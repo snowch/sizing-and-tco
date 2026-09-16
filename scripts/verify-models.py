@@ -39,6 +39,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from bench.stamp import RESULTS_DIR, code_fingerprint, load_result, shown  # noqa: E402
+from sizing import mc  # noqa: E402
 from sizing.dsl import (  # noqa: E402
     PROVENANCE_KINDS,
     Ceiling,
@@ -82,6 +83,17 @@ def check_model(model: Model, problems: list[str]) -> None:
                 problems.append(
                     f"{where}: input {name!r} has an empty provenance source. Every number in a "
                     "model says where it came from, including the ones somebody decided."
+                )
+            elif node.is_uncertain and not any(
+                shape in provenance.source.lower() for shape in mc.SHAPES
+            ):
+                shape, _ = mc.one_shape(node.distribution)
+                problems.append(
+                    f"{where}: input {name!r} is sampled as a {shape} and its provenance never "
+                    f"says so. The shape is a claim about what can happen — that a price cannot "
+                    f"go negative, that a count has a hard maximum — and it is the claim a "
+                    f"reviewer should argue with first. Name it in the source and say why (ch13, "
+                    "appendix C)."
                 )
             elif provenance.kind == "fact" and not any(
                 marker in provenance.source for marker in CITATION_MARKERS

@@ -45,7 +45,9 @@ nodes:
     distribution: {triangular: {minimum: 0.004, likely: 0.006, maximum: 0.011}}
     provenance:
       kind: assumption
-      source: "stated workload characteristic; belongs on the rig and has not been measured"
+      source: "stated workload characteristic; belongs on the rig and has not been measured.
+        Triangular *because* it has not been measured: once it is, the shape becomes a normal
+        around the measurement, which is a change of claim and not only of numbers (ch13)"
     range: [0.001, 0.05]
 
   one_node:
@@ -162,7 +164,10 @@ nodes:
     kind: input
     unit: request/second/node
     distribution: {triangular: {minimum: 100.0, likely: 145.0, maximum: 220.0}}
-    provenance: {kind: vendor_claim, source: "throughput of one node alone, as quoted"}
+    provenance:
+      kind: vendor_claim
+      source: "throughput of one node alone, as quoted. Triangular around the quoted figure,
+        with bounds wide in both directions because nobody here has run it (ch03)"
 
   contention:
     kind: input
@@ -173,7 +178,11 @@ nodes:
       queue. It costs a fixed share of every machine you add, so it flattens the scaling curve
       and never bends it downwards.
     distribution: {triangular: {minimum: 0.002, likely: 0.005, maximum: 0.015}}
-    provenance: {kind: assumption, source: "ch07 - fitted from two measurements, where two exist"}
+    provenance:
+      kind: assumption
+      source: "ch07 - fitted from two measurements, where two exist. Triangular because a fit
+        gives a central value and a range rather than a shape, and its maximum is the claim to
+        distrust: a serial fraction can always be worse than the one you measured"
 
   crosstalk:
     kind: input
@@ -184,7 +193,11 @@ nodes:
       rather than the number of machines. This is the term that makes the curve turn over: past
       some count, the next machine costs more in agreement than it brings in work.
     distribution: {lognormal: {p10: 1.5e-5, p90: 9.0e-5}}
-    provenance: {kind: assumption, source: "ch07 - fitted, and the hardest of the two to fit"}
+    provenance:
+      kind: assumption
+      source: "ch07 - fitted, and the hardest of the two to fit. Lognormal because it spans an
+        order of magnitude and cannot be negative, and because a shape should not assert a hard
+        upper bound on a quantity this weakly fitted"
 
   linear_throughput:
     kind: derived

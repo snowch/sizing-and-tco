@@ -6,4 +6,4 @@
 | utilisation | 0.59 | 30% | 0.70 | ok | 38% | 16% |
 | fraction of the tier doing nothing useful | 0.37 | 50% | 0.50 | ok | 7% | 0% |
 
-*Conditions: target `model` · model `models/service_tier/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/service_tier-reference.json`, code hash `9bd99d2bc803e34a`.*
+*Conditions: target `model` · model `models/service_tier/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/service_tier-reference.json`, code hash `dcc4b2585c13940e`.*

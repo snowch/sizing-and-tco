@@ -8,4 +8,4 @@
 | spans per request | *not yet measured* | — | span/request | `bench/results/traces-spans-per-request.json` does not exist |
 | bytes per span, compressed | 73.6 | ± 0.0173 | bytes / span | python zlib (DEFLATE level 6) |
 
-*Conditions: target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `d9f7022d8a6f59bc`.*
+*Conditions: target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `7510b101692da3e8`.*

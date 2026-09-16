@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "9d9699d85b8b810b",
+  "code_fingerprint": "ea563f58ac2f28c2",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-16T17:15:18+00:00",
-  "git_revision": "767ec80",
+  "generated_at": "2026-09-16T19:25:06+00:00",
+  "git_revision": "a152a7d",
   "kind": "model",
   "name": "storage_cluster-reference",
   "produced_by": {
@@ -85,7 +85,7 @@
       "tco": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-16T17:15:18+00:00",
+    "generated_at": "2026-09-16T19:25:06+00:00",
     "model": "storage_cluster",
     "nodes": {
       "annual_energy": {
@@ -1306,7 +1306,7 @@
         "kind": "derived",
         "label": "average usable capacity",
         "layer": 7,
-        "note": "The mean of the day-one and horizon capacities: a straight line drawn under a curve that is not straight, which understates the area. Stated rather than hidden, because a unit cost is only as defensible as its denominator (ch16).",
+        "note": "The mean of the day-one and horizon capacities: a straight line drawn under a curve that is not straight, which understates the area. Stated rather than hidden, because a unit cost is only as defensible as its denominator (ch17).",
         "point": 10597.555915033356,
         "row": 0,
         "summary": {
@@ -1850,7 +1850,7 @@
         "point": 11661.903789690605,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "chassis, CPU, memory and boot media, less drives"
+          "source": "chassis, CPU, memory and boot media, less drives. Lognormal like any price, and wider than the drives' because a chassis is a configuration rather than a commodity \u2014 which is why ch19 finds it at the top of the tornado"
         },
         "row": 0,
         "summary": {
@@ -2400,7 +2400,7 @@
         "point": 14.12444689182553,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "street price per decimal TB at this capacity point, three quotes"
+          "source": "street price per decimal TB at this capacity point, three quotes. Lognormal because prices move by ratios rather than by amounts, and because three quotes give a centre and a spread rather than a shape"
         },
         "row": 1,
         "summary": {
@@ -3155,7 +3155,7 @@
         "point": 149749.79131871954,
         "provenance": {
           "kind": "assumption",
-          "source": "salary, employer costs, tooling and overhead"
+          "source": "salary, employer costs, tooling and overhead. Lognormal because pay is right-skewed and cannot go negative; the p90 is a senior engineer in an expensive city"
         },
         "row": 3,
         "summary": {
@@ -3759,7 +3759,7 @@
         "point": 1.070717967697245,
         "provenance": {
           "kind": "assumption",
-          "source": "filesystem, index and journal overhead as a multiplier on stored bytes"
+          "source": "filesystem, index and journal overhead as a multiplier on stored bytes. Triangular, and the bounds are for objects of the size this model assumes \u2014 the real spread is a function of object size, which is a term ch09 says this model lacks"
         },
         "row": 10,
         "summary": {
@@ -4101,7 +4101,7 @@
         "point": 1688.6944614553565,
         "provenance": {
           "kind": "assumption",
-          "source": "switch ports, optics and cabling, amortised per node"
+          "source": "switch ports, optics and cabling, amortised per node. Triangular rather than lognormal, although it is a price: it is a bill of materials divided by a node count somebody chose, so the bounds are the plausible designs rather than a market"
         },
         "row": 3,
         "summary": {
@@ -4269,7 +4269,7 @@
         "point": 476.90493569699913,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "typical draw under load, per chassis as configured"
+          "source": "typical draw under load, per chassis as configured. Triangular, and one of the few inputs here whose bounds are physical rather than editorial: a chassis cannot draw less than it idles at, or more than its supply will give it"
         },
         "row": 4,
         "summary": {
@@ -4464,7 +4464,7 @@
         "point": 1.725463121838398,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "sustained sequential read per node, as quoted. Unverified here \u2014 ch03"
+          "source": "sustained sequential read per node, as quoted. Unverified here \u2014 ch03. Triangular, and the lower bound is the one doing the work: the quoted figure is sequential and a real read pattern is not"
         },
         "row": 4,
         "summary": {
@@ -5558,7 +5558,7 @@
         "point": 1.4035898384862247,
         "provenance": {
           "kind": "assumption",
-          "source": "ch15 \u2014 facility overhead. A multiplier on IT load, and the single number a colocation contract is most likely to disagree with you about"
+          "source": "ch15 \u2014 facility overhead. A multiplier on IT load, and the single number a colocation contract is most likely to disagree with you about. Triangular: the minimum is a good building, the maximum is a poor one, and below one is impossible"
         },
         "row": 5,
         "slider": {
@@ -6293,7 +6293,7 @@
         "point": 0.6083920216900384,
         "provenance": {
           "kind": "assumption",
-          "source": "fraction of one engineer this cluster occupies"
+          "source": "fraction of one engineer this cluster occupies. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch08 calls a regime change"
         },
         "row": 4,
         "summary": {
@@ -6461,7 +6461,7 @@
         "point": 0.11795163177004572,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "annual support as a fraction of capital cost"
+          "source": "annual support as a fraction of capital cost. Triangular because it is negotiated inside a band the market sets rather than drawn from one: the spread is what different buyers get, not what varies from year to year"
         },
         "row": 5,
         "summary": {

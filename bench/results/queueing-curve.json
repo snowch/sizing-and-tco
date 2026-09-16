@@ -7,8 +7,8 @@
     "one_slice": "the arrival rate moves and nothing else does. A tier whose service demand also rises with load - which is most of them - is on a steeper curve than this one",
     "the_cap": "the model clamps utilisation before it divides by zero; past that point the formula has stopped describing a queue"
   },
-  "generated_at": "2026-09-16T17:15:38+00:00",
-  "git_revision": "767ec80",
+  "generated_at": "2026-09-16T19:25:55+00:00",
+  "git_revision": "a152a7d",
   "kind": "measurement",
   "name": "queueing-curve",
   "produced_by": {

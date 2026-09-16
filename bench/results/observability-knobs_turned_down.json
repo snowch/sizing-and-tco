@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "e08440c568ba5301",
+  "code_fingerprint": "23e4af5404514ab9",
   "code_sources": [
     "bench/run_models.py",
     "models/observability/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-16T17:15:15+00:00",
-  "git_revision": "767ec80",
+  "generated_at": "2026-09-16T19:25:04+00:00",
+  "git_revision": "a152a7d",
   "kind": "model",
   "name": "observability-knobs_turned_down",
   "produced_by": {
@@ -98,7 +98,7 @@
       "traces_ingest": 1e-06,
       "traces_stored": 0.0864
     },
-    "generated_at": "2026-09-16T17:15:15+00:00",
+    "generated_at": "2026-09-16T19:25:04+00:00",
     "model": "observability",
     "nodes": {
       "active_series": {
@@ -446,7 +446,7 @@
         "point": 1.398213145410956,
         "provenance": {
           "kind": "assumption",
-          "source": "ch04 \u2014 telemetry grows faster than the traffic it describes, because teams add instrumentation as well as load"
+          "source": "ch04 \u2014 telemetry grows faster than the traffic it describes, because teams add instrumentation as well as load. Lognormal like any growth rate \u2014 it compounds and cannot go negative \u2014 and wider than the storage model's for the same reason its median is higher"
         },
         "row": 0,
         "summary": {
@@ -1652,7 +1652,7 @@
         "point": 2.449489742783178,
         "provenance": {
           "kind": "assumption",
-          "source": "ch08 \u2014 the cardinality explosion, as a distribution rather than as a warning"
+          "source": "ch08 \u2014 the cardinality explosion, as a distribution rather than as a warning. Lognormal because this one has no ceiling: a label carrying a user id multiplies the series count by a number nobody chose, and a triangular would assert a maximum that does not exist"
         },
         "row": 2,
         "summary": {
@@ -1820,7 +1820,7 @@
         "point": 8.775027839678176,
         "provenance": {
           "kind": "assumption",
-          "source": "distinct routes appearing as a label value"
+          "source": "distinct routes appearing as a label value. Triangular because somebody could go and count them this afternoon; the maximum is the routes that exist today, and a new service adds to it"
         },
         "row": 3,
         "summary": {
@@ -1988,7 +1988,7 @@
         "point": 3.550510257216822,
         "provenance": {
           "kind": "assumption",
-          "source": "distinct status classes kept as a label"
+          "source": "distinct status classes kept as a label. Triangular, and the one input in this model whose bounds are genuinely hard: a request cannot carry a status the code does not emit"
         },
         "row": 4,
         "summary": {
@@ -2156,7 +2156,7 @@
         "point": 13.162541759517264,
         "provenance": {
           "kind": "assumption",
-          "source": "application log lines emitted per request served"
+          "source": "application log lines emitted per request served. Triangular, from reading a sample of the logs \u2014 and the maximum is the part to distrust, because a debug flag left on in production is outside it"
         },
         "row": 2,
         "summary": {
@@ -3703,7 +3703,7 @@
         "point": 22.690483787644737,
         "provenance": {
           "kind": "assumption",
-          "source": "dashboards, alert rules and people, at the busy hour"
+          "source": "dashboards, alert rules and people, at the busy hour. Triangular because two of those three are countable and the third is not"
         },
         "row": 10,
         "summary": {
@@ -4505,7 +4505,7 @@
         "point": 38376.36200343877,
         "provenance": {
           "kind": "assumption",
-          "source": "ch03 \u2014 the busy hour across the estate, not the daily mean"
+          "source": "ch03 \u2014 the busy hour across the estate, not the daily mean. Triangular: a minimum, a likely and a maximum is the whole of what a dashboard gives you, and the maximum is the busiest hour anybody has looked at rather than the busiest one there will be"
         },
         "row": 7,
         "slider": {
@@ -4897,7 +4897,7 @@
         "point": 709.2637759789957,
         "provenance": {
           "kind": "assumption",
-          "source": "how many distinct metric-name-and-host combinations one dashboard panel or alert rule covers, before any label expansion"
+          "source": "how many distinct metric-name-and-host combinations one dashboard panel or alert rule covers, before any label expansion. Triangular, and wide: dashboards differ from each other more than anything else in this model does"
         },
         "row": 3,
         "summary": {
@@ -5127,7 +5127,7 @@
         "point": 14.69693845669907,
         "provenance": {
           "kind": "assumption",
-          "source": "all-in cost of a usable TB-month on this tier, taken from the storage model's own unit economics (ch16)"
+          "source": "all-in cost of a usable TB-month on this tier, taken from the storage model's own unit economics (ch17). Lognormal because it is a price \u2014 and carried across by hand rather than by sampling, which is the seam ch18 is about"
         },
         "row": 0,
         "summary": {
