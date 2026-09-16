@@ -38,7 +38,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from bench.stamp import RESULTS_DIR, code_fingerprint, load_result  # noqa: E402
+from bench.stamp import RESULTS_DIR, code_fingerprint, load_result, shown  # noqa: E402
 from sizing.dsl import (  # noqa: E402
     PROVENANCE_KINDS,
     Ceiling,
@@ -54,8 +54,13 @@ from sizing.evaluate import check_units, evaluate  # noqa: E402
 CITATION_MARKERS = ("bench/results/", ".json", ".yaml", "definition", "invoice", "@", "http")
 
 
+def _shown(model: Model) -> str:
+    """A model as a reader should see it, or its name if it came from nowhere on disk."""
+    return model.name if model.path is None else shown(model.path)
+
+
 def check_model(model: Model, problems: list[str]) -> None:
-    where = model.path.relative_to(ROOT) if model.path else model.name
+    where = _shown(model)
 
     # 1 — units
     unit_problems, _ = check_units(model)
@@ -155,7 +160,7 @@ def check_model(model: Model, problems: list[str]) -> None:
 
 def check_scenarios(model: Model, problems: list[str]) -> None:
     """Every scenario evaluates, and every override names a real input."""
-    where = model.path.relative_to(ROOT) if model.path else model.name
+    where = _shown(model)
     for scenario in scenarios_for(model):
         for name in sorted(scenario.overrides):
             if name not in model.nodes:

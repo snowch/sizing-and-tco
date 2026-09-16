@@ -24,7 +24,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from bench.stamp import RESULTS_DIR, load_result  # noqa: E402
+from bench.stamp import RESULTS_DIR, load_result, shown  # noqa: E402
 
 VIEWER = ROOT / "sizing" / "viewer"
 DEFAULT_OUT = ROOT / "_build" / "viewers"
@@ -125,14 +125,17 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
+    # Relative to the repository, not to wherever the shell happens to be. A workflow passing
+    # `--out _build/html/models` means the one inside the checkout.
+    out = args.out if args.out.is_absolute() else ROOT / args.out
 
     names = model_results()
     if not names:
         print("build-viewers: no model results — run `python3 -m bench.run_models` first")
         return 1
     for name in names:
-        path = build(name, args.out)
-        print(f"  wrote {path.relative_to(ROOT)} ({path.stat().st_size / 1024:.0f} KB)")
+        path = build(name, out)
+        print(f"  wrote {shown(path)} ({path.stat().st_size / 1024:.0f} KB)")
     print(f"\nbuild-viewers: OK ({len(names)} page(s))")
     return 0
 

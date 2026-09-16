@@ -34,7 +34,15 @@ from typing import Any
 import numpy as np
 
 from sizing import mc
-from sizing.dsl import Ceiling, Derived, Input, Measured, Model, Scenario
+from sizing.dsl import (  # noqa: F401
+    Ceiling,
+    Derived,
+    Input,
+    Measured,
+    Model,
+    Scenario,
+    load_scenario,
+)
 from sizing.units import UNITS, compatible, dimensionality
 from sizing.units import parse as parse_unit
 

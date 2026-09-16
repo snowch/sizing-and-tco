@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "33ada40015be6461",
+  "code_fingerprint": "21be261e282dec8d",
   "code_sources": [
     "bench/run_models.py",
     "models/observability/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-16T16:11:19+00:00",
-  "git_revision": "57ad6b4",
+  "generated_at": "2026-09-16T16:19:43+00:00",
+  "git_revision": "62afd15",
   "kind": "model",
   "name": "observability-knobs_turned_down",
   "produced_by": {
@@ -98,7 +98,7 @@
       "traces_ingest": 1e-06,
       "traces_stored": 0.0864
     },
-    "generated_at": "2026-09-16T16:11:19+00:00",
+    "generated_at": "2026-09-16T16:19:43+00:00",
     "model": "observability",
     "nodes": {
       "active_series": {
@@ -2688,8 +2688,8 @@
         "layer": 3,
         "measured": {
           "corpus": "bench.measure.log_lines \u2014 JSON service logs, five templates, six services, 128-bit trace ids, seeds 0-7",
-          "fingerprint": "39bb49791aaa266d",
-          "generated_at": "2026-09-16T15:09:40+00:00",
+          "fingerprint": "fc1a2e5247a78a60",
+          "generated_at": "2026-09-16T16:11:40+00:00",
           "sd": 0.004369766640344477,
           "stack": "python zlib (DEFLATE level 6)",
           "value": 32.35555625
@@ -3276,8 +3276,8 @@
         "layer": 3,
         "measured": {
           "corpus": "bench.measure.metric_samples \u2014 400 series x 500 points, 15/30/60s scrape intervals with occasional jitter, lognormal random-walk values, seeds 0-7",
-          "fingerprint": "39bb49791aaa266d",
-          "generated_at": "2026-09-16T15:09:41+00:00",
+          "fingerprint": "fc1a2e5247a78a60",
+          "generated_at": "2026-09-16T16:11:41+00:00",
           "sd": 0.0009068057272558302,
           "stack": "this repository's encoder, not any product's",
           "value": 9.369958333333333
@@ -5569,8 +5569,8 @@
         "layer": 3,
         "measured": {
           "corpus": "bench.measure.trace_spans \u2014 spans with 2-14 attributes drawn from a ten-key vocabulary, 128-bit trace ids, seeds 0-7",
-          "fingerprint": "39bb49791aaa266d",
-          "generated_at": "2026-09-16T15:09:45+00:00",
+          "fingerprint": "fc1a2e5247a78a60",
+          "generated_at": "2026-09-16T16:11:45+00:00",
           "sd": 0.017268804737545856,
           "stack": "python zlib (DEFLATE level 6)",
           "value": 73.63665833333333

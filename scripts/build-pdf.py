@@ -36,6 +36,10 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+from bench.stamp import shown  # noqa: E402
+
 CONTENT = ROOT / "_build" / "site" / "content"
 OUT_DIR = ROOT / "_build" / "exports"
 STEM = "sizing-and-tco"
@@ -228,14 +232,6 @@ def find_browser() -> str | None:
     return None
 
 
-def _shown(path: Path) -> str:
-    """A path as a reader should see it: relative to the repository where it can be."""
-    try:
-        return str(path.relative_to(ROOT))
-    except ValueError:
-        return str(path)
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--no-myst", action="store_true", help="reuse _build/site content")
@@ -254,7 +250,7 @@ def main() -> int:
     args.out.parent.mkdir(parents=True, exist_ok=True)
     page = args.out.with_suffix(".html")
     page.write_text(assemble())
-    print(f"  wrote {_shown(page)} ({page.stat().st_size / 1024:.0f} KB)")
+    print(f"  wrote {shown(page)} ({page.stat().st_size / 1024:.0f} KB)")
     if args.html_only:
         return 0
 
@@ -278,7 +274,7 @@ def main() -> int:
         check=True,
         capture_output=True,
     )
-    print(f"  wrote {_shown(args.out)} ({args.out.stat().st_size / 1024:.0f} KB)")
+    print(f"  wrote {shown(args.out)} ({args.out.stat().st_size / 1024:.0f} KB)")
     return 0
 
 

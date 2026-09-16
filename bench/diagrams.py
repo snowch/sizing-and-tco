@@ -374,3 +374,222 @@ def convergence(result: str) -> str:
         f"one over the square root of n</text>"
     )
     return _svg(width, height, "".join(body), "Monte Carlo convergence")
+
+
+# -- Part II's two shapes ----------------------------------------------------------------
+
+
+def queueing_curve(result: str) -> str:
+    """Residence time against utilisation: flat, and then vertical.
+
+    Drawn on linear axes on purpose. A logarithmic vertical axis would make this curve look like
+    a gentle slope, which is how most people have seen it and is the reason most people are
+    surprised by it in production. The shape is the argument, and flattening the shape to fit the
+    page would be flattening the argument.
+    """
+    rows = load_result(result)["summary"]["curve"]
+    width, height = 500.0, 250.0
+    left, right, top, bottom = 52.0, width - 20, 40.0, height - 42
+
+    inflations = [row["inflation"] for row in rows]
+    ceiling_value = max(inflations)
+
+    def at(utilisation: float, inflation: float) -> tuple[float, float]:
+        return (
+            left + utilisation * (right - left),
+            bottom - (inflation - 1.0) / (ceiling_value - 1.0) * (bottom - top),
+        )
+
+    path = " L".join(
+        f"{x:.1f},{y:.1f}" for x, y in (at(row["utilisation"], row["inflation"]) for row in rows)
+    )
+    body = [
+        f'<text x="{MARGIN}" y="20" font-size="11.5" fill="#263238">How much longer a request '
+        f"takes than it would on an idle tier</text>",
+        f'<text x="{MARGIN}" y="34" font-size="9.5" fill="#546e7a">The arrival rate moves; the '
+        f"software and the machines do not</text>",
+    ]
+    # Where a sensible headroom rule would put you, so the curve is read against a decision
+    # rather than admired.
+    for mark, label, colour in ((0.7, "a 30% margin ends here", "#c8791a"), (0.9, "", "#b3413a")):
+        x = left + mark * (right - left)
+        body.append(
+            f'<line x1="{x:.1f}" y1="{top}" x2="{x:.1f}" y2="{bottom}" stroke="{colour}" '
+            f'stroke-width="1" stroke-dasharray="3 3"/>'
+        )
+        if label:
+            body.append(
+                f'<text x="{x - 6:.1f}" y="{top + 12:.0f}" font-size="9" text-anchor="end" '
+                f'fill="{colour}">{_esc(label)}</text>'
+            )
+    body.append(f'<path d="M{path}" fill="none" stroke="#4a7ba7" stroke-width="2"/>')
+    for row in rows:
+        x, y = at(row["utilisation"], row["inflation"])
+        body.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.4" fill="#4a7ba7"/>')
+
+    body.append(
+        f'<line x1="{left}" y1="{bottom}" x2="{right}" y2="{bottom}" stroke="#90a4ae"/>'
+        f'<line x1="{left}" y1="{top}" x2="{left}" y2="{bottom}" stroke="#90a4ae"/>'
+    )
+    for fraction in (0.0, 0.25, 0.5, 0.75, 1.0):
+        x = left + fraction * (right - left)
+        body.append(
+            f'<text x="{x:.1f}" y="{bottom + 15:.0f}" font-size="9" text-anchor="middle" '
+            f'fill="#546e7a">{fraction:.0%}</text>'
+        )
+    for value in (1.0, ceiling_value / 2, ceiling_value):
+        y = bottom - (value - 1.0) / (ceiling_value - 1.0) * (bottom - top)
+        body.append(
+            f'<text x="{left - 6:.0f}" y="{y + 3:.1f}" font-size="9" text-anchor="end" '
+            f'fill="#546e7a">{value:.0f}x</text>'
+        )
+    body.append(
+        f'<text x="{(left + right) / 2:.0f}" y="{height - 8:.0f}" font-size="9.5" '
+        f'text-anchor="middle" fill="#455a64">utilisation</text>'
+    )
+    return _svg(width, height, "".join(body), "Residence time against utilisation")
+
+
+def scaling_curve(result: str) -> str:
+    """Throughput against node count, against the straight line nobody gets.
+
+    Two curves and the gap between them. The straight line is what a budget assumes; the other is
+    what the machines do. The place they stop diverging and start converging on nothing is the
+    peak, and the peak is a property of the software.
+    """
+    summary = load_result(result)["summary"]
+    rows = summary["curve"]
+    width, height = 500.0, 260.0
+    left, right, top, bottom = 56.0, width - 20, 42.0, height - 42
+
+    most_nodes = max(row["nodes"] for row in rows)
+    # Scaled to what the tier can actually reach, not to the straight line — which is nine times
+    # taller and would squash the real curve onto the axis. So the line a budget assumes runs off
+    # the top of the figure, which is a fair description of what it does in practice.
+    tallest = max(row["achievable_throughput"] for row in rows) * 1.35
+
+    def at(nodes: float, throughput: float) -> tuple[float, float]:
+        return (
+            left + nodes / most_nodes * (right - left),
+            bottom - min(throughput / tallest, 1.0) * (bottom - top),
+        )
+
+    def path_of(key: str) -> str:
+        return " L".join(f"{x:.1f},{y:.1f}" for x, y in (at(r["nodes"], r[key]) for r in rows))
+
+    leaves_at = next(
+        (row["nodes"] for row in rows if row["linear_throughput"] > tallest), most_nodes
+    )
+
+    body = [
+        f'<text x="{MARGIN}" y="20" font-size="11.5" fill="#263238">What more machines actually '
+        f"buy</text>",
+        f'<text x="{MARGIN}" y="34" font-size="9.5" fill="#546e7a">The straight line is what a '
+        f"budget assumes. The curve is what the machines do</text>",
+        f'<path d="M{path_of("linear_throughput")}" fill="none" stroke="#b3413a" '
+        f'stroke-width="1.2" stroke-dasharray="4 3"/>',
+        f'<path d="M{path_of("achievable_throughput")}" fill="none" stroke="#4a7ba7" '
+        f'stroke-width="2"/>',
+    ]
+    exit_x, _ = at(leaves_at, tallest)
+    body.append(
+        f'<text x="{exit_x + 6:.1f}" y="{top + 12:.0f}" font-size="9" fill="#b3413a">'
+        f"the budget's line leaves the page at {leaves_at:.0f} nodes</text>"
+    )
+
+    peak = max(rows, key=lambda row: row["achievable_throughput"])
+    peak_x, peak_y = at(peak["nodes"], peak["achievable_throughput"])
+    body.append(
+        f'<circle cx="{peak_x:.1f}" cy="{peak_y:.1f}" r="4" fill="none" stroke="#b3413a" '
+        f'stroke-width="1.5"/>'
+        f'<text x="{peak_x:.1f}" y="{peak_y - 10:.1f}" font-size="9" text-anchor="middle" '
+        f'fill="#b3413a">past here it falls</text>'
+    )
+    body.append(
+        f'<line x1="{left}" y1="{bottom}" x2="{right}" y2="{bottom}" stroke="#90a4ae"/>'
+        f'<line x1="{left}" y1="{top}" x2="{left}" y2="{bottom}" stroke="#90a4ae"/>'
+    )
+    for row in rows:
+        if row["nodes"] not in (1, 64, 128, 256, most_nodes):
+            continue
+        x, _ = at(row["nodes"], 0)
+        body.append(
+            f'<text x="{x:.1f}" y="{bottom + 15:.0f}" font-size="9" text-anchor="middle" '
+            f'fill="#546e7a">{row["nodes"]:.0f}</text>'
+        )
+    body.append(
+        f'<text x="{(left + right) / 2:.0f}" y="{height - 8:.0f}" font-size="9.5" '
+        f'text-anchor="middle" fill="#455a64">nodes</text>'
+        f'<text x="{left - 6:.0f}" y="{top + 4:.0f}" font-size="9" text-anchor="end" '
+        f'fill="#546e7a">{tallest / 1000:.0f}k</text>'
+        f'<text x="{left - 6:.0f}" y="{bottom:.0f}" font-size="9" text-anchor="end" '
+        f'fill="#546e7a">0</text>'
+        f'<text x="{right:.0f}" y="{height - 8:.0f}" font-size="9" text-anchor="end" '
+        f'fill="#546e7a">requests per second</text>'
+    )
+    return _svg(width, height, "".join(body), "Throughput against node count")
+
+
+def distribution_shapes(_result: str | None = None) -> str:
+    """The four shapes this book uses, drawn from their own percentile functions.
+
+    Not illustrations of distributions — these are the actual functions in ``sizing/mc.py``,
+    sampled at a thousand percentiles and plotted. If somebody changes one, this picture changes,
+    which is the only kind of figure this book is willing to print.
+
+    All four are scaled onto the same horizontal range so the *shapes* can be compared. Their
+    parameters are chosen to put roughly the same mass in the same place, which is the fair
+    comparison: the question is never "which is wider" but "which is the right claim about what
+    can happen".
+    """
+    import numpy as np
+
+    from sizing import mc
+
+    width, height = 520.0, 300.0
+    left, right = 54.0, width - 16
+    panel = 62.0
+    percentiles = np.linspace(0.001, 0.999, 1200)
+
+    shapes = (
+        ("uniform", mc.uniform_ppf(percentiles, 2.0, 8.0), "bounds, and nothing else claimed"),
+        (
+            "triangular",
+            mc.triangular_ppf(percentiles, 2.0, 4.0, 8.0),
+            "an expert's least / likely / most",
+        ),
+        (
+            "lognormal",
+            mc.lognormal_ppf(percentiles, 2.6, 7.4),
+            "prices, growth, anything compounding",
+        ),
+        ("normal", mc.normal_ppf_scaled(percentiles, 5.0, 1.15), "measurement error"),
+    )
+    low = min(float(values.min()) for _, values, _ in shapes)
+    high = max(float(values.max()) for _, values, _ in shapes)
+    span = high - low
+
+    body = [
+        f'<text x="{MARGIN}" y="20" font-size="11.5" fill="#263238">The four shapes, drawn from '
+        f"the percentile functions the sampler actually uses</text>"
+    ]
+    for index, (name, values, caption) in enumerate(shapes):
+        top = 34.0 + index * panel
+        base = top + panel - 20
+        counts, edges = np.histogram(values, bins=70, range=(low, high))
+        tallest = max(counts.max(), 1)
+        for i, count in enumerate(counts):
+            x1 = left + (edges[i] - low) / span * (right - left)
+            x2 = left + (edges[i + 1] - low) / span * (right - left)
+            bar = (count / tallest) * (base - top)
+            body.append(
+                f'<rect x="{x1:.2f}" y="{base - bar:.2f}" width="{max(x2 - x1 - 0.4, 0.4):.2f}" '
+                f'height="{bar:.2f}" fill="#9fc0dd"/>'
+            )
+        body.append(
+            f'<line x1="{left}" y1="{base:.1f}" x2="{right}" y2="{base:.1f}" stroke="#90a4ae"/>'
+            f'<text x="{MARGIN}" y="{top + 12:.0f}" font-size="10" fill="#263238">{_esc(name)}</text>'
+            f'<text x="{MARGIN}" y="{top + 24:.0f}" font-size="8" fill="#78909c">'
+            f"{_esc(caption)}</text>"
+        )
+    return _svg(width, height, "".join(body), "The four distributions this book uses")
