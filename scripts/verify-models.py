@@ -54,8 +54,18 @@ from sizing.evaluate import check_units, evaluate  # noqa: E402
 CITATION_MARKERS = ("bench/results/", ".json", ".yaml", "definition", "invoice", "@", "http")
 
 
+def _shown(model: Model) -> str:
+    """A model as a reader should see it: relative to the repository where it can be."""
+    if model.path is None:
+        return model.name
+    try:
+        return str(model.path.relative_to(ROOT))
+    except ValueError:
+        return str(model.path)
+
+
 def check_model(model: Model, problems: list[str]) -> None:
-    where = model.path.relative_to(ROOT) if model.path else model.name
+    where = _shown(model)
 
     # 1 — units
     unit_problems, _ = check_units(model)
@@ -155,7 +165,7 @@ def check_model(model: Model, problems: list[str]) -> None:
 
 def check_scenarios(model: Model, problems: list[str]) -> None:
     """Every scenario evaluates, and every override names a real input."""
-    where = model.path.relative_to(ROOT) if model.path else model.name
+    where = _shown(model)
     for scenario in scenarios_for(model):
         for name in sorted(scenario.overrides):
             if name not in model.nodes:

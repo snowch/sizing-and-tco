@@ -6,4 +6,4 @@
 | request_rate | lines_per_request | +0.30 | Weak and positive: busier services tend to be the chattier ones. Small enough to be worth including as an example of a correlation that barely matters, which is a useful thing for a reader to see beside one that does. |
 | request_rate | queries_per_second | +0.40 | A busier platform is one more people are watching. Moderate rather than strong: most query load comes from alert rules and dashboards on timers, which do not care how busy anything is — right up until an incident, when they all fire at once and nobody is looking at the model. |
 
-*Conditions: target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `3608f5f769a5787a`.*
+*Conditions: target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `68888ad54385413f`.*

@@ -403,8 +403,15 @@ def load_model(path: str | Path) -> Model:
     or a ceiling with no headroom loads fine and is reported by ``scripts/verify-models.py``,
     which lists every one of them at once instead of stopping at the first.
     """
-    path = Path(path)
-    where = path.relative_to(ROOT) if path.is_absolute() else path
+    # Resolved, always. A model loaded by a relative path used to arrive with a relative
+    # `path`, and everything downstream that wanted to show it relative to the repository root
+    # raised instead — in the verifier, which is the one place a confusing error is least
+    # affordable.
+    path = Path(path).resolve()
+    try:
+        where = path.relative_to(ROOT)
+    except ValueError:
+        where = path
     raw = yaml.safe_load(path.read_text())
     if not isinstance(raw, dict):
         raise ModelError(f"{where}: is not a mapping")

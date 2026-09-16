@@ -430,3 +430,306 @@ def _unmeasured_across_models() -> set[str]:
             if not node.is_measured:
                 missing.add(node.result)
     return missing
+
+
+# -- Part II: the curves ------------------------------------------------------------------
+
+
+def queueing_table(name: str) -> str:
+    """Utilisation against what a request actually costs.
+
+    The last column is the one people have not seen. Everybody knows a busy system is slower;
+    almost nobody has looked at how the second half of that sentence behaves, which is that it
+    does nothing for a long time and then does everything at once.
+    """
+    rows = load_result(name)["summary"]["curve"]
+    out = [
+        "| Utilisation | Time queueing | Time in the system | Requests in flight | Slower than idle by |",
+        "|---:|---:|---:|---:|---:|",
+    ]
+    for row in rows:
+        out.append(
+            f"| {row['utilisation']:.0%} | {row['waiting_time'] * 1000:,.1f} ms "
+            f"| {row['residence_time'] * 1000:,.1f} ms | {row['concurrency']:,.0f} "
+            f"| {row['inflation']:.1f}x |"
+        )
+    return "\n".join(out)
+
+
+def scaling_table(name: str) -> str:
+    """What each batch of machines bought, and where the curve turns over."""
+    summary = load_result(name)["summary"]
+    out = [
+        "| Nodes | Throughput | If scaling were free | Efficiency | Per node |",
+        "|---:|---:|---:|---:|---:|",
+    ]
+    for row in summary["curve"]:
+        marker = " **peak**" if row["nodes"] == summary["peak_at_nodes"] else ""
+        out.append(
+            f"| {row['nodes']:,.0f}{marker} | {row['achievable_throughput']:,.0f} "
+            f"| {row['linear_throughput']:,.0f} | {row['scaling_efficiency']:.0%} "
+            f"| {row['throughput_per_node']:,.1f} |"
+        )
+    out.append(
+        f"| | | | *swept peak* | *{summary['peak_at_nodes']:,.0f} nodes, against "
+        f"{summary['predicted_peak']:,.1f} predicted from the two coefficients* |"
+    )
+    return "\n".join(out)
+
+
+def binding_table(name: str) -> str:
+    """Which of two chains decides the answer, and how often."""
+    summary = load_result(name)["summary"]
+    return "\n".join(
+        [
+            "| | |",
+            "|---|---:|",
+            f"| Capacity decides the node count | {summary['capacity_binds']:.0%} of samples |",
+            f"| Bandwidth decides it | {summary['throughput_binds']:.0%} of samples |",
+            f"| Median gap between the two chains | {summary['median_gap']:,.0f} nodes |",
+            f"| Gap at the 95th percentile | {summary['p95_gap']:,.0f} nodes |",
+            f"| Median of the capacity chain alone | {summary['median_capacity_nodes']:,.0f} nodes |",
+            f"| Median of the bandwidth chain alone | {summary['median_throughput_nodes']:,.0f} nodes |",
+        ]
+    )
+
+
+# -- Parts I, III and V --------------------------------------------------------------------
+
+
+def workload_table(name: str) -> str:
+    """The quantities that describe the demand, separated from the ones that describe the system.
+
+    A model's inputs are two different kinds of thing wearing the same clothes. Some describe
+    what the world is doing to you; the rest describe what you have decided to do about it. A
+    table that mixes them is how a sizing conversation ends up arguing about a growth rate as
+    though it were a choice.
+    """
+    payload = load_result(name)["summary"]
+    demand, choices = [], []
+    for node_name in payload["order"]:
+        node = payload["nodes"][node_name]
+        if node["kind"] != "input":
+            continue
+        row = (
+            f"| {node['label']} | {fmt(node.get('point'), node['unit'])} "
+            f"| {unit_label(node['unit'])} | {PROVENANCE_MARK.get(node['provenance']['kind'], '?')} |"
+        )
+        # A quantity with a distribution is something the world decides; a stated value with a
+        # slider is something you do. It is a heuristic, and it is right far more often than the
+        # alternative of not distinguishing them at all.
+        (demand if node.get("distribution") else choices).append(row)
+    header = ["| Quantity | At the reference point | Unit | |", "|---|---:|---|---|"]
+    return "\n".join(
+        [
+            *header,
+            "| **What the world does** | | | |",
+            *demand,
+            "| **What you decide** | | | |",
+            *choices,
+        ]
+    )
+
+
+def cost_split_table(name: str) -> str:
+    """Capital against running cost, over the declared horizon."""
+    payload = load_result(name)["summary"]
+    nodes = payload["nodes"]
+
+    def value(key: str) -> float:
+        return nodes[key]["point"]
+
+    horizon = value("horizon")
+    capex, opex = value("capex"), value("lifecycle_opex")
+    total = value("tco")
+    rows = [
+        "| | Amount | Share of the total |",
+        "|---|---:|---:|",
+        f"| Capital, paid once | {fmt(capex, 'USD')} | {capex / total:.0%} |",
+        f"| Drives | {fmt(value('drive_capex'), 'USD')} | {value('drive_capex') / total:.0%} |",
+        f"| Chassis | {fmt(value('chassis_capex'), 'USD')} | {value('chassis_capex') / total:.0%} |",
+        f"| Network | {fmt(value('network_capex'), 'USD')} | {value('network_capex') / total:.0%} |",
+        f"| Running, over {horizon:.0f} years | {fmt(opex, 'USD')} | {opex / total:.0%} |",
+        f"| Energy | {fmt(value('annual_energy_cost') * horizon, 'USD')} "
+        f"| {value('annual_energy_cost') * horizon / total:.0%} |",
+        f"| Support | {fmt(value('annual_support') * horizon, 'USD')} "
+        f"| {value('annual_support') * horizon / total:.0%} |",
+        f"| People | {fmt(value('annual_staff_cost') * horizon, 'USD')} "
+        f"| {value('annual_staff_cost') * horizon / total:.0%} |",
+        f"| **Total** | **{fmt(total, 'USD')}** | |",
+    ]
+    return "\n".join(rows)
+
+
+def node_kinds_table(name: str) -> str:
+    """What a model is made of, counted.
+
+    The census that classifies it. A model with no measured constant and no ceiling is a cost
+    model and sampling its inputs is enough; one with either is a sizing model and it is not.
+    """
+    payload = load_result(name)["summary"]
+    counts: dict[str, int] = {}
+    for node in payload["nodes"].values():
+        counts[node["kind"]] = counts.get(node["kind"], 0) + 1
+    rows = ["| Node kind | Count | What it carries |", "|---|---:|---|"]
+    meaning = {
+        "input": "a value or a distribution, a provenance kind and a source",
+        "derived": "a formula, whose declared unit is checked against what it produces",
+        "measured": "a stamped result, a standard error, and the implementation it belongs to",
+        "ceiling": "a limit, a declared headroom, and a reason",
+    }
+    for kind in ("input", "derived", "measured", "ceiling"):
+        rows.append(f"| `{kind}` | {counts.get(kind, 0)} | {meaning[kind]} |")
+    rows.append(
+        f"| | | **classified as a {payload['classification']} model**"
+        + (
+            " — it has measured constants or ceilings in it, so sampling the inputs is not "
+            "sufficient on its own"
+            if payload["classification"] == "sizing"
+            else " — accounting identities with uncertain parameters, and sampling the inputs is "
+            "sufficient"
+        )
+        + " |"
+    )
+    return "\n".join(rows)
+
+
+# -- appendices ----------------------------------------------------------------------------
+
+
+def conversions_table(_name: str = "") -> str:
+    """Every conversion the build applies, across every model.
+
+    The reason this book has a unit system rather than a convention. Each row is a place where
+    somebody wrote a formula in the units their invoices and datasheets came in, declared the
+    answer in the unit they wanted to read it in, and the build did the arithmetic that everybody
+    gets wrong by hand.
+
+    A row with a factor of twelve is a figure that would otherwise have been twelve times too
+    large, and it would have looked entirely plausible.
+    """
+    from sizing.dsl import discover
+    from sizing.evaluate import check_units
+
+    rows = [
+        "| Model | Node | Formula produces | Node declares | Factor |",
+        "|---|---|---|---|---:|",
+    ]
+    for model in discover():
+        problems, factors = check_units(model)
+        if problems:
+            continue
+        for key in sorted(factors):
+            factor = factors[key]
+            if abs(factor - 1.0) < 1e-12:
+                continue
+            node_name = key.split(".")[0]
+            node = model.nodes[node_name]
+            produced = _produced_unit(model, node_name)
+            rows.append(
+                f"| `{model.name}` | {node.display} | {produced} | {unit_label(node.unit)} "
+                f"| x{factor:,.6g} |"
+            )
+    if len(rows) == 2:
+        rows.append("| | *no model needs a conversion* | | | |")
+    return "\n".join(rows)
+
+
+def _produced_unit(model, node_name: str) -> str:
+    """What a node's formula produces before conversion, for the table above."""
+    from sizing.evaluate import UNIT_FUNCTIONS, _units_of, _walk, plausible_magnitudes
+    from sizing.units import UNITS
+    from sizing.units import parse as parse_unit
+
+    magnitudes = plausible_magnitudes(model)
+    quantities = {
+        name: UNITS.Quantity(magnitudes[name], parse_unit(node.unit))
+        for name, node in model.nodes.items()
+    }
+    node = model.nodes[node_name]
+    tree = getattr(node, "formula", None) or getattr(node, "of", None)
+    try:
+        return unit_label(str(_units_of(_walk(tree, quantities, UNIT_FUNCTIONS))))
+    except Exception:  # pragma: no cover - a model that does not typecheck is skipped above
+        return "?"
+
+
+def glossary_table(_name: str = "") -> str:
+    """Every term the book rations, and the chapter that introduces it.
+
+    Generated from ``bench/outline.py`` rather than written out, so a term whose chapter moves
+    cannot end up pointing at the wrong one. The list is short on purpose: a book that introduces
+    forty pieces of vocabulary has taught forty pieces of vocabulary and nothing else.
+    """
+    from bench.outline import BY_SLUG
+
+    #: term -> (chapter slug, what it means here, and the plain-English phrase it replaces)
+    terms = {
+        "distribution": (
+            "monte_carlo",
+            "the bag of values an uncertain quantity could take",
+            "a range of plausible values",
+        ),
+        "sample": ("monte_carlo", "one value drawn from that bag", "one guess"),
+        "percentile": (
+            "monte_carlo",
+            "the value a given fraction of the bag is below",
+            "the value nine tenths are under",
+        ),
+        "interval": ("monte_carlo", "the gap between two percentiles", "how wide the answer is"),
+        "correlation": (
+            "correlation_and_convergence",
+            "the tendency of two inputs to move together",
+            "they move together",
+        ),
+        "convergence": (
+            "correlation_and_convergence",
+            "the answer ceasing to move between runs",
+            "it has settled",
+        ),
+        "provenance": (
+            "where_the_numbers_come_from",
+            "how much somebody is claiming when they write a number down",
+            "where it came from",
+        ),
+        "measured constant": (
+            "where_the_numbers_come_from",
+            "an empirical number belonging to one implementation at one version",
+            "a number somebody measured",
+        ),
+        "ceiling": (
+            "regime_changes",
+            "a limit past which a chain of multiplications stops describing anything",
+            "where it breaks",
+        ),
+        "headroom": (
+            "headroom_and_failure_domains",
+            "the margin a design keeps below a ceiling, and the reason for it",
+            "the slack you keep",
+        ),
+        "binding constraint": (
+            "bandwidth_and_the_binding_constraint",
+            "the chain that decides the answer, out of several that could",
+            "whichever runs out first",
+        ),
+        "utilisation": (
+            "queueing_and_the_knee",
+            "the fraction of a system that is busy",
+            "how busy it is",
+        ),
+        "unit economics": (
+            "unit_economics",
+            "a cost divided by a denominator you can defend",
+            "cost per something",
+        ),
+        "structural error": (
+            "the_missing_node",
+            "a model that is wrong in shape rather than in its numbers",
+            "something is missing",
+        ),
+    }
+    rows = ["| Term | Introduced in | What it means here | Said plainly |", "|---|---|---|---|"]
+    for term, (slug, meaning, plain) in terms.items():
+        chapter = BY_SLUG[slug]
+        rows.append(f"| **{term}** | [{chapter.label}](#{chapter.anchor}) | {meaning} | {plain} |")
+    return "\n".join(rows)

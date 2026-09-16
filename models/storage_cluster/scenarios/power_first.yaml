@@ -1,0 +1,13 @@
+scenario: power_first
+title: Sized from the power budget inwards
+because: >-
+  A rack has a power budget before it has a capital budget, and where that is the binding
+  constraint the sizing runs the other way: watts available, divided by watts per node, gives a
+  node count, and everything else follows from it. Here the tier is held to what a
+  fifty-kilowatt allocation supports at the reference PUE, which is fewer nodes than the capacity
+  chain asked for - and ch16 is about reading the ceilings that result rather than arguing with
+  the electricity supply.
+samples: 100000
+seed: 20260916
+overrides:
+  nodes_purchased: 75

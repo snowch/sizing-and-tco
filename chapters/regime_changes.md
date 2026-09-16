@@ -1,55 +1,181 @@
 ---
-title: "Regime changes [DRAFT]"
+title: "Regime changes"
 short_title: "ch08 Regime changes"
 ---
 
 (regime-changes)=
-# ch08 · Regime changes [DRAFT]
+# ch08 · Regime changes
 
 :::{note} Chapter header
 :class: dropdown
 
 | | |
 |---|---|
-| **Prerequisites** | [ch07](#when-adding-servers-stops-helping) |
-| **What it produces** | The cardinality explosion, as a distribution rather than a warning. |
-| **Built from** | `observability-reference` |
+| **Prerequisites** | [ch06](#queueing-and-the-knee) |
+| **What it produces** | The ceilings a chain of multiplications cannot express, in both reference models |
+| **Built from** | `observability-reference`, `queueing-curve` |
 :::
 
 ## The question
 
 Which ceilings can a chain of multiplications not model at all?
 
-[To write: one paragraph. State the question this chapter answers and why the previous chapter
-leaves it open. No summary of what is to come — the reader can see the headings.]
+This is the chapter that closes Part II and justifies the front matter. Everything in Parts I and
+III is a product of quantities. This chapter is about the things that are not, and about why no
+amount of care over the inputs to a product will warn you about them.
 
 ## The material
 
-[To write: the body. Short sections. Code is quoted from the working tree with
-`{literalinclude}` and text anchors, never pasted; model files are quoted the same way. See
-AUTHORING_GUIDE.md.]
+### What a chain of multiplications can and cannot say
+
+Every sizing model in this book is, at heart, a product. Bytes per line times lines per second
+times seconds of retention. Terabytes times replication divided by compression. Each output is
+linear in each input: double one thing, double the answer.
+
+That is an enormous amount of the world and it is why the technique works. It is also completely
+unable to express a **regime change** — a point at which the system stops obeying the rule it was
+obeying and starts obeying a different one.
+
+Problem 8.1 makes the failure concrete, and it is worth doing rather than reading. Fit a straight
+line to a system's behaviour at the loads it has actually run at, which for a healthy system means
+nothing above half. The fit is excellent. Extrapolate it to the loads you are planning for, and it
+is not wrong by a percentage — it is wrong by a multiple, and the multiple grows.
+
+```{image} _figures/regime-changes-knee.svg
+:alt: The queueing knee, as a regime change a multiplication cannot express
+:width: 100%
+```
+
+Nothing in the flat part of that curve contains any information about the vertical part. A model
+fitted there, by any method, predicts the wrong thing — and predicts it confidently, because the
+data it was fitted to was clean.
+
+### Four of them, and what each one does
+
+**The queueing knee.** [ch06](#queueing-and-the-knee). Response time is work divided by what is
+left of the system, so it goes from flat to vertical with no warning in between. A multiplicative
+model of latency says load times some constant, and that constant does not exist.
+
+**Rebuild under failure.** A cluster that loses a node has to put that node's data somewhere,
+using bandwidth it was using for something else, for as long as the rebuild takes. During that
+window the system is a different system: less capacity, less bandwidth, and less tolerance for a
+second failure. No term in a capacity chain represents it — which is why
+[ch11](#headroom-and-failure-domains) handles it with a reserved margin rather than a formula.
+
+**Cardinality explosion.** A label multiplies every series that carries it. Add one with a
+thousand values and the series count is multiplied, not incremented. The chain does express this
+one correctly — and that is precisely the problem, because a multiplication by an uncertain factor
+is an uncertainty that compounds:
+
+```{image} _figures/regime-changes-cardinality.svg
+:alt: Label cardinality as a distribution — a product of uncertain counts
+:width: 100%
+```
+
+That is three counts, none of which anybody would describe as alarming, multiplied together.
+Problem 8.2 is why the result is so much wider than any of its factors, and the answer is that
+uncertainties compound when quantities multiply. The consequence shows up in every tornado the
+node appears in:
+
+```{include} _generated/regime-changes-tornado.md
+```
+
+**A working set that stops fitting.** Data served from memory and data served from disk differ by
+orders of magnitude, and the transition between them is a step rather than a slope. A model with
+an average access cost in it describes neither side, and describes the mixture only at the one
+ratio it was calibrated for.
+
+### What they have in common
+
+Each of them is a **threshold with different physics on either side**, and in each case the
+quantity that crosses the threshold is one a multiplicative model computes perfectly well. The
+model is not wrong about utilisation, or about how full the disks are, or about how many series
+there are. It is wrong about what those numbers *mean* past a point it has no way to represent.
+
+That is why this book's DSL has a node kind for it. A `ceiling` does not model the regime change —
+nothing in a spreadsheet-shaped model can. It declares where the change is, keeps a margin away
+from it, and reports how much of the model's own uncertainty falls on the wrong side:
+
+```{include} _generated/regime-changes-ceilings.md
+```
+
+The last two columns are what a chain of multiplications cannot produce and what a sizing answer
+actually needs. Not "the system will be this busy" but "across everything this model thinks could
+happen, this fraction of it puts you past the point where the model stops applying".
+
+### Why this is the whole argument of the book
+
+A cost model has no regime changes in it. Watts times hours times price is an accounting identity;
+it is true at every scale and there is no load at which electricity starts behaving differently.
+So for a cost model, sampling the inputs is genuinely sufficient — the structure is not in doubt,
+only the numbers are.
+
+A sizing model has thresholds in it, and past a threshold the structure itself changes. Sampling
+the inputs of a model that has stopped applying produces a beautifully converged interval around
+a number that means nothing.
+
+That is why the DSL distinguishes the two, why a model with a `ceiling` in it is classified as a
+sizing model, and why `scripts/verify-models.py` refuses a sizing model that declares a limit with
+no margin. The distinction is not taxonomy. It is the difference between a model whose
+uncertainty you can quantify and a model whose *applicability* you have to bound.
 
 ## What the model says
 
-[To write: `{include}` the generated fragments declared in `bench/figures.py`. No number is
-ever typed here. A figure that depends on a constant nobody has measured renders as *not yet
-measured* on its own — the state propagates down the graph, and nothing has to be marked by
-hand.]
+```{include} _generated/regime-changes-ceilings.md
+```
+
+```{include} _generated/regime-changes-tornado.md
+```
 
 ## What this cannot tell you
 
-[To write. **Mandatory.** What the model, the measurement or the method could not show, and what
-was done instead. For a chapter with a model in it this must name what the model's *structure*
-omits, because that is the error no amount of sampling can see. This chapter is not finished
-while this section is missing.]
+**Where your thresholds are.** Every ceiling in this book was declared by somebody. The queueing
+one comes from a formula with strong assumptions; the capacity ones come from judgement about
+rebuild and allocator behaviour. None was measured, and measuring one means running a system into
+the regime you are trying to avoid.
+
+**How many thresholds you have.** Four are named above because four were thought of. A real system
+has more — a connection limit, a file-descriptor ceiling, a licence tier, a garbage collector that
+changes behaviour at some heap size, a network that reorders under load. Each one you have not
+declared is a ceiling the model cannot report on, and it will not tell you it is missing. That is
+[ch20](#the-missing-node).
+
+**What happens past one.** A ceiling says where the model stops applying. It has no model of what
+is on the other side, deliberately, because an extrapolation into a regime you have not
+characterised is exactly the error this chapter is about.
+
+**Whether the margin is enough.** A headroom is a decision, and this chapter argues only that it
+must exist and have a reason. Whether a given one is generous or reckless depends on how fast your
+load moves and how long you take to notice, neither of which this book can see.
 
 ## Problems
 
-[To write: each problem is a stub under `tests/regime_changes/` with a test that passes only when
-it is solved. There is no answer key — the test is the answer key, and it cannot be wrong about
-whether it passes.]
+Two, in `tests/regime_changes/`.
+
+**8.1 — Do what a spreadsheet would do.**
+Fit a straight line to a system's behaviour at the loads it has actually run at, then extrapolate
+into the loads you are planning for. The fit is excellent where it was fitted. Measure how wrong
+it is where it matters.
+
+```bash
+python3 -m pytest tests/regime_changes/test_problem_1_straight_line.py
+```
+
+**8.2 — Why cardinality dominates.**
+Take three counts that nobody would describe as alarming, multiply them, and compare the spread of
+the product against the spread of the widest factor. Predict the direction and the rough size
+before you run it.
+
+```bash
+python3 -m pytest tests/regime_changes/test_problem_2_combinatorial.py
+```
 
 ## Where to go next
 
-[To write: primary sources via `@citekey` against `references.bib`. Textbooks may appear here as
-further reading and nowhere else — never as a source for this chapter's content.]
+Part III begins at [ch09](#capacity), and puts everything in Parts I and II to work: a chain of
+multiplications from a stated workload to a number of machines, with ceilings declared where the
+chain stops applying.
+
+[ch20](#the-missing-node) is the version of this chapter's limitation that no technique in the
+book can address — a threshold nobody declared is indistinguishable, from inside the model, from
+a threshold that is not there.
