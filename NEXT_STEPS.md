@@ -3,14 +3,6 @@
 What is left, roughly in the order it is worth doing. Kept short and honest; when an item is done
 it comes out rather than being ticked.
 
-## Needs somebody with repository settings
-
-- **GitHub Pages source.** Settings -> Pages -> Build and deployment -> Source must be
-  **GitHub Actions**, not "Deploy from a branch". `configure-pages` with `enablement: true` creates
-  the Pages site but does not change its build type, so the build job succeeds, uploads its
-  artifact, and the deploy job is then rejected before it runs a single step - which is why it
-  fails in two seconds with no log to read. One click, and nothing in the workflow can do it.
-
 ## Needs a machine or a system, not a desk
 
 - **`collector-throughput-per-core`** (`rig`). Declare a reference machine in `rig/machine.yml`,
@@ -25,13 +17,10 @@ it comes out rather than being ticked.
 
 Every chapter and every appendix is written. What is left is the work a first draft leaves:
 
-- **A read-through in one sitting.** Twenty-three chapters written in sequence repeat themselves
-  in ways that are invisible while writing each one. The suspects are the ceiling argument (ch08,
-  ch11), the point-estimate argument (ch12, ch13) and the provenance argument (ch03, ch21).
-- **The two chapters that are waiting on measurements.** ch08 and ch12 both describe the
-  observability model's traces chain around a hole. They read correctly today and they will read
-  better when the chain lights up; neither needs a rewrite, which was the point of building the
-  blocked-state machinery.
+- **The two chapters that are waiting on measurements.** ch20 and ch22 both describe the
+  observability model's traces chain around a hole. They read correctly today and they will
+  read better when the chain lights up; neither needs a rewrite, which was the point of building
+  the blocked-state machinery.
 - **Cross-references.** Every chapter links forwards and backwards by hand. `tests/test_book.py`
   checks the anchors resolve, not that the links are the right ones.
 
@@ -48,7 +37,6 @@ Every chapter and every appendix is written. What is left is the work a first dr
   that took a service time and an arrival rate and derived the knee would let ch06 stop describing
   the shape and start drawing it.
 
-
 ## Known rough edges
 
 - The dependency graph's layout is a barycentre heuristic. It is legible on both models and it
@@ -58,3 +46,9 @@ Every chapter and every appendix is written. What is left is the work a first dr
   and they are an assumption rather than an observation.
 - The PDF renderer handles the node types the book currently uses and raises on anything else.
   That is the intended behaviour, and it means a new directive needs a branch.
+- **Nothing checks what a page looks like.** Every check here reads the source or the parsed
+  content, and both can be perfectly valid while the rendered page is wrong. Money written as
+  `$318,062 to $611,522` shipped for weeks as an equation, because two dollar signs on a line are
+  a LaTeX span and nothing in a clean build says so. `tests/test_figures.py` covers the SVGs and
+  `ci-check.sh` now refuses an `inlineMath` node, but both of those were written after somebody
+  looked at the site on a phone. That is still the only way this class of fault is found.
