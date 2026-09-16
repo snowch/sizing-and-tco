@@ -17,8 +17,13 @@ short_title: "Appendix G · Glossary"
 
 This book rations its vocabulary. Every term below arrives in one chapter, because a model has
 just raised a question that needs it, and never as a definition at the front of a section. The
-list is short by design: a reader who finishes the book should have gained about a dozen words,
+list is short by design: a reader who finishes the book should have gained under twenty words,
 not a dialect.
+
+Four of them are the kinds of thing that can be wrong, and they are worth reading as a group. Two
+of them — measurement and parameter uncertainty — are what an interval is made of. Scenario
+uncertainty is why this book runs a model more than once rather than widening its inputs.
+Structural error is in none of that and is [ch20](#the-missing-node).
 
 The last column is not a simplification. It is the sentence to use out loud. Where a term has a
 plain-English equivalent, this book says the plain one first and names the term second — including

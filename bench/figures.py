@@ -442,6 +442,29 @@ FIGURES: dict[str, Table | Diagram] = {
     "which-input-is-the-answer-correlation": Table(
         render=tables.correlation_table, result="correlation-effect"
     ),
+    "which-input-is-the-answer-worth-storage": Table(
+        render=tables.value_of_information_table,
+        result="value-of-information",
+        args=("storage_cluster", "tco"),
+    ),
+    "which-input-is-the-answer-worth-observability": Table(
+        render=tables.value_of_information_table,
+        result="value-of-information",
+        args=("observability", "known_stored"),
+    ),
+    # -- ch22 What the model got wrong -------------------------------------------------------------
+    "what-the-model-got-wrong-attribution": Table(
+        render=tables.postmortem_table, result="postmortem", args=("complete",)
+    ),
+    "what-the-model-got-wrong-incomplete": Table(
+        render=tables.postmortem_table, result="postmortem", args=("incomplete",)
+    ),
+    "what-the-model-got-wrong-ceilings": Table(
+        render=tables.ceilings_table, result="storage_cluster-reference"
+    ),
+    "what-the-model-got-wrong-unmeasured": Table(
+        render=tables.not_yet_measured, result="observability-reference"
+    ),
     # -- ch20 The missing node ---------------------------------------------------------------------
     "the-missing-node-outputs": Table(
         render=tables.outputs_table, result="observability-reference"

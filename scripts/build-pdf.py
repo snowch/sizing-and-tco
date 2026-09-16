@@ -223,8 +223,13 @@ def parsed_pages() -> dict[str, dict]:
 
 def load(page: str, index: dict[str, dict]) -> dict:
     if page not in index:
-        raise FileNotFoundError(
-            f"no parsed content for {page}; run `myst build` first. Parsed: {sorted(index)[:3]}..."
+        # A precondition rather than a defect: the page is in the table of contents and MyST has
+        # not parsed it, which is what a stale `_build/site` looks like after a page is added.
+        # Said in a sentence, like the empty-index case, because a traceback here reads as a bug
+        # in the renderer and is not one.
+        raise SystemExit(
+            f"no parsed content for {page} — run `myst build` first. "
+            f"Parsed: {', '.join(sorted(index)[:3])}..."
         )
     return index[page]
 

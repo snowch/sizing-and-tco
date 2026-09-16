@@ -61,7 +61,12 @@ def published_pages() -> list[Path]:
     page carrying a comparison table.
     """
     return sorted(
-        [ROOT / "index.md", *(ROOT / "chapters").glob("*.md"), *(ROOT / "appendices").glob("*.md")]
+        [
+            ROOT / "index.md",
+            *(ROOT / "parts").glob("*.md"),
+            *(ROOT / "chapters").glob("*.md"),
+            *(ROOT / "appendices").glob("*.md"),
+        ]
     )
 
 

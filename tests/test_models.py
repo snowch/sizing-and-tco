@@ -230,3 +230,46 @@ def test_scenario_files_load_from_disk():
         assert model.path is not None
         for path in sorted((model.path.parent / "scenarios").glob("*.yaml")):
             assert load_scenario(path).samples > 0
+
+
+# -- what a measurement would buy ------------------------------------------------------------
+
+
+def test_pinning_every_uncertain_input_leaves_no_interval():
+    """The premise ch19's value-of-information table rests on.
+
+    A model whose inputs are all known is arithmetic, and arithmetic has no interval. If this
+    ever stops being true, something is generating randomness that is not a declared input, and
+    every figure in the book that calls itself a 90% interval is about something else.
+    """
+    from bench.run_information import without_uncertainty
+    from sizing.evaluate import sampled_inputs
+
+    model = MODELS["storage_cluster"]
+    scenario = _scenario(model, "reference")
+    pinned = without_uncertainty(model, scenario, tuple(sampled_inputs(model)))
+    assert evaluate(pinned, scenario).samples == {}, (
+        "an input kept its uncertainty after being pinned, or something else is drawing numbers"
+    )
+
+
+def test_knowing_one_input_never_widens_the_interval():
+    """Removing uncertainty cannot add any, and the bound has to be a bound.
+
+    Sampling noise means the two runs are not exactly ordered, so this allows the noise ch14
+    measures and nothing beyond it.
+    """
+    from bench.run_information import without_uncertainty
+    from sizing import mc
+    from sizing.evaluate import sampled_inputs
+
+    model = MODELS["storage_cluster"]
+    scenario = _scenario(model, "reference")
+    baseline = mc.half_width(evaluate(model, scenario).samples["tco"])
+    for name in sampled_inputs(model):
+        if name not in model.ancestors("tco"):
+            continue
+        thinner = without_uncertainty(model, scenario, (name,))
+        assert mc.half_width(evaluate(thinner, scenario).samples["tco"]) <= baseline * 1.01, (
+            f"knowing {name!r} exactly widened the interval, which is not a thing that can happen"
+        )

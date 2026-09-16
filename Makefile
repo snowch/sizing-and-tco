@@ -56,6 +56,14 @@ models:  ## Evaluate and sample every model, and stamp what each one said
 	@echo "Now re-render and commit:"
 	@echo "  $(PYTHON) scripts/render-figures.py && git add bench/results chapters/_generated chapters/_figures"
 
+.PHONY: information
+information:  ## What knowing each uncertain input exactly would buy (ch19)
+	$(PYTHON) -m bench.run_information
+
+.PHONY: postmortem
+postmortem:  ## Attribute the storage model's own failures (ch22)
+	$(PYTHON) -m bench.run_postmortem
+
 .PHONY: verify
 verify:  ## Units, provenance, ceilings and shape, for every model
 	$(PYTHON) scripts/verify-models.py

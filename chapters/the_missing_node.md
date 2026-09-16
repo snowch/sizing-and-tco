@@ -39,6 +39,38 @@ Sampling handles the first perfectly and is completely blind to the second. Wors
 it produces a beautifully converged interval around the wrong answer, and the convergence looks
 like rigour.
 
+### Four things that could be wrong, and the book can count two
+
+The split above is the one that matters, and it is worth drawing once more with the pieces named,
+because the book has been using all four of these for twenty chapters without ever putting them in
+one place.
+
+**A measurement wobbles.** A measured constant has a standard error, and it is as likely to be
+high as low ([ch03](#where-the-numbers-come-from)). This is the smallest of the four and the only
+one anybody can reduce by working harder.
+
+**A number is unknown.** An input nobody measured, given a distribution somebody chose: a price, a
+growth rate, a count of label values ([ch13](#monte-carlo)). Usually the largest thing inside the
+interval, and [ch19](#which-input-is-the-answer) is which of them to go after.
+
+Those two are what the interval is made of. Both are quantities the model can carry, and the whole
+apparatus of Parts IV and VI is about them.
+
+**The world takes a different path.** Retention policy changes. Growth stops. Somebody turns the
+sampling rate down. This one is *not* in the interval, and it is why this book has scenarios at
+all — a scenario is a second run rather than a wider distribution, because the alternative is not
+a value the current model could have produced. A cluster bought for the growth case is a different
+model of the world, not an unlucky draw from this one
+([ch12](#the-sizing-model), [ch16](#power-first)).
+
+**The model is the wrong shape.** This chapter. Not in the interval, not in a scenario, not
+anywhere — because nothing in the file knows the term is missing.
+
+The useful thing about naming them is what it says about a wide interval. A wide interval is a
+report about the first two. It is silent about the third, which is a modelling decision somebody
+took, and it is silent about the fourth, which is a modelling decision nobody knew they were
+taking.
+
 ### The book's own example, on a published page
 
 ```{include} _generated/the-missing-node-outputs.md

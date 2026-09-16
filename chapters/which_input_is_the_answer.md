@@ -13,7 +13,7 @@ short_title: "ch19 Which input is the answer?"
 |---|---|
 | **Prerequisites** | [ch13](#monte-carlo) |
 | **What it produces** | Tornado charts across both reference models, and what the widest bars have in common |
-| **Built from** | `storage_cluster-reference`, `observability-reference`, `service_tier-reference` |
+| **Built from** | `storage_cluster-reference`, `observability-reference`, `service_tier-reference`, `value-of-information` |
 :::
 
 ## The question
@@ -111,6 +111,52 @@ are a ranking, and that is all they are. Treating the bar lengths as shares of t
 mistake the chart invites, and a variance-based decomposition — which does answer that question —
 is not in this toolkit and is noted in `NEXT_STEPS.md`.
 
+### And what would that buy?
+
+A ranking is not a quantity, and the question that follows a ranking is the one somebody has to
+approve: *what would measuring it be worth?*
+
+That is computable, and the computation is the simplest thing that means anything. Take one
+uncertain input, pin it at its median — pretend somebody went and measured it, perfectly — and
+re-sample the whole model. What comes back is the interval the model would report if that one
+thing were known.
+
+```{include} _generated/which-input-is-the-answer-worth-storage.md
+```
+
+The last column is a **ceiling**. No real measurement is perfect: one leaves a standard error
+behind, that error propagates like any other ([ch03](#where-the-numbers-come-from)), and the
+interval closes by less than this. Which is exactly what makes the figure useful — a small number
+in that column says the measurement is not worth commissioning *however well it goes*, and that
+is a decision somebody can take before spending anything.
+
+Read down it. One input is worth most of the interval and everything below it is rounding. A
+campaign to pin down the third row would be a quarter's work for a result nobody could see on a
+chart.
+
+Then the same experiment on the other model, where the answer has a different shape:
+
+```{include} _generated/which-input-is-the-answer-worth-observability.md
+```
+
+Two inputs tie at the top, and **the same number is not the same decision**. One is a count of
+label values somebody could go and query this afternoon. The other is a growth rate, which
+belongs to no target and cannot be measured at all ([ch04](#peak-mean-and-growth)) — the only
+thing available for it is to *decide* it, by policy, and accept the flexibility that costs.
+
+Now the two rows at the bottom of that table, which are the ones worth taking away.
+
+**The measured constants buy nothing.** Bytes per sample and bytes per log line were measured over
+a declared corpus, with a standard error, by the most careful machinery in this book — and
+removing that standard error entirely does not move the interval. Their *values* matter enormously;
+they scale the answer. Their *uncertainty* is not what the answer rests on. Measuring them again,
+better, is work that would produce a nicer provenance and the same interval.
+
+**And the rows do not add up.** They come to rather more or rather less than the whole, depending
+on the model, and they are not shares of anything. Uncertainty in a chain of multiplications does
+not divide between the inputs — which is the same fact problem 19.2 measures, arriving from the
+other direction and harder to argue with.
+
 ### After you measure it
 
 The point of all this is to change something. Which means the honest end of a sensitivity analysis
@@ -136,10 +182,11 @@ what progress looks like here: not a narrower interval on the same chart, but a 
 
 ## What this cannot tell you
 
-**How much the interval would narrow if you measured it.** The tornado ranks; it does not
-quantify what a measurement buys. Answering that needs the model re-run with the input's
-uncertainty replaced by a plausible post-measurement standard error, which is a thing to do by
-hand and is not automated here.
+**How much the interval would narrow if you measured it *in practice*.** The table above is the
+bound, computed by pretending the measurement is perfect. A real one leaves a standard error
+behind, and how large that error would be is not knowable before doing the work — so the honest
+figure is the ceiling, and the shortfall against it is somebody's judgement about how good a
+measurement they can take.
 
 **Anything about interactions.** One at a time, by construction. Problem 19.2 measures the gap and
 the gap is not small in a multiplicative model. An input whose effect appears only in combination

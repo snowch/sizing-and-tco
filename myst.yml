@@ -34,51 +34,55 @@ project:
   toc:
     - file: index.md
 
-    - title: Getting started
+    - file: parts/getting_started.md
       children:
         - file: chapters/prerequisites_and_setup.md
         - file: chapters/reading_a_model.md
 
-    - title: Part I — What you are sizing
+    - file: parts/what_you_are_sizing.md
       children:
         - file: chapters/what_a_workload_is.md
         - file: chapters/where_the_numbers_come_from.md
         - file: chapters/peak_mean_and_growth.md
 
-    - title: Part II — Ceilings
+    - file: parts/ceilings.md
       children:
         - file: chapters/littles_law.md
         - file: chapters/queueing_and_the_knee.md
         - file: chapters/when_adding_servers_stops_helping.md
         - file: chapters/regime_changes.md
 
-    - title: Part III — Sizing
+    - file: parts/sizing.md
       children:
         - file: chapters/capacity.md
         - file: chapters/bandwidth_and_the_binding_constraint.md
         - file: chapters/headroom_and_failure_domains.md
         - file: chapters/the_sizing_model.md
 
-    - title: Part IV — Uncertainty
+    - file: parts/uncertainty.md
       children:
         - file: chapters/monte_carlo.md
         - file: chapters/correlation_and_convergence.md
 
-    - title: Part V — Cost
+    - file: parts/cost.md
       children:
         - file: chapters/capex_opex_and_lifecycle.md
         - file: chapters/power_first.md
         - file: chapters/unit_economics.md
         - file: chapters/the_five_year_model.md
 
-    - title: Part VI — Sensitivity
+    - file: parts/sensitivity.md
       children:
         - file: chapters/which_input_is_the_answer.md
         - file: chapters/the_missing_node.md
 
-    - title: Part VII — Presenting it
+    - file: parts/presenting_it.md
       children:
         - file: chapters/a_tco_for_finance.md
+
+    - file: parts/afterwards.md
+      children:
+        - file: chapters/what_the_model_got_wrong.md
 
     - title: Appendices
       children:

@@ -125,7 +125,7 @@ than to trust a tick.
 
 **Anything about the models themselves.** Every check in this chapter is about whether the
 machinery runs. A model can pass every one of them and still be a bad description of your system,
-which is what the remaining twenty-one chapters are for.
+which is what the remaining twenty-two chapters are for.
 
 ## Problems
 
