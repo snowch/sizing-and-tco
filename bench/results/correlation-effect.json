@@ -1,18 +1,19 @@
 {
-  "code_fingerprint": "1bbc989fd6f4669c",
+  "code_fingerprint": "70404a34aa45e7d0",
   "code_sources": [
     "bench/run_uncertainty.py"
   ],
   "conditions": {
     "what_widening_means": "assuming independence is not neutral. It is a claim, and where it is wrong it makes the interval narrower than the evidence supports \u2014 which is the direction that gets a plan approved"
   },
-  "generated_at": "2026-09-16T15:34:31+00:00",
-  "git_revision": null,
+  "generated_at": "2026-09-16T16:11:35+00:00",
+  "git_revision": "57ad6b4",
   "kind": "measurement",
   "name": "correlation-effect",
   "produced_by": {
-    "codec": "none \u2014 this measures the sampler, not any data",
-    "corpus": "both reference models, sampled with and without their declared correlations",
+    "method": "sampled with and without each model's declared correlations",
+    "model": "storage_cluster and observability",
+    "scenario": "reference",
     "stack": "sizing.mc \u2014 Iman-Conover rank correlation"
   },
   "recorded_on": {
@@ -55,7 +56,7 @@
       }
     ]
   },
-  "target": "corpus",
+  "target": "model",
   "units": {
     "rows": "dimensionless"
   }

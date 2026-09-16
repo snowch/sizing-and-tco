@@ -35,6 +35,26 @@ PINS = {
         "fill_level": (0.7462631549076367, 0.23751424273852662, 2.3483313911156083),
         "read_utilisation": (0.5458080607924731, 0.26650505006771763, 1.0242176962099736),
     },
+    "service_tier-reference": {
+        "utilisation": (0.5878614710768895, 0.23168842385794025, 1.3186737705994391),
+        "utilisation_including_coordination": (
+            0.8939900075324693,
+            0.41339567207336353,
+            1.835670425069286,
+        ),
+        "optimism": (1.5207494478159798, 0.9635533676255424, 2.5630744060972415),
+        "residence_time": (0.01653982675471082, 0.006704620123792237, 0.47161539351445725),
+        "waiting_time": (0.009723126887381197, 0.0015958441132010212, 0.4621830856441681),
+        "concurrency": (91.28759266266023, 19.299538869779, 4219.756065918202),
+        "busy_nodes": (37.623134148920926, 14.828059126908176, 84.3951213183641),
+        "achievable_throughput": (6173.737128031247, 4207.890485276353, 8384.711137091275),
+        "scaling_efficiency": (0.6308261122478787, 0.48729853333873535, 0.7487756138413769),
+        "peak_nodes": (164.40112916277405, 92.48190967899484, 291.04849255061293),
+        "headroom_to_peak": (0.38929173008680135, 0.21989462800516746, 0.6920272324544551),
+        "queueing_headroom": (0.5878614710768895, 0.23168842385794025, 1.3186737705994391),
+        "scaling_loss": (0.36917388775212134, 0.251224386158623, 0.5127014666612645),
+        "coordination_headroom": (0.8939900075324693, 0.41339567207336353, 1.835670425069286),
+    },
     "observability-reference": {
         "metrics_ingest": (4.691199947653698, 0.7087674746854326, 29.10375682615168),
         "logs_ingest": (44.67582461292441, 9.662904248123636, 164.16836699415467),
@@ -48,6 +68,9 @@ PINS = {
         "query_utilisation": (0.5686076313785159, 0.05914481544577415, 3.3746456809609255),
     },
 }
+
+#: Units that count things somebody buys or provisions.
+COUNT_UNITS = ("node", "drive", "core", "host")
 
 MODELS = {model.name: model for model in discover()}
 
@@ -108,17 +131,48 @@ def test_every_scenario_evaluates(model_name):
 
 
 @pytest.mark.parametrize("model_name", sorted(MODELS))
-def test_counts_are_whole_numbers(model_name):
-    """You cannot buy two thirds of a node, and a model that says you can has a `ceil` missing."""
+def test_a_decision_about_countable_things_is_a_whole_number(model_name):
+    """You cannot decide to buy two thirds of a machine.
+
+    Only *decisions* though, and the distinction is worth stating because the first version of
+    this test did not make it and failed on a model that was right. A node whose unit is `node`
+    is a quantity of machines, and there are perfectly good fractional ones: the average number
+    busy at any moment, the point at which a scaling curve turns over. Neither is something
+    anybody buys. An input with a count unit is something somebody chose, and 64.3 of them is not
+    a choice that can be made.
+    """
     model = MODELS[model_name]
     values = point(model, _scenario(model, "reference"))
-    for name, value in values.items():
-        if model.nodes[name].unit in ("node", "drive", "core", "host"):
-            assert value == math.floor(value), (
-                f"{model_name}: {name} is {value}, and it is counted in "
-                f"{model.nodes[name].unit}s. A sizing chain that lands between two nodes needs a "
-                "ceil, and where it lands is the whole of the rounding decision."
-            )
+    for name, node in model.nodes.items():
+        if node.kind != "input" or node.unit not in COUNT_UNITS or name not in values:
+            continue
+        assert values[name] == math.floor(values[name]), (
+            f"{model_name}: {name} is {values[name]}, and it is a decision counted in "
+            f"{node.unit}s. Somebody has to be able to act on it."
+        )
+
+
+@pytest.mark.parametrize("model_name", sorted(MODELS))
+def test_a_sizing_chain_rounds_up_rather_than_to_nearest(model_name):
+    """Where a chain lands between two machines, it must land on the larger.
+
+    Rounding to nearest saves half a machine and loses the thing the chain was computing. Every
+    derived node in this book that turns a demand into a count of machines says `ceil`, and this
+    checks that what comes out of them is whole — so a chain that acquires a division after the
+    rounding, which is the way this goes wrong, fails here.
+    """
+    model = MODELS[model_name]
+    values = point(model, _scenario(model, "reference"))
+    rounded = [
+        name
+        for name, node in model.nodes.items()
+        if node.kind == "derived" and node.formula_text.strip().startswith("ceil(")
+    ]
+    for name in rounded:
+        assert values[name] == math.floor(values[name]), (
+            f"{model_name}: {name} rounds up and is still {values[name]}. Something divides it "
+            "after the rounding, which throws the rounding away."
+        )
 
 
 @pytest.mark.parametrize("model_name", sorted(MODELS))

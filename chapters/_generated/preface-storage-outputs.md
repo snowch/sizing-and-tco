@@ -11,4 +11,4 @@
 | fill level at horizon | 0.746 | 0.238 to 2.35 |  |
 | read utilisation at peak | 0.546 | 0.267 to 1.02 |  |
 
-*Conditions: target `corpus` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-reference.json`, code hash `6300de14ac49a33c`.*
+*Conditions: target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-reference.json`, code hash `a3e06a66eb0e078d`.*

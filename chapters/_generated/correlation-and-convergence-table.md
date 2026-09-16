@@ -8,4 +8,4 @@
 | 100,000 | $1,260,624 | $5,650 | 4.02× |
 | | *settles* | *falls* | **3.30× per decade** from 1,000 samples up, against √10 = 3.16 |
 
-*Conditions: target `corpus` · the storage_cluster reference scenario, resampled 32 times at each sample count with independent seeds · none — this measures the sampler, not any data · sizing.mc · 2026-09-16 · Source: `bench/results/convergence-storage-tco.json`, code hash `1bbc989fd6f4669c`.*
+*Conditions: target `model` · sizing.mc · 2026-09-16 · Source: `bench/results/convergence-storage-tco.json`, code hash `70404a34aa45e7d0`.*

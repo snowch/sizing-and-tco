@@ -24,7 +24,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from bench.stamp import build_result, load_result, result_exists
+from bench.stamp import RERUN_TOLERANCE, build_result, load_result, result_exists
 from sizing import export
 from sizing.dsl import discover, scenarios_for
 
@@ -43,7 +43,7 @@ def run_one(model, scenario, write: bool = True) -> dict:
     relative = str(model.path.relative_to(model.path.parent.parent.parent))  # type: ignore[union-attr]
     return build_result(
         f"{model.name}-{scenario.name}",
-        target="corpus",
+        target="model",
         kind="model",
         produced_by={
             "model": model.name,
@@ -124,7 +124,7 @@ def compare(committed: dict, fresh: dict, outputs) -> list[str]:
             new = now.get(figure, (now.get("summary") or {}).get(figure))
             if old is None and new is None:
                 continue
-            if old is None or new is None or abs(old - new) > 1e-6 * max(1.0, abs(old)):
+            if old is None or new is None or abs(old - new) > RERUN_TOLERANCE * max(1.0, abs(old)):
                 moved.append(f"{name}.{figure}: {old!r} -> {new!r}")
     return moved
 

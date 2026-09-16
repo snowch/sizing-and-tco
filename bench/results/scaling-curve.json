@@ -1,0 +1,143 @@
+{
+  "code_fingerprint": "e6a3b009b05e3804",
+  "code_sources": [
+    "bench/run_curves.py"
+  ],
+  "conditions": {
+    "coefficients_are_assumptions": "contention and crosstalk are fitted in practice, and in this model they are assumptions. The shape is the claim, not the position",
+    "swept_and_predicted": "the peak found by sweeping and the peak the two coefficients predict are computed independently and must agree; if they ever stop agreeing, one of them is wrong"
+  },
+  "generated_at": "2026-09-16T16:11:35+00:00",
+  "git_revision": "57ad6b4",
+  "kind": "measurement",
+  "name": "scaling-curve",
+  "produced_by": {
+    "method": "the node count swept from one to four hundred",
+    "model": "service_tier",
+    "scenario": "reference",
+    "stack": "sizing.evaluate"
+  },
+  "recorded_on": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "kind": "other",
+    "numpy": "2.4.6",
+    "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  },
+  "summary": {
+    "curve": [
+      {
+        "achievable_throughput": 152.91796067500633,
+        "linear_throughput": 152.91796067500633,
+        "nodes": 1.0,
+        "scaling_efficiency": 1.0,
+        "throughput_per_node": 152.91796067500633
+      },
+      {
+        "achievable_throughput": 303.7065656935569,
+        "linear_throughput": 305.83592135001265,
+        "nodes": 2.0,
+        "scaling_efficiency": 0.9930375881058824,
+        "throughput_per_node": 151.85328284677846
+      },
+      {
+        "achievable_throughput": 598.9418517797684,
+        "linear_throughput": 611.6718427000253,
+        "nodes": 4.0,
+        "scaling_efficiency": 0.9791882018566287,
+        "throughput_per_node": 149.7354629449421
+      },
+      {
+        "achievable_throughput": 1164.3997142029757,
+        "linear_throughput": 1223.3436854000506,
+        "nodes": 8.0,
+        "scaling_efficiency": 0.9518173250080583,
+        "throughput_per_node": 145.54996427537196
+      },
+      {
+        "achievable_throughput": 2198.5101036346878,
+        "linear_throughput": 2446.6873708001012,
+        "nodes": 16.0,
+        "scaling_efficiency": 0.8985660080125987,
+        "throughput_per_node": 137.40688147716799
+      },
+      {
+        "achievable_throughput": 3909.9502447949667,
+        "linear_throughput": 4893.3747416002025,
+        "nodes": 32.0,
+        "scaling_efficiency": 0.7990293920380105,
+        "throughput_per_node": 122.18594514984271
+      },
+      {
+        "achievable_throughput": 6173.737128031247,
+        "linear_throughput": 9786.749483200405,
+        "nodes": 64.0,
+        "scaling_efficiency": 0.6308261122478787,
+        "throughput_per_node": 96.46464262548824
+      },
+      {
+        "achievable_throughput": 7361.499864757709,
+        "linear_throughput": 14680.124224800607,
+        "nodes": 96.0,
+        "scaling_efficiency": 0.5014603249965138,
+        "throughput_per_node": 76.6822902578928
+      },
+      {
+        "achievable_throughput": 7897.708940875136,
+        "linear_throughput": 19573.49896640081,
+        "nodes": 128.0,
+        "scaling_efficiency": 0.40348988979599765,
+        "throughput_per_node": 61.700851100587
+      },
+      {
+        "achievable_throughput": 8054.072636364757,
+        "linear_throughput": 24466.87370800101,
+        "nodes": 160.0,
+        "scaling_efficiency": 0.3291827444930556,
+        "throughput_per_node": 50.33795397727973
+      },
+      {
+        "achievable_throughput": 7958.3506712751105,
+        "linear_throughput": 30583.592135001265,
+        "nodes": 200.0,
+        "scaling_efficiency": 0.26021634856185544,
+        "throughput_per_node": 39.79175335637555
+      },
+      {
+        "achievable_throughput": 7575.375093642448,
+        "linear_throughput": 39146.99793280162,
+        "nodes": 256.0,
+        "scaling_efficiency": 0.1935110096218891,
+        "throughput_per_node": 29.59130895954081
+      },
+      {
+        "achievable_throughput": 7026.875865182785,
+        "linear_throughput": 48933.74741600202,
+        "nodes": 320.0,
+        "scaling_efficiency": 0.1435997902520112,
+        "throughput_per_node": 21.958987078696204
+      },
+      {
+        "achievable_throughput": 6350.257000840889,
+        "linear_throughput": 61167.18427000253,
+        "nodes": 400.0,
+        "scaling_efficiency": 0.10381803701817885,
+        "throughput_per_node": 15.875642502102224
+      }
+    ],
+    "peak_at_nodes": 160.0,
+    "peak_throughput": 8054.072636364757,
+    "predicted_peak": 164.40112916277405
+  },
+  "target": "model",
+  "units": {
+    "curve": "request/second",
+    "curve[0].nodes": "node",
+    "curve[0].scaling_efficiency": "dimensionless",
+    "curve[0].throughput_per_node": "request/second",
+    "peak_at_nodes": "node",
+    "peak_throughput": "request/second",
+    "predicted_peak": "node"
+  }
+}

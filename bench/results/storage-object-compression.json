@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "39bb49791aaa266d",
+  "code_fingerprint": "fc1a2e5247a78a60",
   "code_sources": [
     "bench/measure.py",
     "bench/run_corpus.py"
@@ -9,8 +9,8 @@
     "to_use_it": "re-run bench.measure.mixed_objects against a sample of your own estate, or replace the generator with one that reads it",
     "what_this_is_about": "this corpus and this codec, and nothing else"
   },
-  "generated_at": "2026-09-16T15:09:39+00:00",
-  "git_revision": null,
+  "generated_at": "2026-09-16T16:11:39+00:00",
+  "git_revision": "57ad6b4",
   "kind": "measurement",
   "name": "storage-object-compression",
   "produced_by": {

@@ -65,8 +65,13 @@ ROOT = Path(__file__).resolve().parent.parent
 RESULTS_DIR = ROOT / "bench" / "results"
 RIG_DECLARATION = ROOT / "rig" / "machine.yml"
 
-#: The three targets, and what declaring one means.
-TARGETS = ("corpus", "rig", "estate")
+#: The four targets, and what declaring one means.
+#:
+#: Three of them are measurements — something outside this repository was asked a question. The
+#: fourth is not, and separating it out is what stops the distinction going soft. A sweep of a
+#: model is arithmetic over numbers the book already had; it is not evidence about the world, and
+#: a file that recorded it as though it were would be claiming something it cannot support.
+TARGETS = ("corpus", "rig", "estate", "model")
 
 TARGET_MEANING = {
     "corpus": "a deterministic measurement over a declared corpus with a named codec; "
@@ -75,6 +80,9 @@ TARGET_MEANING = {
     "and refused anywhere else",
     "estate": "an observation of a real deployment over a stated window; reproducible by nobody, "
     "checkable by nobody, and therefore held to the strictest disclosure rules in the book",
+    "model": "computed from a model file in this repository. No machine and no body of data was "
+    "involved, so it is evidence about what the book's own models say and about nothing else — "
+    "and its fingerprint covers the whole DSL core, so the claim moves when the method does",
 }
 
 #: What a file *is*. A ``measurement`` was run against data or a machine; a ``model`` is the
@@ -413,6 +421,12 @@ def provenance_problems(filename: str, payload: dict) -> list[str]:
     # graph, and a leaf-by-leaf declaration would be several hundred lines restating what the
     # model file already says. The requirement is the same one in a different shape — every
     # quantity in the file has a declared unit and the build can find it.
+    if kind == "model" and target != "model":
+        problems.append(
+            f"{filename}: kind 'model' must declare target 'model'. A model run is a computation, "
+            "not a measurement of anything outside this repository."
+        )
+
     if kind == "model":
         declared_nodes = set(units)
         graph_nodes = set(summary.get("nodes", {}))
@@ -466,6 +480,14 @@ def provenance_problems(filename: str, payload: dict) -> list[str]:
     if not produced_by:
         problems.append(f"{filename}: `produced_by` is empty — a result must say what made it")
 
+    if target == "model":
+        for required in ("model", "scenario"):
+            if required not in produced_by:
+                problems.append(
+                    f"{filename}: a model result must record {required!r} in `produced_by`, or "
+                    "nobody can tell which model it is about."
+                )
+
     if kind == "measurement" and target == "corpus":
         for required in ("corpus", "codec"):
             if required not in produced_by:
@@ -483,6 +505,14 @@ def provenance_problems(filename: str, payload: dict) -> list[str]:
             f"{filename}: a rig measurement must have been recorded on the rig; this one says "
             f"{payload.get('recorded_on', {}).get('kind')!r}."
         )
+    if kind == "measurement" and target == "estate":
+        for required in ("system", "window", "observed_at"):
+            if required not in produced_by:
+                problems.append(
+                    f"{filename}: an estate observation must record {required!r} in "
+                    "`produced_by`. Nobody can re-run this measurement, so the disclosure is the "
+                    "only thing standing between it and a number somebody remembered."
+                )
     return problems
 
 
@@ -511,3 +541,57 @@ if __name__ == "__main__":  # pragma: no cover
 #: verification, it is much weaker than the other two, and the chapters that use one say so at
 #: the point of use rather than in a footnote.
 RUNNABLE_TARGETS = ("corpus", "rig")
+
+
+#: How close two runs of the same computation have to be before the book calls them the same.
+#:
+#: Not exact equality, and the reason is a CI failure rather than a preference. Numpy chooses
+#: different instruction paths on different processors, so a percentile over a hundred thousand
+#: floats can differ in its last bits between one runner and the next. A check that compared
+#: exactly went green on one machine and red on another with an identical tree, which is the
+#: worst kind of check: it fails for a reason that has nothing to do with the thing being checked,
+#: and people learn to re-run it until it passes.
+#:
+#: One part in a million is far tighter than anything this book prints — every figure is reported
+#: to three or four significant figures — and far looser than the noise. A real change to a model,
+#: a constant or the sampler moves a figure by orders of magnitude more than this.
+RERUN_TOLERANCE = 1e-6
+
+
+def numeric_differences(
+    committed: Any, fresh: Any, tolerance: float = RERUN_TOLERANCE, path: str = ""
+) -> list[str]:
+    """Where two summaries disagree by more than re-running on another machine would explain.
+
+    Walks both structures together. A missing or added key is always a difference; two numbers
+    are the same if they agree to :data:`RERUN_TOLERANCE` relative; anything else is compared for
+    equality, because a changed string or a changed flag is never floating-point noise.
+    """
+    if isinstance(committed, dict) and isinstance(fresh, dict):
+        out = []
+        for key in sorted(set(committed) | set(fresh)):
+            where = f"{path}.{key}" if path else str(key)
+            if key not in committed:
+                out.append(f"{where}: added")
+            elif key not in fresh:
+                out.append(f"{where}: removed")
+            else:
+                out += numeric_differences(committed[key], fresh[key], tolerance, where)
+        return out
+    if isinstance(committed, list) and isinstance(fresh, list):
+        if len(committed) != len(fresh):
+            return [f"{path}: {len(committed)} entries became {len(fresh)}"]
+        out = []
+        for i, (was, now) in enumerate(zip(committed, fresh, strict=True)):
+            out += numeric_differences(was, now, tolerance, f"{path}[{i}]")
+        return out
+    if isinstance(committed, bool) or isinstance(fresh, bool):
+        # `True == 1` in Python, so a flag that quietly became a count would slip through a value
+        # comparison. A verdict turning into a number is a change of meaning, not of magnitude.
+        same = type(committed) is type(fresh) and committed == fresh
+        return [] if same else [f"{path}: {committed!r} -> {fresh!r}"]
+    if isinstance(committed, int | float) and isinstance(fresh, int | float):
+        if abs(committed - fresh) <= tolerance * max(1.0, abs(committed)):
+            return []
+        return [f"{path}: {committed!r} -> {fresh!r}"]
+    return [] if committed == fresh else [f"{path}: {committed!r} -> {fresh!r}"]

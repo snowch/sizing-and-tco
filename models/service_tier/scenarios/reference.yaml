@@ -1,0 +1,6 @@
+scenario: reference
+title: Reference scenario
+because: "The tier as declared. Every figure Part II quotes comes from here unless it says otherwise."
+samples: 100000
+seed: 20260916
+overrides: {}

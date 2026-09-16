@@ -33,7 +33,7 @@ import sys
 
 import numpy as np
 
-from bench.stamp import build_result, load_result, result_exists
+from bench.stamp import build_result, load_result, numeric_differences, result_exists
 from sizing import mc
 from sizing.dsl import Model, Scenario, load_model, load_scenario, scenarios_for
 from sizing.evaluate import evaluate
@@ -120,12 +120,12 @@ def convergence(write: bool = True) -> dict:
     overall = (usable[0]["p95_spread"] / usable[-1]["p95_spread"]) ** (1.0 / decades)
     return build_result(
         "convergence-storage-tco",
-        target="corpus",
+        target="model",
         kind="measurement",
         produced_by={
-            "corpus": f"the storage_cluster reference scenario, resampled {REPLICATES} times at "
-            "each sample count with independent seeds",
-            "codec": "none — this measures the sampler, not any data",
+            "model": "storage_cluster",
+            "scenario": "reference",
+            "method": f"resampled {REPLICATES} times at each sample count, with independent seeds",
             "stack": "sizing.mc",
             "output": "tco",
         },
@@ -197,11 +197,12 @@ def correlation_effect(write: bool = True) -> dict:
             )
     return build_result(
         "correlation-effect",
-        target="corpus",
+        target="model",
         kind="measurement",
         produced_by={
-            "corpus": "both reference models, sampled with and without their declared correlations",
-            "codec": "none — this measures the sampler, not any data",
+            "model": "storage_cluster and observability",
+            "scenario": "reference",
+            "method": "sampled with and without each model's declared correlations",
             "stack": "sizing.mc — Iman-Conover rank correlation",
         },
         summary={"rows": rows},
@@ -233,10 +234,11 @@ def main() -> int:
             print(f"  MISSING: bench/results/{name}.json")
             failures.append(name)
             continue
-        was = load_result(name)["summary"]
-        now = runner(write=False)["summary"]
-        if was != now:
+        moved = numeric_differences(load_result(name)["summary"], runner(write=False)["summary"])
+        if moved:
             print(f"  MOVED: {name} no longer matches what the sampler produces")
+            for line in moved[:6]:
+                print(f"    {line}")
             failures.append(name)
         else:
             print(f"  ok: {name}")

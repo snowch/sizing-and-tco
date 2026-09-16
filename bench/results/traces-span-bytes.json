@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "39bb49791aaa266d",
+  "code_fingerprint": "fc1a2e5247a78a60",
   "code_sources": [
     "bench/measure.py",
     "bench/run_corpus.py"
@@ -7,8 +7,8 @@
   "conditions": {
     "what_moves_it_most": "the attribute count distribution, which is an assumption here and is the first thing to replace with an observation of your own traces"
   },
-  "generated_at": "2026-09-16T15:09:45+00:00",
-  "git_revision": null,
+  "generated_at": "2026-09-16T16:11:45+00:00",
+  "git_revision": "57ad6b4",
   "kind": "measurement",
   "name": "traces-span-bytes",
   "produced_by": {

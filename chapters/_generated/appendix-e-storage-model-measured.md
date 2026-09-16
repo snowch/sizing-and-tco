@@ -4,4 +4,4 @@
 |---|---:|---:|---|---|
 | object compression ratio | 2.55 | ± 0.0748 |  | python lzma (XZ preset 1) |
 
-*Conditions: target `corpus` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-reference.json`, code hash `6300de14ac49a33c`.*
+*Conditions: target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-reference.json`, code hash `a3e06a66eb0e078d`.*

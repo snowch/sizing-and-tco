@@ -115,7 +115,8 @@ Four kinds of number, and each is allowed to claim something different.
 | `assumption` | A decision this model makes | A reviewer, which is why the source string has to say enough to argue with |
 | *measured* | An empirical constant with a standard error and a named implementation | A runner that CI re-executes on every push |
 
-Measurements come from three targets, and the split runs through everything:
+Numbers come from four targets, and the split runs through everything. Three of them are
+measurements — something outside this repository was asked a question. The fourth is not:
 
 - **`corpus`** — a deterministic measurement over a declared body of data with a named codec.
   Reproducible on any machine, re-derived by CI on every push, and never allowed to carry a rate
@@ -125,6 +126,10 @@ Measurements come from three targets, and the split runs through everything:
 - **`estate`** — an observation of a running system. Reproducible by nobody, checkable by
   nobody, and therefore held to the strictest disclosure rules in the book. Where a chapter uses
   one, it says so at the point of use.
+- **`model`** — computed from a model file here. No machine and no data were involved, so it is
+  evidence about what this book's own models say and about nothing else. Every figure that comes
+  out of a model run or a sweep is stamped this way, and its fingerprint covers the sampler and
+  the evaluator — so a change to the method invalidates the claim, which is the point.
 
 When a constant has not been measured, the node that needs it has no value, and neither does
 anything downstream of it. Those figures render as *not yet measured* and the affected chain is
