@@ -111,6 +111,25 @@ fi
 echo "  $(grep -oE 'Built [0-9]+ pages' "$log" | tail -1), no warnings"
 rm -f "$log"
 
+echo "== no price has become an equation =="
+# This book writes money as $4,150,036 and intervals as "$318,062 to $611,522". Two dollar signs
+# on a line are a LaTeX span to MyST, so with dollar-maths on it sets the "to" as a pair of
+# variables — and nothing warns, because the markup is valid. myst.yml turns the extension off
+# (the book has no maths in it); this is the check that the setting is still doing its job, which
+# an assertion about the config file cannot be: the key was in the wrong place once already.
+# A check that cannot find the thing it inspects is a check that always passes.
+if ! compgen -G "_build/site/content/*.json" > /dev/null; then
+  echo "ERROR: no parsed content to inspect — the build wrote nothing to _build/site/content." >&2
+  exit 1
+fi
+if grep -rq '"type":"inlineMath"' _build/site/content/ 2>/dev/null; then
+  echo "ERROR: a figure is being parsed as maths. Currency between two dollar signs, almost" >&2
+  echo "certainly — check project.settings.parser.dollarmath in myst.yml." >&2
+  grep -rho '"type":"inlineMath","value":"[^"]*"' _build/site/content/ | sort -u | head -5 >&2
+  exit 1
+fi
+echo "  no currency parsed as LaTeX"
+
 echo "== the PDF renderer sees every page =="
 # The mdast-to-HTML renderer is the one part of the pipeline that is not MyST's, and it raises on
 # a node type it does not handle rather than dropping content. Running it over every page on every

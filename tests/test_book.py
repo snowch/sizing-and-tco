@@ -274,3 +274,29 @@ def test_the_preface_states_the_distinction_the_book_is_built_on():
             f"the front matter must explain the cost-model / sizing-model distinction; "
             f"{required!r} is missing"
         )
+
+
+def test_dollar_maths_stays_off_while_the_book_prints_money():
+    """Two dollar signs on one line are a LaTeX span, and this book puts money in tables.
+
+    ``$318,062 to $611,522`` parses as inline maths with dollar-maths on, and KaTeX sets the
+    "to" as a pair of variables. It went unnoticed because nothing warns: the HTML is valid, the
+    build is clean, and the only symptom is a number that has quietly become an equation.
+    """
+    parser = MYST["project"].get("settings", {}).get("parser", {})
+    assert parser.get("dollarmath") is False, (
+        "myst.yml must set project.settings.parser.dollarmath: false — note the nesting, which "
+        "is easy to get wrong and which MyST answers with a warning rather than an error. "
+        "ci-check.sh checks the symptom rather than this key, because the key being present is "
+        "not the same as the key being read."
+    )
+    money = [
+        (path.name, line)
+        for path in (ROOT / "chapters" / "_generated").glob("*.md")
+        for line in path.read_text().splitlines()
+        if line.count("$") > 1
+    ]
+    assert money, (
+        "no generated fragment prints two dollar signs on a line any more. If the book has "
+        "stopped writing money that way, this rule and the setting it guards can go."
+    )

@@ -23,6 +23,14 @@ project:
   license:
     content: CC-BY-NC-4.0
     code: Apache-2.0
+  settings:
+    # This book prints money as $4,150,036 and intervals as "$318,062 to $611,522". With
+    # dollar-maths on, MyST reads the span between two dollar signs as LaTeX and KaTeX sets
+    # "to" as the variables t and o — eighty lines across twenty generated tables, wrong in
+    # the HTML and wrong again in the PDF. The book contains no inline maths at all, so the
+    # extension has nothing to offer and one thing to break. tests/test_book.py holds it off.
+    parser:
+      dollarmath: false
   bibliography:
     - references.bib
   exclude:
