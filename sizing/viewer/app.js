@@ -13,6 +13,12 @@ import { evaluatePoint, ceilingState } from "./evaluate.js";
 const PAYLOAD = window.__MODEL__;
 const BOX = { w: 154, h: 32, col: 188, row: 46, margin: 16 };
 
+// A box is a box. What does not fit says so, rather than stopping mid-word and leaving the
+// reader to guess whether "installed read throughpu" was the whole name. The full label is in
+// the panel on the right, and the node's identifier is in the tooltip.
+const LABEL_CHARS = 28;
+const fit = (text) => (text.length > LABEL_CHARS ? text.slice(0, LABEL_CHARS - 1) + "\u2026" : text);
+
 let overrides = {};
 let focus = null;
 let selected = null;
@@ -83,7 +89,7 @@ function drawGraph(values, blocked) {
     boxes.push(
       `<g class="node${dim}" data-node="${name}"><title>${name}</title>` +
       `<rect x="${x}" y="${y}" width="${BOX.w}" height="${BOX.h}" rx="3" fill="${fill}" stroke="${edge}" stroke-width="${selected === name ? 2.2 : 1.2}"${dash}/>` +
-      `<text x="${x + 6}" y="${y + 13}">${node.label.slice(0, 24)}</text>` +
+      `<text x="${x + 6}" y="${y + 13}">${fit(node.label)}</text>` +
       `<text x="${x + BOX.w - 6}" y="${y + 26}" text-anchor="end" fill="var(--muted)" font-size="9">${value}</text>` +
       `</g>`
     );
