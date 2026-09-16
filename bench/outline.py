@@ -91,16 +91,78 @@ class Appendix:
         return f"appendices/{self.slug}.md"
 
 
-PARTS = (
-    "Getting started",
-    "Part I — What you are sizing",
-    "Part II — Ceilings",
-    "Part III — Sizing",
-    "Part IV — Uncertainty",
-    "Part V — Cost",
-    "Part VI — Sensitivity",
-    "Part VII — Presenting it",
+@dataclass(frozen=True)
+class Part:
+    """A group of chapters, and the page in front of it.
+
+    A part page exists to make a transition explicit: what the last part established, what this
+    one is for, and what it deliberately leaves until later. Twenty-two chapters read in sequence
+    hide their own structure, and a reader who cannot see the structure cannot skip.
+    """
+
+    title: str
+    slug: str
+    question: str
+
+    @property
+    def anchor(self) -> str:
+        return f"part-{self.slug.replace('_', '-')}"
+
+    @property
+    def path(self) -> str:
+        return f"parts/{self.slug}.md"
+
+
+PART_PAGES: tuple[Part, ...] = (
+    Part(
+        "Getting started",
+        "getting_started",
+        "What is a model here, and how do you check that a number in this book is still true?",
+    ),
+    Part(
+        "Part I — What you are sizing",
+        "what_you_are_sizing",
+        "Which quantities size a system, where they come from, and how much any of them is worth?",
+    ),
+    Part(
+        "Part II — Ceilings",
+        "ceilings",
+        "Where does a chain of multiplications stop describing a real system?",
+    ),
+    Part(
+        "Part III — Sizing",
+        "sizing",
+        "How do you get from a stated workload to a number of machines you would defend?",
+    ),
+    Part(
+        "Part IV — Uncertainty",
+        "uncertainty",
+        "The number is indefensible. What is the machinery for saying how indefensible?",
+    ),
+    Part(
+        "Part V — Cost",
+        "cost",
+        "What does the thing you have sized cost, over its life, and per unit of what it does?",
+    ),
+    Part(
+        "Part VI — Sensitivity",
+        "sensitivity",
+        "Given a wide interval, what is the one thing to go and do about it?",
+    ),
+    Part(
+        "Part VII — Presenting it",
+        "presenting_it",
+        "How do you hand an interval to somebody who asked for a number?",
+    ),
+    Part(
+        "Part VIII — Afterwards",
+        "afterwards",
+        "The design failed. What does the model have to say about that, and what does it not?",
+    ),
 )
+
+#: The titles, in order, which is what a chapter records and what `myst.yml` groups by.
+PARTS = tuple(part.title for part in PART_PAGES)
 
 CHAPTERS: tuple[Chapter, ...] = (
     Chapter(
@@ -317,6 +379,17 @@ CHAPTERS: tuple[Chapter, ...] = (
         owes="The two storage scenarios as a decision, priced.",
         consumes=("storage_cluster-reference", "storage_cluster-sized_for_growth"),
         needs=("the_five_year_model", "which_input_is_the_answer"),
+    ),
+    Chapter(
+        22,
+        "what_the_model_got_wrong",
+        "What the model got wrong",
+        PARTS[8],
+        "The design failed. Can the model say why, and what can it never say?",
+        owes="The storage model's own failures, attributed — and the same method on a model with "
+        "a hole in it.",
+        consumes=("postmortem", "storage_cluster-reference"),
+        needs=("the_missing_node", "a_tco_for_finance"),
     ),
 )
 

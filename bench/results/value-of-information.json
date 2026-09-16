@@ -1,0 +1,230 @@
+{
+  "code_fingerprint": "861e808eea9bc01a",
+  "code_sources": [
+    "bench/run_information.py"
+  ],
+  "conditions": {
+    "removals_do_not_add": "the sum of the individual removals is not one. Uncertainty in a chain of multiplications is not a quantity that divides between the inputs, and a figure read that way is read wrongly (ch19)",
+    "this_is_an_upper_bound": "each figure is what knowing the input *exactly* would remove. A real measurement leaves a standard error behind and removes less, by an amount nobody can know before doing the work",
+    "what_it_cannot_say": "whether the input can be measured at all. A growth rate has the largest bound in this table and belongs to no target \u2014 the honest response to it is to decide it rather than to commission a measurement (ch04)"
+  },
+  "generated_at": "2026-09-16T18:45:03+00:00",
+  "git_revision": "995ef3e",
+  "kind": "measurement",
+  "name": "value-of-information",
+  "produced_by": {
+    "method": "each uncertain input pinned at its median in turn, and the model resampled",
+    "model": "observability and storage_cluster",
+    "scenario": "reference",
+    "stack": "sizing.evaluate"
+  },
+  "recorded_on": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "kind": "other",
+    "numpy": "2.4.6",
+    "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  },
+  "summary": {
+    "rows": [
+      {
+        "half_width": 1262298.0384286565,
+        "if_known": 662573.215518595,
+        "input": "chassis_price",
+        "kind": "input",
+        "label": "chassis price",
+        "model": "storage_cluster",
+        "output": "tco",
+        "removed": 0.47510556512993996
+      },
+      {
+        "half_width": 1262298.0384286565,
+        "if_known": 1130169.324309812,
+        "input": "drive_price",
+        "kind": "input",
+        "label": "drive price",
+        "model": "storage_cluster",
+        "output": "tco",
+        "removed": 0.10467315174102787
+      },
+      {
+        "half_width": 1262298.0384286565,
+        "if_known": 1222513.1385216701,
+        "input": "electricity_price",
+        "kind": "input",
+        "label": "electricity price",
+        "model": "storage_cluster",
+        "output": "tco",
+        "removed": 0.03151783389960083
+      },
+      {
+        "half_width": 1262298.0384286565,
+        "if_known": 1248821.5104032126,
+        "input": "fully_loaded_salary",
+        "kind": "input",
+        "label": "fully loaded salary",
+        "model": "storage_cluster",
+        "output": "tco",
+        "removed": 0.01067618550862981
+      },
+      {
+        "half_width": 1262298.0384286565,
+        "if_known": 1256436.7138924743,
+        "input": "network_price_per_node",
+        "kind": "input",
+        "label": "network price per node",
+        "model": "storage_cluster",
+        "output": "tco",
+        "removed": 0.004643376094823459
+      },
+      {
+        "half_width": 1262298.0384286565,
+        "if_known": 1257025.7336467146,
+        "input": "node_power",
+        "kind": "input",
+        "label": "node power",
+        "model": "storage_cluster",
+        "output": "tco",
+        "removed": 0.004176751148647129
+      },
+      {
+        "half_width": 1262298.0384286565,
+        "if_known": 1261042.8932744248,
+        "input": "pue",
+        "kind": "input",
+        "label": "PUE",
+        "model": "storage_cluster",
+        "output": "tco",
+        "removed": 0.000994333442674189
+      },
+      {
+        "half_width": 1262298.0384286565,
+        "if_known": 1229504.6810653622,
+        "input": "staff_fte",
+        "kind": "input",
+        "label": "staff fte",
+        "model": "storage_cluster",
+        "output": "tco",
+        "removed": 0.02597909238939833
+      },
+      {
+        "half_width": 1262298.0384286565,
+        "if_known": 1193656.8821306739,
+        "input": "support_rate",
+        "kind": "input",
+        "label": "support rate",
+        "model": "storage_cluster",
+        "output": "tco",
+        "removed": 0.054377931525132595
+      },
+      {
+        "half_width": 613.2306438445196,
+        "if_known": 345.9655263101045,
+        "input": "annual_growth",
+        "kind": "input",
+        "label": "annual growth",
+        "model": "observability",
+        "output": "known_stored",
+        "removed": 0.43583131439559686
+      },
+      {
+        "half_width": 613.2306438445196,
+        "if_known": 346.25738730881744,
+        "input": "label_values_accidental",
+        "kind": "input",
+        "label": "accidental label values",
+        "model": "observability",
+        "output": "known_stored",
+        "removed": 0.4353553743856795
+      },
+      {
+        "half_width": 613.2306438445196,
+        "if_known": 561.0554945368825,
+        "input": "label_values_endpoint",
+        "kind": "input",
+        "label": "label values endpoint",
+        "model": "observability",
+        "output": "known_stored",
+        "removed": 0.08508242344272954
+      },
+      {
+        "half_width": 613.2306438445196,
+        "if_known": 591.3594723496316,
+        "input": "label_values_status",
+        "kind": "input",
+        "label": "label values status",
+        "model": "observability",
+        "output": "known_stored",
+        "removed": 0.03566549016169729
+      },
+      {
+        "half_width": 613.2306438445196,
+        "if_known": 580.9637629920312,
+        "input": "lines_per_request",
+        "kind": "input",
+        "label": "lines per request",
+        "model": "observability",
+        "output": "known_stored",
+        "removed": 0.052617854597412195
+      },
+      {
+        "half_width": 613.2306438445196,
+        "if_known": 613.2181383594974,
+        "input": "logs_line_bytes",
+        "kind": "measured",
+        "label": "bytes per log line, compressed",
+        "model": "observability",
+        "output": "known_stored",
+        "removed": 2.039279208843059e-05
+      },
+      {
+        "half_width": 613.2306438445196,
+        "if_known": 613.1857527601885,
+        "input": "metrics_sample_bytes",
+        "kind": "measured",
+        "label": "bytes per sample, compressed",
+        "model": "observability",
+        "output": "known_stored",
+        "removed": 7.320424179990681e-05
+      },
+      {
+        "half_width": 613.2306438445196,
+        "if_known": 580.5180485102281,
+        "input": "request_rate",
+        "kind": "input",
+        "label": "request rate",
+        "model": "observability",
+        "output": "known_stored",
+        "removed": 0.053344684683737875
+      }
+    ],
+    "totals": [
+      {
+        "all_known": 0.0,
+        "best_single": 0.47510556512993996,
+        "half_width": 1262298.0384286565,
+        "inputs": 9,
+        "model": "storage_cluster",
+        "output": "tco",
+        "sum_of_removals": 0.7121442208798742
+      },
+      {
+        "all_known": 0.0,
+        "best_single": 0.43583131439559686,
+        "half_width": 613.2306438445196,
+        "inputs": 8,
+        "model": "observability",
+        "output": "known_stored",
+        "sum_of_removals": 1.0979907387007413
+      }
+    ]
+  },
+  "target": "model",
+  "units": {
+    "rows": "dimensionless",
+    "rows[0].removed": "dimensionless",
+    "totals": "dimensionless",
+    "totals[0].sum_of_removals": "dimensionless"
+  }
+}

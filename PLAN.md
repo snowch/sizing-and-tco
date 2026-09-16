@@ -74,9 +74,12 @@ stamped sampler, and a second sampler in JavaScript would be a second answer nob
 The two evaluators are pinned to each other by `tests/test_viewer.py`, which runs the JavaScript
 over values Python computed for every node of every model.
 
-**Three targets, and only two of them can be produced by code in this repository.** `corpus` and
+**Four targets, and only two of them are measurements this repository can take.** `corpus` and
 `rig`. An `estate` observation is taken by a person with access to a running system and reviewed
-by a human being; that is much weaker than the other two and the pages that use one say so.
+by a human being; that is much weaker than the other two and the pages that use one say so. The
+fourth, `model`, is not a measurement of anything outside the repository at all — it is what a
+model file said when the build ran it, and keeping it separate is what stops the other three
+going soft.
 
 **No vendor is named, anywhere.** A measured constant names the *implementation* it belongs to —
 which for the metrics encoder is this repository's own — because that is what makes it a
@@ -84,7 +87,7 @@ measurement rather than a claim.
 
 ## 5. The seven-part chapter shape
 
-Every chapter, every time. The repetition is what makes twenty-two chapters read as one book.
+Every chapter, every time. The repetition is what makes twenty-three chapters read as one book.
 
 1. **Header block** — prerequisites, what it produces, what it is built from.
 2. **The question** — one paragraph. What this chapter answers, and why the previous one leaves it

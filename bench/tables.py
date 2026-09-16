@@ -12,7 +12,7 @@ from __future__ import annotations
 import math
 
 from bench.stamp import load_result
-from sizing.dsl import PROVENANCE_MEANING
+from sizing.dsl import PROVENANCE_MEANING, discover
 from sizing.units import parse as parse_unit
 
 #: How a provenance kind is shown. The symbol is carried into the graph viewer and the tornado so
@@ -260,6 +260,79 @@ def tornado_table(name: str, output: str, limit: int = 8) -> str:
             f"| {fmt(bar['high'], unit)} | {fmt(bar['span'], unit)} |"
         )
     return "\n".join(rows)
+
+
+def value_of_information_table(name: str, model: str, output: str) -> str:
+    """What knowing one input exactly would do to the interval, per input.
+
+    The column that matters is the last one, and it is a *ceiling*: no real measurement is
+    perfect, so nothing anybody can go and do buys more than this. A small number in it is the
+    useful case — it says a measurement is not worth commissioning however well it goes.
+
+    The total row is the one to read twice. The individual figures do not add to a hundred per
+    cent and are not shares of anything; a chain of multiplications does not divide its
+    uncertainty between its inputs (ch19).
+    """
+    payload = load_result(name)["summary"]
+    rows = [row for row in payload["rows"] if row["model"] == model and row["output"] == output]
+    totals = next(
+        (t for t in payload["totals"] if t["model"] == model and t["output"] == output), None
+    )
+    if not rows or totals is None:
+        return f"*Nothing uncertain feeds `{output}` in `{model}`.*"
+    unit = _output_unit(model, output)
+    out = [
+        "| If this were known exactly | Kind | The interval would be | Most it could remove |",
+        "|---|---|---:|---:|",
+    ]
+    for row in sorted(rows, key=lambda r: -r["removed"]):
+        out.append(
+            f"| {row['label']} | {row['kind']} | {fmt(row['if_known'], unit)} "
+            f"| {row['removed']:.0%} |"
+        )
+    out.append(f"| **every one of them** | | **{fmt(totals['all_known'], unit)}** | **100%** |")
+    out.append(
+        f"| | | *now: {fmt(totals['half_width'], unit)}* "
+        f"| *the rows above total {totals['sum_of_removals']:.0%}, which is not how this works* |"
+    )
+    return "\n".join(out)
+
+
+def postmortem_table(name: str, which: str) -> str:
+    """Where each input sat in the futures where the design failed, against where it usually sits.
+
+    Two columns do the work. *Shift* says how far an input had to be from its ordinary self for
+    the ceiling to break; a figure near zero is a bystander. *Extreme in* says how often it was
+    genuinely unusual rather than merely high — which is the column that decides whether the
+    story afterwards gets to be about one dramatic thing.
+    """
+    payload = load_result(name)["summary"][which]
+    rows = [
+        "| Input | Its usual value | In the failures | Shift | Extreme in |",
+        "|---|---:|---:|---:|---:|",
+    ]
+    for row in payload["rows"]:
+        unit = _output_unit(payload["model"], row["input"])
+        rows.append(
+            f"| {row['label']} | {fmt(row['overall'], unit)} | {fmt(row['in_failures'], unit)} "
+            f"| {'none' if abs(row['shift']) < 0.005 else format(row['shift'], '+.0%')} "
+            f"| {row['extreme_in_failures']:.0%} of them |"
+        )
+    rows.append(
+        f"| **{payload['inputs']} inputs** | | "
+        f"*{payload['share_of_futures']:.0%} of futures ended here* "
+        f"| | *something was beyond its p90 in {payload['something_extreme_share']:.0%} of them, "
+        f"against {payload['something_extreme_everywhere']:.0%} of futures generally* |"
+    )
+    return "\n".join(rows)
+
+
+def _output_unit(model: str, output: str) -> str:
+    """The unit of one output, read from the model rather than carried in the experiment."""
+    for candidate in discover():
+        if candidate.name == model:
+            return candidate.nodes[output].unit
+    return "dimensionless"
 
 
 def constant_table(name: str) -> str:
@@ -748,6 +821,21 @@ def glossary_table(_name: str = "") -> str:
             "the_missing_node",
             "a model that is wrong in shape rather than in its numbers",
             "something is missing",
+        ),
+        "measurement uncertainty": (
+            "where_the_numbers_come_from",
+            "the standard error beside a number somebody measured",
+            "how much the measuring wobbled",
+        ),
+        "parameter uncertainty": (
+            "monte_carlo",
+            "not knowing a value in a model whose shape is right",
+            "we do not know the number",
+        ),
+        "scenario uncertainty": (
+            "the_sizing_model",
+            "the world taking a path the model was not run for, which no interval covers",
+            "it might go differently",
         ),
     }
     rows = ["| Term | Introduced in | What it means here | Said plainly |", "|---|---|---|---|"]

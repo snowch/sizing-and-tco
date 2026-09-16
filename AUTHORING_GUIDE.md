@@ -39,7 +39,7 @@ Writing the prose first produces a chapter that explains what you meant to model
 
 ## The seven-part shape
 
-PLAN.md §5, and it is not negotiable — the repetition is what makes twenty-two chapters read as
+PLAN.md §5, and it is not negotiable — the repetition is what makes twenty-three chapters read as
 one book. `python3 scripts/new-chapter.py <slug>` generates the shape with the question,
 prerequisites and owed figures already filled in from `bench/outline.py`.
 

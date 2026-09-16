@@ -111,8 +111,8 @@ So for a cost model, sampling the inputs is genuinely sufficient — the structu
 only the numbers are.
 
 A sizing model has thresholds in it, and past a threshold the structure itself changes. Sampling
-the inputs of a model that has stopped applying produces a beautifully converged interval around
-a number that means nothing.
+the inputs of a model that has stopped applying measures, very precisely, the uncertainty in a
+number that has stopped describing anything.
 
 That is why the DSL distinguishes the two, why a model with a `ceiling` in it is classified as a
 sizing model, and why `scripts/verify-models.py` refuses a sizing model that declares a limit with

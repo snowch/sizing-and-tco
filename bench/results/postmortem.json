@@ -1,0 +1,163 @@
+{
+  "code_fingerprint": "4936a30b01677306",
+  "code_sources": [
+    "bench/run_postmortem.py"
+  ],
+  "conditions": {
+    "it_cannot_find_a_missing_cause": "the second attribution is run on a model known to exclude an entire chain, and it blames the inputs that are present without hesitating. A post-mortem inside a model is a post-mortem of that model (ch20)",
+    "medians_not_means": "these inputs are skewed, and a shift in means would mostly be the tail moving rather than the typical case",
+    "no_observation_was_used": "nothing here is a measurement of a real outcome. It is the model's own futures, filtered to the ones in which the design failed \u2014 which is what makes it reproducible and also what bounds what it can say",
+    "read_the_base_rate": "`something_extreme_share` must be read against `something_extreme_everywhere`. A model with eight uncertain inputs has one of them beyond its own p90 in most of its futures, failure or not, and a post-mortem that does not say so has discovered the number of inputs"
+  },
+  "generated_at": "2026-09-16T18:57:14+00:00",
+  "git_revision": "995ef3e",
+  "kind": "measurement",
+  "name": "postmortem",
+  "produced_by": {
+    "method": "the sampled futures filtered to the ones where a ceiling was breached, and each input's median in them compared against its median overall",
+    "model": "storage_cluster and observability",
+    "scenario": "reference",
+    "stack": "sizing.evaluate"
+  },
+  "recorded_on": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "kind": "other",
+    "numpy": "2.4.6",
+    "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  },
+  "summary": {
+    "blocked_nodes": 8,
+    "complete": {
+      "ceiling": "fill_level",
+      "inputs": 3,
+      "model": "storage_cluster",
+      "nothing_extreme_share": 0.5716438194280312,
+      "rows": [
+        {
+          "extreme_in_failures": 0.2954384306310565,
+          "in_failures": 1.5297750327385282,
+          "input": "annual_growth",
+          "label": "annual growth factor",
+          "overall": 1.3384005386959914,
+          "shift": 0.14298746041225718
+        },
+        {
+          "extreme_in_failures": 0.0930631056487828,
+          "in_failures": 2.545358288150686,
+          "input": "object_compression",
+          "label": "object compression ratio",
+          "overall": 2.5484866902774517,
+          "shift": -0.0012275528605664165
+        },
+        {
+          "extreme_in_failures": 0.10691916804537935,
+          "in_failures": 1.071703855318551,
+          "input": "metadata_overhead",
+          "label": "metadata overhead",
+          "overall": 1.0707592645660349,
+          "shift": 0.0008821691147344879
+        }
+      ],
+      "share_of_futures": 0.33848,
+      "something_extreme_everywhere": 0.27015,
+      "something_extreme_share": 0.4283561805719688
+    },
+    "incomplete": {
+      "ceiling": "quoted_pipeline_utilisation",
+      "inputs": 8,
+      "model": "observability",
+      "nothing_extreme_share": 0.15257481675148232,
+      "rows": [
+        {
+          "extreme_in_failures": 0.2882954386292544,
+          "in_failures": 57389.662204236185,
+          "input": "request_rate",
+          "label": "request rate",
+          "overall": 38412.151272768926,
+          "shift": 0.49404967705937275
+        },
+        {
+          "extreme_in_failures": 0.23040291330127458,
+          "in_failures": 3.5973488224339376,
+          "input": "label_values_accidental",
+          "label": "accidental label values",
+          "overall": 2.4441849600139514,
+          "shift": 0.4717989355492165
+        },
+        {
+          "extreme_in_failures": 0.28073206032027637,
+          "in_failures": 19.123891320866505,
+          "input": "lines_per_request",
+          "label": "lines per request",
+          "overall": 13.143573157096524,
+          "shift": 0.4549994200428722
+        },
+        {
+          "extreme_in_failures": 0.30038750641953404,
+          "in_failures": 1.5906541432973416,
+          "input": "annual_growth",
+          "label": "annual growth",
+          "overall": 1.3979206942609528,
+          "shift": 0.13787151862594205
+        },
+        {
+          "extreme_in_failures": 0.11382417479807648,
+          "in_failures": 9.199440703528564,
+          "input": "label_values_endpoint",
+          "label": "label values endpoint",
+          "overall": 8.776252690376067,
+          "shift": 0.048219670522540836
+        },
+        {
+          "extreme_in_failures": 0.11265698678743172,
+          "in_failures": 3.5998688161283736,
+          "input": "label_values_status",
+          "label": "label values status",
+          "overall": 3.5492131327039242,
+          "shift": 0.014272370108655119
+        },
+        {
+          "extreme_in_failures": 0.09977123114991363,
+          "in_failures": 9.36997987513698,
+          "input": "metrics_sample_bytes",
+          "label": "bytes per sample, compressed",
+          "overall": 9.369963506986634,
+          "shift": 1.7468745032722666e-06
+        },
+        {
+          "extreme_in_failures": 0.1003781689154489,
+          "in_failures": 32.3555718016439,
+          "input": "logs_line_bytes",
+          "label": "bytes per log line, compressed",
+          "overall": 32.355562777026734,
+          "shift": 2.7892011100760783e-07
+        }
+      ],
+      "share_of_futures": 0.21419,
+      "something_extreme_everywhere": 0.55056,
+      "something_extreme_share": 0.8474251832485177
+    },
+    "not_in_the_model": [
+      "collector_throughput_measured",
+      "measured_pipeline_capacity",
+      "pipeline_utilisation",
+      "span_rate",
+      "spans_per_request",
+      "total_ingest",
+      "traces_ingest",
+      "traces_stored"
+    ]
+  },
+  "target": "model",
+  "units": {
+    "blocked_nodes": "dimensionless",
+    "complete": "dimensionless",
+    "complete.inputs": "dimensionless",
+    "complete.nothing_extreme_share": "dimensionless",
+    "complete.share_of_futures": "dimensionless",
+    "complete.something_extreme_everywhere": "dimensionless",
+    "incomplete": "dimensionless"
+  }
+}

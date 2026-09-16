@@ -17,8 +17,13 @@ short_title: "Appendix G · Glossary"
 
 This book rations its vocabulary. Every term below arrives in one chapter, because a model has
 just raised a question that needs it, and never as a definition at the front of a section. The
-list is short by design: a reader who finishes the book should have gained about a dozen words,
+list is short by design: a reader who finishes the book should have gained under twenty words,
 not a dialect.
+
+Four of them are the kinds of thing that can be wrong, and they are worth reading as a group. Two
+of them — measurement and parameter uncertainty — are what an interval is made of. Scenario
+uncertainty is why this book runs a model more than once rather than widening its inputs.
+Structural error is in none of that and is [ch20](#the-missing-node).
 
 The last column is not a simplification. It is the sentence to use out loud. Where a term has a
 plain-English equivalent, this book says the plain one first and names the term second — including
@@ -56,6 +61,15 @@ Not an omission in each case. A short account of what it says instead:
 the gap between the fifth and ninety-fifth percentiles of the futures the model produced. The
 statistical term means something else — a statement about a procedure repeated over experiments —
 and borrowing it would import a guarantee this method does not offer.
+
+Four things get called an interval in conversation and only one of them appears in these pages.
+A **percentile interval** is what this book reports: two percentiles of the values a model
+produced, and a statement about the model rather than about the world. A **confidence interval**
+is a statement about an estimation procedure. A **prediction interval** is a claim about where a
+future observation will fall, which would require this book's models to have a track record they
+do not have. And the **probability a ceiling is breached** — the last column of every ceiling
+table — is none of those three: it is the share of the model's futures that ended on the wrong
+side of a declared line, which is why it is reported as a share and never as a range.
 
 **Expected value.** The mean, and in a sizing model the mean is usually the worse summary. Outputs
 that come from chains of multiplication are skewed, so the mean sits above most of the futures and

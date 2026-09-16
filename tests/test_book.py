@@ -14,12 +14,13 @@ import pytest
 import yaml
 
 from bench.figures import FIGURES
-from bench.outline import APPENDICES, CHAPTERS, PARTS, Appendix, Chapter
+from bench.outline import APPENDICES, CHAPTERS, PART_PAGES, Appendix, Chapter
 from bench.stamp import ROOT, result_exists
 
 MYST = yaml.safe_load((ROOT / "myst.yml").read_text())
 PAGES = [
     ROOT / "index.md",
+    *sorted((ROOT / "parts").glob("*.md")),
     *sorted((ROOT / "chapters").glob("*.md")),
     *sorted((ROOT / "appendices").glob("*.md")),
 ]
@@ -91,8 +92,28 @@ def test_every_published_page_is_checked_for_typed_numbers():
 
 
 def test_the_parts_in_the_toc_are_the_parts_in_the_outline():
-    titles = [entry["title"] for entry in MYST["project"]["toc"] if "title" in entry]
-    assert titles == [*PARTS, "Appendices"]
+    grouped = [entry for entry in MYST["project"]["toc"] if entry.get("children")]
+    assert [entry.get("file") for entry in grouped[: len(PART_PAGES)]] == [
+        part.path for part in PART_PAGES
+    ], "a part group in myst.yml is not the part page bench/outline.py names"
+    assert [entry.get("title") for entry in grouped[len(PART_PAGES) :]] == ["Appendices"]
+
+
+@pytest.mark.parametrize("part", PART_PAGES, ids=lambda p: p.slug)
+def test_every_part_page_introduces_its_own_chapters(part):
+    """A part page that does not mention a chapter in it is a transition nobody wrote.
+
+    The point of these pages is to make the seams explicit, and a seam is explicit when the page
+    in front of it says what each chapter behind it is for.
+    """
+    body = (ROOT / part.path).read_text()
+    assert f"(#{part.anchor})=" in body or f"({part.anchor})=" in body, (
+        f"{part.path} does not declare the anchor {part.anchor!r}"
+    )
+    for chapter in [c for c in CHAPTERS if c.part == part.title]:
+        assert f"(#{chapter.anchor})" in body, (
+            f"{part.path} never mentions {chapter.label}, which is one of its chapters"
+        )
 
 
 # -- identity is the slug, the number is derived --------------------------------------------------
@@ -163,7 +184,7 @@ def test_every_figure_belongs_to_a_page_by_name():
 def test_a_written_chapter_says_what_it_cannot_tell_you(path):
     """The mandatory section, and the one that makes the other six believable."""
     if path.parent.name != "chapters":
-        pytest.skip("appendices are reference material, not chapters")
+        pytest.skip("parts and appendices are not chapters")
     assert "## What this cannot tell you" in path.read_text(), (
         f"{path.name} has no 'What this cannot tell you'. A chapter is not finished without it; "
         "if it genuinely has no limits worth naming, look harder at the model."
@@ -173,7 +194,7 @@ def test_a_written_chapter_says_what_it_cannot_tell_you(path):
 @pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
 def test_a_written_chapter_has_problems_that_are_tests(path):
     if path.parent.name != "chapters":
-        pytest.skip("appendices carry no problems")
+        pytest.skip("only chapters carry problems")
     body = path.read_text()
     assert "## Problems" in body
     slug = path.stem

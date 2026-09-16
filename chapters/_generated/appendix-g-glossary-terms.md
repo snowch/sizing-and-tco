@@ -16,5 +16,8 @@
 | **utilisation** | [ch06](#queueing-and-the-knee) | the fraction of a system that is busy | how busy it is |
 | **unit economics** | [ch17](#unit-economics) | a cost divided by a denominator you can defend | cost per something |
 | **structural error** | [ch20](#the-missing-node) | a model that is wrong in shape rather than in its numbers | something is missing |
+| **measurement uncertainty** | [ch03](#where-the-numbers-come-from) | the standard error beside a number somebody measured | how much the measuring wobbled |
+| **parameter uncertainty** | [ch13](#monte-carlo) | not knowing a value in a model whose shape is right | we do not know the number |
+| **scenario uncertainty** | [ch12](#the-sizing-model) | the world taking a path the model was not run for, which no interval covers | it might go differently |
 
 *Conditions: target `corpus` · bench.measure.log_lines — JSON service logs, five templates, six services, 128-bit trace ids, seeds 0-7 · zlib 1.3, DEFLATE level 6 · python zlib (DEFLATE level 6) · 2026-09-16 · Source: `bench/results/logs-line-bytes.json`, code hash `fc1a2e5247a78a60`.*

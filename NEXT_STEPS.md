@@ -25,8 +25,8 @@ it comes out rather than being ticked.
 
 Every chapter and every appendix is written. What is left is the work a first draft leaves:
 
-- **A read-through in one sitting.** Twenty-two chapters written in sequence repeat themselves in
-  ways that are invisible while writing each one. The suspects are the ceiling argument (ch08,
+- **A read-through in one sitting.** Twenty-three chapters written in sequence repeat themselves
+  in ways that are invisible while writing each one. The suspects are the ceiling argument (ch08,
   ch11), the point-estimate argument (ch12, ch13) and the provenance argument (ch03, ch21).
 - **The two chapters that are waiting on measurements.** ch08 and ch12 both describe the
   observability model's traces chain around a hole. They read correctly today and they will read
@@ -37,17 +37,17 @@ Every chapter and every appendix is written. What is left is the work a first dr
 
 ## The toolkit
 
-- **Part pages.** The template this book inherits from puts a short introduction in front of each
-  part, and a test insists on it. Not carried over yet.
+- **Sensitivity beyond one-at-a-time, properly.** `bench/run_information.py` bounds what each
+  input is worth on its own, which is most of what ch19 needed. A variance-based decomposition
+  over the samples already drawn would answer the interaction question the tornado cannot, and is
+  still not much code.
 - **`sync-labels.py`.** Chapter numbers in prose are currently checked by `tests/test_book.py`
   rather than rewritten. Inserting a chapter now means editing every `chNN` that a page says out
   loud, and the check will find them, which is not the same as fixing them.
 - **A second ceiling kind.** Every ceiling here is "a value against a limit". A queueing ceiling
   that took a service time and an arrival rate and derived the knee would let ch06 stop describing
   the shape and start drawing it.
-- **Sensitivity beyond one-at-a-time.** The tornado swings each input alone, which ch19 will have
-  to admit misses interaction effects. A variance-based decomposition over the samples already
-  drawn is not much code.
+
 
 ## Known rough edges
 
