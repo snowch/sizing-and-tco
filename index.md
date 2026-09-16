@@ -73,18 +73,18 @@ That is the whole motivation, and this book does not teach the method until
 [ch13](#monte-carlo) — because the method is not useful until you have a model that has produced
 a number you cannot defend, and you can feel that you cannot defend it.
 
-## A TCO and a sizing are not the same problem
+## A cost model and a sizing model are not the same problem
 
-The distinction the rest of the book is built on, and the one the toolkit encodes.
+This is the distinction the rest of the book is built on, and the one the toolkit encodes.
 
-**A TCO has a deterministic structure with uncertain parameters.** Its relationships are
+**A cost model has a deterministic structure with uncertain parameters.** Its relationships are
 accounting identities and physics: watts times hours times price, capital plus running cost over
 a horizon, a total divided by a denominator. Nothing in that structure is in doubt. Only the
 inputs are uncertain, cost scales roughly in proportion to them, and sampling the inputs is
 genuinely sufficient. A cost model can be wrong because a price was wrong. It is rarely wrong
-because it changed shape.
+because the system it describes started behaving differently.
 
-**Sizing has the same known structure and adds two things.**
+**A sizing model has the same structure and adds two things.**
 
 *Measured constants.* Bytes per sample after compression. Spans per request. Throughput per
 collector core. These are empirical, they belong to a particular implementation at a particular
@@ -96,8 +96,8 @@ them as constants is hiding the most interesting thing about itself.
 busy. Rebuild under failure, where losing one node costs capacity you were using. Cardinality
 explosions, where one label multiplies a series count by a number nobody chose. A working set
 spilling out of memory. These are regime changes, and **a chain of multiplications cannot model
-a regime change**. It will happily report that a system is running at some
-multiple of a limit, which is not a description of anything that can happen.
+a regime change**. It will happily report that a system is running at several times its own
+limit, which is not a description of anything that can happen.
 
 So a sizing model needs headroom rules, not just a number. And because that distinction is the
 argument of the book, the toolkit makes it structural rather than rhetorical: a model with a
