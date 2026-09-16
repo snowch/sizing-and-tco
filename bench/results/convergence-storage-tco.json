@@ -1,0 +1,84 @@
+{
+  "code_fingerprint": "1bbc989fd6f4669c",
+  "code_sources": [
+    "bench/run_uncertainty.py"
+  ],
+  "conditions": {
+    "individual_ratios_are_noisy": "each spread is estimated from a finite number of replicates and carries noise of its own, so read the overall rate rather than any single row. Estimating how uncertain something is, is itself an uncertain measurement",
+    "the_interval_does_not_shrink": "the half_width column settles rather than falling. More samples locate the interval more precisely; they do not narrow the uncertainty the model describes",
+    "what_this_measures": "sampling noise, and nothing else. An interval that has stopped moving is an interval whose *arithmetic* has settled; whether the model is right is a different question and Monte Carlo cannot answer it (ch14, ch19)"
+  },
+  "generated_at": "2026-09-16T15:34:30+00:00",
+  "git_revision": null,
+  "kind": "measurement",
+  "name": "convergence-storage-tco",
+  "produced_by": {
+    "codec": "none \u2014 this measures the sampler, not any data",
+    "corpus": "the storage_cluster reference scenario, resampled 32 times at each sample count with independent seeds",
+    "output": "tco",
+    "stack": "sizing.mc"
+  },
+  "recorded_on": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "kind": "other",
+    "numpy": "2.4.6",
+    "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  },
+  "summary": {
+    "convergence": [
+      {
+        "half_width": 1187217.6021314086,
+        "p50_spread": 90386.3825299365,
+        "p95_mean": 5591389.924329001,
+        "p95_spread": 139902.84178718444,
+        "replicates": 32,
+        "samples": 100
+      },
+      {
+        "half_width": 1254997.805406376,
+        "p50_spread": 29099.44574138873,
+        "p95_mean": 5722721.474178343,
+        "p95_spread": 61531.904619130204,
+        "replicates": 32,
+        "samples": 1000
+      },
+      {
+        "half_width": 1260037.6918039117,
+        "p50_spread": 9253.768170565972,
+        "p95_mean": 5726727.921416532,
+        "p95_spread": 22689.939117379916,
+        "replicates": 32,
+        "samples": 10000
+      },
+      {
+        "half_width": 1260623.613168837,
+        "p50_spread": 3215.29117537096,
+        "p95_mean": 5727637.636453874,
+        "p95_spread": 5650.063117380693,
+        "replicates": 32,
+        "samples": 100000
+      }
+    ],
+    "law_measured_from": 1000,
+    "mean_ratio": 3.363866040743236,
+    "overall_ratio_per_decade": 3.300072867001886,
+    "ratios_per_decade": [
+      2.7118585158299666,
+      4.015873565656506
+    ],
+    "root_ten": 3.1622776601683795
+  },
+  "target": "corpus",
+  "units": {
+    "convergence": "USD",
+    "convergence[0].replicates": "dimensionless",
+    "convergence[0].samples": "dimensionless",
+    "law_measured_from": "dimensionless",
+    "mean_ratio": "dimensionless",
+    "overall_ratio_per_decade": "dimensionless",
+    "ratios_per_decade": "dimensionless",
+    "root_ten": "dimensionless"
+  }
+}

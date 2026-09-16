@@ -1,0 +1,103 @@
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: sizing-and-tco
+  title: Sizing and TCO
+  description: >-
+    Capacity planning, sizing and total cost of ownership, modelled as code. A self-study text
+    and toolkit built on one rule: every number says where it came from, and every model the book
+    publishes is a file the build re-runs.
+  keywords:
+    - capacity planning
+    - sizing
+    - total cost of ownership
+    - monte carlo
+    - uncertainty
+    - unit economics
+    - observability
+    - storage
+  authors:
+    - name: Chris Snow
+      url: https://snowch.github.io
+  github: https://github.com/snowch/sizing-and-tco
+  license:
+    content: CC-BY-NC-4.0
+    code: Apache-2.0
+  bibliography:
+    - references.bib
+  exclude:
+    - README.md
+    - PLAN.md
+    - CLAUDE.md
+    - AUTHORING_GUIDE.md
+    - NEXT_STEPS.md
+  toc:
+    - file: index.md
+
+    - title: Getting started
+      children:
+        - file: chapters/prerequisites_and_setup.md
+        - file: chapters/reading_a_model.md
+
+    - title: Part I — What you are sizing
+      children:
+        - file: chapters/what_a_workload_is.md
+        - file: chapters/where_the_numbers_come_from.md
+        - file: chapters/peak_mean_and_growth.md
+
+    - title: Part II — Ceilings
+      children:
+        - file: chapters/littles_law.md
+        - file: chapters/queueing_and_the_knee.md
+        - file: chapters/when_adding_servers_stops_helping.md
+        - file: chapters/regime_changes.md
+
+    - title: Part III — Sizing
+      children:
+        - file: chapters/capacity.md
+        - file: chapters/bandwidth_and_the_binding_constraint.md
+        - file: chapters/headroom_and_failure_domains.md
+        - file: chapters/the_sizing_model.md
+
+    - title: Part IV — Uncertainty
+      children:
+        - file: chapters/monte_carlo.md
+        - file: chapters/correlation_and_convergence.md
+
+    - title: Part V — Cost
+      children:
+        - file: chapters/capex_opex_and_lifecycle.md
+        - file: chapters/power_first.md
+        - file: chapters/unit_economics.md
+        - file: chapters/the_five_year_model.md
+
+    - title: Part VI — Sensitivity
+      children:
+        - file: chapters/which_input_is_the_answer.md
+        - file: chapters/the_missing_node.md
+
+    - title: Part VII — Presenting it
+      children:
+        - file: chapters/a_tco_for_finance.md
+
+    - title: Appendices
+      children:
+        - file: appendices/appendix_a_dsl_reference.md
+        - file: appendices/appendix_b_monte_carlo_module.md
+        - file: appendices/appendix_c_distributions.md
+        - file: appendices/appendix_d_units.md
+        - file: appendices/appendix_e_storage_model.md
+        - file: appendices/appendix_f_observability_model.md
+        - file: appendices/appendix_g_glossary.md
+
+site:
+  template: book-theme
+  title: Sizing and TCO
+  options:
+    style: ./custom.css
+    logo_text: Sizing and TCO
+  nav:
+    - title: Chris Snow
+      url: https://snowch.github.io
+    - title: GitHub
+      url: https://github.com/snowch/sizing-and-tco

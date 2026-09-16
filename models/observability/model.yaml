@@ -1,0 +1,503 @@
+model: observability
+title: An observability platform — metrics, logs and traces
+currency: USD
+
+description: >-
+  The book's sizing exemplar, and the counterweight to the storage cluster. Three multiplicative
+  chains hang off the same few roots, so they are correlated whether or not anybody says so; label
+  cardinality is a product of uncertain counts and therefore dominates everything downstream of
+  it; the control knobs are sampling and retention rather than money; and there are three separate
+  outputs with three separate ceilings, which no single number can summarise.
+
+  It also has a hole in it. Spans per request is a property of somebody's instrumented
+  application, not of any corpus or any machine, so this repository cannot measure it — and the
+  whole traces chain is therefore shown as unmeasured rather than filled in with a plausible
+  number. That is not a gap waiting to be tidied up. It is what an honest sizing model looks like
+  before the measurement is taken, and it is on a published page for exactly that reason.
+
+nodes:
+
+  # -- shared roots ---------------------------------------------------------------------------
+  # Everything below flows from these five. That is what makes the three chains correlated by
+  # construction: they are not three models, they are one estate seen three ways.
+
+  hosts:
+    kind: input
+    unit: host
+    value: 1200
+    provenance: {kind: assumption, source: "stated estate size (ch02)"}
+    range: [50, 3000]
+
+  request_rate:
+    kind: input
+    unit: request/second
+    distribution: {triangular: {minimum: 8000.0, likely: 25000.0, maximum: 90000.0}}
+    provenance:
+      kind: assumption
+      source: "ch03 — the busy hour across the estate, not the daily mean"
+    range: [2000, 200000]
+
+  annual_growth:
+    kind: input
+    unit: dimensionless
+    distribution: {lognormal: {p10: 1.15, p90: 1.70}}
+    provenance:
+      kind: assumption
+      source: "ch04 — telemetry grows faster than the traffic it describes, because teams add
+        instrumentation as well as load"
+
+  horizon:
+    kind: input
+    unit: year
+    value: 3
+    provenance: {kind: assumption, source: "the planning horizon for this platform"}
+    range: [1, 5]
+
+  one_year:
+    kind: input
+    unit: year
+    value: 1
+    note: "as in the storage model: an exponent has to be a pure number"
+    provenance: {kind: fact, source: "definition"}
+
+  horizon_periods:
+    kind: derived
+    unit: dimensionless
+    formula: horizon / one_year
+
+  growth_factor:
+    kind: derived
+    unit: dimensionless
+    formula: annual_growth ** horizon_periods
+
+  # -- label cardinality: the combinatorial node ------------------------------------------------
+
+  label_values_endpoint:
+    kind: input
+    unit: dimensionless
+    distribution: {triangular: {minimum: 2.0, likely: 6.0, maximum: 20.0}}
+    provenance: {kind: assumption, source: "distinct routes appearing as a label value"}
+
+  label_values_status:
+    kind: input
+    unit: dimensionless
+    distribution: {triangular: {minimum: 2.0, likely: 3.0, maximum: 6.0}}
+    provenance: {kind: assumption, source: "distinct status classes kept as a label"}
+
+  label_values_accidental:
+    kind: input
+    unit: dimensionless
+    label: accidental label values
+    note: >-
+      The label nobody planned. A pod name under a rolling deploy, a customer id added during an
+      incident, a version string. Lognormal and wide, because the failure mode is multiplicative:
+      whatever it is, it multiplies every series that carries it, and the distribution has to be
+      able to express "usually nothing, occasionally catastrophic".
+    distribution: {lognormal: {p10: 1.0, p90: 6.0}}
+    provenance:
+      kind: assumption
+      source: "ch08 — the cardinality explosion, as a distribution rather than as a warning"
+
+  label_cardinality:
+    kind: derived
+    unit: dimensionless
+    label: label cardinality
+    note: >-
+      A product of uncertain counts, which is why it is lognormal-ish whether or not anybody chose
+      that, and why it dominates the tornado for every metrics figure in this model. Multiplying
+      three quantities that are each uncertain by a factor of three gives one uncertain by a
+      factor of twenty-seven, and no amount of care about the other inputs recovers that.
+    formula: label_values_endpoint * label_values_status * label_values_accidental
+
+  # -- chain one: metrics ------------------------------------------------------------------------
+
+  base_metrics_per_host:
+    kind: input
+    unit: series/host
+    value: 60
+    label: metric names per host
+    provenance: {kind: assumption, source: "distinct metric names exposed per host, before labels"}
+    range: [10, 400]
+
+  active_series:
+    kind: derived
+    unit: series
+    formula: hosts * base_metrics_per_host * label_cardinality * growth_factor
+
+  scrape_interval:
+    kind: input
+    unit: second
+    value: 30
+    provenance: {kind: assumption, source: "a control knob (ch12): doubling it halves the metrics
+      chain and loses resolution that cannot be recovered afterwards"}
+    range: [10, 120]
+
+  one_sample_per_series:
+    kind: input
+    unit: sample/series
+    value: 1
+    note: "one scrape takes one sample from one series. A rate is a count over a duration, and the
+      count needs a unit before the division means anything"
+    provenance: {kind: fact, source: "definition"}
+
+  sample_rate:
+    kind: derived
+    unit: sample/series/second
+    formula: one_sample_per_series / scrape_interval
+
+  metrics_sample_bytes:
+    kind: measured
+    unit: byte/sample
+    label: bytes per sample, compressed
+    result: metrics-sample-bytes
+
+  metrics_ingest:
+    kind: derived
+    unit: MB/s
+    label: metrics ingest
+    formula: active_series * sample_rate * metrics_sample_bytes
+
+  metrics_retention:
+    kind: input
+    unit: day
+    value: 400
+    provenance: {kind: assumption, source: "a control knob (ch12)"}
+    range: [15, 800]
+
+  metrics_stored:
+    kind: derived
+    unit: TB
+    formula: metrics_ingest * metrics_retention
+
+  # -- chain two: logs ----------------------------------------------------------------------------
+
+  lines_per_request:
+    kind: input
+    unit: line/request
+    distribution: {triangular: {minimum: 3.0, likely: 9.0, maximum: 30.0}}
+    provenance: {kind: assumption, source: "application log lines emitted per request served"}
+
+  log_keep_rate:
+    kind: input
+    unit: dimensionless
+    value: 1.0
+    label: fraction of log lines kept
+    provenance: {kind: assumption, source: "a control knob (ch12): drop and aggregation rules"}
+    range: [0.05, 1.0]
+
+  log_line_rate:
+    kind: derived
+    unit: line/second
+    formula: request_rate * lines_per_request * log_keep_rate * growth_factor
+
+  logs_line_bytes:
+    kind: measured
+    unit: byte/line
+    label: bytes per log line, compressed
+    result: logs-line-bytes
+
+  logs_ingest:
+    kind: derived
+    unit: MB/s
+    label: logs ingest
+    formula: log_line_rate * logs_line_bytes
+
+  logs_retention:
+    kind: input
+    unit: day
+    value: 30
+    provenance: {kind: assumption, source: "a control knob (ch12)"}
+    range: [3, 365]
+
+  logs_stored:
+    kind: derived
+    unit: TB
+    formula: logs_ingest * logs_retention
+
+  # -- chain three: traces, and the constant nobody has measured ------------------------------------
+
+  spans_per_request:
+    kind: measured
+    unit: span/request
+    label: spans per request
+    note: >-
+      Not measurable from anything in this repository. It is a property of one instrumented
+      application at one version, so it belongs to the `estate` target — an observation somebody
+      takes of a system they run, disclosed rather than verified (ch03). Until somebody takes it,
+      every figure below is absent rather than estimated.
+    result: traces-spans-per-request
+
+  trace_keep_rate:
+    kind: input
+    unit: dimensionless
+    value: 0.05
+    label: trace sampling rate
+    provenance: {kind: assumption, source: "a control knob (ch12), and the one with the widest
+      range: head sampling at 1% and at 100% are two different platforms"}
+    range: [0.001, 1.0]
+
+  span_rate:
+    kind: derived
+    unit: span/second
+    formula: request_rate * spans_per_request * trace_keep_rate * growth_factor
+
+  traces_span_bytes:
+    kind: measured
+    unit: byte/span
+    label: bytes per span, compressed
+    result: traces-span-bytes
+
+  traces_ingest:
+    kind: derived
+    unit: MB/s
+    label: traces ingest
+    formula: span_rate * traces_span_bytes
+
+  traces_retention:
+    kind: input
+    unit: day
+    value: 14
+    provenance: {kind: assumption, source: "a control knob (ch12)"}
+    range: [1, 90]
+
+  traces_stored:
+    kind: derived
+    unit: TB
+    formula: traces_ingest * traces_retention
+
+  # -- output one: the ingest pipeline ---------------------------------------------------------------
+
+  known_ingest:
+    kind: derived
+    unit: MB/s
+    label: ingest, metrics and logs only
+    note: >-
+      Metrics plus logs, and deliberately *not* the total. It is a lower bound with a whole chain
+      missing from it, and ch19 is about exactly this shape of error: a number that is correct
+      arithmetic over an incomplete structure looks identical to a number that is right.
+    formula: metrics_ingest + logs_ingest
+
+  total_ingest:
+    kind: derived
+    unit: MB/s
+    formula: metrics_ingest + logs_ingest + traces_ingest
+
+  collector_cores:
+    kind: input
+    unit: core
+    value: 16
+    provenance: {kind: assumption, source: "the sizing decision for the ingest tier"}
+    range: [8, 512]
+
+  collector_throughput_quoted:
+    kind: input
+    unit: MB/s/core
+    value: 6
+    provenance:
+      kind: vendor_claim
+      source: "throughput per core as documented by the collector. Unverified here, and marked as
+        a claim in every figure it appears in"
+
+  collector_throughput_measured:
+    kind: measured
+    unit: MB/s/core
+    label: collector throughput per core, measured
+    note: >-
+      The same quantity as the node above, taken rather than quoted. It needs the reference
+      machine (`rig`) and nobody has run it, so the ceiling built on it is absent while the
+      ceiling built on the vendor's claim is not. Reading those two rows next to each other is
+      most of ch03.
+    result: collector-throughput-per-core
+
+  quoted_pipeline_capacity:
+    kind: derived
+    unit: MB/s
+    formula: collector_cores * collector_throughput_quoted
+
+  measured_pipeline_capacity:
+    kind: derived
+    unit: MB/s
+    formula: collector_cores * collector_throughput_measured
+
+  quoted_pipeline_utilisation:
+    kind: ceiling
+    unit: dimensionless
+    label: ingest utilisation, on the vendor's number
+    of: known_ingest / quoted_pipeline_capacity
+    limit: 1
+    headroom: 0.4
+    because: >-
+      A queueing ceiling, not a capacity one (ch06), so the margin is large: a pipeline at 80% of
+      quoted throughput has a queue in front of it, and a queue in front of an ingest pipeline is
+      dropped telemetry exactly when something is going wrong. Understated twice over — the
+      numerator excludes traces and the denominator is a vendor's claim.
+
+  pipeline_utilisation:
+    kind: ceiling
+    unit: dimensionless
+    label: ingest utilisation, measured
+    of: total_ingest / measured_pipeline_capacity
+    limit: 1
+    headroom: 0.4
+    because: >-
+      The honest version of the row above, and it cannot be computed. Both halves are missing a
+      measurement, which is the correct output of this model today.
+
+  # -- output two: the retention store -----------------------------------------------------------
+
+  usable_tb_per_node:
+    kind: input
+    unit: TB/node
+    value: 40
+    provenance: {kind: assumption, source: "usable capacity per storage node after replication"}
+    range: [20, 400]
+
+  store_nodes:
+    kind: input
+    unit: node
+    value: 12
+    provenance: {kind: assumption, source: "the sizing decision for the retention tier"}
+    range: [5, 400]
+
+  installed_usable:
+    kind: derived
+    unit: TB
+    formula: store_nodes * usable_tb_per_node
+
+  known_stored:
+    kind: derived
+    unit: TB
+    label: stored, metrics and logs only
+    formula: metrics_stored + logs_stored
+
+  store_fill:
+    kind: ceiling
+    unit: dimensionless
+    label: retention store fill
+    of: known_stored / installed_usable
+    limit: 1
+    headroom: 0.3
+    because: >-
+      Capacity, with a rebuild reserve (ch11) — and again a lower bound, because the traces chain
+      is not in the numerator. A verdict of `ok` here means "ok, ignoring traces", which is a
+      different claim and one the reader should be made to notice.
+
+  # -- output three: the query path -----------------------------------------------------------------
+
+  queries_per_second:
+    kind: input
+    unit: query/second
+    distribution: {triangular: {minimum: 2.0, likely: 12.0, maximum: 60.0}}
+    provenance: {kind: assumption, source: "dashboards, alert rules and people, at the busy hour"}
+
+  series_per_query_base:
+    kind: input
+    unit: series/query
+    label: series per query, before labels
+    distribution: {triangular: {minimum: 40.0, likely: 300.0, maximum: 2000.0}}
+    provenance:
+      kind: assumption
+      source: "how many distinct metric-name-and-host combinations one dashboard panel or alert
+        rule covers, before any label expansion"
+
+  series_per_query:
+    kind: derived
+    unit: series/query
+    note: >-
+      The same cardinality node that drives the metrics ingest chain drives this one too, by a
+      different route: a label that multiplies the series a scrape produces also multiplies the
+      series a query has to walk past to ignore. That is why one accidental label breaks two
+      ceilings at once, and why turning down scrape interval and retention — which fix the first
+      — does nothing at all for the second (ch12).
+    formula: series_per_query_base * label_cardinality
+
+  query_series_rate:
+    kind: derived
+    unit: series/second
+    formula: queries_per_second * series_per_query
+
+  query_nodes:
+    kind: input
+    unit: node
+    value: 24
+    provenance: {kind: assumption, source: "the sizing decision for the query tier"}
+    range: [2, 120]
+
+  query_scan_rate_quoted:
+    kind: input
+    unit: series/second/node
+    value: 90000
+    provenance: {kind: vendor_claim, source: "series scanned per second per query node, quoted"}
+
+  query_capacity:
+    kind: derived
+    unit: series/second
+    formula: query_nodes * query_scan_rate_quoted
+
+  query_utilisation:
+    kind: ceiling
+    unit: dimensionless
+    label: query path utilisation
+    of: query_series_rate / query_capacity
+    limit: 1
+    headroom: 0.4
+    because: >-
+      Queueing again, and the tier where a breach is most visible: a dashboard that times out
+      during an incident is the failure people remember. Cardinality feeds this and the ingest
+      ceiling by different routes, so a single accidental label breaks both at once.
+
+  # -- a small cost tail ----------------------------------------------------------------------------
+
+  storage_price:
+    kind: input
+    unit: USD/TB/month
+    distribution: {lognormal: {p10: 9.0, p90: 24.0}}
+    provenance: {kind: assumption, source: "all-in cost of a usable TB-month on this tier,
+      taken from the storage model's own unit economics (ch16)"}
+
+  known_storage_cost:
+    kind: derived
+    unit: USD/month
+    label: retention cost, metrics and logs only
+    formula: known_stored * storage_price
+
+outputs:
+  - metrics_ingest
+  - logs_ingest
+  - traces_ingest
+  - traces_stored
+  - known_ingest
+  - known_stored
+  - active_series
+  - label_cardinality
+  - known_storage_cost
+  - store_fill
+  - quoted_pipeline_utilisation
+  - query_utilisation
+  - pipeline_utilisation
+
+correlations:
+  - a: annual_growth
+    b: label_values_accidental
+    rho: 0.5
+    because: >-
+      A platform that is growing is a platform that is being changed, and labels arrive with
+      changes. Treating the two as independent makes the metrics interval narrower than the
+      estate warrants — ch14 measures by how much.
+
+  - a: request_rate
+    b: lines_per_request
+    rho: 0.3
+    because: >-
+      Weak and positive: busier services tend to be the chattier ones. Small enough to be worth
+      including as an example of a correlation that barely matters, which is a useful thing for a
+      reader to see beside one that does.
+
+  - a: request_rate
+    b: queries_per_second
+    rho: 0.4
+    because: >-
+      A busier platform is one more people are watching. Moderate rather than strong: most query
+      load comes from alert rules and dashboards on timers, which do not care how busy anything
+      is — right up until an incident, when they all fire at once and nobody is looking at the
+      model.

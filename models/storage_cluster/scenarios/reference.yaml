@@ -1,0 +1,8 @@
+scenario: reference
+title: Reference scenario
+because: >-
+  The scenario every figure in the book quotes unless it says otherwise. Nothing is overridden:
+  this is the model as declared, so that a figure and the model file cannot drift apart.
+samples: 100000
+seed: 20260916
+overrides: {}

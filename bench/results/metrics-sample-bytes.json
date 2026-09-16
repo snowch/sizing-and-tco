@@ -1,0 +1,47 @@
+{
+  "code_fingerprint": "39bb49791aaa266d",
+  "code_sources": [
+    "bench/measure.py",
+    "bench/run_corpus.py"
+  ],
+  "conditions": {
+    "byte_aligned": "a bit-packed production format achieves materially less per sample; this figure belongs to this encoder",
+    "what_moves_it_most": "how fast the values move. A flat gauge costs about a byte; a noisy one costs most of a float"
+  },
+  "generated_at": "2026-09-16T15:09:41+00:00",
+  "git_revision": null,
+  "kind": "measurement",
+  "name": "metrics-sample-bytes",
+  "produced_by": {
+    "codec": "bench.measure.encode_series \u2014 delta-of-delta timestamps, XOR values, byte-aligned",
+    "corpus": "bench.measure.metric_samples \u2014 400 series x 500 points, 15/30/60s scrape intervals with occasional jitter, lognormal random-walk values, seeds 0-7",
+    "stack": "this repository's encoder, not any product's"
+  },
+  "recorded_on": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "kind": "other",
+    "numpy": "2.4.6",
+    "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  },
+  "summary": {
+    "high": 9.375091666666666,
+    "low": 9.36635,
+    "samples": 960000,
+    "sd": 0.0009068057272558302,
+    "shard_spread": 0.002564833915845586,
+    "shards": 8,
+    "value": 9.369958333333333
+  },
+  "target": "corpus",
+  "units": {
+    "high": "byte/sample",
+    "low": "byte/sample",
+    "samples": "sample",
+    "sd": "byte/sample",
+    "shard_spread": "byte/sample",
+    "shards": "dimensionless",
+    "value": "byte/sample"
+  }
+}

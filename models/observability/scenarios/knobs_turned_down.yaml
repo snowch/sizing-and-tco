@@ -1,0 +1,14 @@
+scenario: knobs_turned_down
+title: The four knobs, turned down
+because: >-
+  The same estate with every control knob moved: 60-second scrapes, 90-day metric retention, a
+  tenth of the log lines kept, and 1% trace sampling. Here so that ch12 can put a number on what
+  each knob buys — and so the reader can see that the knobs do not touch cardinality at all,
+  which is the input that dominates everything.
+samples: 100000
+seed: 20260916
+overrides:
+  scrape_interval: 60
+  metrics_retention: 90
+  log_keep_rate: 0.1
+  trace_keep_rate: 0.01
