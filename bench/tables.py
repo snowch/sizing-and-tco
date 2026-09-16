@@ -19,6 +19,9 @@ from sizing.units import parse as parse_unit
 #: that one glance answers "how much of this model is somebody's guess".
 PROVENANCE_MARK = {"fact": "●", "vendor_claim": "◐", "assumption": "○"}
 
+#: What a measurement says about itself, in the order a reader needs it.
+MEASURED_KEYS = ("corpus", "codec", "stack", "system", "window")
+
 VERDICT_MARK = {"ok": "ok", "inside headroom": "inside headroom", "over": "**over**"}
 
 
@@ -81,27 +84,37 @@ def _interval(summary: dict | None) -> str:
 
 
 def conditions(name: str) -> str:
-    """Where this figure came from, in one line, under every table that shows it."""
+    """Where this figure came from, under every table that shows it.
+
+    Two lines rather than one, split where the content already splits: the first is what a reader
+    needs in order to **disagree** with the figure, the second is what they need in order to
+    **re-run** it. As one line it reached two hundred and ninety-three characters, which on a
+    phone is five wrapped lines of italic — and a provenance note nobody reads is worth the same
+    as no provenance note. Nothing is dropped to get there. A book whose argument is that every
+    number carries its conditions does not then abbreviate them.
+    """
     result = load_result(name)
     produced = result.get("produced_by", {})
-    parts = [f"target `{result['target']}`"]
-
+    # What was computed, and against what. This is the half somebody argues with.
+    said = [f"target `{result['target']}`"]
     if result.get("kind") == "model":
-        parts += [
+        said += [
             f"model `{produced.get('model_file')}`",
             f"scenario `{produced.get('scenario')}`",
             f"{produced.get('samples'):,} samples",
             f"seed `{produced.get('seed')}`",
         ]
         if produced.get("unmeasured"):
-            parts.append(f"**{len(produced['unmeasured'])} constant(s) not yet measured**")
+            said.append(f"**{len(produced['unmeasured'])} constant(s) not yet measured**")
     else:
-        for key in ("corpus", "codec", "stack", "system", "window"):
-            if produced.get(key):
-                parts.append(str(produced[key]))
-    parts.append(result["generated_at"][:10])
-    parts.append(f"Source: `bench/results/{name}.json`, code hash `{result['code_fingerprint']}`")
-    return "*Conditions: " + " · ".join(parts) + ".*"
+        said += [str(produced[key]) for key in MEASURED_KEYS if produced.get(key)]
+    # And how to check it for yourself, which is a different question and gets its own line.
+    check = [
+        f"`bench/results/{name}.json`",
+        f"code hash `{result['code_fingerprint']}`",
+        f"stamped {result['generated_at'][:10]}",
+    ]
+    return "*Conditions — " + " · ".join(said) + "*\\\n*Re-run — " + " · ".join(check) + "*"
 
 
 # -- model tables -----------------------------------------------------------------------------

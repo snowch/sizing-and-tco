@@ -11,4 +11,5 @@
 | network price per node | input | $4,063,270 | $4,268,206 | $204,935 |
 | node power | input | $4,083,695 | $4,239,699 | $156,003 |
 
-*Conditions: target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-reference.json`, code hash `ea563f58ac2f28c2`.*
+*Conditions — target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916`*\
+*Re-run — `bench/results/storage_cluster-reference.json` · code hash `ea563f58ac2f28c2` · stamped 2026-09-16*

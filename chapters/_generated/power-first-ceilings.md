@@ -5,4 +5,5 @@
 | fill level at horizon | 1.20 | 25% | 0.75 | **over** | 75% | 61% |
 | read utilisation at peak | 0.88 | 30% | 0.70 | inside headroom | 70% | 39% |
 
-*Conditions: target `model` · model `models/storage_cluster/model.yaml` · scenario `power_first` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-power_first.json`, code hash `4834654ff2ff0163`.*
+*Conditions — target `model` · model `models/storage_cluster/model.yaml` · scenario `power_first` · 100,000 samples · seed `20260916`*\
+*Re-run — `bench/results/storage_cluster-power_first.json` · code hash `4834654ff2ff0163` · stamped 2026-09-16*

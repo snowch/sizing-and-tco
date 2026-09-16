@@ -20,4 +20,5 @@
 | **parameter uncertainty** | [ch13](#monte-carlo) | not knowing a value in a model whose shape is right | we do not know the number |
 | **scenario uncertainty** | [ch12](#the-sizing-model) | the world taking a path the model was not run for, which no interval covers | it might go differently |
 
-*Conditions: target `corpus` · bench.measure.log_lines — JSON service logs, five templates, six services, 128-bit trace ids, seeds 0-7 · zlib 1.3, DEFLATE level 6 · python zlib (DEFLATE level 6) · 2026-09-16 · Source: `bench/results/logs-line-bytes.json`, code hash `fc1a2e5247a78a60`.*
+*Conditions — target `corpus` · bench.measure.log_lines — JSON service logs, five templates, six services, 128-bit trace ids, seeds 0-7 · zlib 1.3, DEFLATE level 6 · python zlib (DEFLATE level 6)*\
+*Re-run — `bench/results/logs-line-bytes.json` · code hash `fc1a2e5247a78a60` · stamped 2026-09-16*

@@ -11,4 +11,5 @@
 | bytes per sample, compressed | measured | 15,019,917 | 15,019,917 | 0 |
 | queries per second | input | 15,019,917 | 15,019,917 | 0 |
 
-*Conditions: target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `7510b101692da3e8`.*
+*Conditions — target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured***\
+*Re-run — `bench/results/observability-reference.json` · code hash `7510b101692da3e8` · stamped 2026-09-16*
