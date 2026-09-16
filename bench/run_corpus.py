@@ -20,7 +20,7 @@ import argparse
 import sys
 
 from bench import measure
-from bench.stamp import build_result, load_result, result_exists
+from bench.stamp import RERUN_TOLERANCE, build_result, load_result, result_exists
 
 #: Everything in this module's fingerprint, so editing a corpus generator or the metrics encoder
 #: invalidates the constants taken with it.
@@ -240,7 +240,7 @@ def main() -> int:
         for figure in ("value", "sd"):
             was = committed["summary"].get(figure)
             now = fresh["summary"].get(figure)
-            if was is None or now is None or abs(was - now) > 1e-9 * max(1.0, abs(was)):
+            if was is None or now is None or abs(was - now) > RERUN_TOLERANCE * max(1.0, abs(was)):
                 print(f"  MOVED: {name}.{figure}: committed {was!r}, now {now!r}")
                 failures.append(name)
         if name not in failures:

@@ -51,6 +51,7 @@ measure-rig:  ## Re-take every rig figure. ON THE REFERENCE MACHINE ONLY.
 models:  ## Evaluate and sample every model, and stamp what each one said
 	$(PYTHON) -m bench.run_models
 	$(PYTHON) -m bench.run_uncertainty
+	$(PYTHON) -m bench.run_curves
 	@echo
 	@echo "Now re-render and commit:"
 	@echo "  $(PYTHON) scripts/render-figures.py && git add bench/results chapters/_generated chapters/_figures"

@@ -7,4 +7,4 @@
 | `observability` | known_ingest | 84.82 | 72.38 | +17.2% |
 | `observability` | query_utilisation | 1.658 | 1.648 | +0.6% |
 
-*Conditions: target `corpus` · both reference models, sampled with and without their declared correlations · none — this measures the sampler, not any data · sizing.mc — Iman-Conover rank correlation · 2026-09-16 · Source: `bench/results/correlation-effect.json`, code hash `1bbc989fd6f4669c`.*
+*Conditions: target `model` · sizing.mc — Iman-Conover rank correlation · 2026-09-16 · Source: `bench/results/correlation-effect.json`, code hash `70404a34aa45e7d0`.*

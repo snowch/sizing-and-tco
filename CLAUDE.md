@@ -26,9 +26,11 @@ model that declares a limit with no headroom does not build. If you find yoursel
 that: the distinction is the book's thesis, and a thesis the repository does not enforce is a
 paragraph.
 
-## The three targets
+## The four targets
 
-`bench.stamp.TARGET_MEANING` is the source of truth; this is the prose version.
+`bench.stamp.TARGET_MEANING` is the source of truth; this is the prose version. Three of them are
+measurements — something outside this repository was asked a question. The fourth is not, and
+keeping it separate is what stops the distinction going soft.
 
 - **`corpus`** — a deterministic measurement over a declared body of data with a named codec.
   Reproducible anywhere, re-derived by CI on every push, and **never allowed to carry a rate or a
@@ -38,6 +40,11 @@ paragraph.
 - **`estate`** — an observation of a running system. Reproducible by nobody, checkable by nobody,
   and therefore held to the strictest disclosure rules in the book: system, window, date. This is
   the one target the build cannot verify, and a page using one says so at the point of use.
+- **`model`** — computed from a model file in this repository. No machine and no body of data was
+  involved, so it is evidence about what the book's own models say and about nothing else. Its
+  fingerprint covers the whole DSL core, so the claim moves when the method does. A `kind: model`
+  result must declare this target: a model run is a computation, not a measurement of anything
+  outside the repository.
 
 ## Build
 

@@ -47,6 +47,11 @@ python3 -m bench.run_models --check
 echo "== the sampler still behaves the way ch14 says it does =="
 python3 -m bench.run_uncertainty --check
 
+echo "== the curves Part II argues about still have the shape it claims =="
+# A shape asserted in prose is a claim; a shape swept out of the model the chapter is about is
+# evidence, and this is what stops the two drifting apart.
+python3 -m bench.run_curves --check
+
 echo "== result stamps and no numbers typed into prose =="
 python3 scripts/verify-numbers.py
 

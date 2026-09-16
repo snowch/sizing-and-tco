@@ -30,4 +30,4 @@
 | ○ | usable tb per node | assumption | usable capacity per storage node after replication |
 | | **26 inputs** | | **2 fact, 2 vendor claim, 22 assumption** |
 
-*Conditions: target `corpus` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `2538ed6dda53895b`.*
+*Conditions: target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `3608f5f769a5787a`.*

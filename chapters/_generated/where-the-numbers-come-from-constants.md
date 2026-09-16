@@ -9,4 +9,4 @@
 | `collector-throughput-per-core` | — | *not yet measured* | — | — |
 | `traces-spans-per-request` | — | *not yet measured* | — | — |
 
-*Conditions: target `corpus` · bench.measure.log_lines — JSON service logs, five templates, six services, 128-bit trace ids, seeds 0-7 · zlib 1.3, DEFLATE level 6 · python zlib (DEFLATE level 6) · 2026-09-16 · Source: `bench/results/logs-line-bytes.json`, code hash `39bb49791aaa266d`.*
+*Conditions: target `corpus` · bench.measure.log_lines — JSON service logs, five templates, six services, 128-bit trace ids, seeds 0-7 · zlib 1.3, DEFLATE level 6 · python zlib (DEFLATE level 6) · 2026-09-16 · Source: `bench/results/logs-line-bytes.json`, code hash `fc1a2e5247a78a60`.*

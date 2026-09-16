@@ -26,4 +26,4 @@
 | ○ | usable capacity, day one | assumption | stated workload (ch02) — what the application says it needs to store today |
 | | **22 inputs** | | **2 fact, 6 vendor claim, 14 assumption** |
 
-*Conditions: target `corpus` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-reference.json`, code hash `6300de14ac49a33c`.*
+*Conditions: target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-reference.json`, code hash `a3e06a66eb0e078d`.*

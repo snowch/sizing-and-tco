@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "2538ed6dda53895b",
+  "code_fingerprint": "3608f5f769a5787a",
   "code_sources": [
     "bench/run_models.py",
     "models/observability/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-16T15:19:03+00:00",
-  "git_revision": null,
+  "generated_at": "2026-09-16T16:11:20+00:00",
+  "git_revision": "57ad6b4",
   "kind": "model",
   "name": "observability-reference",
   "produced_by": {
@@ -98,7 +98,7 @@
       "traces_ingest": 1e-06,
       "traces_stored": 0.0864
     },
-    "generated_at": "2026-09-16T15:19:03+00:00",
+    "generated_at": "2026-09-16T16:11:20+00:00",
     "model": "observability",
     "nodes": {
       "active_series": {
@@ -7431,7 +7431,7 @@
       }
     ]
   },
-  "target": "corpus",
+  "target": "model",
   "units": {
     "active_series": "series",
     "annual_growth": "dimensionless",
