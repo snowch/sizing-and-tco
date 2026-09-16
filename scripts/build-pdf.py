@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -41,6 +42,9 @@ sys.path.insert(0, str(ROOT))
 from bench.stamp import shown  # noqa: E402
 
 CONTENT = ROOT / "_build" / "site" / "content"
+#: Where MyST writes the assets it has content-hashed. An image URL in the parsed content points
+#: here, not at the path the author wrote, which is the whole reason :func:`_image` has to look.
+PUBLIC = ROOT / "_build" / "site" / "public"
 OUT_DIR = ROOT / "_build" / "exports"
 STEM = "sizing-and-tco"
 
@@ -157,15 +161,36 @@ def render(node: dict) -> str:
     )
 
 
+class MissingImageError(FileNotFoundError):
+    """A figure the PDF would have printed as a broken reference."""
+
+
 def _image(node: dict) -> str:
-    """Inline an SVG; leave anything else as a reference the browser will resolve."""
+    """Inline an SVG, and refuse to print a reference to a file that is not there.
+
+    MyST rewrites every image URL to a content-hashed name under the site's public directory, so
+    the URL in the parsed content is not the path the author wrote. Looking only where the author
+    wrote it is how every figure in this book came to be missing from the PDF while the build
+    stayed green: the fallback emitted an ``<img>`` with an absolute URL, which resolves to
+    nothing when the file is printed from disk, and a missing picture makes no noise.
+
+    Same rule as :class:`UnknownNodeError`, one node type along: content does not disappear
+    quietly.
+    """
     url = str(node.get("url", ""))
-    candidate = (ROOT / url.lstrip("/")).resolve()
-    if not candidate.exists():
-        candidate = (ROOT / "chapters" / url.lstrip("./")).resolve()
-    if candidate.exists() and candidate.suffix == ".svg":
-        return f"<div>{candidate.read_text()}</div>"
-    return f'<img src="{html.escape(url)}" alt="{html.escape(str(node.get("alt", "")))}">'
+    for candidate in (
+        ROOT / url.lstrip("/"),
+        ROOT / "chapters" / url.lstrip("./"),
+        PUBLIC / Path(url).name,
+    ):
+        if candidate.exists():
+            if candidate.suffix == ".svg":
+                return f"<div>{candidate.read_text()}</div>"
+            return f'<img src="{html.escape(str(candidate))}" alt="{html.escape(str(node.get("alt", "")))}">'
+    raise MissingImageError(
+        f"the PDF renderer cannot find the image {url!r}. It is not in the repository and not "
+        f"in {shown(PUBLIC)}, so the PDF would have printed a broken reference."
+    )
 
 
 def page_order() -> list[str]:
@@ -204,19 +229,34 @@ def load(page: str, index: dict[str, dict]) -> dict:
     return index[page]
 
 
+def without_repeated_tagline(page: str, description: str) -> str:
+    """Drop the first page's opening line when the front page has just printed it.
+
+    On the site the two never meet: the description is metadata there, and the preface's opening
+    line is the only place a reader sees it. Bound into one document they land three lines apart,
+    which reads like a mistake because it is one.
+    """
+    match = re.match(r"<p><em>(.*?)</em></p>", page)
+    if match and description.startswith(html.unescape(match.group(1))):
+        return page[match.end() :]
+    return page
+
+
 def assemble() -> str:
     config = yaml.safe_load((ROOT / "myst.yml").read_text())["project"]
+    description = " ".join(config["description"].split())
     body = [
         '<div class="frontpage">',
         f"<h1>{html.escape(config['title'])}</h1>",
-        f"<p>{html.escape(' '.join(config['description'].split()))}</p>",
+        f"<p>{html.escape(description)}</p>",
         f"<p>{html.escape(config['authors'][0]['name'])} · "
         f"{datetime.now(UTC).date().isoformat()}</p>",
         "</div>",
     ]
     index = parsed_pages()
-    for page in page_order():
-        body.append(render(load(page, index).get("mdast", {})))
+    for position, page in enumerate(page_order()):
+        rendered = render(load(page, index).get("mdast", {}))
+        body.append(without_repeated_tagline(rendered, description) if position == 0 else rendered)
     return (
         "<!doctype html><html lang='en'><head><meta charset='utf-8'>"
         f"<title>{html.escape(config['title'])}</title><style>{STYLE}</style></head>"
