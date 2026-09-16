@@ -44,7 +44,7 @@ The last row is the distinction the book is built on, and it is decided by the f
 by its author's opinion of it. A model containing a `measured` node or a `ceiling` node **is** a
 sizing model: it has an empirical constant that belongs to one stack at one version, or a limit
 past which its arithmetic stops describing anything, and in either case sampling the inputs is not
-sufficient on its own. A model with neither is a cost model, where it is.
+sufficient on its own. A model with neither is a cost model, and there it is.
 
 Here are the kinds, as the loader defines them:
 
@@ -200,27 +200,33 @@ Scenarios are how two designs get compared without either of them being edited i
   declared unit that disagrees with what the formula produces is an error, and a declared unit
   that agrees dimensionally but differs by a factor — dollars per TB per *year* against per
   *month* — is recorded as a conversion and applied, not waved through
-  ([appendix D](#appendix-d-units)).
+  ([Appendix D](#appendix-d-units)).
 - **An input with no provenance, or a `fact` that cites nothing.**
 - **A ceiling with no headroom, or no reason.**
 - **A measured node whose result reports no uncertainty**, which is a claim to have measured
   something exactly.
 - **A cycle**, or a node that depends on something that does not exist.
-- **A model classified as a cost model that contains a ceiling**, or the reverse. The
-  classification is derived from the file and cannot be asserted by hand.
-- **A scenario overriding something that is not an input.** Overriding a derived node would be
-  editing the arithmetic while claiming to change an assumption.
+- **A measured constant with no ceiling anywhere in the model.** A model with empirical inputs
+  and no declared limit is claiming that nothing in it changes regime. That may be true, and it
+  should be stated by declaring the ceiling rather than by leaving it out. The classification
+  itself is derived from the file and cannot be asserted by hand.
+- **A node that feeds no output**, which is either a leftover or an output somebody forgot to
+  declare — and a model that declares no outputs at all, since nothing in it can then be checked.
+- **A scenario overriding a node that does not exist, or a derived one.** Overriding a derived
+  node would be editing the arithmetic while claiming to change an assumption.
 
 ## The graph
 
 ```{image} ../chapters/_figures/appendix-a-dsl-reference-graph.svg
-:alt: A small model as a dependency graph, with all four node kinds in it
+:alt: The smallest model in the book as a dependency graph, coloured by node kind
 :width: 100%
 ```
 
-The service tier model, which is the smallest one in the book and has all four kinds in it.
-Reading right to left from any answer gives exactly the quantities it rests on; reading left to
-right shows how few inputs most of the graph is downstream of.
+The service tier model, which is the smallest one in the book: nine inputs, three ceilings and
+the arithmetic between them. It has no measured constant, which is why the ceilings alone make it
+a sizing model — [Appendix F](#appendix-f-observability-model) is the one with all four kinds in
+it. Reading right to left from any answer gives exactly the quantities it rests on; reading left
+to right shows how few inputs most of the graph is downstream of.
 
 ## Running it
 

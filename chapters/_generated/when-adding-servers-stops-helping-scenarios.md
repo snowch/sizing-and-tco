@@ -13,9 +13,9 @@
 | scaling efficiency | 0.631<br>*0.487 to 0.749* | 0.403<br>*0.253 to 0.544* |
 | where adding nodes stops helping | 164<br>*92 to 291* | 164<br>*92 to 291* |
 | fraction of the peak already built | 0.389<br>*0.220 to 0.692* | 0.779<br>*0.440 to 1.38* |
-| utilisation | 0.588<br>*0.232 to 1.32* | 0.294<br>*0.116 to 0.659* |
+| utilisation, against its limit | 0.588<br>*0.232 to 1.32* | 0.294<br>*0.116 to 0.659* |
 | fraction of the tier doing nothing useful | 0.369<br>*0.251 to 0.513* | 0.597<br>*0.456 to 0.747* |
-| utilisation, counting coordination | 0.894<br>*0.413 to 1.84* | 0.699<br>*0.312 to 1.58* |
+| utilisation, counting coordination, against its limit | 0.894<br>*0.413 to 1.84* | 0.699<br>*0.312 to 1.58* |
 | *utilisation, counting coordination* — over its limit | 43% | 27% |
 | *utilisation* — over its limit | 16% | 0% |
 | *fraction of the tier doing nothing useful* — over its limit | 0% | 0% |

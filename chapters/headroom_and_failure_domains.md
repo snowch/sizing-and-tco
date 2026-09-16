@@ -91,8 +91,10 @@ the cluster doing the work it was bought for.
 Nobody in the room multiplied them. That is how a cluster ends up twice the size anybody intended,
 with every individual decision in the chain defensible.
 
-The clue that it cannot be addition is at the other end: add three thirty per cent margins and you
-have a negative system.
+The clue that it cannot be addition is at the other end. Push the margins up and addition stops
+describing anything: three of ninety per cent add to nearly three whole clusters, and there is no
+such thing as a negative system. Taking nine tenths three times over leaves a sliver — severe,
+and at least a quantity that exists.
 
 ### What a margin is for, written down
 

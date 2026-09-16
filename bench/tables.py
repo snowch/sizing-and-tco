@@ -107,6 +107,26 @@ def conditions(name: str) -> str:
 # -- model tables -----------------------------------------------------------------------------
 
 
+def row_labels(payload: dict) -> dict[str, str]:
+    """Row labels for a table of outputs, disambiguated where two of them share one.
+
+    A ceiling carries the label of the quantity it watches. That is right in a ceilings table,
+    where the column is headed *Ceiling* — and it prints the same line twice in a table of
+    outputs, when a model publishes both the quantity and the ceiling on it. The ceiling is the
+    one that gets the suffix, because it is the one whose name was borrowed.
+    """
+    nodes, outputs = payload["nodes"], payload["outputs"]
+    labels = [nodes[name]["label"] for name in outputs]
+    return {
+        name: (
+            f"{nodes[name]['label']}, against its limit"
+            if labels.count(nodes[name]["label"]) > 1 and nodes[name].get("ceiling")
+            else nodes[name]["label"]
+        )
+        for name in outputs
+    }
+
+
 def outputs_table(name: str) -> str:
     """What the model says, at a point and across its uncertainty.
 
@@ -114,6 +134,7 @@ def outputs_table(name: str) -> str:
     built on; the interval beside it is the same model saying how much that point is worth.
     """
     payload = load_result(name)["summary"]
+    labels = row_labels(payload)
     rows = [
         "| Output | Point estimate | 90% interval | Unit |",
         "|---|---:|---:|---|",
@@ -132,7 +153,7 @@ def outputs_table(name: str) -> str:
                 if summary
                 else "*fixed*"
             )
-        rows.append(f"| {node['label']} | {point} | {interval} | {unit_label(node['unit'])} |")
+        rows.append(f"| {labels[output]} | {point} | {interval} | {unit_label(node['unit'])} |")
     return "\n".join(rows)
 
 
@@ -357,6 +378,7 @@ def scenario_comparison(name: str, other: str) -> str:
     difference between them is what somebody is being asked to buy (ch21).
     """
     left, right = load_result(name)["summary"], load_result(other)["summary"]
+    labels = row_labels(left)
     rows = [
         f"| Output | {left['scenario']['title']} | {right['scenario']['title']} |",
         "|---|---:|---:|",
@@ -364,7 +386,7 @@ def scenario_comparison(name: str, other: str) -> str:
     for output in left["outputs"]:
         node = left["nodes"][output]
         rows.append(
-            f"| {node['label']} | {_cell(node)} | {_cell(right['nodes'].get(output, {}))} |"
+            f"| {labels[output]} | {_cell(node)} | {_cell(right['nodes'].get(output, {}))} |"
         )
     ceilings = [n for n, node in left["nodes"].items() if node.get("ceiling")]
     for node_name in sorted(ceilings):

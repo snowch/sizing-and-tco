@@ -38,7 +38,7 @@ def test_no_margins_is_no_margin():
 
 @pytest.mark.problem
 def test_it_never_leaves_a_negative_system():
-    """Adding three thirty per cent margins would. That is the clue the problem mentions."""
+    """Adding three margins of ninety per cent would. That is the clue the problem mentions."""
     assert compose([0.3, 0.3, 0.3]) < 1.0
     assert compose([0.9, 0.9, 0.9]) < 1.0
 

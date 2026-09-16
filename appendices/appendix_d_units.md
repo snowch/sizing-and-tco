@@ -76,11 +76,11 @@ the factor of eight between them sits at exactly the boundary between two teams.
 multiplies a link rate by a duration and compares the result to a volume has to get this right
 once; a model that does not declare units has to get it right every time anybody edits it.
 
-**Months.** There is no such unit as a month in this registry, because there is no such quantity.
-A model that prices per month and sizes per year has to say which month it means, and dividing a
-year by twelve is a decision — a defensible one, and different from using the actual lengths of
-the months in the period. The book divides the year, says so, and the conversion appears in the
-table above.
+**Months.** The registry has one, and it is a twelfth of a year — which is no month that has ever
+appeared on a calendar. That is the right convention for a price per terabyte-month, where nobody
+means February, and the wrong one for anything that has to reconcile against a billing period.
+The distinction is invisible until somebody in finance does the reconciling, which is why the
+conversion appears in the table above rather than inside somebody's head.
 
 **Years.** The same problem, smaller: a year is not exactly three hundred and sixty-five days. The
 storage model's `hours per year` input carries the quarter-day and says in its provenance what

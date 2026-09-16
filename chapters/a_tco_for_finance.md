@@ -232,9 +232,10 @@ python3 -m pytest tests/a_tco_for_finance/test_problem_2_one_number.py
 
 ## Where to go next
 
-This is the last chapter. What remains is reference material: [appendix A](#appendix-a-dsl-reference)
-for the DSL, [appendix B](#appendix-b-monte-carlo-module) for the sampler read end to end,
-[appendix E](#appendix-e-storage-model) and [appendix F](#appendix-f-observability-model) for the
+This is the last chapter. What remains is reference material:
+[Appendix A](#appendix-a-dsl-reference) for the DSL,
+[Appendix B](#appendix-b-monte-carlo-module) for the sampler read end to end,
+[Appendix E](#appendix-e-storage-model) and [Appendix F](#appendix-f-observability-model) for the
 two worked models in full.
 
 If you read one thing again, make it [ch20](#the-missing-node). Everything in this chapter is

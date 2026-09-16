@@ -137,9 +137,11 @@ In order:
    ([ch12](#the-sizing-model)).
 
 And the rule underneath all of them: **the shape is part of the model, so it belongs in the model
-file with a source attached**. Every input in both reference models says in its `source` field why
-it has the shape it has. That sentence is what a reviewer argues with; without it, the
-distribution is an assertion with a nice picture.
+file with a source attached**. Where an input in this book's models has its shape for a reason —
+growth compounds, a price cannot go negative — the `source` field says so, and that sentence is
+what a reviewer argues with. Where it does not, the shape is doing work nobody has defended: the
+build has no check for it, most of the uncertain inputs in both reference models are in that
+state, and it is a fair thing to raise in review of this book's own models.
 
 ## Inputs that move together
 
@@ -171,16 +173,16 @@ absorb them produces an interval so wide it cannot distinguish two designs — w
 thing the model was for. They belong in *What this cannot tell you*, not in a parameter
 ([ch20](#the-missing-node)).
 
-**Mixtures.** Two regimes with a probability of each is expressible and deliberately absent. When
-a quantity has two regimes, the honest model has a node for which regime it is in, and a scenario
-for each — a number that is bimodal is usually two decisions wearing one name.
+**Mixtures.** A mixture — two regimes with a probability of each — would be easy to add, and is
+deliberately absent. When a quantity has two regimes, the honest model has a node for which regime it is in and
+a scenario for each — a number that is bimodal is usually two decisions wearing one name.
 
 **Empirical resampling.** Drawing from observed history rather than from a shape. It is a good
 technique and it needs history, which is the thing most sizing exercises do not have. Where this
 book has data it measures a constant and states its uncertainty; where it does not, it says so.
 
 **Fitted distributions.** Deliberate, and the reason is in
-[appendix B](#appendix-b-monte-carlo-module): a function that reads your data and picks a shape
+[Appendix B](#appendix-b-monte-carlo-module): a function that reads your data and picks a shape
 produces a model whose central assumption nobody ever wrote down.
 
 ## Adding one

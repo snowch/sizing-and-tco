@@ -38,15 +38,15 @@ comparison, a negotiation. Running cost arrives in pieces, monthly, from several
 is nobody's decision in particular: an electricity bill, a support renewal, a fraction of a
 salary. Each piece is too small to argue about and the total is not.
 
-Problem 15.1 is the one division that makes this concrete. For most infrastructure the cumulative
-running cost overtakes the purchase well inside the horizon the thing was bought for, which means
-the argument was had about the smaller half.
+Problem 15.1 is the one division that makes this concrete. Run it against the table above and
+the running cost overtakes the purchase inside the horizon the cluster was bought for — which
+means the argument was had about the smaller half.
 
 ### What is actually in each
 
 The capital rows split three ways and the proportions are worth noticing: the chassis dominates,
-the drives are a smaller share than most people guess, and the network is a rounding error that
-grows with cluster size in a way this model does not capture.
+the drives are a smaller share than most people guess, and the network is the smallest of the
+three and grows with cluster size in a way this model does not capture.
 
 The running rows are the interesting ones.
 

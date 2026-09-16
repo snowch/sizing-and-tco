@@ -104,7 +104,7 @@ price, because it will happily go negative.
 
 No registration machinery and no plugin system. Four shapes cover every input in both reference
 models, and a fifth should have to argue for itself
-([appendix C](#appendix-c-distributions)).
+([Appendix C](#appendix-c-distributions)).
 
 ## Drawing
 
@@ -151,7 +151,7 @@ trigonometry applied before the sort rather than an apology in the documentation
 Iman–Conover @imanconover1982, which is short enough to read: build a reference sample with the
 correlation you want, rank it, and shuffle each input column into the same rank order. Every
 column keeps its own distribution exactly — every value that was drawn is still there — and only
-the *pairing* between columns changes. That is why it can be applied to any four shapes without
+the *pairing* between columns changes. That is why it can be applied to all four shapes without
 knowing anything about them.
 
 ## Reading the answer

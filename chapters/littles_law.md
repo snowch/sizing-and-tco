@@ -65,15 +65,22 @@ useful thing in this chapter.
 ```
 
 ```{image} _figures/littles-law-concurrency.svg
-:alt: Requests in the system, as a distribution
+:alt: Requests in the system, as a distribution on a logarithmic axis
 :width: 100%
 ```
 
-Look at the shape of that distribution rather than at the numbers. It is not a hump. It has a long
-flat right tail that goes a very long way, and the point estimate sits far down at the left of it.
+Look at the shape rather than at the numbers, and start with the axis: it is logarithmic, because
+the middle ninety per cent of this quantity spans more than two decades. Drawn any other way it is
+a spike against an empty page.
 
-That is not a property of Little's law, which is linear and would give a perfectly ordinary
-distribution. It comes from the other multiplicand:
+Then look at the right-hand end, where a stack of samples piles up against a wall. That is
+[ch06](#queueing-and-the-knee) arriving early. Past the utilisation this model is willing to admit
+to, it stops computing a residence time and clamps — so every sample beyond that point lands in
+the same place, and the pile is the model saying *I do not describe anything out here* rather than
+the tier doing something interesting.
+
+None of that is a property of Little's law, which is one multiplication and would pass an ordinary
+distribution straight through. It comes from the other multiplicand:
 
 ```{image} _figures/littles-law-graph.svg
 :alt: The sub-graph that produces the number of requests in the system
@@ -154,7 +161,7 @@ python3 -m pytest tests/littles_law/test_problem_2_backwards.py
 
 ## Where to go next
 
-Little's original proof @little1961proof is four pages and is worth reading for how little it
+Little's original proof @little1961proof is five pages and is worth reading for how little it
 assumes, which is the property this chapter has been claiming for it.
 
 [ch06](#queueing-and-the-knee) buys a mechanism. It costs assumptions, and it explains the shape

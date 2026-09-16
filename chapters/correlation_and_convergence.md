@@ -140,7 +140,7 @@ the regime the square-root law describes. It stays because it is the clearest de
 the *other* column: that is where the interval has visibly not settled yet.
 
 ```{image} _figures/correlation-and-convergence-curve.svg
-:alt: Run-to-run spread against sample count, with the one-over-root-n law drawn beside it
+:alt: Interval width and run-to-run spread against sample count, with the square-root law
 :width: 100%
 ```
 
@@ -244,8 +244,8 @@ wrong for that mistake to survive review.
 
 ## Where to go next
 
-Iman and Conover's paper @imanconover1982 is the method in this chapter, in eleven pages, and is
-unusually readable for a statistics paper of its era. The section on what the method does *not*
+Iman and Conover's paper @imanconover1982 is the method in this chapter, and is unusually
+readable for a statistics paper of its era. The section on what the method does *not*
 guarantee is the part to read twice.
 
 [ch19](#which-input-is-the-answer) is the question this chapter keeps deferring: given that the
