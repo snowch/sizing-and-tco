@@ -18,10 +18,13 @@ import pytest
 
 from bench.stamp import ROOT, shown
 
-#: Scripts that take an output directory and are given a relative one by a workflow.
+#: Scripts that take an output directory and are given a relative one by a workflow, and whether
+#: each one can do its job in a checkout that has not been built yet. ``build-pdf.py`` assembles
+#: what MyST parsed, so in a fresh clone it has nothing to assemble and says so — which is the
+#: state CI is in when it runs the tests, because the book build comes after them.
 TAKES_AN_OUT = [
-    ("scripts/build-viewers.py", "--out"),
-    ("scripts/build-pdf.py", "--out"),
+    ("scripts/build-viewers.py", "--out", True),
+    ("scripts/build-pdf.py", "--out", False),
 ]
 
 
@@ -50,12 +53,18 @@ def test_shown_leaves_a_path_outside_the_repository_alone():
     assert shown("/tmp/elsewhere").startswith("/tmp")
 
 
-@pytest.mark.parametrize(("script", "flag"), TAKES_AN_OUT, ids=lambda v: Path(str(v)).name)
-def test_a_relative_out_does_not_blow_up(script, flag, tmp_path):
+@pytest.mark.parametrize(
+    ("script", "flag", "self_sufficient"), TAKES_AN_OUT, ids=lambda v: Path(str(v)).name
+)
+def test_a_relative_out_does_not_blow_up(script, flag, self_sufficient):
     """Exactly what deploy.yml does: a repository-relative output directory.
 
     Run from the repository root with a relative path, because that is the invocation that
     failed. A script that only works with absolute paths works until somebody writes a workflow.
+
+    A script that refuses because its inputs are not there has not failed this check — it has
+    passed it, out loud. What fails it is a traceback, which is what printing a path used to
+    produce.
     """
     relative = f"_build/test-out/{Path(script).stem}"
     extra = ["--no-myst", "--html-only"] if "pdf" in script else []
@@ -68,7 +77,11 @@ def test_a_relative_out_does_not_blow_up(script, flag, tmp_path):
     assert "relative_to" not in completed.stderr, (
         f"{script} cannot print a path it was given:\n{completed.stderr[-600:]}"
     )
-    assert completed.returncode == 0, completed.stderr[-600:]
+    assert "Traceback" not in completed.stderr, (
+        f"{script} raised where it should have reported:\n{completed.stderr[-600:]}"
+    )
+    if self_sufficient:
+        assert completed.returncode == 0, completed.stderr[-600:]
 
 
 def test_verify_setup_reports_rather_than_failing_on_a_missing_optional():

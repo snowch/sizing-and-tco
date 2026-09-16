@@ -511,8 +511,8 @@ def queueing_curve(result: str) -> str:
     page would be flattening the argument.
     """
     rows = load_result(result)["summary"]["curve"]
-    width, height = 500.0, 250.0
-    left, right, top, bottom = 52.0, width - 20, 40.0, height - 42
+    width, height = 500.0, 256.0
+    left, right, top, bottom = 52.0, width - 20, 46.0, height - 42
 
     inflations = [row["inflation"] for row in rows]
     ceiling_value = max(inflations)
