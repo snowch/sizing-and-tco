@@ -48,6 +48,7 @@ from bench.stamp import (  # noqa: E402
     RESULTS_DIR,
     code_fingerprint,
     provenance_problems,
+    shown,
 )
 
 
@@ -164,7 +165,7 @@ def check_prose(problems: list[str]) -> None:
                 continue
             for hit in MEASURED_FIGURE.findall(CONVENTION.sub("", line)):
                 problems.append(
-                    f"{source.relative_to(ROOT)}:{n} types the measured figure {hit.strip()!r} "
+                    f"{shown(source)}:{n} types the measured figure {hit.strip()!r} "
                     "into prose. Put it in a generated fragment (AUTHORING_GUIDE.md), or, if it "
                     "is a definition rather than a measurement, precede the line with "
                     "`% number-ok: <reason>`."

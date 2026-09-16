@@ -38,7 +38,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from bench.stamp import RESULTS_DIR, code_fingerprint, load_result  # noqa: E402
+from bench.stamp import RESULTS_DIR, code_fingerprint, load_result, shown  # noqa: E402
 from sizing.dsl import (  # noqa: E402
     PROVENANCE_KINDS,
     Ceiling,
@@ -55,13 +55,8 @@ CITATION_MARKERS = ("bench/results/", ".json", ".yaml", "definition", "invoice",
 
 
 def _shown(model: Model) -> str:
-    """A model as a reader should see it: relative to the repository where it can be."""
-    if model.path is None:
-        return model.name
-    try:
-        return str(model.path.relative_to(ROOT))
-    except ValueError:
-        return str(model.path)
+    """A model as a reader should see it, or its name if it came from nowhere on disk."""
+    return model.name if model.path is None else shown(model.path)
 
 
 def check_model(model: Model, problems: list[str]) -> None:

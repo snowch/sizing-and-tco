@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from bench.outline import APPENDICES, CHAPTERS, Appendix, Chapter  # noqa: E402
+from bench.stamp import shown  # noqa: E402
 
 MARKER = "[To write"
 
@@ -128,11 +129,11 @@ def write(path: Path, body: str, force: bool) -> bool:
         if MARKER not in current and not force:
             return False
         if MARKER not in current and force:
-            print(f"  refusing to overwrite {path.relative_to(ROOT)} — it is no longer a stub")
+            print(f"  refusing to overwrite {shown(path)} — it is no longer a stub")
             return False
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(body)
-    print(f"  wrote {path.relative_to(ROOT)}")
+    print(f"  wrote {shown(path)}")
     return True
 
 

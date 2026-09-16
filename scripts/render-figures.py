@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from bench.figures import FIGURES, Diagram, Table  # noqa: E402
+from bench.stamp import shown  # noqa: E402
 from bench.tables import conditions  # noqa: E402
 
 FRAGMENTS = ROOT / "chapters" / "_generated"
@@ -81,11 +82,11 @@ def main() -> int:
             current = target.read_text() if target.exists() else ""
             if current != rendered:
                 stale.append(name)
-                print(f"  STALE: {target.relative_to(ROOT)}")
+                print(f"  STALE: {shown(target)}")
         else:
             target.write_text(rendered)
             state = " (pending measurement)" if figure.pending else ""
-            print(f"  wrote {target.relative_to(ROOT)}{state}")
+            print(f"  wrote {shown(target)}{state}")
 
     # A renamed figure leaves its old fragment on disk, still included by whichever page referred
     # to it, and nothing regenerates it ever again. That is worse than a missing file: the page
@@ -101,11 +102,11 @@ def main() -> int:
     )
     for path in orphans:
         if args.check:
-            print(f"  ORPHAN: {path.relative_to(ROOT)} — no figure declares it")
+            print(f"  ORPHAN: {shown(path)} — no figure declares it")
             stale.append(path.name)
         else:
             path.unlink()
-            print(f"  removed {path.relative_to(ROOT)} (no figure declares it)")
+            print(f"  removed {shown(path)} (no figure declares it)")
 
     if stale:
         if args.check:

@@ -595,3 +595,21 @@ def numeric_differences(
             return []
         return [f"{path}: {committed!r} -> {fresh!r}"]
     return [] if committed == fresh else [f"{path}: {committed!r} -> {fresh!r}"]
+
+
+def shown(path: Path | str) -> str:
+    """A path as a reader should see it: relative to the repository where it can be.
+
+    This exists because the same bug was fixed three times in three files before anybody wrote it
+    down, and the third time it took the Pages deploy out. ``Path.relative_to`` raises when the
+    path is outside the root **or** when one of the two is relative and the other absolute — and
+    the second case is the one that bites, because a script given ``--out _build/html/models`` on
+    the command line has a perfectly reasonable path that simply is not absolute.
+
+    Printing a path is never important enough to fail a build. This never raises.
+    """
+    path = Path(path)
+    try:
+        return str(path.resolve().relative_to(ROOT))
+    except ValueError:
+        return str(path)
