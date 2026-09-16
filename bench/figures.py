@@ -28,11 +28,23 @@ from bench import diagrams, tables
 
 @dataclass(frozen=True)
 class Table:
-    """A markdown fragment rendered from one committed result."""
+    """A markdown fragment and every committed result it is rendered from.
+
+    ``result`` is ``None`` for a fragment computed from the model files at build time rather than
+    from a run. Before that was possible, such a fragment had to name *some* result to satisfy the
+    machinery, and two of them named a compression benchmark they had nothing to do with — so the
+    conditions line under a table of unit conversions sent a reader to `logs-line-bytes.json`.
+    """
 
     render: Callable[..., str]
-    result: str
+    result: str | None = None
+    #: What a fragment with no `result` was assembled from, as a phrase for the conditions line.
+    computed_from: str | None = None
     args: tuple = ()
+    #: Further stamped results this fragment draws on. A scenario comparison prints two columns
+    #: from two runs, and a conditions line naming one of them is a disclosure that is quietly
+    #: false — which is what five of them were.
+    also: tuple[str, ...] = ()
     #: None means "take the conditions line from `result`"; a name overrides it.
     conditions_from: str | None = None
     #: Why this has not been produced, and what to run. None means it has been.
@@ -40,7 +52,9 @@ class Table:
 
     @property
     def sources(self) -> tuple[str, ...]:
-        return (self.result,) if self.pending is None else ()
+        if self.pending is not None:
+            return ()
+        return tuple(name for name in (self.result, *self.also) if name)
 
 
 @dataclass(frozen=True)
@@ -154,6 +168,7 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.scenario_comparison,
         result="storage_cluster-reference",
         args=("storage_cluster-sized_for_growth",),
+        also=("storage_cluster-sized_for_growth",),
     ),
     # -- appendix F: the observability model ----------------------------------------------
     "appendix-f-observability-model-graph": Diagram(
@@ -195,10 +210,12 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.scenario_comparison,
         result="observability-reference",
         args=("observability-knobs_turned_down",),
+        also=("observability-knobs_turned_down",),
     ),
     # -- ch00 Prerequisites and setup ------------------------------------------------------
     "prerequisites-and-setup-constants": Table(
-        render=tables.constants_index, result="logs-line-bytes"
+        render=tables.constants_index,
+        computed_from="every stamped result in `bench/results/`, each row naming its own",
     ),
     "prerequisites-and-setup-models": Table(
         render=tables.node_kinds_table, result="storage_cluster-reference"
@@ -215,7 +232,10 @@ FIGURES: dict[str, Table | Diagram] = {
     "reading-a-model-outputs": Table(
         render=tables.outputs_table, result="storage_cluster-reference"
     ),
-    "reading-a-model-conversions": Table(render=tables.conversions_table, result="logs-line-bytes"),
+    "reading-a-model-conversions": Table(
+        render=tables.conversions_table,
+        computed_from="every model file in `models/`",
+    ),
     # -- ch02 What a workload is -------------------------------------------------------------
     "what-a-workload-is-storage": Table(
         render=tables.workload_table, result="storage_cluster-reference"
@@ -228,7 +248,8 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     # -- ch03 Where the numbers come from ------------------------------------------------------
     "where-the-numbers-come-from-constants": Table(
-        render=tables.constants_index, result="logs-line-bytes"
+        render=tables.constants_index,
+        computed_from="every stamped result in `bench/results/`, each row naming its own",
     ),
     "where-the-numbers-come-from-provenance": Table(
         render=tables.provenance_table, result="observability-reference"
@@ -297,6 +318,7 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.scenario_comparison,
         result="service_tier-reference",
         args=("service_tier-twice_the_nodes",),
+        also=("service_tier-twice_the_nodes",),
     ),
     # -- ch08 Regime changes ---------------------------------------------------------------------
     "regime-changes-cardinality": Diagram(
@@ -388,6 +410,7 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.scenario_comparison,
         result="storage_cluster-reference",
         args=("storage_cluster-power_first",),
+        also=("storage_cluster-power_first",),
     ),
     "power-first-ceilings": Table(
         render=tables.ceilings_table, result="storage_cluster-power_first"
@@ -483,6 +506,7 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.scenario_comparison,
         result="storage_cluster-reference",
         args=("storage_cluster-sized_for_growth",),
+        also=("storage_cluster-sized_for_growth",),
     ),
     "a-tco-for-finance-distribution": Diagram(
         draw=diagrams.distribution,
@@ -517,9 +541,13 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.correlation_table, result="correlation-effect"
     ),
     "appendix-d-units-conversions": Table(
-        render=tables.conversions_table, result="logs-line-bytes"
+        render=tables.conversions_table,
+        computed_from="every model file in `models/`",
     ),
-    "appendix-g-glossary-terms": Table(render=tables.glossary_table, result="logs-line-bytes"),
+    "appendix-g-glossary-terms": Table(
+        render=tables.glossary_table,
+        computed_from="the book's outline and the terms `bench/tables.py` declares",
+    ),
 }
 
 

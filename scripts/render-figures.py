@@ -50,7 +50,9 @@ def render_table(figure: Table) -> str:
             ]
         )
     body = figure.render(figure.result, *figure.args)
-    caption = conditions(figure.conditions_from or figure.result)
+    caption = conditions(
+        figure.conditions_from or figure.result, *figure.also, computed_from=figure.computed_from
+    )
     return "\n".join([BANNER, "", body, "", caption, ""])
 
 
