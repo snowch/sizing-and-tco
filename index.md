@@ -10,47 +10,49 @@ short_title: Preface
 
 ## What this book is
 
-A self-study text and a toolkit, built around one question and a rule about answering it.
+A self-study text and a toolkit, built around one question and one rule about answering it.
 
-Three things make it the shape it is.
+The rule first: nothing is asserted here that the repository could check instead. Three things
+follow from it.
 
 **Every number says where it came from.** No figure is typed into the prose. Each one comes from
-a stamped result recording what produced it, the conditions it holds under, and a hash of the
-code that made it — and a check fails the build if a quoted figure stops matching what the
-repository computes. Where a measurement has not been taken you get a box saying so, and never a
+a stamped result recording what produced it, the conditions it holds under, and a hash of the code
+that made it. When a quoted figure stops matching what the repository computes, the build fails.
+Where a measurement has not been taken, the page says so in a box rather than showing a
 plausible-looking placeholder.
 
 **Every model is a file, not a spreadsheet.** A model here is a graph of named quantities in a
-text file. Each one declares a unit, so the build can refuse a model that multiplies the wrong
-two things. Each input declares whether it is a fact, a vendor's claim or somebody's assumption.
-Each empirical constant points at the measurement behind it. The build re-runs every model, and
-the figures in these pages are what it computed.
+text file. Every quantity declares a unit, so the build can refuse a model that multiplies the
+wrong two things. Every input declares whether it is a fact, a vendor's claim or somebody's
+assumption, and an uncertain one has to say what shape its uncertainty has and why that shape
+rather than another. Every measured constant names the measurement behind it. The build re-runs
+all of it, and the figures in these pages are what it computed.
 
-**Every chapter ends by saying what it could not tell you.** A section called *What this cannot
-tell you* is mandatory. In a book about estimates it is usually the most useful part of the
-chapter.
+**Every chapter ends by saying what it cannot tell you.** A section with that name is required,
+and the tests fail a chapter that leaves it out. In a book about estimates it is usually the most
+useful part of the chapter.
 
 ## The question this book keeps asking
 
 **How big, how much, and how wrong could I be?**
 
-The third clause is the whole book. Working out that a cluster needs some number of nodes is
-arithmetic, and most people can do it. Knowing how much that number is worth — which input it
-rests on, how far it moves when that input moves, and what it would take to find out — is a
-different skill, and it is the one that decides whether anybody should act on the answer.
+The third part is what the book is for. Working out how many nodes a cluster needs is arithmetic,
+and most people can do it. Knowing how much to trust the answer — which input it rests on, how far
+it moves when that input moves, and what it would take to find out — is a different skill, and it
+is the one that decides whether anybody should act on it.
 
 ## Why point estimates lie
 
 Not because they are wrong. Because they are *silent*.
 
-Take a storage cluster with a stated workload, and size it the way sizing is usually done: take
-the expected value of every input, multiply along the chain, and read off the answer. The model
-in this book does exactly that, and recommends a number of nodes. Buy them.
+Take a storage cluster with a stated workload and size it the usual way: take the expected value
+of every input, multiply along the chain, and read off the answer. The model in this book does
+exactly that, and recommends a node count. Buy that many.
 
 Now let every input be as uncertain as it honestly is — the growth rate is a forecast, the
 compression ratio was measured on somebody else's data, the price is a quote that expires — and
-ask the same model the same question. It does not give one answer. It gives a distribution, and
-the answer you were about to act on sits somewhere in it.
+ask the same model the same question. It no longer gives one answer. It gives a distribution, and
+the number you were about to act on sits somewhere in it.
 
 ```{include} chapters/_generated/preface-storage-outputs.md
 ```
