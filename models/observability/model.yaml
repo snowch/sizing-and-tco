@@ -34,7 +34,10 @@ nodes:
     distribution: {triangular: {minimum: 8000.0, likely: 25000.0, maximum: 90000.0}}
     provenance:
       kind: assumption
-      source: "ch03 — the busy hour across the estate, not the daily mean"
+      source: "ch03 — the busy hour across the estate, not the daily mean. Triangular: a
+        minimum, a likely and a maximum is the whole of what a dashboard gives you, and the
+        maximum is the busiest hour anybody has looked at rather than the busiest one there
+        will be"
     range: [2000, 200000]
 
   annual_growth:
@@ -44,7 +47,9 @@ nodes:
     provenance:
       kind: assumption
       source: "ch04 — telemetry grows faster than the traffic it describes, because teams add
-        instrumentation as well as load"
+        instrumentation as well as load. Lognormal like any growth rate — it compounds and
+        cannot go negative — and wider than the storage model's for the same reason its
+        median is higher"
 
   horizon:
     kind: input
@@ -76,13 +81,21 @@ nodes:
     kind: input
     unit: dimensionless
     distribution: {triangular: {minimum: 2.0, likely: 6.0, maximum: 20.0}}
-    provenance: {kind: assumption, source: "distinct routes appearing as a label value"}
+    provenance:
+      kind: assumption
+      source: "distinct routes appearing as a label value. Triangular because somebody could
+        go and count them this afternoon; the maximum is the routes that exist today, and a
+        new service adds to it"
 
   label_values_status:
     kind: input
     unit: dimensionless
     distribution: {triangular: {minimum: 2.0, likely: 3.0, maximum: 6.0}}
-    provenance: {kind: assumption, source: "distinct status classes kept as a label"}
+    provenance:
+      kind: assumption
+      source: "distinct status classes kept as a label. Triangular, and the one input in this
+        model whose bounds are genuinely hard: a request cannot carry a status the code does
+        not emit"
 
   label_values_accidental:
     kind: input
@@ -96,7 +109,10 @@ nodes:
     distribution: {lognormal: {p10: 1.0, p90: 6.0}}
     provenance:
       kind: assumption
-      source: "ch08 — the cardinality explosion, as a distribution rather than as a warning"
+      source: "ch08 — the cardinality explosion, as a distribution rather than as a warning.
+        Lognormal because this one has no ceiling: a label carrying a user id multiplies the
+        series count by a number nobody chose, and a triangular would assert a maximum that
+        does not exist"
 
   label_cardinality:
     kind: derived
@@ -175,7 +191,11 @@ nodes:
     kind: input
     unit: line/request
     distribution: {triangular: {minimum: 3.0, likely: 9.0, maximum: 30.0}}
-    provenance: {kind: assumption, source: "application log lines emitted per request served"}
+    provenance:
+      kind: assumption
+      source: "application log lines emitted per request served. Triangular, from reading a
+        sample of the logs — and the maximum is the part to distrust, because a debug flag
+        left on in production is outside it"
 
   log_keep_rate:
     kind: input
@@ -388,7 +408,10 @@ nodes:
     kind: input
     unit: query/second
     distribution: {triangular: {minimum: 2.0, likely: 12.0, maximum: 60.0}}
-    provenance: {kind: assumption, source: "dashboards, alert rules and people, at the busy hour"}
+    provenance:
+      kind: assumption
+      source: "dashboards, alert rules and people, at the busy hour. Triangular because two of
+        those three are countable and the third is not"
 
   series_per_query_base:
     kind: input
@@ -398,7 +421,8 @@ nodes:
     provenance:
       kind: assumption
       source: "how many distinct metric-name-and-host combinations one dashboard panel or alert
-        rule covers, before any label expansion"
+        rule covers, before any label expansion. Triangular, and wide: dashboards differ from
+        each other more than anything else in this model does"
 
   series_per_query:
     kind: derived
@@ -452,8 +476,11 @@ nodes:
     kind: input
     unit: USD/TB/month
     distribution: {lognormal: {p10: 9.0, p90: 24.0}}
-    provenance: {kind: assumption, source: "all-in cost of a usable TB-month on this tier,
-      taken from the storage model's own unit economics (ch16)"}
+    provenance:
+      kind: assumption
+      source: "all-in cost of a usable TB-month on this tier, taken from the storage model's
+        own unit economics (ch17). Lognormal because it is a price — and carried across by
+        hand rather than by sampling, which is the seam ch18 is about"
 
   known_storage_cost:
     kind: derived

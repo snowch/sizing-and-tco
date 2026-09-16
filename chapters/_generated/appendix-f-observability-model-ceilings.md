@@ -6,4 +6,4 @@
 | ingest utilisation, quoted | 0.51 | 40% | 0.60 | ok | 44% | 21% |
 | retention store fill | 0.58 | 30% | 0.70 | ok | 45% | 30% |
 
-*Conditions: target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `d9f7022d8a6f59bc`.*
+*Conditions: target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `7510b101692da3e8`.*

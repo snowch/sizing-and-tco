@@ -150,8 +150,9 @@ high as low. It is the wrong default for a price, for the reason lognormal is th
 normal will happily go negative and a price will not.
 
 Choosing badly is not a rounding error. It is a claim about what can happen, made in a model file
-that will outlive the meeting it came from — which is why every input in this book records who
-claimed it and on what basis:
+that will outlive the meeting it came from. So the build refuses an input that is sampled without
+naming its shape and saying why, and every input in this book records who claimed it, on what
+basis, and which of the four it is:
 
 ```{include} _generated/monte-carlo-provenance.md
 ```

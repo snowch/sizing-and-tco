@@ -202,6 +202,9 @@ Scenarios are how two designs get compared without either of them being edited i
   *month* — is recorded as a conversion and applied, not waved through
   ([Appendix D](#appendix-d-units)).
 - **An input with no provenance, or a `fact` that cites nothing.**
+- **An input that is sampled and does not name its shape in that source.** The distribution is a
+  claim about what can happen, and it is the claim to argue with first
+  ([Appendix C](#appendix-c-distributions)).
 - **A ceiling with no headroom, or no reason.**
 - **A measured node whose result reports no uncertainty**, which is a claim to have measured
   something exactly.

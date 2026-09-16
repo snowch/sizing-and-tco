@@ -103,7 +103,9 @@ nodes:
     distribution: {triangular: {minimum: 1.02, likely: 1.06, maximum: 1.14}}
     provenance:
       kind: assumption
-      source: "filesystem, index and journal overhead as a multiplier on stored bytes"
+      source: "filesystem, index and journal overhead as a multiplier on stored bytes.
+        Triangular, and the bounds are for objects of the size this model assumes — the real
+        spread is a function of object size, which is a term ch09 says this model lacks"
 
   raw_per_usable:
     kind: derived
@@ -162,7 +164,9 @@ nodes:
     distribution: {triangular: {minimum: 1.1, likely: 1.7, maximum: 2.4}}
     provenance:
       kind: vendor_claim
-      source: "sustained sequential read per node, as quoted. Unverified here — ch03"
+      source: "sustained sequential read per node, as quoted. Unverified here — ch03.
+        Triangular, and the lower bound is the one doing the work: the quoted figure is
+        sequential and a real read pattern is not"
 
   nodes_for_throughput:
     kind: derived
@@ -253,7 +257,9 @@ nodes:
     distribution: {lognormal: {p10: 10.5, p90: 19.0}}
     provenance:
       kind: vendor_claim
-      source: "street price per decimal TB at this capacity point, three quotes"
+      source: "street price per decimal TB at this capacity point, three quotes. Lognormal
+        because prices move by ratios rather than by amounts, and because three quotes give a
+        centre and a spread rather than a shape"
 
   drive_capex:
     kind: derived
@@ -264,7 +270,11 @@ nodes:
     kind: input
     unit: USD/node
     distribution: {lognormal: {p10: 8500, p90: 16000}}
-    provenance: {kind: vendor_claim, source: "chassis, CPU, memory and boot media, less drives"}
+    provenance:
+      kind: vendor_claim
+      source: "chassis, CPU, memory and boot media, less drives. Lognormal like any price, and
+        wider than the drives' because a chassis is a configuration rather than a commodity —
+        which is why ch19 finds it at the top of the tornado"
 
   chassis_capex:
     kind: derived
@@ -275,7 +285,11 @@ nodes:
     kind: input
     unit: USD/node
     distribution: {triangular: {minimum: 900, likely: 1500, maximum: 2800}}
-    provenance: {kind: assumption, source: "switch ports, optics and cabling, amortised per node"}
+    provenance:
+      kind: assumption
+      source: "switch ports, optics and cabling, amortised per node. Triangular rather than
+        lognormal, although it is a price: it is a bill of materials divided by a node count
+        somebody chose, so the bounds are the plausible designs rather than a market"
 
   network_capex:
     kind: derived
@@ -293,7 +307,11 @@ nodes:
     kind: input
     unit: W/node
     distribution: {triangular: {minimum: 360, likely: 450, maximum: 640}}
-    provenance: {kind: vendor_claim, source: "typical draw under load, per chassis as configured"}
+    provenance:
+      kind: vendor_claim
+      source: "typical draw under load, per chassis as configured. Triangular, and one of the
+        few inputs here whose bounds are physical rather than editorial: a chassis cannot draw
+        less than it idles at, or more than its supply will give it"
 
   pue:
     kind: input
@@ -303,7 +321,8 @@ nodes:
     provenance:
       kind: assumption
       source: "ch15 — facility overhead. A multiplier on IT load, and the single number a
-        colocation contract is most likely to disagree with you about"
+        colocation contract is most likely to disagree with you about. Triangular: the minimum
+        is a good building, the maximum is a poor one, and below one is impossible"
     range: [1.0, 2.2]
 
   facility_power:
@@ -345,7 +364,11 @@ nodes:
     kind: input
     unit: 1/year
     distribution: {triangular: {minimum: 0.07, likely: 0.11, maximum: 0.18}}
-    provenance: {kind: vendor_claim, source: "annual support as a fraction of capital cost"}
+    provenance:
+      kind: vendor_claim
+      source: "annual support as a fraction of capital cost. Triangular because it is
+        negotiated inside a band the market sets rather than drawn from one: the spread is
+        what different buyers get, not what varies from year to year"
 
   annual_support:
     kind: derived
@@ -356,13 +379,20 @@ nodes:
     kind: input
     unit: dimensionless
     distribution: {triangular: {minimum: 0.2, likely: 0.5, maximum: 1.2}}
-    provenance: {kind: assumption, source: "fraction of one engineer this cluster occupies"}
+    provenance:
+      kind: assumption
+      source: "fraction of one engineer this cluster occupies. Triangular, and the shape
+        cannot express what actually happens: people are not divisible, so the real
+        distribution is lumpy in the way ch08 calls a regime change"
 
   fully_loaded_salary:
     kind: input
     unit: USD/year
     distribution: {lognormal: {p10: 115000, p90: 195000}}
-    provenance: {kind: assumption, source: "salary, employer costs, tooling and overhead"}
+    provenance:
+      kind: assumption
+      source: "salary, employer costs, tooling and overhead. Lognormal because pay is
+        right-skewed and cannot go negative; the p90 is a senior engineer in an expensive city"
 
   annual_staff_cost:
     kind: derived
@@ -393,7 +423,7 @@ nodes:
     note: >-
       The mean of the day-one and horizon capacities: a straight line drawn under a curve that
       is not straight, which understates the area. Stated rather than hidden, because a unit cost
-      is only as defensible as its denominator (ch16).
+      is only as defensible as its denominator (ch17).
     formula: (usable_capacity_t0 + usable_capacity) / 2
 
   cost_per_usable_tb_month:

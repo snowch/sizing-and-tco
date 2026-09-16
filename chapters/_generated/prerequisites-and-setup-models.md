@@ -8,4 +8,4 @@
 | `ceiling` | 2 | a limit, a declared headroom, and a reason |
 | | | **classified as a sizing model** — it has measured constants or ceilings in it, so sampling the inputs is not sufficient on its own |
 
-*Conditions: target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-reference.json`, code hash `9d9699d85b8b810b`.*
+*Conditions: target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-reference.json`, code hash `ea563f58ac2f28c2`.*

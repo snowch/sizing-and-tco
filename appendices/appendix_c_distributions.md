@@ -137,11 +137,17 @@ In order:
    ([ch12](#the-sizing-model)).
 
 And the rule underneath all of them: **the shape is part of the model, so it belongs in the model
-file with a source attached**. Where an input in this book's models has its shape for a reason —
-growth compounds, a price cannot go negative — the `source` field says so, and that sentence is
-what a reviewer argues with. Where it does not, the shape is doing work nobody has defended: the
-build has no check for it, most of the uncertain inputs in both reference models are in that
-state, and it is a fair thing to raise in review of this book's own models.
+file with a source attached**. Every input in all three of this book's models that carries a
+distribution says in its `source` which shape it has and why — that a price cannot go negative,
+that a count has a hard maximum, that a fit this weak should not be given an upper bound by a
+shape. That sentence is what a reviewer argues with; without it the distribution is an assertion
+with a nice picture.
+
+`scripts/verify-models.py` refuses an input that is sampled and does not name its shape. The check
+is mechanical — it looks for the word — and a mechanical check cannot tell a reason from a
+formality. What it can do is make the omission impossible, which is the same bargain as the rule
+that a `fact` must cite something, and it was added after an audit of this book's own models found
+most of them silent.
 
 ## Inputs that move together
 

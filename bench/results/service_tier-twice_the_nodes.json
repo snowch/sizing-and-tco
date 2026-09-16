@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "bbbd3493b09cfc7e",
+  "code_fingerprint": "67d40f4b12d84a65",
   "code_sources": [
     "bench/run_models.py",
     "models/service_tier/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-16T17:15:17+00:00",
-  "git_revision": "767ec80",
+  "generated_at": "2026-09-16T19:25:05+00:00",
+  "git_revision": "a152a7d",
   "kind": "model",
   "name": "service_tier-twice_the_nodes",
   "produced_by": {
@@ -72,7 +72,7 @@
       "utilisation_including_coordination": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-16T17:15:16+00:00",
+    "generated_at": "2026-09-16T19:25:05+00:00",
     "model": "service_tier",
     "nodes": {
       "achievable_throughput": {
@@ -986,7 +986,7 @@
         "point": 0.0069377422517014516,
         "provenance": {
           "kind": "assumption",
-          "source": "ch07 - fitted from two measurements, where two exist"
+          "source": "ch07 - fitted from two measurements, where two exist. Triangular because a fit gives a central value and a range rather than a shape, and its maximum is the claim to distrust: a serial fraction can always be worse than the one you measured"
         },
         "row": 4,
         "summary": {
@@ -1329,7 +1329,7 @@
         "point": 3.67423461417477e-05,
         "provenance": {
           "kind": "assumption",
-          "source": "ch07 - fitted, and the hardest of the two to fit"
+          "source": "ch07 - fitted, and the hardest of the two to fit. Lognormal because it spans an order of magnitude and cannot be negative, and because a shape should not assert a hard upper bound on a quantity this weakly fitted"
         },
         "row": 5,
         "summary": {
@@ -3197,7 +3197,7 @@
         "point": 0.006816699867329622,
         "provenance": {
           "kind": "assumption",
-          "source": "stated workload characteristic; belongs on the rig and has not been measured"
+          "source": "stated workload characteristic; belongs on the rig and has not been measured. Triangular *because* it has not been measured: once it is, the shape becomes a normal around the measurement, which is a change of claim and not only of numbers (ch13)"
         },
         "row": 1,
         "slider": {
@@ -3553,7 +3553,7 @@
         "point": 152.91796067500633,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "throughput of one node alone, as quoted"
+          "source": "throughput of one node alone, as quoted. Triangular around the quoted figure, with bounds wide in both directions because nobody here has run it (ch03)"
         },
         "row": 6,
         "summary": {
