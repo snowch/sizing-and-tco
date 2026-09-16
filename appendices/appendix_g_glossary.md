@@ -62,6 +62,15 @@ the gap between the fifth and ninety-fifth percentiles of the futures the model 
 statistical term means something else — a statement about a procedure repeated over experiments —
 and borrowing it would import a guarantee this method does not offer.
 
+Four things get called an interval in conversation and only one of them appears in these pages.
+A **percentile interval** is what this book reports: two percentiles of the values a model
+produced, and a statement about the model rather than about the world. A **confidence interval**
+is a statement about an estimation procedure. A **prediction interval** is a claim about where a
+future observation will fall, which would require this book's models to have a track record they
+do not have. And the **probability a ceiling is breached** — the last column of every ceiling
+table — is none of those three: it is the share of the model's futures that ended on the wrong
+side of a declared line, which is why it is reported as a share and never as a range.
+
 **Expected value.** The mean, and in a sizing model the mean is usually the worse summary. Outputs
 that come from chains of multiplication are skewed, so the mean sits above most of the futures and
 describes none of them. This book reports the median and says so.

@@ -133,9 +133,9 @@ measurements — something outside this repository was asked a question. The fou
 
 When a constant has not been measured, the node that needs it has no value, and neither does
 anything downstream of it. Those figures render as *not yet measured* and the affected chain is
-named. That is not a gap waiting to be tidied away before publication. It is what an honest
-sizing model looks like before somebody does the work, and [Appendix F](#appendix-f-observability-model)
-has one on a published page for exactly that reason.
+named — never a placeholder, and never a number borrowed from a different stack.
+[Appendix F](#appendix-f-observability-model) has one on a published page, which is a deliberate
+choice and is argued there.
 
 ## Who it is for
 

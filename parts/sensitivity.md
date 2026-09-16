@@ -17,9 +17,8 @@ results there are worth the chapter on their own — that the book's most carefu
 constants buy nothing, and that the input worth most cannot be measured at all.
 
 [ch20](#the-missing-node) is the error no technique in this book can rank, because it is not in
-the list. A model can be wrong about a number or wrong about its shape; sampling handles the first
-perfectly and is completely blind to the second, and a converged interval around a structurally
-incomplete model is the most confident wrong answer available anywhere in this subject.
+the list. A model can be wrong about a number or wrong about its shape; everything in Parts IV and
+VI is about the first, and the second is where the machinery stops helping and starts flattering.
 
 The order matters. A reader who does [ch19](#which-input-is-the-answer) without
 [ch20](#the-missing-node) has learned to optimise a list without asking whether the list is

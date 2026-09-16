@@ -132,8 +132,8 @@ out of space. Making it an input is what lets the ceilings ask the only question
 
 **Whether the structure is right.** Everything above takes the chains as given and asks what the
 inputs are worth. A missing chain — rebuild bandwidth, metadata operations, a control plane — is
-invisible from inside, and the model will produce a beautifully converged interval around the
-wrong answer. That is [ch20](#the-missing-node).
+invisible from inside, and nothing in the output distinguishes a model that is complete from one
+that is not. That is [ch20](#the-missing-node).
 
 **What the ceilings are really at.** Both were declared by somebody with a reason
 ([ch11](#headroom-and-failure-domains)). The probabilities in the last two columns are exact
