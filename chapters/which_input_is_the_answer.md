@@ -131,7 +131,7 @@ in that column says the measurement is not worth commissioning *however well it 
 is a decision somebody can take before spending anything.
 
 Read down it. One input is worth most of the interval and everything below it is rounding. A
-campaign to pin down the third row would be a quarter's work for a result nobody could see on a
+campaign to pin down *support rate* would be a quarter's work for a result nobody could see on a
 chart.
 
 Then the same experiment on the other model, where the answer has a different shape:

@@ -32,9 +32,16 @@ ask the same model the same question. It no longer gives one answer.
 ```{include} chapters/_generated/preface-storage-outputs.md
 ```
 
-The row that matters is the node count. The point estimate is a real number, correctly computed,
-and the interval beside it spans most of an order of magnitude. Nothing in the first calculation
-was wrong. It simply had no way to mention that it was a bet.
+The row that matters is *nodes the model recommends*. The point estimate is a real number,
+correctly computed, and the interval beside it spans most of an order of magnitude. Nothing in the
+first calculation was wrong. It simply had no way to mention that it was a bet.
+
+The italic line under the table runs under every table in this book. **Conditions** says what was
+computed — which model file, which scenario, how many futures were drawn, and the seed that drew
+them. **Re-run** says how to check it: the stamped result on disk, and a hash of the code that did
+the arithmetic. Change that code and the hash changes, and the build refuses to publish a figure
+that no longer matches what the repository computes. The line is there so that a reader who does
+not believe this table has somewhere to go.
 
 ```{image} chapters/_figures/preface-tco-distribution.svg
 :alt: The five-year total cost as a distribution, with the point estimate marked on it
