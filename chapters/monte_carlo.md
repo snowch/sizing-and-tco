@@ -62,7 +62,7 @@ every value in the bag. You get a bag of answers out, and the bag is the answer.
 That is Monte Carlo. There is no more to it than that; everything else is bookkeeping about how
 to fill the bag and how to read it.
 
-Three words, and you will not need many more. The bag of plausible values for an input is its
+Two words, and you will not need many more. The bag of plausible values for an input is its
 **distribution**. One value drawn from the bag is a **sample**. The bag of answers that comes out
 the other end is the output's distribution, and reading it is the last section of this chapter.
 
@@ -318,7 +318,7 @@ have looked like under your choice. If the answer embarrasses you, that is the e
 
 ## Where to go next
 
-Metropolis and Ulam's original paper @metropolis1949monte is four pages, is readable without any
+Metropolis and Ulam's original paper @metropolis1949monte is seven pages, is readable without any
 statistics, and is a useful corrective to the idea that this is a modern technique.
 
 `numpy.random`'s documentation on generators and seeding is worth twenty minutes, particularly

@@ -91,10 +91,15 @@ a breach probability you are willing to be accountable for, and ask the model wh
 machines.
 
 That is a different conversation from "how many nodes do we need", and it is a better one, because
-it is answerable. Here is one other point on the curve:
+it is answerable. Here is one other point on that curve — the same model, the same ceilings, with
+a cluster bought for the growth case rather than the expected one:
 
-```{include} _generated/the-sizing-model-outputs.md
+```{include} _generated/the-sizing-model-resized.md
 ```
+
+Every figure in the last two columns falls, and one of them falls to nothing. What that costs is
+[ch21](#a-tco-for-finance)'s table rather than this one — but the pair, *what it costs* beside
+*how often it breaks*, is the only form in which this decision can be handed to somebody.
 
 Problem 12.2 is the shape of the trade. Removing risk costs money, the cost is not linear in the
 risk removed, and the last few percentage points cost more than all the ones before them. Having

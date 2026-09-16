@@ -45,7 +45,7 @@ about what this book's models say and about nothing else — so its fingerprint 
 sampler, and every figure derived from it moves when the method does.
 
 The node kinds — `input`, `derived`, `measured`, `ceiling` — and the provenance kinds — `fact`,
-`vendor_claim`, `assumption` — are in [appendix A](#appendix-a-dsl-reference), where the fields
+`vendor_claim`, `assumption` — are in [Appendix A](#appendix-a-dsl-reference), where the fields
 they carry are quoted alongside them.
 
 ## Terms this book does not use

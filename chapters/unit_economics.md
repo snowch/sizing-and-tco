@@ -91,7 +91,7 @@ capacity nobody filled, and the same cluster is expensive per terabyte.
 
 So the wide interval on this figure is not measurement error. It is the model saying that **the
 unit cost of a cluster depends on something that has not happened yet** — and that most of the
-uncertainty in the denominator, not the numerator.
+uncertainty is in the denominator rather than in the numerator.
 
 ```{include} _generated/unit-economics-tornado.md
 ```

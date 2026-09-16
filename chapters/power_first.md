@@ -20,9 +20,9 @@ short_title: "ch16 Power first"
 
 What changes when watts are the binding constraint rather than money?
 
-Everything in Parts I to III sized a system from demand and then priced it. This chapter is what
-happens when the answer arrives before the question: a rack has a power allocation, the allocation
-is not negotiable, and the sizing runs the other way.
+Everything so far has sized a system from demand and then priced what it sized. This chapter is
+what happens when the answer arrives before the question: a rack has a power allocation, the
+allocation is not negotiable, and the sizing runs the other way.
 
 ## The material
 
@@ -52,9 +52,11 @@ Then read the ceilings:
 ```{include} _generated/power-first-ceilings.md
 ```
 
-Both of them are breached. The capacity ceiling is over at the point estimate — not at some
-unlucky percentile, at the expected case — and the model puts it over its hard limit in most of
-the futures it thinks are plausible.
+Neither is comfortable, and they are uncomfortable in different ways. The capacity ceiling is over
+its hard limit at the point estimate — not at some unlucky percentile, at the expected case — and
+the model puts it over in most of the futures it thinks are plausible. The bandwidth ceiling
+is under its limit and has spent the whole of the margin that was keeping it there, which is the
+verdict column saying *inside headroom* rather than *ok*.
 
 So the honest output of this chapter is not a cluster. **It is the statement that this workload
 does not fit in this power envelope**, with the numbers to say so.

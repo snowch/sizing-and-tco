@@ -110,8 +110,8 @@ Two of the three are computed from an incomplete total. The `because` on each sa
 ```
 
 The accidental label — the one nobody planned, added during an incident and never removed — is
-near the top. That is the chapter [ch08](#regime-changes) is for, demonstrated rather than warned
-about.
+at the top of it. That is the chapter [ch08](#regime-changes) is for, demonstrated rather than
+warned about.
 
 ## Turning the knobs
 

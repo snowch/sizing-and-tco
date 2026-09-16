@@ -92,7 +92,7 @@ everybody gets wrong by hand. [Appendix D](#appendix-d-units) has the rest of th
 :end-before: replication_factor:
 ```
 
-Three lines, and the third is the whole idea. It names a stamped file, and the file carries the
+Four fields, and the last is the whole idea. It names a stamped file, and the file carries the
 value, the standard error, the corpus, the codec and the implementation. A compression ratio is
 not a fact about the world; it is a fact about some data and some software at some version, and a
 model that treated it as a constant would be hiding the most interesting thing about itself.
@@ -135,7 +135,7 @@ from and [ch11](#headroom-and-failure-domains) is what to do about it.
 
 Colour is kind. An input's border says what it is claiming: solid for a fact, dashed for a
 vendor's claim, dotted for an assumption. Arrows run from cause to effect, and every node sits
-immediately right of the last thing it depends on.
+immediately to the right of the last thing it depends on.
 
 Two things read straight off it. The graph is **wide at the left and narrow at the right** —
 dozens of quantities collapsing into a handful of answers, which is what makes a single wrong

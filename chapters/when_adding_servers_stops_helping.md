@@ -84,8 +84,9 @@ Utilisation halves, exactly as arithmetic says it should. Waiting time falls by 
 than half, because [ch06](#queueing-and-the-knee)'s division is not linear and this is the
 direction in which that helps you.
 
-And throughput goes up by rather less than a quarter — for a doubling of the fleet. Efficiency
-falls by more than a third at the same time, which is the same fact stated as an accusation.
+And throughput goes up by not much more than a quarter — for a doubling of the fleet.
+Efficiency falls by more than a third at the same time, which is the same fact stated as an
+accusation.
 
 So: doubling a tier is an excellent way to fix latency and a poor way to buy capacity. Those are
 different purchases, they are usually conflated, and the model tells them apart.
@@ -180,6 +181,8 @@ Differentiate and set to zero. It comes out as a square root, and it says the pe
 software rather than to the budget. Handle zero crosstalk honestly: there is no peak, and a large
 number is not the same answer.
 
+Both are checked by one file, because the peak is what the fit is for:
+
 ```bash
 python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_2_fit.py
 ```
@@ -189,6 +192,6 @@ python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_2_fit.py
 Gunther's paper @gunther2007usl derives the law from a queueing argument rather than by fitting a
 curve to data, which is worth reading if the second term has so far felt like an extra parameter.
 
-[ch08](#regime-changes) is what both Part II chapters have in common: a place where the chain of
-multiplications stops describing anything, and why no amount of care about the inputs would have
-warned you.
+[ch08](#regime-changes) is what this chapter and the last one have in common: a place where the
+chain of multiplications stops describing anything, and why no amount of care about the inputs
+would have warned you.

@@ -364,6 +364,9 @@ FIGURES: dict[str, Table | Diagram] = {
     "the-sizing-model-ceilings": Table(
         render=tables.ceilings_table, result="storage_cluster-reference"
     ),
+    "the-sizing-model-resized": Table(
+        render=tables.ceilings_table, result="storage_cluster-sized_for_growth"
+    ),
     "the-sizing-model-nodes": Diagram(
         draw=diagrams.distribution,
         result="storage_cluster-reference",

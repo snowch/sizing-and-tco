@@ -144,7 +144,7 @@ wants to give an answer they would still defend a year later.
 
 You should be comfortable with code and with arithmetic. You are assumed to know **nothing**
 about statistics. [ch13](#monte-carlo) and [ch14](#correlation-and-convergence) introduce the
-five or six words you need — distribution, sample, percentile, interval, correlation,
+six words you need — distribution, sample, percentile, interval, correlation,
 convergence — one at a time, each one arriving because a model has just raised a question that
 needs it. Where a statistical term has a plain-English equivalent, this book uses the plain one
 first and names the term second.
@@ -170,9 +170,8 @@ Nothing in this book needs a datacentre, a cloud account, or a licence. The one 
 do on your laptop is take a `rig` measurement, and it refuses to pretend otherwise.
 
 :::{note} Where this book is
-The toolkit is complete and both reference models run end to end. The front matter,
-[ch13](#monte-carlo) and [ch14](#correlation-and-convergence) are written; the remaining chapters
-are stubs that name the question they answer and the figures they owe you.
+The toolkit is complete, both reference models run end to end, and every chapter and appendix is
+written.
 
 **[Download the whole book as a PDF](/sizing-and-tco.pdf)** — every chapter and appendix in one
 file, built from the same source as this site, so the two cannot disagree about what a page says.
