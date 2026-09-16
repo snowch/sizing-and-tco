@@ -6,7 +6,7 @@ short_title: "ch22 What the model got wrong"
 (what-the-model-got-wrong)=
 # ch22 · What the model got wrong
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

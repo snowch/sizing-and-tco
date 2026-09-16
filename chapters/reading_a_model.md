@@ -6,7 +6,7 @@ short_title: "ch01 Reading a model"
 (reading-a-model)=
 # ch01 · Reading a model
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

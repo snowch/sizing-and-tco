@@ -6,7 +6,7 @@ short_title: "ch17 Unit economics"
 (unit-economics)=
 # ch17 · Unit economics
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

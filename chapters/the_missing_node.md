@@ -6,7 +6,7 @@ short_title: "ch20 The missing node"
 (the-missing-node)=
 # ch20 · The missing node
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

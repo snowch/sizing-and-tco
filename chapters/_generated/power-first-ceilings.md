@@ -3,7 +3,7 @@
 | Ceiling | At the plan | Headroom | Allowed | Limit | Verdict | Over allowed | Over limit |
 |---|---:|---:|---:|---:|---|---:|---:|
 | fill level at horizon | 1.20 | 25% | 0.75 | 1.00 | **over** | 75% | 61% |
-| read utilisation at peak | 0.88 | 30% | 0.70 | 1.00 | inside headroom | 70% | 39% |
+| read utilisation at peak | 0.88 | 30% | 0.70 | 1.00 | into the margin | 70% | 39% |
 
 *Conditions — target `model` · model `models/storage_cluster/model.yaml` · scenario `power_first` · 100,000 samples · seed `20260916`*\
 *Re-run — `bench/results/storage_cluster-power_first.json` · code hash `4834654ff2ff0163` · stamped 2026-09-16*

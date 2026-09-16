@@ -6,7 +6,7 @@ short_title: "ch19 Which input is the answer?"
 (which-input-is-the-answer)=
 # ch19 · Which input is the answer?
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

@@ -6,7 +6,7 @@ short_title: "ch10 Bandwidth, and the binding constraint"
 (bandwidth-and-the-binding-constraint)=
 # ch10 · Bandwidth, and the binding constraint
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

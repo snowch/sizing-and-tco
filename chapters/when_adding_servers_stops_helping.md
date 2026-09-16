@@ -6,7 +6,7 @@ short_title: "ch07 When adding servers stops helping"
 (when-adding-servers-stops-helping)=
 # ch07 · When adding servers stops helping
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

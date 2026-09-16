@@ -6,7 +6,7 @@ short_title: "ch14 Correlation and convergence"
 (correlation-and-convergence)=
 # ch14 · Correlation and convergence
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

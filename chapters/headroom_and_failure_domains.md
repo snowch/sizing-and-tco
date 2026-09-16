@@ -6,7 +6,7 @@ short_title: "ch11 Headroom, failure domains and reservations"
 (headroom-and-failure-domains)=
 # ch11 · Headroom, failure domains and reservations
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

@@ -22,7 +22,11 @@ PROVENANCE_MARK = {"fact": "●", "vendor_claim": "◐", "assumption": "○"}
 #: What a measurement says about itself, in the order a reader needs it.
 MEASURED_KEYS = ("corpus", "codec", "stack", "system", "window")
 
-VERDICT_MARK = {"ok": "ok", "inside headroom": "inside headroom", "over": "**over**"}
+#: How a verdict is shown. `inside headroom` is the evaluator's word and it reads as reassurance
+#: — two readers coming to the book cold took it to mean "comfortable". It means the plan is past
+#: the allowed line and spending the reserve that was declared to protect it, so the table says
+#: that instead.
+VERDICT_MARK = {"ok": "ok", "inside headroom": "into the margin", "over": "**over**"}
 
 
 # -- formatting -----------------------------------------------------------------------------

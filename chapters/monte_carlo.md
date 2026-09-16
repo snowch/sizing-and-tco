@@ -6,7 +6,7 @@ short_title: "ch13 Monte Carlo"
 (monte-carlo)=
 # ch13 · Monte Carlo
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

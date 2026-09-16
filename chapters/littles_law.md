@@ -6,7 +6,7 @@ short_title: "ch05 Little's law"
 (littles-law)=
 # ch05 · Little's law
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

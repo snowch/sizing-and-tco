@@ -6,7 +6,7 @@ short_title: "ch09 Capacity"
 (capacity)=
 # ch09 · Capacity
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

@@ -6,7 +6,7 @@ short_title: "ch00 Prerequisites and setup"
 (prerequisites-and-setup)=
 # ch00 · Prerequisites and setup
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

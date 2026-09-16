@@ -6,7 +6,7 @@ short_title: "ch06 Queueing, and the knee"
 (queueing-and-the-knee)=
 # ch06 · Queueing, and the knee
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |
@@ -81,6 +81,17 @@ So this book does not have a knee rule. It has a **declared margin, with a reaso
 
 ```{include} _generated/queueing-and-the-knee-ceilings.md
 ```
+
+This is the first ceilings table in the book and every later chapter prints one, so it is worth
+reading the columns once. *At the plan* is where the design sits at the point estimate. *Limit* is
+where the quantity stops meaning anything — a full disk, a saturated device. *Headroom* is the
+margin somebody declared, and *allowed* is the limit less that margin. The verdict judges the
+point estimate alone: `ok` under the allowed line, **over** past the limit, and *into the margin*
+for the case between them, where the design is spending the reserve that was declared to protect
+it. The last two columns are the ones this book exists for, and they are not about the point
+estimate at all: across everything the model thinks could happen, the share of futures past the
+allowed line, and the share past the limit. A design can read `ok` and still be over the limit in
+a third of its futures, which is [ch12](#the-sizing-model).
 
 A margin is a decision, it belongs to somebody, and a ceiling's `because` field — quoted above,
 and required by the build — is where they say what they were protecting. [ch11](#headroom-and-failure-domains) is about making that decision

@@ -6,7 +6,7 @@ short_title: "ch15 Capex, opex and the lifecycle"
 (capex-opex-and-lifecycle)=
 # ch15 · Capex, opex and the lifecycle
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |
