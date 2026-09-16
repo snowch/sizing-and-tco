@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "68888ad54385413f",
+  "code_fingerprint": "d9f7022d8a6f59bc",
   "code_sources": [
     "bench/run_models.py",
     "models/observability/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-16T16:19:43+00:00",
-  "git_revision": "62afd15",
+  "generated_at": "2026-09-16T17:15:16+00:00",
+  "git_revision": "767ec80",
   "kind": "model",
   "name": "observability-reference",
   "produced_by": {
@@ -98,7 +98,7 @@
       "traces_ingest": 1e-06,
       "traces_stored": 0.0864
     },
-    "generated_at": "2026-09-16T16:19:43+00:00",
+    "generated_at": "2026-09-16T17:15:16+00:00",
     "model": "observability",
     "nodes": {
       "active_series": {
@@ -273,7 +273,8 @@
             1273360045.9953682,
             1293895855.8670611,
             1314431665.7387538
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "active series",
@@ -435,7 +436,8 @@
             2.638402333071065,
             2.6699422554721117,
             2.7014821778731584
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "annual growth",
@@ -679,7 +681,8 @@
             19.10927918442343,
             19.412356106130318,
             19.715433027837204
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "growth factor",
@@ -944,7 +947,8 @@
             976.0612547865145,
             991.7912119183022,
             1007.52116905009
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "ingest, metrics and logs only",
@@ -1117,7 +1121,8 @@
             237436.21484143572,
             241264.93254006852,
             245093.6502387013
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "retention cost, metrics and logs only",
@@ -1290,7 +1295,8 @@
             13893.306892363724,
             14117.336360301631,
             14341.365828239539
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "stored, metrics and logs only",
@@ -1473,7 +1479,8 @@
             2023.1487785001586,
             2055.748417490905,
             2088.3480564816514
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "label cardinality",
@@ -1635,7 +1642,8 @@
             53.22649567689429,
             54.082863028394925,
             54.93923037989556
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "accidental label values",
@@ -1802,7 +1810,8 @@
             19.372879631951903,
             19.65273395797989,
             19.932588284007878
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "label values endpoint",
@@ -1969,7 +1978,8 @@
             5.8545515963535095,
             5.916614369026867,
             5.978677141700224
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "label values status",
@@ -2136,7 +2146,8 @@
             29.128012834888544,
             29.548630867207912,
             29.969248899527283
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "lines per request",
@@ -2352,7 +2363,8 @@
             25679724.659957226,
             26093534.8514106,
             26507345.04286398
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "log line rate",
@@ -2525,7 +2537,8 @@
             830.7882711596081,
             844.1758200556039,
             857.5633689515997
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "logs ingest",
@@ -2681,7 +2694,8 @@
             32.37378908328638,
             32.37444609078874,
             32.37510309829109
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "measured",
         "label": "bytes per log line, compressed",
@@ -2882,7 +2896,8 @@
             2153.4031988457045,
             2188.1037255841256,
             2222.8042523225467
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "logs stored",
@@ -3094,7 +3109,8 @@
             397.699363164217,
             404.11316461835264,
             410.5269660724883
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "metrics ingest",
@@ -3269,7 +3285,8 @@
             9.373796107897101,
             9.373919822770265,
             9.374043537643427
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "measured",
         "label": "bytes per sample, compressed",
@@ -3451,7 +3468,8 @@
             13744.48999095534,
             13966.150969210268,
             14187.811947465196
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "metrics stored",
@@ -3675,7 +3693,8 @@
             58.061186964765504,
             58.963405610536846,
             59.86562425630818
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "queries per second",
@@ -3913,7 +3932,8 @@
             157758593.50074524,
             160303033.49629495,
             162847473.49184462
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "query series rate",
@@ -4098,7 +4118,8 @@
             73.03638587997465,
             74.21436735939581,
             75.39234883881696
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "ceiling",
         "label": "query path utilisation",
@@ -4310,10 +4331,11 @@
             10.167304737359526,
             10.331158457482314,
             10.495012177605103
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "ceiling",
-        "label": "ingest utilisation, on the vendor's number",
+        "label": "ingest utilisation, quoted",
         "layer": 6,
         "note": null,
         "point": 0.5142398391726887,
@@ -4473,7 +4495,8 @@
             87318.5005853436,
             88595.66466657714,
             89872.82874781068
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "request rate",
@@ -4700,7 +4723,8 @@
             2967147.8993232716,
             3014999.318560678,
             3062850.737798085
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "series per query",
@@ -4863,7 +4887,8 @@
             1935.762515728984,
             1966.3150308219288,
             1996.8675459148737
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "series per query, before labels",
@@ -5092,7 +5117,8 @@
             80.44988585553928,
             81.6971817464116,
             82.94447763728391
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "storage price",
@@ -5281,7 +5307,8 @@
             28.94438935909109,
             29.411117417295063,
             29.87784547549904
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "ceiling",
         "label": "retention store fill",
@@ -5562,7 +5589,8 @@
             73.71162723064555,
             73.71394572405009,
             73.71626421745462
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "measured",
         "label": "bytes per span, compressed",

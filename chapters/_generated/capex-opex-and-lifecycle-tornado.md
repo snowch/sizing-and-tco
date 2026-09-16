@@ -11,4 +11,4 @@
 | drive price | input | $412,473 | $441,588 | $29,115 |
 | PUE | input | $415,153 | $437,829 | $22,677 |
 
-*Conditions: target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-reference.json`, code hash `db7e90c7954372e4`.*
+*Conditions: target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-reference.json`, code hash `9d9699d85b8b810b`.*

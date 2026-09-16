@@ -3,6 +3,14 @@
 What is left, roughly in the order it is worth doing. Kept short and honest; when an item is done
 it comes out rather than being ticked.
 
+## Needs somebody with repository settings
+
+- **GitHub Pages source.** Settings -> Pages -> Build and deployment -> Source must be
+  **GitHub Actions**, not "Deploy from a branch". `configure-pages` with `enablement: true` creates
+  the Pages site but does not change its build type, so the build job succeeds, uploads its
+  artifact, and the deploy job is then rejected before it runs a single step - which is why it
+  fails in two seconds with no log to read. One click, and nothing in the workflow can do it.
+
 ## Needs a machine or a system, not a desk
 
 - **`collector-throughput-per-core`** (`rig`). Declare a reference machine in `rig/machine.yml`,
@@ -15,19 +23,25 @@ it comes out rather than being ticked.
 
 ## The book
 
-- Twenty chapters are stubs. Each names its question and the figures it owes; `make chapter`
-  regenerates any that go missing. The order that makes the book readable soonest is ch01
-  (*Reading a model*), then ch12 (*The sizing model*), then ch03 (*Where the numbers come from*) —
-  those three are what ch13 and ch14 currently assume without being able to point at.
-- Appendices A to D and G are stubs. B is nearly free: it is `sizing/mc.py` quoted in order.
+Every chapter and every appendix is written. What is left is the work a first draft leaves:
+
+- **A read-through in one sitting.** Twenty-two chapters written in sequence repeat themselves in
+  ways that are invisible while writing each one. The suspects are the ceiling argument (ch08,
+  ch11), the point-estimate argument (ch12, ch13) and the provenance argument (ch03, ch21).
+- **The two chapters that are waiting on measurements.** ch08 and ch12 both describe the
+  observability model's traces chain around a hole. They read correctly today and they will read
+  better when the chain lights up; neither needs a rewrite, which was the point of building the
+  blocked-state machinery.
+- **Cross-references.** Every chapter links forwards and backwards by hand. `tests/test_book.py`
+  checks the anchors resolve, not that the links are the right ones.
 
 ## The toolkit
 
 - **Part pages.** The template this book inherits from puts a short introduction in front of each
   part, and a test insists on it. Not carried over yet.
 - **`sync-labels.py`.** Chapter numbers in prose are currently checked by `tests/test_book.py`
-  rather than rewritten. With twenty stubs and few cross-references that is enough; it will not
-  stay enough.
+  rather than rewritten. Inserting a chapter now means editing every `chNN` that a page says out
+  loud, and the check will find them, which is not the same as fixing them.
 - **A second ceiling kind.** Every ceiling here is "a value against a limit". A queueing ceiling
   that took a service time and an arrival rate and derived the knee would let ch06 stop describing
   the shape and start drawing it.

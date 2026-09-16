@@ -8,4 +8,4 @@
 | crosstalk | input | 0.0165 | 0.0165 | 0 |
 | single node throughput | input | 0.0165 | 0.0165 | 0 |
 
-*Conditions: target `model` · model `models/service_tier/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/service_tier-reference.json`, code hash `5de348188c0ebf98`.*
+*Conditions: target `model` · model `models/service_tier/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/service_tier-reference.json`, code hash `9bd99d2bc803e34a`.*

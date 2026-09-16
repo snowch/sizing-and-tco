@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "009d40d904f49342",
+  "code_fingerprint": "bcd2fbdc176e62a2",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-16T16:19:45+00:00",
-  "git_revision": "62afd15",
+  "generated_at": "2026-09-16T17:15:19+00:00",
+  "git_revision": "767ec80",
   "kind": "model",
   "name": "storage_cluster-sized_for_growth",
   "produced_by": {
@@ -85,7 +85,7 @@
       "tco": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-16T16:19:45+00:00",
+    "generated_at": "2026-09-16T17:15:18+00:00",
     "model": "storage_cluster",
     "nodes": {
       "annual_energy": {
@@ -240,7 +240,8 @@
             2175352.048494672,
             2196598.5276660835,
             2217845.0068374956
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "annual energy",
@@ -413,7 +414,8 @@
             1038734.3368959895,
             1054997.4122064547,
             1071260.4875169196
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "annual energy cost",
@@ -575,7 +577,8 @@
             2.387068351498251,
             2.4143414978272806,
             2.44161464415631
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "annual growth factor",
@@ -766,7 +769,8 @@
             1813092.4037965925,
             1837304.7189634833,
             1861517.0341303742
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "annual opex",
@@ -939,7 +943,8 @@
             330723.95183449186,
             335766.8399394201,
             340809.7280443484
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "annual staff cost",
@@ -1112,7 +1117,8 @@
             1415919.8446927923,
             1436343.7756432965,
             1456767.7065938008
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "annual support",
@@ -1294,7 +1300,8 @@
             170133.28925530994,
             172839.84298514386,
             175546.39671497777
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "average usable capacity",
@@ -1496,7 +1503,8 @@
             9602292.345144149,
             9730592.575242247,
             9858892.805340346
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "capex",
@@ -1669,7 +1677,8 @@
             7888412.716926697,
             8000094.9548815135,
             8111777.192836329
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "chassis capex",
@@ -1831,7 +1840,8 @@
             34001.778952270244,
             34483.16790897204,
             34964.55686567383
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "chassis price",
@@ -2018,7 +2028,8 @@
             72.31563081114808,
             73.47274956539736,
             74.62986831964665
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "cost per usable TB per month",
@@ -2216,7 +2227,8 @@
             1990669.6817049682,
             2018146.0159741566,
             2045622.3502433447
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "drive capex",
@@ -2378,7 +2390,8 @@
             35.75196985820704,
             36.24543850528298,
             36.73890715235892
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "drive price",
@@ -2590,7 +2603,8 @@
             0.5239400418179864,
             0.5319083322007836,
             0.5398766225835808
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "electricity price",
@@ -2781,7 +2795,8 @@
             248.15788826085696,
             250.5816253326584,
             253.00536240445993
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "facility power",
@@ -2967,7 +2982,8 @@
             7.973830924077709,
             8.10219385174149,
             8.230556779405271
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "ceiling",
         "label": "fill level at horizon",
@@ -3129,7 +3145,8 @@
             380034.8766822861,
             385141.46619630745,
             390248.05571032874
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "fully loaded salary",
@@ -3394,7 +3411,8 @@
             547.0245752173084,
             551.7195333293813,
             556.4144914414543
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "installed read throughput",
@@ -3567,7 +3585,8 @@
             9065462.018982964,
             9186523.594817419,
             9307585.170651872
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "lifecycle opex",
@@ -3730,7 +3749,8 @@
             1.1360644717122736,
             1.1379360753842018,
             1.13980767905613
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "metadata overhead",
@@ -3907,7 +3927,8 @@
             635208.2751002125,
             642072.0620646535,
             648935.8490290946
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "network capex",
@@ -4070,7 +4091,8 @@
             2737.966703018157,
             2767.5519916579897,
             2797.1372802978212
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "network price per node",
@@ -4237,7 +4259,8 @@
             630.706411742673,
             635.0595003669091,
             639.4125889911453
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "node power",
@@ -4431,7 +4454,8 @@
             2.357864548350468,
             2.378101436764575,
             2.3983383251786825
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "node read throughput",
@@ -4633,7 +4657,8 @@
             2466.59375,
             2506.296875,
             2546.0
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "nodes for capacity",
@@ -4812,7 +4837,8 @@
             196.1875,
             199.09375,
             202.0
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "nodes for throughput",
@@ -5005,7 +5031,8 @@
             2466.9375,
             2506.46875,
             2546.0
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "nodes the model recommends",
@@ -5161,7 +5188,8 @@
             2.86650186160032,
             2.876986490662204,
             2.887471119724087
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "measured",
         "label": "object compression ratio",
@@ -5348,7 +5376,8 @@
             233.30763532962257,
             236.49791755786333,
             239.6881997861041
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "peak read throughput",
@@ -5519,7 +5548,8 @@
             1.7306394606716264,
             1.7399720063433533,
             1.7493045520150798
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "PUE",
@@ -5700,7 +5730,8 @@
             443982.90585264674,
             451130.1536649661,
             458277.4014772855
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "raw capacity needed",
@@ -5883,7 +5914,8 @@
             1.4640880449246128,
             1.4702571934734163,
             1.47642634202222
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "raw bytes per usable byte",
@@ -6068,7 +6100,8 @@
             0.842143788367616,
             0.8546629124669853,
             0.8671820365663546
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "ceiling",
         "label": "read utilisation at peak",
@@ -6250,7 +6283,8 @@
             1.1652786543272755,
             1.1808403980624105,
             1.1964021417975454
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "staff fte",
@@ -6417,7 +6451,8 @@
             0.1763111090354162,
             0.17802525502293412,
             0.17973940101045205
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "support rate",
@@ -6594,7 +6629,8 @@
             16936091.89300761,
             17152748.735852618,
             17369405.578697626
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "five-year total cost of ownership",
@@ -6777,7 +6813,8 @@
             336266.5785106199,
             341679.6859702877,
             347092.79342995555
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "usable capacity at horizon",
@@ -6881,7 +6918,7 @@
       "read_utilisation"
     ],
     "scenario": {
-      "because": "The reference scenario buys what the point estimates recommend, and the model then puts a third of its futures over the capacity limit. This scenario buys the cluster the p90 growth case needs instead, and is here so the two can be read side by side: what the extra capital buys is a number, the reduction in P(over) is a number, and the decision between them is a judgement somebody has to make and defend (ch20).",
+      "because": "The reference scenario buys what the point estimates recommend, and the model then puts a third of its futures over the capacity limit. This scenario buys the cluster the p90 growth case needs instead, and is here so the two can be read side by side: what the extra capital buys is a number, the reduction in P(over) is a number, and the decision between them is a judgement somebody has to make and defend (ch21).",
       "name": "sized_for_growth",
       "overrides": {
         "nodes_purchased": 232.0

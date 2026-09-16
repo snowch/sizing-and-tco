@@ -9,4 +9,4 @@
 8 node(s) downstream of those cannot be computed and are shown as — rather than filled in. Nothing is estimated in their place: this book publishes measurements or it publishes nothing.
 :::
 
-*Conditions: target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `68888ad54385413f`.*
+*Conditions: target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `d9f7022d8a6f59bc`.*

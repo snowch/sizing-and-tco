@@ -37,6 +37,11 @@ jobs:
         with:
           # Turns Pages on if it is off. Without it the very first deploy fails with a 404 on a
           # repository setting nobody has been told about, which is exactly what happened.
+          #
+          # It does NOT change the build type of a site that already exists. If the deploy job
+          # below fails in a couple of seconds having run no steps and written no log, that is
+          # what has happened: Settings -> Pages -> Source has to say "GitHub Actions" rather than
+          # "Deploy from a branch", and no workflow can set it.
           enablement: true
 
       - name: Setup Node.js
