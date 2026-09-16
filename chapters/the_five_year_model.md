@@ -6,7 +6,7 @@ short_title: "ch18 The five-year model"
 (the-five-year-model)=
 # ch18 · The five-year model
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

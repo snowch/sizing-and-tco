@@ -6,7 +6,7 @@ short_title: "ch12 The sizing model"
 (the-sizing-model)=
 # ch12 · The sizing model
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

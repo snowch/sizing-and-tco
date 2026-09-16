@@ -48,7 +48,7 @@ short_title: "{chapter.label} {chapter.title}"
 ({chapter.anchor})=
 # {chapter.label} · {chapter.title} [DRAFT]
 
-:::{{note}} Chapter header
+:::{{note}} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

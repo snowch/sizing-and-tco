@@ -6,7 +6,7 @@ short_title: "ch08 Regime changes"
 (regime-changes)=
 # ch08 · Regime changes
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

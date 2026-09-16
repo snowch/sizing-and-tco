@@ -6,7 +6,7 @@ short_title: "ch21 A TCO for a finance audience"
 (a-tco-for-finance)=
 # ch21 · A TCO for a finance audience
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

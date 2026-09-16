@@ -6,7 +6,7 @@ short_title: "ch16 Power first"
 (power-first)=
 # ch16 · Power first
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |
@@ -56,7 +56,7 @@ Neither is comfortable, and they are uncomfortable in different ways. The capaci
 its hard limit at the point estimate — not at some unlucky percentile, at the expected case — and
 the model puts it over in most of the futures it thinks are plausible. The bandwidth ceiling
 is under its limit and has spent the whole of the margin that was keeping it there, which is the
-verdict column saying *inside headroom* rather than *ok*.
+verdict column saying *into the margin* rather than *ok*.
 
 So the honest output of this chapter is not a cluster. **It is the statement that this workload
 does not fit in this power envelope**, with the numbers to say so.

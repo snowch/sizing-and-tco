@@ -6,7 +6,7 @@ short_title: "ch03 Where the numbers come from"
 (where-the-numbers-come-from)=
 # ch03 · Where the numbers come from
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |

@@ -6,7 +6,7 @@ short_title: "ch04 Peak, mean and growth"
 (peak-mean-and-growth)=
 # ch04 · Peak, mean and growth
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |
@@ -45,6 +45,13 @@ shape it does not have.
 ### Growth is a bet, and the bet compounds
 
 Now the input that does most of the damage in this book.
+
+The chart below is the first of a kind the rest of the book uses constantly, so here is how it is
+made. Take one input. Hold every other input still, swing that one from the low end of its range
+to the high end, and record how far the answer moves. That distance is its **swing**. Do it for
+every input, sort the bars longest-first, and they make a funnel — which is where the name
+**tornado** comes from. The two columns in the table are the ends of each swing: low enough that
+only about one future in ten comes in under, high enough that only about one in ten comes in over.
 
 ```{image} _figures/peak-mean-and-growth-chart.svg
 :alt: Which input moves the recommended node count most, when swung across its middle 80%

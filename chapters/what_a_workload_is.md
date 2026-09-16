@@ -6,7 +6,7 @@ short_title: "ch02 What a workload is"
 (what-a-workload-is)=
 # ch02 · What a workload is
 
-:::{note} Chapter header
+:::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |
