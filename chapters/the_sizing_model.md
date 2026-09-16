@@ -72,8 +72,8 @@ At the point estimate, every ceiling is comfortable. Of course it is — the clu
 those point estimates, so it satisfies them by construction. A model that reported only the
 verdict column would be marking its own homework.
 
-The last two columns are the model asked a different question, and the capacity row is the one to
-sit with. Buy the cluster the arithmetic recommends, and across everything this model thinks could
+The last two columns are the model asked a different question, and *fill level at horizon* is
+the row to sit with. Buy the cluster the arithmetic recommends, and across everything this model thinks could
 happen, it runs out of space a substantial fraction of the time. Not in an extreme scenario. In a
 third of them.
 
