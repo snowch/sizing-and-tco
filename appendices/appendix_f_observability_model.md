@@ -23,8 +23,8 @@ This is the **sizing exemplar**, and it is here to show what
 [Appendix E](#appendix-e-storage-model) could not. Three multiplicative chains hang off the same
 few roots, so they move together whether or not anybody says so. Label cardinality is a product of
 uncertain counts and therefore dominates everything downstream of it. The control knobs are
-sampling and retention rather than money. There are three separate outputs with three separate
-ceilings, and no single number summarises them.
+sampling and retention rather than money. Three tiers — ingest, store and query — carry four
+ceilings between them, and no single number summarises them.
 
 And it has a hole in it, deliberately left open.
 
@@ -46,8 +46,8 @@ invented one.
 
 The same is true of collector throughput per core. The model declares it twice on purpose: once as
 the vendor's quoted figure, which lets a ceiling be computed, and once as a measurement nobody has
-taken, which leaves a second ceiling blank. Reading those two rows next to each other is most of
-[ch03](#where-the-numbers-come-from).
+taken, which leaves a second ceiling with nothing in it but the words *not yet measured*.
+Reading those two rows next to each other is most of [ch03](#where-the-numbers-come-from).
 
 ## The graph
 
@@ -84,7 +84,7 @@ any of them:
 :width: 100%
 ```
 
-## The three ceilings
+## The four ceilings, one of which cannot be computed
 
 ```{include} ../chapters/_generated/appendix-f-observability-model-ceilings.md
 ```

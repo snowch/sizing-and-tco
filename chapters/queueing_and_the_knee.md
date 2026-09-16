@@ -82,8 +82,8 @@ So this book does not have a knee rule. It has a **declared margin, with a reaso
 ```{include} _generated/queueing-and-the-knee-ceilings.md
 ```
 
-A margin is a decision, it belongs to somebody, and the `because` column is where they say what
-they were protecting. [ch11](#headroom-and-failure-domains) is about making that decision
+A margin is a decision, it belongs to somebody, and a ceiling's `because` field — quoted above,
+and required by the build — is where they say what they were protecting. [ch11](#headroom-and-failure-domains) is about making that decision
 deliberately instead of inheriting it.
 
 ### Why the margin is so large

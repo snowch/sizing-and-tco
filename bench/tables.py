@@ -215,22 +215,32 @@ def ceilings_table(name: str) -> str:
     number together with how much of the model's own uncertainty puts it over the edge.
     """
     payload = load_result(name)["summary"]
-    ceilings = {
-        node_name: node["ceiling"]
+    # Every *declared* ceiling, not only the ones that could be computed. A ceiling whose
+    # constant has not been measured used to be dropped here without trace, which is the one
+    # place the blocked-state machinery was failing to show a hole — and the observability
+    # model's honest ingest ceiling is exactly that case.
+    declared = {
+        node_name: node
         for node_name, node in payload["nodes"].items()
-        if node.get("ceiling")
+        if node.get("kind") == "ceiling"
     }
-    if not ceilings:
+    if not declared:
         return "*This model declares no ceilings. It is a cost model: see the front matter.*"
     rows = [
-        "| Ceiling | At the plan | Headroom | Allowed | Verdict | Over allowed | Over limit |",
-        "|---|---:|---:|---:|---|---:|---:|",
+        "| Ceiling | At the plan | Headroom | Allowed | Limit | Verdict "
+        "| Over allowed | Over limit |",
+        "|---|---:|---:|---:|---:|---|---:|---:|",
     ]
-    for node_name, ceiling in sorted(ceilings.items()):
-        label = payload["nodes"][node_name]["label"]
+    for _node_name, node in sorted(declared.items()):
+        label = node["label"]
+        ceiling = node.get("ceiling")
+        if not ceiling:
+            rows.append(f"| {label} | *not yet measured* |  |  |  |  |  |  |")
+            continue
         rows.append(
             f"| {label} | {ceiling['value']:.2f} | {ceiling['headroom']:.0%} "
-            f"| {ceiling['allowed']:.2f} | {VERDICT_MARK[ceiling['verdict']]} "
+            f"| {ceiling['allowed']:.2f} | {ceiling['limit']:.2f} "
+            f"| {VERDICT_MARK[ceiling['verdict']]} "
             f"| {ceiling.get('p_over_allowed', 0):.0%} | {ceiling.get('p_over_limit', 0):.0%} |"
         )
     return "\n".join(rows)

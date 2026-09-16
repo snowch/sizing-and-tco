@@ -192,8 +192,8 @@ undeclared correlation is indistinguishable, from inside the model, from a corre
 That is the same failure as a missing node, and it belongs to [ch20](#the-missing-node).
 
 **Whether the coefficient is right.** A rank correlation declared as moderate rather than strong
-is a guess with the same standing as any other assumption in the model. The `because` column is
-the only thing standing behind it.
+is a guess with the same standing as any other assumption in the model. The `because` field
+beside it in the model file is the only thing standing behind it.
 
 **Anything about correlations that are not monotonic.** Rank correlation describes two quantities
 that tend to move in the same direction. Two that move together up to a point and then diverge —
