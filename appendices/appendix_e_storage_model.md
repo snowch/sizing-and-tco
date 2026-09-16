@@ -11,7 +11,7 @@ short_title: "Appendix E · Storage model"
 
 | | |
 |---|---|
-| **Purpose** | The book's cost exemplar, through every output the toolkit produces |
+| **Purpose** | Cost-shaped arithmetic, classified a sizing model, through every output the toolkit produces |
 | **Model** | `models/storage_cluster/model.yaml` |
 | **Built from** | `storage_cluster-reference`, `storage_cluster-sized_for_growth` |
 :::
@@ -20,11 +20,15 @@ A generic scale-out storage cluster, sized from a stated workload and costed ove
 product is named and none is implied: what is on this page is a structure, and the numbers in it
 are placeholders for yours.
 
-This is the **cost exemplar**. Its relationships are accounting identities and physics, it carries
-exactly one measured constant, and almost nothing in it changes regime — so sampling the inputs
-really is sufficient, which is the claim the front matter makes and this model is here to
-demonstrate. [Appendix F](#appendix-f-observability-model) is what it looks like when that claim
-does not hold.
+This model is the book's **cost exemplar in shape and a sizing model by the rule**, and the gap
+between those two things is worth a paragraph. Almost all of it is accounting identity and
+physics — watts times hours times price, capital plus running cost over a horizon — which is the
+structure the front matter says sampling the inputs is sufficient for. But it carries one measured
+constant and two ceilings, so `scripts/verify-models.py` classifies it a sizing model and holds it
+to the stricter rules, and it is right to: the compression ratio belongs to a codec, and a cluster
+that runs out of space does not fail proportionally. A model is not a cost model because most of
+it looks like one. [Appendix F](#appendix-f-observability-model) is what it looks like when even
+the arithmetic stops being a chain.
 
 ## The graph
 

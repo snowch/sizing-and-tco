@@ -9,4 +9,4 @@
 | | *settles* | *falls* | **3.30× per decade** from 1,000 samples up, against √10 = 3.16 |
 
 *Conditions — target `model` · sizing.mc*\
-*Re-run — `bench/results/convergence-storage-tco.json` · code hash `70404a34aa45e7d0` · stamped 2026-09-16*
+*Re-run — `bench/results/convergence-storage-tco.json` · code hash `cc004a3fad2435cc` · stamped 2026-09-16*

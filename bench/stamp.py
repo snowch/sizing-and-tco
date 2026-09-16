@@ -449,6 +449,17 @@ def provenance_problems(filename: str, payload: dict) -> list[str]:
                 )
         return problems
 
+    # A sampling experiment is stamped `kind: measurement` because it measures the model rather
+    # than the world, and it escaped the rule above for years on that technicality. It should not
+    # have: an unseeded run is a number nobody can reproduce, which is the one thing this
+    # repository refuses everywhere else. Appendix B says so in as many words, and said it while
+    # six results in `bench/results/` recorded no seed at all.
+    if target == "model" and "seed" not in produced_by:
+        problems.append(
+            f"{filename}: a result computed from a model must record 'seed' in `produced_by`. "
+            "Where the run uses many seeds, record the one they are derived from and say how."
+        )
+
     # Every figure declares a unit, and every declared unit is a unit.
     figures = _leaf_figures(summary)
     for path in sorted(figures):

@@ -80,6 +80,7 @@ def queueing_curve(write: bool = True) -> dict:
         produced_by={
             "model": "service_tier",
             "scenario": "reference",
+            "seed": load_scenario(SERVICE_REFERENCE).seed,
             "method": "arrival_rate swept to hit each utilisation, everything else held still",
             "stack": "sizing.evaluate",
         },
@@ -130,6 +131,7 @@ def scaling_curve(write: bool = True) -> dict:
         produced_by={
             "model": "service_tier",
             "scenario": "reference",
+            "seed": load_scenario(SERVICE_REFERENCE).seed,
             "method": "the node count swept from one to four hundred",
             "stack": "sizing.evaluate",
         },
@@ -179,6 +181,7 @@ def binding_constraint(write: bool = True) -> dict:
         produced_by={
             "model": "storage_cluster",
             "scenario": "reference",
+            "seed": load_scenario(STORAGE_REFERENCE).seed,
             "method": "sampled, and the two node-count chains compared draw by draw",
             "stack": "sizing.evaluate",
         },

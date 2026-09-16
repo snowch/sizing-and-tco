@@ -44,9 +44,11 @@ looking the values up.
 :end-before: # -- percentile functions
 ```
 
-Every stamped result in this book records the seed that produced it. An unseeded run is a
-measurement nobody can repeat, which is the thing this repository refuses everywhere else and
-would be strange to permit here.
+Every stamped result computed from a model records the seed that produced it, and
+`bench/stamp.py` refuses one that does not. An unseeded run is a measurement nobody can repeat,
+which is the thing this repository refuses everywhere else and would be strange to permit here.
+Where an experiment uses many seeds — the convergence table on this page uses one per replicate —
+what it records is the seed they are all derived from, and the rule that derives them.
 
 ## The four percentile functions
 

@@ -8,4 +8,4 @@
 | `observability` | query_utilisation | 1.658 | 1.648 | +0.6% |
 
 *Conditions — target `model` · sizing.mc — Iman-Conover rank correlation*\
-*Re-run — `bench/results/correlation-effect.json` · code hash `70404a34aa45e7d0` · stamped 2026-09-16*
+*Re-run — `bench/results/correlation-effect.json` · code hash `cc004a3fad2435cc` · stamped 2026-09-16*

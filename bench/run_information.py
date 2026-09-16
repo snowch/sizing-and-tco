@@ -155,6 +155,7 @@ def value_of_information(write: bool = True) -> dict:
             "method": "each uncertain input pinned at its median in turn, and the model resampled",
             "model": " and ".join(sorted({row["model"] for row in rows})),
             "scenario": "reference",
+            "seed": load_scenario("models/storage_cluster/scenarios/reference.yaml").seed,
             "stack": "sizing.evaluate",
         },
         summary={"rows": rows, "totals": totals},

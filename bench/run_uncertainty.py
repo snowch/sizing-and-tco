@@ -125,7 +125,9 @@ def convergence(write: bool = True) -> dict:
         produced_by={
             "model": "storage_cluster",
             "scenario": "reference",
-            "method": f"resampled {REPLICATES} times at each sample count, with independent seeds",
+            "seed": load_scenario(REFERENCE).seed,
+            "method": f"resampled {REPLICATES} times at each sample count, each replicate's seed "
+            f"derived from the scenario's as seed + count * 977 + replicate",
             "stack": "sizing.mc",
             "output": "tco",
         },
@@ -202,6 +204,7 @@ def correlation_effect(write: bool = True) -> dict:
         produced_by={
             "model": "storage_cluster and observability",
             "scenario": "reference",
+            "seed": load_scenario(REFERENCE).seed,
             "method": "sampled with and without each model's declared correlations",
             "stack": "sizing.mc — Iman-Conover rank correlation",
         },

@@ -141,6 +141,7 @@ def postmortem(write: bool = True) -> dict:
             "and each input's median in them compared against its median overall",
             "model": "storage_cluster and observability",
             "scenario": "reference",
+            "seed": load_scenario(STORAGE_REFERENCE).seed,
             "stack": "sizing.evaluate",
         },
         summary={

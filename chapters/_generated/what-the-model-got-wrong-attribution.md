@@ -8,4 +8,4 @@
 | **3 inputs** | | *34% of futures ended here* | | *something was beyond its p90 in 43% of them, against 27% of futures generally* |
 
 *Conditions — target `model` · sizing.evaluate*\
-*Re-run — `bench/results/postmortem.json` · code hash `4936a30b01677306` · stamped 2026-09-16*
+*Re-run — `bench/results/postmortem.json` · code hash `f8023472e9cf11ec` · stamped 2026-09-16*

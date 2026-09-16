@@ -265,11 +265,14 @@ with tight ones will give different intervals for the same input, and nothing he
 which was right. The distribution is an assumption like any other, and this book makes you write
 it in a file with your name on it for that reason.
 
-**Anything about correlation, yet.** Every input above was drawn independently, as though the
-electricity price knew nothing about the carbon price and the growth rate knew nothing about the
-read load. In this model that assumption is wrong, it is not a small effect, and it makes the
-interval *narrower* than the evidence supports — which is the direction that gets a plan
-approved. [ch14](#correlation-and-convergence) measures it.
+**How the inputs were drawn together.** The sampler above draws each input on its own. The
+intervals above were not produced that way: this model declares two pairs that move together —
+drives and chassis, which are quoted by the same supply chain, and growth and read load, which
+are the same year seen twice — and the evaluator applies them after the draw. So every figure on
+this page already carries them, and none of this chapter has said so. Drawing those pairs
+independently instead would make every interval here *narrower*, which is the direction that gets
+a plan approved. [ch14](#correlation-and-convergence) names the pairs, and measures what they
+were worth.
 
 **Whether a hundred thousand samples was enough.** It was assumed here and not established. The
 argument, and the way to work it out for a model of your own, is also
@@ -325,5 +328,5 @@ statistics, and is a useful corrective to the idea that this is a modern techniq
 `numpy.random`'s documentation on generators and seeding is worth twenty minutes, particularly
 the part about why `default_rng` exists and what it replaced.
 
-[ch14](#correlation-and-convergence) picks up the two things this chapter assumed and did not
-establish: that the inputs move independently, and that the sample count was large enough.
+[ch14](#correlation-and-convergence) picks up the two things this chapter used without
+establishing: the correlations the intervals above already carry, and the sample count.

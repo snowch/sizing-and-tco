@@ -18,4 +18,4 @@
 | 97% | 220.4 ms | 227.2 ms | 2,069 | 33.3x |
 
 *Conditions — target `model` · sizing.evaluate*\
-*Re-run — `bench/results/queueing-curve.json` · code hash `e6a3b009b05e3804` · stamped 2026-09-16*
+*Re-run — `bench/results/queueing-curve.json` · code hash `5dae44783a592596` · stamped 2026-09-16*
