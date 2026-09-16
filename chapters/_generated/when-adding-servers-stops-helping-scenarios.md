@@ -20,5 +20,5 @@
 | *utilisation* — over its limit | 16% | 0% |
 | *fraction of the tier doing nothing useful* — over its limit | 0% | 0% |
 
-*Conditions — target `model` · model `models/service_tier/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916`*\
-*Re-run — `bench/results/service_tier-reference.json` · code hash `dcc4b2585c13940e` · stamped 2026-09-16*
+*Conditions — target `model` · model `models/service_tier/model.yaml` · scenarios `reference` and `twice_the_nodes` · 100,000 samples · seed `20260916`*\
+*Re-run — `bench/results/service_tier-reference.json` · `bench/results/service_tier-twice_the_nodes.json` · code hash `dcc4b2585c13940e` · stamped 2026-09-16*

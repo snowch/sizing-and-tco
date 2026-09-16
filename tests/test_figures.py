@@ -98,3 +98,53 @@ def test_no_label_is_truncated(path):
     assert "…" not in path.read_text(), (
         f"{path.name} truncates a label. Shorten the label in the model, or give the box room."
     )
+
+
+# -- a figure's conditions line names what the figure was made from -----------------------------
+
+
+def test_a_renderer_that_ignores_a_result_is_not_given_one():
+    """The bug: a table of unit conversions stamped with a compression benchmark.
+
+    ``conversions_table``, ``glossary_table`` and ``constants_index`` all take ``_name`` and
+    ignore it — they are assembled from the model files or from the results directory. Each was
+    nonetheless declared with a ``result`` purely to satisfy the machinery, and the conditions
+    line under them therefore sent a reader to a file the table had nothing to do with. Nothing
+    noticed, because ``verify-numbers.py`` only checks that a named result *exists*.
+    """
+    import inspect
+
+    from bench.figures import FIGURES, Table
+
+    for name, figure in FIGURES.items():
+        if not isinstance(figure, Table):
+            continue
+        first = next(iter(inspect.signature(figure.render).parameters), None)
+        if first and first.startswith("_"):
+            assert figure.result is None, (
+                f"figure {name!r} is rendered by {figure.render.__name__}, which ignores the "
+                f"result it is given — yet it declares result={figure.result!r}. Its conditions "
+                "line will name a result the table was not built from. Use computed_from instead."
+            )
+            assert figure.computed_from, (
+                f"figure {name!r} has no result and no computed_from, so its conditions line "
+                "cannot say where it came from."
+            )
+
+
+def test_a_table_drawing_on_two_results_names_both():
+    """A scenario comparison prints two columns from two runs and must disclose both.
+
+    Five of them named only the first, so half the numbers in each table — including the whole
+    point of ch16 — came from a file the footer never mentioned.
+    """
+    from bench.figures import FIGURES, Table
+
+    for name, figure in FIGURES.items():
+        if not isinstance(figure, Table) or figure.render.__name__ != "scenario_comparison":
+            continue
+        other = figure.args[0] if figure.args else None
+        assert other in figure.also, (
+            f"figure {name!r} compares against {other!r} and does not list it in `also`, so its "
+            "conditions line names one of the two results its columns come from."
+        )

@@ -13,5 +13,5 @@
 | *fill level at horizon* — over its limit | 34% | 9% |
 | *read utilisation at peak* — over its limit | 6% | 0% |
 
-*Conditions — target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916`*\
-*Re-run — `bench/results/storage_cluster-reference.json` · code hash `ea563f58ac2f28c2` · stamped 2026-09-16*
+*Conditions — target `model` · model `models/storage_cluster/model.yaml` · scenarios `reference` and `sized_for_growth` · 100,000 samples · seed `20260916`*\
+*Re-run — `bench/results/storage_cluster-reference.json` · `bench/results/storage_cluster-sized_for_growth.json` · code hash `ea563f58ac2f28c2` · stamped 2026-09-16*

@@ -83,19 +83,10 @@ def _interval(summary: dict | None) -> str:
 # -- conditions -------------------------------------------------------------------------------
 
 
-def conditions(name: str) -> str:
-    """Where this figure came from, under every table that shows it.
-
-    Two lines rather than one, split where the content already splits: the first is what a reader
-    needs in order to **disagree** with the figure, the second is what they need in order to
-    **re-run** it. As one line it reached two hundred and ninety-three characters, which on a
-    phone is five wrapped lines of italic — and a provenance note nobody reads is worth the same
-    as no provenance note. Nothing is dropped to get there. A book whose argument is that every
-    number carries its conditions does not then abbreviate them.
-    """
+def _said_by(name: str) -> list[str]:
+    """What one stamped result says about how it was produced."""
     result = load_result(name)
     produced = result.get("produced_by", {})
-    # What was computed, and against what. This is the half somebody argues with.
     said = [f"target `{result['target']}`"]
     if result.get("kind") == "model":
         said += [
@@ -108,13 +99,60 @@ def conditions(name: str) -> str:
             said.append(f"**{len(produced['unmeasured'])} constant(s) not yet measured**")
     else:
         said += [str(produced[key]) for key in MEASURED_KEYS if produced.get(key)]
+    return said
+
+
+def _from_source(what: str) -> str:
+    """What a fragment assembled at build time says instead of naming a run.
+
+    There is no single result to point at, and naming one anyway is what put a compression
+    benchmark under a table of unit conversions. Saying so is the honest option and the short one.
+    """
+    return (
+        f"*Conditions — assembled at build time from {what} · no single stamped run*\\\n"
+        "*Re-run — `make figures`*"
+    )
+
+
+def conditions(name: str | None, *also: str, computed_from: str | None = None) -> str:
+    """Where this figure came from, under every table that shows it.
+
+    ``name`` is ``None`` for a fragment computed from the model files rather than from a run, and
+    ``also`` names any further results the fragment draws on — a scenario comparison prints two
+    columns from two runs, and naming one of them is a disclosure that is quietly false.
+
+    Two lines rather than one, split where the content already splits: the first is what a reader
+    needs in order to **disagree** with the figure, the second is what they need in order to
+    **re-run** it. As one line it reached two hundred and ninety-three characters, which on a
+    phone is five wrapped lines of italic — and a provenance note nobody reads is worth the same
+    as no provenance note. Nothing is dropped to get there. A book whose argument is that every
+    number carries its conditions does not then abbreviate them.
+    """
+    if name is None:
+        return _from_source(computed_from or "this repository")
+    # What was computed, and against what. This is the half somebody argues with. Every result
+    # the fragment draws on gets its own clause, because a table with two columns from two runs
+    # has two sets of conditions and a reader checking either one needs both.
+    names = (name, *also)
+    # Every scenario table in the book is one model run twice, so repeating the model and the
+    # sample count would be noise. Where the runs share a model, they share one clause and the
+    # scenarios are listed; where they do not, each gets its own.
+    models = {load_result(one).get("produced_by", {}).get("model_file") for one in names}
+    if also and len(models) == 1:
+        scenarios = [load_result(one).get("produced_by", {}).get("scenario") for one in names]
+        said = " · ".join(_said_by(name)).replace(
+            f"scenario `{scenarios[0]}`",
+            "scenarios " + " and ".join(f"`{one}`" for one in scenarios),
+        )
+    else:
+        said = " · ".join(_said_by(name))
+        for extra in also:
+            said += " · and " + " · ".join(_said_by(extra))
     # And how to check it for yourself, which is a different question and gets its own line.
-    check = [
-        f"`bench/results/{name}.json`",
-        f"code hash `{result['code_fingerprint']}`",
-        f"stamped {result['generated_at'][:10]}",
-    ]
-    return "*Conditions — " + " · ".join(said) + "*\\\n*Re-run — " + " · ".join(check) + "*"
+    check = [f"`bench/results/{one}.json`" for one in names]
+    check.append(f"code hash `{load_result(name)['code_fingerprint']}`")
+    check.append(f"stamped {load_result(name)['generated_at'][:10]}")
+    return "*Conditions — " + said + "*\\\n*Re-run — " + " · ".join(check) + "*"
 
 
 # -- model tables -----------------------------------------------------------------------------
