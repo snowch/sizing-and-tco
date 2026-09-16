@@ -7,6 +7,10 @@ could I be?** — and a rule about answering it: every number says where it came
 
 **Read it at <https://snowch.github.io/sizing-and-tco>.**
 
+> First deploy on a fresh clone: set **Settings -> Pages -> Source** to *GitHub Actions*. The
+> workflow enables Pages itself but cannot change an existing site's build type, and the symptom
+> is a deploy job that fails in two seconds with no log.
+
 Companion to [computer-systems](https://github.com/snowch/computer-systems), and built on the same
 bargain: nothing is published that the repository cannot re-derive.
 
@@ -44,8 +48,8 @@ make book      # live preview at localhost:3000
 
 The toolkit is complete and both reference models run end to end through the dependency graph, the
 generated input UI, the tornado, the sampled distributions, the unit gate and the reference-scenario
-tests. The front matter and the two Monte Carlo chapters are written; the remaining chapters are
-stubs that name the question they answer and the figures they owe.
+tests. Every chapter and every appendix is written, and every problem is a test that fails until it
+is solved.
 
 Two constants are not yet measured — collector throughput per core, which needs a reference
 machine, and spans per request, which needs somebody's instrumented application. The observability

@@ -62,7 +62,7 @@ def _svg(width: float, height: float, body: str, title: str) -> str:
     )
 
 
-def _wrap(text: str, width: int = 22) -> list[str]:
+def _wrap(text: str, width: int = 26) -> list[str]:
     """Break a label into at most two lines, because a box is a box."""
     words, lines, current = str(text).split(), [], ""
     for word in words:
@@ -145,7 +145,10 @@ def dependency_graph(result: str, focus: str | None = None) -> str:
             f'<rect x="{x}" y="{y}" width="{BOX_WIDTH}" height="{BOX_HEIGHT}" rx="3" '
             f'fill="{fill}" stroke="{stroke}" stroke-width="1.2"{dash}/>'
         )
-        lines = _wrap(node["label"])
+        label = node["label"]
+        if node["kind"] == "ceiling":
+            label = f"limit on {label}"
+        lines = _wrap(label)
         for i, line in enumerate(lines):
             offset = 13 if len(lines) == 1 else 9 + i * 11
             boxes.append(
@@ -245,6 +248,13 @@ def tornado_chart(result: str, output: str, limit: int = 9) -> str:
 # -- a distribution ------------------------------------------------------------------------
 
 
+#: How much of the sampled mass a distribution figure draws before it truncates. A long right
+#: tail is a fact about the model, but a figure that spends nine tenths of its width on the last
+#: hundredth of the samples shows the reader nothing. The figure draws the bulk and says in words
+#: how far the tail runs and how much of it was left off.
+SHOWN_MASS = 0.99
+
+
 def distribution(result: str, node_name: str) -> str:
     """One node's sampled distribution, with the interval and the point estimate on it.
 
@@ -260,15 +270,24 @@ def distribution(result: str, node_name: str) -> str:
             360, 40, '<text x="8" y="24" font-size="11">this node does not vary</text>', "fixed"
         )
 
-    width, height = 520.0, 220.0
-    plot_left, plot_right, plot_top, plot_bottom = 46.0, width - 16, 44.0, height - 40
+    width, height = 520.0, 240.0
+    plot_left, plot_right, plot_top, plot_bottom = 46.0, width - 24, 68.0, height - 42
     counts, edges = histogram["counts"], histogram["edges"]
-    low, high = edges[0], edges[-1]
-    span = (high - low) or 1.0
-    tallest = max(counts) or 1
+    # A quantity spanning orders of magnitude arrives already binned by ratio (`mc.histogram`).
+    # It gets a logarithmic axis to match, and no truncation: on that axis the tail costs a
+    # third of the width rather than nine tenths of it.
+    logarithmic = histogram.get("spacing") == "log"
+    if logarithmic:
+        drawn, hidden = len(counts), 0
+    else:
+        drawn, hidden = _visible_bins(counts, edges, summary, node.get("point"))
+    low, high = edges[0], edges[drawn]
+    span = (math.log10(high / low) if logarithmic else high - low) or 1.0
+    tallest = max(counts[:drawn]) or 1
 
     def at_x(value: float) -> float:
-        return plot_left + (value - low) / span * (plot_right - plot_left)
+        travelled = math.log10(max(value, low) / low) if logarithmic else value - low
+        return plot_left + travelled / span * (plot_right - plot_left)
 
     body = [
         f'<text x="{MARGIN}" y="20" font-size="11.5" fill="#263238">'
@@ -276,9 +295,10 @@ def distribution(result: str, node_name: str) -> str:
         f'<text x="{MARGIN}" y="34" font-size="9.5" fill="#546e7a">'
         f"90% interval {_esc(fmt(summary['p5'], node['unit']))} to "
         f"{_esc(fmt(summary['p95'], node['unit']))} · median "
-        f"{_esc(fmt(summary['p50'], node['unit']))}</text>",
+        f"{_esc(fmt(summary['p50'], node['unit']))}"
+        f"{' · horizontal axis logarithmic' if logarithmic else ''}</text>",
     ]
-    for i, count in enumerate(counts):
+    for i, count in enumerate(counts[:drawn]):
         x1, x2 = at_x(edges[i]), at_x(edges[i + 1])
         bar = (count / tallest) * (plot_bottom - plot_top)
         inside = summary["p5"] <= (edges[i] + edges[i + 1]) / 2 <= summary["p95"]
@@ -286,57 +306,128 @@ def distribution(result: str, node_name: str) -> str:
             f'<rect x="{x1:.2f}" y="{plot_bottom - bar:.2f}" width="{max(x2 - x1 - 0.4, 0.4):.2f}" '
             f'height="{bar:.2f}" fill="{"#9fc0dd" if inside else "#dde5ec"}"/>'
         )
-    for value, colour, label in (
+    markers = [
         (summary["p5"], "#455a64", "p5"),
-        (summary["p95"], "#455a64", "p95"),
         (node.get("point"), "#b3413a", "point"),
-    ):
+        (summary["p95"], "#455a64", "p95"),
+    ]
+    # Two rows, so that a point estimate sitting almost on top of a percentile does not print
+    # one label over the other. Both rows clear the subtitle and the line below them.
+    row_ends = [MARGIN - 2.0, MARGIN - 2.0]
+    row_y = (plot_top - 10.0, plot_top - 22.0)
+    for value, colour, label in markers:
         if value is None or not low <= value <= high:
             continue
-        dash = "" if label == "point" else ' stroke-dasharray="3 2"'
         x = at_x(value)
+        half = len(label) * 2.4 + 3
+        row = next((i for i, end in enumerate(row_ends) if x - half >= end), None)
+        if row is None:  # both taken: the less crowded one, and accept the crowding
+            row = row_ends.index(min(row_ends))
+        row_ends[row] = x + half
+        dash = "" if label == "point" else ' stroke-dasharray="3 2"'
         body.append(
-            f'<line x1="{x:.1f}" y1="{plot_top - 4:.0f}" x2="{x:.1f}" '
+            f'<line x1="{x:.1f}" y1="{plot_top - 6:.0f}" x2="{x:.1f}" '
             f'y2="{plot_bottom:.0f}" stroke="{colour}" stroke-width="1.2"{dash}/>'
-            f'<text x="{x:.1f}" y="{plot_top - 8:.0f}" font-size="8.5" '
+            f'<text x="{x:.1f}" y="{row_y[row]:.0f}" font-size="8.5" '
             f'text-anchor="middle" fill="{colour}">{label}</text>'
         )
     body.append(
         f'<line x1="{plot_left}" y1="{plot_bottom}" x2="{plot_right}" y2="{plot_bottom}" '
         f'stroke="#90a4ae" stroke-width="1"/>'
     )
-    for fraction in (0.0, 0.5, 1.0):
-        value = low + fraction * span
+    for value, anchor in _ticks(low, high, logarithmic):
         x = at_x(value)
         body.append(
             f'<line x1="{x:.1f}" y1="{plot_bottom}" x2="{x:.1f}" y2="{plot_bottom + 4}" '
             f'stroke="#90a4ae"/>'
-            f'<text x="{x:.1f}" y="{plot_bottom + 16}" font-size="8.5" text-anchor="middle" '
+            f'<text x="{x:.1f}" y="{plot_bottom + 16}" font-size="8.5" text-anchor="{anchor}" '
             f'fill="#546e7a">{_esc(fmt(value, node["unit"]))}</text>'
         )
+    if hidden:
+        total = sum(counts) or 1
+        body.append(
+            f'<text x="{plot_right:.0f}" y="{plot_top - 22:.0f}" font-size="8.5" '
+            f'text-anchor="end" fill="#90a4ae">'
+            f"{hidden / total * 100:.1f}% of samples run on to "
+            f"{_esc(fmt(edges[-1], node['unit']))}</text>"
+        )
     return _svg(width, height, "".join(body), f"Distribution of {node['label']}")
+
+
+def _ticks(low: float, high: float, logarithmic: bool) -> list[tuple[float, str]]:
+    """Where to put the labels along the bottom, and which way to hang them off their tick.
+
+    The ends are always labelled and always fall inside the canvas, which is why they are
+    anchored rather than centred. Between them, a decade if the axis is logarithmic and the
+    midpoint if it is not.
+    """
+    ticks = [(low, "start")]
+    if logarithmic:
+        span = math.log10(high / low)
+        ticks += [
+            (float(10**power), "middle")
+            for power in range(math.ceil(math.log10(low)), math.floor(math.log10(high)) + 1)
+            # Not so close to an end that the two labels would collide.
+            if 0.09 < math.log10(10**power / low) / span < 0.91
+        ]
+    else:
+        ticks.append((low + (high - low) / 2, "middle"))
+    return [*ticks, (high, "end")]
+
+
+def _visible_bins(
+    counts: list[int], edges: list[float], summary: dict, point: float | None
+) -> tuple[int, int]:
+    """How many bins to draw, and how many samples that leaves off the right-hand end.
+
+    Always enough to reach the top of the interval and the point estimate, whatever the tail
+    does: the figure exists to show where the point estimate sits inside the interval, and a
+    truncation that hid either of those would be hiding the argument.
+    """
+    total = sum(counts) or 1
+    must_reach = max(x for x in (summary["p95"], point) if x is not None)
+    running = 0
+    for i, count in enumerate(counts):
+        running += count
+        if running >= total * SHOWN_MASS and edges[i + 1] >= must_reach:
+            return i + 1, total - running
+    return len(counts), 0
 
 
 # -- convergence ------------------------------------------------------------------------------
 
 
-def convergence(result: str) -> str:
-    """Interval half-width against sample count, with the one-over-root-n law drawn beside it.
+def _decade(power: int) -> str:
+    """A tick label for ten to the power, short enough to sit beside an axis."""
+    if power >= 6:
+        return f"${10 ** (power - 6)}M"
+    if power >= 3:
+        return f"${10 ** (power - 3)}k"
+    return f"${10**power}"
 
-    ch14 shows this rather than asserting it. The measured points and the law are drawn on the
-    same axes so the reader can see how well it holds, including where it does not.
+
+def convergence(result: str) -> str:
+    """The two quantities ch14 is at pains to separate, drawn on one pair of axes.
+
+    The width of the interval is a property of the model, and more samples do not move it. The
+    gap between one run and the next is a property of how hard you looked, and falls at one over
+    the square root of n. Drawn apart they are two unremarkable lines; drawn together they are
+    the argument, which is why the flat one is in the picture at all.
     """
     payload = load_result(result)["summary"]
     points = payload["convergence"]
-    width, height = 470.0, 230.0
-    left, right, top, bottom = 58.0, width - 18, 34.0, height - 38
+    width, height = 520.0, 264.0
+    left, right, top, bottom = 64.0, width - 16, 56.0, height - 46
 
     counts = [p["samples"] for p in points]
-    widths = [p["half_width"] for p in points]
+    series = (
+        ("half_width", "#4a7ba7", "width of the interval"),
+        ("p95_spread", "#c8791a", "gap between runs"),
+    )
     log_n = [math.log10(c) for c in counts]
-    log_w = [math.log10(w) for w in widths]
     x_low, x_high = min(log_n), max(log_n)
-    y_low, y_high = min(log_w) - 0.1, max(log_w) + 0.1
+    magnitudes = [math.log10(p[key]) for key, _, _ in series for p in points]
+    y_low, y_high = math.floor(min(magnitudes)), math.ceil(max(magnitudes))
 
     def at(lx: float, ly: float) -> tuple[float, float]:
         return (
@@ -345,33 +436,65 @@ def convergence(result: str) -> str:
         )
 
     body = [
-        f'<text x="{MARGIN}" y="20" font-size="11.5" fill="#263238">Half-width of the 90% '
-        f"interval against sample count (both axes logarithmic)</text>"
+        f'<text x="{MARGIN}" y="20" font-size="11.5" fill="#263238">Two things that are easily '
+        f"confused, at rising sample counts</text>",
+        f'<text x="{MARGIN}" y="34" font-size="9.5" fill="#546e7a">Both axes logarithmic. Only '
+        f"one of them is converging on anything</text>",
     ]
-    # The law: half-width proportional to one over the square root of n, anchored at the first
-    # measured point, so the comparison is a shape rather than a fitted line.
-    law = [(lx, log_w[0] - 0.5 * (lx - log_n[0])) for lx in (x_low, x_high)]
+    for power in range(y_low, y_high + 1):
+        _, y = at(x_low, power)
+        body.append(
+            f'<line x1="{left}" y1="{y:.1f}" x2="{right}" y2="{y:.1f}" stroke="#eceff1"/>'
+            f'<text x="{left - 6:.0f}" y="{y + 3:.1f}" font-size="8.5" text-anchor="end" '
+            f'fill="#546e7a">{_decade(power)}</text>'
+        )
+    # The law, anchored on the first sample count the run was willing to fit it from, and cut
+    # where it would leave the axes rather than drawn off the edge of the figure.
+    anchor = next(i for i, c in enumerate(counts) if c >= payload["law_measured_from"])
+    law_y = math.log10(points[anchor]["p95_spread"])
+    end_x = x_high
+    if law_y - 0.5 * (x_high - log_n[anchor]) < y_low:
+        end_x = log_n[anchor] + 2 * (law_y - y_low)
+    law = ((log_n[anchor], law_y), (end_x, law_y - 0.5 * (end_x - log_n[anchor])))
     body.append(
         '<path d="M'
         + " L".join(f"{x:.1f},{y:.1f}" for x, y in (at(*pair) for pair in law))
         + '" fill="none" stroke="#b3413a" stroke-width="1.2" stroke-dasharray="4 3"/>'
     )
-    path = " L".join(
-        f"{x:.1f},{y:.1f}" for x, y in (at(lx, ly) for lx, ly in zip(log_n, log_w, strict=True))
+    law_end_x, law_end_y = at(*law[1])
+    body.append(
+        f'<text x="{law_end_x - 4:.1f}" y="{law_end_y + 13:.1f}" font-size="8.5" '
+        f'text-anchor="end" fill="#b3413a">one over the square root of n</text>'
     )
-    body.append(f'<path d="M{path}" fill="none" stroke="#4a7ba7" stroke-width="1.6"/>')
-    for lx, ly, count in zip(log_n, log_w, counts, strict=True):
-        x, y = at(lx, ly)
-        body.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3" fill="#4a7ba7"/>')
+    for key, colour, label in series:
+        magnitude = [math.log10(p[key]) for p in points]
+        path = " L".join(
+            f"{x:.1f},{y:.1f}"
+            for x, y in (at(lx, ly) for lx, ly in zip(log_n, magnitude, strict=True))
+        )
+        body.append(f'<path d="M{path}" fill="none" stroke="{colour}" stroke-width="1.8"/>')
+        for lx, ly in zip(log_n, magnitude, strict=True):
+            x, y = at(lx, ly)
+            body.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3" fill="{colour}"/>')
+        x, y = at(log_n[0], magnitude[0])
         body.append(
-            f'<text x="{x:.1f}" y="{bottom + 14:.0f}" font-size="8.5" text-anchor="middle" '
-            f'fill="#546e7a">{count:,}</text>'
+            f'<text x="{x + 8:.1f}" y="{y - 8:.1f}" font-size="9" fill="{colour}">'
+            f"{_esc(label)}</text>"
         )
     body.append(
         f'<line x1="{left}" y1="{bottom}" x2="{right}" y2="{bottom}" stroke="#90a4ae"/>'
         f'<line x1="{left}" y1="{top}" x2="{left}" y2="{bottom}" stroke="#90a4ae"/>'
-        f'<text x="{right}" y="{top + 2:.0f}" font-size="9" text-anchor="end" fill="#b3413a">'
-        f"one over the square root of n</text>"
+    )
+    for i, (lx, count) in enumerate(zip(log_n, counts, strict=True)):
+        x, _ = at(lx, y_low)
+        anchor = "start" if i == 0 else "end" if i == len(counts) - 1 else "middle"
+        body.append(
+            f'<text x="{x:.1f}" y="{bottom + 14:.0f}" font-size="8.5" text-anchor="{anchor}" '
+            f'fill="#546e7a">{count:,}</text>'
+        )
+    body.append(
+        f'<text x="{(left + right) / 2:.0f}" y="{height - 8:.0f}" font-size="9.5" '
+        f'text-anchor="middle" fill="#455a64">samples drawn</text>'
     )
     return _svg(width, height, "".join(body), "Monte Carlo convergence")
 
@@ -411,17 +534,17 @@ def queueing_curve(result: str) -> str:
     ]
     # Where a sensible headroom rule would put you, so the curve is read against a decision
     # rather than admired.
-    for mark, label, colour in ((0.7, "a 30% margin ends here", "#c8791a"), (0.9, "", "#b3413a")):
+    # Written up the line rather than across the top, so that neither label is crossed by the
+    # other's line.
+    marks = ((0.7, "a 30% margin ends here", "#c8791a"), (0.9, "a 10% margin ends here", "#b3413a"))
+    for mark, label, colour in marks:
         x = left + mark * (right - left)
         body.append(
             f'<line x1="{x:.1f}" y1="{top}" x2="{x:.1f}" y2="{bottom}" stroke="{colour}" '
             f'stroke-width="1" stroke-dasharray="3 3"/>'
+            f'<text transform="rotate(-90 {x - 5:.1f} {bottom - 6:.0f})" x="{x - 5:.1f}" '
+            f'y="{bottom - 6:.0f}" font-size="9" fill="{colour}">{_esc(label)}</text>'
         )
-        if label:
-            body.append(
-                f'<text x="{x - 6:.1f}" y="{top + 12:.0f}" font-size="9" text-anchor="end" '
-                f'fill="{colour}">{_esc(label)}</text>'
-            )
     body.append(f'<path d="M{path}" fill="none" stroke="#4a7ba7" stroke-width="2"/>')
     for row in rows:
         x, y = at(row["utilisation"], row["inflation"])
@@ -446,6 +569,9 @@ def queueing_curve(result: str) -> str:
     body.append(
         f'<text x="{(left + right) / 2:.0f}" y="{height - 8:.0f}" font-size="9.5" '
         f'text-anchor="middle" fill="#455a64">utilisation</text>'
+        f'<text transform="rotate(-90 13 {(top + bottom) / 2:.0f})" x="13" '
+        f'y="{(top + bottom) / 2:.0f}" font-size="9.5" text-anchor="middle" fill="#455a64">'
+        f"how much longer a request takes</text>"
     )
     return _svg(width, height, "".join(body), "Residence time against utilisation")
 
@@ -524,8 +650,9 @@ def scaling_curve(result: str) -> str:
         f'fill="#546e7a">{tallest / 1000:.0f}k</text>'
         f'<text x="{left - 6:.0f}" y="{bottom:.0f}" font-size="9" text-anchor="end" '
         f'fill="#546e7a">0</text>'
-        f'<text x="{right:.0f}" y="{height - 8:.0f}" font-size="9" text-anchor="end" '
-        f'fill="#546e7a">requests per second</text>'
+        f'<text transform="rotate(-90 13 {(top + bottom) / 2:.0f})" x="13" '
+        f'y="{(top + bottom) / 2:.0f}" font-size="9.5" text-anchor="middle" fill="#455a64">'
+        f"requests per second</text>"
     )
     return _svg(width, height, "".join(body), "Throughput against node count")
 
@@ -547,7 +674,7 @@ def distribution_shapes(_result: str | None = None) -> str:
     from sizing import mc
 
     width, height = 520.0, 300.0
-    left, right = 54.0, width - 16
+    left, right = 194.0, width - 16
     panel = 62.0
     percentiles = np.linspace(0.001, 0.999, 1200)
 
@@ -588,8 +715,9 @@ def distribution_shapes(_result: str | None = None) -> str:
             )
         body.append(
             f'<line x1="{left}" y1="{base:.1f}" x2="{right}" y2="{base:.1f}" stroke="#90a4ae"/>'
-            f'<text x="{MARGIN}" y="{top + 12:.0f}" font-size="10" fill="#263238">{_esc(name)}</text>'
-            f'<text x="{MARGIN}" y="{top + 24:.0f}" font-size="8" fill="#78909c">'
+            f'<text x="{MARGIN}" y="{base - 14:.0f}" font-size="10" fill="#263238">'
+            f"{_esc(name)}</text>"
+            f'<text x="{MARGIN}" y="{base - 3:.0f}" font-size="8" fill="#78909c">'
             f"{_esc(caption)}</text>"
         )
     return _svg(width, height, "".join(body), "The four distributions this book uses")

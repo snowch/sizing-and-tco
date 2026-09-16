@@ -192,6 +192,33 @@ def test_no_literalinclude_uses_line_numbers(path):
     )
 
 
+#: One ``{literalinclude}``: the file it quotes, and the text anchors it quotes it between.
+QUOTE = re.compile(
+    r"```\{literalinclude\}\s*(?P<target>\S+)\n(?P<options>(?::[a-z-]+:.*\n)*)", re.MULTILINE
+)
+
+
+@pytest.mark.parametrize("path", PAGES, ids=lambda p: p.name)
+def test_every_quoted_anchor_still_matches(path):
+    """A text anchor that no longer matches quotes the wrong span, silently.
+
+    Which is the failure mode :func:`test_no_literalinclude_uses_line_numbers` was avoiding in
+    the first place: anchoring on text survives an edit *above* it, and does not survive the
+    quoted function being renamed. This is the check that notices.
+    """
+    for quote in QUOTE.finditer(path.read_text()):
+        target = (path.parent / quote["target"]).resolve()
+        assert target.exists(), f"{path.name} quotes {quote['target']}, which does not exist"
+        body = target.read_text()
+        for option, anchor in re.findall(
+            r":(start-at|start-after|end-before):\s*(.+)", quote["options"]
+        ):
+            assert anchor.strip() in body, (
+                f"{path.name} quotes {quote['target']} :{option}: {anchor.strip()!r}, which is "
+                f"no longer in that file. The quote is now of something else."
+            )
+
+
 @pytest.mark.parametrize("path", PAGES, ids=lambda p: p.name)
 def test_every_directive_is_closed(path):
     """A build that succeeds is not the same as a page that says what it was written to say."""

@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "b70e9a64c043758a",
+  "code_fingerprint": "bbbd3493b09cfc7e",
   "code_sources": [
     "bench/run_models.py",
     "models/service_tier/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-16T16:19:44+00:00",
-  "git_revision": "62afd15",
+  "generated_at": "2026-09-16T17:15:17+00:00",
+  "git_revision": "767ec80",
   "kind": "model",
   "name": "service_tier-twice_the_nodes",
   "produced_by": {
@@ -72,7 +72,7 @@
       "utilisation_including_coordination": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-16T16:19:43+00:00",
+    "generated_at": "2026-09-16T17:15:16+00:00",
     "model": "service_tier",
     "nodes": {
       "achievable_throughput": {
@@ -292,7 +292,8 @@
             18597.73483020381,
             18874.324682157712,
             19150.914534111613
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "throughput the tier can actually reach",
@@ -455,7 +456,8 @@
             11647.191369803722,
             11810.761231804068,
             11974.331093804414
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "arrival rate",
@@ -636,7 +638,8 @@
             125.56911128363085,
             127.49187417992975,
             129.41463707622867
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "nodes busy on average",
@@ -809,7 +812,8 @@
             6268.730549388994,
             6369.731201600211,
             6470.731853811427
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "requests in the system",
@@ -972,7 +976,8 @@
             0.014571570595636317,
             0.014773954392075978,
             0.014976338188515638
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "contention",
@@ -1151,7 +1156,8 @@
             5.366538213091849,
             5.451432548521213,
             5.536326883950576
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "ceiling",
         "label": "utilisation, counting coordination",
@@ -1313,7 +1319,8 @@
             0.0006392609005443872,
             0.0006495433272229746,
             0.0006598257539015619
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "crosstalk",
@@ -1491,7 +1498,8 @@
             0.9509272001252681,
             0.965463600062634,
             0.98
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "effective utilisation",
@@ -1674,7 +1682,8 @@
             3.1987964687270707,
             3.2476551220316594,
             3.2965137753362486
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "fraction of the peak already built",
@@ -1847,7 +1856,8 @@
             27665.955753675444,
             27905.13689655964,
             28144.318039443835
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "throughput if scaling were free",
@@ -2096,7 +2106,8 @@
             13.98777328265971,
             14.202664992131917,
             14.417556701604124
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "how much the queueing view understated it",
@@ -2294,7 +2305,8 @@
             732.5181119956947,
             743.7066476913002,
             754.8951833869057
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "where adding nodes stops helping",
@@ -2469,7 +2481,8 @@
             0.981008681903366,
             0.9960302670307012,
             1.0110518521580365
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "ceiling",
         "label": "utilisation",
@@ -2651,7 +2664,8 @@
             0.5311822846763599,
             0.5396807495082324,
             0.548179214340105
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "residence time",
@@ -2824,7 +2838,8 @@
             0.7237162218620234,
             0.7340868097773647,
             0.744457397692706
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "scaling efficiency",
@@ -3008,7 +3023,8 @@
             0.8985190530584523,
             0.9088896409737935,
             0.9192602288891348
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "ceiling",
         "label": "fraction of the tier doing nothing useful",
@@ -3171,7 +3187,8 @@
             0.010746361625973094,
             0.010854972956387602,
             0.01096358428680211
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "service demand per request",
@@ -3362,7 +3379,8 @@
             0.010746361625973094,
             0.010854972956387602,
             0.01096358428680211
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "service time",
@@ -3525,7 +3543,8 @@
             216.1402793255894,
             218.0088820043722,
             219.87748468315496
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "input",
         "label": "single node throughput",
@@ -3702,7 +3721,8 @@
             0.981008681903366,
             0.9960302670307012,
             1.0110518521580365
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "utilisation",
@@ -3890,7 +3910,8 @@
             5.366538213091849,
             5.451432548521213,
             5.536326883950576
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "utilisation, counting coordination",
@@ -4063,7 +4084,8 @@
             0.5204345190333818,
             0.5288250745433423,
             0.5372156300533029
-          ]
+          ],
+          "spacing": "linear"
         },
         "kind": "derived",
         "label": "time spent queueing",

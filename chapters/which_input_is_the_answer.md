@@ -1,10 +1,10 @@
 ---
-title: "Which input is the answer? [DRAFT]"
+title: "Which input is the answer?"
 short_title: "ch19 Which input is the answer?"
 ---
 
 (which-input-is-the-answer)=
-# ch19 · Which input is the answer? [DRAFT]
+# ch19 · Which input is the answer?
 
 :::{note} Chapter header
 :class: dropdown
@@ -12,44 +12,171 @@ short_title: "ch19 Which input is the answer?"
 | | |
 |---|---|
 | **Prerequisites** | [ch13](#monte-carlo) |
-| **What it produces** | Tornado charts for every output of both models, and what the widest bar has in common across them. |
-| **Built from** | `storage_cluster-reference`, `observability-reference` |
+| **What it produces** | Tornado charts across both reference models, and what the widest bars have in common |
+| **Built from** | `storage_cluster-reference`, `observability-reference`, `service_tier-reference` |
 :::
 
 ## The question
 
 Which input should you go and measure first, and how would the model tell you?
 
-[To write: one paragraph. State the question this chapter answers and why the previous chapter
-leaves it open. No summary of what is to come — the reader can see the headings.]
+An interval is a description of a problem. This chapter is the only actionable thing you can do
+with one.
 
 ## The material
 
-[To write: the body. Short sections. Code is quoted from the working tree with
-`{literalinclude}` and text anchors, never pasted; model files are quoted the same way. See
-AUTHORING_GUIDE.md.]
+### More samples never help
+
+Worth restating, because it is the instinct. [ch14](#correlation-and-convergence) established that
+a wide interval is not sampling noise — the interval is a property of the model's inputs, and more
+draws locate it more precisely rather than narrowing it.
+
+So there are exactly two things that narrow an interval. **Measure something**, and replace a guess
+with a figure that has a standard error. Or **decide something**, and replace an uncertainty with a
+constraint — pin the retention, cap the growth by policy, fix the sampling rate.
+
+Both are work. The question is which one is worth doing, and the answer is not obvious because
+the model has dozens of uncertain inputs and only one of them matters.
+
+### Swing one thing at a time
+
+```{image} _figures/which-input-is-the-answer-storage.svg
+:alt: Which input moves the five-year total most
+:width: 100%
+```
+
+Each bar swings one input across the middle eighty per cent of its own distribution, with
+everything else held still. Problem 19.1 is building it.
+
+One detail in that construction matters more than it looks: the swing comes from the input's
+**declared distribution**, not from its slider range. Otherwise an input somebody gave a generous
+slider gets a long bar for free, and the chart measures somebody's UI choices rather than the
+model.
+
+The ordering is the useful part. It answers "what should I go and measure first", and that is the
+only question a tornado answers well.
+
+### What the widest bars have in common
+
+```{image} _figures/which-input-is-the-answer-observability.svg
+:alt: Which input moves the retention store most
+:width: 100%
+```
+
+```{include} _generated/which-input-is-the-answer-service.md
+```
+
+Three models, three tornados. Look at what is at the top of each.
+
+**Growth**, in the storage model — the input that is raised to a power rather than multiplied
+([ch04](#peak-mean-and-growth)).
+
+**Cardinality**, in the observability model — a product of uncertain counts, whose uncertainty
+compounds ([ch08](#regime-changes)).
+
+**Service demand and arrival rate**, in the service tier — the two that meet in a division by what
+is left of the system ([ch06](#queueing-and-the-knee)).
+
+The pattern: **the widest bar is always somewhere the model is not linear.** An exponent, a
+product of uncertain things, a division by a small remainder. Inputs that are merely multiplied by
+constants, or added, hardly move anything, however uncertain they are.
+
+That is a useful heuristic for a model you have not built. Before running anything, look for the
+exponent, the combinatorial node and the division by a remainder — the answer is usually one of
+those three, and it is almost never the price somebody spent the meeting arguing about.
+
+### The correlation the chart cannot show
+
+```{include} _generated/which-input-is-the-answer-correlation.md
+```
+
+Declared correlations widen every interval in the book. A tornado has no way to show that: each
+bar moves one input, and a correlation is a statement about two.
+
+So the two figures answer different questions and should not be read against each other. The
+tornado says which input is worth measuring; the interval says what the model currently believes.
+An input with a short bar that is strongly correlated with a long one is still worth attention,
+and neither chart will say so.
+
+### What one-at-a-time misses
+
+The sharper version of the same limitation, and problem 19.2 measures it.
+
+Swing input A alone. Swing B alone. Swing both. If the model were additive in them, the third
+would be the sum of the first two. In a model built out of multiplications it is not — and the
+model in this book is built out of multiplications.
+
+So a tornado's bars do not add up to the interval, and they are not a decomposition of it. They
+are a ranking, and that is all they are. Treating the bar lengths as shares of the variance is a
+mistake the chart invites, and a variance-based decomposition — which does answer that question —
+is not in this toolkit and is noted in `NEXT_STEPS.md`.
+
+### After you measure it
+
+The point of all this is to change something. Which means the honest end of a sensitivity analysis
+is a plan:
+
+- **measure it** — turn an assumption into a measured constant with a standard error, which is
+  [ch03](#where-the-numbers-come-from)'s discipline and problem 3.2's arithmetic for how much
+  measuring is enough;
+- **decide it** — turn an uncertainty into a policy, which costs flexibility rather than money;
+- **design around it** — make the answer less sensitive to it, which is usually the most expensive
+  and the most durable.
+
+And then re-run the model, because the tornado will have a different input at the top. That is
+what progress looks like here: not a narrower interval on the same chart, but a different chart.
 
 ## What the model says
 
-[To write: `{include}` the generated fragments declared in `bench/figures.py`. No number is
-ever typed here. A figure that depends on a constant nobody has measured renders as *not yet
-measured* on its own — the state propagates down the graph, and nothing has to be marked by
-hand.]
+```{include} _generated/which-input-is-the-answer-service.md
+```
+
+```{include} _generated/which-input-is-the-answer-correlation.md
+```
 
 ## What this cannot tell you
 
-[To write. **Mandatory.** What the model, the measurement or the method could not show, and what
-was done instead. For a chapter with a model in it this must name what the model's *structure*
-omits, because that is the error no amount of sampling can see. This chapter is not finished
-while this section is missing.]
+**How much the interval would narrow if you measured it.** The tornado ranks; it does not
+quantify what a measurement buys. Answering that needs the model re-run with the input's
+uncertainty replaced by a plausible post-measurement standard error, which is a thing to do by
+hand and is not automated here.
+
+**Anything about interactions.** One at a time, by construction. Problem 19.2 measures the gap and
+the gap is not small in a multiplicative model. An input whose effect appears only in combination
+with another gets a short bar and can still be the thing that sinks you.
+
+**Anything about correlated inputs.** As above: a bar is one input and a correlation is two.
+
+**Whether the input can be measured at all.** The widest bar in the storage model is a growth
+rate, which is a claim about the future and belongs to no target
+([ch04](#peak-mean-and-growth)). The chart will keep pointing at it, and the honest response is to
+decide it rather than measure it.
+
+**Whether the model has the right inputs.** An input that is not there has no bar, and a tornado
+of a model missing a cost line is a confident ranking of the wrong list.
+[ch20](#the-missing-node).
 
 ## Problems
 
-[To write: each problem is a stub under `tests/which_input_is_the_answer/` with a test that passes only when
-it is solved. There is no answer key — the test is the answer key, and it cannot be wrong about
-whether it passes.]
+Two, in `tests/which_input_is_the_answer/`.
+
+**19.1 — Build the chart.**
+Reproduce the tornado the build publishes. Swing from each input's distribution rather than from
+its slider, so that every bar answers the same question.
+
+```bash
+python3 -m pytest tests/which_input_is_the_answer/test_problem_1_tornado.py
+```
+
+**19.2 — What one-at-a-time misses.**
+Move two inputs separately, then together, and measure the difference. Do it for a pair that meets
+in a product and a pair that meets in a sum, and predict which will show a gap.
+
+```bash
+python3 -m pytest tests/which_input_is_the_answer/test_problem_2_interaction.py
+```
 
 ## Where to go next
 
-[To write: primary sources via `@citekey` against `references.bib`. Textbooks may appear here as
-further reading and nowhere else — never as a source for this chapter's content.]
+[ch20](#the-missing-node) is the input that has no bar because it is not in the model, and the one
+error nothing in this book can rank.

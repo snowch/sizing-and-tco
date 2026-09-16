@@ -150,8 +150,9 @@ first and name the term second.
 
 ## Chapter status
 
-The toolkit is complete and both reference models run end to end. `index.md`, ch13 and ch14 are
-written; everything else is a stub that names its question and the figures it owes.
+The toolkit is complete, both reference models run end to end, and every chapter and appendix is
+written. A page that is regenerated from `scripts/new-chapter.py` carries `[To write` markers
+until it is; that marker is what everything below keys off.
 
 **A chapter's number is never an identifier.** Identity is the slug: `(#monte-carlo)`,
 `chapters/monte_carlo.md`, `tests/monte_carlo/`. The number survives only where a reader sees it,

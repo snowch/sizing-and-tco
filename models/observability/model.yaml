@@ -322,7 +322,7 @@ nodes:
   quoted_pipeline_utilisation:
     kind: ceiling
     unit: dimensionless
-    label: ingest utilisation, on the vendor's number
+    label: ingest utilisation, quoted
     of: known_ingest / quoted_pipeline_capacity
     limit: 1
     headroom: 0.4

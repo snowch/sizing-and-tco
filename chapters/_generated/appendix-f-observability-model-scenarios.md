@@ -12,11 +12,11 @@
 | label cardinality | 76.3<br>*17.9 to 300* | 76.3<br>*17.9 to 300* |
 | retention cost, metrics and logs only | $4,085<br>*$957.47 to $21,788* | $438.25<br>*$101.75 to $2,374* |
 | retention store fill | 0.579<br>*0.155 to 2.71* | 0.0621<br>*0.0165 to 0.296* |
-| ingest utilisation, on the vendor's number | 0.514<br>*0.130 to 1.90* | 0.0710<br>*0.0198 to 0.287* |
+| ingest utilisation, quoted | 0.514<br>*0.130 to 1.90* | 0.0710<br>*0.0198 to 0.287* |
 | query path utilisation | 0.569<br>*0.0591 to 3.37* | 0.569<br>*0.0591 to 3.37* |
 | ingest utilisation, measured | *not yet measured* | *not yet measured* |
 | *query path utilisation* — over its limit | 28% | 28% |
-| *ingest utilisation, on the vendor's number* — over its limit | 21% | 0% |
+| *ingest utilisation, quoted* — over its limit | 21% | 0% |
 | *retention store fill* — over its limit | 30% | 0% |
 
-*Conditions: target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `68888ad54385413f`.*
+*Conditions: target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured** · 2026-09-16 · Source: `bench/results/observability-reference.json`, code hash `d9f7022d8a6f59bc`.*

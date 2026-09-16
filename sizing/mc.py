@@ -325,13 +325,29 @@ def samples_needed(observed_half_width: float, at_n: int, target_half_width: flo
     return int(np.ceil(at_n * ratio * ratio))
 
 
+#: Above this ratio between the 95th percentile and the 5th, equal-width bins stop describing the
+#: quantity: most of the draws fall in the first bin and the rest of the picture is empty. A queue
+#: near saturation does this. Deliberately measured across the interval rather than across the
+#: extremes, because one stray draw from a long tail should not change how everything is binned.
+LOG_BINNING_SPAN = 100.0
+
+
 def histogram(x: np.ndarray, bins: int = 64) -> dict:
     """A node's distribution, small enough to ship to a browser for every node in the graph.
 
     Counts and edges rather than the draws themselves: forty numbers a node instead of a hundred
     thousand, which is what makes it affordable to let the reader click any node in the DAG and
     watch a narrow input distribution turn into a wide output one further down the chain.
+
+    The bins are equal in width, unless the draws span more than :data:`LOG_BINNING_SPAN`, in
+    which case they are equal in *ratio* and ``spacing`` says so. Whatever draws the histogram
+    needs to know which it has: the same counts mean different things on the two axes.
     """
     x = np.asarray(x, dtype=float)
+    low, high = float(x.min()), float(x.max())
+    p5, p95 = (float(v) for v in np.percentile(x, [5, 95]))
+    if low > 0 and p5 > 0 and p95 / p5 >= LOG_BINNING_SPAN:
+        counts, edges = np.histogram(x, bins=np.geomspace(low, high, bins + 1))
+        return {"counts": counts.tolist(), "edges": edges.tolist(), "spacing": "log"}
     counts, edges = np.histogram(x, bins=bins)
-    return {"counts": counts.tolist(), "edges": edges.tolist()}
+    return {"counts": counts.tolist(), "edges": edges.tolist(), "spacing": "linear"}
