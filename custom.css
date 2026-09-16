@@ -1,0 +1,31 @@
+/* Sizing and TCO — small adjustments to the book theme.
+ *
+ * Deliberately short. The theme is fine; what it does not know about is this book's two recurring
+ * shapes: a wide table of figures with their conditions underneath, and a dependency graph that
+ * is wider than a column. */
+
+/* A conditions line belongs to the table above it and should read as a footnote, not a paragraph. */
+.myst-content p em:only-child {
+  font-size: 0.86em;
+  line-height: 1.45;
+  color: #52606d;
+}
+
+/* Model tables are numeric. Right-align what is a number, and stop the columns dancing. */
+.myst-content table td:not(:first-child),
+.myst-content table th:not(:first-child) {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Dependency graphs are wider than the text column. Let them scroll rather than shrink to
+ * illegibility — the labels are the figure. */
+.myst-content img[src*="_figures/"] {
+  max-width: 100%;
+  height: auto;
+}
+
+/* The "not measured yet" box should not look like a decorative aside. It is the most important
+ * thing on the page it appears on. */
+.myst-content .admonition.warning {
+  border-left-width: 4px;
+}

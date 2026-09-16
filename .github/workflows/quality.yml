@@ -1,0 +1,52 @@
+name: Quality
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        # No fetch-depth needed: verify-numbers.py hashes file contents rather than comparing
+        # commit times, so it needs the checkout and nothing more.
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Setup Node.js
+        # Node is not optional here. It builds the book, and it also runs the browser-side model
+        # evaluator against the values Python computed — which is the only thing standing between
+        # the published pages and a second, unchecked implementation of the arithmetic.
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install MyST CLI (pinned)
+        # Required, not optional: without it ci-check.sh cannot run `myst build --strict`, and a
+        # broken cross-reference would reach main unnoticed. ci-check.sh fails when CI is set and
+        # myst is missing, so this step going wrong cannot pass silently.
+        run: npm install -g "mystmd@$(node -p "require('./package.json').devDependencies.mystmd")"
+
+      - name: Install Python dependencies
+        # Both files, and with `python -m pip` so the tests run under the interpreter that has
+        # them. The suite imports `sizing`, which imports numpy and Pint.
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Show what this runner is
+        # Not a check — a record. It will say `other`, which is why no rig figure can be taken
+        # here, and when a measurement is missing this is the log that says so.
+        run: python3 -m bench.stamp || true
+
+      - name: Run the same checks as locally
+        # ci-check.sh is the single source of truth for what CI runs, so local and CI cannot
+        # drift.
+        run: ./scripts/ci-check.sh

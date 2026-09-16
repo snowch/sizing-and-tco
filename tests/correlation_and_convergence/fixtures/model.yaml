@@ -1,0 +1,66 @@
+# An exercise fixture for problem 14.3, and deliberately incomplete.
+#
+# This is NOT one of the book's models and nothing in it is measured. It is a small monthly cost
+# model for a hosted service, of the kind somebody would write in an afternoon, and it is missing
+# exactly one cost line. Every number in it is invented for the exercise; the file lives under
+# tests/ rather than models/ so that it can never be mistaken for a figure the book publishes.
+#
+# The reader's job is in tests/correlation_and_convergence/stubs.py.
+model: incomplete_service
+title: A hosted service, monthly (exercise fixture — incomplete)
+currency: USD
+
+nodes:
+  instances:
+    kind: input
+    unit: node
+    value: 40
+    provenance: {kind: assumption, source: "exercise fixture"}
+    range: [10, 200]
+
+  instance_price:
+    kind: input
+    unit: USD/node/month
+    distribution: {lognormal: {p10: 210.0, p90: 340.0}}
+    provenance: {kind: assumption, source: "exercise fixture"}
+
+  compute_cost:
+    kind: derived
+    unit: USD/month
+    formula: instances * instance_price
+
+  storage_tb:
+    kind: input
+    unit: TB
+    distribution: {triangular: {minimum: 300.0, likely: 480.0, maximum: 900.0}}
+    provenance: {kind: assumption, source: "exercise fixture"}
+
+  storage_price:
+    kind: input
+    unit: USD/TB/month
+    distribution: {lognormal: {p10: 16.0, p90: 27.0}}
+    provenance: {kind: assumption, source: "exercise fixture"}
+
+  storage_cost:
+    kind: derived
+    unit: USD/month
+    formula: storage_tb * storage_price
+
+  support_rate:
+    kind: input
+    unit: dimensionless
+    distribution: {triangular: {minimum: 0.06, likely: 0.1, maximum: 0.16}}
+    provenance: {kind: assumption, source: "exercise fixture"}
+
+  support_cost:
+    kind: derived
+    unit: USD/month
+    formula: (compute_cost + storage_cost) * support_rate
+
+  monthly_cost:
+    kind: derived
+    unit: USD/month
+    formula: compute_cost + storage_cost + support_cost
+
+outputs:
+  - monthly_cost

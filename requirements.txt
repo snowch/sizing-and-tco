@@ -1,0 +1,18 @@
+# Python dependencies for Sizing and TCO.
+#
+# Pinned deliberately. This book publishes intervals, and an unpinned numerical dependency
+# changes what an interval means without changing a line of the repository. Versions verified
+# 2026-09-16.
+#
+# The book *builder* is not here — MyST comes from npm, pinned in package.json, so there is
+# exactly one source of truth for its version.
+#
+# Three lines, and the shortness is the point. The Monte Carlo core is numpy and the standard
+# library; there is no statistics package and no simulation framework, because a reader cannot
+# learn sampling from a library call (ch13). Pint is a *build-time* checker rather than a
+# runtime dependency of the evaluator — see sizing/units.py for why. PyYAML reads the model
+# files and myst.yml.
+
+numpy==2.4.6
+Pint==0.25.3
+PyYAML==6.0.1

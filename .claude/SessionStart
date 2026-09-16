@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Bootstrap so a Claude Code web session can lint, test and build without setup.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+python3 -m pip install --quiet --upgrade pip
+# Into *this* interpreter, not a standalone tool install: `python3 -m pytest` has to work, and a
+# pipx or uv pytest has its own environment and cannot import `sizing`.
+python3 -m pip install --quiet -r requirements.txt -r requirements-dev.txt
+
+if ! command -v myst >/dev/null 2>&1; then
+  npm install -g "mystmd@$(node -p "require('./package.json').devDependencies.mystmd")" >/dev/null 2>&1 || \
+    echo "note: mystmd install failed; ./scripts/ci-check.sh will skip the book build"
+fi
+
+# Node runs the browser-side model evaluator against Python's answers. Without it that check
+# skips itself, which is quiet enough to be missed — so say so.
+command -v node >/dev/null 2>&1 || echo "note: no node; the viewer agreement test will skip"
+
+echo "Ready. Run ./scripts/ci-check.sh before pushing."

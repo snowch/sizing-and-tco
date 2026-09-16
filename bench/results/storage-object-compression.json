@@ -1,0 +1,51 @@
+{
+  "code_fingerprint": "39bb49791aaa266d",
+  "code_sources": [
+    "bench/measure.py",
+    "bench/run_corpus.py"
+  ],
+  "conditions": {
+    "the_mixture_is_an_assumption": "the proportions were chosen, not observed; they are the first thing to change and the largest source of error here",
+    "to_use_it": "re-run bench.measure.mixed_objects against a sample of your own estate, or replace the generator with one that reads it",
+    "what_this_is_about": "this corpus and this codec, and nothing else"
+  },
+  "generated_at": "2026-09-16T15:09:39+00:00",
+  "git_revision": null,
+  "kind": "measurement",
+  "name": "storage-object-compression",
+  "produced_by": {
+    "codec": "liblzma via python lzma, XZ preset 1",
+    "corpus": "bench.measure.mixed_objects \u2014 synthetic mixture of text, columnar, already-compressed and sparse objects, seeds 0-7",
+    "mixture": "38% text, 24% fixed-width records, 18% incompressible, 20% sparse",
+    "stack": "python lzma (XZ preset 1)"
+  },
+  "recorded_on": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "kind": "other",
+    "numpy": "2.4.6",
+    "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  },
+  "summary": {
+    "bytes_in": 33418975,
+    "high": 2.822018948919358,
+    "low": 2.2701684902166304,
+    "objects": 2000,
+    "sd": 0.07478653995392605,
+    "shard_spread": 0.21152827817159914,
+    "shards": 8,
+    "value": 2.548664901267576
+  },
+  "target": "corpus",
+  "units": {
+    "bytes_in": "byte",
+    "high": "dimensionless",
+    "low": "dimensionless",
+    "objects": "dimensionless",
+    "sd": "dimensionless",
+    "shard_spread": "dimensionless",
+    "shards": "dimensionless",
+    "value": "dimensionless"
+  }
+}

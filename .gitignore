@@ -1,0 +1,19 @@
+# Build output. Everything here is regenerated from committed sources.
+_build/
+models/_out/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Node
+node_modules/
+
+# Editors
+.DS_Store
+*.swp

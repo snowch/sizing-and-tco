@@ -1,0 +1,62 @@
+{
+  "code_fingerprint": "1bbc989fd6f4669c",
+  "code_sources": [
+    "bench/run_uncertainty.py"
+  ],
+  "conditions": {
+    "what_widening_means": "assuming independence is not neutral. It is a claim, and where it is wrong it makes the interval narrower than the evidence supports \u2014 which is the direction that gets a plan approved"
+  },
+  "generated_at": "2026-09-16T15:34:31+00:00",
+  "git_revision": null,
+  "kind": "measurement",
+  "name": "correlation-effect",
+  "produced_by": {
+    "codec": "none \u2014 this measures the sampler, not any data",
+    "corpus": "both reference models, sampled with and without their declared correlations",
+    "stack": "sizing.mc \u2014 Iman-Conover rank correlation"
+  },
+  "recorded_on": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "kind": "other",
+    "numpy": "2.4.6",
+    "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  },
+  "summary": {
+    "rows": [
+      {
+        "change": 0.08448143718683743,
+        "declared": 1262298.0384286565,
+        "independent": 1163964.6333671494,
+        "model": "storage_cluster",
+        "output": "tco"
+      },
+      {
+        "change": 0.03722161657066514,
+        "declared": 166.5,
+        "independent": 160.52499999999418,
+        "model": "storage_cluster",
+        "output": "nodes_recommended"
+      },
+      {
+        "change": 0.171909110848685,
+        "declared": 84.82053708052327,
+        "independent": 72.37808486623769,
+        "model": "observability",
+        "output": "known_ingest"
+      },
+      {
+        "change": 0.0061232661893064755,
+        "declared": 1.6577504327575756,
+        "independent": 1.6476613636381834,
+        "model": "observability",
+        "output": "query_utilisation"
+      }
+    ]
+  },
+  "target": "corpus",
+  "units": {
+    "rows": "dimensionless"
+  }
+}

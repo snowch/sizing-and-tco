@@ -1,0 +1,8 @@
+scenario: reference
+title: Reference scenario
+because: >-
+  The platform as declared: 30-second scrapes, 400-day metric retention, 30-day logs, 5% trace
+  sampling. Every figure the book quotes for this model comes from here unless it says otherwise.
+samples: 100000
+seed: 20260916
+overrides: {}
