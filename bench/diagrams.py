@@ -200,14 +200,19 @@ def tornado_chart(result: str, output: str, limit: int = 9) -> str:
     people bring to a tornado: *what should I go and measure first?*
     """
     payload = load_result(result)["summary"]
-    bars = payload["tornado"].get(output, [])[:limit]
+    declared = payload["tornado"].get(output, [])
+    # An input that does not reach this output swings it by nothing, and a row of those is six
+    # identical empty bars where the eye is looking for a shape. The count is worth saying; the
+    # bars are not. The table beside the figure keeps every row, including the still ones.
+    bars = [bar for bar in declared if bar["span"] > 0][:limit]
+    still = sum(1 for bar in declared if bar["span"] <= 0)
     node = payload["nodes"][output]
     if not bars:
         return _svg(360, 40, '<text x="8" y="24" font-size="11">no uncertain input</text>', "empty")
 
     label_width, chart_width, bar_height = 168.0, 300.0, 24.0
     width = label_width + chart_width + MARGIN * 2 + 96
-    height = MARGIN * 2 + 42 + len(bars) * bar_height
+    height = MARGIN * 2 + 42 + len(bars) * bar_height + (14 if still else 0)
 
     base = bars[0]["base"]
     low = min(min(bar["low"], bar["high"]) for bar in bars)
@@ -223,8 +228,14 @@ def tornado_chart(result: str, output: str, limit: int = 9) -> str:
         f"{_esc(node['label'])} ({_esc(unit_label(node['unit']))}) — point estimate "
         f"{_esc(fmt(base, node['unit']))}</text>",
         f'<line x1="{at(base):.1f}" y1="{MARGIN + 24}" x2="{at(base):.1f}" '
-        f'y2="{height - MARGIN:.0f}" stroke="#455a64" stroke-width="1" stroke-dasharray="3 2"/>',
+        f'y2="{MARGIN + 38 + len(bars) * bar_height:.0f}" stroke="#455a64" stroke-width="1" '
+        f'stroke-dasharray="3 2"/>',
     ]
+    if still:
+        body.append(
+            f'<text x="{MARGIN + label_width - 8}" y="{height - MARGIN + 2:.0f}" font-size="9" '
+            f'text-anchor="end" fill="#90a4ae">and {still} that do not move it at all</text>'
+        )
     for i, bar in enumerate(bars):
         y = MARGIN + 34 + i * bar_height
         left, right = sorted((bar["low"], bar["high"]))
