@@ -12,6 +12,10 @@ short_title: Preface
 
 **How big, how much, and how wrong could I be?**
 
+*How big* is **sizing**: how much hardware a stated workload needs, and where it stops coping.
+*How much* is **total cost of ownership**: what that hardware costs over the years you keep it,
+which is not the same as what it costs to buy.
+
 Working out how many nodes a cluster needs is arithmetic, and most people can do it. The third
 part is the one that decides whether anybody should act on the answer — which input it rests on,
 how far it moves when that input moves, and what it would take to find out. That is a different
