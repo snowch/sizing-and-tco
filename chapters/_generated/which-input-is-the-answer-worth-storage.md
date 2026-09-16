@@ -15,4 +15,4 @@
 | | | *now: $1,262,298* | *the rows above total 71%, which is not how this works* |
 
 *Conditions — target `model` · sizing.evaluate*\
-*Re-run — `bench/results/value-of-information.json` · code hash `861e808eea9bc01a` · stamped 2026-09-16*
+*Re-run — `bench/results/value-of-information.json` · code hash `00e3ba942d37219d` · stamped 2026-09-16*

@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "861e808eea9bc01a",
+  "code_fingerprint": "00e3ba942d37219d",
   "code_sources": [
     "bench/run_information.py"
   ],
@@ -8,14 +8,15 @@
     "this_is_an_upper_bound": "each figure is what knowing the input *exactly* would remove. A real measurement leaves a standard error behind and removes less, by an amount nobody can know before doing the work",
     "what_it_cannot_say": "whether the input can be measured at all. A growth rate has the largest bound in this table and belongs to no target \u2014 the honest response to it is to decide it rather than to commission a measurement (ch04)"
   },
-  "generated_at": "2026-09-16T19:25:35+00:00",
-  "git_revision": "a152a7d",
+  "generated_at": "2026-09-16T22:03:39+00:00",
+  "git_revision": "12e5026",
   "kind": "measurement",
   "name": "value-of-information",
   "produced_by": {
     "method": "each uncertain input pinned at its median in turn, and the model resampled",
     "model": "observability and storage_cluster",
     "scenario": "reference",
+    "seed": 20260916,
     "stack": "sizing.evaluate"
   },
   "recorded_on": {

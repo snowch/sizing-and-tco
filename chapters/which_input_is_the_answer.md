@@ -66,24 +66,34 @@ only question a tornado answers well.
 ```{include} _generated/which-input-is-the-answer-service.md
 ```
 
-Three models, three tornados. Look at what is at the top of each.
-
-**Growth**, in the storage model — the input that is raised to a power rather than multiplied
-([ch04](#peak-mean-and-growth)).
+Two charts and a table, because the third is short enough to read as one. Look at what is at the
+top of each.
 
 **Cardinality**, in the observability model — a product of uncertain counts, whose uncertainty
 compounds ([ch08](#regime-changes)).
 
-**Service demand and arrival rate**, in the service tier — the two that meet in a division by what
-is left of the system ([ch06](#queueing-and-the-knee)).
+**Arrival rate**, in the service tier, with service demand a distant second — the two that meet in
+a division by what is left of the system ([ch06](#queueing-and-the-knee)).
 
-The pattern: **the widest bar is always somewhere the model is not linear.** An exponent, a
-product of uncertain things, a division by a small remainder. Inputs that are merely multiplied by
-constants, or added, hardly move anything, however uncertain they are.
+**The chassis price**, in the storage model. Which breaks the pattern the other two make, and the
+break is the most useful thing on this page.
 
-That is a useful heuristic for a model you have not built. Before running anything, look for the
-exponent, the combinatorial node and the division by a remainder — the answer is usually one of
-those three, and it is almost never the price somebody spent the meeting arguing about.
+The pattern the first two make is that **the widest bar is somewhere the model is not linear**: an
+exponent, a product of uncertain things, a division by a small remainder. Inputs that are merely
+multiplied by constants, or added, hardly move anything, however uncertain they are. So the
+storage model ought to be topped by its growth rate, which is raised to a power — and
+[ch04](#peak-mean-and-growth)'s tornado, which swings the same inputs against the *recommended*
+node count, is topped by growth with nothing else close.
+
+This chart is against the five-year total, and growth is not on it at all. It cannot be. The cost
+chain starts at *nodes purchased*, which is a decision somebody took, and a decision has no
+distribution. The exponent left the cost model at the moment the cluster was chosen, and what
+remains downstream of that choice is a bill of materials, where the largest line item wins.
+
+Which is the rule worth carrying: **a tornado is about the output you point it at, and pinning a
+decision can remove the dominant input from everything downstream of it.** Neither chart is wrong.
+They answer different questions, and the reason the cost question has a boring answer is that the
+interesting one was settled before it was asked.
 
 ### The correlation the chart cannot show
 
@@ -194,8 +204,8 @@ with another gets a short bar and can still be the thing that sinks you.
 
 **Anything about correlated inputs.** As above: a bar is one input and a correlation is two.
 
-**Whether the input can be measured at all.** The widest bar in the storage model is a growth
-rate, which is a claim about the future and belongs to no target
+**Whether the input can be measured at all.** In the observability model the joint-widest bar is
+a growth rate, which is a claim about the future and belongs to no target
 ([ch04](#peak-mean-and-growth)). The chart will keep pointing at it, and the honest response is to
 decide it rather than measure it.
 

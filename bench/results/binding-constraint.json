@@ -1,19 +1,20 @@
 {
-  "code_fingerprint": "e6a3b009b05e3804",
+  "code_fingerprint": "5dae44783a592596",
   "code_sources": [
     "bench/run_curves.py"
   ],
   "conditions": {
     "two_chains_only": "this model has two. A real estate has more - rebuild bandwidth, metadata operations, a control plane - and each one is another chance for the answer to be set by something nobody was watching"
   },
-  "generated_at": "2026-09-16T19:25:56+00:00",
-  "git_revision": "a152a7d",
+  "generated_at": "2026-09-16T22:03:06+00:00",
+  "git_revision": "12e5026",
   "kind": "measurement",
   "name": "binding-constraint",
   "produced_by": {
     "method": "sampled, and the two node-count chains compared draw by draw",
     "model": "storage_cluster",
     "scenario": "reference",
+    "seed": 20260916,
     "stack": "sizing.evaluate"
   },
   "recorded_on": {
