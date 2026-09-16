@@ -89,9 +89,9 @@ is always about the one dramatic thing, because a dramatic thing can be pointed 
 And one caution about that column, because it is the sort of statistic that goes wrong quietly.
 The share of failures containing something extreme is only meaningful against the share of *all*
 futures containing something extreme, which the table also gives. A model with enough uncertain
-inputs has one of them beyond its own p90 nearly all the time, failure or not. A post-mortem that
-reports "something was unusual" without its base rate has discovered how many inputs the model
-has.
+inputs has one of them beyond its own p90 more often than not, whether or not anything failed. A
+post-mortem that reports "something was unusual" without its base rate has discovered how many
+inputs the model has.
 
 ### The same method, on a model with a hole in it
 
@@ -107,8 +107,8 @@ Run the identical attribution against its ingest ceiling, and it is happy to hel
 ```{include} _generated/what-the-model-got-wrong-incomplete.md
 ```
 
-Three confident causes, ranked, with figures beside them. Not one of them mentions the chain that
-is missing, because the chain is not in the samples and never was. If traces were what actually
+The top three are confident, specific and ranked. Not one of them mentions the chain that is
+missing, because the chain is not in the samples and never was. If traces were what actually
 filled that pipeline, this table is a list of innocent parties in descending order of how guilty
 they look.
 

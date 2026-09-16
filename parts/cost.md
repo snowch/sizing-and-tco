@@ -23,6 +23,8 @@ something, and is mostly about the denominator, which is the part nobody checks.
 [ch18](#the-five-year-model) is the seam between two models, where a distribution becomes a number
 in a document and the uncertainty quietly disappears.
 
-Every figure in this part is a cost model in the front matter's sense: accounting identities and
-physics, with uncertain inputs and no regime changes in it. That is why sampling the inputs is
-genuinely sufficient here, and it is worth noticing how much easier this part is than Part III.
+The chains in this part are the deterministic half of the front matter's distinction: accounting
+identities and physics, with uncertain inputs and nothing in them that changes regime. Sampling
+the inputs really is sufficient for those, and it is worth noticing how much easier this part is
+than Part III. The ceilings are still there — [ch16](#power-first) breaks one — but this part
+adds none of its own.
