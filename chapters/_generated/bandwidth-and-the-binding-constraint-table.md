@@ -9,4 +9,5 @@
 | Median of the capacity chain alone | 121 nodes |
 | Median of the bandwidth chain alone | 67 nodes |
 
-*Conditions: target `model` · sizing.evaluate · 2026-09-16 · Source: `bench/results/binding-constraint.json`, code hash `e6a3b009b05e3804`.*
+*Conditions — target `model` · sizing.evaluate*\
+*Re-run — `bench/results/binding-constraint.json` · code hash `e6a3b009b05e3804` · stamped 2026-09-16*

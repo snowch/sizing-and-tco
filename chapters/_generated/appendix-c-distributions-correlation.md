@@ -7,4 +7,5 @@
 | `observability` | known_ingest | 84.82 | 72.38 | +17.2% |
 | `observability` | query_utilisation | 1.658 | 1.648 | +0.6% |
 
-*Conditions: target `model` · sizing.mc — Iman-Conover rank correlation · 2026-09-16 · Source: `bench/results/correlation-effect.json`, code hash `70404a34aa45e7d0`.*
+*Conditions — target `model` · sizing.mc — Iman-Conover rank correlation*\
+*Re-run — `bench/results/correlation-effect.json` · code hash `70404a34aa45e7d0` · stamped 2026-09-16*

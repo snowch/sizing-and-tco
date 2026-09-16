@@ -12,4 +12,5 @@
 | bytes per log line, compressed | 32.4 | 32.4 | none | 10% of them |
 | **8 inputs** | | *21% of futures ended here* | | *something was beyond its p90 in 85% of them, against 55% of futures generally* |
 
-*Conditions: target `model` · sizing.evaluate · 2026-09-16 · Source: `bench/results/postmortem.json`, code hash `4936a30b01677306`.*
+*Conditions — target `model` · sizing.evaluate*\
+*Re-run — `bench/results/postmortem.json` · code hash `4936a30b01677306` · stamped 2026-09-16*

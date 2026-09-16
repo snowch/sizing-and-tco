@@ -13,4 +13,5 @@
 | **every one of them** | | **0** | **100%** |
 | | | *now: 613* | *the rows above total 110%, which is not how this works* |
 
-*Conditions: target `model` · sizing.evaluate · 2026-09-16 · Source: `bench/results/value-of-information.json`, code hash `861e808eea9bc01a`.*
+*Conditions — target `model` · sizing.evaluate*\
+*Re-run — `bench/results/value-of-information.json` · code hash `861e808eea9bc01a` · stamped 2026-09-16*

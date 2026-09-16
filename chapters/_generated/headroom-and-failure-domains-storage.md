@@ -5,4 +5,5 @@
 | fill level at horizon | 0.75 | 25% | 0.75 | ok | 50% | 34% |
 | read utilisation at peak | 0.55 | 30% | 0.70 | ok | 29% | 6% |
 
-*Conditions: target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · 2026-09-16 · Source: `bench/results/storage_cluster-reference.json`, code hash `ea563f58ac2f28c2`.*
+*Conditions — target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916`*\
+*Re-run — `bench/results/storage_cluster-reference.json` · code hash `ea563f58ac2f28c2` · stamped 2026-09-16*

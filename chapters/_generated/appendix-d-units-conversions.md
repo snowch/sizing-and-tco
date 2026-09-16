@@ -11,4 +11,5 @@
 | `storage_cluster` | cost per usable TB per month | USD / terabyte / year | USD / TB / month | x0.0833333 |
 | `storage_cluster` | facility power | watt | kW | x0.001 |
 
-*Conditions: target `corpus` · bench.measure.log_lines — JSON service logs, five templates, six services, 128-bit trace ids, seeds 0-7 · zlib 1.3, DEFLATE level 6 · python zlib (DEFLATE level 6) · 2026-09-16 · Source: `bench/results/logs-line-bytes.json`, code hash `fc1a2e5247a78a60`.*
+*Conditions — target `corpus` · bench.measure.log_lines — JSON service logs, five templates, six services, 128-bit trace ids, seeds 0-7 · zlib 1.3, DEFLATE level 6 · python zlib (DEFLATE level 6)*\
+*Re-run — `bench/results/logs-line-bytes.json` · code hash `fc1a2e5247a78a60` · stamped 2026-09-16*

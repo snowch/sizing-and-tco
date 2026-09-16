@@ -7,4 +7,5 @@
 | metadata overhead | 1.07 | 1.07 | none | 11% of them |
 | **3 inputs** | | *34% of futures ended here* | | *something was beyond its p90 in 43% of them, against 27% of futures generally* |
 
-*Conditions: target `model` · sizing.evaluate · 2026-09-16 · Source: `bench/results/postmortem.json`, code hash `4936a30b01677306`.*
+*Conditions — target `model` · sizing.evaluate*\
+*Re-run — `bench/results/postmortem.json` · code hash `4936a30b01677306` · stamped 2026-09-16*
