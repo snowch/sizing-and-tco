@@ -6,13 +6,13 @@ short_title: Preface
 (preface)=
 # Sizing and TCO
 
-*Capacity planning, sizing and total cost of ownership, modelled as code.*
+*How to size a system, cost it, and know how much to trust the answer.*
 
 ## The question
 
-Somebody has asked you how big it needs to be. How many machines, how much storage, how much it
-will cost to run for the next three years — and they are going to spend real money on whatever
-you tell them.
+Somebody has asked you how big the system needs to be. How many machines, how much storage, how
+much it will cost to run for the next three years — and they are going to spend real money on
+whatever you tell them.
 
 You can do the arithmetic. That is rarely the hard part. What comes out is one number, and that
 number says nothing at all about how much of it you would actually bet.
