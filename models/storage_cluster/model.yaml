@@ -69,7 +69,7 @@ nodes:
     distribution: {triangular: {minimum: 35.0, likely: 85.0, maximum: 240.0}}
     provenance:
       kind: assumption
-      source: "ch02 — the busy hour, not the average. Triangular because this is an engineer's
+      source: "ch03 — the busy hour, not the average. Triangular because this is an engineer's
         min/likely/max and pretending to more shape than that would be invention."
     range: [10, 400]
 

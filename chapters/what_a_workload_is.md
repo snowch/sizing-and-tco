@@ -112,10 +112,11 @@ Every quantity is filed under *what you decide*, and one of them is the growth r
 a growth rate.
 
 The table is not wrong about the model. The model is wrong, and the table is showing you the only
-signal it has: whether somebody gave the quantity a shape. A declared range says *the world settles
-this one*; a single value with a slider says *I do*. Nothing in the file has a shape yet, so
-everything reads as a choice. [ch03](#peak-mean-and-growth) gives the growth rate one, and this
-table splits in two for the first time.
+signal it has: whether somebody gave the quantity a shape instead of a single number. A shape says
+*the world settles this one, and here is how much it varies*; one number says *I chose this*.
+Nothing in the file has a shape yet, so everything reads as a choice.
+[ch03](#peak-mean-and-growth) gives the growth rate one, and this table splits in two for the
+first time.
 
 That is worth more here than a correct table would have been, because the failure is the useful
 one. **An input you gave a single value to and cannot actually control is an assumption you have
@@ -186,10 +187,11 @@ Here is the whole demand side of a request-serving tier:
 ```{include} _generated/what-a-workload-is-service.md
 ```
 
-Two quantities describe what the world does — how fast requests arrive, and how much work each
-one costs. Everything else in [ch04](#littles-law) through [ch06](#when-adding-servers-stops-helping)
-is derived from those two and a count of machines. A workload description that cannot be reduced
-this far usually contains something that is not a workload.
+Two of those rows are the workload proper: how fast requests arrive, and how much work each one
+costs. [ch04](#littles-law) through [ch06](#when-adding-servers-stops-helping) are built on that
+pair and a count of machines. The other three describe how the tier behaves under load rather than
+what is asked of it, and each one is a chapter of Part II — which is the distinction this table
+cannot draw and the next part exists to make.
 
 ## What this cannot tell you
 
