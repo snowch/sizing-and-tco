@@ -1,4 +1,4 @@
-"""Problem 0.1 - the smallest model this repository will accept.
+"""Problem 2.3 - the smallest model this repository will accept.
 
 Graded by running the real loader, the real unit checker and the real verifier, rather than by
 comparing against a model kept somewhere in the repository. There is nothing to copy.
@@ -12,7 +12,7 @@ import pytest
 
 from sizing.dsl import Derived, Input, load_model
 from sizing.evaluate import check_units, point
-from tests.prerequisites_and_setup.stubs import smallest_model_that_builds
+from tests.what_a_workload_is.stubs import smallest_model_that_builds
 
 
 def _verifier():

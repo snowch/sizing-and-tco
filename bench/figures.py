@@ -212,29 +212,13 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("observability-knobs_turned_down",),
         also=("observability-knobs_turned_down",),
     ),
-    # -- ch00 Prerequisites and setup -------------------------------------------------------------
-    "prerequisites-and-setup-constants": Table(
+    # -- Appendix H Running the toolkit -------------------------------------------------------------
+    "appendix-h-running-the-toolkit-constants": Table(
         render=tables.constants_index,
         computed_from="`bench/results/`, one row per stamped result",
     ),
-    "prerequisites-and-setup-models": Table(
+    "appendix-h-running-the-toolkit-models": Table(
         render=tables.node_kinds_table, result="storage_cluster-reference"
-    ),
-    # -- ch01 Reading a model ---------------------------------------------------------------------
-    "reading-a-model-kinds": Table(
-        render=tables.node_kinds_table, result="storage_cluster-reference"
-    ),
-    "reading-a-model-graph": Diagram(
-        draw=diagrams.dependency_graph,
-        result="storage_cluster-reference",
-        alt="A model as a graph, coloured by node kind and by provenance",
-    ),
-    "reading-a-model-outputs": Table(
-        render=tables.outputs_table, result="storage_cluster-reference"
-    ),
-    "reading-a-model-conversions": Table(
-        render=tables.conversions_table,
-        computed_from="`models/`",
     ),
     # -- ch02 What a workload is ------------------------------------------------------------------
     "what-a-workload-is-stage": Table(

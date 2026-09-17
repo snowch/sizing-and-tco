@@ -1,4 +1,4 @@
-"""Problem 1.1 - add a ceiling, and meet the three things declaring one commits you to."""
+"""Problem 11.3 - add a ceiling, and meet the three things declaring one commits you to."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import pytest
 
 from sizing.dsl import Ceiling, load_model
 from sizing.evaluate import check_units, evaluate, load_scenario
-from tests.reading_a_model.stubs import add_a_ceiling
+from tests.headroom_and_failure_domains.stubs import add_a_ceiling
 
 NAME, OF, LIMIT, HEADROOM = "drive_pressure", "raw_capacity / installed_raw_capacity", 1.0, 0.2
 

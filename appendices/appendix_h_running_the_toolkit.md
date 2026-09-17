@@ -1,0 +1,89 @@
+---
+title: "Running the toolkit"
+short_title: "Appendix H · Running the toolkit"
+---
+
+(appendix-h-running-the-toolkit)=
+# Appendix H · Running the toolkit
+
+:::{note} What this holds
+:class: dropdown
+
+| | |
+|---|---|
+| **Purpose** | The make targets, how to check a figure against the repository, and what is in it |
+| **Source** | `Makefile`, `scripts/ci-check.sh`, `bench/results/` |
+:::
+
+Nothing in this book needs to be run to be read. This page is for the point where you want to
+check a figure rather than trust it, or run a problem, or point the toolkit at your own numbers.
+The install is in [the introduction](#preface), under *What you will need*.
+
+## What the commands do
+
+```bash
+make measure    # re-take every constant that a codec decides
+make models     # evaluate and sample every model, and stamp what each one said
+make figures    # re-render every table and diagram from the stamped results
+make check      # everything CI runs
+make book       # live preview at localhost:3000
+```
+
+Run `make check` before you believe anything. It is the same script CI runs, so the two cannot
+drift, and it takes well under a minute.
+
+`python3 -m pip`, not a standalone tool install. `python3 -m pytest` has to work, and a `pytest`
+installed by pipx or uv has its own environment and cannot import this repository's code.
+
+## How to check a number in this book
+
+Every figure on every page came out of a file under `bench/results/`. Pick one — the compression
+ratio in the storage model, say — and follow it backwards:
+
+```bash
+python3 -c "import json; print(json.load(open('bench/results/storage-object-compression.json'))['produced_by'])"
+python3 -m bench.run_corpus --check
+```
+
+The first prints the corpus, the codec and the implementation the figure belongs to. The second
+re-derives it from scratch on your machine and fails if it has moved. That is the whole contract:
+a number, what produced it, and a command that fails when the two have parted company.
+
+Your laptop cannot take a timing on the reference machine, and the toolkit will not pretend it
+can: `verify-setup.py` says so, and every figure that would need such a timing renders as a box
+saying it has not been measured. [ch03](#where-the-numbers-come-from) is about why.
+
+## What is in the repository
+
+```{include} ../chapters/_generated/appendix-h-running-the-toolkit-constants.md
+```
+
+Every constant, including the ones nobody has measured. A row saying *not yet measured* is not a
+gap somebody forgot to fill; it is a figure this repository refuses to invent.
+
+A model is a file. Here is what each one is made of:
+
+```{include} ../chapters/_generated/appendix-h-running-the-toolkit-models.md
+```
+
+The last row says whether the build classifies the model as a cost model or a sizing one. It works
+that out from the file — a `measured` node or a `ceiling` makes it a sizing model — and
+[ch09](#capacity) is where the reader's own model crosses that line.
+
+## What this cannot tell you
+
+**Whether your machine gives the same answers as the one that produced these figures.** The
+corpus constants should agree, because a codec is deterministic — but a different Python, a
+different compression library, or a processor that takes a different instruction path can move a
+figure in its last digits. `make check` allows a tolerance looser than that noise and tighter than
+anything this book prints, so the noise passes and a real change does not. Where to put that
+tolerance is a judgement, not a fact.
+
+**Whether the tools are the right versions.** `verify-setup.py` checks that things are present,
+not that they are the versions the pins name. A dependency resolved differently is the commonest
+reason a fresh checkout disagrees with CI, and the honest fix is to read `requirements.txt` rather
+than to trust a tick.
+
+**Anything about the models themselves.** Every check on this page is about whether the machinery
+runs. A model can pass every one of them and still be a bad description of your system. The
+chapters are about that.

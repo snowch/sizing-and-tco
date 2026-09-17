@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from sizing.dsl import Model
+
 
 def raw_for(usable: float, replication: float, compression: float, overhead: float) -> float:
     """Problem 9.1 - the chain from what you need to what you must buy.
@@ -40,3 +42,42 @@ def erasure_crossover(data_shards: int, parity_shards: int) -> float:
     matters.
     """
     raise NotImplementedError("problem 9.2")
+
+
+def in_binary_units(model: Model) -> Model:
+    """Problem 9.3 - the same model, read in the other kind of terabyte.
+
+    A vendor's TB is a trillion bytes. A filesystem's TiB is 2^40 of them, about ten per cent
+    more. Both are spelled "terabyte" in conversation and the difference has bought a lot of
+    people a smaller cluster than they thought.
+
+    Return a copy of ``model`` in which every node currently declared in ``TB`` is declared in
+    ``TiB`` instead - and **change nothing else**. No formula, no input value, no distribution.
+
+    The test then asserts two things that only both hold if the unit system is doing its job:
+    every affected output is numerically *smaller* by the expected ratio, because the same
+    quantity of bytes counted in larger units is a smaller number - and the model still
+    typechecks, because the dimensions did not change, only the units.
+
+    If you find yourself editing a value to compensate, stop. The build does that conversion, and
+    doing it by hand is how the two copies of a model start to disagree.
+    """
+    raise NotImplementedError("problem 9.3")
+
+
+def make_it_a_cost_model(model: Model) -> Model:
+    """Problem 9.4 - turn a sizing model back into a cost model, honestly.
+
+    ``scripts/verify-models.py`` classifies a model by what is in it: a ``measured`` node or a
+    ``ceiling`` makes it a sizing model, and a model with neither is a cost model whose inputs
+    can simply be sampled. This chapter is where the storage model crossed that line.
+
+    Return a copy of ``model`` that classifies as a **cost** model, while still evaluating and
+    still producing at least one of the outputs it produced before.
+
+    You may delete nodes. You may not delete the outputs. And the point of the exercise is in the
+    third test: having removed them, write one sentence in this docstring saying what the
+    resulting model can no longer tell anybody. If you cannot name it, you have removed something
+    that was not doing any work, and the original model should not have had it.
+    """
+    raise NotImplementedError("problem 9.4")

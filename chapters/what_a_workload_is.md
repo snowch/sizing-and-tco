@@ -52,8 +52,16 @@ of by an amount of time. It typechecks in a spreadsheet. It does not typecheck h
 
 ### Turning the workload into a file
 
-Take the workload above: some amount held today, growing at some rate, over the life of whatever
-gets bought. The first node is the level you were given.
+You could put the workload above in a spreadsheet, and most people do. A cell holds a value. It
+does not hold the fact that the value was measured last March against version 2.4 of something,
+or that it is a vendor's claim nobody has checked, or that it was agreed in a meeting by people
+who have since left. Those facts live in the head of whoever built the sheet, and they leave when
+that person does. Nor does a cell have a unit: `=B4*C7` is as valid as any other product, and
+multiplying series by requests gives a number that looks exactly like a number of bytes.
+
+So a model here is a text file of named quantities, each with a unit and a source, that diffs and
+reviews like code. Take the workload above: some amount held today, growing at some rate, over
+the life of whatever gets bought. The first node is the level you were given.
 
 ```{literalinclude} ../models/storage_cluster/stages/01-demand/model.yaml
 :language: yaml
@@ -206,7 +214,7 @@ makes every interval in the book too narrow ([ch14](#correlation-and-convergence
 
 ## Problems
 
-Two, in `tests/what_a_workload_is/`.
+Four, in `tests/what_a_workload_is/`.
 
 **2.1 — Levels and rates.**
 Classify every node in the observability model as a stock, a flow or neither — by reading what it
@@ -223,6 +231,24 @@ the build will keep saying so until something in the formula carries a duration.
 
 ```bash
 python3 -m pytest tests/what_a_workload_is/test_problem_2_daily_volume.py
+```
+
+**2.3 — The smallest model that builds.**
+Write a model file of your own with one input and one derived node that passes the loader, the
+dimensional pass and every rule in `scripts/verify-models.py`. Read the rules before you start;
+the refusals are the point.
+
+```bash
+python3 -m pytest tests/what_a_workload_is/test_problem_3_smallest.py
+```
+
+**2.4 — Break it on purpose, in a way that still loads.**
+Write a second model that loads cleanly and is wrong about units. Not a typo — those fail
+immediately and teach nothing. A node that declares a unit its own formula cannot produce. A
+spreadsheet cannot see that class of error at all.
+
+```bash
+python3 -m pytest tests/what_a_workload_is/test_problem_4_broken.py
 ```
 
 ## Where to go next

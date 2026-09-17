@@ -1,4 +1,4 @@
-"""Problem 0.2 - a model that loads and is still wrong.
+"""Problem 2.4 - a model that loads and is still wrong.
 
 The error has to survive loading and be caught by the dimensional pass. That is the whole
 distinction: a typo fails immediately and teaches nothing, while a unit error is confidently
@@ -11,7 +11,7 @@ import pytest
 
 from sizing.dsl import load_model
 from sizing.evaluate import check_units
-from tests.prerequisites_and_setup.stubs import a_model_that_does_not_typecheck
+from tests.what_a_workload_is.stubs import a_model_that_does_not_typecheck
 
 
 @pytest.fixture

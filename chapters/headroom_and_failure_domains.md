@@ -138,7 +138,7 @@ event, not three, and the model has no term for it.
 
 ## Problems
 
-Two, in `tests/headroom_and_failure_domains/`.
+Three, in `tests/headroom_and_failure_domains/`.
 
 **11.1 — What a node loss costs.**
 The one piece of headroom that is arithmetic rather than judgement. Then notice what it says about
@@ -154,6 +154,15 @@ does to three large ones. Then look at what three separately reasonable requests
 
 ```bash
 python3 -m pytest tests/headroom_and_failure_domains/test_problem_2_compose.py
+```
+
+**11.3 — Add a ceiling.**
+Add one to the storage model, with a margin and a reason, and get a verdict and a breach
+probability out of it. The build will refuse it three different ways before it accepts it, and
+each refusal is a rule this chapter argues for.
+
+```bash
+python3 -m pytest tests/headroom_and_failure_domains/test_problem_3_ceiling.py
 ```
 
 ## Where to go next

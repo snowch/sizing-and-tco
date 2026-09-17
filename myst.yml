@@ -42,11 +42,6 @@ project:
   toc:
     - file: index.md
 
-    - file: parts/getting_started.md
-      children:
-        - file: chapters/prerequisites_and_setup.md
-        - file: chapters/reading_a_model.md
-
     - file: parts/what_you_are_sizing.md
       children:
         - file: chapters/what_a_workload_is.md
@@ -101,6 +96,7 @@ project:
         - file: appendices/appendix_e_storage_model.md
         - file: appendices/appendix_f_observability_model.md
         - file: appendices/appendix_g_glossary.md
+        - file: appendices/appendix_h_running_the_toolkit.md
 
 site:
   template: book-theme

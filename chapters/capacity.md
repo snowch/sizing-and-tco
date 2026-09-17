@@ -75,8 +75,7 @@ about a tenth, both are called a terabyte in conversation, and a tenth is a larg
 compression was going to buy you.
 
 So every node in this book declares a unit, and the build converts rather than assuming. Problem
-1.2 in [ch01](#reading-a-model) was that conversion. If you skipped it, it is worth ten minutes
-now: this is the chapter where getting it wrong costs money.
+9.3 is that conversion, and this is the chapter where getting it wrong costs money.
 
 ### What comes out
 
@@ -118,7 +117,7 @@ decides the answer.
 
 ## Problems
 
-Two, in `tests/capacity/`.
+Four, in `tests/capacity/`.
 
 **9.1 — The chain.**
 Four terms, one of which divides. Getting the division upside down gives an answer wrong by the
@@ -136,6 +135,24 @@ and what else grows with it.
 
 ```bash
 python3 -m pytest tests/capacity/test_problem_2_erasure.py
+```
+
+**9.3 — The other kind of terabyte.**
+Re-declare every capacity node in binary units and change nothing else. The outputs must come out
+smaller by exactly the right ratio, and the model must still typecheck. If you find yourself
+editing a value to compensate, stop.
+
+```bash
+python3 -m pytest tests/capacity/test_problem_3_binary_units.py
+```
+
+**9.4 — Turn it back into a cost model.**
+Remove what made the storage model a sizing model in this chapter, keep it working, and then write
+one sentence saying what the result can no longer tell anybody. If you cannot name it, you removed
+something that was doing no work — and the model should not have had it.
+
+```bash
+python3 -m pytest tests/capacity/test_problem_4_classification.py
 ```
 
 ## Where to go next

@@ -1,4 +1,4 @@
-"""Problem 1.2 - TB against TiB, which is ten per cent and a lot of arguments."""
+"""Problem 9.3 - TB against TiB, which is ten per cent and a lot of arguments."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import pytest
 
 from sizing.dsl import load_model, load_scenario
 from sizing.evaluate import check_units, point
-from tests.reading_a_model.stubs import in_binary_units
+from tests.capacity.stubs import in_binary_units
 
 #: 2^40 over 10^12. The number at the bottom of the difference.
 TIB_PER_TB = 1_000_000_000_000 / 2**40

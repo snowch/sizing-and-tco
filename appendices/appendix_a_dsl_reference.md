@@ -19,8 +19,8 @@ A model is a YAML file. It declares named quantities, each with a unit, and how 
 each other. There is no evaluation order in the file, no cells, no hidden state, and no way to
 write a number in one place and have it mean something else in another.
 
-The whole language is on this page. It is small on purpose: [ch01](#reading-a-model) argues that a
-model somebody has to learn a system to read is a model nobody reads.
+The whole language is on this page. It is small on purpose: a model somebody has to learn a
+system to read is a model nobody reads.
 
 ## The file
 

@@ -8,12 +8,13 @@ short_title: "Part I — What you are sizing"
 
 > Which quantities size a system, where they come from, and how much any of them is worth?
 
-The toolkit can hold a quantity and check it. This part is about choosing which quantities to
-hold, and about what a number in a model file actually is: a claim, made by somebody.
+This part starts the model the rest of the book uses, and it starts it with the demand side:
+which quantities to write down, and what a number in a model file actually is — a claim, made by
+somebody.
 
 [ch02](#what-a-workload-is) separates rates from levels, and what the world does to you from what
-you have decided to do about it. A sizing conversation should be about that second split, and
-usually is not.
+you have decided to do about it. It writes the first nodes of the storage model, and ends with a
+file that runs and a table that cannot yet tell the two apart.
 
 [ch03](#where-the-numbers-come-from) is the difference between a number you measured, a number you
 were told and a number you decided — which is invisible once all three are cells in one column.

@@ -39,8 +39,8 @@ in it is the period: per terabyte-month and per terabyte-year differ by a factor
 look equally authoritative on a slide.
 
 In a model, the build catches that — the two have identical dimensions and different units, and
-`sizing/units.py` converts. The same factor of twelve is in [ch01](#reading-a-model), where this
-repository nearly published it.
+`sizing/units.py` converts. The same factor of twelve is in [Appendix D](#appendix-d-units),
+where this repository nearly published it.
 
 In a slide, nothing catches it.
 

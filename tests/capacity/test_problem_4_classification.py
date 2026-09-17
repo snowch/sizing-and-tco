@@ -1,4 +1,4 @@
-"""Problem 1.3 - the classification the whole book rests on, from the inside."""
+"""Problem 9.4 - the classification the whole book rests on, from the inside."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import pytest
 
 from sizing.dsl import load_model, load_scenario
 from sizing.evaluate import check_units, point
-from tests.reading_a_model.stubs import make_it_a_cost_model
+from tests.capacity.stubs import make_it_a_cost_model
 
 
 @pytest.fixture(scope="module")
