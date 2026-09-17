@@ -10,6 +10,24 @@
 # `introduces` is the whole of it. Every node in model.yaml appears in exactly one stage, and a
 # stage whose nodes refer to something no earlier stage introduced will not load.
 
+# Two inputs are plain numbers until ch04 gives them shapes. A stage before that declares the
+# value somebody would have chosen, and a provenance that says the distribution is coming — the
+# only edit a stage may make to a node, because any other would let it show something the
+# finished model does not say.
+certain_until:
+  annual_growth:
+    stage: uncertainty
+    value: 1.3
+    source: >-
+      ch02 - one growth rate, chosen rather than measured. ch04 replaces it with a distribution,
+      because a single number cannot say how sure anybody is of it.
+  peak_read_throughput:
+    stage: uncertainty
+    value: 85
+    source: >-
+      ch02 - the busy hour, as one number. ch04 replaces it with a distribution, because an
+      engineer who gives you this figure is giving you a range and rounding it.
+
 stages:
   - stage: demand
     chapter: what_a_workload_is
@@ -24,13 +42,6 @@ stages:
       - horizon_periods
       - usable_capacity
       - peak_read_throughput
-    # ch04 gives this one a shape. Until then it is a number somebody chose.
-    certain_for_now:
-      annual_growth:
-        value: 1.3
-        source: >-
-          ch02 - a single growth rate, chosen rather than measured. ch04 replaces it with a
-          distribution, because one number cannot say how sure anybody is of it.
 
   - stage: provenance
     chapter: where_the_numbers_come_from
@@ -41,12 +52,6 @@ stages:
       - drive_capacity
       - drives_per_node
       - node_raw_capacity
-    certain_for_now:
-      annual_growth:
-        value: 1.3
-        source: >-
-          ch02 - a single growth rate, chosen rather than measured. ch04 replaces it with a
-          distribution, because one number cannot say how sure anybody is of it.
 
   - stage: uncertainty
     chapter: peak_mean_and_growth

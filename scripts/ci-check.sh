@@ -40,7 +40,7 @@ echo "== the storage model, as each chapter leaves it =="
 # tests/test_stages.py is where the invariants live — every node introduced by some chapter, no
 # stage taking a node away, and the change from a cost model to a sizing model happening in the
 # chapter that claims it.
-python3 -m bench.stages
+python3 -m bench.stages --check
 
 echo "== the corpus constants still say what the book prints =="
 # The one class of measurement CI can re-derive rather than trust: a codec is deterministic, so

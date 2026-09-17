@@ -1,0 +1,423 @@
+{
+  "code_fingerprint": "e2ac7ce6ab357c79",
+  "code_sources": [
+    "bench/run_models.py",
+    "models/storage_cluster/stages/02-provenance/model.yaml",
+    "models/storage_cluster/stages/02-provenance/scenarios/reference.yaml",
+    "sizing/export.py",
+    "sizing/expr.py",
+    "sizing/graph.py"
+  ],
+  "conditions": {
+    "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
+    "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
+  },
+  "generated_at": "2026-09-17T11:58:19+00:00",
+  "git_revision": "eaf3ff0",
+  "kind": "model",
+  "name": "storage_cluster_provenance-reference",
+  "produced_by": {
+    "classification": "cost",
+    "model": "storage_cluster_provenance",
+    "model_file": "models/storage_cluster/stages/02-provenance/model.yaml",
+    "sampler": "sizing.mc \u2014 inverse transform, Iman-Conover rank correlation",
+    "samples": 100000,
+    "scenario": "reference",
+    "seed": 20260916,
+    "unmeasured": []
+  },
+  "recorded_on": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "kind": "other",
+    "numpy": "2.4.6",
+    "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  },
+  "summary": {
+    "classification": "cost",
+    "correlations": [],
+    "currency": "USD",
+    "description": "The storage model as it stands at the end of where_the_numbers_come_from, built by bench/stages.py from models/storage_cluster/model.yaml. Not a model anybody would ship: it is the finished model with everything the book has not introduced yet removed, so that a reader can see what it looked like when it had 10 nodes in it.",
+    "factors": {
+      "horizon_periods": 1.0,
+      "node_raw_capacity": 1.0,
+      "usable_capacity": 1.0
+    },
+    "generated_at": "2026-09-17T11:58:19+00:00",
+    "model": "storage_cluster_provenance",
+    "nodes": {
+      "annual_growth": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "annual growth factor",
+        "layer": 1,
+        "note": null,
+        "point": 1.3,
+        "provenance": {
+          "kind": "assumption",
+          "source": "ch02 - one growth rate, chosen rather than measured. ch04 replaces it with a distribution, because a single number cannot say how sure anybody is of it."
+        },
+        "row": 0,
+        "slider": {
+          "max": 2.0,
+          "min": 1.0
+        },
+        "unit": "dimensionless"
+      },
+      "drive_capacity": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "drive capacity",
+        "layer": 0,
+        "note": null,
+        "point": 20.0,
+        "provenance": {
+          "kind": "vendor_claim",
+          "source": "datasheet capacity. Decimal TB, not TiB \u2014 appendix D, and it is a 10% difference"
+        },
+        "row": 2,
+        "unit": "TB/drive"
+      },
+      "drives_per_node": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "drives per node",
+        "layer": 0,
+        "note": null,
+        "point": 12.0,
+        "provenance": {
+          "kind": "assumption",
+          "source": "chassis choice"
+        },
+        "row": 3,
+        "slider": {
+          "max": 36.0,
+          "min": 6.0
+        },
+        "unit": "drive/node"
+      },
+      "horizon": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "horizon",
+        "layer": 0,
+        "note": null,
+        "point": 5.0,
+        "provenance": {
+          "kind": "assumption",
+          "source": "the refresh cycle this cluster is bought against"
+        },
+        "row": 0,
+        "slider": {
+          "max": 8.0,
+          "min": 3.0
+        },
+        "unit": "year"
+      },
+      "horizon_periods": {
+        "ast": {
+          "args": [
+            {
+              "name": "horizon",
+              "op": "ref"
+            },
+            {
+              "name": "one_year",
+              "op": "ref"
+            }
+          ],
+          "op": "/"
+        },
+        "depends_on": [
+          "horizon",
+          "one_year"
+        ],
+        "formula": "horizon / one_year",
+        "kind": "derived",
+        "label": "horizon periods",
+        "layer": 1,
+        "note": null,
+        "point": 5.0,
+        "row": 1,
+        "unit": "dimensionless"
+      },
+      "node_raw_capacity": {
+        "ast": {
+          "args": [
+            {
+              "name": "drive_capacity",
+              "op": "ref"
+            },
+            {
+              "name": "drives_per_node",
+              "op": "ref"
+            }
+          ],
+          "op": "*"
+        },
+        "depends_on": [
+          "drive_capacity",
+          "drives_per_node"
+        ],
+        "formula": "drive_capacity * drives_per_node",
+        "kind": "derived",
+        "label": "node raw capacity",
+        "layer": 1,
+        "note": null,
+        "point": 240.0,
+        "row": 3,
+        "unit": "TB/node"
+      },
+      "one_year": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "one year",
+        "layer": 0,
+        "note": "Here because a duration cannot be an exponent. In (1+r)^n the n is a pure number, so the horizon has to be divided by something with the same units before it can be used as one. Appendix D has the rest of the conversions that bite.",
+        "point": 1.0,
+        "provenance": {
+          "kind": "fact",
+          "source": "definition"
+        },
+        "row": 1,
+        "unit": "year"
+      },
+      "peak_read_throughput": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "peak read throughput",
+        "layer": 0,
+        "note": null,
+        "point": 85.0,
+        "provenance": {
+          "kind": "assumption",
+          "source": "ch02 - the busy hour, as one number. ch04 replaces it with a distribution, because an engineer who gives you this figure is giving you a range and rounding it."
+        },
+        "row": 4,
+        "slider": {
+          "max": 400.0,
+          "min": 10.0
+        },
+        "unit": "GB/s"
+      },
+      "usable_capacity": {
+        "ast": {
+          "args": [
+            {
+              "name": "usable_capacity_t0",
+              "op": "ref"
+            },
+            {
+              "args": [
+                {
+                  "name": "annual_growth",
+                  "op": "ref"
+                },
+                {
+                  "name": "horizon_periods",
+                  "op": "ref"
+                }
+              ],
+              "op": "**"
+            }
+          ],
+          "op": "*"
+        },
+        "depends_on": [
+          "annual_growth",
+          "horizon_periods",
+          "usable_capacity_t0"
+        ],
+        "formula": "usable_capacity_t0 * annual_growth ** horizon_periods",
+        "kind": "derived",
+        "label": "usable capacity at horizon",
+        "layer": 2,
+        "note": null,
+        "point": 14851.720000000001,
+        "row": 0,
+        "unit": "TB"
+      },
+      "usable_capacity_t0": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "usable capacity, day one",
+        "layer": 1,
+        "note": null,
+        "point": 4000.0,
+        "provenance": {
+          "kind": "assumption",
+          "source": "stated workload (ch02) \u2014 what the application says it needs to store today"
+        },
+        "row": 2,
+        "slider": {
+          "max": 20000.0,
+          "min": 500.0
+        },
+        "unit": "TB"
+      }
+    },
+    "order": [
+      "annual_growth",
+      "drive_capacity",
+      "drives_per_node",
+      "horizon",
+      "node_raw_capacity",
+      "one_year",
+      "horizon_periods",
+      "peak_read_throughput",
+      "usable_capacity_t0",
+      "usable_capacity"
+    ],
+    "outputs": [
+      "usable_capacity",
+      "peak_read_throughput",
+      "node_raw_capacity"
+    ],
+    "scenario": {
+      "because": "The same conditions the finished model is quoted under, so that a number from a stage and a number from the whole model differ only by what the stage does not contain yet.",
+      "name": "reference",
+      "overrides": {},
+      "samples": 100000,
+      "seed": 20260916,
+      "title": "Reference scenario"
+    },
+    "scenarios": [
+      "reference"
+    ],
+    "title": "A generic scale-out storage cluster \u2014 The first number somebody else supplied",
+    "tornado": {
+      "node_raw_capacity": [],
+      "peak_read_throughput": [],
+      "usable_capacity": []
+    },
+    "unmeasured": [],
+    "viewer_expectations": [
+      {
+        "overrides": {
+          "annual_growth": 1.0,
+          "drives_per_node": 6.0,
+          "horizon": 3.0,
+          "peak_read_throughput": 10.0,
+          "usable_capacity_t0": 500.0
+        },
+        "values": {
+          "annual_growth": 1.0,
+          "drive_capacity": 20.0,
+          "drives_per_node": 6.0,
+          "horizon": 3.0,
+          "horizon_periods": 3.0,
+          "node_raw_capacity": 120.0,
+          "one_year": 1.0,
+          "peak_read_throughput": 10.0,
+          "usable_capacity": 500.0,
+          "usable_capacity_t0": 500.0
+        }
+      },
+      {
+        "overrides": {
+          "annual_growth": 1.25,
+          "drives_per_node": 13.5,
+          "horizon": 4.25,
+          "peak_read_throughput": 107.5,
+          "usable_capacity_t0": 5375.0
+        },
+        "values": {
+          "annual_growth": 1.25,
+          "drive_capacity": 20.0,
+          "drives_per_node": 13.5,
+          "horizon": 4.25,
+          "horizon_periods": 4.25,
+          "node_raw_capacity": 270.0,
+          "one_year": 1.0,
+          "peak_read_throughput": 107.5,
+          "usable_capacity": 13875.416359846271,
+          "usable_capacity_t0": 5375.0
+        }
+      },
+      {
+        "overrides": {
+          "annual_growth": 1.5,
+          "drives_per_node": 21.0,
+          "horizon": 5.5,
+          "peak_read_throughput": 205.0,
+          "usable_capacity_t0": 10250.0
+        },
+        "values": {
+          "annual_growth": 1.5,
+          "drive_capacity": 20.0,
+          "drives_per_node": 21.0,
+          "horizon": 5.5,
+          "horizon_periods": 5.5,
+          "node_raw_capacity": 420.0,
+          "one_year": 1.0,
+          "peak_read_throughput": 205.0,
+          "usable_capacity": 95329.16526308126,
+          "usable_capacity_t0": 10250.0
+        }
+      },
+      {
+        "overrides": {
+          "annual_growth": 1.9,
+          "drives_per_node": 33.0,
+          "horizon": 7.5,
+          "peak_read_throughput": 361.0,
+          "usable_capacity_t0": 18050.0
+        },
+        "values": {
+          "annual_growth": 1.9,
+          "drive_capacity": 20.0,
+          "drives_per_node": 33.0,
+          "horizon": 7.5,
+          "horizon_periods": 7.5,
+          "node_raw_capacity": 660.0,
+          "one_year": 1.0,
+          "peak_read_throughput": 361.0,
+          "usable_capacity": 2223971.478942745,
+          "usable_capacity_t0": 18050.0
+        }
+      },
+      {
+        "overrides": {
+          "annual_growth": 2.0,
+          "drives_per_node": 36.0,
+          "horizon": 8.0,
+          "peak_read_throughput": 400.0,
+          "usable_capacity_t0": 20000.0
+        },
+        "values": {
+          "annual_growth": 2.0,
+          "drive_capacity": 20.0,
+          "drives_per_node": 36.0,
+          "horizon": 8.0,
+          "horizon_periods": 8.0,
+          "node_raw_capacity": 720.0,
+          "one_year": 1.0,
+          "peak_read_throughput": 400.0,
+          "usable_capacity": 5120000.0,
+          "usable_capacity_t0": 20000.0
+        }
+      }
+    ]
+  },
+  "target": "model",
+  "units": {
+    "annual_growth": "dimensionless",
+    "drive_capacity": "TB/drive",
+    "drives_per_node": "drive/node",
+    "horizon": "year",
+    "horizon_periods": "dimensionless",
+    "node_raw_capacity": "TB/node",
+    "one_year": "year",
+    "peak_read_throughput": "GB/s",
+    "usable_capacity": "TB",
+    "usable_capacity_t0": "TB"
+  }
+}

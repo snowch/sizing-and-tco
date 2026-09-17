@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "dcc4b2585c13940e",
+  "code_fingerprint": "625e182ef21045ec",
   "code_sources": [
     "bench/run_models.py",
     "models/service_tier/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-16T19:25:05+00:00",
-  "git_revision": "a152a7d",
+  "generated_at": "2026-09-17T11:58:17+00:00",
+  "git_revision": "eaf3ff0",
   "kind": "model",
   "name": "service_tier-reference",
   "produced_by": {
@@ -72,7 +72,7 @@
       "utilisation_including_coordination": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-16T19:25:05+00:00",
+    "generated_at": "2026-09-17T11:58:17+00:00",
     "model": "service_tier",
     "nodes": {
       "achievable_throughput": {
