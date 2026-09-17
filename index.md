@@ -8,7 +8,7 @@ short_title: Introduction
 
 *How to size a system, cost it, and know how much to trust the answer.*
 
-## How big, how much, and how wrong could I be?
+## You have been asked for a number
 
 Somebody has asked you how big the system needs to be. How many machines, how much storage, how
 much it will cost to run for the next three years — and they are going to spend real money on
@@ -17,14 +17,16 @@ whatever you tell them.
 You can do the arithmetic. That is rarely the hard part. What comes out is one number, and that
 number says nothing at all about how much of it you would actually bet.
 
-That question has three parts. **Sizing** is the first: how much hardware a stated workload
-needs, and where it stops coping. **Total cost of ownership** is the second: what that hardware
-costs over the years you keep it, which is not the same as what it costs to buy. Both are
-arithmetic, and most people can do them.
+**How big, how much, and how wrong could I be?**
 
-This book teaches the third part: how to find which input your answer rests on, how far the
-answer moves when that input moves, and what it would cost to find out. Almost nobody is taught
-this, and it is what decides whether anybody should act on your number.
+Three questions, and the first two are arithmetic. **Sizing** is how much hardware a stated
+workload needs, and where it stops coping. **Total cost of ownership** is what that hardware
+costs over the years you keep it, which is not the same as what it costs to buy. Most people can
+do both.
+
+This book teaches the third: how to find which input your answer rests on, how far the answer
+moves when that input moves, and what it would cost to find out. Almost nobody is taught this,
+and it is what decides whether anybody should act on your number.
 
 ## Why point estimates lie
 
