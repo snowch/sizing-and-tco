@@ -8,8 +8,8 @@ short_title: "Part VII — Presenting it"
 
 > How do you hand an interval to somebody who asked for a number?
 
-One chapter, and it is the one that decides whether any of the previous twenty-one were worth the
-effort. A model nobody acts on has the same value as a model that was never built.
+One chapter, and it decides whether the previous twenty-one were worth the effort. A model
+nobody acts on has the same value as a model that was never built.
 
 [ch21](#a-tco-for-finance) is the twenty minutes in which the work is used or ignored: what to
 put in front of the person whose decision it is, why a decision table beats an interval, and the

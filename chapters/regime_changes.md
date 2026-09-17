@@ -103,7 +103,7 @@ The last two columns are what a chain of multiplications cannot produce and what
 actually needs. Not "the system will be this busy" but "across everything this model thinks could
 happen, this fraction of it puts you past the point where the model stops applying".
 
-### Why this is the whole argument of the book
+### Why a cost model can be sampled and a sizing model cannot
 
 A cost model has no regime changes in it. Watts times hours times price is an accounting identity;
 it is true at every scale and there is no load at which electricity starts behaving differently.

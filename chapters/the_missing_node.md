@@ -28,7 +28,7 @@ method and it deserves its own chapter rather than a paragraph at the end of som
 ### Two ways to be wrong
 
 **Wrong about a number.** An input is off. The model is the right shape, the arithmetic is right,
-one of the quantities is not what you thought. This is the error the whole book has been about:
+one of the quantities is not what you thought. Every chapter so far has been about this error:
 [ch13](#monte-carlo) quantifies it, [ch14](#correlation-and-convergence) refines it,
 [ch19](#which-input-is-the-answer) says which one to go and fix.
 

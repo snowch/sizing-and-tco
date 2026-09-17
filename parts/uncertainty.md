@@ -12,8 +12,8 @@ Two chapters, placed here rather than at the front of the book on purpose. The m
 useful until you have a model that has produced a number you cannot defend, and
 [ch12](#the-sizing-model) is where that happened.
 
-[ch13](#monte-carlo) is the whole technique, from first principles, in about as much code as fits
-on a page. It assumes you can read code and do arithmetic, and it assumes nothing at all about
+[ch13](#monte-carlo) gives you the whole technique, from first principles, in about as much code
+as fits on a page. It assumes you can read code and do arithmetic, and it assumes nothing at all about
 statistics. Four words of vocabulary arrive in it, each because a model has just raised a question
 that needs it.
 
