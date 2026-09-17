@@ -11,7 +11,7 @@ short_title: "ch19 The missing node"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch13](#correlation-and-convergence) |
+| **Prerequisites** | [ch13 · Correlation and convergence](#correlation-and-convergence) |
 | **What it produces** | The observability model's incomplete ingest total, and what it costs to believe it |
 | **Built from** | `observability-reference` |
 :::

@@ -11,7 +11,7 @@ short_title: "ch04 Little's law"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch01](#what-a-workload-is) |
+| **Prerequisites** | [ch01 · What a workload is](#what-a-workload-is) |
 | **What it produces** | Requests in flight, from a rate and a duration, across the whole range |
 | **Built from** | `service_tier-reference` |
 :::

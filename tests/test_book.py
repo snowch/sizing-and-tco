@@ -143,6 +143,43 @@ def test_a_chapter_declares_its_own_label(chapter: Chapter):
     )
 
 
+#: A link to a chapter, as a page writes it: ``[ch12](#monte-carlo)`` or
+#: ``[ch12 · Monte Carlo](#monte-carlo)``.
+CHAPTER_LINK = re.compile(r"\[(ch\d+)([^\]]*)\]\(#([a-z-]+)\)")
+
+#: What separates a chapter's number from its title, here and in every chapter's own heading.
+TITLED = " · "
+
+
+@pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
+def test_a_chapter_reference_names_the_chapter_the_outline_names(path):
+    """A reference that carries a title has to carry the right one.
+
+    Both forms are deliberate. Inside a sentence a bare number is enough, because the sentence
+    says what the chapter is about. Where the reference stands alone — a prerequisites row, the
+    opening of a paragraph on a part page — it carries the title too, because there is no prose
+    to carry it and ``ch13`` on its own tells a reader where to click and nothing else.
+
+    Either way the text is derived from ``bench/outline.py``, and neither the number nor the
+    title is the chapter's identity, so both move without warning. This is the check that makes
+    them move everywhere at once instead of going stale in a table cell nobody rereads.
+    """
+    by_anchor = {c.anchor: c for c in CHAPTERS}
+    for label, rest, target in CHAPTER_LINK.findall(path.read_text()):
+        chapter = by_anchor.get(target)
+        assert chapter is not None, (
+            f"{path.name} links to #{target} as a chapter, and the outline has no such chapter"
+        )
+        assert label == chapter.label, (
+            f"{path.name} calls #{target} {label!r}; the outline makes it {chapter.label!r}"
+        )
+        assert rest in ("", TITLED + chapter.title), (
+            f"{path.name} links to #{target} as {label + rest!r}. A chapter reference is either "
+            f"{chapter.label!r} or {chapter.label + TITLED + chapter.title!r} — nothing "
+            "else, so that a renamed chapter cannot leave a stale title behind."
+        )
+
+
 @pytest.mark.parametrize("chapter", CHAPTERS, ids=lambda c: c.slug)
 def test_a_prerequisite_comes_earlier(chapter: Chapter):
     for needed in chapter.needs:

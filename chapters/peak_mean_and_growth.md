@@ -11,7 +11,7 @@ short_title: "ch03 Peak, mean and growth"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch01](#what-a-workload-is) |
+| **Prerequisites** | [ch01 · What a workload is](#what-a-workload-is) |
 | **What it produces** | What moves the recommended node count, and by how much |
 | **Built from** | `storage_cluster-reference` |
 :::

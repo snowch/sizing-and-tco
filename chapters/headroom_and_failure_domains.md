@@ -11,7 +11,7 @@ short_title: "ch10 Headroom and failure domains"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch05](#queueing-and-the-knee), [ch08](#capacity) |
+| **Prerequisites** | [ch05 · Queueing, and the knee](#queueing-and-the-knee), [ch08 · Capacity](#capacity) |
 | **What it produces** | Every declared margin in the book, and the reason for each |
 | **Built from** | `storage_cluster-reference`, `observability-reference`, `service_tier-reference` |
 :::

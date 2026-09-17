@@ -11,7 +11,7 @@ short_title: "ch02 Where the numbers come from"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch01](#what-a-workload-is) |
+| **Prerequisites** | [ch01 · What a workload is](#what-a-workload-is) |
 | **What it produces** | The model's first vendor claim, every measured constant in the book, and a provenance census |
 | **Built from** | `storage_cluster_provenance-reference`, `logs-line-bytes`, `metrics-sample-bytes`, `traces-span-bytes`, `storage-object-compression` |
 :::

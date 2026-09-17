@@ -11,7 +11,7 @@ short_title: "ch13 Correlation and convergence"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch12](#monte-carlo) |
+| **Prerequisites** | [ch12 · Monte Carlo](#monte-carlo) |
 | **What it produces** | What assuming independence was worth, and how many samples is enough |
 | **Built from** | `correlation-effect`, `convergence-storage-tco`, `observability-reference` |
 :::
@@ -188,10 +188,10 @@ that tend to move in the same direction. Two that move together up to a point an
 which is what a ceiling does to everything downstream of it — are not described by a single
 coefficient at all, and this book does not pretend otherwise.
 
-**That more samples are ever the answer to a wide interval.** They are not. More samples tell you
-where the interval is, not how wide it is. A wide interval means the inputs are uncertain, and
-the only things that narrow it are measuring something or deciding something —
-[ch18](#which-input-is-the-answer).
+**That more samples are ever the answer to a wide interval.** They are not. More samples
+tell you where the interval is, not how wide it is. A wide interval means the inputs are
+uncertain, and the only things that narrow it are measuring something or deciding something
+— [ch18 · Which input to go and measure](#which-input-is-the-answer).
 
 ## Problems
 

@@ -11,7 +11,7 @@ short_title: "ch07 Regime changes"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch05](#queueing-and-the-knee) |
+| **Prerequisites** | [ch05 · Queueing, and the knee](#queueing-and-the-knee) |
 | **What it produces** | The ceilings a chain of multiplications cannot express, in both reference models |
 | **Built from** | `observability-reference`, `queueing-curve` |
 :::

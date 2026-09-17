@@ -191,9 +191,7 @@ make check      # exactly what CI runs
 make book       # live preview at localhost:3000
 ```
 
-Nothing in this book needs a datacentre, a cloud account, or a licence. The one thing it cannot
-do on your laptop is time how fast something runs on the one machine this book takes its timings
-from, and it refuses to pretend otherwise.
+Nothing in this book needs a datacentre, a cloud account, or a licence.
 
 :::{note} Where this book is
 The toolkit is complete, all three models run end to end, and every chapter and appendix is

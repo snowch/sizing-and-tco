@@ -11,7 +11,7 @@ short_title: "ch16 Unit economics"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch14](#capex-opex-and-lifecycle) |
+| **Prerequisites** | [ch14 · Capex, opex and where the total stops](#capex-opex-and-lifecycle) |
 | **What it produces** | Cost per usable TB per month, and what its denominator assumes |
 | **Built from** | `storage_cluster-reference` |
 :::
@@ -136,7 +136,7 @@ position is that stating it is the whole of the discipline.
 
 **What the structure omits.** A unit cost inherits every missing line from the total it comes from
 ([ch14](#capex-opex-and-lifecycle)), and dividing by a large denominator makes a missing line look
-smaller rather than making it visible. [ch19](#the-missing-node).
+smaller rather than making it visible. [ch19 · The missing node](#the-missing-node).
 
 **Anything about marginal cost.** Every figure here is an average: total over quantity. What the
 *next* terabyte costs is a different number, usually much lower until a threshold and then equal

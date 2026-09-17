@@ -11,7 +11,7 @@ short_title: "ch11 The sizing model"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch08](#capacity), [ch09](#bandwidth-and-the-binding-constraint), [ch10](#headroom-and-failure-domains) |
+| **Prerequisites** | [ch08 · Capacity](#capacity), [ch09 · Bandwidth, and the binding constraint](#bandwidth-and-the-binding-constraint), [ch10 · Headroom and failure domains](#headroom-and-failure-domains) |
 | **What it produces** | The storage model end to end, and the node count it recommends |
 | **Built from** | `storage_cluster-reference`, `storage_cluster-sized_for_growth` |
 :::
@@ -122,16 +122,16 @@ what we actually bought, how often does the world break it?*
 **Whether the structure is right.** Everything above takes the chains as given and asks what the
 inputs are worth. A missing chain — rebuild bandwidth, metadata operations, a control plane — is
 invisible from inside, and nothing in the output distinguishes a model that is complete from one
-that is not. That is [ch19](#the-missing-node).
+that is not. That is [ch19 · The missing node](#the-missing-node).
 
 **What the ceilings are really at.** Both were declared by somebody with a reason
 ([ch10](#headroom-and-failure-domains)). The probabilities in the last two columns are exact
 statements about where the model's samples fall relative to lines that are judgements.
 
-**Where the uncertainty comes from.** The interval is wide, and this chapter has not said which
-input makes it wide. That is the only actionable question about a wide interval, and
-[ch18](#which-input-is-the-answer) answers it — the answer will not surprise you if you read
-[ch03](#peak-mean-and-growth).
+**Where the uncertainty comes from.** The interval is wide, and this
+chapter has not said which input makes it wide. That is the only
+actionable question about a wide interval, and [ch18](#which-input-is-the-answer) answers it — the
+answer will not surprise you if you read [ch03 · Peak, mean and growth](#peak-mean-and-growth).
 
 **What any of it costs.** Part III has sized a cluster and said nothing about money. Part V is
 cost, and it comes after sizing because it consumes sizing's output — including, if anybody is

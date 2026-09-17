@@ -21,10 +21,10 @@ list is short by design: a reader who finishes the book should have gained under
 not a dialect.
 
 Four of the terms name kinds of error, and they are worth reading as a group. Measurement
-uncertainty and parameter uncertainty are what an interval is made of. Scenario uncertainty is why
-this book runs a model more than once rather than widening its inputs. Structural error is none of
-those three — the model is wrong in shape rather than in its numbers — and it is
-[ch19](#the-missing-node).
+uncertainty and parameter uncertainty are what an interval is made of. Scenario uncertainty
+is why this book runs a model more than once rather than widening its inputs. Structural
+error is none of those three — the model is wrong in shape rather than in its numbers — and
+it is [ch19 · The missing node](#the-missing-node).
 
 The last column is not a simplification. It is the sentence to use out loud. Where a term has a
 plain-English equivalent, this book says the plain one first and names the term second — including

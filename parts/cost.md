@@ -11,17 +11,19 @@ short_title: "Part V — Cost"
 Cost comes after sizing because it consumes sizing's output. The cluster has already been chosen;
 this part is what it costs, and what that figure is and is not comparable with.
 
-[ch14](#capex-opex-and-lifecycle) splits what you pay once from what you pay every month, and
-notices which of the two got the meeting.
+**[ch14 · Capex, opex and where the total stops](#capex-opex-and-lifecycle)** splits what you pay
+once from what you pay every month, and notices which of the two got the meeting.
 
-[ch15](#power-first) is what changes when the constraint is watts rather than money — the one
-place in the book where the sizing runs backwards and the rounding goes the other way.
+**[ch15 · Power first](#power-first)** is what changes when the constraint is watts rather than
+money — the one place in the book where the sizing runs backwards and the rounding goes the other
+way.
 
-[ch16](#unit-economics) turns a total into a number somebody outside the team can compare against
-something, and spends most of its time on the denominator, because nobody checks it.
+**[ch16 · Unit economics](#unit-economics)** turns a total into a number somebody outside the team
+can compare against something, and spends most of its time on the denominator, because nobody
+checks it.
 
-[ch17](#the-five-year-model) is the seam between two models, where a distribution becomes a number
-in a document and the uncertainty quietly disappears.
+**[ch17 · The five-year model](#the-five-year-model)** is the seam between two models, where a
+distribution becomes a number in a document and the uncertainty quietly disappears.
 
 The chains in this part are the deterministic half of [the introduction](#preface)'s distinction:
 accounting identities and physics, with uncertain inputs and nothing in them that changes regime.
