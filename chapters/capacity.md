@@ -75,7 +75,7 @@ about a tenth, both are called a terabyte in conversation, and a tenth is a larg
 compression was going to buy you.
 
 So every node in this book declares a unit, and the build converts rather than assuming. Problem
-9.3 is that conversion, and this is the chapter where getting it wrong costs money.
+8.3 is that conversion, and this is the chapter where getting it wrong costs money.
 
 ### What comes out
 

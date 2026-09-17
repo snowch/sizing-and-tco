@@ -48,7 +48,7 @@ its numerator and is none of the three.
 
 The commonest error in sizing is turning a flow into a stock by multiplying it by a number instead
 of by an amount of time. It typechecks in a spreadsheet. It does not typecheck here, and problem
-2.2 is exactly that.
+1.2 is exactly that.
 
 ### Turning the workload into a file
 
