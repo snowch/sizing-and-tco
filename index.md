@@ -87,6 +87,22 @@ The method that produced the interval is [ch12](#monte-carlo)'s, not this page's
 you until you have built a model, got a number out of it, and felt that you could not defend the
 number.
 
+## What a model is in this book
+
+The quantities that went into that number, and the arithmetic joining them, written down in a
+file. Each quantity gets a name, a unit, and a note saying where its value came from. Each
+computed quantity gets a formula referring to the others by name. Nothing more exotic than that:
+the file is the model, and you can read the whole of one in a sitting.
+
+You build this one. It starts in [ch01 · What a workload is](#what-a-workload-is) as what
+arrives and what accumulates — a file that runs, and that cannot yet tell you anything you did
+not type into it. Later chapters add to it as they earn the right to: where each number came from,
+what the hardware can hold, where it stops coping, what it costs to run.
+[ch11 · The sizing model](#the-sizing-model) is where it produces the node count in the table
+above, and [ch17 · The five-year model](#the-five-year-model) is where it produces the cost.
+The storage figures in this book are computed from that file at whatever stage the chapter has
+reached, so an early table cannot show you something that chapter has not built yet.
+
 ## The error an interval cannot show
 
 Almost all of that width came from one input. The growth rate is a forecast, it compounds over
