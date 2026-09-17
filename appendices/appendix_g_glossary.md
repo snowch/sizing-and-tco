@@ -20,10 +20,11 @@ just raised a question that needs it, and never as a definition at the front of 
 list is short by design: a reader who finishes the book should have gained under twenty words,
 not a dialect.
 
-Four of them are the kinds of thing that can be wrong, and they are worth reading as a group. Two
-of them — measurement and parameter uncertainty — are what an interval is made of. Scenario
-uncertainty is why this book runs a model more than once rather than widening its inputs.
-Structural error is in none of that and is [ch20](#the-missing-node).
+Four of the terms name kinds of error, and they are worth reading as a group. Measurement
+uncertainty and parameter uncertainty are what an interval is made of. Scenario uncertainty is why
+this book runs a model more than once rather than widening its inputs. Structural error is none of
+those three — the model is wrong in shape rather than in its numbers — and it is
+[ch20](#the-missing-node).
 
 The last column is not a simplification. It is the sentence to use out loud. Where a term has a
 plain-English equivalent, this book says the plain one first and names the term second — including
@@ -44,10 +45,10 @@ likely to meet without an introduction. They name **what was asked a question**:
 :end-before: #: What a file *is*.
 ```
 
-Three of those are measurements: something outside this repository was asked. The fourth is not,
-and keeping it separate is what stops the distinction going soft. A `model` result is evidence
-about what this book's models say and about nothing else — so its fingerprint covers the whole
-sampler, and every figure derived from it moves when the method does.
+Three of those are measurements: something outside this repository was asked a question. A
+`model` result is not. It is evidence about what this book's models say and about nothing else,
+so its fingerprint covers the whole sampler and every figure derived from it moves when the
+method does. Keeping it apart from the other three is what stops the distinction going soft.
 
 The node kinds — `input`, `derived`, `measured`, `ceiling` — and the provenance kinds — `fact`,
 `vendor_claim`, `assumption` — are in [Appendix A](#appendix-a-dsl-reference), where the fields
@@ -55,7 +56,7 @@ they carry are quoted alongside them.
 
 ## Terms this book does not use
 
-Not an omission in each case. A short account of what it says instead:
+None of these is an oversight. Each one has something the book says instead:
 
 **Confidence interval.** The intervals in this book are percentile intervals of a sampled output:
 the gap between the fifth and ninety-fifth percentiles of the futures the model produced. The
@@ -71,8 +72,8 @@ do not have. And the **probability a ceiling is breached** — the last column o
 table — is none of those three: it is the share of the model's futures that ended on the wrong
 side of a declared line, which is why it is reported as a share and never as a range.
 
-**Expected value.** The mean, and in a sizing model the mean is usually the worse summary. Outputs
-that come from chains of multiplication are skewed, so the mean sits above most of the futures and
+**Expected value.** The mean. In a sizing model it is usually worse than the median: outputs that
+come from chains of multiplication are skewed, so the mean sits above most of the futures and
 describes none of them. This book reports the median and says so.
 
 **Best case and worst case.** Percentiles, named. A "worst case" is whatever the person saying it
@@ -83,17 +84,17 @@ somebody can disagree with.
 ([ch11](#headroom-and-failure-domains)). A contingency is a number added at the end to feel safer;
 headroom is a margin below a limit that has a name and a consequence.
 
-**Risk**, unqualified. Used here only where a ceiling gives it something to mean: how often, across
-the sampled futures, a design is asked to do something it cannot. That number has a row in a table
-and a sentence in plain English attached to it.
+**Risk**, unqualified. Used here only where a ceiling gives it something to mean: how often,
+across the sampled futures, a design is asked to do something it cannot. That number has a row in
+a table and a sentence in plain English attached to it.
 
 **Overhead**, unqualified. Every overhead in both reference models is a named node with a unit and
 a provenance, because "about twenty per cent overhead" is four different quantities depending on
 who is saying it.
 
-**Estimate.** Where possible: a *point estimate*, which names what it is — one number from one
-pass through the model with every input at its central value, and the thing the whole book is
-about not confusing with the answer.
+**Estimate.** A *point estimate* wherever the book can say so, which names what it is: one number
+from one pass through the model with every input at its central value. Not confusing that with the
+answer is what the whole book is about.
 
 ## Where each term is introduced
 

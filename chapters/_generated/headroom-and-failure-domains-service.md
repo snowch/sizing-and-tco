@@ -6,5 +6,4 @@
 | utilisation | 0.59 | 30% | 0.70 | 1.00 | ok | 38% | 16% |
 | fraction of the tier doing nothing useful | 0.37 | 50% | 0.50 | 1.00 | ok | 7% | 0% |
 
-*Conditions — target `model` · model `models/service_tier/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916`*\
-*Re-run — `bench/results/service_tier-reference.json` · code hash `dcc4b2585c13940e` · stamped 2026-09-16*
+*Source — [`service_tier-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/service_tier-reference.json)*

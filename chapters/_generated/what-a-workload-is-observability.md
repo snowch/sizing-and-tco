@@ -31,5 +31,4 @@
 | traces retention | 14.0 | day | ○ |
 | usable tb per node | 40.0 | TB/node | ○ |
 
-*Conditions — target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured***\
-*Re-run — `bench/results/observability-reference.json` · code hash `7510b101692da3e8` · stamped 2026-09-16*
+*Source — [`observability-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-reference.json) · **2 constant(s) not yet measured***

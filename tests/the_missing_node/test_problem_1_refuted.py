@@ -29,8 +29,8 @@ def test_one_miss_is_never_a_refutation(samples):
     just_outside = percentile(samples, 96)
     assert not is_refuted(samples, just_outside, observations=1), (
         "a single observation just outside a 90% interval is the expected behaviour of an "
-        "interval that is working. A rule that rejects on it rejects a correct model roughly "
-        "whenever it is correct."
+        "interval that is working. A rule that rejects on one miss will reject a correct model "
+        "sooner or later, because a correct model is supposed to miss."
     )
 
 

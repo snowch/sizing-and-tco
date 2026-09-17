@@ -5,5 +5,4 @@
 | fill level at horizon | 0.39 | 25% | 0.75 | 1.00 | ok | 17% | 9% |
 | read utilisation at peak | 0.28 | 30% | 0.70 | 1.00 | ok | 0% | 0% |
 
-*Conditions — target `model` · model `models/storage_cluster/model.yaml` · scenario `sized_for_growth` · 100,000 samples · seed `20260916`*\
-*Re-run — `bench/results/storage_cluster-sized_for_growth.json` · code hash `29ea4d8c26b77aba` · stamped 2026-09-16*
+*Source — [`storage_cluster-sized_for_growth`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-sized_for_growth.json)*

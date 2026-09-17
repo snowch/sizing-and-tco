@@ -9,5 +9,4 @@
 | `collector-throughput-per-core` | — | *not yet measured* | — | — |
 | `traces-spans-per-request` | — | *not yet measured* | — | — |
 
-*Conditions — assembled at build time from every stamped result in `bench/results/`, each row naming its own · no single stamped run*\
-*Re-run — `make figures`*
+*Source — `bench/results/`, one row per stamped result*

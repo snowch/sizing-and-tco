@@ -7,5 +7,4 @@
 | ingest utilisation, quoted | 0.51 | 40% | 0.60 | 1.00 | ok | 44% | 21% |
 | retention store fill | 0.58 | 30% | 0.70 | 1.00 | ok | 45% | 30% |
 
-*Conditions — target `model` · model `models/observability/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured***\
-*Re-run — `bench/results/observability-reference.json` · code hash `7510b101692da3e8` · stamped 2026-09-16*
+*Source — [`observability-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-reference.json) · **2 constant(s) not yet measured***

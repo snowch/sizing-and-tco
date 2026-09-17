@@ -21,7 +21,8 @@ short_title: "Appendix D · Units"
 :end-before: ## Counting units are units
 ```
 
-That is the reason this book has a build step at all.
+Multiplying two quantities that should never have met is the reason this book has a build step
+at all.
 
 ## Counting units are units
 
@@ -41,17 +42,16 @@ Without this, spans-per-request and bytes-per-span are both plain numbers, and m
 wrong pair produces a plausible answer with no complaint from anything. With it, only one product
 of those two is well formed.
 
-The cost is the interesting part. Converting between two counting units *requires a node that
-names the conversion* — how many spans a request emits, how many samples a series produces per
-scrape. That node is exactly the measured constant of [ch03](#where-the-numbers-come-from): an
-empirical number belonging to one implementation at one version, with provenance attached. The
-unit system pushes you towards declaring the thing the book says you must declare, which is a
-better mechanism than a rule in a style guide.
+The cost of that is a node. Converting between two counting units *requires one that names the
+conversion* — how many spans a request emits, how many samples a series produces per scrape. That
+node is exactly the measured constant of [ch03](#where-the-numbers-come-from): an empirical number
+belonging to one implementation at one version, with provenance attached. The unit system makes
+you declare what the book says you must declare, which a rule in a style guide cannot do.
 
 ## Dimensions are not enough
 
-The check that catches the most is not the one that catches dimensional nonsense. It is the one
-that catches two units with the *same* dimensions and different magnitudes:
+Most of what the check catches is not dimensional nonsense. It is two units with the *same*
+dimensions and different magnitudes:
 
 ```{include} ../chapters/_generated/appendix-d-units-conversions.md
 ```
@@ -64,7 +64,7 @@ the figure most likely to be quoted in a meeting.
 So the build records the factor and applies it. The declared unit wins — a node says what it means
 to produce, and the build makes the arithmetic agree or refuses to continue.
 
-## The conversions that actually bite
+## Five places a unit goes wrong
 
 **Decimal against binary.** A drive is sold in decimal terabytes. An operating system reports
 tebibytes. The gap is nearly a tenth of the capacity, it is in the direction that makes a cluster
@@ -101,18 +101,18 @@ time the check catches a growth factor raised to the power of five *seconds*.
 
 Units are checked once, at build time, over the model's formulas with unit-bearing quantities.
 After that the units are stripped and the sampler works in plain floating point. A unit-bearing
-array across a hundred nodes and a hundred thousand samples is slow, and `sizing/mc.py` is a
-chapter of this book that the reader is asked to read — a units library in the middle of it would
-be answering a question nobody asked.
+array across a hundred nodes and a hundred thousand samples is slow. And `sizing/mc.py` is a
+chapter of this book, written to be read: a units library in the middle of it would answer a
+question nobody asked.
 
 **Units are a gate, not a tax.**
 
-## One more thing the check needs
+## Why the check needs a magnitude
 
-Evaluating a formula in units alone is not always possible: a formula containing `1 - headroom`
-has to be evaluated at a *magnitude* as well as a unit, and doing it at one produces a division by
-zero in a model that is perfectly sound. So the checker uses each node's real point value where it
-has one:
+Evaluating a formula in units alone is not always possible. A formula containing `1 - headroom`
+has to be evaluated at a *magnitude* as well as a unit, and a magnitude of one produces a division
+by zero in a model that is perfectly sound. So the checker uses each node's real point value where
+it has one:
 
 ```{literalinclude} ../sizing/evaluate.py
 :language: python
@@ -120,7 +120,7 @@ has one:
 :end-before: def check_units
 ```
 
-Found by the check itself, on a model that was correct.
+The check found that case itself, on a model that was correct.
 
 ## Running it
 

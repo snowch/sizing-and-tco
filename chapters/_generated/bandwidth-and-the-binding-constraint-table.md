@@ -9,5 +9,4 @@
 | Median of the capacity chain alone | 121 nodes |
 | Median of the bandwidth chain alone | 67 nodes |
 
-*Conditions — target `model` · sizing.evaluate*\
-*Re-run — `bench/results/binding-constraint.json` · code hash `5dae44783a592596` · stamped 2026-09-16*
+*Source — [`binding-constraint`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/binding-constraint.json) · sizing.evaluate*

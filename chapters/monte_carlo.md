@@ -22,12 +22,11 @@ The sizing model has produced a node count. How sure are we?
 
 [ch12](#the-sizing-model) took a stated workload, multiplied along two chains, took the larger of
 the two answers, and produced a number. Every step was arithmetic you could check by hand. The
-number is correct. What nobody has established is whether it is *right*, and those turn out to be
-different questions — because every input to that chain was itself uncertain, and the chain has
-no way to say so.
+number is correct. Whether it is *right* is a different question: every input to that chain was
+itself uncertain, and the chain has no way to say so.
 
-This chapter is the machinery for asking the second question. It assumes you can read code and do
-arithmetic, and it assumes nothing at all about statistics.
+This chapter builds the machinery for asking the second question. It assumes you can read code
+and do arithmetic, and it assumes nothing about statistics.
 
 ## The material
 
@@ -55,20 +54,19 @@ Everything below is how that second column was produced.
 
 ### Instead of one value, a bag of values
 
-The idea is almost embarrassingly simple. If you do not know what the growth rate will be, do not
-give the model one growth rate. Give it a bag of plausible growth rates. Run the model once for
-every value in the bag. You get a bag of answers out, and the bag is the answer.
+The idea is simple. If you do not know what the growth rate will be, do not give the model one
+growth rate. Give it a bag of plausible growth rates. Run the model once for every value in the
+bag. You get a bag of answers out, and the bag is the answer.
 
-That is Monte Carlo. There is no more to it than that; everything else is bookkeeping about how
-to fill the bag and how to read it.
+That is Monte Carlo. Everything else is bookkeeping: how to fill the bag, and how to read it.
 
 Two words, and you will not need many more. The bag of plausible values for an input is its
 **distribution**. One value drawn from the bag is a **sample**. The bag of answers that comes out
-the other end is the output's distribution, and reading it is the last section of this chapter.
+the other end is the output's distribution, and reading one is a later section of this chapter.
 
 ### Where the bag comes from: pick a percentile at random
 
-Here is the part that makes it work, and it is one line of code.
+Filling the bag takes one line of code, and the same line works for every distribution.
 
 Every distribution can be described by a function that answers one question: *what value sits at
 this percentile?* Give it 0.5 and it hands back the middle value. Give it 0.9 and it hands back
@@ -88,9 +86,8 @@ sits there. Do it a hundred thousand times. You have sampled the distribution.
 is the entire sampler, and it is why adding a distribution to this book is three lines rather
 than a new dependency.
 
-The technique is called **inverse transform sampling**, and the name is the least interesting
-thing about it. What matters is what it buys: any distribution whose percentile function you can
-write down, you can sample. Problem 13.1 asks you to write one.
+The technique is called **inverse transform sampling**. Any distribution whose percentile
+function you can write down, you can sample. Problem 13.1 asks you to write one.
 
 Here is the simplest:
 
@@ -101,7 +98,7 @@ Here is the simplest:
 ```
 
 Percentile zero gives the minimum, percentile one gives the maximum, and everything in between is
-a straight line. You could have guessed that one. The next is the first that needs thinking about:
+a straight line. You could have guessed that one. The next one needs some thought:
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -111,23 +108,23 @@ a straight line. You could have guessed that one. The next is the first that nee
 
 Two branches, meeting at the mode. Below the mode the area under the triangle grows as the square
 of the distance from the minimum, so inverting it gives a square root. That is the whole
-derivation, and it is worth doing on paper once — after which every other distribution in this
-chapter is the same exercise with different algebra.
+derivation. Do it on paper once, and every other distribution in this chapter is the same
+exercise with different algebra.
 
 ### Which shape for which input
 
-This is where the judgement is, and it is not a technical question. Choosing a distribution is a
-claim about the world, and it is the claim a reviewer should argue with first.
+Choosing a distribution is a judgement rather than a technical question. It is a claim about the
+world, and the first claim a reviewer should argue with.
 
 **Lognormal, for prices and growth and anything that compounds.** Two properties earn it its
 place. It cannot go negative, and neither can a price. And a product of several lognormals is
-another lognormal — which is what a chain of multiplications *is*, so the uncertainty arriving at
-the end of a sizing chain has roughly this shape whether or not anybody chose it.
+another lognormal: a sizing chain is a product, so the uncertainty arriving at the end of one has
+roughly this shape whether or not anybody chose it.
 
 The parameters here are two percentiles rather than the mean and standard deviation of a
-logarithm, because nobody has an intuition for the second and everybody has one for the first.
-*"I would be surprised if it were under eleven or over nineteen"* is a sentence a person can say
-about a price, and it is exactly what the model file records.
+logarithm. Nobody has an intuition for the standard deviation of a logarithm. Everybody has one
+for *"I would be surprised if it were under eleven or over nineteen"*, which is a sentence a
+person can say about a price and exactly what the model file records.
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -137,8 +134,8 @@ about a price, and it is exactly what the model file records.
 
 **Triangular, for an expert's guess.** The least it could be, the most it could be, and the one
 they would bet on. Most sizing inputs arrive in this shape, because it is the shape of the answer
-to "what is it, roughly?". Its flaw is worth naming every time it is used: it asserts that nothing
-outside the bounds can happen, and the bounds came out of somebody's memory.
+to "what is it, roughly?". Name its flaw every time you use it: it asserts that nothing outside
+the bounds can happen, and the bounds came out of somebody's memory.
 
 **Uniform, when the bounds really are all you know.** A price capped by a contract. A retention
 window somebody will pick from a range. Honest exactly there, and dishonest as a default — it
@@ -146,13 +143,13 @@ says the extremes are as likely as the middle, and almost nothing real is like t
 
 **Normal, for measurement error.** In this book it means one thing: the standard error beside a
 measured constant. A number was measured, the measurement wobbles, and it is as likely to wobble
-high as low. It is the wrong default for a price, for the reason lognormal is the right one: the
-normal will happily go negative and a price will not.
+high as low. It is the wrong default for a price: a normal will happily go negative and a price
+will not.
 
 Choosing badly is not a rounding error. It is a claim about what can happen, made in a model file
 that will outlive the meeting it came from. So the build refuses an input that is sampled without
-naming its shape and saying why, and every input in this book records who claimed it, on what
-basis, and which of the four it is:
+naming its shape and saying why. Every input in this book records who claimed it, on what basis,
+and which of the four shapes it is:
 
 ```{include} _generated/monte-carlo-provenance.md
 ```
@@ -162,13 +159,13 @@ traceable; this many are somebody's sales material; this many were decided in a 
 
 ### Running the bag through the model
 
-Nothing changes. That is the point worth pausing on.
+Nothing changes.
 
 The model is a graph of quantities, each computed from the ones before it. Evaluating it at a
 point walks the graph in order, doing arithmetic on numbers. Sampling it walks the same graph in
 the same order, doing the same arithmetic on arrays — because `a * b` means the same thing
 whether `a` and `b` are two numbers or two hundred thousand. The evaluator in this book has one
-expression walker and hands it a different set of functions depending on which pass it is doing.
+expression walker, and hands it a different set of functions for each pass.
 
 So uncertainty propagates for free. An input with a distribution becomes an array; everything
 downstream of it becomes an array; everything else stays a single number and broadcasts.
@@ -190,7 +187,7 @@ narrow.
 :width: 100%
 ```
 
-Two words for this, and then we are done with vocabulary.
+Two words, and then we are done with vocabulary.
 
 A **percentile** is the value a given fraction of the bag is below. The 5th percentile is the
 value only one sample in twenty came in under.
@@ -198,18 +195,18 @@ value only one sample in twenty came in under.
 An **interval** is the gap between two of them. This book reports the gap between the 5th and the
 95th percentile, calls it the 90% interval, and deliberately does not call it a confidence
 interval. That phrase means something precise to a statistician and something vaguer to everybody
-else, and what is meant here is only the plain reading: *the model put nine tenths of its belief
-in this range*.
+else. What is meant here is the plain reading: *the model put nine tenths of its belief in this
+range*.
 
 Note where the red line sits relative to the middle of the distribution. For a chain of
 multiplications with skewed inputs, the answer you get from the average inputs is not the average
 answer, and it is not the middle one either. There is a theorem behind that; you do not need it.
 You need to have seen it happen once.
 
-### What the ceilings do with this
+### How often each ceiling is breached
 
-Here is the output that has no equivalent in a spreadsheet, and the reason the whole apparatus
-was worth building.
+The ceilings are what the machinery was built for, and a spreadsheet has no equivalent of this
+table.
 
 ```{include} _generated/monte-carlo-ceilings.md
 ```
@@ -240,17 +237,16 @@ count, and a hash of the sampler's source. Run it again with those three and you
 numbers to the last digit.
 
 That is not fastidiousness. An unseeded simulation is a measurement nobody can repeat, and a
-figure nobody can repeat is a figure nobody can check — which is the thing this repository
-refuses everywhere else and has no reason to start allowing here.
+figure nobody can repeat is a figure nobody can check. This repository refuses that everywhere
+else, and has no reason to start allowing it here.
 
 ## What this cannot tell you
 
 **Whether the model has the right shape.** Everything above takes the structure as given and asks
 what the inputs are worth. If a cost line is missing, if a ceiling was never declared, if two
 quantities were multiplied that should have been added — sampling will propagate the error
-beautifully and report a confident interval around the wrong answer. This is *structural error*,
-it is invisible to every technique in this chapter, and it is the subject of
-[ch20](#the-missing-node).
+beautifully and report a confident interval around the wrong answer. That is *structural error*:
+invisible to every technique in this chapter, and the subject of [ch20](#the-missing-node).
 
 **Whether the shapes were chosen honestly.** A triangular with generous bounds and a lognormal
 with tight ones will give different intervals for the same input, and nothing here can tell you
@@ -258,17 +254,16 @@ which was right. The distribution is an assumption like any other, and this book
 it in a file with your name on it for that reason.
 
 **How the inputs were drawn together.** The sampler above draws each input on its own. The
-intervals above were not produced that way: this model declares two pairs that move together —
-drives and chassis, which are quoted by the same supply chain, and growth and read load, which
-are the same year seen twice — and the evaluator applies them after the draw. So every figure on
-this page already carries them, and none of this chapter has said so. Drawing those pairs
-independently instead would make every interval here *narrower*, which is the direction that gets
-a plan approved. [ch14](#correlation-and-convergence) names the pairs, and measures what they
-were worth.
+intervals above were not produced that way. This model declares two pairs that move together —
+drives and chassis, quoted by the same supply chain; growth and read load, the same year seen
+twice — and the evaluator applies the pairing after the draw. So every figure on this page
+already carries it, and this chapter has not said so until now. Drawing those pairs independently
+would make every interval here *narrower*, which is the direction that gets a plan approved.
+[ch14](#correlation-and-convergence) names the pairs, and measures what they were worth.
 
-**Whether a hundred thousand samples was enough.** It was assumed here and not established. The
-argument, and the way to work it out for a model of your own, is also
-[ch14](#correlation-and-convergence).
+**Whether a hundred thousand samples was enough.** This chapter assumed it and did not establish
+it. [ch14](#correlation-and-convergence) has the argument, and the way to work it out for a model
+of your own.
 
 **How likely any of this actually is.** The interval is a statement about the model's declared
 inputs. It is not a forecast, it carries no track record, and its 95th percentile is not a

@@ -19,5 +19,4 @@
 | *ingest utilisation, quoted* — over its limit | 21% | 0% |
 | *retention store fill* — over its limit | 30% | 0% |
 
-*Conditions — target `model` · model `models/observability/model.yaml` · scenarios `reference` and `knobs_turned_down` · 100,000 samples · seed `20260916` · **2 constant(s) not yet measured***\
-*Re-run — `bench/results/observability-reference.json` · `bench/results/observability-knobs_turned_down.json` · code hash `7510b101692da3e8` · stamped 2026-09-16*
+*Source — [`observability-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-reference.json) and [`observability-knobs_turned_down`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-knobs_turned_down.json) · **4 constant(s) not yet measured***

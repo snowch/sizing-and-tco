@@ -1,10 +1,10 @@
 ---
-title: "Part VII — Presenting it"
-short_title: "Part VII — Presenting it"
+title: "Part VII — Presenting an interval"
+short_title: "Part VII — Presenting an interval"
 ---
 
 (part-presenting-it)=
-# Part VII — Presenting it
+# Part VII — Presenting an interval
 
 > How do you hand an interval to somebody who asked for a number?
 
@@ -13,7 +13,8 @@ nobody acts on has the same value as a model that was never built.
 
 [ch21](#a-tco-for-finance) is the twenty minutes in which the work is used or ignored: what to
 put in front of the person whose decision it is, why a decision table beats an interval, and the
-single sentence the whole apparatus exists to earn the right to say.
+one sentence that has to go beside the number — what it leaves out. Everything before this chapter
+exists to earn the right to say it.
 
 It is also the one chapter in the book arguing from experience rather than from a stamped result,
 and it says so.

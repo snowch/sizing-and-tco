@@ -31,8 +31,9 @@ model somebody has to learn a system to read is a model nobody reads.
 ```
 
 Four keys before the nodes begin. `model` is the identifier, and it is the directory name.
-`currency` is declared rather than assumed, so that a model mixing two of them fails to typecheck
-instead of quietly adding them. `description` is prose, and it is where a model says what it is
+`title` is the name a reader sees, and it defaults to the identifier when a model does not give
+one. `currency` is declared rather than assumed, so that a model mixing two of them fails to
+typecheck instead of quietly adding them. `description` is prose, and it is where a model says what it is
 *for* — the one thing a reader cannot reconstruct from the graph.
 
 ## The four node kinds
@@ -40,11 +41,11 @@ instead of quietly adding them. `description` is prose, and it is where a model 
 ```{include} ../chapters/_generated/appendix-a-dsl-reference-kinds.md
 ```
 
-The last row is the distinction the book is built on, and it is decided by the file rather than
-by its author's opinion of it. A model containing a `measured` node or a `ceiling` node **is** a
-sizing model: it has an empirical constant that belongs to one stack at one version, or a limit
-past which its arithmetic stops describing anything, and in either case sampling the inputs is not
-sufficient on its own. A model with neither is a cost model, and there it is.
+The last row is the distinction the book is built on, and the file decides it rather than its
+author's opinion of it. A model containing a `measured` node or a `ceiling` node **is** a sizing
+model: it has an empirical constant that belongs to one stack at one version, or a limit past
+which its arithmetic stops describing anything, and in either case sampling the inputs is not
+sufficient on its own. A model with neither is a cost model.
 
 Here are the kinds, as the loader defines them:
 
@@ -56,8 +57,8 @@ Here are the kinds, as the loader defines them:
 
 ### `input` — a number somebody chose
 
-A value, or a distribution, or both. Plus a provenance kind and a non-empty source, which is the
-one field the build will not let you skip:
+A value, or a distribution, or both. Plus a provenance kind, and a source the build will not let
+you leave empty:
 
 ```{literalinclude} ../models/storage_cluster/model.yaml
 :language: yaml
@@ -103,10 +104,10 @@ Not a value. A reference to a stamped result:
 ```
 
 The number, its standard error and the implementation it belongs to all come from
-`bench/results/`, which is what makes a measured constant different from an input that happens to
-have been measured once. If the result does not exist, the node has no value and neither does
-anything downstream of it — the state propagates by itself and the figures say *not yet measured*
-rather than showing an estimate ([ch03](#where-the-numbers-come-from)).
+`bench/results/`. That is what separates a measured constant from an input that happens to have
+been measured once. If the result does not exist, the node has no value and neither does anything
+downstream of it — the state propagates by itself and the figures say *not yet measured* rather
+than showing an estimate ([ch03](#where-the-numbers-come-from)).
 
 ### `ceiling` — where the arithmetic stops working
 
@@ -118,13 +119,13 @@ A quantity, a limit, a margin, and a reason:
 :end-before: # -- what more machines buy
 ```
 
-`of`, `limit` and `headroom` are all expressions rather than numbers, and that is deliberate. A
-margin a sizing formula uses and a margin a ceiling audits against should be able to be *the same
-node*. Writing the same figure in both places is how a design comes to be sized for one headroom
-and checked against another, some months after anybody remembers there were two.
+`of`, `limit` and `headroom` are all expressions rather than numbers, so that a margin a sizing
+formula uses and a margin a ceiling audits against can be *the same node*. Writing the same figure
+in both places is how a design comes to be sized for one headroom and checked against another,
+some months after anybody remembers there were two.
 
 `because` is required and `headroom` is required. A ceiling with a limit and no margin is not a
-sizing rule, it is a comparison, and the build refuses it
+sizing rule but a comparison, and the build refuses it
 ([ch11](#headroom-and-failure-domains)).
 
 ## Provenance
@@ -135,9 +136,9 @@ sizing rule, it is a comparison, and the build refuses it
 :end-before: PROVENANCE_MEANING
 ```
 
-Three kinds, one required source string, and the gap between the first two is the one that costs
-money. Every figure in the book colours them differently and none of them is ever silently
-promoted.
+Three kinds, and a source string on every input. A vendor's claim is not a fact, and that gap is
+the one that costs money. Every figure in the book colours the three differently, and none of them
+is ever silently promoted.
 
 ## Distributions
 
@@ -189,7 +190,7 @@ count and the seed so the run can be reproduced exactly:
 :language: yaml
 ```
 
-Scenarios are how two designs get compared without either of them being edited into the other
+Scenarios are how you compare two designs without editing either one into the other
 ([ch21](#a-tco-for-finance)).
 
 ## What the build checks
@@ -202,7 +203,7 @@ Scenarios are how two designs get compared without either of them being edited i
   *month* — is recorded as a conversion and applied, not waved through
   ([Appendix D](#appendix-d-units)).
 - **An input with no provenance, or a `fact` that cites nothing.**
-- **An input that is sampled and does not name its shape in that source.** The distribution is a
+- **An input that is sampled and does not name its shape in its source.** The distribution is a
   claim about what can happen, and it is the claim to argue with first
   ([Appendix C](#appendix-c-distributions)).
 - **A ceiling with no headroom, or no reason.**
@@ -210,9 +211,9 @@ Scenarios are how two designs get compared without either of them being edited i
   something exactly.
 - **A cycle**, or a node that depends on something that does not exist.
 - **A measured constant with no ceiling anywhere in the model.** A model with empirical inputs
-  and no declared limit is claiming that nothing in it changes regime. That may be true, and it
-  should be stated by declaring the ceiling rather than by leaving it out. The classification
-  itself is derived from the file and cannot be asserted by hand.
+  and no declared limit is claiming that nothing in it changes regime. That may be true; say it
+  by declaring the ceiling, not by leaving one out. The classification comes from the file and
+  cannot be asserted by hand.
 - **A node that feeds no output**, which is either a leftover or an output somebody forgot to
   declare — and a model that declares no outputs at all, since nothing in it can then be checked.
 - **A scenario overriding a node that does not exist, or a derived one.** Overriding a derived
@@ -225,11 +226,11 @@ Scenarios are how two designs get compared without either of them being edited i
 :width: 100%
 ```
 
-The service tier model, which is the smallest one in the book: nine inputs, three ceilings and
-the arithmetic between them. It has no measured constant, which is why the ceilings alone make it
-a sizing model — [Appendix F](#appendix-f-observability-model) is the one with all four kinds in
-it. Reading right to left from any answer gives exactly the quantities it rests on; reading left
-to right shows how few inputs most of the graph is downstream of.
+The service tier model, the smallest in the book: nine inputs, three ceilings and the arithmetic
+between them. It has no measured constant, so its ceilings alone make it a sizing model.
+[Appendix F](#appendix-f-observability-model) is the model with all four kinds in it. Reading
+right to left from any answer gives exactly the quantities it rests on; reading left to right
+shows how few inputs most of the graph is downstream of.
 
 ## Running it
 

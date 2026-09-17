@@ -8,5 +8,4 @@
 | 100,000 | $1,260,624 | $5,650 | 4.02× |
 | | *settles* | *falls* | **3.30× per decade** from 1,000 samples up, against √10 = 3.16 |
 
-*Conditions — target `model` · sizing.mc*\
-*Re-run — `bench/results/convergence-storage-tco.json` · code hash `cc004a3fad2435cc` · stamped 2026-09-16*
+*Source — [`convergence-storage-tco`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/convergence-storage-tco.json) · sizing.mc*

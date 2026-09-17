@@ -11,5 +11,4 @@
 | `storage_cluster` | cost per usable TB per month | USD / terabyte / year | USD / TB / month | x0.0833333 |
 | `storage_cluster` | facility power | watt | kW | x0.001 |
 
-*Conditions — assembled at build time from every model file in `models/` · no single stamped run*\
-*Re-run — `make figures`*
+*Source — `models/`*

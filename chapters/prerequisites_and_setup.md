@@ -21,8 +21,8 @@ short_title: "ch00 Prerequisites and setup"
 What do I need installed, and how do I check that a figure in this book still says what it says
 here?
 
-The second half is the reason this chapter exists at all. A book of numbers you cannot re-derive
-is a book of assertions, and the difference between the two is one command.
+A book of numbers you cannot re-derive is a book of assertions. The difference between the two is
+one command, and showing you that command is most of what this chapter does.
 
 ## The material
 
@@ -39,10 +39,9 @@ python3 scripts/verify-setup.py
 `python3 -m pip`, not a standalone tool install. `python3 -m pytest` has to work, and a `pytest`
 installed by pipx or uv has its own environment and cannot import this repository's code.
 
-Nothing here needs a datacentre, a cloud account or a licence. The one thing your laptop cannot
-do is take a timing on the reference machine, and the toolkit refuses to pretend otherwise —
-`verify-setup.py` says so, and every figure that would need one renders as a box saying it has not
-been measured.
+Nothing here needs a datacentre, a cloud account or a licence. Your laptop cannot take a timing
+on the reference machine, and the toolkit will not pretend it can: `verify-setup.py` says so, and
+every figure that would need such a timing renders as a box saying it has not been measured.
 
 ### What the commands do
 
@@ -54,8 +53,8 @@ make check      # everything CI runs
 make book       # live preview at localhost:3000
 ```
 
-`make check` is the one that matters. It is the same script CI runs, so the two cannot drift, and
-it takes well under a minute. Run it before you believe anything.
+Run `make check` before you believe anything. It is the same script CI runs, so the two cannot
+drift, and it takes well under a minute.
 
 ### How to check a number in this book
 
@@ -69,7 +68,7 @@ python3 -m bench.run_corpus --check
 
 The first prints the corpus, the codec and the implementation the figure belongs to. The second
 re-derives it from scratch on your machine and fails if it has moved. That is the whole contract:
-a number, what produced it, and a command that disagrees with you if the two have parted company.
+a number, what produced it, and a command that fails when the two have parted company.
 
 ### What is in the repository
 
@@ -85,8 +84,8 @@ A model is a file. Here is what one is made of:
 ```{include} _generated/prerequisites-and-setup-models.md
 ```
 
-The last row is the classification the rest of the book turns on, and
-[ch01](#reading-a-model) is about how the build arrives at it.
+The last row says whether the model is a cost model or a sizing model — the classification the
+rest of the book turns on. [ch01](#reading-a-model) is how the build works that out.
 
 ### The four targets, and what your machine may produce
 
@@ -101,17 +100,18 @@ them are things your laptop can do.
 | `estate` | an observation of a system somebody runs | never by a machine; a person takes it |
 
 The split is not bureaucracy. A compression ratio is a property of a codec and some bytes, so
-anybody can check it. A throughput is a property of the computer that produced it, so nobody can
-check yours — which is why this repository will not let you record one from the wrong machine
+anybody can check it. A throughput is a property of the computer that produced it, so nobody else
+can check yours. That is why this repository will not let you record one from the wrong machine,
 even by accident.
 
 ## What this cannot tell you
 
 **Whether your machine gives the same answers as the one that produced these figures.** The
-corpus constants should, because a codec is deterministic — but a different Python, a different
-compression library, or a processor that takes a different instruction path can move a figure in
-its last digits. `make check` uses a tolerance far tighter than anything this book prints and far
-looser than that noise, and the tolerance is a judgement rather than a fact.
+corpus constants should agree, because a codec is deterministic — but a different Python, a
+different compression library, or a processor that takes a different instruction path can move a
+figure in its last digits. `make check` allows a tolerance looser than that noise and tighter than
+anything this book prints, so the noise passes and a real change does not. Where to put that
+tolerance is a judgement, not a fact.
 
 **Whether the tools are the right versions.** `verify-setup.py` checks that things are present,
 not that they are the versions the pins name. A dependency resolved differently is the commonest
@@ -119,14 +119,14 @@ reason a fresh checkout disagrees with CI, and the honest fix is to read `requir
 than to trust a tick.
 
 **Anything about the models themselves.** Every check in this chapter is about whether the
-machinery runs. A model can pass every one of them and still be a bad description of your system,
-which is what the remaining twenty-two chapters are for.
+machinery runs. A model can pass every one of them and still be a bad description of your system.
+The remaining twenty-two chapters are about that.
 
 ## Problems
 
-Two, in `tests/prerequisites_and_setup/`. Both are about the toolchain rather than about sizing,
-because everything the rest of the book claims rests on the thing that refuses a bad model on your
-machine being the same thing that refuses it in CI.
+Two, in `tests/prerequisites_and_setup/`. Both are about the toolchain rather than about sizing:
+the rest of the book rests on your machine refusing a bad model for exactly the reasons CI refuses
+it.
 
 **0.1 — The smallest model that builds.**
 Write a model file with one input and one derived node that passes the loader, the dimensional
@@ -137,10 +137,10 @@ are the point.
 python3 -m pytest tests/prerequisites_and_setup/test_problem_1_smallest.py
 ```
 
-**0.2 — Break it on purpose, in the one way that matters.**
+**0.2 — Break it on purpose, in a way that still loads.**
 Write a second model that loads cleanly and is wrong about units. Not a typo — those fail
-immediately and teach nothing. A node that declares a unit its own formula cannot produce, which
-is the class of error a spreadsheet cannot see at all.
+immediately and teach nothing. A node that declares a unit its own formula cannot produce. A
+spreadsheet cannot see that class of error at all.
 
 ```bash
 python3 -m pytest tests/prerequisites_and_setup/test_problem_2_broken.py
@@ -151,5 +151,5 @@ python3 -m pytest tests/prerequisites_and_setup/test_problem_2_broken.py
 [ch01](#reading-a-model) is the model file itself: four node kinds, what declaring each one
 commits you to, and why the build is allowed to refuse your arithmetic.
 
-`AUTHORING_GUIDE.md` in the repository is the rules this book is written under, if you would
-rather see them stated than inferred.
+`AUTHORING_GUIDE.md` in the repository states the rules this book is written under, if you would
+rather read them than infer them.

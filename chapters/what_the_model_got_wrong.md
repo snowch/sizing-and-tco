@@ -124,15 +124,15 @@ is the first chapter where it closes:
 > **model → measure → predict → build → observe → compare → update**
 
 Parts I to V do the first four. [ch19](#which-input-is-the-answer) is about doing the second one
-better, and about knowing whether it is worth it. This chapter is *compare*, and the step after it
-is the only one that makes the next model better than this one.
+better, and about knowing whether it is worth it. This chapter is *compare*. The step after it,
+*update*, is the only one that makes the next model better than this one.
 
-What *compare* needs is unglamorous and is the reason this repository is shaped the way it is: a
-prediction recorded before the fact, with its interval, its inputs, its date and a hash of the
-code that produced it. A forecast reconstructed from memory afterwards is not evidence, because
-memory adjusts — and the adjustment always runs in the direction that makes the present bearable.
-Every stamped result in this book exists so that the comparison is available to somebody who was
-not there and does not have to be trusted.
+*Compare* needs a prediction recorded before the fact, with its interval, its inputs, its date
+and a hash of the code that produced it. That requirement is unglamorous, and it is why this
+repository is shaped the way it is. A forecast reconstructed from memory afterwards is not
+evidence, because memory adjusts — and the adjustment always runs in the direction that makes the
+present bearable. Every stamped result in this book exists so that somebody who was not there can
+make the comparison without taking anybody's word for it.
 
 ## What this cannot tell you
 
@@ -160,8 +160,8 @@ observe the system afterwards — neither of which a book can do for you.
 
 ## Problems
 
-Two, in `tests/what_the_model_got_wrong/`. Both are the chapter's two halves, and the second is
-the one worth predicting before running.
+Two, in `tests/what_the_model_got_wrong/` — the chapter's two halves. The second is worth
+predicting before you run it.
 
 **22.1 — Attribute the failure.**
 Given the draws and which of them failed, rank the inputs by how far each one had to be from its

@@ -21,13 +21,13 @@ short_title: "ch17 Unit economics"
 What does a cost per unit have to have before it means anything?
 
 A total is a number about one system. A unit cost is a claim that can be compared — against a
-supplier, against last year, against another team — and the comparison is the whole point of
-computing one. Which means a unit cost that is not comparable is worse than no unit cost, because
-it will be compared anyway.
+supplier, against last year, against another team — and comparison is the whole point of computing
+one. A unit cost that is not comparable is worse than no unit cost, because it will be compared
+anyway.
 
 ## The material
 
-### Two divisions, and the second one is where it goes wrong
+### Two divisions: a quantity and a period
 
 ```{image} _figures/unit-economics-graph.svg
 :alt: Everything that feeds the unit cost, including its denominator
@@ -39,17 +39,16 @@ in it is the period: per terabyte-month and per terabyte-year differ by a factor
 look equally authoritative on a slide.
 
 In a model, the build catches that — the two have identical dimensions and different units, and
-`sizing/units.py` converts. This is the second time in the book that particular factor of twelve
-has come up ([ch01](#reading-a-model)), because it is the one that was nearly published.
+`sizing/units.py` converts. The same factor of twelve is in [ch01](#reading-a-model), where this
+repository nearly published it.
 
 In a slide, nothing catches it.
 
 ### The denominator is the part nobody checks
 
-Here is the finding, and problem 17.2 is it.
-
 Take one model, one set of samples, one five-year total. Ask for a cost per usable terabyte per
-month. There are at least four defensible denominators:
+month. There are at least four defensible denominators, and problem 17.2 is computing all of
+them:
 
 - the capacity at the horizon — what you will be able to store at the end;
 - the capacity on day one — what you can store now;
@@ -76,14 +75,14 @@ in a footnote:
 
 It is stated as a convention with a known bias, because that is the most anybody can honestly do.
 
-### What it does to a distribution
+### Why the unit cost has a wide interval
 
 ```{image} _figures/unit-economics-distribution.svg
 :alt: Cost per usable TB per month, as a distribution
 :width: 100%
 ```
 
-That shape is the most counter-intuitive figure in the book and it is worth sitting with.
+That is the most counter-intuitive figure in the book, and it is worth sitting with.
 
 A unit cost falls when growth arrives. You bought a cluster for a future; if the future turns up,
 you use the cluster you bought and the cost per terabyte is low. If it does not, you have paid for
@@ -96,10 +95,10 @@ uncertainty is in the denominator rather than in the numerator.
 ```{include} _generated/unit-economics-tornado.md
 ```
 
-Which is why the growth rate is at the top of this tornado as well, and why a unit cost quoted
-without a date is quoting a guess about the future.
+That is why the growth rate is at the top of this tornado too, and why a unit cost quoted without
+a date is quoting a guess about the future.
 
-### What makes one comparable
+### What makes a unit cost comparable
 
 Three things, and a unit cost missing any of them cannot be compared with anything:
 
@@ -113,8 +112,8 @@ usually comparing different terabytes, and the ratio between raw and usable in
 **What is in the numerator.** People or not. Network or not. The building or not. A supplier's
 figure includes their margin and excludes your staff; an internal figure usually does the reverse.
 
-The book's own figure states all three, in the model file, where a reviewer can see them. That is
-the only version of this that survives being quoted by somebody who was not there.
+The book's own figure states all three in the model file, where a reviewer can see them. A unit
+cost stated that way is the only kind that survives being quoted by somebody who was not there.
 
 ### What a unit cost is for
 

@@ -17,5 +17,4 @@
 | 95% | 129.5 ms | 136.3 ms | 1,216 | 20.0x |
 | 97% | 220.4 ms | 227.2 ms | 2,069 | 33.3x |
 
-*Conditions — target `model` · sizing.evaluate*\
-*Re-run — `bench/results/queueing-curve.json` · code hash `5dae44783a592596` · stamped 2026-09-16*
+*Source — [`queueing-curve`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/queueing-curve.json) · sizing.evaluate*

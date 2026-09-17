@@ -4,5 +4,4 @@
 |---|---:|---:|---|---|
 | object compression ratio | 2.55 | ± 0.0748 |  | python lzma (XZ preset 1) |
 
-*Conditions — target `model` · model `models/storage_cluster/model.yaml` · scenario `reference` · 100,000 samples · seed `20260916`*\
-*Re-run — `bench/results/storage_cluster-reference.json` · code hash `ea563f58ac2f28c2` · stamped 2026-09-16*
+*Source — [`storage_cluster-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-reference.json)*

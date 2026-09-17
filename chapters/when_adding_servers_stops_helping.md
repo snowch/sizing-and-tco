@@ -22,8 +22,8 @@ How far does a system scale, and how would you find out from the two measurement
 have?
 
 [ch06](#queueing-and-the-knee) ended with a tier too close to its margin and an obvious remedy:
-buy more machines. This chapter is about how much less that works than the arithmetic suggests,
-and about the fact that it eventually works in reverse.
+buy more machines. This chapter is about how much less that buys than the arithmetic promises,
+and about the count past which each new machine takes capacity away.
 
 ## The material
 
@@ -32,16 +32,16 @@ and about the fact that it eventually works in reverse.
 Machines do not simply add up, and there are two separate reasons.
 
 **Contention.** Some fraction of the work cannot be done in parallel — a lock, a single writer, a
-shared queue, a coordinator. That fraction costs a fixed share of every machine you add. It grows
-with the *count*, it flattens the curve, and it is the famous one: Amdahl's argument, and the
-ceiling it implies.
+shared queue, a coordinator. That fraction takes a fixed share of every machine you add, so the
+cost grows with the *count* and the curve flattens. This is the famous one: Amdahl's argument, and
+the ceiling it implies.
 
 **Crosstalk.** Machines have to agree with each other. Every new one has to be told about all the
 others, so the cost grows with the number of *pairs* rather than the number of machines.
 
-That second term is the one worth internalising, because it does something contention never does.
-Contention flattens a curve. Crosstalk **turns it over**. Past some count, the next machine costs
-more in agreement than it brings in work, and the total goes down.
+Crosstalk does something contention never does. Contention flattens the curve; crosstalk **turns
+it over**. Past some count, the next machine costs more in agreement than it brings in work, and
+the total goes down.
 
 Both terms together are the universal scalability law @gunther2007usl:
 
@@ -51,7 +51,7 @@ Both terms together are the universal scalability law @gunther2007usl:
 :end-before: scaling_efficiency:
 ```
 
-### What it looks like
+### The curve, against the straight line
 
 ```{image} _figures/when-adding-servers-stops-helping-curve.svg
 :alt: Throughput against node count, against the straight line a budget assumes
@@ -65,13 +65,13 @@ climbing slowly — and then stops climbing.
 ```{include} _generated/when-adding-servers-stops-helping-table.md
 ```
 
-Read the last column, which is what each machine is worth. It falls the whole way down. By the
-peak, a machine is contributing a fraction of what the first one did, and every one after that
-contributes less than nothing.
+Read the last column: what each machine is worth. It falls the whole way down. By the peak, a
+machine contributes a fraction of what the first one did, and every one after that contributes
+less than nothing.
 
-The last row is the thing to trust. The peak found by sweeping the model and the peak its two
-coefficients predict are computed independently, and they agree — which is the only reason the
-closed form in problem 7.3 is worth having.
+The last row checks the peak twice. One comes from sweeping the model, the other from its two
+coefficients; the calculations are independent, and they agree. That agreement is why the closed
+form in problem 7.3 is worth having.
 
 ### What doubling actually buys
 
@@ -81,24 +81,21 @@ closed form in problem 7.3 is worth having.
 Twice the machines. Read down.
 
 Utilisation halves, exactly as arithmetic says it should. Waiting time falls by a great deal more
-than half, because [ch06](#queueing-and-the-knee)'s division is not linear and this is the
-direction in which that helps you.
+than half, because [ch06](#queueing-and-the-knee)'s division is not linear and the non-linearity
+runs in your favour in this direction.
 
-And throughput goes up by not much more than a quarter — for a doubling of the fleet.
-Efficiency falls by more than a third at the same time, which is the same fact stated as an
-accusation.
+Throughput goes up by not much more than a quarter, for a doubling of the fleet. Efficiency falls
+by more than a third at the same time, which is the same fact counted from the other end.
 
 So: doubling a tier is an excellent way to fix latency and a poor way to buy capacity. Those are
 different purchases, they are usually conflated, and the model tells them apart.
 
 ### The utilisation you were quoted was optimistic
 
-Here is the part [ch06](#queueing-and-the-knee) could not say, because it had no scaling term.
-
-The queueing chapter computed utilisation as work arriving divided by what the machines could do
-*if each of them worked alone*. But they do not work alone. Some of their capacity is spent on
-each other, and the honest utilisation is the arriving work divided by what the tier can actually
-deliver.
+[ch06](#queueing-and-the-knee) had no scaling term, so its utilisation was the work arriving
+divided by what the machines could do *if each of them worked alone*. They do not work alone. Some
+of their capacity is spent on each other, and the honest utilisation is the arriving work divided
+by what the tier can actually deliver.
 
 The model carries both numbers, side by side, on purpose:
 
@@ -112,17 +109,17 @@ At the reference point the two differ by half again. The queueing view is not wr
 optimistic, by a factor nobody notices until they measure the tier at two sizes and find the
 second one disappointing.
 
-Which is precisely how the coefficients get fitted.
+Measuring the tier at more than one size is also how the coefficients get fitted.
 
-### Fitting it from what you have
+### Fitting the coefficients from what you have
 
 Three unknowns, so three measurements determine them exactly. You will usually have: one machine
 on a bench, the cluster you are running, and the cluster you were running before you grew it.
 That is not much data and it is what exists.
 
-Problem 7.2 is the algebra. It is worth doing by hand once, because rearranging the law to make it
-linear is the step that shows why three points is the minimum and why they must be at *different*
-counts — two measurements at the same size determine nothing at all.
+Problem 7.2 is the algebra, and it is worth doing by hand once. Rearranging the law into a
+straight line shows why three points are the minimum and why they must be at *different* counts:
+two measurements at the same size determine nothing at all.
 
 Then notice what you have done. You have extended a two-parameter curve out to hundreds of
 machines from three points clustered at the low end, and you are about to spend money on the
@@ -159,7 +156,7 @@ Three, in `tests/when_adding_servers_stops_helping/`.
 
 **7.1 — Write the law.**
 Two terms in the denominator, behaving differently. The tests check that contention alone flattens
-the curve and that crosstalk alone turns it over, which is the distinction worth having.
+the curve and that crosstalk alone turns it over, so the two cannot stand in for each other.
 
 ```bash
 python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_1_law.py
@@ -182,8 +179,8 @@ python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_2_fit.py
 ## Where to go next
 
 Gunther's paper @gunther2007usl derives the law from a queueing argument rather than by fitting a
-curve to data, which is worth reading if the second term has so far felt like an extra parameter.
+curve to data. Read it if the crosstalk term has so far felt like a free parameter.
 
-[ch08](#regime-changes) is what this chapter and the last one have in common: a place where the
-chain of multiplications stops describing anything, and why no amount of care about the inputs
-would have warned you.
+[ch08](#regime-changes) is what this chapter and the last one have in common: a point where the
+chain of multiplications stops describing the system, and no care over the inputs would have
+warned you.

@@ -20,8 +20,8 @@ short_title: "ch18 The five-year model"
 
 How does a cost model consume a sizing model's output without swallowing its uncertainty?
 
-Badly, almost always, and the mechanism is worth seeing because it is the commonest way a
-carefully built model becomes a confident wrong number.
+Badly, almost always. Swallowing the upstream uncertainty is the commonest way a carefully built
+model becomes a confident wrong number.
 
 ## The material
 
@@ -44,11 +44,11 @@ units still match, because if they ever stop matching the two models have quietl
 describing the same trade.
 
 So the observability model could be driven by the storage model. It is not. It declares the price
-as an assumption with its own invented distribution, and that is a way of not joining them at all.
+as an assumption with its own invented distribution, so the two models are not joined at all.
 
 ### What happens when you do join them
 
-Two ways, and the difference is the chapter.
+Two ways, and they differ in what becomes of the upstream uncertainty.
 
 **Hand over the distribution.** The downstream model receives the whole bag of possible prices and
 propagates it. The uncertainty in the upstream model becomes uncertainty in the downstream one,
@@ -63,8 +63,9 @@ interval on the downstream answer gets **narrower**.
 
 Not wrong. Narrower. The headline number stays roughly where it was, and the doubt disappears.
 
-That is why it survives review. A change that moved the answer would be noticed and argued about.
-A change that leaves the answer alone and deletes the uncertainty around it looks like tidying up.
+That is why the point estimate survives review. A change that moved the answer would be noticed
+and argued about. A change that leaves the answer alone and deletes the uncertainty around it
+looks like tidying up.
 
 ### Why every real estate has this seam
 
@@ -74,36 +75,34 @@ Each model is defensible on its own terms and the joins are undefended.
 
 And the joins are where the correlations live. The upstream price and the downstream volume are
 usually driven by the same growth: a year when there is more telemetry is a year when there is
-more of everything, so the price and the quantity move together. Split into two models, each is
-sampled with its own independent growth rate, and the joint uncertainty is understated twice over
-— once by the point estimate at the seam, and once by the correlation that no longer has anywhere
-to be declared ([ch14](#correlation-and-convergence)).
+more of everything, so the price and the quantity move together. Put them in two models and each
+gets its own independent growth rate, which understates the joint uncertainty twice over — once by
+the point estimate at the seam, and once by the correlation that no longer has anywhere to be
+declared ([ch14](#correlation-and-convergence)).
 
 ### The gap in this book's own toolkit
 
 The DSL has four node kinds and none of them is *"a distribution that came from another model"*.
 
-That is a real limitation and problem 18.2 makes the reader run into it: to carry the price
-across, you have to sample the downstream model by hand, outside `sizing.evaluate`. There is a
-test asserting the gap is still there, so that if a fifth node kind is ever added, the test fails
-and the problem gets rewritten.
+Problem 18.2 walks you into the gap: to carry the price across, you have to sample the downstream
+model by hand, outside `sizing.evaluate`. A test asserts the gap is still there, so adding a fifth
+node kind fails that test and the problem gets rewritten.
 
 Whether the DSL *should* have one is a genuine question. The case for is that it would make the
-join explicit, checkable and correlatable. The case against is that a model which reaches into
-another model's samples is a model whose fingerprint has to cover both, whose scenarios have to
-agree, and which cannot be reasoned about on its own — and one large model is not obviously better
-than two honest small ones with a documented seam.
+join explicit, checkable and correlatable. The case against is that a model reaching into another
+model's samples needs a fingerprint covering both, needs scenarios that agree, and cannot be
+reasoned about on its own. One large model is not obviously better than two honest small ones with
+a documented seam.
 
-This book has not resolved it. What it does is name the seam and measure what crossing it badly
-costs.
+This book has not resolved it. It names the seam and measures what crossing it badly costs.
 
 ### The whole five years
 
 ```{include} _generated/the-five-year-model-split.md
 ```
 
-Which is where Part V ends: a total, its composition, and the knowledge that half of it was never
-argued about and a good deal of it rests on numbers that crossed a seam.
+Part V ends there: a total, its composition, and the knowledge that half of it was never argued
+about and a good deal of it rests on numbers that crossed a seam.
 
 ## What this cannot tell you
 
@@ -111,8 +110,8 @@ argued about and a good deal of it rests on numbers that crossed a seam.
 a capacity, or not joined at all, are others, and each puts the uncertainty somewhere different.
 
 **What the correlation across the seam is.** It exists — both sides are driven by the same growth
-— and there is nowhere in this toolkit to declare it. That is the clearest limitation in the book
-and it is stated here rather than discovered later.
+— and there is nowhere in this toolkit to declare it. That is the clearest limitation in the
+book.
 
 **Anything about the organisation.** Two models is not an estate. The real total includes tiers
 nobody modelled, shared costs nobody allocated, and a network between them that appears in neither.
