@@ -66,8 +66,8 @@ the model can actually support is more honest than quoting a figure to the dolla
 [ch14](#correlation-and-convergence) gives the arithmetic for what precision that is: the run-to-run
 wobble has to be below the digit you are prepared to defend.
 
-Here is the shape all three are chosen from — the same picture the preface opened with, now as
-something to pick a number off rather than something to be alarmed by:
+Here is the shape all three are chosen from — the same picture [the preface](#preface) opened
+with, now as something to pick a number off rather than something to be alarmed by:
 
 ```{image} _figures/a-tco-for-finance-distribution.svg
 :alt: The five-year total for the reference design, with the point estimate marked on it

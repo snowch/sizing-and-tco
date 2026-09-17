@@ -20,9 +20,9 @@ short_title: "ch08 Regime changes"
 
 Which ceilings can a chain of multiplications not model at all?
 
-This is the chapter that closes Part II and justifies the front matter. Everything in Parts I and
-III is a product of quantities. This chapter is about the things that are not, and about why no
-amount of care over the inputs to a product will warn you about them.
+This is the chapter that closes Part II and justifies [the front matter](#preface). Everything in
+Parts I and III is a product of quantities. This chapter is about the things that are not, and
+about why no amount of care over the inputs to a product will warn you about them.
 
 ## The material
 

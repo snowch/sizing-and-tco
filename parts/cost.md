@@ -23,7 +23,8 @@ something, and spends most of its time on the denominator, because nobody checks
 [ch18](#the-five-year-model) is the seam between two models, where a distribution becomes a number
 in a document and the uncertainty quietly disappears.
 
-The chains in this part are the deterministic half of the front matter's distinction: accounting
+The chains in this part are the deterministic half of [the front matter](#preface)'s
+distinction: accounting
 identities and physics, with uncertain inputs and nothing in them that changes regime. Sampling
 the inputs really is sufficient for those, and it is worth noticing how much easier this part is
 than Part III. The ceilings are still there — [ch16](#power-first) breaks one — but this part

@@ -1,10 +1,10 @@
 ---
-title: "Sizing and TCO"
+title: "Preface"
 short_title: Preface
 ---
 
 (preface)=
-# Sizing and TCO
+# Preface
 
 *How to size a system, cost it, and know how much to trust the answer.*
 

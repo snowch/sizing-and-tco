@@ -21,14 +21,14 @@ product is named and none is implied: what is on this page is a structure, and t
 are placeholders for yours.
 
 This model is the book's **cost exemplar in shape and a sizing model by the rule**, and the gap
-between those two things is worth a paragraph. Almost all of it is accounting identity and
-physics — watts times hours times price, capital plus running cost over a horizon — which is the
-structure the front matter says sampling the inputs is sufficient for. But it carries one measured
-constant and two ceilings, so `scripts/verify-models.py` classifies it a sizing model and holds it
-to the stricter rules, and it is right to: the compression ratio belongs to a codec, and a cluster
-that runs out of space does not fail proportionally. A model is not a cost model because most of
-it looks like one. [Appendix F](#appendix-f-observability-model) is what it looks like when even
-the arithmetic stops being a chain.
+between those two things is worth a paragraph. Almost all of it is accounting identity and physics
+— watts times hours times price, capital plus running cost over a horizon — which is the structure
+[the front matter](#preface) says sampling the inputs is sufficient for. But it carries one
+measured constant and two ceilings, so `scripts/verify-models.py` classifies it a sizing model and
+holds it to the stricter rules, and it is right to: the compression ratio belongs to a codec, and
+a cluster that runs out of space does not fail proportionally. A model is not a cost model because
+most of it looks like one. [Appendix F](#appendix-f-observability-model) is what it looks like
+when even the arithmetic stops being a chain.
 
 ## The graph
 
