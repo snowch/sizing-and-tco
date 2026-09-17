@@ -10,16 +10,22 @@ short_title: Preface
 
 ## The question
 
+Somebody has asked you how big it needs to be. How many machines, how much storage, how much it
+will cost to run for the next three years — and they are going to spend real money on whatever
+you tell them.
+
+You can do the arithmetic. That is rarely the hard part. What comes out is one number, and that
+number says nothing at all about how much of it you would actually bet.
+
 **How big, how much, and how wrong could I be?**
 
 *How big* is **sizing**: how much hardware a stated workload needs, and where it stops coping.
 *How much* is **total cost of ownership**: what that hardware costs over the years you keep it,
-which is not the same as what it costs to buy.
+which is not the same as what it costs to buy. Both are arithmetic, and most people can do them.
 
-Working out how many nodes a cluster needs is arithmetic, and most people can do it. The third
-part is the one that decides whether anybody should act on the answer — which input it rests on,
-how far it moves when that input moves, and what it would take to find out. That is a different
-skill, and it is the one this book is about.
+The third part is the one that decides whether anybody should act on the answer — which input it
+rests on, how far it moves when that input moves, and what it would take to find out. That is a
+different skill, it is the one nobody is taught, and it is what this book is about.
 
 ## Why point estimates lie
 
