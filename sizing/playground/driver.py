@@ -5,9 +5,10 @@ is refused rather than accepted. Until now both were claims: running the file ne
 a pip install and three make targets, in a chapter whose whole argument is not to take a number
 on trust.
 
-Nothing here reimplements anything. It loads the model with ``sizing.dsl.load_model`` and checks
-it with ``sizing.evaluate.check_units`` — the same two calls the build makes — so a verdict in
-the browser is the build's verdict, not a second opinion about it.
+Nothing here reimplements anything. It loads the model with ``sizing.dsl.load_model``,
+checks it with ``sizing.evaluate.check_units`` and evaluates it with
+``sizing.evaluate.point`` — the calls the build makes — so a verdict in the browser is
+the build's verdict, not a second opinion about it.
 """
 
 from __future__ import annotations
@@ -20,7 +21,7 @@ from pathlib import Path
 def check(text: str) -> dict:
     """Load a model file as written and report what the build would say about it."""
     from sizing.dsl import load_model
-    from sizing.evaluate import check_units
+    from sizing.evaluate import check_units, point
 
     with tempfile.TemporaryDirectory() as directory:
         path = Path(directory) / "model.yaml"
@@ -36,6 +37,21 @@ def check(text: str) -> dict:
             }
 
     problems, factors = check_units(model)
+    if problems:
+        return {"stage": "units", "ok": False, "problems": problems}
+
+    # Only once the units are sound: a value computed from a formula that does not typecheck is
+    # a number nobody should be shown, which is the whole argument of the chapter this page
+    # belongs to.
+    try:
+        values = point(model, factors=factors)
+    except Exception as error:
+        return {
+            "stage": "evaluate",
+            "ok": False,
+            "problems": [f"{type(error).__name__}: {error}"],
+        }
+
     nodes = [
         {
             "name": name,
@@ -43,13 +59,14 @@ def check(text: str) -> dict:
             "unit": node.unit,
             "label": node.label,
             "formula": getattr(node, "formula_text", None),
+            "value": values.get(name),
         }
         for name, node in model.nodes.items()
     ]
     return {
-        "stage": "units" if problems else "ok",
-        "ok": not problems,
-        "problems": problems,
+        "stage": "ok",
+        "ok": True,
+        "problems": [],
         "nodes": nodes,
         "order": list(model.order),
         "outputs": list(model.outputs),
