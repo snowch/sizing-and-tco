@@ -1,6 +1,6 @@
 scenario: reference
 title: Reference (exercise fixture)
-because: "The fixture for problem 14.3. Nothing here is a measurement."
+because: "The fixture for problem 13.3. Nothing here is a measurement."
 samples: 40000
 seed: 4801
 overrides: {}

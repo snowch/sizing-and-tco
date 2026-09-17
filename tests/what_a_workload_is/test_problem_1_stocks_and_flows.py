@@ -1,4 +1,4 @@
-"""Problem 2.1 - levels against rates, graded against the units rather than a list.
+"""Problem 1.1 - levels against rates, graded against the units rather than a list.
 
 The oracle is the model's own declared units, which the reader is not looking at when they answer:
 they are reading names and notes. Two independent routes to the same classification, and a

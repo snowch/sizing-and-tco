@@ -1,4 +1,4 @@
-"""Chapter 3's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 2's problems. Edit this file; the tests beside it say whether you are right.
 
 The first asks you to take a measurement and stamp it properly. The second asks what a
 measurement is worth, which is a different question and the one people skip.
@@ -8,7 +8,7 @@ from __future__ import annotations
 
 
 def measure_something(shards: int = 8) -> dict:
-    """Problem 3.1 - take a constant, and stamp it so somebody else could check it.
+    """Problem 2.1 - take a constant, and stamp it so somebody else could check it.
 
     Pick any quantity a codec or an encoder decides. The obvious ones are already taken by
     ``bench/run_corpus.py``; reach for a different one. How many bytes a UUID costs after
@@ -32,21 +32,21 @@ def measure_something(shards: int = 8) -> dict:
     Generate the corpus in this file, deterministically, from seeds you state. A constant measured
     over data nobody else can obtain is a constant nobody else can check.
     """
-    raise NotImplementedError("problem 3.1")
+    raise NotImplementedError("problem 2.1")
 
 
 def shards_needed(observed_sd: float, at_shards: int, target_sd: float) -> int:
-    """Problem 3.2 - how much more measuring would it take?
+    """Problem 2.2 - how much more measuring would it take?
 
     You have measured a constant over ``at_shards`` pieces of corpus and got a standard error of
     ``observed_sd``. You want ``target_sd``. Return the number of shards that would get you there,
     rounded up.
 
     The standard error of a mean falls as one over the square root of the count, so this is the
-    same arithmetic as ch14's "how many samples is enough", used in the direction people find less
+    same arithmetic as ch13's "how many samples is enough", used in the direction people find less
     intuitive. It is also the arithmetic that stops a measurement campaign before it starts: work
     out what halving your uncertainty costs *before* agreeing to halve it.
 
     Return the total number of shards needed, not the number of extra ones.
     """
-    raise NotImplementedError("problem 3.2")
+    raise NotImplementedError("problem 2.2")

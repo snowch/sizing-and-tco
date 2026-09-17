@@ -42,12 +42,12 @@ produce a number; Part IV establishes what it is worth; Part V prices it.
 ## 3. Why Monte Carlo is where it is
 
 Part IV sits between sizing and cost, and not at the front, because the method is not useful until
-the reader has a number they cannot defend and can feel that they cannot defend it. ch12 produces
-that number. ch13 opens on it.
+the reader has a number they cannot defend and can feel that they cannot defend it. ch11 produces
+that number. ch12 opens on it.
 
-It is two chapters rather than one because the natural seam is real: ch13 ends having assumed that
-every input moves on its own, and ch14 opens on exactly that. Each gets its own *What this cannot
-tell you* — ch13's is about the shapes you chose, ch14's is about structural error — and neither
+It is two chapters rather than one because the natural seam is real: ch12 ends having assumed that
+every input moves on its own, and ch13 opens on exactly that. Each gets its own *What this cannot
+tell you* — ch12's is about the shapes you chose, ch13's is about structural error — and neither
 section would have survived being merged.
 
 ## 4. Settled decisions
@@ -118,11 +118,11 @@ Named here so that nobody has to guess whether it was forgotten.
 
 - **Tax, depreciation schedules and discount rates.** They are jurisdiction- and
   company-specific, they change the answer a great deal, and a book that guessed at them would be
-  giving financial advice. ch15 says what to hand to somebody who does know.
+  giving financial advice. ch14 says what to hand to somebody who does know.
 - **Procurement reality.** Lead times, minimum orders, the discount you get for asking. Real, and
   not a modelling problem.
 - **Risk appetite.** The book produces a probability that a ceiling is breached. What probability
-  is acceptable is a decision, and ch21 is about presenting it rather than making it.
+  is acceptable is a decision, and ch20 is about presenting it rather than making it.
 - **Fitting distributions to data.** Nothing in this repository reads a dataset and tells you what
   shape it is. Choosing a shape is an editorial act with provenance attached, and a function that
   guessed it would produce a model whose central assumption nobody ever wrote down.

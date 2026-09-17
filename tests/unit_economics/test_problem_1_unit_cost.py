@@ -1,4 +1,4 @@
-"""Problem 17.1 - graded against the model's own unit-economics node."""
+"""Problem 16.1 - graded against the model's own unit-economics node."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Problem 20.1 - what would count as evidence.
+"""Problem 19.1 - what would count as evidence.
 
 Graded at the two ends where there is a right answer, and for self-consistency in between, because
 in between there is no right answer and a test claiming otherwise would be the error the chapter

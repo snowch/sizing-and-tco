@@ -1,4 +1,4 @@
-"""Problem 14.2 — correlate two inputs without disturbing their distributions.
+"""Problem 13.2 — correlate two inputs without disturbing their distributions.
 
 Two assertions, and the second is the one that separates the right method from the obvious one.
 """

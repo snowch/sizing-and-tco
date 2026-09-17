@@ -1,17 +1,17 @@
 ---
 title: "The sizing model"
-short_title: "ch12 The sizing model"
+short_title: "ch11 The sizing model"
 ---
 
 (the-sizing-model)=
-# ch12 · The sizing model
+# ch11 · The sizing model
 
 :::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |
 |---|---|
-| **Prerequisites** | [ch09](#capacity), [ch10](#bandwidth-and-the-binding-constraint), [ch11](#headroom-and-failure-domains) |
+| **Prerequisites** | [ch08](#capacity), [ch09](#bandwidth-and-the-binding-constraint), [ch10](#headroom-and-failure-domains) |
 | **What it produces** | The storage model end to end, and the node count it recommends |
 | **Built from** | `storage_cluster-reference`, `storage_cluster-sized_for_growth` |
 :::
@@ -33,9 +33,9 @@ This chapter puts them together, arrives at a number, and then makes the number 
 ```
 
 Every node in that sub-graph has appeared in a chapter. The workload on the left
-([ch02](#what-a-workload-is)), the growth term ([ch04](#peak-mean-and-growth)), the capacity chain
-and the bandwidth chain ([ch09](#capacity), [ch10](#bandwidth-and-the-binding-constraint)), the
-margin ([ch11](#headroom-and-failure-domains)), and the larger-of-the-two at the end.
+([ch01](#what-a-workload-is)), the growth term ([ch03](#peak-mean-and-growth)), the capacity chain
+and the bandwidth chain ([ch08](#capacity), [ch09](#bandwidth-and-the-binding-constraint)), the
+margin ([ch10](#headroom-and-failure-domains)), and the larger-of-the-two at the end.
 
 Follow it left to right and there is nothing surprising in it. Sizing models are not clever: they
 are a dozen multiplications anybody could check, and the difficulty has never been the arithmetic.
@@ -60,7 +60,7 @@ The red line is where the point estimate falls. Everything else is the same mode
 chains, the same margins, with its inputs allowed to be as uncertain as the people who wrote them
 down actually are.
 
-And here is what that cluster does against the ceilings [ch11](#headroom-and-failure-domains)
+And here is what that cluster does against the ceilings [ch10](#headroom-and-failure-domains)
 declared:
 
 ```{include} _generated/the-sizing-model-ceilings.md
@@ -83,7 +83,7 @@ sizing from point estimates does.**
 There isn't one. Part III has been building to exactly that.
 
 A sizing model does not produce a number. It produces a *relationship between a number and a
-risk*, and somebody has to choose a point on it. Problem 12.1 is that choice made explicitly: pick
+risk*, and somebody has to choose a point on it. Problem 11.1 is that choice made explicitly: pick
 a breach probability you are willing to be accountable for, and ask the model what it costs in
 machines.
 
@@ -96,13 +96,13 @@ cluster bought for the growth case rather than the expected one:
 
 Every figure in the last two columns falls, and the read ceiling stops being breached at all.
 What that costs is
-[ch21](#a-tco-for-finance)'s table rather than this one — but the pair, *what it costs* beside
+[ch20](#a-tco-for-finance)'s table rather than this one — but the pair, *what it costs* beside
 *how often it breaks*, is the only form in which this decision can be handed to somebody.
 
-Problem 12.2 is the shape of the trade. Removing risk costs money, the cost is not linear in the
+Problem 11.2 is the shape of the trade. Removing risk costs money, the cost is not linear in the
 risk removed, and the last few percentage points cost more than all the ones before them. Having
 that number is the difference between an argument and a preference, and
-[ch21](#a-tco-for-finance) is about putting it to the person whose decision it is.
+[ch20](#a-tco-for-finance) is about putting it to the person whose decision it is.
 
 ### The decision is an input
 
@@ -122,23 +122,23 @@ what we actually bought, how often does the world break it?*
 **Whether the structure is right.** Everything above takes the chains as given and asks what the
 inputs are worth. A missing chain — rebuild bandwidth, metadata operations, a control plane — is
 invisible from inside, and nothing in the output distinguishes a model that is complete from one
-that is not. That is [ch20](#the-missing-node).
+that is not. That is [ch19](#the-missing-node).
 
 **What the ceilings are really at.** Both were declared by somebody with a reason
-([ch11](#headroom-and-failure-domains)). The probabilities in the last two columns are exact
+([ch10](#headroom-and-failure-domains)). The probabilities in the last two columns are exact
 statements about where the model's samples fall relative to lines that are judgements.
 
 **Where the uncertainty comes from.** The interval is wide, and this chapter has not said which
 input makes it wide. That is the only actionable question about a wide interval, and
-[ch19](#which-input-is-the-answer) answers it — the answer will not surprise you if you read
-[ch04](#peak-mean-and-growth).
+[ch18](#which-input-is-the-answer) answers it — the answer will not surprise you if you read
+[ch03](#peak-mean-and-growth).
 
 **What any of it costs.** Part III has sized a cluster and said nothing about money. Part V is
 cost, and it comes after sizing because it consumes sizing's output — including, if anybody is
 careful, its uncertainty.
 
 **How any of these numbers were produced.** The last two columns of every ceiling table have been
-appearing since [ch06](#queueing-and-the-knee) without explanation. [ch13](#monte-carlo) is the
+appearing since [ch05](#queueing-and-the-knee) without explanation. [ch12](#monte-carlo) is the
 explanation, and it is next because this is the chapter where a number appeared that you cannot
 defend.
 
@@ -146,7 +146,7 @@ defend.
 
 Two, in `tests/the_sizing_model/`.
 
-**12.1 — Size to a risk, not to a point estimate.**
+**11.1 — Size to a risk, not to a point estimate.**
 Find the smallest cluster whose capacity ceiling is breached in at most some fraction of samples.
 Bisect rather than step, and turn the sample count down while searching — a search nobody runs
 twice is a search nobody runs.
@@ -155,7 +155,7 @@ twice is a search nobody runs.
 python3 -m pytest tests/the_sizing_model/test_problem_1_risk.py
 ```
 
-**12.2 — What a percentage point of risk costs.**
+**11.2 — What a percentage point of risk costs.**
 Price the move between two risk targets, then look at the shape as the target tightens. The last
 few points cost more than all the ones before them, and knowing by how much is the difference
 between an argument and a preference.
@@ -166,7 +166,7 @@ python3 -m pytest tests/the_sizing_model/test_problem_2_cost_of_certainty.py
 
 ## Where to go next
 
-[ch13](#monte-carlo) is where the last two columns came from. It sits here rather than at the
+[ch12](#monte-carlo) is where the last two columns came from. It sits here rather than at the
 front of the book for the reason this chapter has just demonstrated: the method is no use to you
 until you have a number you cannot defend, and can feel that you cannot defend it.
 

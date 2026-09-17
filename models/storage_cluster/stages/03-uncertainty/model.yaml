@@ -15,7 +15,7 @@ nodes:
     label: usable capacity, day one
     provenance:
       kind: assumption
-      source: stated workload (ch02) — what the application says it needs to store today
+      source: stated workload (ch01) — what the application says it needs to store today
     range:
     - 500
     - 20000
@@ -29,7 +29,7 @@ nodes:
         p90: 1.6
     provenance:
       kind: assumption
-      source: 'ch04 — lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised
+      source: 'ch03 — lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised
         below 12% a year, surprised above 60%.'
     range:
     - 1.0
@@ -70,7 +70,7 @@ nodes:
         maximum: 240.0
     provenance:
       kind: assumption
-      source: ch03 — the busy hour, not the average. Triangular because this is an engineer's min/likely/max
+      source: ch02 — the busy hour, not the average. Triangular because this is an engineer's min/likely/max
         and pretending to more shape than that would be invention.
     range:
     - 10

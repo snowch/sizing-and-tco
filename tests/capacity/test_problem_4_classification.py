@@ -1,4 +1,4 @@
-"""Problem 1.3 - the classification the whole book rests on, from the inside."""
+"""Problem 8.4 - the classification the whole book rests on, from the inside."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import pytest
 
 from sizing.dsl import load_model, load_scenario
 from sizing.evaluate import check_units, point
-from tests.reading_a_model.stubs import make_it_a_cost_model
+from tests.capacity.stubs import make_it_a_cost_model
 
 
 @pytest.fixture(scope="module")
@@ -47,7 +47,7 @@ def test_you_said_what_was_lost():
     model you cannot say the limits of is a model you should not hand to anybody.
     """
     doc = (make_it_a_cost_model.__doc__ or "").strip()
-    assert "problem 1.3" not in doc.lower() or len(doc) > 400, (
+    assert "problem 8.4" not in doc.lower() or len(doc) > 400, (
         "write one sentence in the stub's docstring naming what the cost model can no longer "
         "tell anybody. If you cannot name it, you removed something that was doing no work."
     )

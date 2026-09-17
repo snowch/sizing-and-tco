@@ -1,17 +1,17 @@
 ---
 title: "Unit economics"
-short_title: "ch17 Unit economics"
+short_title: "ch16 Unit economics"
 ---
 
 (unit-economics)=
-# ch17 · Unit economics
+# ch16 · Unit economics
 
 :::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |
 |---|---|
-| **Prerequisites** | [ch15](#capex-opex-and-lifecycle) |
+| **Prerequisites** | [ch14](#capex-opex-and-lifecycle) |
 | **What it produces** | Cost per usable TB per month, and what its denominator assumes |
 | **Built from** | `storage_cluster-reference` |
 :::
@@ -34,20 +34,20 @@ anyway.
 :width: 100%
 ```
 
-A total, divided by a quantity, divided by a period. Problem 17.1 is the arithmetic, and the trap
+A total, divided by a quantity, divided by a period. Problem 16.1 is the arithmetic, and the trap
 in it is the period: per terabyte-month and per terabyte-year differ by a factor of twelve and
 look equally authoritative on a slide.
 
 In a model, the build catches that — the two have identical dimensions and different units, and
-`sizing/units.py` converts. The same factor of twelve is in [ch01](#reading-a-model), where this
-repository nearly published it.
+`sizing/units.py` converts. The same factor of twelve is in [Appendix D](#appendix-d-units),
+where this repository nearly published it.
 
 In a slide, nothing catches it.
 
 ### The denominator is the part nobody checks
 
 Take one model, one set of samples, one five-year total. Ask for a cost per usable terabyte per
-month. There are at least four defensible denominators, and problem 17.2 is computing all of
+month. There are at least four defensible denominators, and problem 16.2 is computing all of
 them:
 
 - the capacity at the horizon — what you will be able to store at the end;
@@ -107,7 +107,7 @@ Three things, and a unit cost missing any of them cannot be compared with anythi
 **The denominator's definition.** Usable or raw, at what point in the life, before or after
 replication, before or after compression. Two organisations comparing "cost per terabyte" are
 usually comparing different terabytes, and the ratio between raw and usable in
-[ch09](#capacity) is larger than the difference either is arguing about.
+[ch08](#capacity) is larger than the difference either is arguing about.
 
 **What is in the numerator.** People or not. Network or not. The building or not. A supplier's
 figure includes their margin and excludes your staff; an internal figure usually does the reverse.
@@ -122,7 +122,7 @@ a unit cost that is out of line with a supplier's is a reason to go and find out
 to buy from the supplier.
 
 The decision needs the total, the risk, and what the alternatives would cost —
-[ch21](#a-tco-for-finance). A unit cost is what gets you invited to that meeting.
+[ch20](#a-tco-for-finance). A unit cost is what gets you invited to that meeting.
 
 ## What this cannot tell you
 
@@ -130,30 +130,30 @@ The decision needs the total, the risk, and what the alternatives would cost —
 It does nothing at all about the figure it is being compared against, which will have its own
 conventions and will not state them.
 
-**What the right denominator is.** The four in problem 17.2 are all defensible and the model picks
+**What the right denominator is.** The four in problem 16.2 are all defensible and the model picks
 one. There is no fact of the matter — only a convention, stated or unstated, and this book's
 position is that stating it is the whole of the discipline.
 
 **What the structure omits.** A unit cost inherits every missing line from the total it comes from
-([ch15](#capex-opex-and-lifecycle)), and dividing by a large denominator makes a missing line look
-smaller rather than making it visible. [ch20](#the-missing-node).
+([ch14](#capex-opex-and-lifecycle)), and dividing by a large denominator makes a missing line look
+smaller rather than making it visible. [ch19](#the-missing-node).
 
 **Anything about marginal cost.** Every figure here is an average: total over quantity. What the
 *next* terabyte costs is a different number, usually much lower until a threshold and then equal
-to a whole machine, and no average can express that ([ch08](#regime-changes)).
+to a whole machine, and no average can express that ([ch07](#regime-changes)).
 
 ## Problems
 
 Two, in `tests/unit_economics/`.
 
-**17.1 — A total, a quantity, a period.**
+**16.1 — A total, a quantity, a period.**
 Two divisions. If your answer is out by twelve, one of you is working in years.
 
 ```bash
 python3 -m pytest tests/unit_economics/test_problem_1_unit_cost.py
 ```
 
-**17.2 — Four defensible denominators.**
+**16.2 — Four defensible denominators.**
 Compute all four, look at the spread, and then decide which you would put on a slide — and whether
 you would be willing to say which it was.
 
@@ -163,7 +163,7 @@ python3 -m pytest tests/unit_economics/test_problem_2_denominators.py
 
 ## Where to go next
 
-[ch18](#the-five-year-model) is what happens when a unit cost from one model becomes an input to
+[ch17](#the-five-year-model) is what happens when a unit cost from one model becomes an input to
 another, which is where most of them end up.
 
-[ch19](#which-input-is-the-answer) is the question the tornado above keeps raising.
+[ch18](#which-input-is-the-answer) is the question the tornado above keeps raising.

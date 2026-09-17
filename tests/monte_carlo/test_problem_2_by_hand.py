@@ -1,4 +1,4 @@
-"""Problem 13.2 — sample two of the model's inputs without the model's machinery.
+"""Problem 12.2 — sample two of the model's inputs without the model's machinery.
 
 The oracle is the model file. Expected percentiles are computed from the distribution the model
 declares, at test time, so editing the model changes what this problem wants — which is the
@@ -52,6 +52,6 @@ def test_the_model_still_declares_two_sampled_prices(declared):
     """Scaffolding: the problem's subject exists and is uncertain."""
     for name in WANTED:
         assert declared[name] is not None, (
-            f"{name} no longer declares a distribution, so problem 13.2 has nothing to sample. "
+            f"{name} no longer declares a distribution, so problem 12.2 has nothing to sample. "
             "Either the model changed or the problem needs rewriting."
         )

@@ -134,7 +134,7 @@ In order:
 4. **Are the bounds genuinely the only claim?** Uniform.
 5. **None of these?** Then the shape is not the problem — the input is. Go and measure it, or
    declare it a control knob and run scenarios instead of sampling it
-   ([ch12](#the-sizing-model)).
+   ([ch11](#the-sizing-model)).
 
 One rule sits under all of them: **the shape is part of the model, so it belongs in the model
 file with a source attached**. In all three of this book's models, every input that carries a
@@ -168,7 +168,7 @@ growth rate they are usually relatives.
 One row barely moves, and it is there deliberately: a correlation between two inputs that do not
 both feed the output in question changes almost nothing. Seeing a correlation that does not matter
 beside one that does is the fastest way to stop treating the subject as magic
-([ch14](#correlation-and-convergence)).
+([ch13](#correlation-and-convergence)).
 
 ## What is not here, and why
 
@@ -176,7 +176,7 @@ beside one that does is the fastest way to stop treating the subject as magic
 failing, or a regulation arriving. Those are structural events, and a distribution that tries to
 absorb them produces an interval so wide it cannot distinguish two designs — which is the only
 thing the model was for. They belong in *What this cannot tell you*, not in a parameter
-([ch20](#the-missing-node)).
+([ch19](#the-missing-node)).
 
 **Mixtures.** A mixture — two regimes with a probability of each — would be easy to add, and is
 deliberately absent. When a quantity has two regimes, the honest model has a node for which
@@ -195,4 +195,4 @@ produces a model whose central assumption nobody ever wrote down.
 
 Three lines and a test. A percentile function, an entry in `SHAPES`, and a case in
 `tests/test_mc.py` asserting that the percentiles it produces are the ones it was asked for.
-Problem 13.1 is exactly this, for a shape that is not on this page.
+Problem 12.1 is exactly this, for a shape that is not on this page.

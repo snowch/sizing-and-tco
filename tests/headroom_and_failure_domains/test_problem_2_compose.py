@@ -1,4 +1,4 @@
-"""Problem 11.2 - margins compose multiplicatively, and the arithmetic surprises people."""
+"""Problem 10.2 - margins compose multiplicatively, and the arithmetic surprises people."""
 
 from __future__ import annotations
 

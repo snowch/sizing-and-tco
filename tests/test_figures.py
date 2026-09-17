@@ -136,7 +136,7 @@ def test_a_table_drawing_on_two_results_names_both():
     """A scenario comparison prints two columns from two runs and must disclose both.
 
     Five of them named only the first, so half the numbers in each table — including the whole
-    point of ch16 — came from a file the footer never mentioned.
+    point of ch15 — came from a file the footer never mentioned.
     """
     from bench.figures import FIGURES, Table
 

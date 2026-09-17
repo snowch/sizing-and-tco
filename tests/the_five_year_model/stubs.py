@@ -1,4 +1,4 @@
-"""Chapter 18's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 17's problems. Edit this file; the tests beside it say whether you are right.
 
 Both are about what happens at the seam between two models, which is where most real cost models
 are actually joined and where most of them quietly lose their uncertainty.
@@ -10,7 +10,7 @@ import numpy as np
 
 
 def price_from_storage_model() -> np.ndarray:
-    """Problem 18.1 - carry a distribution across a model boundary.
+    """Problem 17.1 - carry a distribution across a model boundary.
 
     The observability model buys storage at a price per usable terabyte per month. The storage
     model computes exactly that quantity. Today the observability model declares it as an
@@ -22,11 +22,11 @@ def price_from_storage_model() -> np.ndarray:
     The whole array, not a summary. A point estimate handed across a seam is the failure mode this
     problem exists to show you, and 18.2 measures what it costs.
     """
-    raise NotImplementedError("problem 18.1")
+    raise NotImplementedError("problem 17.1")
 
 
 def joined_interval(use_distribution: bool) -> tuple[float, float]:
-    """Problem 18.2 - what a point estimate costs at the seam.
+    """Problem 17.2 - what a point estimate costs at the seam.
 
     Evaluate the observability model's ``known_storage_cost`` twice.
 
@@ -44,4 +44,4 @@ def joined_interval(use_distribution: bool) -> tuple[float, float]:
     another model" - and noticing that gap is part of the problem. Say in a comment whether you
     think it should have one.
     """
-    raise NotImplementedError("problem 18.2")
+    raise NotImplementedError("problem 17.2")

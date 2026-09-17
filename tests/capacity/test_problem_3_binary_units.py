@@ -1,4 +1,4 @@
-"""Problem 1.2 - TB against TiB, which is ten per cent and a lot of arguments."""
+"""Problem 8.3 - TB against TiB, which is ten per cent and a lot of arguments."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import pytest
 
 from sizing.dsl import load_model, load_scenario
 from sizing.evaluate import check_units, point
-from tests.reading_a_model.stubs import in_binary_units
+from tests.capacity.stubs import in_binary_units
 
 #: 2^40 over 10^12. The number at the bottom of the difference.
 TIB_PER_TB = 1_000_000_000_000 / 2**40
@@ -26,7 +26,7 @@ def scenario():
 def test_every_terabyte_node_changed_unit(base):
     converted = in_binary_units(base)
     was = {n for n, node in base.nodes.items() if node.unit == "TB"}
-    assert was, "the model has no TB nodes; problem 1.2 needs rewriting"
+    assert was, "the model has no TB nodes; problem 8.3 needs rewriting"
     for name in was:
         assert converted.nodes[name].unit == "TiB", (
             f"{name} is still in {converted.nodes[name].unit}"

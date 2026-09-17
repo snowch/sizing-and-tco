@@ -3,7 +3,7 @@
     python3 -m bench.run_postmortem            # run it and write the result
     python3 -m bench.run_postmortem --check    # re-run and fail if a published figure moved
 
-ch12 bought a cluster and ch13 reported that it runs out of space in about a third of the futures
+ch11 bought a cluster and ch12 reported that it runs out of space in about a third of the futures
 the model thinks are plausible. This runner asks the question somebody asks three years later,
 when one of those futures has happened:
 
@@ -34,7 +34,7 @@ correlate with failure, and it will do so with a straight face.
 
 So the runner also does the experiment on a model that is *known* to be missing a term — the
 observability model's ingest total, which excludes traces because nobody has measured spans per
-request (ch20) — and records that the attribution confidently blames the inputs that are present.
+request (ch19) — and records that the attribution confidently blames the inputs that are present.
 That is the honest bottom of the technique, and a post-mortem that does not know about it is a
 procedure for generating a culprit.
 """
@@ -167,7 +167,7 @@ def postmortem(write: bool = True) -> dict:
             "what makes it reproducible and also what bounds what it can say",
             "it_cannot_find_a_missing_cause": "the second attribution is run on a model known to "
             "exclude an entire chain, and it blames the inputs that are present without "
-            "hesitating. A post-mortem inside a model is a post-mortem of that model (ch20)",
+            "hesitating. A post-mortem inside a model is a post-mortem of that model (ch19)",
             "medians_not_means": "these inputs are skewed, and a shift in means would mostly be "
             "the tail moving rather than the typical case",
             "read_the_base_rate": "`something_extreme_share` must be read against "

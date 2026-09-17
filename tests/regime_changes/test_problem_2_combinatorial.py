@@ -1,4 +1,4 @@
-"""Problem 8.2 - uncertainty compounds when quantities multiply.
+"""Problem 7.2 - uncertainty compounds when quantities multiply.
 
 Graded against the samples themselves, computed both ways at test time.
 """

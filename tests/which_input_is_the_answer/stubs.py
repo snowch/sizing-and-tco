@@ -1,4 +1,4 @@
-"""Chapter 19's problems. Edit this file; the tests beside it say whether you are right."""
+"""Chapter 18's problems. Edit this file; the tests beside it say whether you are right."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from sizing.dsl import Model, Scenario
 
 
 def tornado(model: Model, scenario: Scenario, output: str) -> list[tuple[str, float]]:
-    """Problem 19.1 - build the chart yourself.
+    """Problem 18.1 - build the chart yourself.
 
     Return a list of ``(input_name, span)`` pairs, sorted with the largest span first: for each
     uncertain input, how far ``output`` moves when that input alone is swung from its own 10th to
@@ -19,11 +19,11 @@ def tornado(model: Model, scenario: Scenario, output: str) -> list[tuple[str, fl
 
     Skip anything the model cannot evaluate and anything the scenario has already pinned.
     """
-    raise NotImplementedError("problem 19.1")
+    raise NotImplementedError("problem 18.1")
 
 
 def interaction_gap(model: Model, scenario: Scenario, output: str, a: str, b: str) -> float:
-    """Problem 19.2 - what one-at-a-time misses.
+    """Problem 18.2 - what one-at-a-time misses.
 
     Swing input ``a`` alone from its p10 to its p90 and record the change in ``output``. Swing
     ``b`` alone and record that. Then swing **both together** and record that.
@@ -39,4 +39,4 @@ def interaction_gap(model: Model, scenario: Scenario, output: str, a: str, b: st
     always show some of this, because a product is not additive in its factors - which is the point,
     and is why a tornado is a guide to what to measure rather than a decomposition of the answer.
     """
-    raise NotImplementedError("problem 19.2")
+    raise NotImplementedError("problem 18.2")

@@ -1,4 +1,4 @@
-"""Problem 22.2 - how often a failure has a culprit at all.
+"""Problem 21.2 - how often a failure has a culprit at all.
 
 Every case here has an answer that comes out of arithmetic rather than out of a stored figure: a
 uniform input above its own 80th percentile has a known chance of also being above its 90th, and

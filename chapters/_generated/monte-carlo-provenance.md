@@ -2,9 +2,9 @@
 
 | | Input | Provenance | Source |
 |---|---|---|---|
-| ○ | annual growth factor | assumption | ch04 — lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%. |
-| ○ | capacity headroom | assumption | ch11 — rebuild reserve plus allocator behaviour near full. One node's worth of data has to land somewhere when a node dies, and a filesystem at 97% is a different filesystem. |
-| ◐ | chassis price | vendor claim | chassis, CPU, memory and boot media, less drives. Lognormal like any price, and wider than the drives' because a chassis is a configuration rather than a commodity — which is why ch19 finds it at the top of the tornado |
+| ○ | annual growth factor | assumption | ch03 — lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%. |
+| ○ | capacity headroom | assumption | ch10 — rebuild reserve plus allocator behaviour near full. One node's worth of data has to land somewhere when a node dies, and a filesystem at 97% is a different filesystem. |
+| ◐ | chassis price | vendor claim | chassis, CPU, memory and boot media, less drives. Lognormal like any price, and wider than the drives' because a chassis is a configuration rather than a commodity — which is why ch18 finds it at the top of the tornado |
 | ◐ | drive capacity | vendor claim | datasheet capacity. Decimal TB, not TiB — appendix D, and it is a 10% difference |
 | ◐ | drive price | vendor claim | street price per decimal TB at this capacity point, three quotes. Lognormal because prices move by ratios rather than by amounts, and because three quotes give a centre and a spread rather than a shape |
 | ○ | drives per node | assumption | chassis choice |
@@ -12,18 +12,18 @@
 | ○ | fully loaded salary | assumption | salary, employer costs, tooling and overhead. Lognormal because pay is right-skewed and cannot go negative; the p90 is a senior engineer in an expensive city |
 | ○ | horizon | assumption | the refresh cycle this cluster is bought against |
 | ● | hours per year | fact | by definition, 365.25 x 24. The quarter-day is worth about a fifth of a per cent over five years — less than this model's other errors, and free to get right |
-| ○ | metadata overhead | assumption | filesystem, index and journal overhead as a multiplier on stored bytes. Triangular, and the bounds are for objects of the size this model assumes — the real spread is a function of object size, which is a term ch09 says this model lacks |
+| ○ | metadata overhead | assumption | filesystem, index and journal overhead as a multiplier on stored bytes. Triangular, and the bounds are for objects of the size this model assumes — the real spread is a function of object size, which is a term ch08 says this model lacks |
 | ○ | network price per node | assumption | switch ports, optics and cabling, amortised per node. Triangular rather than lognormal, although it is a price: it is a bill of materials divided by a node count somebody chose, so the bounds are the plausible designs rather than a market |
 | ◐ | node power | vendor claim | typical draw under load, per chassis as configured. Triangular, and one of the few inputs here whose bounds are physical rather than editorial: a chassis cannot draw less than it idles at, or more than its supply will give it |
-| ◐ | node read throughput | vendor claim | sustained sequential read per node, as quoted. Unverified here — ch03. Triangular, and the lower bound is the one doing the work: the quoted figure is sequential and a real read pattern is not |
-| ○ | nodes purchased | assumption | the sizing decision, taken the way it is usually taken: nodes_recommended evaluated at every input's point estimate. That is exactly 121, and the ceilings below are what the same model says about that decision once the inputs are allowed to be uncertain. Change this number and watch them move — that is the exercise of ch12 |
+| ◐ | node read throughput | vendor claim | sustained sequential read per node, as quoted. Unverified here — ch02. Triangular, and the lower bound is the one doing the work: the quoted figure is sequential and a real read pattern is not |
+| ○ | nodes purchased | assumption | the sizing decision, taken the way it is usually taken: nodes_recommended evaluated at every input's point estimate. That is exactly 121, and the ceilings below are what the same model says about that decision once the inputs are allowed to be uncertain. Change this number and watch them move — that is the exercise of ch11 |
 | ● | one year | fact | definition |
-| ○ | peak read throughput | assumption | ch03 — the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention. |
-| ○ | PUE | assumption | ch15 — facility overhead. A multiplier on IT load, and the single number a colocation contract is most likely to disagree with you about. Triangular: the minimum is a good building, the maximum is a poor one, and below one is impossible |
+| ○ | peak read throughput | assumption | ch02 — the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention. |
+| ○ | PUE | assumption | ch14 — facility overhead. A multiplier on IT load, and the single number a colocation contract is most likely to disagree with you about. Triangular: the minimum is a good building, the maximum is a poor one, and below one is impossible |
 | ○ | replication factor | assumption | three copies. An erasure-coded cluster substitutes its own overhead factor here and the rest of the model is unchanged, which is the point of it being a node. |
-| ○ | staff fte | assumption | fraction of one engineer this cluster occupies. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch08 calls a regime change |
+| ○ | staff fte | assumption | fraction of one engineer this cluster occupies. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch07 calls a regime change |
 | ◐ | support rate | vendor claim | annual support as a fraction of capital cost. Triangular because it is negotiated inside a band the market sets rather than drawn from one: the spread is what different buyers get, not what varies from year to year |
-| ○ | usable capacity, day one | assumption | stated workload (ch02) — what the application says it needs to store today |
+| ○ | usable capacity, day one | assumption | stated workload (ch01) — what the application says it needs to store today |
 | | **22 inputs** | | **2 fact, 6 vendor claim, 14 assumption** |
 
 *Source — [`storage_cluster-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-reference.json)*

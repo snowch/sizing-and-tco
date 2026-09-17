@@ -17,7 +17,7 @@ it comes out rather than being ticked.
 
 Every chapter and every appendix is written. What is left is the work a first draft leaves:
 
-- **The two chapters that are waiting on measurements.** ch20 and ch22 both describe the
+- **The two chapters that are waiting on measurements.** ch19 and ch21 both describe the
   observability model's traces chain around a hole. They read correctly today and they will
   read better when the chain lights up; neither needs a rewrite, which was the point of building
   the blocked-state machinery.
@@ -27,14 +27,14 @@ Every chapter and every appendix is written. What is left is the work a first dr
 ## The toolkit
 
 - **Sensitivity beyond one-at-a-time, properly.** `bench/run_information.py` bounds what each
-  input is worth on its own, which is most of what ch19 needed. A variance-based decomposition
+  input is worth on its own, which is most of what ch18 needed. A variance-based decomposition
   over the samples already drawn would answer the interaction question the tornado cannot, and is
   still not much code.
 - **`sync-labels.py`.** Chapter numbers in prose are currently checked by `tests/test_book.py`
   rather than rewritten. Inserting a chapter now means editing every `chNN` that a page says out
   loud, and the check will find them, which is not the same as fixing them.
 - **A second ceiling kind.** Every ceiling here is "a value against a limit". A queueing ceiling
-  that took a service time and an arrival rate and derived the knee would let ch06 stop describing
+  that took a service time and an arrival rate and derived the knee would let ch05 stop describing
   the shape and start drawing it.
 
 ## Known rough edges

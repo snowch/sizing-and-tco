@@ -1,4 +1,4 @@
-"""Chapter 14's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 13's problems. Edit this file; the tests beside it say whether you are right.
 
 No answer key. Each test derives what it expects from the problem's own terms.
 """
@@ -9,13 +9,13 @@ from sizing.dsl import Model
 
 
 def spread_at(samples: int, replicates: int) -> float:
-    """Problem 14.1 — show the square-root law yourself.
+    """Problem 13.1 — show the square-root law yourself.
 
     Return the *run-to-run spread* of the 95th percentile of the storage model's five-year total:
     run the model ``replicates`` times at ``samples`` draws, each with a different seed, take the
     p95 of each run, and return the standard deviation of those p95 values.
 
-    That is the quantity one-over-root-n governs. The interval itself is not — ch14 is mostly
+    That is the quantity one-over-root-n governs. The interval itself is not — ch13 is mostly
     about the difference, and this problem is where you convince yourself.
 
     Use ``sizing.evaluate.evaluate`` with a replaced scenario; you do not have to rebuild the
@@ -23,11 +23,11 @@ def spread_at(samples: int, replicates: int) -> float:
     falls as one over the square root of the count, to a tolerance it computes rather than one
     that is written down.
     """
-    raise NotImplementedError("problem 14.1")
+    raise NotImplementedError("problem 13.1")
 
 
 def correlated_model(model: Model, a: str, b: str, rho: float) -> Model:
-    """Problem 14.2 — correlate two inputs without disturbing their distributions.
+    """Problem 13.2 — correlate two inputs without disturbing their distributions.
 
     Return a copy of ``model`` that declares a rank correlation ``rho`` between inputs ``a`` and
     ``b``. Both are inputs with distributions; ``rho`` is the rank correlation the modeller wants,
@@ -42,11 +42,11 @@ def correlated_model(model: Model, a: str, b: str, rho: float) -> Model:
     If you find yourself adjusting the values rather than reordering them, stop and re-read the
     section on why the obvious approach is wrong.
     """
-    raise NotImplementedError("problem 14.2")
+    raise NotImplementedError("problem 13.2")
 
 
 def repair_the_model(model: Model) -> Model:
-    """Problem 14.3 — find the missing node.
+    """Problem 13.3 — find the missing node.
 
     ``tests/correlation_and_convergence/fixtures/model.yaml`` is a small monthly cost model for a
     hosted service. It is arithmetically correct, its inputs carry honest distributions, and it
@@ -71,4 +71,4 @@ def repair_the_model(model: Model) -> Model:
     neither a machine, nor a disk, nor a support contract — and which is billed on a quantity
     nothing in this model currently mentions.
     """
-    raise NotImplementedError("problem 14.3")
+    raise NotImplementedError("problem 13.3")

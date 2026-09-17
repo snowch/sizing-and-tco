@@ -1,4 +1,4 @@
-"""Problem 6.1 - graded against the curve the book publishes, not against a formula in a file."""
+"""Problem 5.1 - graded against the curve the book publishes, not against a formula in a file."""
 
 from __future__ import annotations
 

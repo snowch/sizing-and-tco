@@ -52,16 +52,16 @@ python3 -m bench.run_corpus --check
 echo "== the models still compute what the book publishes =="
 python3 -m bench.run_models --check
 
-echo "== the sampler still behaves the way ch14 says it does =="
+echo "== the sampler still behaves the way ch13 says it does =="
 python3 -m bench.run_uncertainty --check
 
 echo "== what a measurement would buy is still what the book says it would =="
-# ch19's ceiling on every measurement anybody could commission. Re-derived rather than trusted,
+# ch18's ceiling on every measurement anybody could commission. Re-derived rather than trusted,
 # for the same reason as everything else here: it is a claim about what this book's models say.
 python3 -m bench.run_information --check
 
 echo "== the post-mortem still attributes what the book says it attributes =="
-# ch22, and the half of it that matters: the same method on a model with a known hole in it,
+# ch21, and the half of it that matters: the same method on a model with a known hole in it,
 # which has to keep confidently blaming the inputs that are present.
 python3 -m bench.run_postmortem --check
 

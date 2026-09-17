@@ -165,7 +165,7 @@ def scaling_curve(write: bool = True) -> dict:
 def binding_constraint(write: bool = True) -> dict:
     """How often each of the storage model's two chains decides the answer.
 
-    ch10's whole subject, as a count rather than a claim. Two independent chains produce two node
+    ch09's whole subject, as a count rather than a claim. Two independent chains produce two node
     counts and you buy the larger, so across the model's uncertainty the answer is sometimes set
     by capacity and sometimes by bandwidth - and an average of the two would satisfy neither.
     """

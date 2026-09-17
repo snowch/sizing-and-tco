@@ -1,4 +1,4 @@
-"""Problem 18.2 - what a point estimate costs at the seam between two models."""
+"""Problem 17.2 - what a point estimate costs at the seam between two models."""
 
 from __future__ import annotations
 

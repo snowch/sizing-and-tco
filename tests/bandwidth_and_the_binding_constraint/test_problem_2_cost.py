@@ -1,4 +1,4 @@
-"""Problem 10.2 - the shortfall conditional on the neglected chain binding.
+"""Problem 9.2 - the shortfall conditional on the neglected chain binding.
 
 Graded against the published sweep and against the samples, both computed at test time.
 """

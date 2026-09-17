@@ -1,17 +1,17 @@
 ---
 title: "Power first"
-short_title: "ch16 Power first"
+short_title: "ch15 Power first"
 ---
 
 (power-first)=
-# ch16 · Power first
+# ch15 · Power first
 
 :::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |
 |---|---|
-| **Prerequisites** | [ch15](#capex-opex-and-lifecycle) |
+| **Prerequisites** | [ch14](#capex-opex-and-lifecycle) |
 | **What it produces** | The storage model resized from a power budget inwards |
 | **Built from** | `storage_cluster-reference`, `storage_cluster-power_first` |
 :::
@@ -32,7 +32,7 @@ When power binds, the chain inverts. You start with an allocation at the wall, d
 building spends on itself, divide by what a machine draws, and round **down**.
 
 That rounding is the only one in this book that goes that way. Every other constraint is a demand
-to be satisfied, so it rounds up; this one is a supply that cannot be exceeded. Problem 16.1 is
+to be satisfied, so it rounds up; this one is a supply that cannot be exceeded. Problem 15.1 is
 that inversion. People get the facility multiplier backwards: an inefficient building buys you
 *fewer* machines, not more.
 
@@ -41,7 +41,7 @@ that inversion. People get the facility multiplier backwards: an inefficient bui
 ```{include} _generated/power-first-scenarios.md
 ```
 
-The left column is the cluster [ch12](#the-sizing-model) recommended. The right is what fits in
+The left column is the cluster [ch11](#the-sizing-model) recommended. The right is what fits in
 the allocation.
 
 It is smaller. Everything downstream is smaller with it: less capital, less running cost, a lower
@@ -76,8 +76,8 @@ property and sometimes a substation's.
 **Use less per machine.** Fewer, denser machines change watts per machine and capacity per
 machine together, and the model will say whether the trade is favourable.
 
-**Improve the building.** [ch15](#capex-opex-and-lifecycle)'s facility multiplier is a division.
-Problem 16.2 is worth doing for the framing alone: a multiplier quoted as a small surcharge is a
+**Improve the building.** [ch14](#capex-opex-and-lifecycle)'s facility multiplier is a division.
+Problem 15.2 is worth doing for the framing alone: a multiplier quoted as a small surcharge is a
 substantial *share* of the bill. Halving the overhead is equivalent to finding machines that draw
 materially less, and is often cheaper.
 
@@ -86,7 +86,7 @@ this in a sizing meeting, and it is frequently the right answer.
 
 ### Why power is not a price like the others
 
-Every other cost in [ch15](#capex-opex-and-lifecycle) is a price: negotiable, comparable, subject
+Every other cost in [ch14](#capex-opex-and-lifecycle) is a price: negotiable, comparable, subject
 to a discount. Energy is physics with a price attached.
 
 ```{include} _generated/power-first-tornado.md
@@ -109,7 +109,7 @@ accounting decision rather than a physical one. This book produces the kilowatt-
 the part it can defend. Multiplying them is somebody else's judgement, and the multiplier is where
 all the disagreement is.
 
-Energy price and carbon price move together ([ch14](#correlation-and-convergence)), so a model
+Energy price and carbon price move together ([ch13](#correlation-and-convergence)), so a model
 that added a carbon line and drew it independently would understate the range of the total.
 
 ## What this cannot tell you
@@ -132,13 +132,13 @@ full the facility is, and the figure quoted in a contract is usually an annual a
 favourable assumptions.
 
 **What to do about it.** The model prices three of the four responses above. Which to choose is a
-decision, and [ch21](#a-tco-for-finance) is about putting one to somebody.
+decision, and [ch20](#a-tco-for-finance) is about putting one to somebody.
 
 ## Problems
 
 Two, in `tests/power_first/`.
 
-**16.1 — Sizing backwards.**
+**15.1 — Sizing backwards.**
 From an allocation to a machine count. Get the multiplier the right way up, and round the way a
 supply rounds rather than the way a demand does.
 
@@ -146,7 +146,7 @@ supply rounds rather than the way a demand does.
 python3 -m pytest tests/power_first/test_problem_1_budget.py
 ```
 
-**16.2 — A ratio quoted, a fraction paid.**
+**15.2 — A ratio quoted, a fraction paid.**
 One line, worth having in your head. A building that sounds a little inefficient is spending a
 substantial share of the bill on itself, and the two framings land very differently in a
 conversation about money.
@@ -157,8 +157,8 @@ python3 -m pytest tests/power_first/test_problem_2_pue.py
 
 ## Where to go next
 
-[ch17](#unit-economics) turns a total into a number somebody outside the team can compare against
+[ch16](#unit-economics) turns a total into a number somebody outside the team can compare against
 something — which is where a power-constrained design either justifies itself or does not.
 
-[ch14](#correlation-and-convergence) is why an energy price and a carbon price should not be drawn
+[ch13](#correlation-and-convergence) is why an energy price and a carbon price should not be drawn
 independently.

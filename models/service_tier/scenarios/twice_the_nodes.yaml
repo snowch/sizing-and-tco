@@ -1,7 +1,7 @@
 scenario: twice_the_nodes
 title: Twice the nodes
 because: >-
-  The same workload on twice the tier. Here so that ch06 and ch07 can be read against each other:
+  The same workload on twice the tier. Here so that ch05 and ch06 can be read against each other:
   doubling the machines halves the utilisation and does far less than halve the residence time,
   and it does not double the throughput either.
 samples: 100000

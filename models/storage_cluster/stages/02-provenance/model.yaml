@@ -15,7 +15,7 @@ nodes:
     label: usable capacity, day one
     provenance:
       kind: assumption
-      source: stated workload (ch02) — what the application says it needs to store today
+      source: stated workload (ch01) — what the application says it needs to store today
     range:
     - 500
     - 20000
@@ -25,7 +25,7 @@ nodes:
     label: annual growth factor
     provenance:
       kind: assumption
-      source: ch02 - one growth rate, chosen rather than measured. ch04 replaces it with a distribution,
+      source: ch01 - one growth rate, chosen rather than measured. ch03 replaces it with a distribution,
         because a single number cannot say how sure anybody is of it.
     range:
     - 1.0
@@ -62,7 +62,7 @@ nodes:
     label: peak read throughput
     provenance:
       kind: assumption
-      source: ch02 - the busy hour, as one number. ch04 replaces it with a distribution, because an
+      source: ch01 - the busy hour, as one number. ch03 replaces it with a distribution, because an
         engineer who gives you this figure is giving you a range and rounding it.
     range:
     - 10

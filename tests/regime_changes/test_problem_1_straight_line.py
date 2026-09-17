@@ -1,4 +1,4 @@
-"""Problem 8.1 - a straight line fitted to a healthy system, extrapolated into a busy one.
+"""Problem 7.1 - a straight line fitted to a healthy system, extrapolated into a busy one.
 
 Graded against the queueing curve the book publishes. The line is fitted on the low end, which is
 the only data a system that has never been in trouble can give you.

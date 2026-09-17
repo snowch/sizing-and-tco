@@ -1,4 +1,4 @@
-"""Problem 10.1 - graded against the model, which reaches the same answer through its own node."""
+"""Problem 9.1 - graded against the model, which reaches the same answer through its own node."""
 
 from __future__ import annotations
 

@@ -1,17 +1,17 @@
 ---
 title: "The missing node"
-short_title: "ch20 The missing node"
+short_title: "ch19 The missing node"
 ---
 
 (the-missing-node)=
-# ch20 · The missing node
+# ch19 · The missing node
 
 :::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |
 |---|---|
-| **Prerequisites** | [ch14](#correlation-and-convergence) |
+| **Prerequisites** | [ch13](#correlation-and-convergence) |
 | **What it produces** | The observability model's incomplete ingest total, and what it costs to believe it |
 | **Built from** | `observability-reference` |
 :::
@@ -20,7 +20,7 @@ short_title: "ch20 The missing node"
 
 How do you find the error that no amount of sampling can see?
 
-Every chapter since [ch13](#monte-carlo) has deferred this one. It is the limitation of the entire
+Every chapter since [ch12](#monte-carlo) has deferred this one. It is the limitation of the entire
 method and it deserves its own chapter rather than a paragraph at the end of somebody else's.
 
 ## The material
@@ -29,8 +29,8 @@ method and it deserves its own chapter rather than a paragraph at the end of som
 
 **Wrong about a number.** An input is off. The model is the right shape, the arithmetic is right,
 one of the quantities is not what you thought. Every chapter so far has been about this error:
-[ch13](#monte-carlo) quantifies it, [ch14](#correlation-and-convergence) refines it,
-[ch19](#which-input-is-the-answer) says which one to go and fix.
+[ch12](#monte-carlo) quantifies it, [ch13](#correlation-and-convergence) refines it,
+[ch18](#which-input-is-the-answer) says which one to go and fix.
 
 **Wrong about the shape.** A cost line is missing. A chain is not in the model. A ceiling nobody
 declared. Two things multiplied that should have been added.
@@ -45,12 +45,12 @@ The split above is the one that matters, and it is worth making again with all f
 The book has been using them for twenty chapters without ever putting them in one place.
 
 **A measurement wobbles.** A measured constant has a standard error, and it is as likely to be
-high as low ([ch03](#where-the-numbers-come-from)). This is the smallest of the four and the only
+high as low ([ch02](#where-the-numbers-come-from)). This is the smallest of the four and the only
 one anybody can reduce by working harder.
 
 **A number is unknown.** An input nobody measured, given a distribution somebody chose: a price, a
-growth rate, a count of label values ([ch13](#monte-carlo)). Usually the largest thing inside the
-interval, and [ch19](#which-input-is-the-answer) is which of them to go after.
+growth rate, a count of label values ([ch12](#monte-carlo)). Usually the largest thing inside the
+interval, and [ch18](#which-input-is-the-answer) is which of them to go after.
 
 Those two are what the interval is made of. Both are quantities the model can carry, and the whole
 apparatus of Parts IV and VI is about them.
@@ -60,7 +60,7 @@ sampling rate down. This one is *not* in the interval, and it is why this book h
 all — a scenario is a second run rather than a wider distribution, because the alternative is not
 a value the current model could have produced. A cluster bought for the growth case is a different
 model of the world, not an unlucky draw from this one
-([ch12](#the-sizing-model), [ch16](#power-first)).
+([ch11](#the-sizing-model), [ch15](#power-first)).
 
 **The model is the wrong shape.** This chapter. Not in the interval, not in a scenario, not
 anywhere — because nothing in the file knows the term is missing.
@@ -116,7 +116,7 @@ Nothing automatic. Four that are not:
 
 **Compare against an invoice.** The strongest test available. A model of something that already
 exists can be checked against what it actually cost, and that number is a fact the model did not
-have. ch14's problem 3 is exactly this, and it is the only exercise in the book where the oracle
+have. ch13's problem 3 is exactly this, and it is the only exercise in the book where the oracle
 is outside the model.
 
 **Ask what is not in the graph.** Read the node list as a list of *categories* and ask what
@@ -133,14 +133,14 @@ produced both.
 
 ### The two wrong responses, and one of them is measured
 
-Problem 20.1 is the first trap. An observation falls outside the interval. Is the model refuted?
+Problem 19.1 is the first trap. An observation falls outside the interval. Is the model refuted?
 
 Almost certainly not, on one observation — a 90% interval is **supposed** to be missed one time in
 ten. A rule that rejects on a single miss will therefore reject a correct model sooner or later,
 and the more observations you make the surer it becomes. Deciding what would count as evidence is harder than it looks and the problem makes
 you state a rule rather than react.
 
-Problem 20.2 is the second trap, and it is the one that gets shipped. The model disagrees with
+Problem 19.2 is the second trap, and it is the one that gets shipped. The model disagrees with
 reality, so make the model vaguer until it stops disagreeing. Widen the inputs. The observation
 lands inside, everyone relaxes.
 
@@ -176,7 +176,7 @@ structure nobody has checked, however good its interval looks.
 
 Two, in `tests/the_missing_node/`.
 
-**20.1 — What would count as evidence?**
+**19.1 — What would count as evidence?**
 An observation falls outside the interval. Decide what it would take to call the model refuted,
 state a rule that holds together, and implement it. One miss is not it.
 
@@ -184,7 +184,7 @@ state a rule that holds together, and implement it. One miss is not it.
 python3 -m pytest tests/the_missing_node/test_problem_1_refuted.py
 ```
 
-**20.2 — The wrong repair, measured.**
+**19.2 — The wrong repair, measured.**
 Widen the model until it agrees with the observation, then measure what the interval has become.
 A model that cannot be wrong has stopped being able to be useful, and this is what that costs.
 
@@ -194,9 +194,9 @@ python3 -m pytest tests/the_missing_node/test_problem_2_widening.py
 
 ## Where to go next
 
-[ch21](#a-tco-for-finance) is the last chapter of the argument, and this one is its prerequisite:
+[ch20](#a-tco-for-finance) is the last chapter of the argument, and this one is its prerequisite:
 an honest presentation of a total includes what the model does not contain, and saying so out loud
 is harder than any of the arithmetic that came before it.
 
-[ch14](#correlation-and-convergence) has the exercise where an invoice refutes a model, if you
+[ch13](#correlation-and-convergence) has the exercise where an invoice refutes a model, if you
 skipped it.

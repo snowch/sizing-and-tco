@@ -1,4 +1,4 @@
-"""Problem 19.2 - the limitation of every one-at-a-time chart, measured."""
+"""Problem 18.2 - the limitation of every one-at-a-time chart, measured."""
 
 from __future__ import annotations
 
@@ -50,6 +50,6 @@ def test_the_gap_is_signed(model, scenario):
 def test_both_pairs_are_still_in_the_model(model):
     """Scaffolding: the problem's two cases exist and are what it claims."""
     for name in INTERACTING + SEPARATE:
-        assert name in model.nodes, f"{name} is gone; problem 19.2 needs rewriting"
+        assert name in model.nodes, f"{name} is gone; problem 18.2 needs rewriting"
     assert "annual_growth" in model.ancestors("raw_capacity")
     assert "electricity_price" in model.ancestors("annual_opex")
