@@ -176,14 +176,6 @@ interval stabilise to four significant figures, and present it with complete con
 whole cost line is missing from the model. The sampling converged beautifully on the wrong
 number. Convergence is a statement about the estimator, never about the estimand.
 
-## What the model says
-
-```{include} _generated/correlation-and-convergence-table.md
-```
-
-```{include} _generated/correlation-and-convergence-effect.md
-```
-
 ## What this cannot tell you
 
 **Which correlations exist.** Everything above takes the declared pairs as given. Nothing here

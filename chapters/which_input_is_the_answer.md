@@ -182,14 +182,6 @@ is a plan:
 And then re-run the model, because the tornado will have a different input at the top. That is
 what progress looks like here: not a narrower interval on the same chart, but a different chart.
 
-## What the model says
-
-```{include} _generated/which-input-is-the-answer-service.md
-```
-
-```{include} _generated/which-input-is-the-answer-correlation.md
-```
-
 ## What this cannot tell you
 
 **How much the interval would narrow if you measured it *in practice*.** The table above is the

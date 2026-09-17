@@ -66,6 +66,17 @@ the model can actually support is more honest than quoting a figure to the dolla
 [ch14](#correlation-and-convergence) gives the arithmetic for what precision that is: the run-to-run
 wobble has to be below the digit you are prepared to defend.
 
+Here is the shape all three are chosen from — the same picture the preface opened with, now as
+something to pick a number off rather than something to be alarmed by:
+
+```{image} _figures/a-tco-for-finance-distribution.svg
+:alt: The five-year total for the reference design, with the point estimate marked on it
+:width: 100%
+```
+
+The red line is the point estimate, and it is not the middle. Whichever of the three you choose,
+choose it off this and say which one it was.
+
 What must not happen is the number arriving without the sentence. The sentence is the whole of
 the engineering position, and there is only room for one, so it has to name something specific —
 a percentile, an omission, an assumption the total rests on. "There is some uncertainty" names
@@ -165,19 +176,6 @@ why this book does not discount: the rate is a policy decision, not an engineeri
 practical consequence lands here — the first thing a finance team will do with a five-year total
 is discount it, and they can only do that if the years have not already been added together.
 
-## What the model says
-
-```{include} _generated/a-tco-for-finance-scenarios.md
-```
-
-```{image} _figures/a-tco-for-finance-distribution.svg
-:alt: The five-year total for the reference design, with the point estimate marked on it
-:width: 100%
-```
-
-```{include} _generated/a-tco-for-finance-ceilings.md
-```
-
 ## What this cannot tell you
 
 **What running out is worth.** Every figure in the decision table is a cost of *building*. There
@@ -232,11 +230,16 @@ python3 -m pytest tests/a_tco_for_finance/test_problem_2_one_number.py
 
 ## Where to go next
 
-This is the last chapter. What remains is reference material:
+That is the argument. [ch22](#what-the-model-got-wrong) is what happens afterwards — three
+years later, when one of the futures in that table turned out to be the one you got.
+
+What remains after it is reference material:
 [Appendix A](#appendix-a-dsl-reference) for the DSL,
 [Appendix B](#appendix-b-monte-carlo-module) for the sampler read end to end,
+[Appendix C](#appendix-c-distributions) for choosing a shape,
 [Appendix E](#appendix-e-storage-model) and [Appendix F](#appendix-f-observability-model) for the
-two worked models in full.
+storage and observability models in full, and
+[Appendix G](#appendix-g-glossary) for the vocabulary, including the terms this book refuses.
 
 If you read one thing again, make it [ch20](#the-missing-node). Everything in this chapter is
 about presenting what the model knows, and the hardest sentence to write is still the one about

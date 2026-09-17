@@ -70,6 +70,11 @@ jobs:
       - name: Check the figures are current
         run: python3 scripts/render-figures.py --check
 
+      # Names the commit this deploy came from, so a reader can tell whether the page they are
+      # looking at is the current one. Not a committed figure: it would be stale on arrival.
+      - name: Stamp the build with its commit
+        run: python3 scripts/build-stamp.py
+
       - name: Build the book
         env:
           # base_path is "/" for a user site and "/repo" for a project site; MyST wants an empty

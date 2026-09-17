@@ -125,11 +125,6 @@ wrong depending on whether those eighteen days are consecutive.
 long. Over one year it is a rounding error against the other uncertainties; over five it is the
 model.
 
-## What the model says
-
-```{include} _generated/peak-mean-and-growth-tornado.md
-```
-
 ## What this cannot tell you
 
 **What your peak-to-mean ratio is.** Nothing in this repository can measure it — it is a property

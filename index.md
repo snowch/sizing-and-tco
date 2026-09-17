@@ -133,9 +133,11 @@ convergence — one at a time, each one arriving because a model has just raised
 needs it. Where a statistical term has a plain-English equivalent, this book uses the plain one
 first and names the term second.
 
-No vendor is named anywhere in this book, and no product is recommended. The two worked models
-are a scale-out storage cluster and an observability platform, and both are written so that the
-structure is the point and the numbers are yours to replace.
+No vendor is named anywhere in this book, and no product is recommended. Three models carry it,
+all written so that the structure is the point and the numbers are yours to replace: a scale-out
+storage cluster, which is sized and costed end to end; an observability platform, which is the one
+with a hole in it where a measurement should be; and a request-serving tier, which is the only one
+of the three that is not a chain of multiplications, and therefore the one Part II is built on.
 
 ## What you will need
 
@@ -164,4 +166,7 @@ Two constants are not yet measured — collector throughput per core, which need
 machine, and spans per request, which needs somebody's instrumented application. The observability
 model shows both as missing rather than guessing, which is the behaviour the rest of the book is
 about.
+
+```{include} chapters/_generated/build.md
+```
 :::

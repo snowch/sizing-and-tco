@@ -157,9 +157,6 @@ the build does not check is a paragraph.
 ```{include} _generated/reading-a-model-outputs.md
 ```
 
-```{include} _generated/reading-a-model-conversions.md
-```
-
 ## What this cannot tell you
 
 **Whether the model is a good description of anything.** Everything above is about form. A model

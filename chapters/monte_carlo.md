@@ -243,14 +243,6 @@ That is not fastidiousness. An unseeded simulation is a measurement nobody can r
 figure nobody can repeat is a figure nobody can check — which is the thing this repository
 refuses everywhere else and has no reason to start allowing here.
 
-## What the model says
-
-```{include} _generated/monte-carlo-outputs.md
-```
-
-```{include} _generated/monte-carlo-ceilings.md
-```
-
 ## What this cannot tell you
 
 **Whether the model has the right shape.** Everything above takes the structure as given and asks

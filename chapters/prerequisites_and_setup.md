@@ -105,11 +105,6 @@ anybody can check it. A throughput is a property of the computer that produced i
 check yours — which is why this repository will not let you record one from the wrong machine
 even by accident.
 
-## What the model says
-
-```{include} _generated/prerequisites-and-setup-constants.md
-```
-
 ## What this cannot tell you
 
 **Whether your machine gives the same answers as the one that produced these figures.** The

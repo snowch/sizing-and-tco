@@ -80,10 +80,12 @@ viewers:  ## Build the interactive model pages into _build/viewers/
 
 .PHONY: book
 book:  ## Live preview at localhost:3000
+	$(PYTHON) scripts/build-stamp.py
 	myst start
 
 .PHONY: pdf
 pdf:  ## Build the whole book as one PDF
+	$(PYTHON) scripts/build-stamp.py
 	$(PYTHON) scripts/build-pdf.py
 
 .PHONY: chapter

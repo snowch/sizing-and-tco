@@ -119,14 +119,6 @@ sizing model, and why `scripts/verify-models.py` refuses a sizing model that dec
 no margin. The distinction is not taxonomy. It is the difference between a model whose
 uncertainty you can quantify and a model whose *applicability* you have to bound.
 
-## What the model says
-
-```{include} _generated/regime-changes-ceilings.md
-```
-
-```{include} _generated/regime-changes-tornado.md
-```
-
 ## What this cannot tell you
 
 **Where your thresholds are.** Every ceiling in this book was declared by somebody. The queueing
