@@ -6,16 +6,6 @@ short_title: "ch16 Unit economics"
 (unit-economics)=
 # ch16 · Unit economics
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch14 · Capex, opex and where the total stops](#capex-opex-and-lifecycle) |
-| **What it produces** | Cost per usable TB per month, and what its denominator assumes |
-| **Built from** | `storage_cluster-reference` |
-:::
-
 ## The question
 
 What does a cost per unit have to have before it means anything?

@@ -6,16 +6,6 @@ short_title: "ch15 Power first"
 (power-first)=
 # ch15 · Power first
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch14 · Capex, opex and where the total stops](#capex-opex-and-lifecycle) |
-| **What it produces** | The storage model resized from a power budget inwards |
-| **Built from** | `storage_cluster-reference`, `storage_cluster-power_first` |
-:::
-
 ## The question
 
 What changes when watts are the binding constraint rather than money?

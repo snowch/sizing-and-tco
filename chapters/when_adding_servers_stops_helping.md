@@ -6,16 +6,6 @@ short_title: "ch06 When adding servers stops helping"
 (when-adding-servers-stops-helping)=
 # ch06 · When adding servers stops helping
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch05 · Queueing, and the knee](#queueing-and-the-knee) |
-| **What it produces** | The scaling curve, and the peak the coefficients predict |
-| **Built from** | `scaling-curve`, `service_tier-reference`, `service_tier-twice_the_nodes` |
-:::
-
 ## The question
 
 How far does a system scale, and how would you find out from the two measurements you actually

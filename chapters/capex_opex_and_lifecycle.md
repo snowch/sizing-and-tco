@@ -6,16 +6,6 @@ short_title: "ch14 Capex, opex and where the total stops"
 (capex-opex-and-lifecycle)=
 # ch14 · Capex, opex and where the total stops
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch11 · The sizing model](#the-sizing-model) |
-| **What it produces** | The storage model's capital and running cost split, over its declared horizon |
-| **Built from** | `storage_cluster-reference` |
-:::
-
 ## The question
 
 What do you pay once, what do you pay every month, and what does this book deliberately not model?

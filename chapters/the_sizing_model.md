@@ -6,16 +6,6 @@ short_title: "ch11 The sizing model"
 (the-sizing-model)=
 # ch11 · The sizing model
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch08 · Capacity](#capacity), [ch09 · Bandwidth, and the binding constraint](#bandwidth-and-the-binding-constraint), [ch10 · Headroom and failure domains](#headroom-and-failure-domains) |
-| **What it produces** | The storage model end to end, and the node count it recommends |
-| **Built from** | `storage_cluster-reference`, `storage_cluster-sized_for_growth` |
-:::
-
 ## The question
 
 What does the whole chain produce, and how much of it would you defend?

@@ -6,16 +6,6 @@ short_title: "ch02 Where the numbers come from"
 (where-the-numbers-come-from)=
 # ch02 · Where the numbers come from
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch01 · What a workload is](#what-a-workload-is) |
-| **What it produces** | The model's first vendor claim, every measured constant in the book, and a provenance census |
-| **Built from** | `storage_cluster_provenance-reference`, `logs-line-bytes`, `metrics-sample-bytes`, `traces-span-bytes`, `storage-object-compression` |
-:::
-
 ## The question
 
 What is the difference between a number you measured, a number you were told, and a number you
@@ -75,7 +65,8 @@ about who said a number — it is about whether the arithmetic around it stops a
 
 ### Three claims, counted
 
-Here is the census of the observability model, which is finished and therefore has all three:
+Here is the census of the observability model, which has the most inputs of the three and all
+three kinds of claim among them:
 
 ```{include} _generated/where-the-numbers-come-from-provenance.md
 ```

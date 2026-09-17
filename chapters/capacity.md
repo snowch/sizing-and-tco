@@ -6,16 +6,6 @@ short_title: "ch08 Capacity"
 (capacity)=
 # ch08 · Capacity
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch01 · What a workload is](#what-a-workload-is) |
-| **What it produces** | The raw-to-usable chain of the storage model, node by node |
-| **Built from** | `storage_cluster-reference` |
-:::
-
 ## The question
 
 How far is what you buy from what you can use?

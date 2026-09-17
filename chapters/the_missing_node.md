@@ -6,16 +6,6 @@ short_title: "ch19 The missing node"
 (the-missing-node)=
 # ch19 · The missing node
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch13 · Correlation and convergence](#correlation-and-convergence) |
-| **What it produces** | The observability model's incomplete ingest total, and what it costs to believe it |
-| **Built from** | `observability-reference` |
-:::
-
 ## The question
 
 How do you find the error that no amount of sampling can see?

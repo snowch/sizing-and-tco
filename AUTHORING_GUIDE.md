@@ -37,7 +37,7 @@ Not the order the chapter is read in.
 
 Writing the prose first produces a chapter that explains what you meant to model.
 
-## The seven-part shape
+## The six-part shape
 
 PLAN.md §5, and it is not negotiable — the repetition is what makes twenty-three chapters read as
 one book. `python3 scripts/new-chapter.py <slug>` generates the shape with the question,

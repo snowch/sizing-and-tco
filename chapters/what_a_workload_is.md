@@ -6,16 +6,6 @@ short_title: "ch01 What a workload is"
 (what-a-workload-is)=
 # ch01 · What a workload is
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | none |
-| **What it produces** | The demand side of the storage model, and the workload table for all three |
-| **Built from** | `storage_cluster_demand-reference`, `storage_cluster-reference`, `observability-reference`, `service_tier-reference` |
-:::
-
 ## The question
 
 Which quantities actually size a system, and which ones only look as though they do?
@@ -52,7 +42,9 @@ of by an amount of time. It typechecks in a spreadsheet. It does not typecheck h
 
 ### Turning the workload into a file
 
-You could put the workload above in a spreadsheet, and most people do. A cell holds a value. It
+The workload you have been given is the one this book carries all the way through: some amount
+of data held today, growing at some rate, over the life of whatever gets bought. You could put
+that in a spreadsheet, and most people do. A cell holds a value. It
 does not hold the fact that the value was measured last March against version 2.4 of something,
 or that it is a vendor's claim nobody has checked, or that it was agreed in a meeting by people
 who have since left. Those facts live in the head of whoever built the sheet, and they leave when
@@ -60,8 +52,7 @@ that person does. Nor does a cell have a unit: `=B4*C7` is as valid as any other
 multiplying series by requests gives a number that looks exactly like a number of bytes.
 
 So a model here is a text file of named quantities, each with a unit and a source, that diffs and
-reviews like code. Take the workload above: some amount held today, growing at some rate, over
-the life of whatever gets bought. The first node is the level you were given.
+reviews like code. The first node is the level you were given.
 
 ```{literalinclude} ../models/storage_cluster/stages/01-demand/model.yaml
 :language: yaml
@@ -69,10 +60,12 @@ the life of whatever gets bought. The first node is the level you were given.
 :end-before: annual_growth:
 ```
 
-A `unit`, so the build knows this is a level and not a rate. A `value`, because somebody said so.
-A `provenance`, because a number with no source is a rumour — that is
-[ch02](#where-the-numbers-come-from)'s subject, and the reason the field is mandatory from the
-very first node. The `range` is what a reader may drag it to on the published page.
+A `unit`, so the build knows this is a level and not a rate. A
+`value`, because somebody said so. A `provenance`, because a number with no
+source is a rumour — that is [ch02](#where-the-numbers-come-from)'s subject, and the reason the
+field is mandatory from the very first node. The `range` is how
+far a slider may take it on the interactive version of this
+model, which [Appendix A](#appendix-a-dsl-reference) covers.
 
 Growing it over the horizon takes one multiplication and one thing that is easy to miss:
 
@@ -83,8 +76,8 @@ Growing it over the horizon takes one multiplication and one thing that is easy 
 ```
 
 `horizon / one_year` looks like ceremony and is not. Growth compounds, so the horizon has to be an
-exponent, and an exponent is a pure number: five years cannot be one, but five can. Dividing a
-duration by a declared year is how it becomes the count of periods the formula can use. A
+exponent, and an exponent has to be a pure number. Five years is a duration; five is a number.
+Dividing a duration by a declared year is how the first becomes the second. A
 spreadsheet does this silently and correctly, right until the quarter somebody types a horizon in
 months into the same cell.
 
@@ -108,8 +101,8 @@ the first thing worth doing to any model, including this one:
 ```{include} _generated/what-a-workload-is-storage.md
 ```
 
-Every quantity is filed under *what you decide*, and one of them is the growth rate. Nobody decides
-a growth rate.
+Every quantity is filed under *what you decide*, and one of them is the growth rate. Nobody
+decides a growth rate.
 
 The table is not wrong about the model. The model is wrong, and the table is showing you the only
 signal it has: whether somebody gave the quantity a shape instead of a single number. A shape says
@@ -126,10 +119,10 @@ capacity is sitting in the same list, and that one is not a decision either.
 Once the table does separate, the half worth arguing about is *what you decide*, because it is the
 half anybody can change. Most sizing conversations are spent on the other one.
 
-The *Claim* column is asking something else: how much the person who wrote each number down was
-claiming. **●** traceable to a measurement or a definition, **◐** supplied by whoever is selling
-it, **○** somebody's assumption. [ch02](#where-the-numbers-come-from) is about what that difference
-is worth.
+The *Claim* column is asking something else: how much the person who wrote
+each number down was claiming. **●** traceable to a measurement or a
+definition, **◐** supplied by whoever is selling it, **○** somebody's
+assumption. [ch02](#where-the-numbers-come-from) is about what that difference is worth.
 
 ### What it says, and what the build calls it
 
@@ -155,8 +148,8 @@ so.
 ### The same split, on a model that is finished
 
 Here is the table doing what it is for. This is a different system — an observability platform,
-carrying metrics, logs and traces — and its model is complete, so every quantity has been given
-either a shape or a value and the two lists are both populated:
+carrying metrics, logs and traces — and every input in its model has been given either a shape or
+a value, so both lists are populated:
 
 ```{include} _generated/what-a-workload-is-observability.md
 ```

@@ -6,16 +6,6 @@ short_title: "ch07 Regime changes"
 (regime-changes)=
 # ch07 · Regime changes
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch05 · Queueing, and the knee](#queueing-and-the-knee) |
-| **What it produces** | The ceilings a chain of multiplications cannot express, in both reference models |
-| **Built from** | `observability-reference`, `queueing-curve` |
-:::
-
 ## The question
 
 Which ceilings can a chain of multiplications not model at all?

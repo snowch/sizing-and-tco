@@ -6,16 +6,6 @@ short_title: "ch17 The five-year model"
 (the-five-year-model)=
 # ch17 · The five-year model
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch16 · Unit economics](#unit-economics) |
-| **What it produces** | Both reference models, and the seam where one buys from the other |
-| **Built from** | `storage_cluster-reference`, `observability-reference` |
-:::
-
 ## The question
 
 How does a cost model consume a sizing model's output without swallowing its uncertainty?
