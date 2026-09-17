@@ -51,7 +51,7 @@ The calculation had no way to mention that its inputs were guesses, so it did no
 :width: 100%
 ```
 
-That is the whole motivation, and everything below is how the second column was produced.
+Everything below is how that second column was produced.
 
 ### Instead of one value, a bag of values
 

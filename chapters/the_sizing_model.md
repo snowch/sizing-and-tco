@@ -79,11 +79,11 @@ third of them.
 
 Nothing went wrong to produce that. Every input was defensible, every multiplication was correct,
 and the result is a cluster with a one-in-three chance of not lasting its horizon. **That is what
-sizing from point estimates does**, and it is the whole argument of this book in one table.
+sizing from point estimates does.**
 
 ### So what is the answer?
 
-There isn't one, and that is the transition Part III has been building to.
+There isn't one. Part III has been building to exactly that.
 
 A sizing model does not produce a number. It produces a *relationship between a number and a
 risk*, and somebody has to choose a point on it. Problem 12.1 is that choice made explicitly: pick

@@ -23,9 +23,9 @@ number says nothing at all about how much of it you would actually bet.
 *How much* is **total cost of ownership**: what that hardware costs over the years you keep it,
 which is not the same as what it costs to buy. Both are arithmetic, and most people can do them.
 
-The third part is the one that decides whether anybody should act on the answer — which input it
-rests on, how far it moves when that input moves, and what it would take to find out. That is a
-different skill, it is the one nobody is taught, and it is what this book is about.
+This book teaches the third part: how to find which input your answer rests on, how far the
+answer moves when that input moves, and what it would cost to find out. Almost nobody is taught
+this, and it is what decides whether anybody should act on your number.
 
 ## Why point estimates lie
 
@@ -42,16 +42,16 @@ ask the same model the same question. It no longer gives one answer.
 ```{include} chapters/_generated/preface-storage-outputs.md
 ```
 
-The row that matters is *nodes the model recommends*. The point estimate is a real number,
-correctly computed, and the interval beside it spans most of an order of magnitude. Nothing in the
+Read the *nodes the model recommends* row. Its point estimate is a real number, correctly
+computed, and the interval beside it spans most of an order of magnitude. Nothing in the
 first calculation was wrong. It simply had no way to mention that it was a bet.
 
 The italic line under the table runs under every table in this book. **Conditions** says what was
 computed — which model file, which scenario, how many futures were drawn, and the seed that drew
 them. **Re-run** says how to check it: the stamped result on disk, and a hash of the code that did
 the arithmetic. Change that code and the hash changes, and the build refuses to publish a figure
-that no longer matches what the repository computes. The line is there so that a reader who does
-not believe this table has somewhere to go.
+that no longer matches what the repository computes. It is there so you can check the table
+instead of trusting it.
 
 ```{image} chapters/_figures/preface-tco-distribution.svg
 :alt: The five-year total cost as a distribution, with the point estimate marked on it
@@ -61,9 +61,9 @@ not believe this table has somewhere to go.
 The red line is where the point estimate falls. Everything else is the same model, told the truth
 about its own inputs.
 
-That is the whole motivation, and this book does not teach the method until
-[ch13](#monte-carlo) — because the method is not useful until you have a model that has produced
-a number you cannot defend, and you can feel that you cannot defend it.
+The method that produced that second column is [ch13](#monte-carlo)'s, not this page's. It is no
+use to you until you have built a model, got a number out of it, and felt that you could not
+defend the number.
 
 ## Why the interval was that wide
 

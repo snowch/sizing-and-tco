@@ -129,6 +129,29 @@ convergence — and that is the list. Each arrives because a model has just rais
 needs it, never as a definition. Where a term has a plain-English equivalent, use the plain one
 first and name the term second.
 
+**Say the thing. Do not perform it.** "Direct" above was not specific enough to hold, and the
+prose drifted into three habits that make a reader extract the point instead of receiving it. The
+test for any sentence: *does this state the point, or make the reader work it out?*
+
+- **A label where a statement belongs.** "That is the whole motivation" names the paragraph
+  instead of saying anything. Write what the motivation is.
+  *Was:* "That is the whole motivation, and this book does not teach the method until ch13 —
+  because the method is not useful until…"
+  *Now:* "The method that produced that second column is ch13's, not this page's. It is no use to
+  you until you have built a model, got a number out of it, and felt that you could not defend
+  the number."
+- **Withholding, then revealing.** "X is the one that decides…" sets a small puzzle and makes the
+  reader wait. Lead with the point.
+  *Was:* "The third part is the one that decides whether anybody should act on the answer."
+  *Now:* "This book teaches the third part: how to find which input your answer rests on…"
+- **A roundabout purpose.** "The line is there so that a reader who does not believe this table
+  has somewhere to go" → "It is there so you can check the table instead of trusting it."
+
+This is a rule about the habit, not about the words. `That is the whole of it. One
+multiplication.` in ch05 is good writing: short, direct, and the device is doing work rather than
+standing in for it. Banning the phrasings would flatten those too. Read the sentence and ask
+whether the reader has to decode it.
+
 ## Things that will break the build
 
 - **Editing `sizing/mc.py`, `sizing/evaluate.py`, `sizing/units.py` or `sizing/dsl.py`.** They are

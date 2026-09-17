@@ -18,7 +18,7 @@ notices which of the two got the meeting.
 place in the book where the sizing runs backwards and the rounding goes the other way.
 
 [ch17](#unit-economics) turns a total into a number somebody outside the team can compare against
-something, and is mostly about the denominator, which is the part nobody checks.
+something, and spends most of its time on the denominator, because nobody checks it.
 
 [ch18](#the-five-year-model) is the seam between two models, where a distribution becomes a number
 in a document and the uncertainty quietly disappears.
