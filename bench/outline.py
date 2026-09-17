@@ -145,12 +145,12 @@ PART_PAGES: tuple[Part, ...] = (
         "What does the thing you have sized cost, over its life, and per unit of what it does?",
     ),
     Part(
-        "Part VI — Sensitivity",
+        "Part VI — What the answer rests on",
         "sensitivity",
         "Given a wide interval, what is the one thing to go and do about it?",
     ),
     Part(
-        "Part VII — Presenting it",
+        "Part VII — Presenting an interval",
         "presenting_it",
         "How do you hand an interval to somebody who asked for a number?",
     ),
@@ -170,7 +170,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "prerequisites_and_setup",
         "Prerequisites and setup",
         PARTS[0],
-        "What do I need installed, and how do I check that a model in this book still says what "
+        "What do I need installed, and how do I check that a figure in this book still says what "
         "it says here?",
         owes="The setup check's own output, as a stamped result.",
     ),
@@ -214,8 +214,8 @@ CHAPTERS: tuple[Chapter, ...] = (
         "peak_mean_and_growth",
         "Peak, mean and growth",
         PARTS[1],
-        "Which number in a demand curve is the one that sizes you, and what is a five-year growth "
-        "rate actually a claim about?",
+        "Which number in a demand curve sizes you, and what is a five-year growth rate actually "
+        "a claim about?",
         owes="The growth sensitivity of the storage model, as a swing across the declared range.",
     ),
     Chapter(
@@ -278,7 +278,7 @@ CHAPTERS: tuple[Chapter, ...] = (
     Chapter(
         11,
         "headroom_and_failure_domains",
-        "Headroom, failure domains and reservations",
+        "Headroom and failure domains",
         PARTS[3],
         "Why is headroom a rule rather than a number?",
         owes="Each ceiling's declared margin and the reason for it, from both models.",
@@ -316,7 +316,7 @@ CHAPTERS: tuple[Chapter, ...] = (
     Chapter(
         15,
         "capex_opex_and_lifecycle",
-        "Capex, opex and the lifecycle",
+        "Capex, opex and where the total stops",
         PARTS[5],
         "What do you pay once, what do you pay every month, and what does this book deliberately "
         "not model?",
@@ -352,7 +352,7 @@ CHAPTERS: tuple[Chapter, ...] = (
     Chapter(
         19,
         "which_input_is_the_answer",
-        "Which input is the answer?",
+        "Which input to go and measure",
         PARTS[6],
         "Which input should you go and measure first, and how would the model tell you?",
         owes="Tornado charts for every output of both models, and what the widest bar has in "

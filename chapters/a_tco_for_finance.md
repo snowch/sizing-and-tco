@@ -38,9 +38,9 @@ A budget line is a single number by construction; a commitment is a single numbe
 it.
 
 Both instincts are right, and the argument between them is usually conducted as though only one
-of them can be. The way out is not compromise. It is to notice that they want different things:
-finance wants a number to **commit** to, and engineering wants to say what the number **hides**.
-Those fit together.
+of them can be. No compromise is needed, because the two sides want different things. Finance
+wants a number to **commit** to. Engineering wants to say what the number **hides**. Those two
+fit together.
 
 ### The number, and the sentence
 
@@ -51,7 +51,7 @@ So the deliverable is a pair.
 Not a range. Not a range with a recommendation attached. A number, chosen deliberately and named
 as a choice, and then a single sentence that says the thing the number cannot.
 
-Which number is a decision, and any of them can be defended out loud:
+Which number you pick is a decision, and you can defend any of these three out loud:
 
 **The median.** Half the futures cost more. Honest, easy to explain, and the one most people mean
 when they say "the estimate". It is also the number that will be wrong half the time in the
@@ -75,14 +75,14 @@ with, now as something to pick a number off rather than something to be alarmed 
 ```
 
 The red line is the point estimate, and it is not the middle. Whichever of the three you choose,
-choose it off this and say which one it was.
+choose it off that chart and say which one it was.
 
-What must not happen is the number arriving without the sentence. The sentence is the whole of
-the engineering position, and there is only room for one, so it has to name something specific —
-a percentile, an omission, an assumption the total rests on. "There is some uncertainty" names
-nothing and will be heard as "no".
+The number must not arrive without the sentence. The sentence is the whole of the engineering
+position, and there is only room for one, so it has to name something specific — a percentile, an
+omission, an assumption the total rests on. "There is some uncertainty" names nothing and will be
+heard as "no".
 
-Problem 21.2 is this, and it is graded on the sentence.
+Problem 21.2 is that pair, and it is graded on the sentence.
 
 ### A decision, not an interval
 
@@ -101,9 +101,9 @@ estimate right", which nobody in the room can answer. It is "is the difference b
 columns worth the difference in the last two rows", which is exactly the sort of question the
 people being asked are good at.
 
-That is the reframing. **An interval is a statement about the world. A decision table is a
-statement about what you can buy**, and only the second is actionable by someone who cannot
-change the world but can sign for the extra machines.
+**An interval is a statement about the world. A decision table is a statement about what you can
+buy**, and only the second is actionable by someone who cannot change the world but can sign for
+the extra machines.
 
 ### Pricing a risk
 
@@ -114,12 +114,12 @@ have a consequence in them.
 ```
 
 *Over limit* is how often, across the sampled futures, the cluster is asked to do something it
-cannot. The capacity row is a plain English sentence: this is how often we buy this and it does
-not hold the data we said it would.
+cannot. The capacity row is a plain English sentence: this is how often we buy the cluster and it
+does not hold the data we said it would.
 
-That sentence is worth more than any amount of argument about the growth rate, and it is worth
-noticing why. Nobody in the room has an opinion about a lognormal. Everybody in the room has an
-opinion about running out of disk in year four.
+That sentence is worth more than any amount of argument about the growth rate. Nobody in the room
+has an opinion about a lognormal. Everybody in the room has an opinion about running out of disk
+in year four.
 
 The second scenario reduces that number, and the table says by how much and what it costs. Put
 the two together and you have the only sentence in the document that is genuinely a
@@ -134,15 +134,14 @@ Then the appendix nobody asks for until they do.
 ```{include} _generated/a-tco-for-finance-provenance.md
 ```
 
-Three marks, and the middle one is the one that matters in this room. A vendor claim is a number
-supplied by the party being paid. It may well be right. It has not been checked here, it is
-coloured differently in every figure in this book for that reason ([ch03](#where-the-numbers-come-from)),
-and the finance audience is entitled to know which of the inputs to a capital request came from
-the supplier.
+Three marks. The one that matters in this room is *vendor claim*: a number supplied by the party
+being paid. It may well be right. It has not been checked here, it is coloured differently in
+every figure in this book for that reason ([ch03](#where-the-numbers-come-from)), and the finance
+audience is entitled to know which of the inputs to a capital request came from the supplier.
 
-Handing this over unprompted does something that is hard to achieve any other way: it makes the
-rest of the document more believable, because a model that volunteers which of its inputs are
-guesses is not a model that is trying to win an argument.
+Handing this over unprompted makes the rest of the document more believable, and little else
+does. A model that volunteers which of its inputs are guesses is not a model trying to win an
+argument.
 
 ### Three ways to lose the room
 
@@ -159,7 +158,7 @@ who does not know which parts of it were conservative.
 optical. This one is real: half the futures cost more, and nothing has been said about what
 happens in them.
 
-The common thread is that each of the three is a way of not saying the sentence.
+Each of the three is a way of not saying the sentence.
 
 ### What to hand over
 
@@ -172,9 +171,9 @@ One page:
 - A link to the model file, because it re-runs and they can change an input and see what happens.
 
 And the cash flow, separated by year rather than summed. [ch15](#capex-opex-and-lifecycle) says
-why this book does not discount: the rate is a policy decision, not an engineering one. The
-practical consequence lands here — the first thing a finance team will do with a five-year total
-is discount it, and they can only do that if the years have not already been added together.
+why this book does not discount: the rate is a policy decision, not an engineering one. The first
+thing a finance team will do with a five-year total is discount it, and they can only do that if
+the years have not already been added together.
 
 ## What this cannot tell you
 
@@ -204,7 +203,7 @@ hurts both columns — but "more robust" is not "unaffected".
 
 **Whether it worked.** There is no measurement in this repository of whether a document shaped
 like this gets a better decision than one shaped some other way. This chapter is the one place in
-the book arguing from experience rather than from a stamped result, and it is marked as such.
+the book arguing from experience rather than from a stamped result.
 
 ## Problems
 

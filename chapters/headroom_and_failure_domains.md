@@ -1,10 +1,10 @@
 ---
-title: "Headroom, failure domains and reservations"
-short_title: "ch11 Headroom, failure domains and reservations"
+title: "Headroom and failure domains"
+short_title: "ch11 Headroom and failure domains"
 ---
 
 (headroom-and-failure-domains)=
-# ch11 · Headroom, failure domains and reservations
+# ch11 · Headroom and failure domains
 
 :::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
@@ -59,26 +59,24 @@ loose for another, and unexplainable for the third.
 
 ### The one margin you can actually compute
 
-Most headroom is judgement. One piece of it is arithmetic, and it is worth separating out.
+Most headroom is judgement. One piece of it is arithmetic.
 
-A cluster that has to survive losing machines has to have somewhere for those machines' data to
-go. That space has to be there *beforehand* — a cluster discovering it needs a rebuild reserve
-during a rebuild has already failed.
+A cluster that has to survive losing machines needs somewhere for those machines' data to go. That
+space has to be there *beforehand* — a cluster discovering it needs a rebuild reserve during a
+rebuild has already failed.
 
-Problem 11.1 is that fraction, and it has a consequence that is rarely stated as a capacity
-argument. A small cluster pays an enormous margin: one machine in five is a fifth of the estate. A
-large cluster pays almost nothing per machine. That is a real and quantitative argument for larger
-failure domains, and it is not the argument people usually give for them.
+Problem 11.1 is that fraction. It has a consequence people rarely state as a capacity argument: a
+small cluster pays an enormous margin, because one machine in five is a fifth of the estate, while
+a large cluster pays almost nothing per machine. That is a real and quantitative argument for
+larger failure domains, and it is not the argument people usually give for them.
 
-The other half of that problem is worth more than the arithmetic. **The margin is for a loss, not
-for a failure.** A machine being drained for an upgrade costs exactly the same capacity as one
-that has died — and planned work is far more common than failure. Most clusters spend their
-rebuild reserve on a Tuesday afternoon, and a reserve sized for annual hardware failure is a
-reserve that is not there when somebody starts a rolling upgrade.
+The second half of that problem is worth more than the arithmetic. **The margin is for a loss, not
+for a failure.** A machine drained for an upgrade costs exactly the same capacity as one that has
+died, and planned work is far more common than failure. Most clusters spend their rebuild reserve
+on a Tuesday afternoon. A reserve sized for annual hardware failure is not there when somebody
+starts a rolling upgrade.
 
 ### Margins do not add
-
-Now the arithmetic that catches people, and problem 11.2 is it.
 
 A sizing conversation collects margins. Rebuild wants some. Queueing wants some. Growth between
 now and the next purchase wants some. Each request arrives separately, each is defensible, and
@@ -86,15 +84,14 @@ each is granted.
 
 They do not add. Each one takes its share of what the previous one left, so applying them in
 sequence is multiplication — and three separately modest margins leave you with well under half of
-the cluster doing the work it was bought for.
+the cluster doing the work it was bought for. Problem 11.2 is that composition.
 
 Nobody in the room multiplied them. That is how a cluster ends up twice the size anybody intended,
 with every individual decision in the chain defensible.
 
-The clue that it cannot be addition is at the other end. Push the margins up and addition stops
-describing anything: three of ninety per cent add to nearly three whole clusters, and there is no
-such thing as a negative system. Taking nine tenths three times over leaves a sliver — severe,
-and at least a quantity that exists.
+Push the margins up and addition stops describing anything. Three margins of ninety per cent add
+to nearly three whole clusters, and no system has negative capacity. Taking nine tenths three
+times over leaves a sliver — severe, and at least a quantity that exists.
 
 ### What a margin is for, written down
 
@@ -102,8 +99,8 @@ Every ceiling in this book carries a `because`. Not because it is tidy, but beca
 mode of a margin is specific and predictable: it gets copied.
 
 A margin with a reason attached can be argued with, adjusted when the reason changes, and dropped
-when the reason goes away. A margin that is just a number gets carried into the next model, and the
-one after that, by people who were not in the room. Ten years later an organisation has a
+when the reason goes away. A margin that is just a number gets carried into the next model, and
+the one after that, by people who were not in the room. Ten years later an organisation has a
 thirty-per-cent rule that everybody follows and nobody can source.
 
 `scripts/verify-models.py` refuses a ceiling without one, which is the only enforcement available
@@ -113,11 +110,11 @@ and is better than none.
 
 Not a verdict. A probability.
 
-Look again at the last two columns of the tables above. A ceiling's real output is: across
-everything this model thinks could happen, how often does the design end up past this limit? The
-point estimate being comfortably inside the margin tells you about one future.
-[ch13](#monte-carlo) is where the rest come from, and [ch12](#the-sizing-model) is what the
-difference between those two readings costs.
+Read the last two columns of the tables above. They answer one question: across everything this
+model thinks could happen, how often does the design end up past this limit? A point estimate
+comfortably inside the margin tells you about one future only. [ch13](#monte-carlo) is where the
+other futures come from, and [ch12](#the-sizing-model) is what the difference between the two
+readings costs.
 
 ## What this cannot tell you
 
@@ -161,8 +158,8 @@ python3 -m pytest tests/headroom_and_failure_domains/test_problem_2_compose.py
 
 ## Where to go next
 
-[ch12](#the-sizing-model) is Part III assembled: every chain, every margin, and a number at the end
-of it.
+[ch12](#the-sizing-model) is Part III assembled: every chain, every margin, and a number at the
+end of it.
 
 [ch13](#monte-carlo) is what the last two columns of every table in this chapter actually came
 from.

@@ -21,8 +21,8 @@ short_title: "ch02 What a workload is"
 Which quantities actually size a system, and which ones only look as though they do?
 
 [ch01](#reading-a-model) gave you a file that can hold a quantity and check it. This chapter is
-about which quantities are worth holding — and it starts with a distinction that sounds like
-pedantry right up until the first time somebody sizes a retention store from a rate.
+about which quantities are worth holding, and it starts with the difference between a rate and a
+level. That sounds like pedantry right up until somebody sizes a retention store from a rate.
 
 ## The material
 
@@ -38,7 +38,7 @@ right now. You *can* run out of one, and that is usually what a ceiling is about
 **Everything else is a ratio, a count or a price** — a replication factor, a compression ratio, a
 cost per terabyte. These have no time in them at all and they are the constants of a sizing chain.
 
-The unit tells you which is which, which is why the build can check it and why every node in this
+The unit tells you which is which. That is why the build can check it, and why every node in this
 book declares one. A flow has time in its denominator; a stock does not; a duration has time in
 its numerator and is none of the three.
 
@@ -58,17 +58,17 @@ the first thing worth doing to any model you inherit:
 The *Claim* column is how much the person who wrote each number down was claiming, and the three
 marks run through every figure in the book: **●** something traceable to a measurement or a
 definition, **◐** a figure supplied by whoever is selling it, **○** somebody's assumption.
-[ch03](#where-the-numbers-come-from) is what the difference is worth.
+[ch03](#where-the-numbers-come-from) is about what the difference is worth.
 
 Everything above the second heading is something you can argue about and cannot choose. Everything
-below is a choice somebody made and could unmake — which is the list a sizing conversation should
-be about, and is not the list most sizing conversations are about.
+below is a choice somebody made and could unmake. A sizing conversation should be about the second
+list. Most are about the first.
 
 The heuristic that produced that split is crude and worth knowing: a quantity somebody gave a
 distribution to is one they think the world decides, and a quantity with a single value and a
-slider is one they think they decide. It is right far more often than not distinguishing them at
-all, and where it is wrong, the wrongness is interesting. An input you gave a single value to and
-cannot actually control is an assumption you have stopped noticing.
+slider is one they think they decide. Splitting a model this way is far better than not splitting
+it, and where the heuristic is wrong the wrongness is interesting. An input you gave a single
+value to and cannot actually control is an assumption you have stopped noticing.
 
 ### The same split, on a system with three of everything
 
@@ -80,8 +80,7 @@ those are the four knobs an observability platform gives you, and
 [Appendix F](#appendix-f-observability-model) shows what turning all of them down actually buys.
 
 Then read the demand, and notice what is *not* in the decisions: the number of label values. It
-is the input that dominates the whole model, and it is not on the list of things you can turn.
-That is [ch08](#regime-changes)'s subject.
+dominates the whole model and it is not a knob. That is [ch08](#regime-changes)'s subject.
 
 ### A workload can be described badly in three ways
 
@@ -117,8 +116,8 @@ be wrong in a way nothing here would show.
 
 **Where the numbers come from.** Every figure in the tables above is an input somebody wrote down.
 Some are measured, most are not, and this chapter has said nothing about the difference.
-[ch03](#where-the-numbers-come-from) is that chapter and it is the one that decides how much any
-of this is worth.
+[ch03](#where-the-numbers-come-from) is about that difference, and how much any of this is worth
+depends on it.
 
 **Whether a peak is a peak.** "The busy hour" is a phrase, not a measurement. Whether your busy
 hour is an hour, a minute or a Tuesday in November is a property of your traffic, and sizing for

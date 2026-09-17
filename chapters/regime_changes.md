@@ -20,9 +20,10 @@ short_title: "ch08 Regime changes"
 
 Which ceilings can a chain of multiplications not model at all?
 
-This is the chapter that closes Part II and justifies [the front matter](#preface). Everything in
-Parts I and III is a product of quantities. This chapter is about the things that are not, and
-about why no amount of care over the inputs to a product will warn you about them.
+Everything in Parts I and III is a product of quantities. This chapter is about the points where a
+system stops behaving like a product, and about why no amount of care over the inputs will warn
+you that you are near one. Those points are why [the front matter](#preface) separates a sizing
+model from a cost model.
 
 ## The material
 
@@ -32,14 +33,14 @@ Every sizing model in this book is, at heart, a product. Bytes per line times li
 times seconds of retention. Terabytes times replication divided by compression. Each output is
 linear in each input: double one thing, double the answer.
 
-That is an enormous amount of the world and it is why the technique works. It is also completely
-unable to express a **regime change** — a point at which the system stops obeying the rule it was
-obeying and starts obeying a different one.
+A product covers an enormous amount of the world, which is why the technique works. It cannot
+express a **regime change**: a point at which the system stops obeying one rule and starts obeying
+another.
 
-Problem 8.1 makes the failure concrete, and it is worth doing rather than reading. Fit a straight
-line to a system's behaviour at the loads it has actually run at, which for a healthy system means
-nothing above half. The fit is excellent. Extrapolate it to the loads you are planning for, and it
-is not wrong by a percentage — it is wrong by a multiple, and the multiple grows.
+Problem 8.1 puts a straight line through a system that has a regime change in it. Fit the line to
+the loads the system has actually run at, which for a healthy one means nothing above half, then
+extrapolate to the loads you are planning for. The fit is excellent where it was made. Out where
+it matters it is not wrong by a percentage: it is wrong by a multiple, and the multiple grows.
 
 ```{image} _figures/regime-changes-knee.svg
 :alt: The queueing knee, as a regime change a multiplication cannot express
@@ -50,7 +51,7 @@ Nothing in the flat part of that curve contains any information about the vertic
 fitted there, by any method, predicts the wrong thing — and predicts it confidently, because the
 data it was fitted to was clean.
 
-### Four of them, and what each one does
+### Four regime changes, and what each one does
 
 **The queueing knee.** [ch06](#queueing-and-the-knee). Response time is work divided by what is
 left of the system, so it goes from flat to vertical with no warning in between. A multiplicative
@@ -63,19 +64,18 @@ second failure. No term in a capacity chain represents it — which is why
 [ch11](#headroom-and-failure-domains) handles it with a reserved margin rather than a formula.
 
 **Cardinality explosion.** A label multiplies every series that carries it. Add one with a
-thousand values and the series count is multiplied, not incremented. The chain does express this
-one correctly — and that is precisely the problem, because a multiplication by an uncertain factor
-is an uncertainty that compounds:
+thousand values and the series count is multiplied, not incremented. A chain of multiplications
+expresses this one correctly. The trouble is what that arithmetic does to the uncertainty:
 
 ```{image} _figures/regime-changes-cardinality.svg
 :alt: Label cardinality as a distribution — a product of uncertain counts
 :width: 100%
 ```
 
-That is three counts, none of which anybody would describe as alarming, multiplied together.
-Problem 8.2 is why the result is so much wider than any of its factors, and the answer is that
-uncertainties compound when quantities multiply. The consequence shows up in every tornado the
-node appears in:
+That is three counts, none of which anybody would describe as alarming, multiplied together. The
+product is far wider than any of the three: uncertainty compounds when quantities multiply, and
+problem 8.2 is where you measure by how much. The same spread shows up in every tornado the series
+count appears in:
 
 ```{include} _generated/regime-changes-tornado.md
 ```
@@ -85,23 +85,22 @@ orders of magnitude, and the transition between them is a step rather than a slo
 an average access cost in it describes neither side, and describes the mixture only at the one
 ratio it was calibrated for.
 
-### What they have in common
+### What the four have in common
 
-Each of them is a **threshold with different physics on either side**, and in each case the
-quantity that crosses the threshold is one a multiplicative model computes perfectly well. The
-model is not wrong about utilisation, or about how full the disks are, or about how many series
-there are. It is wrong about what those numbers *mean* past a point it has no way to represent.
+Each of them is a **threshold with different physics on either side**, and in each case a
+multiplicative model computes the crossing quantity perfectly well. The model is not wrong about
+utilisation, or about how full the disks are, or about how many series there are. It is wrong
+about what those numbers *mean* past a point it cannot represent.
 
-That is why this book's DSL has a node kind for it. A `ceiling` does not model the regime change —
+So the DSL has a node kind for exactly this. A `ceiling` does not model the regime change —
 nothing in a spreadsheet-shaped model can. It declares where the change is, keeps a margin away
 from it, and reports how much of the model's own uncertainty falls on the wrong side:
 
 ```{include} _generated/regime-changes-ceilings.md
 ```
 
-The last two columns are what a chain of multiplications cannot produce and what a sizing answer
-actually needs. Not "the system will be this busy" but "across everything this model thinks could
-happen, this fraction of it puts you past the point where the model stops applying".
+Read the last two columns. Not "the system will be this busy", but "across everything this model
+thinks could happen, this fraction of it puts you past the point where the model stops applying".
 
 ### Why a cost model can be sampled and a sizing model cannot
 
@@ -110,14 +109,13 @@ it is true at every scale and there is no load at which electricity starts behav
 So for a cost model, sampling the inputs is genuinely sufficient — the structure is not in doubt,
 only the numbers are.
 
-A sizing model has thresholds in it, and past a threshold the structure itself changes. Sampling
-the inputs of a model that has stopped applying measures, very precisely, the uncertainty in a
+A sizing model has thresholds in it, and past a threshold the structure itself changes. Sample the
+inputs of a model that has stopped applying and you measure, very precisely, the uncertainty in a
 number that has stopped describing anything.
 
-That is why the DSL distinguishes the two, why a model with a `ceiling` in it is classified as a
-sizing model, and why `scripts/verify-models.py` refuses a sizing model that declares a limit with
-no margin. The distinction is not taxonomy. It is the difference between a model whose
-uncertainty you can quantify and a model whose *applicability* you have to bound.
+So a model with a `ceiling` in it is classified as a sizing model, and `scripts/verify-models.py`
+refuses one that declares a limit with no margin. The distinction is not taxonomy. It separates a
+model whose uncertainty you can quantify from a model whose *applicability* you have to bound.
 
 ## What this cannot tell you
 
@@ -129,12 +127,12 @@ the regime you are trying to avoid.
 **How many thresholds you have.** Four are named above because four were thought of. A real system
 has more — a connection limit, a file-descriptor ceiling, a licence tier, a garbage collector that
 changes behaviour at some heap size, a network that reorders under load. Each one you have not
-declared is a ceiling the model cannot report on, and it will not tell you it is missing. That is
-[ch20](#the-missing-node).
+declared is a ceiling the model cannot report on, and the model will not tell you it is missing.
+[ch20](#the-missing-node) is about that gap.
 
-**What happens past one.** A ceiling says where the model stops applying. It has no model of what
-is on the other side, deliberately, because an extrapolation into a regime you have not
-characterised is exactly the error this chapter is about.
+**What happens past one.** A ceiling says where the model stops applying and says nothing about
+the other side. That is deliberate: extrapolating into a regime nobody has characterised is the
+mistake problem 8.1 measures.
 
 **Whether the margin is enough.** A headroom is a decision, and this chapter argues only that it
 must exist and have a reason. Whether a given one is generous or reckless depends on how fast your
@@ -145,9 +143,8 @@ load moves and how long you take to notice, neither of which this book can see.
 Two, in `tests/regime_changes/`.
 
 **8.1 — Do what a spreadsheet would do.**
-Fit a straight line to a system's behaviour at the loads it has actually run at, then extrapolate
-into the loads you are planning for. The fit is excellent where it was fitted. Measure how wrong
-it is where it matters.
+Fit the line, extrapolate it well past everything it was fitted to, and measure how wrong it is
+where it matters.
 
 ```bash
 python3 -m pytest tests/regime_changes/test_problem_1_straight_line.py

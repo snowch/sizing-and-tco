@@ -20,9 +20,9 @@ short_title: "ch16 Power first"
 
 What changes when watts are the binding constraint rather than money?
 
-Everything so far has sized a system from demand and then priced what it sized. This chapter is
-what happens when the answer arrives before the question: a rack has a power allocation, the
-allocation is not negotiable, and the sizing runs the other way.
+Everything so far has sized a system from demand and then priced what it sized. Here the sizing
+runs the other way: a rack has a power allocation, the allocation is not negotiable, and the
+number of machines follows from it.
 
 ## The material
 
@@ -33,10 +33,10 @@ building spends on itself, divide by what a machine draws, and round **down**.
 
 That rounding is the only one in this book that goes that way. Every other constraint is a demand
 to be satisfied, so it rounds up; this one is a supply that cannot be exceeded. Problem 16.1 is
-that inversion, and the direction of the facility multiplier is the part people get backwards —
-an inefficient building buys you *fewer* machines, not more.
+that inversion. People get the facility multiplier backwards: an inefficient building buys you
+*fewer* machines, not more.
 
-### What that does to a cluster sized for demand
+### What a power budget does to a cluster sized for demand
 
 ```{include} _generated/power-first-scenarios.md
 ```
@@ -54,18 +54,18 @@ Then read the ceilings:
 
 Neither is comfortable, and they are uncomfortable in different ways. The capacity ceiling is over
 its hard limit at the point estimate — not at some unlucky percentile, at the expected case — and
-the model puts it over in most of the futures it thinks are plausible. The bandwidth ceiling
-is under its limit and has spent the whole of the margin that was keeping it there, which is the
+the model puts it over in most of the futures it thinks are plausible. The bandwidth ceiling is
+still under its limit, but it has spent the whole margin that was keeping it there. That is the
 verdict column saying *into the margin* rather than *ok*.
 
 So the honest output of this chapter is not a cluster. **It is the statement that this workload
 does not fit in this power envelope**, with the numbers to say so.
 
-That is a useful answer and it is one a spreadsheet does not produce, because a spreadsheet
-sized from a power budget produces a node count and stops. The node count is real. What it cannot
-do is the thing it was bought for.
+That is a useful answer, and a spreadsheet does not produce it: sized from a power budget, a
+spreadsheet gives a node count and stops. The node count is real. The cluster it describes cannot
+do the job it would be bought for.
 
-### The conversation that follows
+### Four ways out of a power budget that does not fit
 
 Once the model says the workload does not fit, there are four things to do and the model prices
 three of them.
@@ -76,15 +76,15 @@ property and sometimes a substation's.
 **Use less per machine.** Fewer, denser machines change watts per machine and capacity per
 machine together, and the model will say whether the trade is favourable.
 
-**Improve the building.** [ch15](#capex-opex-and-lifecycle)'s facility multiplier is a division,
-and problem 16.2 is worth doing for the framing alone: a multiplier quoted as a small surcharge is
-a substantial *share* of the bill. Halving the overhead is equivalent to finding machines that
-draw materially less, and is often cheaper.
+**Improve the building.** [ch15](#capex-opex-and-lifecycle)'s facility multiplier is a division.
+Problem 16.2 is worth doing for the framing alone: a multiplier quoted as a small surcharge is a
+substantial *share* of the bill. Halving the overhead is equivalent to finding machines that draw
+materially less, and is often cheaper.
 
-**Want less.** Reduce retention, sample harder, accept a lower service level. This is the one
-nobody proposes in a sizing meeting and it is frequently the right answer.
+**Want less.** Reduce retention, sample harder, accept a lower service level. Nobody proposes
+this in a sizing meeting, and it is frequently the right answer.
 
-### Why power is the line that behaves differently
+### Why power is not a price like the others
 
 Every other cost in [ch15](#capex-opex-and-lifecycle) is a price: negotiable, comparable, subject
 to a discount. Energy is physics with a price attached.
@@ -96,9 +96,8 @@ The things that move the energy bill are a count of machines, a draw per machine
 multiplier and a tariff. Three of the four are properties of hardware and buildings rather than of
 contracts, and the one that is a price is set by a market nobody in the room influences.
 
-And it is the only cost line that is simultaneously a **constraint**. Nobody is told they may not
-spend more on drives; they are regularly told the rack has no more power. That is what makes this
-chapter necessary rather than a footnote to the last one.
+Energy is also the only cost line that is simultaneously a **constraint**. Nobody is told they
+may not spend more on drives; they are regularly told the rack has no more power.
 
 ### A note on carbon
 
@@ -110,9 +109,8 @@ accounting decision rather than a physical one. This book produces the kilowatt-
 the part it can defend. Multiplying them is somebody else's judgement, and the multiplier is where
 all the disagreement is.
 
-What is worth saying is that energy price and carbon price move together
-([ch14](#correlation-and-convergence)), so a model that added a carbon line and drew it
-independently would be understating the range of the total.
+Energy price and carbon price move together ([ch14](#correlation-and-convergence)), so a model
+that added a carbon line and drew it independently would understate the range of the total.
 
 ## What this cannot tell you
 
@@ -122,8 +120,8 @@ usually the same one. This chapter takes one number; getting the right one is a 
 whoever runs the building.
 
 **What a machine really draws.** The model uses a typical figure under load, marked as a vendor's
-claim. Draw varies with workload, with ambient temperature, and with how full the drives are — and
-the number that matters for an allocation is a sustained peak rather than a typical.
+claim. Draw varies with workload, with ambient temperature, and with how full the drives are. The
+number that matters for an allocation is a sustained peak rather than a typical figure.
 
 **Anything about the shape of the draw.** Power is billed on energy and constrained on peak. A
 cluster that idles overnight and saturates at noon has an energy bill of one shape and a capacity

@@ -41,9 +41,8 @@ like rigour.
 
 ### Four things that could be wrong, and the book can count two
 
-The split above is the one that matters, and it is worth drawing once more with the pieces named,
-because the book has been using all four of these for twenty chapters without ever putting them in
-one place.
+The split above is the one that matters, and it is worth making again with all four pieces named.
+The book has been using them for twenty chapters without ever putting them in one place.
 
 **A measurement wobbles.** A measured constant has a standard error, and it is as likely to be
 high as low ([ch03](#where-the-numbers-come-from)). This is the smallest of the four and the only
@@ -66,10 +65,9 @@ model of the world, not an unlucky draw from this one
 **The model is the wrong shape.** This chapter. Not in the interval, not in a scenario, not
 anywhere — because nothing in the file knows the term is missing.
 
-The useful thing about naming them is what it says about a wide interval. A wide interval is a
-report about the first two. It is silent about the third, which is a modelling decision somebody
-took, and it is silent about the fourth, which is a modelling decision nobody knew they were
-taking.
+Naming them says what a wide interval is and is not. A wide interval is a report about the first
+two. It is silent about the third, which is a modelling decision somebody took, and silent about
+the fourth, which is a modelling decision nobody knew they were taking.
 
 ### The book's own example, on a published page
 
@@ -91,8 +89,8 @@ It is also missing an entire chain, because nobody has measured spans per reques
 ```
 
 This one is visible, because the DSL happens to have a node for the missing thing and the build
-marks it. That is the *easy* case, and it is on a published page precisely so the hard case has
-something to be compared against.
+marks it. That is the *easy* case. It is on a published page so you have something to compare the
+hard case against.
 
 The hard case is a chain nobody thought of at all. It has no node, so there is nothing to mark, no
 box to render, and no way for the model to know it is incomplete. The output is a number with an
@@ -114,7 +112,7 @@ inputs are uncertain about. It is the only defence available and it is a weak on
 
 ### What actually works
 
-Nothing automatic. Four things that are not automatic:
+Nothing automatic. Four that are not:
 
 **Compare against an invoice.** The strongest test available. A model of something that already
 exists can be checked against what it actually cost, and that number is a fact the model did not
@@ -125,7 +123,7 @@ is outside the model.
 category is absent. The storage model has no line for rack space, cross-connects, backup, or the
 migration that fills the cluster. Each of those is obvious once named and invisible until.
 
-**Check the dimensions of the answer.** A total that is too round, a unit cost that is
+**Distrust an answer that is too neat.** A total that is too round, a unit cost that is
 suspiciously close to a supplier's headline price, a utilisation that is exactly what somebody
 hoped — each is a reason to look for the term that is missing rather than to celebrate.
 
@@ -138,17 +136,17 @@ produced both.
 Problem 20.1 is the first trap. An observation falls outside the interval. Is the model refuted?
 
 Almost certainly not, on one observation — a 90% interval is **supposed** to be missed one time in
-ten, and a rule that rejects a model on a single miss rejects a correct model roughly whenever it
-is correct. Deciding what would count as evidence is harder than it looks and the problem makes
+ten. A rule that rejects on a single miss will therefore reject a correct model sooner or later,
+and the more observations you make the surer it becomes. Deciding what would count as evidence is harder than it looks and the problem makes
 you state a rule rather than react.
 
 Problem 20.2 is the second trap, and it is the one that gets shipped. The model disagrees with
 reality, so make the model vaguer until it stops disagreeing. Widen the inputs. The observation
 lands inside, everyone relaxes.
 
-Measure what that costs and it is unambiguous: the interval grows until the model can no longer
-tell two designs apart, which is the only thing it was for. The median does not move — so the
-headline number is unchanged and only the doubt has grown, which is why it passes review.
+Measure what that costs and the answer is unambiguous: the interval grows until the model can no
+longer tell two designs apart, which is the only thing it was for. The median does not move — so
+the headline number is unchanged and only the doubt has grown, which is why it passes review.
 
 **A model that cannot be wrong has stopped being able to be useful.** Widening is how a model
 becomes unfalsifiable, and an unfalsifiable model is a very expensive way of writing down what
@@ -170,9 +168,9 @@ something outside the model and the fourth needs somebody outside the team, whic
 of the limitation: **a model cannot audit itself**, and every technique that works is one that
 brings in information the model did not have.
 
-**When to stop looking.** There is no test that says a model is complete. What there is, is a
-model that has been compared against reality at least once — and a model that never has is a model
-whose structure nobody has checked, however good its interval looks.
+**When to stop looking.** There is no test that says a model is complete. There is only a model
+that has been compared against reality at least once, and a model that never has is a model whose
+structure nobody has checked, however good its interval looks.
 
 ## Problems
 
@@ -196,10 +194,9 @@ python3 -m pytest tests/the_missing_node/test_problem_2_widening.py
 
 ## Where to go next
 
-[ch21](#a-tco-for-finance) is the last chapter of the argument, and this one is its
-prerequisite: the honest
-presentation of a total includes what the model does not contain, and saying so out loud is harder
-than any of the arithmetic that came before it.
+[ch21](#a-tco-for-finance) is the last chapter of the argument, and this one is its prerequisite:
+an honest presentation of a total includes what the model does not contain, and saying so out loud
+is harder than any of the arithmetic that came before it.
 
 [ch14](#correlation-and-convergence) has the exercise where an invoice refutes a model, if you
 skipped it.

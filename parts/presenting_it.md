@@ -1,10 +1,10 @@
 ---
-title: "Part VII — Presenting it"
-short_title: "Part VII — Presenting it"
+title: "Part VII — Presenting an interval"
+short_title: "Part VII — Presenting an interval"
 ---
 
 (part-presenting-it)=
-# Part VII — Presenting it
+# Part VII — Presenting an interval
 
 > How do you hand an interval to somebody who asked for a number?
 

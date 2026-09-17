@@ -27,8 +27,7 @@ Once they are all cells in the same column, none. That is the problem.
 
 ### Three claims, wearing the same clothes
 
-Every input in this book declares which of three things it is. The gap between the first two is
-the one that costs money.
+Every input in this book declares which of three things it is.
 
 **`fact`** — traceable to something. A stamped measurement, an invoice, a published specification.
 The build refuses a `fact` whose source cites nothing, because an assumption wearing a better label
@@ -48,12 +47,10 @@ Here is the census of the observability model:
 ```{include} _generated/where-the-numbers-come-from-provenance.md
 ```
 
-The tally at the bottom is the honest summary of any model, and of most models it is not
-flattering. That is fine. What is not fine is not knowing.
+The tally at the bottom is the honest summary of any model, and for most models it is not
+flattering. That is fine. Not knowing is not.
 
 ### A measured constant is not a fact about the world
-
-This is the idea the rest of the book leans on hardest.
 
 A compression ratio is not a property of compression. It is a property of *some data* and *some
 software at some version*, and it will move when either changes. So will bytes per sample, spans
@@ -64,9 +61,9 @@ their own node kind, and every one of them carries the implementation it belongs
 ```
 
 Read the last column. One of those constants was produced by an encoder that lives in this
-repository — not any product's, this book's, byte-aligned and therefore worse than a production
-format that packs bits. The figure is correct and it is about that encoder. Anybody who copied it
-into a model of a real system would be wrong by a factor nobody would ever find.
+repository: this book's own, byte-aligned, and therefore worse than a production format that packs
+bits. The figure is correct and it is about that encoder. Anybody who copied it into a model of a
+real system would be wrong by a factor nobody would ever find.
 
 The method is what transfers. The number does not.
 
@@ -83,7 +80,7 @@ The first two are cheap and the book is full of them. The third is refused on an
 not the declared one, because a throughput measured on a shared CI runner is indistinguishable
 from a real one once it is a number in a table.
 
-The fourth is the interesting one.
+The fourth cannot be checked by anybody at all.
 
 ### The target the build cannot check
 
@@ -106,8 +103,8 @@ knowable by watching a real system, and pretending otherwise would be worse than
 Two rows there say *not yet measured*. One needs a reference machine nobody has attached; the
 other needs somebody's instrumented application.
 
-What happens next is the part worth watching. The node has no value, so nothing downstream of it
-has a value either, and the state propagates down the graph without anybody marking anything:
+The node has no value, so nothing downstream of it has a value either, and the state propagates
+down the graph without anybody marking anything:
 
 ```{include} _generated/where-the-numbers-come-from-unmeasured.md
 ```
@@ -116,8 +113,8 @@ No placeholder. No estimate. No number borrowed from a different stack and quiet
 figures that depend on those constants are absent, and the box says which constants and what would
 close them.
 
-That is inconvenient, and the inconvenience is the feature. A placeholder is indistinguishable
-from a measurement after one copy-paste, and every organisation has a capacity plan built on one.
+That is inconvenient on purpose. A placeholder is indistinguishable from a measurement after one
+copy-paste, and every organisation has a capacity plan built on one.
 
 ### The rig, and why the book will not let you fake it
 
@@ -129,23 +126,23 @@ The machine this was written on refuses to produce that figure. So does CI. Not 
 reference machine and raises otherwise.
 
 An environment variable would have been easier and would have let anybody stamp a laptop timing as
-a reference measurement by typing four characters. The whole point of the target is that it cannot
-be done by accident.
+a reference measurement by typing four characters. A target you can set by accident is not worth
+having.
 
 ### What a measurement is worth
 
-One measurement is a number. The interesting question is how much it would move if you did it
-again, so every constant in this book is measured over several independently generated shards and
-reported as a mean with the standard error of that mean beside it.
+One measurement is a number. It says nothing about how far it would move if you did it again, so
+every constant in this book is measured over several independently generated shards and reported
+as a mean with the standard error of that mean beside it.
 
-That standard error becomes the measured node's uncertainty, and
-[ch13](#monte-carlo) propagates it through the model like any other. A constant stamped without
-one is claiming to have been measured exactly, and the build says so.
+That standard error becomes the measured node's uncertainty, and [ch13](#monte-carlo) propagates
+it through the model like any other. A constant stamped without one is claiming to have been
+measured exactly, and the build says so.
 
-It also tells you what more measuring would buy, which is usually less than people expect. The
-standard error falls as one over the square root of the count: halving it costs four times the
-work. Problem 3.2 is that arithmetic, and it is worth doing *before* agreeing to a measurement
-campaign rather than during one.
+A standard error also tells you what more measuring would buy, which is usually less than people
+expect. It falls as one over the square root of the count: halving it costs four times the work.
+Problem 3.2 is that arithmetic, and it is worth doing *before* agreeing to a measurement campaign
+rather than during one.
 
 ## What this cannot tell you
 
@@ -190,8 +187,8 @@ python3 -m pytest tests/where_the_numbers_come_from/test_problem_2_shards.py
 
 ## Where to go next
 
-[ch04](#peak-mean-and-growth) is the input that does the most damage in this book and is the
-hardest to measure at all: a growth rate is a claim about the future, and no amount of provenance
-discipline makes it one.
+[ch04](#peak-mean-and-growth) is about the input that does the most damage in this book and is
+the hardest to measure: a growth rate is a claim about the future, and no amount of provenance
+discipline turns one into a measurement.
 
 [ch13](#monte-carlo) is what to do with a standard error once you have one.

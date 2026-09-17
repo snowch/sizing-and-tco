@@ -11,7 +11,7 @@ short_title: "Appendix E · Storage model"
 
 | | |
 |---|---|
-| **Purpose** | Cost-shaped arithmetic, classified a sizing model, through every output the toolkit produces |
+| **Purpose** | Cost-shaped arithmetic, classified a sizing model, through every toolkit output |
 | **Model** | `models/storage_cluster/model.yaml` |
 | **Built from** | `storage_cluster-reference`, `storage_cluster-sized_for_growth` |
 :::
@@ -20,15 +20,15 @@ A generic scale-out storage cluster, sized from a stated workload and costed ove
 product is named and none is implied: what is on this page is a structure, and the numbers in it
 are placeholders for yours.
 
-This model is the book's **cost exemplar in shape and a sizing model by the rule**, and the gap
-between those two things is worth a paragraph. Almost all of it is accounting identity and physics
-— watts times hours times price, capital plus running cost over a horizon — which is the structure
-[the front matter](#preface) says sampling the inputs is sufficient for. But it carries one
-measured constant and two ceilings, so `scripts/verify-models.py` classifies it a sizing model and
-holds it to the stricter rules, and it is right to: the compression ratio belongs to a codec, and
-a cluster that runs out of space does not fail proportionally. A model is not a cost model because
-most of it looks like one. [Appendix F](#appendix-f-observability-model) is what it looks like
-when even the arithmetic stops being a chain.
+This model is the book's **cost exemplar in shape and a sizing model by the rule**. Almost all of
+it is accounting identity and physics — watts times hours times price, capital plus running cost
+over a horizon — which is the structure [the front matter](#preface) says sampling the inputs is
+sufficient for. But it carries one measured constant and two ceilings, so
+`scripts/verify-models.py` classifies it a sizing model and holds it to the stricter rules. That
+is the right call: the compression ratio belongs to a codec, and a cluster that runs out of space
+does not fail proportionally. A model is not a cost model because most of it looks like one.
+[Appendix F](#appendix-f-observability-model) shows what a model looks like when even the
+arithmetic stops being a chain.
 
 ## The graph
 
@@ -49,11 +49,10 @@ input's border says what it is claiming — solid for a fact, dashed for a vendo
 for an assumption. Arrows run from cause to effect, and every node sits immediately to the right
 of the last thing it depends on.
 
-Two things are worth reading off it directly. The graph is **wide at the left and narrow at the
-right**: two dozen quantities collapsing into a handful of answers, which is what makes a single
-wrong input so hard to spot downstream. And there are **two separate chains reaching the node
-count** — capacity and bandwidth — which is [ch10](#bandwidth-and-the-binding-constraint)'s whole
-subject.
+Read two things off it directly. The graph is **wide at the left and narrow at the right**: two
+dozen quantities collapsing into a handful of answers, which is what makes a single wrong input so
+hard to spot downstream. And **two separate chains reach the node count** — capacity and bandwidth
+— which is [ch10](#bandwidth-and-the-binding-constraint)'s whole subject.
 
 ## The outputs
 
@@ -93,9 +92,9 @@ that sinks you.
 ```
 
 Unit cost rather than total cost, because it is the figure that behaves least like people expect.
-A cluster bought for growth that then arrives is cheap per terabyte; the same cluster with the
-growth that did not arrive is expensive. The distribution carries both, and a single number
-carries neither.
+A cluster bought for growth that then arrives is cheap per terabyte; the same cluster is expensive
+if the growth never comes. The distribution carries both futures, and a single number carries
+neither.
 
 ## Where the inputs came from
 
@@ -116,9 +115,9 @@ The method transfers; the number does not. Point the runner at a sample of your 
 ```
 
 The left column buys what the point estimates recommend. The right buys for the growth case the
-model thinks is plausible but not expected. The difference in capital is a number; the difference
-in how often each ceiling breaks is a number; and the choice between them is a judgement somebody
-has to make and defend, which is [ch21](#a-tco-for-finance).
+model thinks is plausible but not expected. The difference in capital is a number, and so is the
+difference in how often each ceiling breaks. Choosing between them is a judgement somebody has to
+make and defend, which is [ch21](#a-tco-for-finance).
 
 ## Running it yourself
 
@@ -129,5 +128,5 @@ python3 scripts/render-figures.py                     # re-render every figure a
 python3 -m pytest tests/test_models.py                # the reference outputs, asserted
 ```
 
-Every figure on this page came from the first command. The second refuses a model that does not
-typecheck. The fourth is what stops any of it changing silently.
+Every figure on this page came from `bench.run_models`. `verify-models.py` refuses a model that
+does not typecheck, and `tests/test_models.py` is what stops any of it changing silently.

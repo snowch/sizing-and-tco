@@ -20,9 +20,9 @@ they need them. This page is the whole of it, in the order it is written, for a 
 to see that there is nothing else in it.
 
 There is no simulation framework underneath this and no statistics package beside it. numpy for
-arrays, one rational approximation for the inverse normal, and nothing else. That is not
-minimalism for its own sake: a reader who cannot see the sampler cannot check the interval, and
-an interval nobody can check is a decoration.
+arrays, one rational approximation for the inverse normal, and nothing else. The reason is not
+minimalism: a reader who cannot see the sampler cannot check the interval, and an interval nobody
+can check is decoration.
 
 ## The one idea
 
@@ -32,9 +32,9 @@ an interval nobody can check is a decoration.
 :end-before: ## What is deliberately absent
 ```
 
-Everything below is arrangement around that sentence. Each distribution needs exactly one
-function — the value at a given percentile — and sampling it is drawing percentiles at random and
-looking the values up.
+Each distribution needs exactly one function: the value at a given percentile. Sampling it is
+drawing percentiles at random and looking the values up. Everything below is arrangement around
+that.
 
 ## The seed
 
@@ -46,9 +46,9 @@ looking the values up.
 
 Every stamped result computed from a model records the seed that produced it, and
 `bench/stamp.py` refuses one that does not. An unseeded run is a measurement nobody can repeat,
-which is the thing this repository refuses everywhere else and would be strange to permit here.
-Where an experiment uses many seeds — the convergence table on this page uses one per replicate —
-what it records is the seed they are all derived from, and the rule that derives them.
+and this repository refuses those everywhere else. Where an experiment uses many seeds — the
+convergence table on this page uses one per replicate — the result records the seed they are all
+derived from, and the rule that derives them.
 
 ## The four percentile functions
 
@@ -82,8 +82,9 @@ asks for it again for a shape that is not here.
 ```
 
 Parameterised by two percentiles, not by the mean and standard deviation of the logarithm. Nobody
-has an intuition for the second. Everybody has one for the first: *I would be surprised if it were
-under this, or over that* is a sentence a person can actually say about a price.
+has an intuition for the mean of a logarithm. Everybody has one for percentiles: *I would be
+surprised if it were under this, or over that* is a sentence a person can actually say about a
+price.
 
 ### Normal
 
@@ -96,7 +97,7 @@ under this, or over that* is a sentence a person can actually say about a price.
 One job in this book: the measurement error of a `measured` node. It is the wrong default for a
 price, because it will happily go negative.
 
-### The registry
+## The registry
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -138,11 +139,11 @@ Two lines, and they are the two lines of the entire subject.
 :end-before: def correlate(
 ```
 
-This correction is the part that is easy to leave out and then hard to find. Inducing a
-correlation on *ranks* and then reading it back on *values* does not return the number you asked
-for — it comes back attenuated, by an amount that depends only on the coefficient. Ask for a
-strong correlation, measure the result, and it is visibly weaker. The fix is one line of
-trigonometry applied before the sort rather than an apology in the documentation afterwards.
+Inducing a correlation on *ranks* and then reading it back on *values* does not return the number
+you asked for. It comes back attenuated, by an amount that depends only on the coefficient: ask
+for a strong correlation, measure the result, and it is visibly weaker. This is the correction
+that is easy to leave out and hard to find afterwards, and the fix is one line of trigonometry
+before the sort rather than an apology in the documentation after it.
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -153,8 +154,8 @@ trigonometry applied before the sort rather than an apology in the documentation
 Iman–Conover @imanconover1982, which is short enough to read: build a reference sample with the
 correlation you want, rank it, and shuffle each input column into the same rank order. Every
 column keeps its own distribution exactly — every value that was drawn is still there — and only
-the *pairing* between columns changes. That is why it can be applied to all four shapes without
-knowing anything about them.
+the *pairing* between columns changes. That is why it works on all four shapes without knowing
+anything about them.
 
 ## Reading the answer
 
@@ -176,9 +177,9 @@ knowing anything about them.
 :end-before: #: Above this ratio
 ```
 
-The arithmetic of "enough", both ways round. It is the honest answer to a question people usually
-settle with a habit, and it is unforgiving: a factor of ten less wobble costs a hundred times the
-samples.
+The arithmetic of "enough", both ways round: the width you have at the draws you took, and the
+draws you need for the width you want. People usually settle this with a habit. The arithmetic is
+unforgiving — a factor of ten less wobble costs a hundred times the samples.
 
 ```{include} ../chapters/_generated/appendix-b-monte-carlo-module-convergence.md
 ```
@@ -200,17 +201,17 @@ the square root of ten per decade, because that is a property of how hard you lo
 :start-at: #: Above this ratio
 ```
 
-Counts and edges rather than the draws: a few dozen numbers a node instead of a hundred thousand,
-which is what makes it affordable for the interactive page to let a reader click **any** node and
-see its distribution, rather than only the outputs. Watching a narrow input turn into a wide
-output three steps down the chain is the fastest way to understand a sizing model, and it costs
-almost nothing to ship.
+Counts and edges rather than the draws: a few dozen numbers a node instead of a hundred thousand.
+That is cheap enough for the interactive page to let a reader click **any** node and see its
+distribution, not only the outputs. Watching a narrow input turn into a wide output three steps
+down the chain is the fastest way to understand a sizing model, and it costs almost nothing to
+ship.
 
 The bins are equal in width unless the quantity spans orders of magnitude, in which case they are
 equal in *ratio* and the payload says so. A queue near saturation does this: half the draws land
 in the first equal-width bin and the picture becomes a spike beside an empty page. The figure
-reads that flag and labels its axis accordingly, which is [ch05](#littles-law)'s concurrency
-figure.
+reads that flag and labels its axis accordingly; [ch05](#littles-law)'s concurrency figure is one
+that does.
 
 ## What is deliberately absent
 
@@ -231,9 +232,9 @@ in the model file where a reviewer can argue with it.
 
 ## The inverse normal
 
-Two of the four shapes need the inverse normal CDF, and there is no closed form. `sizing/normal.py`
-is Acklam's rational approximation @acklam2003inverse, implemented here and checked against
-Python's own `statistics.NormalDist` across the range:
+Two of the four shapes need the inverse normal CDF, and there is no closed form.
+`sizing/normal.py` is Acklam's rational approximation @acklam2003inverse, implemented here and
+checked against Python's own `statistics.NormalDist` across the range:
 
 ```{literalinclude} ../sizing/normal.py
 :language: python

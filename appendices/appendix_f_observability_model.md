@@ -19,12 +19,12 @@ short_title: "Appendix F · Observability model"
 Metrics, logs and traces, for an estate stated in [ch02](#what-a-workload-is)'s terms. Vendor
 neutral: nothing on this page names a product, and the structure is what transfers.
 
-This is the **sizing exemplar**, and it is here to show what
-[Appendix E](#appendix-e-storage-model) could not. Three multiplicative chains hang off the same
-few roots, so they move together whether or not anybody says so. Label cardinality is a product of
-uncertain counts and therefore dominates everything downstream of it. The control knobs are
-sampling and retention rather than money. Three tiers — ingest, store and query — carry four
-ceilings between them, and no single number summarises them.
+This is the **sizing exemplar**: it shows what [Appendix E](#appendix-e-storage-model) could not.
+Three multiplicative chains hang off the same few roots, so they move together whether or not
+anybody says so. Label cardinality is a product of uncertain counts and therefore dominates
+everything downstream of it. The control knobs are sampling and retention rather than money. Three
+tiers — ingest, store and query — carry four ceilings between them, and no single number
+summarises them.
 
 And it has a hole in it, deliberately left open.
 
@@ -63,9 +63,9 @@ all four already moved.
 :width: 100%
 ```
 
-The unmeasured constants are drawn hollow, and everything downstream of them is dimmed. Follow
-the dimmed nodes and you have the answer to "what would measuring this one thing unlock" without
-anybody having to write it down.
+The unmeasured constants are drawn hollow, and everything downstream of them is dimmed. The
+dimmed nodes are the answer to "what would measuring this one thing unlock", and nobody had to
+write that answer down.
 
 ## The three chains
 
@@ -75,9 +75,9 @@ anybody having to write it down.
 Metrics are cheap in bytes and expensive in series. Logs are the reverse. Traces would be
 somewhere in between, and the model declines to guess.
 
-The active series count is the figure to sit with. It is driven by a cardinality node that is the
-product of three uncertain counts, and a product of uncertain things is far more uncertain than
-any of them:
+Look hardest at the active series count. A cardinality node drives it, and that node is the
+product of three uncertain counts — a product of uncertain things is far more uncertain than any
+of them:
 
 ```{image} ../chapters/_figures/appendix-f-observability-model-cardinality.svg
 :alt: Label cardinality as a distribution — a product of uncertain counts
@@ -96,8 +96,8 @@ queueing, where response time climbs long before anything is busy
 capacity you were using ([ch11](#headroom-and-failure-domains)). They only look alike because they
 are both percentages.
 
-Two of the three are computed from an incomplete total. The `because` on each says so, and
-[ch20](#the-missing-node) is about what it costs to forget.
+Two of the three that can be computed rest on an incomplete total. The `because` on each says so,
+and [ch20](#the-missing-node) is about what it costs to forget.
 
 ## What moves the answer
 
@@ -109,9 +109,9 @@ Two of the three are computed from an incomplete total. The `because` on each sa
 ```{include} ../chapters/_generated/appendix-f-observability-model-tornado.md
 ```
 
-The accidental label — the one nobody planned, added during an incident and never removed — is
-at the top of it. That is the chapter [ch08](#regime-changes) is for, demonstrated rather than
-warned about.
+The accidental label — the one nobody planned, added during an incident and never removed — is at
+the top of the tornado. [ch08](#regime-changes) is the chapter about that, and here it is
+demonstrated rather than warned about.
 
 ## Turning the knobs
 
@@ -122,10 +122,10 @@ The right-hand column doubles the scrape interval, cuts metric retention by most
 a tenth of the log lines and samples one trace in a hundred. Ingest and storage fall a long way.
 
 **The query ceiling does not move at all.** Not by a little — not at all, because none of the four
-knobs touches cardinality, and cardinality is what a query has to walk past. That is the most
-useful thing on this page: the controls a platform gives you operate on the chains that were
-already affordable, and the input that actually decides the size of the system is not one of them.
-Fixing it is a conversation with whoever added the label.
+knobs touches cardinality, and cardinality is what a query has to walk past. The controls a
+platform gives you operate on the chains that were already affordable, and the input that decides
+the size of the system is not one of them. That is the most useful thing on this page. Fixing
+cardinality means a conversation with whoever added the label.
 
 ## Where the inputs came from
 

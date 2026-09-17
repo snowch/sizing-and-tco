@@ -16,11 +16,11 @@ short_title: "Appendix C · Distributions"
 :::
 
 Four shapes. Choosing between them is the most consequential editorial act in building a model,
-and it is usually done by whichever one the tool offered first.
+and most models settle it by taking whichever shape the tool offered first.
 
 Each section below says the same three things: what the shape is for, what it *asserts* about the
-world, and the specific way it will mislead you. The third is the one worth reading. A
-distribution is a claim, and every claim of this kind is wrong in a direction.
+world, and the specific way it will mislead you. Read *how it lies* first. A distribution is a
+claim, and every claim of this kind is wrong in a direction.
 
 ```{image} ../chapters/_figures/appendix-c-distributions-shapes.svg
 :alt: The four shapes, drawn from the percentile functions the sampler actually uses
@@ -45,14 +45,14 @@ figures. A retention window somebody will pick from a range at a meeting you are
 parameter with a documented minimum and maximum and no reason to prefer the middle.
 
 **What it asserts.** That every value between the bounds is exactly as likely as every other, and
-that nothing outside them can happen. The first half is a strong claim that reads as a weak one —
+that nothing outside them can happen. Equal likelihood is a strong claim that reads as a weak one:
 it looks like saying "I do not know", and it is actually saying "the extremes are as likely as the
 middle".
 
 **How it lies.** By putting mass at the ends where almost nothing real has any. Used as the
 default for a quantity that has a typical value, it widens the interval with futures nobody
-believes in, which makes the model look cautious and makes it worse: every output interval is
-inflated by the same wrong assumption and the ordering of a tornado can change.
+believes in. That looks cautious and is not: every output interval is inflated by the same wrong
+assumption, and the ordering of a tornado can change.
 
 **Use it when the bounds are the claim.** Not when they are the only two numbers you happen to
 have.
@@ -69,7 +69,7 @@ have.
 the most it could be, and the one they would bet on. Most sizing inputs are this and nothing more.
 
 **What it asserts.** That the bounds are hard, and that the density falls linearly away from the
-mode. The second is arbitrary and mostly harmless. The first is not.
+mode. The straight sides are arbitrary and mostly harmless. The hard bounds are not.
 
 **How it lies.** The bounds came from somebody's memory, and the shape says nothing outside them
 can occur — so the model cannot produce the case where the peak hour is twice anything anyone has
@@ -97,8 +97,8 @@ price, both are usually right.
 **How it lies.** It has no upper bound, and the upper tail is longer than it looks. A model with
 several of these multiplied together produces an output whose 95th percentile is far above
 anything the inputs individually suggested, and that output is *also* lognormal whether or not
-anybody chose it — which is why so many sizing answers come out skewed, and why the mean of a
-sizing model is usually a worse summary than its median.
+anybody chose it. That is why so many sizing answers come out skewed, and why the mean of a sizing
+model is usually a worse summary than its median.
 
 **Use it for anything with a price on it**, and read the median rather than the mean.
 
@@ -136,23 +136,22 @@ In order:
    declare it a control knob and run scenarios instead of sampling it
    ([ch12](#the-sizing-model)).
 
-And the rule underneath all of them: **the shape is part of the model, so it belongs in the model
-file with a source attached**. Every input in all three of this book's models that carries a
+One rule sits under all of them: **the shape is part of the model, so it belongs in the model
+file with a source attached**. In all three of this book's models, every input that carries a
 distribution says in its `source` which shape it has and why — that a price cannot go negative,
 that a count has a hard maximum, that a fit this weak should not be given an upper bound by a
 shape. That sentence is what a reviewer argues with; without it the distribution is an assertion
 with a nice picture.
 
 `scripts/verify-models.py` refuses an input that is sampled and does not name its shape. The check
-is mechanical — it looks for the word — and a mechanical check cannot tell a reason from a
-formality. What it can do is make the omission impossible, which is the same bargain as the rule
-that a `fact` must cite something, and it was added after an audit of this book's own models found
-most of them silent.
+is mechanical — it looks for the word — so it cannot tell a reason from a formality. What it can
+do is make the omission impossible, which is the same bargain as the rule that a `fact` must cite
+something. It was added after an audit of this book's own models found most of them silent.
 
 ## Inputs that move together
 
-A shape describes one input on its own. Most models have at least two inputs that do not move on
-their own, and assuming they do is not a neutral simplification:
+A shape describes one input on its own. Most models have at least two inputs that move together,
+and pretending otherwise is not a neutral simplification:
 
 ```{include} ../chapters/_generated/appendix-c-distributions-correlation.md
 ```
@@ -160,9 +159,9 @@ their own, and assuming they do is not a neutral simplification:
 Every row is positive: assuming independence made every interval narrower. Narrower in the
 direction that gets a plan approved, which is the direction to be suspicious of.
 
-The mechanism is worth carrying around. Independent inputs partly cancel — one is high while
-another is low — and that cancellation is what makes the interval narrow. Correlated inputs push
-the same way at the same time, so the cancellation does not happen. A model that declares no
+Independent inputs partly cancel — one is high while another is low — and that cancellation is
+what makes the interval narrow. Correlated inputs push the same way at the same time, so the
+cancellation does not happen. That mechanism is worth carrying around. A model that declares no
 correlations is claiming that all of its inputs are strangers, and in a sizing model fed by one
 growth rate they are usually relatives.
 
@@ -180,12 +179,13 @@ thing the model was for. They belong in *What this cannot tell you*, not in a pa
 ([ch20](#the-missing-node)).
 
 **Mixtures.** A mixture — two regimes with a probability of each — would be easy to add, and is
-deliberately absent. When a quantity has two regimes, the honest model has a node for which regime it is in and
-a scenario for each — a number that is bimodal is usually two decisions wearing one name.
+deliberately absent. When a quantity has two regimes, the honest model has a node for which
+regime it is in and a scenario for each: a number that is bimodal is usually two decisions
+wearing one name.
 
 **Empirical resampling.** Drawing from observed history rather than from a shape. It is a good
-technique and it needs history, which is the thing most sizing exercises do not have. Where this
-book has data it measures a constant and states its uncertainty; where it does not, it says so.
+technique that needs history, and most sizing exercises have none. Where this book has data it
+measures a constant and states its uncertainty; where it does not, it says so.
 
 **Fitted distributions.** Deliberate, and the reason is in
 [Appendix B](#appendix-b-monte-carlo-module): a function that reads your data and picks a shape

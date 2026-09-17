@@ -1,10 +1,10 @@
 ---
-title: "Part VI — Sensitivity"
-short_title: "Part VI — Sensitivity"
+title: "Part VI — What the answer rests on"
+short_title: "Part VI — What the answer rests on"
 ---
 
 (part-sensitivity)=
-# Part VI — Sensitivity
+# Part VI — What the answer rests on
 
 > Given a wide interval, what is the one thing to go and do about it?
 

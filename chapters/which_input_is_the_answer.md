@@ -1,10 +1,10 @@
 ---
-title: "Which input is the answer?"
-short_title: "ch19 Which input is the answer?"
+title: "Which input to go and measure"
+short_title: "ch19 Which input to go and measure"
 ---
 
 (which-input-is-the-answer)=
-# ch19 · Which input is the answer?
+# ch19 · Which input to go and measure
 
 :::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
@@ -20,16 +20,16 @@ short_title: "ch19 Which input is the answer?"
 
 Which input should you go and measure first, and how would the model tell you?
 
-An interval is a description of a problem. This chapter is the only actionable thing you can do
-with one.
+An interval describes a problem. Choosing which input to go and measure is the only actionable
+thing you can do with one.
 
 ## The material
 
 ### More samples never help
 
-Worth restating, because it is the instinct. [ch14](#correlation-and-convergence) established that
-a wide interval is not sampling noise — the interval is a property of the model's inputs, and more
-draws locate it more precisely rather than narrowing it.
+The instinct is to run more samples, which is why [ch14](#correlation-and-convergence) is worth
+restating: a wide interval is not sampling noise. The interval is a property of the model's
+inputs, and more draws locate it more precisely rather than narrowing it.
 
 So there are exactly two things that narrow an interval. **Measure something**, and replace a guess
 with a figure that has a standard error. Or **decide something**, and replace an uncertainty with a
@@ -48,10 +48,9 @@ the model has dozens of uncertain inputs and only one of them matters.
 Each bar swings one input across the middle eighty per cent of its own distribution, with
 everything else held still. Problem 19.1 is building it.
 
-One detail in that construction matters more than it looks: the swing comes from the input's
-**declared distribution**, not from its slider range. Otherwise an input somebody gave a generous
-slider gets a long bar for free, and the chart measures somebody's UI choices rather than the
-model.
+The swing comes from the input's **declared distribution**, not from its slider range. Otherwise
+an input somebody gave a generous slider gets a long bar for free, and the chart measures
+somebody's UI choices rather than the model.
 
 The ordering is the useful part. It answers "what should I go and measure first", and that is the
 only question a tornado answers well.
@@ -66,8 +65,8 @@ only question a tornado answers well.
 ```{include} _generated/which-input-is-the-answer-service.md
 ```
 
-Two charts and a table, because the third is short enough to read as one. Look at what is at the
-top of each.
+Two charts and a table, because the third is short enough to read as a table. Look at what is at
+the top of each.
 
 **Cardinality**, in the observability model — a product of uncertain counts, whose uncertainty
 compounds ([ch08](#regime-changes)).
@@ -110,7 +109,7 @@ and neither chart will say so.
 
 ### What one-at-a-time misses
 
-The sharper version of the same limitation, and problem 19.2 measures it.
+Problem 19.2 measures a sharper version of the same limitation.
 
 Swing input A alone. Swing B alone. Swing both. If the model were additive in them, the third
 would be the sum of the first two. In a model built out of multiplications it is not — and the
@@ -121,28 +120,27 @@ are a ranking, and that is all they are. Treating the bar lengths as shares of t
 mistake the chart invites, and a variance-based decomposition — which does answer that question —
 is not in this toolkit and is noted in `NEXT_STEPS.md`.
 
-### And what would that buy?
+### What the measurement would be worth
 
-A ranking is not a quantity, and the question that follows a ranking is the one somebody has to
-approve: *what would measuring it be worth?*
+A ranking is not a quantity. Somebody has to approve the measurement, and they will ask what it
+would buy.
 
-That is computable, and the computation is the simplest thing that means anything. Take one
-uncertain input, pin it at its median — pretend somebody went and measured it, perfectly — and
-re-sample the whole model. What comes back is the interval the model would report if that one
-thing were known.
+That is computable, and the computation is simple. Take one uncertain input, pin it at its
+median — pretend somebody went and measured it, perfectly — and re-sample the whole model. What
+comes back is the interval the model would report if that one thing were known.
 
 ```{include} _generated/which-input-is-the-answer-worth-storage.md
 ```
 
 The last column is a **ceiling**. No real measurement is perfect: one leaves a standard error
 behind, that error propagates like any other ([ch03](#where-the-numbers-come-from)), and the
-interval closes by less than this. Which is exactly what makes the figure useful — a small number
-in that column says the measurement is not worth commissioning *however well it goes*, and that
-is a decision somebody can take before spending anything.
+interval closes by less than the column says. That bound is what makes the column useful. A small
+number in it says the measurement is not worth commissioning *however well it goes*, and somebody
+can take that decision before spending anything.
 
-Read down it. One input is worth most of the interval and everything below it is rounding. A
-campaign to pin down *support rate* would be a quarter's work for a result nobody could see on a
-chart.
+Read down the column. One input is worth most of the interval and everything below it is
+rounding. A campaign to pin down *support rate* would be a quarter's work for a result nobody
+could see on a chart.
 
 Then the same experiment on the other model, where the answer has a different shape:
 
@@ -154,7 +152,7 @@ label values somebody could go and query this afternoon. The other is a growth r
 belongs to no target and cannot be measured at all ([ch04](#peak-mean-and-growth)) — the only
 thing available for it is to *decide* it, by policy, and accept the flexibility that costs.
 
-Now the two rows at the bottom of that table, which are the ones worth taking away.
+Now the two rows at the bottom of that table.
 
 **The measured constants buy nothing.** Bytes per sample and bytes per log line were measured over
 a declared corpus, with a standard error, by the most careful machinery in this book — and
@@ -164,13 +162,12 @@ better, is work that would produce a nicer provenance and the same interval.
 
 **And the rows do not add up.** They come to rather more or rather less than the whole, depending
 on the model, and they are not shares of anything. Uncertainty in a chain of multiplications does
-not divide between the inputs — which is the same fact problem 19.2 measures, arriving from the
-other direction and harder to argue with.
+not divide between the inputs. Problem 19.2 measures the same fact from the other direction, where
+it is harder to argue with.
 
 ### After you measure it
 
-The point of all this is to change something. Which means the honest end of a sensitivity analysis
-is a plan:
+The point of running a sensitivity analysis is to change something, so it ends in a plan:
 
 - **measure it** — turn an assumption into a measured constant with a standard error, which is
   [ch03](#where-the-numbers-come-from)'s discipline and problem 3.2's arithmetic for how much
