@@ -33,6 +33,10 @@ cluster has already been chosen. This is what it costs.
 Read the two headline rows before anything else. Over the declared horizon, the capital cost and
 the running cost are roughly the same size — and one of them was argued about.
 
+Capital cost — *capex* — is what you pay once. Running cost — *opex* — is what you pay every
+month for as long as you keep it. Those are the words the tables use and the words the room will
+use, and the split between them is not an accounting formality.
+
 Capital arrives as a single invoice with somebody's signature on it. It gets a meeting, a
 comparison, a negotiation. Running cost arrives in pieces, monthly, from several directions, and
 is nobody's decision in particular: an electricity bill, a support renewal, a fraction of a

@@ -86,6 +86,13 @@ worth ten minutes now, because this is the chapter where it costs money.
 ```{include} _generated/capacity-outputs.md
 ```
 
+Two rows need a word before they mean anything. *Fill level at horizon* is how full the cluster is
+at the end of the period it was bought for, as a fraction of what it can hold: one is full, and an
+interval reaching past one is the model saying that in some futures the data does not fit — the
+arithmetic carries on past the point the disks stop. And *nodes purchased* shows no interval
+because it is not a prediction. It is a decision somebody took, and the rest of the table is what
+the model says about it.
+
 The interval on the node count spans most of an order of magnitude, and almost all of that is the
 growth rate from [ch04](#peak-mean-and-growth) rather than anything in this chapter's chain. The
 capacity arithmetic is the well-understood part of the problem. What it is applied to is not.

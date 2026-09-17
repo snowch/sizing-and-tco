@@ -74,7 +74,9 @@ the middle ninety per cent of this quantity spans more than two decades. Drawn a
 a spike against an empty page.
 
 Then look at the right-hand end, where a stack of samples piles up against a wall. That is
-[ch06](#queueing-and-the-knee) arriving early. Past the utilisation this model is willing to admit
+[ch06](#queueing-and-the-knee) arriving early — *utilisation* being the work arriving divided by
+the work the machines could do, busy capacity over capacity owned. Past the utilisation this model
+is willing to admit
 to, it stops computing a residence time and clamps — so every sample beyond that point lands in
 the same place, and the pile is the model saying *I do not describe anything out here* rather than
 the tier doing something interesting.
