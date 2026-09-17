@@ -37,6 +37,29 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def _site() -> str:
+    """Where the published book lives, derived rather than typed.
+
+    A link written ``/models/storage_cluster-reference.html`` resolves on the site and is dead on
+    paper: a PDF has no site root, so the browser printing it resolves the path against the local
+    filesystem. Five links in the book are written that way, and a reader holding the PDF is
+    exactly the reader most likely to want the one that says "run it in your browser".
+
+    The host comes from ``myst.yml``'s ``github``, so it cannot disagree with the repository and
+    would follow it if the repository moved.
+    """
+    config = yaml.safe_load((ROOT / "myst.yml").read_text())
+    owner, repo = config["project"]["github"].rstrip("/").split("/")[-2:]
+    return f"https://{owner}.github.io/{repo}"
+
+
+def _absolute(url: str) -> str:
+    """A site-root link, made to work for somebody holding the PDF."""
+    return _site() + url if url.startswith("/") else url
+
+
 sys.path.insert(0, str(ROOT))
 
 from bench.stamp import shown  # noqa: E402
@@ -135,7 +158,7 @@ def render(node: dict) -> str:
         tag = "th" if node.get("header") else "td"
         return f"<{tag}>{children()}</{tag}>"
     if kind == "link":
-        return f'<a href="{html.escape(str(node.get("url", "")))}">{children()}</a>'
+        return f'<a href="{html.escape(_absolute(str(node.get("url", ""))))}">{children()}</a>'
     if kind == "crossReference":
         # Rendered as its own text: a PDF has no site to link into, and the chapter label the
         # reference carries is what a reader on paper needs anyway.
