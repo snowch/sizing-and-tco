@@ -50,22 +50,24 @@ it: each one can be wrong in the same direction as the others, and the answer st
 than any single input does.
 
 So the honest answer to *how big* is not a number. It is a range, with some values in it far more
-likely than others. Here is that range for a real sizing problem — this book's worked example, a
-storage cluster, first as the single number and then with every input allowed to vary as far as it
-honestly might:
+likely than others. You get one by doing the arithmetic over and over — each time picking a
+different value for every input, from the spread that input honestly has — and keeping every
+answer that comes out. Here is that for a real sizing problem, this book's worked example, a
+storage cluster: the single number first, and then the answers:
 
 ```{include} chapters/_generated/preface-storage-outputs.md
 ```
 
 Read the first row. Its point estimate is a real number, correctly computed — and beside it the
-**90% interval**, the range nine runs in ten landed in, spans most of an order of magnitude.
-Nothing in the first calculation was wrong. It simply had no way to mention that it was a bet.
+**90% interval**, the range nine of those answers in ten fell into, spans most of an order of
+magnitude. Nothing in the first calculation was wrong. It simply had no way to mention that it was
+a bet.
 
 Why nine in ten, rather than the smallest and largest answers? Because the smallest and largest
-are not properties of the problem. They are properties of how many times you ran it: run it ten
-times more and the largest gets larger, every time, because you gave the unlucky combinations
-more chances to turn up. The ends of a run drift. The middle settles, and settles quickly enough
-to be worth quoting. Ninety per cent is then a convention, and this book uses the same one
+are not properties of the problem. They are properties of how many answers you collected: collect
+ten times as many and the largest gets larger, every time, because you gave the unlucky
+combinations more chances to turn up. The ends drift. The middle settles, and settles quickly
+enough to be worth quoting. Ninety per cent is then a convention, and this book uses the same one
 everywhere so that two figures can be compared.
 
 Under the table is an italic line, and one appears under every table in this book. It is a link to
@@ -80,7 +82,7 @@ link is there so you can check the table instead of trusting it — and the name
 :width: 100%
 ```
 
-Each bar counts how many of those runs landed on a given five-year total — the table's second
+Each bar counts how many of those answers landed on a given five-year total — the table's second
 row, drawn — and the red line is where the single-number answer falls.
 
 The method that produced the interval is [ch12](#monte-carlo)'s, not this page's. It is no use to
