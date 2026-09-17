@@ -29,11 +29,14 @@ this, and it is what decides whether anybody should act on your number.
 
 ## Why point estimates lie
 
-Not because they are wrong. Because they are *silent*.
+A **point estimate** is the number you get by choosing one value for every input and doing the
+arithmetic once. It is what a spreadsheet gives you, and it is what almost every sizing
+conversation is about. The tables in this book put it in a column of that name.
 
-Take a storage cluster with a stated workload and size it the usual way: expected value of every
-input, multiply along the chain, read off the answer. The model in this book does exactly that,
-and recommends a node count. Buy that many.
+Point estimates do not lie by being wrong. They lie by being *silent*.
+
+Take a storage cluster with a stated workload and size it that way. The model in this book does
+exactly that, and recommends a node count. Buy that many.
 
 Now let every input be as uncertain as it honestly is — the growth rate is a forecast, the
 compression ratio was measured on somebody else's data, the price is a quote that expires — and
@@ -43,8 +46,9 @@ ask the same model the same question. It no longer gives one answer.
 ```
 
 Read the *nodes the model recommends* row. Its point estimate is a real number, correctly
-computed, and the interval beside it spans most of an order of magnitude. Nothing in the
-first calculation was wrong. It simply had no way to mention that it was a bet.
+computed. Beside it is the **90% interval** — the range that nine futures out of ten fall inside
+— and it spans most of an order of magnitude. Nothing in the first calculation was wrong. It
+simply had no way to mention that it was a bet.
 
 The italic line under that table appears under every one in this book, and it is a link. It names
 the stamped result the figure was rendered from — `storage_cluster-reference` is the storage model
