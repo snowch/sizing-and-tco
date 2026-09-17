@@ -151,6 +151,26 @@ CHAPTER_LINK = re.compile(r"\[(ch\d+)([^\]]*)\]\(#([a-z-]+)\)")
 TITLED = " · "
 
 
+#: A repository path as a page writes it: backticked, with a slash and an extension this book
+#: actually uses. Deliberately narrow — `USD/TB/month` is a unit, not a file.
+QUOTED_PATH = re.compile(r"`([A-Za-z0-9_./-]+\.(?:py|js|yaml|yml|json|md|sh|toml|txt|css))`")
+
+
+@pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
+def test_a_page_does_not_name_a_file_that_is_not_there(path):
+    """A page telling a reader to go and look at something that is not there.
+
+    The one item from AUTHORING_GUIDE's "What no check can catch" that turned out to be
+    checkable. The rest of that list needs a reader; this one only needs the filesystem, and it
+    fails the day a script is renamed rather than the day somebody follows the path.
+    """
+    for named in QUOTED_PATH.findall(path.read_text()):
+        assert (ROOT / named).exists() or list(ROOT.glob(f"**/{named}")), (
+            f"{path.name} sends a reader to {named!r}, which does not exist. Rename the "
+            "reference, or write the file."
+        )
+
+
 @pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
 def test_a_chapter_reference_names_the_chapter_the_outline_names(path):
     """A reference that carries a title has to carry the right one.
