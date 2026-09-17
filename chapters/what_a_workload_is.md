@@ -11,18 +11,22 @@ short_title: "ch02 What a workload is"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch01](#reading-a-model) |
-| **What it produces** | The workload table for all three reference models |
-| **Built from** | `storage_cluster-reference`, `observability-reference`, `service_tier-reference` |
+| **Prerequisites** | none |
+| **What it produces** | The demand side of the storage model, and the workload table for all three |
+| **Built from** | `storage_cluster_demand-reference`, `storage_cluster-reference`, `observability-reference`, `service_tier-reference` |
 :::
 
 ## The question
 
 Which quantities actually size a system, and which ones only look as though they do?
 
-[ch01](#reading-a-model) gave you a file that can hold a quantity and check it. This chapter is
-about which quantities are worth holding, and it starts with the difference between a rate and a
-level. That sounds like pedantry right up until somebody sizes a retention store from a rate.
+Somebody has told you what the system has to do. Before any of it can be multiplied into a number
+of machines, it has to be written down in a form that cannot quietly mean two things — and the
+first distinction that matters is between a rate and a level. That sounds like pedantry right up
+until somebody sizes a retention store from a rate.
+
+This chapter writes the first nodes of the model the rest of the book uses. By the end of it you
+will have a file that runs.
 
 ## The material
 
@@ -45,6 +49,66 @@ its numerator and is none of the three.
 The commonest error in sizing is turning a flow into a stock by multiplying it by a number instead
 of by an amount of time. It typechecks in a spreadsheet. It does not typecheck here, and problem
 2.2 is exactly that.
+
+### Writing the first one down
+
+Take the workload above: some amount held today, growing at some rate, over the life of whatever
+gets bought. The first node is the level you were given.
+
+```{literalinclude} ../models/storage_cluster/stages/01-demand/model.yaml
+:language: yaml
+:start-at: usable_capacity_t0:
+:end-before: annual_growth:
+```
+
+A `unit`, so the build knows this is a level and not a rate. A `value`, because somebody said so.
+A `provenance`, because a number with no source is a rumour — that is
+[ch03](#where-the-numbers-come-from)'s subject, and the reason the field is mandatory from the
+very first node. The `range` is what a reader may drag it to on the published page.
+
+Growing it over the horizon takes one multiplication and one thing that is easy to miss:
+
+```{literalinclude} ../models/storage_cluster/stages/01-demand/model.yaml
+:language: yaml
+:start-at: one_year:
+:end-before: peak_read_throughput:
+```
+
+`horizon / one_year` looks like ceremony and is not. Growth compounds, so the horizon has to be an
+exponent, and an exponent is a pure number: five years cannot be one, but five can. Dividing a
+duration by a declared year is how it becomes the count of periods the formula can use. A
+spreadsheet does this silently and correctly, right until the quarter somebody types a horizon in
+months into the same cell.
+
+Then the level at the end, which is the first quantity in this book that is *computed* rather than
+stated:
+
+```{literalinclude} ../models/storage_cluster/stages/01-demand/model.yaml
+:language: yaml
+:start-at: usable_capacity:
+:end-before: outputs:
+```
+
+That is the whole of the demand side:
+
+```{include} _generated/what-a-workload-is-stage-shape.md
+```
+
+The last row is not a label somebody typed. `sizing/dsl.py` works it out from what is in the file,
+and nothing here has a measured constant or a declared limit in it yet, so what the book has so far
+is a **cost model** — structure nobody doubts, with uncertain numbers in it. It will change kind in
+[ch09](#capacity), and it will change because the file changed rather than because a chapter said
+so.
+
+### What it says, and what that is worth
+
+```{include} _generated/what-a-workload-is-stage.md
+```
+
+A number, out of a handful of numbers and a multiplication. The arithmetic is right and you should
+not act on it, for a reason this chapter cannot yet name: every figure that went in was a single
+figure, and not one of them is known that precisely. [ch04](#peak-mean-and-growth) takes the first
+of them apart.
 
 ### The demand and the decisions
 

@@ -237,6 +237,12 @@ FIGURES: dict[str, Table | Diagram] = {
         computed_from="`models/`",
     ),
     # -- ch02 What a workload is ------------------------------------------------------------------
+    "what-a-workload-is-stage": Table(
+        render=tables.stage_outputs, result="storage_cluster_demand-reference"
+    ),
+    "what-a-workload-is-stage-shape": Table(
+        render=tables.stage_shape, result="storage_cluster_demand-reference"
+    ),
     "what-a-workload-is-storage": Table(
         render=tables.workload_table, result="storage_cluster-reference"
     ),

@@ -20,6 +20,7 @@ fact about the figure, not a filing detail (invariant 3). And what a measured co
 from __future__ import annotations
 
 import math
+from collections import Counter
 
 from bench.stamp import load_result
 from sizing.dsl import PROVENANCE_MEANING, discover
@@ -208,6 +209,44 @@ def outputs_table(name: str) -> str:
                 else "*fixed*"
             )
         rows.append(f"| {labels[output]} | {point} | {interval} | {unit_label(node['unit'])} |")
+    return "\n".join(rows)
+
+
+def stage_outputs(name: str) -> str:
+    """What the model says while the book is still building it.
+
+    One column, not two. `outputs_table` puts a 90% interval beside every point estimate, and
+    that column is ch13's: a reader in ch02 has not been told what an interval is, and a header
+    naming one would be the book teaching a term by using it. The chapters that build the model
+    show what it computes; the chapter that teaches sampling adds the second column.
+    """
+    payload = load_result(name)["summary"]
+    labels = row_labels(payload)
+    rows = ["| Output | What the model says | Unit |", "|---|---:|---|"]
+    for output in payload["outputs"]:
+        node = payload["nodes"][output]
+        value = (
+            "*not yet measured*" if node.get("blocked_by") else fmt(node.get("point"), node["unit"])
+        )
+        rows.append(f"| {labels[output]} | {value} | {unit_label(node['unit'])} |")
+    return "\n".join(rows)
+
+
+def stage_shape(name: str) -> str:
+    """How big the model is at this point in the book, and what the build makes of it.
+
+    The last row is the one the book is built on, and it is not an assertion: `sizing/dsl.py`
+    decides it from the file, and `bench/run_models.py` stamps what it decided.
+    """
+    result = load_result(name)
+    payload = result["summary"]
+    kinds = Counter(node.get("kind") for node in payload["nodes"].values())
+    classification = result["produced_by"]["classification"]
+    rows = ["| | |", "|---|---:|"]
+    for kind in ("input", "derived", "measured", "ceiling"):
+        if kinds.get(kind):
+            rows.append(f"| `{kind}` nodes | {kinds[kind]} |")
+    rows.append(f"| **What the build calls it** | **{classification} model** |")
     return "\n".join(rows)
 
 
