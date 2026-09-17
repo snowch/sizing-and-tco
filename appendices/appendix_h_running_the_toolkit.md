@@ -32,6 +32,11 @@ make book       # live preview at localhost:3000
 Run `make check` before you believe anything. It is the same script CI runs, so the two cannot
 drift, and it takes well under a minute.
 
+% number-ok: settings this book chose, not figures it measured. Stated once because they never vary, and tests/test_book.py fails if they do.
+Every model run in this book draws 100,000 samples from seed 20260916. Neither appears under the
+tables, because a constant repeated under ninety figures is not information — and a test fails if
+a run ever uses a different one, so that this sentence cannot quietly stop being true.
+
 `python3 -m pip`, not a standalone tool install. `python3 -m pytest` has to work, and a `pytest`
 installed by pipx or uv has its own environment and cannot import this repository's code.
 

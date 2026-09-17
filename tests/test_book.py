@@ -303,14 +303,18 @@ def test_dollar_maths_stays_off_while_the_book_prints_money():
 
 
 def test_every_model_run_shares_one_sample_count_and_seed():
-    """The preface states them once and the tables no longer carry them.
+    """Appendix H states them once and the tables no longer carry them.
 
     That is only honest while they never vary. Before, every figure printed ``100,000 samples ·
     seed 20260916`` — the same words on ninety tables, which is how a constant disguises itself
-    as information. The preface now says it once and points at this test.
+    as information. Appendix H now says it once and points at this test.
+
+    It said it on page one until a reader pointed out that a seed is of no use to somebody
+    reading a table: it is a detail for whoever re-runs the book, and they are in Appendix H.
 
     If a run ever needs a different sample count or seed, this fails, and the choice is to put
-    them back under the figures that differ or to say in the preface which runs are exceptions.
+    them back under the figures that differ or to name the exceptions where the setting is
+    stated.
     """
     import json
 

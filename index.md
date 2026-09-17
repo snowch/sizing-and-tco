@@ -15,14 +15,15 @@ much it will cost to run for the next three years — and they are going to spen
 whatever you tell them.
 
 You can do the arithmetic. That is rarely the hard part. What comes out is one number, and that
-number says nothing at all about how much of it you would actually bet.
+number tells you nothing about how much you would be willing to stake on it.
 
 **How big, how much, and how wrong could I be?**
 
 Three questions, and the first two are arithmetic. **Sizing** is how much hardware a stated
 workload needs, and where it stops coping. **Total cost of ownership** is what that hardware
-costs over the years you keep it, which is not the same as what it costs to buy. Most people can
-do both.
+costs over the years you keep it, which is not the same as what it costs to buy. The arithmetic
+for both is within anybody's reach. Knowing where that arithmetic stops describing the system is
+not, and it is a good part of what follows.
 
 This book teaches the third: how to find which input your answer rests on, how far the answer
 moves when that input moves, and what it would cost to find out. Almost nobody is taught this,
@@ -74,26 +75,29 @@ the build refuses to publish a figure that no longer matches what the repository
 link is there so you can check the table instead of trusting it — and the name on it,
 `storage_cluster-reference`, is just which model was run and under which set of assumptions.
 
-% number-ok: settings this book chose, not figures it measured. Stated once because they never vary, and tests/test_book.py fails if they do.
-Every model run in this book draws 100,000 samples from seed 20260916, which is why neither
-appears under the tables. A test fails if that ever stops being true.
-
 ```{image} chapters/_figures/preface-tco-distribution.svg
 :alt: The five-year total cost as a distribution, with the point estimate marked on it
 :width: 100%
 ```
 
-The red line is where the point estimate falls. Everything else is the same model, told the truth
-about its own inputs.
+Each bar counts how many of those runs landed on a given five-year total, and the red line is
+where the single-number answer falls.
 
 The method that produced the interval is [ch12](#monte-carlo)'s, not this page's. It is no use to
 you until you have built a model, got a number out of it, and felt that you could not defend the
 number.
 
-## Why the interval was that wide
+## The error an interval cannot show
 
-Because that was not a cost model. It was a sizing model, and the two fail differently. This is
-the distinction the rest of the book is built on, and the one the toolkit encodes.
+Almost all of that width came from one input. The growth rate is a forecast, it compounds over
+five years, and it moves the answer further than everything else in the model put together.
+Finding that out rather than guessing it is [ch18](#which-input-is-the-answer)'s subject, and
+it is the most useful thing you can do with a model you already have.
+
+Letting inputs vary and watching what happens is honest work, and most of this book is about
+doing it well. But it can only ever report the doubt somebody wrote down. There is a second kind
+of error it cannot see at all, and which of two kinds of model you have decides whether you are
+exposed to it.
 
 **A cost model has a deterministic structure with uncertain parameters.** Its relationships are
 accounting identities and physics: watts times hours times price, capital plus running cost over
@@ -104,51 +108,52 @@ because the system it describes started behaving differently.
 
 **A sizing model has the same structure and adds two things.**
 
-*Measured constants.* Bytes per sample after compression. Spans per request. Throughput per
-collector core. These are empirical, they belong to a particular implementation at a particular
-version, they have measurement error, and none of them is a fact about the world. A chain of
-multiplications built on them inherits every one of those properties, and a model that treats
-them as constants hides them all.
+*Measured constants.* How many bytes a stored measurement takes once it is compressed. How many
+records one request leaves behind when a system is traced. How much work a single processing core
+gets through in a second. These are empirical, they belong to a particular implementation at a
+particular version, they have measurement error, and none of them is a fact about the world. A
+chain of multiplications built on them inherits every one of those properties, and a model that
+treats them as constants hides them all.
 
-*Non-linear ceilings.* The queueing knee, where response time climbs long before a device is
-busy. Rebuild under failure, where losing one node costs capacity you were using. Cardinality
-explosions, where one label multiplies a series count by a number nobody chose. A working set
-spilling out of memory. These are regime changes, and **a chain of multiplications cannot model
-a regime change**. It will happily report that a system is running at several times its own
-limit, which is not a description of anything that can happen.
+*Non-linear ceilings.* The queueing knee, where response time climbs steeply while a device still
+has capacity to spare. Rebuild under failure, where losing one machine costs capacity you were
+using. A new field attached to a measurement, which multiplies how many separate things you have
+to store by however many values that field turns out to take. A working set outgrowing memory.
+These are regime changes, and **a chain of multiplications cannot model a regime change**. It will
+happily report that a system is running at several times its own limit, which is not a description
+of anything that can happen.
 
-So a sizing model needs headroom rules, not just a number. That distinction is the argument of the
-book, so the toolkit enforces it rather than asserting it: a model with a measured constant or a
-declared ceiling in it **is** a sizing model, a model with neither **is** a cost model, and
-`scripts/verify-models.py` holds the two to different rules. A sizing model that declares a limit
-with no margin does not build.
+So a sizing model has to say how much room it keeps below each limit, and why, rather than only
+producing a number. This repository enforces that rather than asking for it: a model with a
+measured constant or a declared limit in it **is** a sizing model, one with neither **is** a cost
+model, and the build holds the two to different rules. A sizing model that names a limit and keeps
+no room below it does not build.
 
 ## Why you should believe any of it
 
-You have just been shown a wide interval and invited to act on it. The rule underneath this book
-is that nothing is asserted here that the repository could check instead. That rule shows up in
-three ways.
+You have just been shown a table and asked to take its numbers seriously. The rule underneath this
+book is that nothing is asserted here that the repository could check instead. That rule shows up
+in three ways.
 
-**Every number says where it came from.** No figure is typed into the prose. Each one comes from
-a stamped result recording what produced it, the conditions it holds under, and a hash of the code
-that made it. When a quoted figure stops matching what the repository computes, the build fails.
+**Every number says where it came from.** No figure is typed into the prose; every one is
+computed, and the link under the table you just read is how you check any of them.
 
-**Every model is a file, not a spreadsheet.** Every quantity in it declares a unit, so the build can refuse a model that multiplies the
-wrong two things. Every input declares whether it is a fact, a vendor's claim or somebody's
-assumption, and an uncertain one has to say what shape its uncertainty has and why that shape
-rather than another. Every measured constant names the measurement behind it.
-[ch02](#where-the-numbers-come-from) says what those distinctions are worth;
-[Appendix A](#appendix-a-dsl-reference) is the file format that holds them.
+**Every model is a file, not a spreadsheet.** Every quantity in it declares a unit, so the build
+can refuse a model that multiplies the wrong two things. Every input declares whether it is a
+fact, a vendor's claim or somebody's assumption, and an uncertain one has to say what shape its
+uncertainty has and why that shape rather than another. Every measured constant names the
+measurement behind it. [ch02](#where-the-numbers-come-from) says what those distinctions are
+worth; [Appendix A](#appendix-a-dsl-reference) is the file format that holds them.
 
 **Every chapter ends by saying what it cannot tell you.** A section with that name is required,
 and the tests fail a chapter that leaves it out. In a book about estimates it is usually the most
 useful part of the chapter.
 
 One consequence of those rules shows up on the pages. When a constant has not been measured, the
-node that needs it has no value, and neither does anything downstream of it. Those figures render
-as *not yet measured* and the affected chain is named — never a placeholder, and never a number
-borrowed from a different stack. [Appendix F](#appendix-f-observability-model) publishes one of
-those figures, which is a deliberate choice and is argued there.
+quantity that needs it has no value, and neither does anything computed from it. Those figures
+render as *not yet measured* and the affected chain is named — never a placeholder, and never a
+number borrowed from a different stack. [Appendix F](#appendix-f-observability-model) publishes
+one of those figures, which is a deliberate choice and is argued there.
 
 ## Who this book is for
 
@@ -156,23 +161,28 @@ A self-study text and a toolkit, for an engineer who has been asked how big some
 be, or what it will cost, and who wants to give an answer they would still defend a year later.
 
 You should be comfortable with code and with arithmetic. You are assumed to know **nothing**
-about statistics. [ch12](#monte-carlo) and [ch13](#correlation-and-convergence) introduce the
-six words you need — distribution, sample, percentile, interval, correlation,
-convergence — one at a time, each one arriving because a model has just raised a question that
-needs it. Where a statistical term has a plain-English equivalent, this book uses the plain one
-first and names the term second.
+about statistics. [ch12](#monte-carlo) and [ch13](#correlation-and-convergence) are where the six
+words you need — distribution, sample, percentile, interval, correlation, convergence — get
+defined properly, each arriving because a model has just raised a question that needs it. This
+page has leaned on three of them loosely, and that is the last time it happens. Where a
+statistical term has a plain-English equivalent, this book uses the plain one first and names the
+term second.
 
 No vendor is named anywhere in this book, and no product is recommended. Three models carry it,
 all written so that the structure is the point and the numbers are yours to replace: a scale-out
 storage cluster, which is sized and costed end to end; an observability platform, which is the one
-with a hole in it where a measurement should be; and a request-serving tier, which is the only one
-of the three that is not a chain of multiplications, and therefore the one Part II is built on.
+with a hole in it where a measurement should be; and a request-serving tier, whose behaviour under
+load is not a chain of multiplications at all, which is why the chapters on ceilings are built on
+it.
 
 ## What you will need
 
 Python, Node for the book build, and about twenty minutes:
 
 ```bash
+git clone https://github.com/snowch/sizing-and-tco.git
+cd sizing-and-tco
+
 python3 -m pip install -r requirements.txt -r requirements-dev.txt
 npm install -g "mystmd@$(node -p "require('./package.json').devDependencies.mystmd")"
 
@@ -182,7 +192,8 @@ make book       # live preview at localhost:3000
 ```
 
 Nothing in this book needs a datacentre, a cloud account, or a licence. The one thing it cannot
-do on your laptop is take a `rig` measurement, and it refuses to pretend otherwise.
+do on your laptop is time how fast something runs on the one machine this book takes its timings
+from, and it refuses to pretend otherwise.
 
 :::{note} Where this book is
 The toolkit is complete, all three models run end to end, and every chapter and appendix is
