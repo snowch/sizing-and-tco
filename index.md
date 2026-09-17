@@ -31,9 +31,9 @@ this, and it is what decides whether anybody should act on your number.
 
 Not because they are wrong. Because they are *silent*.
 
-Take a storage cluster with a stated workload and size it the usual way: take the expected value
-of every input, multiply along the chain, and read off the answer. The model in this book does
-exactly that, and recommends a node count. Buy that many.
+Take a storage cluster with a stated workload and size it the usual way: expected value of every
+input, multiply along the chain, read off the answer. The model in this book does exactly that,
+and recommends a node count. Buy that many.
 
 Now let every input be as uncertain as it honestly is — the growth rate is a forecast, the
 compression ratio was measured on somebody else's data, the price is a quote that expires — and
@@ -46,7 +46,7 @@ Read the *nodes the model recommends* row. Its point estimate is a real number, 
 computed, and the interval beside it spans most of an order of magnitude. Nothing in the
 first calculation was wrong. It simply had no way to mention that it was a bet.
 
-The italic line under the table runs under every table in this book, and it is a link. It names
+The italic line under that table appears under every one in this book, and it is a link. It names
 the stamped result the figure was rendered from — `storage_cluster-reference` is the storage model
 at its reference scenario — and following it gets you the file itself: every input, the seed, the
 sample count, the conditions the run held under, and a hash of the code that did the arithmetic.
@@ -88,7 +88,7 @@ because the system it describes started behaving differently.
 collector core. These are empirical, they belong to a particular implementation at a particular
 version, they have measurement error, and none of them is a fact about the world. A chain of
 multiplications built on them inherits every one of those properties, and a model that treats
-them as constants is hiding the most interesting thing about itself.
+them as constants hides them all.
 
 *Non-linear ceilings.* The queueing knee, where response time climbs long before a device is
 busy. Rebuild under failure, where losing one node costs capacity you were using. Cardinality
@@ -97,16 +97,16 @@ spilling out of memory. These are regime changes, and **a chain of multiplicatio
 a regime change**. It will happily report that a system is running at several times its own
 limit, which is not a description of anything that can happen.
 
-So a sizing model needs headroom rules, not just a number. And because that distinction is the
-argument of the book, the toolkit makes it structural rather than rhetorical: a model with a
-measured constant or a declared ceiling in it **is** a sizing model, a model with neither **is** a
-cost model, and `scripts/verify-models.py` holds the two to different rules. A sizing model that
-declares a limit with no margin does not build.
+So a sizing model needs headroom rules, not just a number. That distinction is the argument of the
+book, so the toolkit enforces it rather than asserting it: a model with a measured constant or a
+declared ceiling in it **is** a sizing model, a model with neither **is** a cost model, and
+`scripts/verify-models.py` holds the two to different rules. A sizing model that declares a limit
+with no margin does not build.
 
 ## Why you should believe any of it
 
 You have just been shown a wide interval and invited to act on it. The rule underneath this book
-is that nothing is asserted here that the repository could check instead, and it shows up in
+is that nothing is asserted here that the repository could check instead. That rule shows up in
 three ways.
 
 **Every number says where it came from.** No figure is typed into the prose. Each one comes from
@@ -118,19 +118,18 @@ text file. Every quantity declares a unit, so the build can refuse a model that 
 wrong two things. Every input declares whether it is a fact, a vendor's claim or somebody's
 assumption, and an uncertain one has to say what shape its uncertainty has and why that shape
 rather than another. Every measured constant names the measurement behind it.
-[ch03](#where-the-numbers-come-from) is what those distinctions are worth, and
+[ch03](#where-the-numbers-come-from) says what those distinctions are worth;
 [Appendix A](#appendix-a-dsl-reference) is the file format that holds them.
 
 **Every chapter ends by saying what it cannot tell you.** A section with that name is required,
 and the tests fail a chapter that leaves it out. In a book about estimates it is usually the most
 useful part of the chapter.
 
-One consequence is worth naming here, because it is visible on the pages. When a constant has not
-been measured, the node that needs it has no value, and neither does anything downstream of it.
-Those figures render as *not yet measured* and the affected chain is named — never a placeholder,
-and never a number borrowed from a different stack.
-[Appendix F](#appendix-f-observability-model) has one on a published page, which is a deliberate
-choice and is argued there.
+One consequence of those rules shows up on the pages. When a constant has not been measured, the
+node that needs it has no value, and neither does anything downstream of it. Those figures render
+as *not yet measured* and the affected chain is named — never a placeholder, and never a number
+borrowed from a different stack. [Appendix F](#appendix-f-observability-model) publishes one of
+those figures, which is a deliberate choice and is argued there.
 
 ## Who it is for
 
@@ -175,8 +174,8 @@ file, built from the same source as this site, so the two cannot disagree about 
 
 Two constants are not yet measured — collector throughput per core, which needs a reference
 machine, and spans per request, which needs somebody's instrumented application. The observability
-model shows both as missing rather than guessing, which is the behaviour the rest of the book is
-about.
+model shows both as missing rather than guessing, which is what the rest of the book asks of any
+model.
 
 ```{include} chapters/_generated/build.md
 ```

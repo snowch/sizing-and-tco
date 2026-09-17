@@ -9,10 +9,10 @@ short_title: "Part VIII — Afterwards"
 > The design failed. What does the model have to say about that, and what does it not?
 
 Every part before this one ends before anything happens. The model is built, the interval is
-reported, the decision is taken — and then the book stops, which is where books about modelling
-usually do stop and where the interesting part begins.
+reported, the decision is taken — and then the book stops. That is where books about modelling
+usually stop, and where the interesting part begins.
 
-[ch22](#what-the-model-got-wrong) is the part after. It takes the cluster
+[ch22](#what-the-model-got-wrong) is what happens next. It takes the cluster
 [ch12](#the-sizing-model) recommended, the future in which it ran out of space, and asks the two
 questions somebody asks three years later: *what went wrong*, and *could we have known*.
 
