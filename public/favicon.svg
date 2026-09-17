@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="An interval with a single estimate marked on it, left of centre">
+<rect width="64" height="64" fill="#263238"/>
+<rect x="5.76" y="30.37" width="52.48" height="3.25" fill="#dbe7f3"/>
+<rect x="5.76" y="15.05" width="3.25" height="33.90" fill="#dbe7f3"/>
+<rect x="54.99" y="15.05" width="3.25" height="33.90" fill="#dbe7f3"/>
+<circle cx="25.35" cy="32.00" r="8.50" fill="#e8756c"/>
+</svg>

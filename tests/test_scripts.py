@@ -25,6 +25,7 @@ from bench.stamp import ROOT, shown
 TAKES_AN_OUT = [
     ("scripts/build-viewers.py", "--out", True),
     ("scripts/build-pdf.py", "--out", False),
+    ("scripts/build-icons.py", "--out", True),
 ]
 
 
