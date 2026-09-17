@@ -90,7 +90,10 @@ stated:
 :end-before: outputs:
 ```
 
-That is the whole of the demand side.
+That is the whole of the demand side, and you can [run it in your browser](/playground/) — the
+page opens on this file, and the thing reading it is this repository's toolkit rather than a copy
+of it. Change a number and the total moves. Change `usable_capacity`'s formula to multiply the
+read throughput by a count of periods, and it refuses, for the reason at the top of this chapter.
 
 ### The demand and the decisions
 

@@ -112,10 +112,11 @@ the first load is the slow one.</div>
 </main>
 
 <footer>
-  <p>This runs <code>sizing.dsl.load_model</code> and <code>sizing.evaluate.check_units</code>
-  &mdash; the same two calls <code>make check</code> makes, not a second implementation of them.
-  The fixtures above were checked by the build; the page re-runs them here so that a browser
-  which disagrees says so rather than teaching you something this repository does not do.</p>
+  <p>This runs <code>sizing.dsl.load_model</code>, <code>sizing.evaluate.check_units</code> and
+  <code>sizing.evaluate.point</code> &mdash; the calls <code>make check</code> makes, not a second
+  implementation of them. The fixtures above were checked by the build; the page re-runs them here
+  so that a browser which disagrees says so rather than teaching you something this repository
+  does not do.</p>
   <p>Built from <code>{stage}</code>.</p>
 </footer>
 
@@ -125,6 +126,9 @@ const MODULES = {modules};
 const START = {model_json};
 
 const $ = (id) => document.getElementById(id);
+const fmt = (v) => v === null || v === undefined
+  ? "\u2014"
+  : v.toLocaleString(undefined, {{ maximumFractionDigits: Math.abs(v) >= 100 ? 0 : 2 }});
 const show = (el, text, cls) => {{ el.textContent = text; if (cls) el.className = cls; }};
 
 let pyodide = null;
@@ -191,11 +195,26 @@ function report(result) {{
   const v = $("verdict"), d = $("detail");
   d.innerHTML = "";
   if (result.stage === "ok") {{
-    show(v, "It loads, and every formula is dimensionally sound.", "verdict good");
+    show(v, "It runs.", "verdict good");
+
+    // The outputs first and large: a reader who has just written this file wants the number it
+    // produces, not a confirmation that its units are consistent.
+    const outputs = document.createElement("div");
+    outputs.className = "outputs";
+    outputs.innerHTML = result.outputs.map((name) => {{
+      const node = result.nodes.find((n) => n.name === name) || {{}};
+      return `<div class="output"><div class="figure">${{fmt(node.value)}}</div>` +
+             `<div class="unit">${{node.unit || ""}}</div>` +
+             `<div class="what">${{node.label || name}}</div></div>`;
+    }}).join("");
+    d.appendChild(outputs);
+
     const table = document.createElement("table");
-    table.innerHTML = "<tr><th>Node</th><th>Kind</th><th>Unit</th><th>Formula</th></tr>" +
+    table.innerHTML = "<tr><th>Node</th><th>Kind</th><th>Value</th><th>Unit</th>" +
+      "<th>Formula</th></tr>" +
       result.nodes.map((n) =>
-        `<tr><td>${{n.name}}</td><td>${{n.kind}}</td><td>${{n.unit}}</td>` +
+        `<tr><td>${{n.label || n.name}}</td><td>${{n.kind}}</td>` +
+        `<td class="num">${{fmt(n.value)}}</td><td>${{n.unit}}</td>` +
         `<td>${{n.formula ? "<code>" + n.formula + "</code>" : ""}}</td></tr>`).join("");
     d.appendChild(table);
     const note = document.createElement("p");
@@ -204,9 +223,11 @@ function report(result) {{
       "it a sizing model, and this one has neither yet.";
     d.appendChild(note);
   }} else {{
-    show(v, result.stage === "load"
-      ? "It does not load."
-      : "It loads, and the units do not work out.", "verdict bad");
+    show(v, {{
+      load: "It does not load.",
+      units: "It loads, and the units do not work out.",
+      evaluate: "The units are sound and it will not evaluate.",
+    }}[result.stage] || "It does not run.", "verdict bad");
     const list = document.createElement("ul");
     for (const problem of result.problems) {{
       const item = document.createElement("li");
@@ -262,6 +283,11 @@ textarea { width: 100%; height: 62vh; min-height: 320px; font: 13px/1.5 ui-monos
            SFMono-Regular, Menlo, monospace; padding: 10px; border: 1px solid var(--edge);
            border-radius: 4px; background: var(--panel); color: var(--ink); resize: vertical; }
 .verdict { font-weight: 600; margin-bottom: 8px; }
+.outputs { display: flex; flex-wrap: wrap; gap: 20px; margin: 4px 0 18px; }
+.output .figure { font-size: 30px; font-weight: 600; line-height: 1.1; }
+.output .unit { color: var(--muted); font-size: 13px; }
+.output .what { font-size: 13px; margin-top: 2px; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .verdict.good { color: var(--good); }
 .verdict.bad { color: var(--bad); }
 #detail ul { padding-left: 18px; }
