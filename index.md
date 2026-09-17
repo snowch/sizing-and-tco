@@ -207,16 +207,14 @@ make book       # live preview at localhost:3000
 Nothing in this book needs a datacentre, a cloud account, or a licence.
 
 :::{note} Where this book is
-The toolkit is complete, all three models run end to end, and every chapter and appendix is
-written.
-
 **[Download the whole book as a PDF](/sizing-and-tco.pdf)** — every chapter and appendix in one
 file, built from the same source as this site, so the two cannot disagree about what a page says.
 
-Two constants are not yet measured — collector throughput per core, which needs a reference
-machine, and spans per request, which needs somebody's instrumented application. The observability
-model shows both as missing rather than guessing, which is what the rest of the book asks of any
-model.
+```{include} chapters/_generated/preface-unmeasured.md
+```
+
+What it would take to fill each of them, and why this book would rather print a gap than a
+plausible number, is [ch02](#where-the-numbers-come-from).
 
 ```{include} chapters/_generated/build.md
 ```
