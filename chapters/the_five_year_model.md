@@ -105,14 +105,6 @@ costs.
 Which is where Part V ends: a total, its composition, and the knowledge that half of it was never
 argued about and a good deal of it rests on numbers that crossed a seam.
 
-## What the model says
-
-```{include} _generated/the-five-year-model-split.md
-```
-
-```{include} _generated/the-five-year-model-observability.md
-```
-
 ## What this cannot tell you
 
 **Whether the seam is in the right place.** Two models joined at a price is one choice. Joined at

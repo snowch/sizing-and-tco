@@ -129,14 +129,6 @@ machines from three points clustered at the low end, and you are about to spend 
 extrapolation. The coefficients in this book's model are assumptions and say so in their
 provenance. **The shape is the claim. The position of the peak is a guess.**
 
-## What the model says
-
-```{include} _generated/when-adding-servers-stops-helping-table.md
-```
-
-```{include} _generated/when-adding-servers-stops-helping-scenarios.md
-```
-
 ## What this cannot tell you
 
 **Where your peak is.** The coefficients here are assumptions, the peak follows from them, and the

@@ -154,14 +154,6 @@ headline number is unchanged and only the doubt has grown, which is why it passe
 becomes unfalsifiable, and an unfalsifiable model is a very expensive way of writing down what
 somebody already believed.
 
-## What the model says
-
-```{include} _generated/the-missing-node-outputs.md
-```
-
-```{include} _generated/the-missing-node-unmeasured.md
-```
-
 ## What this cannot tell you
 
 **Whether this chapter's own model is complete.** It is not. The observability model has no line
@@ -204,7 +196,8 @@ python3 -m pytest tests/the_missing_node/test_problem_2_widening.py
 
 ## Where to go next
 
-[ch21](#a-tco-for-finance) is the last chapter, and this one is its prerequisite: the honest
+[ch21](#a-tco-for-finance) is the last chapter of the argument, and this one is its
+prerequisite: the honest
 presentation of a total includes what the model does not contain, and saying so out loud is harder
 than any of the arithmetic that came before it.
 

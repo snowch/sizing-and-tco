@@ -120,14 +120,6 @@ satisfies it in every sample, and the model would cheerfully report no chance at
 out of space. Making it an input is what lets the ceilings ask the only question worth asking:
 *given what we actually bought, how often does the world break it?*
 
-## What the model says
-
-```{include} _generated/the-sizing-model-outputs.md
-```
-
-```{include} _generated/the-sizing-model-ceilings.md
-```
-
 ## What this cannot tell you
 
 **Whether the structure is right.** Everything above takes the chains as given and asks what the

@@ -70,12 +70,15 @@ leaves it open. No summary of what is to come — the reader can see the heading
 `{{literalinclude}}` and text anchors, never pasted; model files are quoted the same way. See
 AUTHORING_GUIDE.md.]
 
-## What the model says
+[To write: `{{include}}` the generated fragments declared in `bench/figures.py`, where the prose
+needs them. No number is ever typed here. A figure that depends on a constant nobody has measured
+renders as *not yet measured* on its own — the state propagates down the graph, and nothing has to
+be marked by hand.
 
-[To write: `{{include}}` the generated fragments declared in `bench/figures.py`. No number is
-ever typed here. A figure that depends on a constant nobody has measured renders as *not yet
-measured* on its own — the state propagates down the graph, and nothing has to be marked by
-hand.]
+There is no trailing "What the model says" section. There used to be, in every chapter, and in
+twenty-one of twenty-three it reprinted a table the reader had already seen a few hundred words
+earlier with nothing new said about it. Show a figure where the argument needs it. If a chapter
+genuinely ends on its numbers, give the section a name that says what is in it.]
 
 ## What this cannot tell you
 

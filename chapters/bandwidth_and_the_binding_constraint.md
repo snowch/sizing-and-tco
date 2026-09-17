@@ -105,11 +105,6 @@ The observability model in [Appendix F](#appendix-f-observability-model) has thr
 and three separate ceilings for exactly this reason. There is no single number that summarises
 them, and a model that produced one would be hiding the thing you needed.
 
-## What the model says
-
-```{include} _generated/bandwidth-and-the-binding-constraint-table.md
-```
-
 ## What this cannot tell you
 
 **Whether there are only two chains.** This model has the two somebody thought of. Every chain not

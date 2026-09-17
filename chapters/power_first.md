@@ -114,14 +114,6 @@ What is worth saying is that energy price and carbon price move together
 ([ch14](#correlation-and-convergence)), so a model that added a carbon line and drew it
 independently would be understating the range of the total.
 
-## What the model says
-
-```{include} _generated/power-first-scenarios.md
-```
-
-```{include} _generated/power-first-ceilings.md
-```
-
 ## What this cannot tell you
 
 **What your allocation actually is.** Contracted power, breaker capacity, cooling capacity and

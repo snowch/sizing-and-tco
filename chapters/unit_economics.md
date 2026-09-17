@@ -125,11 +125,6 @@ to buy from the supplier.
 The decision needs the total, the risk, and what the alternatives would cost —
 [ch21](#a-tco-for-finance). A unit cost is what gets you invited to that meeting.
 
-## What the model says
-
-```{include} _generated/unit-economics-tornado.md
-```
-
 ## What this cannot tell you
 
 **Whether the comparison is like for like.** Everything above makes this model's figure explicit.

@@ -115,11 +115,6 @@ That is the honest limit, and it is why this is the shortest chapter in Part II.
 assumptions has no mechanism in it either, and everything from here on is the business of buying
 a mechanism by making assumptions you have to state.
 
-## What the model says
-
-```{include} _generated/littles-law-outputs.md
-```
-
 ## What this cannot tell you
 
 **Anything about a system that is not in a steady state.** The one condition, and the one people

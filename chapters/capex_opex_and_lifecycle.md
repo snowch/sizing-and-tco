@@ -113,9 +113,6 @@ the other side of it belongs to somebody whose job it is.
 
 ## What the model says
 
-```{include} _generated/capex-opex-and-lifecycle-split.md
-```
-
 ```{include} _generated/capex-opex-and-lifecycle-outputs.md
 ```
 

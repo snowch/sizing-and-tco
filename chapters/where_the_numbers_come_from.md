@@ -147,14 +147,6 @@ standard error falls as one over the square root of the count: halving it costs 
 work. Problem 3.2 is that arithmetic, and it is worth doing *before* agreeing to a measurement
 campaign rather than during one.
 
-## What the model says
-
-```{include} _generated/where-the-numbers-come-from-constants.md
-```
-
-```{include} _generated/where-the-numbers-come-from-unmeasured.md
-```
-
 ## What this cannot tell you
 
 **Whether a corpus resembles your data.** Every constant above was measured over a body of data

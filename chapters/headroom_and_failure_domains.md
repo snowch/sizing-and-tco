@@ -119,14 +119,6 @@ point estimate being comfortably inside the margin tells you about one future.
 [ch13](#monte-carlo) is where the rest come from, and [ch12](#the-sizing-model) is what the
 difference between those two readings costs.
 
-## What the model says
-
-```{include} _generated/headroom-and-failure-domains-storage.md
-```
-
-```{include} _generated/headroom-and-failure-domains-service.md
-```
-
 ## What this cannot tell you
 
 **Whether any of these margins is right.** Every one was declared by somebody, with a reason, and

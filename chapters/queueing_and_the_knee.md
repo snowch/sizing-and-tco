@@ -142,14 +142,6 @@ Past that point the formula has stopped describing a queue and started describin
 accident. The ceiling still reports that the design is over, which is the honest output: the model
 does not know what happens there, and it says the design should not go there.
 
-## What the model says
-
-```{include} _generated/queueing-and-the-knee-table.md
-```
-
-```{include} _generated/queueing-and-the-knee-ceilings.md
-```
-
 ## What this cannot tell you
 
 **What your system's curve looks like.** Everything above is one queueing model with strong

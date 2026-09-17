@@ -107,14 +107,6 @@ one costs. Everything else in [ch05](#littles-law) through [ch07](#when-adding-s
 is derived from those two and a count of machines. A workload description that cannot be reduced
 this far usually contains something that is not a workload.
 
-## What the model says
-
-```{include} _generated/what-a-workload-is-storage.md
-```
-
-```{include} _generated/what-a-workload-is-service.md
-```
-
 ## What this cannot tell you
 
 **Whether the quantities are the right ones.** A workload description is a model of demand, and

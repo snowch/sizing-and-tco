@@ -134,14 +134,6 @@ memory adjusts — and the adjustment always runs in the direction that makes th
 Every stamped result in this book exists so that the comparison is available to somebody who was
 not there and does not have to be trusted.
 
-## What the model says
-
-```{include} _generated/what-the-model-got-wrong-attribution.md
-```
-
-```{include} _generated/what-the-model-got-wrong-incomplete.md
-```
-
 ## What this cannot tell you
 
 **Whether the cause was in the model at all.** The whole chapter is conditioning on the model's
@@ -199,3 +191,13 @@ attribution name three innocent inputs without hesitating.
 that make somebody's observation of their own system worth anything to anybody else.
 
 [Appendix E](#appendix-e-storage-model) is the model this chapter convicted, in full.
+
+And the question the book opened with, which it is worth answering out loud now that there are
+twenty-two chapters behind it. **How big** it answered, in Part III, with a chain of multiplications
+and a number you could put on a purchase order. **How much** it answered in Part V, over a horizon,
+split between the invoice that gets a meeting and the one that does not. **How wrong could I be**
+it answered in the only way anything can: by sampling what was written down, and then — in
+[ch20](#the-missing-node) and in the second half of this chapter — by showing you the part of the
+answer that sampling cannot reach. A model can tell you how wrong its inputs might be. Nothing in
+it can tell you that the model is the wrong shape, and a method that claimed otherwise would be
+the most dangerous thing in this book.

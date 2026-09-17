@@ -97,14 +97,6 @@ The interval on the node count spans most of an order of magnitude, and almost a
 growth rate from [ch04](#peak-mean-and-growth) rather than anything in this chapter's chain. The
 capacity arithmetic is the well-understood part of the problem. What it is applied to is not.
 
-## What the model says
-
-```{include} _generated/capacity-outputs.md
-```
-
-```{include} _generated/capacity-measured.md
-```
-
 ## What this cannot tell you
 
 **What your data compresses to.** The constant above was measured over a synthetic mixture this
