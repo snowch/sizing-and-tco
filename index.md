@@ -80,8 +80,8 @@ link is there so you can check the table instead of trusting it — and the name
 :width: 100%
 ```
 
-Each bar counts how many of those runs landed on a given five-year total, and the red line is
-where the single-number answer falls.
+Each bar counts how many of those runs landed on a given five-year total — the table's second
+row, drawn — and the red line is where the single-number answer falls.
 
 The method that produced the interval is [ch12](#monte-carlo)'s, not this page's. It is no use to
 you until you have built a model, got a number out of it, and felt that you could not defend the
