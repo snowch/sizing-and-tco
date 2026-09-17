@@ -112,10 +112,11 @@ the first load is the slow one.</div>
 </main>
 
 <footer>
-  <p>This runs <code>sizing.dsl.load_model</code> and <code>sizing.evaluate.check_units</code>
-  &mdash; the same two calls <code>make check</code> makes, not a second implementation of them.
-  The fixtures above were checked by the build; the page re-runs them here so that a browser
-  which disagrees says so rather than teaching you something this repository does not do.</p>
+  <p>This runs <code>sizing.dsl.load_model</code>, <code>sizing.evaluate.check_units</code> and
+  <code>sizing.evaluate.point</code> &mdash; the calls <code>make check</code> makes, not a second
+  implementation of them. The fixtures above were checked by the build; the page re-runs them here
+  so that a browser which disagrees says so rather than teaching you something this repository
+  does not do.</p>
   <p>Built from <code>{stage}</code>.</p>
 </footer>
 
