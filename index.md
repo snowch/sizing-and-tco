@@ -36,8 +36,10 @@ conversation is about. The tables in this book put it in a column of that name.
 
 Point estimates do not lie by being wrong. They lie by being *silent*.
 
-Take a storage cluster with a stated workload and size it that way. The model in this book does
-exactly that, and recommends a node count. Buy that many.
+Take a storage cluster with a stated workload and size it that way. This book has a model that
+does exactly that, and a model here is a text file of named quantities — how much data arrives,
+how well it compresses, how many copies you keep, what a drive holds — each one feeding the next
+until the chain reaches a number of machines. It recommends a node count. Buy that many.
 
 Now let every input be as uncertain as it honestly is — the growth rate is a forecast, the
 compression ratio was measured on somebody else's data, the price is a quote that expires — and
@@ -136,7 +138,7 @@ as *not yet measured* and the affected chain is named — never a placeholder, a
 borrowed from a different stack. [Appendix F](#appendix-f-observability-model) publishes one of
 those figures, which is a deliberate choice and is argued there.
 
-## Who it is for
+## Who this book is for
 
 A self-study text and a toolkit, for an engineer who has been asked how big something needs to
 be, or what it will cost, and who wants to give an answer they would still defend a year later.
