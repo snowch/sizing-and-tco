@@ -60,13 +60,19 @@ Read the first row. Its point estimate is a real number, correctly computed — 
 **90% interval**, the range nine runs in ten landed in, spans most of an order of magnitude.
 Nothing in the first calculation was wrong. It simply had no way to mention that it was a bet.
 
-The italic line under that table appears under every one in this book, and it is a link. It names
-the stamped result the figure was rendered from — `storage_cluster-reference` is the storage model
-at its reference scenario — and following it gets you the file itself: every input, the seed, the
-sample count, the conditions the run held under, and a hash of the code that did the arithmetic.
-Change that code and the hash changes, and the build refuses to publish a figure that no longer
-matches what the repository computes. The link is there so you can check the table instead of
-trusting it.
+Why nine in ten, rather than the smallest and largest answers? Because the smallest and largest
+are not properties of the problem. They are properties of how many times you ran it: run it ten
+times more and the largest gets larger, every time, because you gave the unlucky combinations
+more chances to turn up. The ends of a run drift. The middle settles, and settles quickly enough
+to be worth quoting. Ninety per cent is then a convention, and this book uses the same one
+everywhere so that two figures can be compared.
+
+Under the table is an italic line, and one appears under every table in this book. It is a link to
+the file the figure was computed from: every input, the conditions the run held under, and a
+fingerprint of the code that did the arithmetic. Change that code and the fingerprint changes, and
+the build refuses to publish a figure that no longer matches what the repository computes. The
+link is there so you can check the table instead of trusting it — and the name on it,
+`storage_cluster-reference`, is just which model was run and under which set of assumptions.
 
 % number-ok: settings this book chose, not figures it measured. Stated once because they never vary, and tests/test_book.py fails if they do.
 Every model run in this book draws 100,000 samples from seed 20260916, which is why neither
