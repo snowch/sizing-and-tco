@@ -166,4 +166,7 @@ Two constants are not yet measured — collector throughput per core, which need
 machine, and spans per request, which needs somebody's instrumented application. The observability
 model shows both as missing rather than guessing, which is the behaviour the rest of the book is
 about.
+
+```{include} chapters/_generated/build.md
+```
 :::

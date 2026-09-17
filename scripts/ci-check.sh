@@ -72,6 +72,11 @@ echo "== the interactive pages assemble =="
 python3 scripts/build-viewers.py > /dev/null
 echo "  OK"
 
+echo "== which commit this build is =="
+# Not one of the committed figures: it names the commit being built, so it is written here rather
+# than checked. The pages include it, so MyST needs it to exist before it parses anything.
+python3 scripts/build-stamp.py
+
 echo "== myst content build (strict) =="
 if ! command -v myst >/dev/null 2>&1; then
   if [ -n "${CI:-}" ]; then

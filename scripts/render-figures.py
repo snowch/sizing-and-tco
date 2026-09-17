@@ -96,6 +96,11 @@ def main() -> int:
     expected = {
         f"{name}.svg" if isinstance(FIGURES[name], Diagram) else f"{name}.md" for name in FIGURES
     }
+    # Written by scripts/build-stamp.py rather than rendered from a result, because it names the
+    # commit being built and a committed copy would be stale on arrival. It is gitignored, so it
+    # cannot go stale the way the orphan check exists to catch — nothing regenerates it because
+    # every build regenerates it.
+    expected.add("build.md")
     orphans = sorted(
         path
         for directory in (FRAGMENTS, DIAGRAMS)
