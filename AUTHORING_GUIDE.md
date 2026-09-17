@@ -37,7 +37,7 @@ Not the order the chapter is read in.
 
 Writing the prose first produces a chapter that explains what you meant to model.
 
-## The seven-part shape
+## The six-part shape
 
 PLAN.md §5, and it is not negotiable — the repetition is what makes twenty-three chapters read as
 one book. `python3 scripts/new-chapter.py <slug>` generates the shape with the question,
@@ -120,6 +120,104 @@ is invisible from inside a spreadsheet and expensive from outside one.
 
 State what *changes* on a different stack, not merely that something does. "Assumes zstd" is a
 warning. "A different codec moves this constant and nothing else in the chain" is useful.
+
+## What no check can catch
+
+Every rule above has a script behind it. Nothing in this section does. Each of these was written,
+reviewed, published, and found only when somebody read the page again slowly — so this is a
+reading list rather than a lint, and the sentences quoted are the real ones.
+
+The heading deliberately does not say how many. A section called "Seven things" would be an
+instance of the first item.
+
+### A claim about the repository's own state
+
+The most reliable way to publish something false. It is true when written and rots silently,
+because no check looks at prose describing the repository.
+
+| Published | Actually |
+|---|---|
+| "all three models run end to end" | the observability model cannot compute three of its thirteen outputs |
+| "This page has leaned on three of them loosely" | it leans on one |
+| "the one machine this book takes its timings from" | no `rig` result exists and `rig/machine.yml` is absent |
+
+**If the repository can compute it, generate it.** `bench.tables.unmeasured_constants` is the
+worked example: it walks every model for a measured node with no result and writes the sentence,
+so the count cannot drift and a constant cannot be named after somebody measures it. Declare that
+kind of fragment with `computed_from=` rather than a `result`.
+
+If you cannot generate it, ask what makes it true and whether that will still hold in a year. A
+status report in a finished book usually answers nothing the reader asked.
+
+### A word that means two things on one page
+
+"Run" meant one trial of the arithmetic, the whole batch of trials, and the stamped execution of a
+model — within twenty lines of the introduction, and never defined.
+
+The fix was not a better sentence. It was saying once, before the word appeared, what the thing
+was: *the arithmetic done over and over, every answer kept*. After that the page could say "nine
+of those answers in ten" and mean something.
+
+Watch for a word this book uses technically — run, node, sample, model, stage, target, figure,
+constant — and check it means one thing per page.
+
+### A definite reference to something the reader has not met
+
+> This part starts the storage cluster
+
+*The* storage cluster. The reader has met no cluster, and you cannot start one anyway. The
+definite article is the tell: it promises the reader already has this, and a reader who does not
+assumes they missed something.
+
+### A term doing work before it is defined
+
+Page one used "model" from the Source line onwards and then ran a whole taxonomy on it — cost
+model, sizing model, which kind you have decides what you are exposed to — with nothing having
+said what a model is here.
+
+A term that carries an argument must be defined before the argument, on the same page, in the
+plain-English form. The book's rationed vocabulary (PLAN.md) is about which terms are allowed;
+this is about where they arrive.
+
+### A table nobody chose
+
+The introduction's outputs table had eight rows because `outputs_table` rendered every output the
+model declared, in the model file's own order. It was byte-identical to ch12's. Six of the rows
+were a chapter's subject arriving up to nineteen chapters early, and two of them were ceilings
+shown without a limit, a verdict or a breach probability — the three columns that make a ceiling
+row mean anything.
+
+Ask of every figure: **did somebody choose these rows for this page, or is this the renderer's
+default?** A renderer that takes the whole result is right for the chapter that earned it and
+wrong everywhere else.
+
+### The same argument twice, far apart
+
+A paragraph under the introduction's first table explained the Source line and why you could trust
+it. Eighty lines later, the section that exists to make that argument made it again in one
+sentence. The near one was longer, interrupted the table from the figure that paid it off, and
+was the one to cut.
+
+Duplication over a screen's distance is invisible while writing and obvious while reading.
+
+### A number spelled as a word
+
+`verify-numbers.py` scans digits, so "seven nodes", "five inputs and two computed" and "fifteen
+petabytes" all pass. They are figures typed into prose exactly as much as `7` would be.
+
+Small counts of things on the page — "two rows", "three questions" — are fine. A quantity the
+repository measured is not, whichever way you spell it.
+
+## How to read for these
+
+Not while writing. Take a finished page and read it as somebody who has read every page before it
+and none after — which is the only way a reader ever arrives — and stop at:
+
+- every sentence stating a fact about this repository
+- every word used technically, checked against its other uses on the page
+- every "the" in front of a noun the page has not introduced
+- every figure, asking who chose its rows
+- every paragraph, asking whether the page has already said this
 
 ## Figures
 

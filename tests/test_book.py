@@ -151,6 +151,67 @@ CHAPTER_LINK = re.compile(r"\[(ch\d+)([^\]]*)\]\(#([a-z-]+)\)")
 TITLED = " · "
 
 
+#: "problem 3.2", however the line happens to wrap.
+PROBLEM_REFERENCE = re.compile(r"[Pp]roblems?\s+(\d+)\.(\d+)")
+
+#: A problem as its chapter declares it: "**3.2 — Take a constant...**"
+PROBLEM_DECLARED = re.compile(r"^\*\*(\d+\.\d+) \u2014", re.M)
+
+
+@pytest.mark.parametrize("chapter", CHAPTERS, ids=lambda c: c.slug)
+def test_a_problem_reference_points_at_a_problem_that_exists(chapter: Chapter):
+    """A problem number is a chapter number and a position, and chapters move.
+
+    Both halves of this failed. Renumbering left ch01 pointing at "problem 2.2", which exists and
+    is about something else entirely, and ch08 pointing at "problem 9.3", which never existed at
+    all. Neither is visible from the chapter doing the pointing.
+
+    A bare reference means this chapter's own problem: that is what thirty-five of the book's
+    thirty-eight do. The exception is a reference that names the owning chapter in the same
+    breath — "ch02's discipline and problem 2.2's arithmetic" — which reads correctly and is
+    allowed, because the link beside it is what a reader follows.
+    """
+    declared = {
+        c.label: set(PROBLEM_DECLARED.findall((ROOT / c.path).read_text())) for c in CHAPTERS
+    }
+    flat = " ".join((ROOT / chapter.path).read_text().split())
+    for match in PROBLEM_REFERENCE.finditer(flat):
+        number = f"{match.group(1)}.{match.group(2)}"
+        owner = f"ch{int(match.group(1)):02d}"
+        assert number in declared.get(owner, set()), (
+            f"{chapter.path} points at problem {number}, which no chapter declares. "
+            f"{owner} has {sorted(declared.get(owner, set())) or 'no problems'}."
+        )
+        if owner != chapter.label:
+            near = flat[max(0, match.start() - 200) : match.start()]
+            other = next(c for c in CHAPTERS if c.label == owner)
+            assert f"(#{other.anchor})" in near, (
+                f"{chapter.path} says 'problem {number}' without naming {owner}, so a reader "
+                f"takes it for one of {chapter.label}'s own. Either it meant "
+                f"{chapter.label}.{match.group(2)}, or it should link {owner} beside it."
+            )
+
+
+#: A repository path as a page writes it: backticked, with a slash and an extension this book
+#: actually uses. Deliberately narrow — `USD/TB/month` is a unit, not a file.
+QUOTED_PATH = re.compile(r"`([A-Za-z0-9_./-]+\.(?:py|js|yaml|yml|json|md|sh|toml|txt|css))`")
+
+
+@pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
+def test_a_page_does_not_name_a_file_that_is_not_there(path):
+    """A page telling a reader to go and look at something that is not there.
+
+    The one item from AUTHORING_GUIDE's "What no check can catch" that turned out to be
+    checkable. The rest of that list needs a reader; this one only needs the filesystem, and it
+    fails the day a script is renamed rather than the day somebody follows the path.
+    """
+    for named in QUOTED_PATH.findall(path.read_text()):
+        assert (ROOT / named).exists() or list(ROOT.glob(f"**/{named}")), (
+            f"{path.name} sends a reader to {named!r}, which does not exist. Rename the "
+            "reference, or write the file."
+        )
+
+
 @pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
 def test_a_chapter_reference_names_the_chapter_the_outline_names(path):
     """A reference that carries a title has to carry the right one.

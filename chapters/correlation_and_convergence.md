@@ -6,16 +6,6 @@ short_title: "ch13 Correlation and convergence"
 (correlation-and-convergence)=
 # ch13 · Correlation and convergence
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch12 · Monte Carlo](#monte-carlo) |
-| **What it produces** | What assuming independence was worth, and how many samples is enough |
-| **Built from** | `correlation-effect`, `convergence-storage-tco`, `observability-reference` |
-:::
-
 ## The question
 
 [ch12](#monte-carlo) produced an interval, and it rested on two things nobody checked: that every

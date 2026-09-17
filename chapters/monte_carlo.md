@@ -6,16 +6,6 @@ short_title: "ch12 Monte Carlo"
 (monte-carlo)=
 # ch12 · Monte Carlo
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch11 · The sizing model](#the-sizing-model) |
-| **What it produces** | The storage model sampled rather than evaluated, and the probability each of its ceilings is breached |
-| **Built from** | `storage_cluster-reference`, `storage_cluster-sized_for_growth` |
-:::
-
 ## The question
 
 The sizing model has produced a node count. How sure are we?

@@ -6,16 +6,6 @@ short_title: "ch09 Bandwidth, and the binding constraint"
 (bandwidth-and-the-binding-constraint)=
 # ch09 · Bandwidth, and the binding constraint
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch08 · Capacity](#capacity) |
-| **What it produces** | How often each of the storage model's two chains decides the answer |
-| **Built from** | `binding-constraint`, `storage_cluster-reference` |
-:::
-
 ## The question
 
 When two independent chains each demand a different size, which one are you actually buying?

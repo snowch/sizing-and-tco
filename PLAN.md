@@ -85,20 +85,25 @@ going soft.
 which for the metrics encoder is this repository's own — because that is what makes it a
 measurement rather than a claim.
 
-## 5. The seven-part chapter shape
+## 5. The six-part chapter shape
 
-Every chapter, every time. The repetition is what makes twenty-three chapters read as one book.
+Every chapter, every time. The repetition is what makes the book read as one book.
 
-1. **Header block** — prerequisites, what it produces, what it is built from.
-2. **The question** — one paragraph. What this chapter answers, and why the previous one leaves it
+There was a seventh, at the top: a collapsed table giving the chapter's prerequisites, what it
+produced and which results it was built from. It went because a reader does not open it, every
+figure already carries its own source line, and for sixteen of the chapters the prerequisite was
+"the previous one". The five where it said something real turned out to say it in prose already.
+The data stays in `bench/outline.py`, where `tests/test_book.py` checks it.
+
+1. **The question** — one paragraph. What this chapter answers, and why the previous one leaves it
    open.
-3. **The material** — the body. Short sections. Code and models quoted from the working tree.
-4. **What the model says** — generated fragments only. No number typed in prose.
-5. **What this cannot tell you** — **mandatory**, and for a chapter with a model in it, it must
+2. **The material** — the body. Short sections. Code and models quoted from the working tree.
+3. **What the model says** — generated fragments only. No number typed in prose.
+4. **What this cannot tell you** — **mandatory**, and for a chapter with a model in it, it must
    name what the *structure* omits.
-6. **Problems** — each a stub under `tests/<chapter-slug>/` with a test that passes only when
+5. **Problems** — each a stub under `tests/<chapter-slug>/` with a test that passes only when
    solved.
-7. **Where to go next** — primary sources via `@citekey`.
+6. **Where to go next** — primary sources via `@citekey`.
 
 ## 6. Conventions
 

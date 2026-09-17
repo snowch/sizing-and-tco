@@ -5,10 +5,11 @@
     python3 scripts/new-chapter.py --all            # every one that does not exist yet
     python3 scripts/new-chapter.py --all --force    # regenerate stubs, refusing written pages
 
-A stub is not a placeholder. It carries the chapter's question, its prerequisites and the
-measurements it owes the reader, all taken from ``bench/outline.py`` — so the table of contents
-of work not yet done is visible from the published site, and a chapter cannot acquire a
-dependency without recording it.
+A stub is not a placeholder. It carries the chapter's question and its heading shape, taken from
+``bench/outline.py`` — so the work not yet done is visible from the published site. What a
+chapter needs and what it owes stay in the outline, where the tests can check them, rather than
+in a table on the page: a reader reads the chapter, and a chapter that cannot say in its own
+prose what it rests on has a worse problem than a missing table.
 
 ``--force`` refuses to touch a page that is no longer a stub. Losing prose to a regeneration is
 the kind of mistake that only has to happen once.
@@ -30,23 +31,6 @@ MARKER = "[To write"
 
 
 def chapter_stub(chapter: Chapter) -> str:
-    previous = [c for c in CHAPTERS if c.number < chapter.number]
-    # Title as well as number. A cell reading "ch13" tells a reader where to click and nothing
-    # about what they are expected to know, and unlike a reference in a sentence there is no
-    # surrounding prose to say. tests/test_book.py pins the title to bench/outline.py.
-    needs = ", ".join(
-        f"[{c.label} \u00b7 {c.title}](#{c.anchor})" for c in CHAPTERS if c.slug in chapter.needs
-    ) or (
-        f"[{previous[-1].label} \u00b7 {previous[-1].title}](#{previous[-1].anchor})"
-        if previous
-        else "none"
-    )
-    owes = chapter.owes or "[To write: what this chapter must produce.]"
-    consumes = (
-        "\n| **Built from** | " + ", ".join(f"`{source}`" for source in chapter.consumes) + " |"
-        if chapter.consumes
-        else ""
-    )
     return f"""---
 title: "{chapter.title} [DRAFT]"
 short_title: "{chapter.label} {chapter.title}"
@@ -54,15 +38,6 @@ short_title: "{chapter.label} {chapter.title}"
 
 ({chapter.anchor})=
 # {chapter.label} · {chapter.title} [DRAFT]
-
-:::{{note}} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | {needs} |
-| **What it produces** | {owes} |{consumes}
-:::
 
 ## The question
 

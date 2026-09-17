@@ -6,16 +6,6 @@ short_title: "ch04 Little's law"
 (littles-law)=
 # ch04 · Little's law
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch01 · What a workload is](#what-a-workload-is) |
-| **What it produces** | Requests in flight, from a rate and a duration, across the whole range |
-| **Built from** | `service_tier-reference` |
-:::
-
 ## The question
 
 What can you infer about a system from the one relationship that is always true, and what can you

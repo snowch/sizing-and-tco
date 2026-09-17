@@ -6,22 +6,13 @@ short_title: "ch18 Which input to go and measure"
 (which-input-is-the-answer)=
 # ch18 · Which input to go and measure
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch12 · Monte Carlo](#monte-carlo) |
-| **What it produces** | Tornado charts across both reference models, and what the widest bars have in common |
-| **Built from** | `storage_cluster-reference`, `observability-reference`, `service_tier-reference`, `value-of-information` |
-:::
-
 ## The question
 
 Which input should you go and measure first, and how would the model tell you?
 
 An interval describes a problem. Choosing which input to go and measure is the only actionable
-thing you can do with one.
+thing you can do with one. Everything here operates on a model that has already been sampled, so
+it needs [ch12](#monte-carlo) behind it rather than the chapter before.
 
 ## The material
 

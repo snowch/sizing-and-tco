@@ -6,16 +6,6 @@ short_title: "ch10 Headroom and failure domains"
 (headroom-and-failure-domains)=
 # ch10 · Headroom and failure domains
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch05 · Queueing, and the knee](#queueing-and-the-knee), [ch08 · Capacity](#capacity) |
-| **What it produces** | Every declared margin in the book, and the reason for each |
-| **Built from** | `storage_cluster-reference`, `observability-reference`, `service_tier-reference` |
-:::
-
 ## The question
 
 Why is headroom a rule rather than a number?

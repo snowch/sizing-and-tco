@@ -6,16 +6,6 @@ short_title: "ch08 Capacity"
 (capacity)=
 # ch08 · Capacity
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch01 · What a workload is](#what-a-workload-is) |
-| **What it produces** | The raw-to-usable chain of the storage model, node by node |
-| **Built from** | `storage_cluster-reference` |
-:::
-
 ## The question
 
 How far is what you buy from what you can use?
@@ -75,7 +65,7 @@ about a tenth, both are called a terabyte in conversation, and a tenth is a larg
 compression was going to buy you.
 
 So every node in this book declares a unit, and the build converts rather than assuming. Problem
-9.3 is that conversion, and this is the chapter where getting it wrong costs money.
+8.3 is that conversion, and this is the chapter where getting it wrong costs money.
 
 ### What comes out
 

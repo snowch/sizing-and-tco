@@ -6,16 +6,6 @@ short_title: "ch03 Peak, mean and growth"
 (peak-mean-and-growth)=
 # ch03 · Peak, mean and growth
 
-:::{note} Prerequisites, and what this chapter is built from
-:class: dropdown
-
-| | |
-|---|---|
-| **Prerequisites** | [ch01 · What a workload is](#what-a-workload-is) |
-| **What it produces** | What moves the recommended node count, and by how much |
-| **Built from** | `storage_cluster-reference` |
-:::
-
 ## The question
 
 Which number in a demand curve sizes you, and what is a five-year growth rate actually a claim
