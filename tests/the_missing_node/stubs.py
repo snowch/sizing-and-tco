@@ -1,6 +1,6 @@
-"""Chapter 20's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 19's problems. Edit this file; the tests beside it say whether you are right.
 
-ch14 asked you to repair a model that was wrong in shape. These two ask the harder question that
+ch13 asked you to repair a model that was wrong in shape. These two ask the harder question that
 comes first: how would you know?
 """
 
@@ -10,7 +10,7 @@ import numpy as np
 
 
 def is_refuted(samples: np.ndarray, observation: float, observations: int) -> bool:
-    """Problem 20.1 - is one number outside the interval evidence of anything?
+    """Problem 19.1 - is one number outside the interval evidence of anything?
 
     ``samples`` is a model's output distribution. ``observation`` is a figure from the real world
     that the model was supposed to describe. ``observations`` is how many such figures you have.
@@ -31,11 +31,11 @@ def is_refuted(samples: np.ndarray, observation: float, observations: int) -> bo
     there is no right answer there and pretending otherwise would be the same error the chapter is
     about.
     """
-    raise NotImplementedError("problem 20.1")
+    raise NotImplementedError("problem 19.1")
 
 
 def widen_until_it_fits(samples: np.ndarray, observation: float) -> float:
-    """Problem 20.2 - the wrong repair, measured.
+    """Problem 19.2 - the wrong repair, measured.
 
     A model disagrees with an observation. The easiest response is to make the model vaguer until
     it stops disagreeing.
@@ -48,4 +48,4 @@ def widen_until_it_fits(samples: np.ndarray, observation: float) -> float:
     no longer distinguish between designs, which is the only thing it was for. A model that cannot
     be wrong has stopped being able to be useful, and this number is what that costs.
     """
-    raise NotImplementedError("problem 20.2")
+    raise NotImplementedError("problem 19.2")

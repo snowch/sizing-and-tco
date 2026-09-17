@@ -26,7 +26,7 @@ exactly like a right one, and the reader has no way to tell.
 ## The one carve-out in rule 6, and why it is narrow
 
 A percentage is a figure, and *"the 90% interval"* is not: it is the name of a convention this
-book defines once in ch13 and then uses as vocabulary, the way a paper says "95% confidence
+book defines once in ch12 and then uses as vocabulary, the way a paper says "95% confidence
 interval" without quoting a measurement. So that exact shape is exempt and nothing else is — not
 "a 34% chance", not "9% of futures", not any percentage that came out of a model. Every other
 exemption has to be written into the page as `% number-ok: <reason>`, where a reviewer sees it.

@@ -107,7 +107,7 @@ The number, its standard error and the implementation it belongs to all come fro
 `bench/results/`. That is what separates a measured constant from an input that happens to have
 been measured once. If the result does not exist, the node has no value and neither does anything
 downstream of it — the state propagates by itself and the figures say *not yet measured* rather
-than showing an estimate ([ch03](#where-the-numbers-come-from)).
+than showing an estimate ([ch02](#where-the-numbers-come-from)).
 
 ### `ceiling` — where the arithmetic stops working
 
@@ -126,7 +126,7 @@ some months after anybody remembers there were two.
 
 `because` is required and `headroom` is required. A ceiling with a limit and no margin is not a
 sizing rule but a comparison, and the build refuses it
-([ch11](#headroom-and-failure-domains)).
+([ch10](#headroom-and-failure-domains)).
 
 ## Provenance
 
@@ -179,7 +179,7 @@ A model may declare that two inputs move together, with a reason:
 
 The reason is not optional. A coefficient with no reason attached is a number somebody will copy
 into the next model without knowing what it was for
-([ch14](#correlation-and-convergence)).
+([ch13](#correlation-and-convergence)).
 
 ## Scenarios
 
@@ -191,7 +191,7 @@ count and the seed so the run can be reproduced exactly:
 ```
 
 Scenarios are how you compare two designs without editing either one into the other
-([ch21](#a-tco-for-finance)).
+([ch20](#a-tco-for-finance)).
 
 ## What the build checks
 

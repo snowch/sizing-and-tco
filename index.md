@@ -73,7 +73,7 @@ appears under the tables. A test fails if that ever stops being true.
 The red line is where the point estimate falls. Everything else is the same model, told the truth
 about its own inputs.
 
-The method that produced that second column is [ch13](#monte-carlo)'s, not this page's. It is no
+The method that produced that second column is [ch12](#monte-carlo)'s, not this page's. It is no
 use to you until you have built a model, got a number out of it, and felt that you could not
 defend the number.
 
@@ -125,7 +125,7 @@ text file. Every quantity declares a unit, so the build can refuse a model that 
 wrong two things. Every input declares whether it is a fact, a vendor's claim or somebody's
 assumption, and an uncertain one has to say what shape its uncertainty has and why that shape
 rather than another. Every measured constant names the measurement behind it.
-[ch03](#where-the-numbers-come-from) says what those distinctions are worth;
+[ch02](#where-the-numbers-come-from) says what those distinctions are worth;
 [Appendix A](#appendix-a-dsl-reference) is the file format that holds them.
 
 **Every chapter ends by saying what it cannot tell you.** A section with that name is required,
@@ -144,7 +144,7 @@ A self-study text and a toolkit, for an engineer who has been asked how big some
 be, or what it will cost, and who wants to give an answer they would still defend a year later.
 
 You should be comfortable with code and with arithmetic. You are assumed to know **nothing**
-about statistics. [ch13](#monte-carlo) and [ch14](#correlation-and-convergence) introduce the
+about statistics. [ch12](#monte-carlo) and [ch13](#correlation-and-convergence) introduce the
 six words you need — distribution, sample, percentile, interval, correlation,
 convergence — one at a time, each one arriving because a model has just raised a question that
 needs it. Where a statistical term has a plain-English equivalent, this book uses the plain one

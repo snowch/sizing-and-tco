@@ -1,17 +1,17 @@
 ---
 title: "A TCO for a finance audience"
-short_title: "ch21 A TCO for a finance audience"
+short_title: "ch20 A TCO for a finance audience"
 ---
 
 (a-tco-for-finance)=
-# ch21 · A TCO for a finance audience
+# ch20 · A TCO for a finance audience
 
 :::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |
 |---|---|
-| **Prerequisites** | [ch18](#the-five-year-model), [ch19](#which-input-is-the-answer) |
+| **Prerequisites** | [ch17](#the-five-year-model), [ch18](#which-input-is-the-answer) |
 | **What it produces** | The two storage scenarios as a decision, priced |
 | **Built from** | `storage_cluster-reference`, `storage_cluster-sized_for_growth` |
 :::
@@ -63,7 +63,7 @@ money will be allocated, and when the cost lands lower nobody will thank you for
 
 **A round number above the median.** Not as unprincipled as it sounds. Rounding to a precision
 the model can actually support is more honest than quoting a figure to the dollar, and
-[ch14](#correlation-and-convergence) gives the arithmetic for what precision that is: the run-to-run
+[ch13](#correlation-and-convergence) gives the arithmetic for what precision that is: the run-to-run
 wobble has to be below the digit you are prepared to defend.
 
 Here is the shape all three are chosen from — the same picture [the introduction](#preface) opened
@@ -82,7 +82,7 @@ position, and there is only room for one, so it has to name something specific �
 omission, an assumption the total rests on. "There is some uncertainty" names nothing and will be
 heard as "no".
 
-Problem 21.2 is that pair, and it is graded on the sentence.
+Problem 20.2 is that pair, and it is graded on the sentence.
 
 ### A decision, not an interval
 
@@ -94,7 +94,7 @@ interval and start presenting two designs with a price.
 
 Two columns. The left one buys what the model recommends at the point estimate. The right one
 buys the same cluster sized for the growth we might get rather than the growth we expect, which
-is the decision of [ch11](#headroom-and-failure-domains) taken deliberately instead of by default.
+is the decision of [ch10](#headroom-and-failure-domains) taken deliberately instead of by default.
 
 Read across the rows and the conversation changes shape. The question is no longer "is this
 estimate right", which nobody in the room can answer. It is "is the difference between these two
@@ -136,7 +136,7 @@ Then the appendix nobody asks for until they do.
 
 Three marks. The one that matters in this room is *vendor claim*: a number supplied by the party
 being paid. It may well be right. It has not been checked here, it is coloured differently in
-every figure in this book for that reason ([ch03](#where-the-numbers-come-from)), and the finance
+every figure in this book for that reason ([ch02](#where-the-numbers-come-from)), and the finance
 audience is entitled to know which of the inputs to a capital request came from the supplier.
 
 Handing this over unprompted makes the rest of the document more believable, and little else
@@ -170,7 +170,7 @@ One page:
 - The provenance table, marked.
 - A link to the model file, because it re-runs and they can change an input and see what happens.
 
-And the cash flow, separated by year rather than summed. [ch15](#capex-opex-and-lifecycle) says
+And the cash flow, separated by year rather than summed. [ch14](#capex-opex-and-lifecycle) says
 why this book does not discount: the rate is a policy decision, not an engineering one. The first
 thing a finance team will do with a five-year total is discount it, and they can only do that if
 the years have not already been added together.
@@ -195,7 +195,7 @@ design that spends capital up front and one that spends it over time — and the
 differ in exactly that way. The model hands over the shape of the spend so that somebody can
 apply theirs; it does not pretend the undiscounted total is the answer.
 
-**Whether the structure is complete.** [ch20](#the-missing-node) is the standing limitation and
+**Whether the structure is complete.** [ch19](#the-missing-node) is the standing limitation and
 it does not stop applying because the audience has changed. The decision table is a comparison
 between two designs inside one model, and both columns inherit whatever that model is missing.
 The comparison is more robust than either total — a missing cost line that scales with node count
@@ -209,7 +209,7 @@ the book arguing from experience rather than from a stamped result.
 
 Two, in `tests/a_tco_for_finance/`. Neither is arithmetic.
 
-**21.1 — The decision table.**
+**20.1 — The decision table.**
 Build the two-design comparison from the stamped results, with the columns that answer the
 question and no others. The test grades the numbers against the model and the shape against what
 fits in somebody's head.
@@ -218,7 +218,7 @@ fits in somebody's head.
 python3 -m pytest tests/a_tco_for_finance/test_problem_1_decision_table.py
 ```
 
-**21.2 — They have asked for one number.**
+**20.2 — They have asked for one number.**
 Give it. Then write the sentence. Any defensible choice of number passes; the test checks that it
 came out of the model, that it is rounded to a precision the model can support, and that the
 sentence names something specific.
@@ -229,7 +229,7 @@ python3 -m pytest tests/a_tco_for_finance/test_problem_2_one_number.py
 
 ## Where to go next
 
-That is the argument. [ch22](#what-the-model-got-wrong) is what happens afterwards — three
+That is the argument. [ch21](#what-the-model-got-wrong) is what happens afterwards — three
 years later, when one of the futures in that table turned out to be the one you got.
 
 What remains after it is reference material:
@@ -240,6 +240,6 @@ What remains after it is reference material:
 storage and observability models in full, and
 [Appendix G](#appendix-g-glossary) for the vocabulary, including the terms this book refuses.
 
-If you read one thing again, make it [ch20](#the-missing-node). Everything in this chapter is
+If you read one thing again, make it [ch19](#the-missing-node). Everything in this chapter is
 about presenting what the model knows, and the hardest sentence to write is still the one about
 what it does not.

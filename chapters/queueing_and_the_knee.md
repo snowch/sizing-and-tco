@@ -1,17 +1,17 @@
 ---
 title: "Queueing, and the knee"
-short_title: "ch06 Queueing, and the knee"
+short_title: "ch05 Queueing, and the knee"
 ---
 
 (queueing-and-the-knee)=
-# ch06 · Queueing, and the knee
+# ch05 · Queueing, and the knee
 
 :::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |
 |---|---|
-| **Prerequisites** | [ch05](#littles-law) |
+| **Prerequisites** | [ch04](#littles-law) |
 | **What it produces** | The utilisation curve, swept out of the model rather than asserted |
 | **Built from** | `queueing-curve`, `service_tier-reference` |
 :::
@@ -20,7 +20,7 @@ short_title: "ch06 Queueing, and the knee"
 
 Why does response time climb long before a device is busy, and what does headroom actually buy?
 
-[ch05](#littles-law) related three quantities without assuming anything, and could therefore
+[ch04](#littles-law) related three quantities without assuming anything, and could therefore
 explain nothing. This chapter buys a mechanism, and the price is a set of assumptions somebody can
 argue with.
 
@@ -70,7 +70,7 @@ get the same picture back. There is nothing in it to find.
 
 What people point at when they say "the knee" is the place where the slope first exceeded what
 they were willing to put up with. That is a statement about the person, not about the queue.
-Problem 6.2 measures how much that person matters: invert the formula, ask where requests take
+Problem 5.2 measures how much that person matters: invert the formula, ask where requests take
 twice as long, then ask where they take ten times as long, and watch the answer travel across most
 of the useful range of a system.
 
@@ -90,12 +90,12 @@ estimate alone: `ok` under the allowed line, **over** past the limit, *into the 
 the two, where the design is spending the reserve that was declared to protect it. The last two
 columns ignore the point estimate: across everything the model thinks could happen, they give the
 share of futures past the allowed line and the share past the limit. A design can read `ok` and
-still be over the limit in a third of its futures. [ch12](#the-sizing-model) builds exactly that
+still be over the limit in a third of its futures. [ch11](#the-sizing-model) builds exactly that
 design.
 
 A margin is a decision, it belongs to somebody, and a ceiling's `because` field is where they
 say what they were protecting. The build refuses a ceiling that leaves it empty.
-[ch11](#headroom-and-failure-domains) is where that decision gets made deliberately instead of
+[ch10](#headroom-and-failure-domains) is where that decision gets made deliberately instead of
 inherited.
 
 ### Why the margin is so large
@@ -110,7 +110,7 @@ was in a way that shows up in somebody else's dashboards.
 
 The way back is worse, too. Coming back from a full disk means deleting something. Coming back
 from a queue means shedding load or adding machines, and
-[ch07](#when-adding-servers-stops-helping) is about how little the second one buys.
+[ch06](#when-adding-servers-stops-helping) is about how little the second one buys.
 
 ### What this model assumes, and what it costs
 
@@ -156,7 +156,7 @@ worse, and the gap between the two widens as utilisation rises — by a factor t
 report.
 
 **When the load will cross the line.** The model says what happens at a given utilisation, not
-when yours will get there. That is [ch04](#peak-mean-and-growth)'s question, and its answer rests
+when yours will get there. That is [ch03](#peak-mean-and-growth)'s question, and its answer rests
 on a growth rate nobody can measure.
 
 **Whether the service time is constant.** It is not, the model says it is, and the declared
@@ -167,7 +167,7 @@ cannot say by how much.
 
 Two, in `tests/queueing_and_the_knee/`.
 
-**6.1 — The formula.**
+**5.1 — The formula.**
 Write the division. Work out what you are dividing by before you look it up, then decide what to
 return at a utilisation of one — an infinity is defensible and so is raising, but a large finite
 number is not, because somebody will put it in a slide.
@@ -176,7 +176,7 @@ number is not, because somebody will put it in a slide.
 python3 -m pytest tests/queueing_and_the_knee/test_problem_1_residence.py
 ```
 
-**6.2 — Where is the knee?**
+**5.2 — Where is the knee?**
 Invert the formula and find the utilisation at which requests take a given multiple of their idle
 time. Then compare what comes out for a tolerant engineer and a strict one. The gap between their
 two answers is a decision, not a discovery.
@@ -187,8 +187,8 @@ python3 -m pytest tests/queueing_and_the_knee/test_problem_2_knee.py
 
 ## Where to go next
 
-[ch07](#when-adding-servers-stops-helping) takes the obvious response to everything above — add
+[ch06](#when-adding-servers-stops-helping) takes the obvious response to everything above — add
 machines — and works out what it actually buys.
 
-[ch11](#headroom-and-failure-domains) chooses the margin this chapter refused to choose, and shows
+[ch10](#headroom-and-failure-domains) chooses the margin this chapter refused to choose, and shows
 what happens when two of them end up multiplied together.

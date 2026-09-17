@@ -1,4 +1,4 @@
-"""Chapter 17's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 16's problems. Edit this file; the tests beside it say whether you are right.
 
 Both are about the denominator, which is the half of a unit cost nobody checks.
 """
@@ -9,7 +9,7 @@ import numpy as np
 
 
 def unit_cost(total: float, quantity: float, months: float) -> float:
-    """Problem 17.1 - a total, over a quantity, over a period.
+    """Problem 16.1 - a total, over a quantity, over a period.
 
     Return the cost per unit per month.
 
@@ -21,11 +21,11 @@ def unit_cost(total: float, quantity: float, months: float) -> float:
     The build catches this in a model, because those two have identical dimensions and different
     units and sizing/units.py converts. In a slide nothing catches it.
     """
-    raise NotImplementedError("problem 17.1")
+    raise NotImplementedError("problem 16.1")
 
 
 def denominators(capacity_samples: np.ndarray, total_samples: np.ndarray) -> dict[str, float]:
-    """Problem 17.2 - the same cost, over four defensible denominators.
+    """Problem 16.2 - the same cost, over four defensible denominators.
 
     You have a bag of five-year totals and a bag of capacities at the horizon, sample by sample.
     Somebody wants a cost per terabyte per month. Return a dictionary with four of them, keyed
@@ -50,4 +50,4 @@ def denominators(capacity_samples: np.ndarray, total_samples: np.ndarray) -> dic
     Return them, look at the spread, and then decide which you would put on a slide - and whether
     you would be willing to say which it was.
     """
-    raise NotImplementedError("problem 17.2")
+    raise NotImplementedError("problem 16.2")

@@ -1,4 +1,4 @@
-"""Problem 20.2 - the wrong repair, and what it costs."""
+"""Problem 19.2 - the wrong repair, and what it costs."""
 
 from __future__ import annotations
 

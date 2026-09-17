@@ -23,7 +23,7 @@ nodes:
     label: usable capacity, day one
     provenance:
       kind: assumption
-      source: "stated workload (ch02) — what the application says it needs to store today"
+      source: "stated workload (ch01) — what the application says it needs to store today"
     range: [500, 20000]
 
   annual_growth:
@@ -33,7 +33,7 @@ nodes:
     distribution: {lognormal: {p10: 1.12, p90: 1.60}}
     provenance:
       kind: assumption
-      source: "ch04 — lognormal because growth compounds and cannot be negative. The p10/p90
+      source: "ch03 — lognormal because growth compounds and cannot be negative. The p10/p90
         say: surprised below 12% a year, surprised above 60%."
     range: [1.0, 2.0]
 
@@ -69,7 +69,7 @@ nodes:
     distribution: {triangular: {minimum: 35.0, likely: 85.0, maximum: 240.0}}
     provenance:
       kind: assumption
-      source: "ch03 — the busy hour, not the average. Triangular because this is an engineer's
+      source: "ch02 — the busy hour, not the average. Triangular because this is an engineer's
         min/likely/max and pretending to more shape than that would be invention."
     range: [10, 400]
 
@@ -105,7 +105,7 @@ nodes:
       kind: assumption
       source: "filesystem, index and journal overhead as a multiplier on stored bytes.
         Triangular, and the bounds are for objects of the size this model assumes — the real
-        spread is a function of object size, which is a term ch09 says this model lacks"
+        spread is a function of object size, which is a term ch08 says this model lacks"
 
   raw_per_usable:
     kind: derived
@@ -146,7 +146,7 @@ nodes:
     label: capacity headroom
     provenance:
       kind: assumption
-      source: "ch11 — rebuild reserve plus allocator behaviour near full. One node's worth of
+      source: "ch10 — rebuild reserve plus allocator behaviour near full. One node's worth of
         data has to land somewhere when a node dies, and a filesystem at 97% is a different
         filesystem."
     range: [0.0, 0.45]
@@ -164,7 +164,7 @@ nodes:
     distribution: {triangular: {minimum: 1.1, likely: 1.7, maximum: 2.4}}
     provenance:
       kind: vendor_claim
-      source: "sustained sequential read per node, as quoted. Unverified here — ch03.
+      source: "sustained sequential read per node, as quoted. Unverified here — ch02.
         Triangular, and the lower bound is the one doing the work: the quoted figure is
         sequential and a real read pattern is not"
 
@@ -206,7 +206,7 @@ nodes:
       source: "the sizing decision, taken the way it is usually taken: nodes_recommended
         evaluated at every input's point estimate. That is exactly 121, and the ceilings below
         are what the same model says about that decision once the inputs are allowed to be
-        uncertain. Change this number and watch them move — that is the exercise of ch12"
+        uncertain. Change this number and watch them move — that is the exercise of ch11"
     range: [40, 500]
 
   installed_raw_capacity:
@@ -229,7 +229,7 @@ nodes:
     because: >-
       A cluster that is full cannot rebuild a failed node, and one that is nearly full allocates
       badly long before that. The margin is the same node the sizing used, so the two cannot
-      drift apart (ch11). Over the limit means out of space; inside the headroom means the
+      drift apart (ch10). Over the limit means out of space; inside the headroom means the
       rebuild reserve has been spent on data.
 
   read_utilisation:
@@ -240,7 +240,7 @@ nodes:
     limit: 1
     headroom: 0.3
     because: >-
-      Not a hard limit but a queueing one (ch06). Response time climbs long before a device is
+      Not a hard limit but a queueing one (ch05). Response time climbs long before a device is
       saturated, so the margin here is about latency rather than capacity — which is why it is
       a different number from capacity_headroom and declared separately rather than shared.
 
@@ -274,7 +274,7 @@ nodes:
       kind: vendor_claim
       source: "chassis, CPU, memory and boot media, less drives. Lognormal like any price, and
         wider than the drives' because a chassis is a configuration rather than a commodity —
-        which is why ch19 finds it at the top of the tornado"
+        which is why ch18 finds it at the top of the tornado"
 
   chassis_capex:
     kind: derived
@@ -320,7 +320,7 @@ nodes:
     distribution: {triangular: {minimum: 1.15, likely: 1.35, maximum: 1.75}}
     provenance:
       kind: assumption
-      source: "ch15 — facility overhead. A multiplier on IT load, and the single number a
+      source: "ch14 — facility overhead. A multiplier on IT load, and the single number a
         colocation contract is most likely to disagree with you about. Triangular: the minimum
         is a good building, the maximum is a poor one, and below one is impossible"
     range: [1.0, 2.2]
@@ -383,7 +383,7 @@ nodes:
       kind: assumption
       source: "fraction of one engineer this cluster occupies. Triangular, and the shape
         cannot express what actually happens: people are not divisible, so the real
-        distribution is lumpy in the way ch08 calls a regime change"
+        distribution is lumpy in the way ch07 calls a regime change"
 
   fully_loaded_salary:
     kind: input
@@ -423,7 +423,7 @@ nodes:
     note: >-
       The mean of the day-one and horizon capacities: a straight line drawn under a curve that
       is not straight, which understates the area. Stated rather than hidden, because a unit cost
-      is only as defensible as its denominator (ch17).
+      is only as defensible as its denominator (ch16).
     formula: (usable_capacity_t0 + usable_capacity) / 2
 
   cost_per_usable_tb_month:

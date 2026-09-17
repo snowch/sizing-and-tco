@@ -5,7 +5,7 @@ because: >-
   of its futures over the capacity limit. This scenario buys the cluster the p90 growth case needs
   instead, and is here so the two can be read side by side: what the extra capital buys is a
   number, the reduction in P(over) is a number, and the decision between them is a judgement
-  somebody has to make and defend (ch21).
+  somebody has to make and defend (ch20).
 samples: 100000
 seed: 20260916
 overrides:

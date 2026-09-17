@@ -1,4 +1,4 @@
-"""Problem 9.2 - comparing two protection schemes at equal safety.
+"""Problem 8.2 - comparing two protection schemes at equal safety.
 
 The oracle is the definition of the schemes, computed at test time. Nothing is stored.
 """
@@ -48,7 +48,7 @@ def test_the_saving_grows_with_the_stripe():
     wide = erasure_space(16, 2) / erasure_crossover(16, 2)
     assert wide < narrow, (
         "spreading the same protection over more pieces costs less space per byte - and touches "
-        "more machines on every read, which is ch10's problem rather than this one's"
+        "more machines on every read, which is ch09's problem rather than this one's"
     )
 
 

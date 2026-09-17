@@ -1,4 +1,4 @@
-"""Problem 9.1 - graded against the model's own chain, node by node."""
+"""Problem 8.1 - graded against the model's own chain, node by node."""
 
 from __future__ import annotations
 

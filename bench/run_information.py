@@ -3,7 +3,7 @@
     python3 -m bench.run_information            # run it and write the result
     python3 -m bench.run_information --check    # re-run and fail if a published figure moved
 
-ch19 ranks the inputs with a tornado, and a tornado answers *which input should I go and measure
+ch18 ranks the inputs with a tornado, and a tornado answers *which input should I go and measure
 first*. It does not answer the question that follows, which is the one somebody has to approve:
 **and what would that buy?** A ranking is not a quantity. This is the quantity.
 
@@ -26,7 +26,7 @@ Two further things fall out of running it, and both are worth more than the head
 **The reductions do not add up.** Pin every uncertain input one at a time, total what each one
 removed, and the total is not a hundred per cent — it is nowhere near it. Uncertainty in a chain
 of multiplications is not a pie that can be divided between the inputs, and a sensitivity figure
-that invites that reading is inviting a mistake (ch19).
+that invites that reading is inviting a mistake (ch18).
 
 **Knowing everything is not the same as knowing anything.** The last row pins every uncertain
 input at once. The interval collapses, because a model with no uncertain inputs is arithmetic —
@@ -140,7 +140,7 @@ def value_of_information(write: bool = True) -> dict:
                 "inputs": len(uncertain),
                 # Each input pinned alone, totalled. If uncertainty were a pie this would come to
                 # one; it does not, and the gap is the interaction a one-at-a-time figure cannot
-                # show (ch19, problem 19.2).
+                # show (ch18, problem 18.2).
                 "sum_of_removals": sum(row["removed"] for row in mine),
                 # Everything pinned at once. A model with nothing uncertain in it is arithmetic.
                 "all_known": everything,
@@ -171,10 +171,10 @@ def value_of_information(write: bool = True) -> dict:
             "amount nobody can know before doing the work",
             "removals_do_not_add": "the sum of the individual removals is not one. Uncertainty in "
             "a chain of multiplications is not a quantity that divides between the inputs, and a "
-            "figure read that way is read wrongly (ch19)",
+            "figure read that way is read wrongly (ch18)",
             "what_it_cannot_say": "whether the input can be measured at all. A growth rate has "
             "the largest bound in this table and belongs to no target — the honest response to it "
-            "is to decide it rather than to commission a measurement (ch04)",
+            "is to decide it rather than to commission a measurement (ch03)",
         },
         code_sources=SOURCES,
         write=write,

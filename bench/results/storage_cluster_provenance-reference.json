@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "9552c41bda4b3803",
+  "code_fingerprint": "f0da38ef57cf322a",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/stages/02-provenance/model.yaml",
@@ -10,10 +10,10 @@
   ],
   "conditions": {
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
-    "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
+    "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch13, ch18)"
   },
-  "generated_at": "2026-09-17T12:31:04+00:00",
-  "git_revision": "9c5089f",
+  "generated_at": "2026-09-17T14:15:13+00:00",
+  "git_revision": "667b099",
   "kind": "model",
   "name": "storage_cluster_provenance-reference",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
@@ -44,7 +44,7 @@
       "node_raw_capacity": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-17T12:31:04+00:00",
+    "generated_at": "2026-09-17T14:15:13+00:00",
     "model": "storage_cluster_provenance",
     "nodes": {
       "annual_growth": {
@@ -57,7 +57,7 @@
         "point": 1.3,
         "provenance": {
           "kind": "assumption",
-          "source": "ch02 - one growth rate, chosen rather than measured. ch04 replaces it with a distribution, because a single number cannot say how sure anybody is of it."
+          "source": "ch01 - one growth rate, chosen rather than measured. ch03 replaces it with a distribution, because a single number cannot say how sure anybody is of it."
         },
         "row": 0,
         "slider": {
@@ -198,7 +198,7 @@
         "point": 85.0,
         "provenance": {
           "kind": "assumption",
-          "source": "ch02 - the busy hour, as one number. ch04 replaces it with a distribution, because an engineer who gives you this figure is giving you a range and rounding it."
+          "source": "ch01 - the busy hour, as one number. ch03 replaces it with a distribution, because an engineer who gives you this figure is giving you a range and rounding it."
         },
         "row": 4,
         "slider": {
@@ -254,7 +254,7 @@
         "point": 4000.0,
         "provenance": {
           "kind": "assumption",
-          "source": "stated workload (ch02) \u2014 what the application says it needs to store today"
+          "source": "stated workload (ch01) \u2014 what the application says it needs to store today"
         },
         "row": 2,
         "slider": {

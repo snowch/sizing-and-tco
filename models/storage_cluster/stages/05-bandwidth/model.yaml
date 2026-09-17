@@ -15,7 +15,7 @@ nodes:
     label: usable capacity, day one
     provenance:
       kind: assumption
-      source: stated workload (ch02) — what the application says it needs to store today
+      source: stated workload (ch01) — what the application says it needs to store today
     range:
     - 500
     - 20000
@@ -29,7 +29,7 @@ nodes:
         p90: 1.6
     provenance:
       kind: assumption
-      source: 'ch04 — lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised
+      source: 'ch03 — lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised
         below 12% a year, surprised above 60%.'
     range:
     - 1.0
@@ -70,7 +70,7 @@ nodes:
         maximum: 240.0
     provenance:
       kind: assumption
-      source: ch03 — the busy hour, not the average. Triangular because this is an engineer's min/likely/max
+      source: ch02 — the busy hour, not the average. Triangular because this is an engineer's min/likely/max
         and pretending to more shape than that would be invention.
     range:
     - 10
@@ -108,7 +108,7 @@ nodes:
       kind: assumption
       source: filesystem, index and journal overhead as a multiplier on stored bytes. Triangular, and
         the bounds are for objects of the size this model assumes — the real spread is a function of
-        object size, which is a term ch09 says this model lacks
+        object size, which is a term ch08 says this model lacks
   raw_per_usable:
     kind: derived
     unit: dimensionless
@@ -147,7 +147,7 @@ nodes:
     label: capacity headroom
     provenance:
       kind: assumption
-      source: ch11 — rebuild reserve plus allocator behaviour near full. One node's worth of data has
+      source: ch10 — rebuild reserve plus allocator behaviour near full. One node's worth of data has
         to land somewhere when a node dies, and a filesystem at 97% is a different filesystem.
     range:
     - 0.0
@@ -166,7 +166,7 @@ nodes:
         maximum: 2.4
     provenance:
       kind: vendor_claim
-      source: 'sustained sequential read per node, as quoted. Unverified here — ch03. Triangular, and
+      source: 'sustained sequential read per node, as quoted. Unverified here — ch02. Triangular, and
         the lower bound is the one doing the work: the quoted figure is sequential and a real read pattern
         is not'
   nodes_for_throughput:
@@ -202,7 +202,7 @@ nodes:
       source: 'the sizing decision, taken the way it is usually taken: nodes_recommended evaluated at
         every input''s point estimate. That is exactly 121, and the ceilings below are what the same
         model says about that decision once the inputs are allowed to be uncertain. Change this number
-        and watch them move — that is the exercise of ch12'
+        and watch them move — that is the exercise of ch11'
     range:
     - 40
     - 500
@@ -223,7 +223,7 @@ nodes:
     headroom: capacity_headroom
     because: A cluster that is full cannot rebuild a failed node, and one that is nearly full allocates
       badly long before that. The margin is the same node the sizing used, so the two cannot drift apart
-      (ch11). Over the limit means out of space; inside the headroom means the rebuild reserve has been
+      (ch10). Over the limit means out of space; inside the headroom means the rebuild reserve has been
       spent on data.
   read_utilisation:
     kind: ceiling
@@ -232,7 +232,7 @@ nodes:
     of: peak_read_throughput / installed_read_throughput
     limit: 1
     headroom: 0.3
-    because: Not a hard limit but a queueing one (ch06). Response time climbs long before a device is
+    because: Not a hard limit but a queueing one (ch05). Response time climbs long before a device is
       saturated, so the margin here is about latency rather than capacity — which is why it is a different
       number from capacity_headroom and declared separately rather than shared.
 outputs:

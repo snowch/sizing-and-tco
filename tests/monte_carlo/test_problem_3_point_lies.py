@@ -1,4 +1,4 @@
-"""Problem 13.3 — make the point estimate unrepresentative.
+"""Problem 12.3 — make the point estimate unrepresentative.
 
 No stored answer: the test takes whatever distributions the reader proposes, checks they are
 legal under the model's own declared ranges, then runs the model and asks whether the point

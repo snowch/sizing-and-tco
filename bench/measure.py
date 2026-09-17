@@ -23,7 +23,7 @@ figure with conditions and a figure with authority.
 One measurement is a number; the interesting question is how much it would move if you did it
 again. So each constant is measured over several independent shards of corpus and reported as a
 mean with the standard error of that mean. That standard error is what becomes the measurement
-uncertainty of a ``measured`` node, and it is what ch13 propagates through the model. A constant
+uncertainty of a ``measured`` node, and it is what ch12 propagates through the model. A constant
 stamped without one is claiming to have been measured exactly.
 """
 
@@ -43,7 +43,7 @@ from dataclasses import dataclass
 #:
 #: Shards per measurement. Small on purpose: the standard error of a mean falls as one over the
 #: square root of the count, so the seventh shard buys very little, and a runner nobody waits for
-#: is a runner nobody runs. ch14's convergence argument applies to measurements as well as to
+#: is a runner nobody runs. ch13's convergence argument applies to measurements as well as to
 #: sampling, and this is the same arithmetic used the other way round.
 SHARDS = 8
 
@@ -261,7 +261,7 @@ def encode_series(stream: list[tuple[int, float]]) -> bytes:
 
     A byte-aligned arrangement rather than a bit-packed one, which costs perhaps a third of the
     space a production format achieves and makes the code legible. The stamped result says so,
-    and ch03's whole point is that a measured constant belongs to the implementation that
+    and ch02's whole point is that a measured constant belongs to the implementation that
     produced it — this implementation included.
     """
     out = bytearray()
@@ -314,7 +314,7 @@ def with_error(values: list[float]) -> dict:
     """A mean and how far it would move if the measurement were taken again.
 
     The standard error of the mean — the spread of the individual shards divided by the square
-    root of how many there were. It is the same one-over-root-n that ch14 spends a section on,
+    root of how many there were. It is the same one-over-root-n that ch13 spends a section on,
     used here in the direction people find less intuitive: not "how many samples do I need" but
     "given the ones I took, how much do I know".
     """

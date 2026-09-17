@@ -16,7 +16,7 @@ short_title: "Appendix F · Observability model"
 | **Built from** | `observability-reference`, `observability-knobs_turned_down` |
 :::
 
-Metrics, logs and traces, for an estate stated in [ch02](#what-a-workload-is)'s terms. Vendor
+Metrics, logs and traces, for an estate stated in [ch01](#what-a-workload-is)'s terms. Vendor
 neutral: nothing on this page names a product, and the structure is what transfers.
 
 This is the **sizing exemplar**: it shows what [Appendix E](#appendix-e-storage-model) could not.
@@ -47,7 +47,7 @@ invented one.
 The same is true of collector throughput per core. The model declares it twice on purpose: once as
 the vendor's quoted figure, which lets a ceiling be computed, and once as a measurement nobody has
 taken, which leaves a second ceiling with nothing in it but the words *not yet measured*.
-Reading those two rows next to each other is most of [ch03](#where-the-numbers-come-from).
+Reading those two rows next to each other is most of [ch02](#where-the-numbers-come-from).
 
 ## The graph
 
@@ -92,12 +92,12 @@ of them:
 Three tiers, three different mechanisms, three different margins — and that is the argument for
 declaring headroom per ceiling rather than globally. The ingest and query margins are about
 queueing, where response time climbs long before anything is busy
-([ch06](#queueing-and-the-knee)). The store margin is about rebuild, where losing a node costs
-capacity you were using ([ch11](#headroom-and-failure-domains)). They only look alike because they
+([ch05](#queueing-and-the-knee)). The store margin is about rebuild, where losing a node costs
+capacity you were using ([ch10](#headroom-and-failure-domains)). They only look alike because they
 are both percentages.
 
 Two of the three that can be computed rest on an incomplete total. The `because` on each says so,
-and [ch20](#the-missing-node) is about what it costs to forget.
+and [ch19](#the-missing-node) is about what it costs to forget.
 
 ## What moves the answer
 
@@ -110,7 +110,7 @@ and [ch20](#the-missing-node) is about what it costs to forget.
 ```
 
 The accidental label — the one nobody planned, added during an incident and never removed — is at
-the top of the tornado. [ch08](#regime-changes) is the chapter about that, and here it is
+the top of the tornado. [ch07](#regime-changes) is the chapter about that, and here it is
 demonstrated rather than warned about.
 
 ## Turning the knobs

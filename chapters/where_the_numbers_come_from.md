@@ -1,17 +1,17 @@
 ---
 title: "Where the numbers come from"
-short_title: "ch03 Where the numbers come from"
+short_title: "ch02 Where the numbers come from"
 ---
 
 (where-the-numbers-come-from)=
-# ch03 · Where the numbers come from
+# ch02 · Where the numbers come from
 
 :::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
 
 | | |
 |---|---|
-| **Prerequisites** | [ch02](#what-a-workload-is) |
+| **Prerequisites** | [ch01](#what-a-workload-is) |
 | **What it produces** | The model's first vendor claim, every measured constant in the book, and a provenance census |
 | **Built from** | `storage_cluster_provenance-reference`, `logs-line-bytes`, `metrics-sample-bytes`, `traces-span-bytes`, `storage-object-compression` |
 :::
@@ -44,7 +44,7 @@ one, because nothing can dislodge it.
 
 ### The first number somebody else supplied
 
-Every quantity in [ch02](#what-a-workload-is)'s file came from you or from the application: how
+Every quantity in [ch01](#what-a-workload-is)'s file came from you or from the application: how
 much is held, how fast it grows, how long the cluster has to last. The next one does not. How much
 a drive holds is decided by whoever sells it, and this is the form that takes:
 
@@ -71,7 +71,7 @@ quantity in the model that is about hardware rather than about data:
 
 Still a cost model. A vendor's claim is a claim about a number, and this book's distinction is not
 about who said a number — it is about whether the arithmetic around it stops applying somewhere.
-[ch09](#capacity) is where that changes.
+[ch08](#capacity) is where that changes.
 
 ### Three claims, counted
 
@@ -168,13 +168,13 @@ One measurement is a number. It says nothing about how far it would move if you 
 every constant in this book is measured over several independently generated shards and reported
 as a mean with the standard error of that mean beside it.
 
-That standard error becomes the measured node's uncertainty, and [ch13](#monte-carlo) propagates
+That standard error becomes the measured node's uncertainty, and [ch12](#monte-carlo) propagates
 it through the model like any other. A constant stamped without one is claiming to have been
 measured exactly, and the build says so.
 
 A standard error also tells you what more measuring would buy, which is usually less than people
 expect. It falls as one over the square root of the count: halving it costs four times the work.
-Problem 3.2 is that arithmetic, and it is worth doing *before* agreeing to a measurement campaign
+Problem 2.2 is that arithmetic, and it is worth doing *before* agreeing to a measurement campaign
 rather than during one.
 
 ## What this cannot tell you
@@ -200,7 +200,7 @@ A model can be all assumptions, all sourced, all defensible-sounding, and comple
 
 Two, in `tests/where_the_numbers_come_from/`.
 
-**3.1 — Take a constant, and stamp it so somebody else could check it.**
+**2.1 — Take a constant, and stamp it so somebody else could check it.**
 Pick a quantity a codec decides, measure it over a corpus you generate deterministically, and
 produce a stamped payload that satisfies every rule in `bench.stamp.provenance_problems` — corpus,
 codec, units with no time in them, and a standard error that came from somewhere.
@@ -209,7 +209,7 @@ codec, units with no time in them, and a standard error that came from somewhere
 python3 -m pytest tests/where_the_numbers_come_from/test_problem_1_measure.py
 ```
 
-**3.2 — What would it cost to be more sure?**
+**2.2 — What would it cost to be more sure?**
 Given a standard error at some number of shards, work out how many shards a target would need.
 Halving your uncertainty costs four times the measuring, and knowing that before the campaign is
 worth more than knowing it during one.
@@ -220,8 +220,8 @@ python3 -m pytest tests/where_the_numbers_come_from/test_problem_2_shards.py
 
 ## Where to go next
 
-[ch04](#peak-mean-and-growth) is about the input that does the most damage in this book and is
+[ch03](#peak-mean-and-growth) is about the input that does the most damage in this book and is
 the hardest to measure: a growth rate is a claim about the future, and no amount of provenance
 discipline turns one into a measurement.
 
-[ch13](#monte-carlo) is what to do with a standard error once you have one.
+[ch12](#monte-carlo) is what to do with a standard error once you have one.

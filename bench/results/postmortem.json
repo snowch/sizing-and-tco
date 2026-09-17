@@ -1,16 +1,16 @@
 {
-  "code_fingerprint": "f8023472e9cf11ec",
+  "code_fingerprint": "700b0e33d09e758f",
   "code_sources": [
     "bench/run_postmortem.py"
   ],
   "conditions": {
-    "it_cannot_find_a_missing_cause": "the second attribution is run on a model known to exclude an entire chain, and it blames the inputs that are present without hesitating. A post-mortem inside a model is a post-mortem of that model (ch20)",
+    "it_cannot_find_a_missing_cause": "the second attribution is run on a model known to exclude an entire chain, and it blames the inputs that are present without hesitating. A post-mortem inside a model is a post-mortem of that model (ch19)",
     "medians_not_means": "these inputs are skewed, and a shift in means would mostly be the tail moving rather than the typical case",
     "no_observation_was_used": "nothing here is a measurement of a real outcome. It is the model's own futures, filtered to the ones in which the design failed \u2014 which is what makes it reproducible and also what bounds what it can say",
     "read_the_base_rate": "`something_extreme_share` must be read against `something_extreme_everywhere`. A model with eight uncertain inputs has one of them beyond its own p90 in most of its futures, failure or not, and a post-mortem that does not say so has discovered the number of inputs"
   },
-  "generated_at": "2026-09-16T22:03:41+00:00",
-  "git_revision": "12e5026",
+  "generated_at": "2026-09-17T14:17:45+00:00",
+  "git_revision": "667b099",
   "kind": "measurement",
   "name": "postmortem",
   "produced_by": {
@@ -22,7 +22,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",

@@ -1,4 +1,4 @@
-"""Problem 4.2 - compounding an average is not averaging the compounds.
+"""Problem 3.2 - compounding an average is not averaging the compounds.
 
 The oracle is the sample set itself, computed both ways at test time. Nothing is stored, and the
 direction of the inequality is a fact about convexity rather than about these particular numbers.

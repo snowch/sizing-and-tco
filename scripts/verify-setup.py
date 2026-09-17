@@ -70,7 +70,7 @@ def main() -> int:
         print()
         print("This machine may not take a rig measurement, so any figure that needs one renders")
         print("as 'not measured yet' rather than as a number. That is the intended behaviour and")
-        print("not a broken checkout (ch03).")
+        print("not a broken checkout (ch02).")
 
     if missing:
         print()

@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "a6616454c84031f8",
+  "code_fingerprint": "6725d27f49352c67",
   "code_sources": [
     "bench/run_models.py",
     "models/service_tier/model.yaml",
@@ -10,10 +10,10 @@
   ],
   "conditions": {
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
-    "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
+    "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch13, ch18)"
   },
-  "generated_at": "2026-09-17T12:31:02+00:00",
-  "git_revision": "9c5089f",
+  "generated_at": "2026-09-17T14:15:11+00:00",
+  "git_revision": "667b099",
   "kind": "model",
   "name": "service_tier-reference",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
@@ -72,7 +72,7 @@
       "utilisation_including_coordination": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-17T12:31:02+00:00",
+    "generated_at": "2026-09-17T14:15:11+00:00",
     "model": "service_tier",
     "nodes": {
       "achievable_throughput": {
@@ -466,7 +466,7 @@
         "point": 5519.25930159214,
         "provenance": {
           "kind": "assumption",
-          "source": "ch03 - requests per second at the busy hour. Triangular because this is an engineer's min/likely/max and claiming more shape than that would be invention."
+          "source": "ch02 - requests per second at the busy hour. Triangular because this is an engineer's min/likely/max and claiming more shape than that would be invention."
         },
         "row": 0,
         "slider": {
@@ -818,7 +818,7 @@
         "kind": "derived",
         "label": "requests in the system",
         "layer": 5,
-        "note": "Little's law, and the only relationship in Part II that is always true: the number of requests in a system is the rate they arrive at times how long each one stays. No distribution assumed, no queue discipline assumed, nothing assumed except that the system is in a steady state. ch05 is about what that buys and what it does not.",
+        "note": "Little's law, and the only relationship in Part II that is always true: the number of requests in a system is the rate they arrive at times how long each one stays. No distribution assumed, no queue discipline assumed, nothing assumed except that the system is in a steady state. ch04 is about what that buys and what it does not.",
         "point": 91.28759266266023,
         "row": 0,
         "summary": {
@@ -986,7 +986,7 @@
         "point": 0.0069377422517014516,
         "provenance": {
           "kind": "assumption",
-          "source": "ch07 - fitted from two measurements, where two exist. Triangular because a fit gives a central value and a range rather than a shape, and its maximum is the claim to distrust: a serial fraction can always be worse than the one you measured"
+          "source": "ch06 - fitted from two measurements, where two exist. Triangular because a fit gives a central value and a range rather than a shape, and its maximum is the claim to distrust: a serial fraction can always be worse than the one you measured"
         },
         "row": 4,
         "summary": {
@@ -1009,7 +1009,7 @@
         },
         "ceiling": {
           "allowed": 0.7,
-          "because": "The same queueing margin as above, applied to the capacity the tier actually has rather than to the capacity its parts would have had alone. Where the two ceilings disagree, this is the one that is about the system you own (ch07).",
+          "because": "The same queueing margin as above, applied to the capacity the tier actually has rather than to the capacity its parts would have had alone. Where the two ceilings disagree, this is the one that is about the system you own (ch06).",
           "headroom": 0.3,
           "headroom_text": "0.3",
           "limit": 1.0,
@@ -1329,7 +1329,7 @@
         "point": 3.67423461417477e-05,
         "provenance": {
           "kind": "assumption",
-          "source": "ch07 - fitted, and the hardest of the two to fit. Lognormal because it spans an order of magnitude and cannot be negative, and because a shape should not assert a hard upper bound on a quantity this weakly fitted"
+          "source": "ch06 - fitted, and the hardest of the two to fit. Lognormal because it spans an order of magnitude and cannot be negative, and because a shape should not assert a hard upper bound on a quantity this weakly fitted"
         },
         "row": 5,
         "summary": {
@@ -2334,7 +2334,7 @@
         },
         "ceiling": {
           "allowed": 0.7,
-          "because": "Not a capacity limit: a tier at ninety per cent of capacity has not run out of anything, it has a queue in front of it. The margin is large because the cost of crossing it is paid in latency by every request, not in a failure somebody gets paged for (ch06).",
+          "because": "Not a capacity limit: a tier at ninety per cent of capacity has not run out of anything, it has a queue in front of it. The margin is large because the cost of crossing it is paid in latency by every request, not in a failure somebody gets paged for (ch05).",
           "headroom": 0.3,
           "headroom_text": "0.3",
           "limit": 1.0,
@@ -2670,7 +2670,7 @@
         "kind": "derived",
         "label": "residence time",
         "layer": 4,
-        "note": "Service time divided by the fraction of the tier that is idle. That single division is ch06's whole subject: it is nearly flat while there is slack and nearly vertical when there is not, and nothing about the arithmetic warns you which side you are on.",
+        "note": "Service time divided by the fraction of the tier that is idle. That single division is ch05's whole subject: it is nearly flat while there is slack and nearly vertical when there is not, and nothing about the arithmetic warns you which side you are on.",
         "point": 0.01653982675471082,
         "row": 0,
         "summary": {
@@ -2876,7 +2876,7 @@
         },
         "ceiling": {
           "allowed": 0.5,
-          "because": "At half, one machine in two is paying for the other's coordination. There is no failure and nothing gets paged; the tier simply costs twice what its work is worth, and it will go on doing so until somebody looks. A budget is the only thing this ceiling protects, which is why the margin is the loosest in the book and why it is still worth declaring (ch07).",
+          "because": "At half, one machine in two is paying for the other's coordination. There is no failure and nothing gets paged; the tier simply costs twice what its work is worth, and it will go on doing so until somebody looks. A budget is the only thing this ceiling protects, which is why the margin is the loosest in the book and why it is still worth declaring (ch06).",
           "headroom": 0.5,
           "headroom_text": "0.5",
           "limit": 1.0,
@@ -3193,11 +3193,11 @@
         "kind": "input",
         "label": "service demand per request",
         "layer": 0,
-        "note": "Node-seconds of work one request costs, which is not the same thing as how long a request takes. A request that occupies one node for six milliseconds has a service demand of six milliseconds whether it returns in six milliseconds or in six seconds - the difference between those two is queueing, and this model is about that difference.\nIt is declared as an assumption and it should be a `rig` measurement (ch03). Nobody has taken one, and the model says so here rather than in a footnote.",
+        "note": "Node-seconds of work one request costs, which is not the same thing as how long a request takes. A request that occupies one node for six milliseconds has a service demand of six milliseconds whether it returns in six milliseconds or in six seconds - the difference between those two is queueing, and this model is about that difference.\nIt is declared as an assumption and it should be a `rig` measurement (ch02). Nobody has taken one, and the model says so here rather than in a footnote.",
         "point": 0.006816699867329622,
         "provenance": {
           "kind": "assumption",
-          "source": "stated workload characteristic; belongs on the rig and has not been measured. Triangular *because* it has not been measured: once it is, the shape becomes a normal around the measurement, which is a change of claim and not only of numbers (ch13)"
+          "source": "stated workload characteristic; belongs on the rig and has not been measured. Triangular *because* it has not been measured: once it is, the shape becomes a normal around the measurement, which is a change of claim and not only of numbers (ch12)"
         },
         "row": 1,
         "slider": {
@@ -3553,7 +3553,7 @@
         "point": 152.91796067500633,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "throughput of one node alone, as quoted. Triangular around the quoted figure, with bounds wide in both directions because nobody here has run it (ch03)"
+          "source": "throughput of one node alone, as quoted. Triangular around the quoted figure, with bounds wide in both directions because nobody here has run it (ch02)"
         },
         "row": 6,
         "summary": {
@@ -3753,7 +3753,7 @@
         "point": 0.98,
         "provenance": {
           "kind": "assumption",
-          "source": "where this model stops being about queues (ch06)"
+          "source": "where this model stops being about queues (ch05)"
         },
         "row": 0,
         "unit": "dimensionless"
@@ -3916,7 +3916,7 @@
         "kind": "derived",
         "label": "utilisation, counting coordination",
         "layer": 3,
-        "note": "The same tier's utilisation, worked out from what it can actually deliver rather than from what one node could deliver alone. It is higher than the row above, always, and the gap is the work the machines are doing on each other's behalf.\nReading those two rows next to each other is ch07's whole argument. The queueing view of Part II is not wrong; it is optimistic, and it is optimistic by a factor nobody notices until they measure the tier at two sizes and find the second one disappointing.",
+        "note": "The same tier's utilisation, worked out from what it can actually deliver rather than from what one node could deliver alone. It is higher than the row above, always, and the gap is the work the machines are doing on each other's behalf.\nReading those two rows next to each other is ch06's whole argument. The queueing view of Part II is not wrong; it is optimistic, and it is optimistic by a factor nobody notices until they measure the tier at two sizes and find the second one disappointing.",
         "point": 0.8939900075324693,
         "row": 3,
         "summary": {

@@ -1,4 +1,4 @@
-"""Problem 16.1 - graded against the model's own power chain, run backwards."""
+"""Problem 15.1 - graded against the model's own power chain, run backwards."""
 
 from __future__ import annotations
 
@@ -60,7 +60,7 @@ def test_no_power_fits_nothing():
 def test_the_scenario_is_the_one_the_problem_describes(values):
     """Scaffolding: the power-first scenario still exists and is power-bound."""
     assert values["facility_power"] == pytest.approx(50.0, abs=2.0), (
-        f"the scenario draws {values['facility_power']:.1f} kW; problem 16.1 describes it as a "
+        f"the scenario draws {values['facility_power']:.1f} kW; problem 15.1 describes it as a "
         "fifty-kilowatt allocation"
     )
     assert math.isclose(values["nodes_purchased"], int(values["nodes_purchased"]))

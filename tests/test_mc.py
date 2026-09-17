@@ -187,7 +187,7 @@ def test_samples_needed_follows_the_square_root_law():
 
 
 def test_the_interval_settles_while_the_run_to_run_spread_falls():
-    """ch14's central claim, as a test rather than a paragraph.
+    """ch13's central claim, as a test rather than a paragraph.
 
     Forty replicates rather than a dozen, and the reason is the chapter's own argument turned on
     itself: the spread between runs is being *estimated*, and an estimate of a spread from twelve

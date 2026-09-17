@@ -24,7 +24,7 @@ Four of the terms name kinds of error, and they are worth reading as a group. Me
 uncertainty and parameter uncertainty are what an interval is made of. Scenario uncertainty is why
 this book runs a model more than once rather than widening its inputs. Structural error is none of
 those three — the model is wrong in shape rather than in its numbers — and it is
-[ch20](#the-missing-node).
+[ch19](#the-missing-node).
 
 The last column is not a simplification. It is the sentence to use out loud. Where a term has a
 plain-English equivalent, this book says the plain one first and names the term second — including
@@ -81,7 +81,7 @@ last thought of; the ninety-fifth percentile is a specific claim about a specifi
 somebody can disagree with.
 
 **Contingency.** Headroom, with a stated reason and a ceiling it is measured against
-([ch11](#headroom-and-failure-domains)). A contingency is a number added at the end to feel safer;
+([ch10](#headroom-and-failure-domains)). A contingency is a number added at the end to feel safer;
 headroom is a margin below a limit that has a name and a consequence.
 
 **Risk**, unqualified. Used here only where a ceiling gives it something to mean: how often,

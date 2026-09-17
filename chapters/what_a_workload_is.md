@@ -1,10 +1,10 @@
 ---
 title: "What a workload is"
-short_title: "ch02 What a workload is"
+short_title: "ch01 What a workload is"
 ---
 
 (what-a-workload-is)=
-# ch02 · What a workload is
+# ch01 · What a workload is
 
 :::{note} Prerequisites, and what this chapter is built from
 :class: dropdown
@@ -71,7 +71,7 @@ the life of whatever gets bought. The first node is the level you were given.
 
 A `unit`, so the build knows this is a level and not a rate. A `value`, because somebody said so.
 A `provenance`, because a number with no source is a rumour — that is
-[ch03](#where-the-numbers-come-from)'s subject, and the reason the field is mandatory from the
+[ch02](#where-the-numbers-come-from)'s subject, and the reason the field is mandatory from the
 very first node. The `range` is what a reader may drag it to on the published page.
 
 Growing it over the horizon takes one multiplication and one thing that is easy to miss:
@@ -114,7 +114,7 @@ a growth rate.
 The table is not wrong about the model. The model is wrong, and the table is showing you the only
 signal it has: whether somebody gave the quantity a shape. A declared range says *the world settles
 this one*; a single value with a slider says *I do*. Nothing in the file has a shape yet, so
-everything reads as a choice. [ch04](#peak-mean-and-growth) gives the growth rate one, and this
+everything reads as a choice. [ch03](#peak-mean-and-growth) gives the growth rate one, and this
 table splits in two for the first time.
 
 That is worth more here than a correct table would have been, because the failure is the useful
@@ -127,7 +127,7 @@ half anybody can change. Most sizing conversations are spent on the other one.
 
 The *Claim* column is asking something else: how much the person who wrote each number down was
 claiming. **●** traceable to a measurement or a definition, **◐** supplied by whoever is selling
-it, **○** somebody's assumption. [ch03](#where-the-numbers-come-from) is about what that difference
+it, **○** somebody's assumption. [ch02](#where-the-numbers-come-from) is about what that difference
 is worth.
 
 ### What it says, and what the build calls it
@@ -137,7 +137,7 @@ is worth.
 
 A number, out of a handful of numbers and a multiplication. The arithmetic is right and you should
 not act on it, for a reason this chapter cannot yet name: every figure that went in was a single
-figure, and not one of them is known that precisely. [ch04](#peak-mean-and-growth) takes the first
+figure, and not one of them is known that precisely. [ch03](#peak-mean-and-growth) takes the first
 of them apart.
 
 The build has already decided what kind of model this is, too:
@@ -148,7 +148,7 @@ The build has already decided what kind of model this is, too:
 The last row is not a label anybody typed. `sizing/dsl.py` works it out from what is in the file:
 nothing here has a measured constant or a declared limit in it, so what you have is a **cost
 model** — a structure nobody doubts, with uncertain numbers in it. It changes kind in
-[ch09](#capacity), and it changes because two nodes get added rather than because a chapter says
+[ch08](#capacity), and it changes because two nodes get added rather than because a chapter says
 so.
 
 ### The same split, on a model that is finished
@@ -165,11 +165,11 @@ those are the four knobs an observability platform gives you, and
 [Appendix F](#appendix-f-observability-model) shows what turning all of them down actually buys.
 
 Then read the demand, and notice what is *not* in the decisions: the number of label values. It
-dominates the whole model and it is not a knob. That is [ch08](#regime-changes)'s subject.
+dominates the whole model and it is not a knob. That is [ch07](#regime-changes)'s subject.
 
 ### A workload can be described badly in three ways
 
-**Averaged.** A daily mean is the one number nobody experiences. [ch04](#peak-mean-and-growth) is
+**Averaged.** A daily mean is the one number nobody experiences. [ch03](#peak-mean-and-growth) is
 about which number in a demand curve sizes you, and it is not that one.
 
 **In the wrong units.** "Ten thousand users" is not a workload. It is a fact about a licence
@@ -187,7 +187,7 @@ Here is the whole demand side of a request-serving tier:
 ```
 
 Two quantities describe what the world does — how fast requests arrive, and how much work each
-one costs. Everything else in [ch05](#littles-law) through [ch07](#when-adding-servers-stops-helping)
+one costs. Everything else in [ch04](#littles-law) through [ch06](#when-adding-servers-stops-helping)
 is derived from those two and a count of machines. A workload description that cannot be reduced
 this far usually contains something that is not a workload.
 
@@ -201,7 +201,7 @@ be wrong in a way nothing here would show.
 
 **Where the numbers come from.** Every figure in the tables above is an input somebody wrote down.
 Some are measured, most are not, and this chapter has said nothing about the difference.
-[ch03](#where-the-numbers-come-from) is about that difference, and how much any of this is worth
+[ch02](#where-the-numbers-come-from) is about that difference, and how much any of this is worth
 depends on it.
 
 **Whether a peak is a peak.** "The busy hour" is a phrase, not a measurement. Whether your busy
@@ -210,13 +210,13 @@ the wrong one is expensive in both directions.
 
 **How the demand quantities move together.** Every table above lists them separately, as though
 request rate and log volume were unrelated. They are not, and treating them as though they were
-makes every interval in the book too narrow ([ch14](#correlation-and-convergence)).
+makes every interval in the book too narrow ([ch13](#correlation-and-convergence)).
 
 ## Problems
 
 Four, in `tests/what_a_workload_is/`.
 
-**2.1 — Levels and rates.**
+**1.1 — Levels and rates.**
 Classify every node in the observability model as a stock, a flow or neither — by reading what it
 means. The test classifies the same nodes by their declared units. Where your reading and the
 model's units disagree, one of them is wrong, and finding out which is the exercise.
@@ -225,7 +225,7 @@ model's units disagree, one of them is wrong, and finding out which is the exerc
 python3 -m pytest tests/what_a_workload_is/test_problem_1_stocks_and_flows.py
 ```
 
-**2.2 — Turn a rate into a volume.**
+**1.2 — Turn a rate into a volume.**
 Add a node giving terabytes a day of telemetry. A rate times a pure number is still a rate, and
 the build will keep saying so until something in the formula carries a duration.
 
@@ -233,7 +233,7 @@ the build will keep saying so until something in the formula carries a duration.
 python3 -m pytest tests/what_a_workload_is/test_problem_2_daily_volume.py
 ```
 
-**2.3 — The smallest model that builds.**
+**1.3 — The smallest model that builds.**
 Write a model file of your own with one input and one derived node that passes the loader, the
 dimensional pass and every rule in `scripts/verify-models.py`. Read the rules before you start;
 the refusals are the point.
@@ -242,7 +242,7 @@ the refusals are the point.
 python3 -m pytest tests/what_a_workload_is/test_problem_3_smallest.py
 ```
 
-**2.4 — Break it on purpose, in a way that still loads.**
+**1.4 — Break it on purpose, in a way that still loads.**
 Write a second model that loads cleanly and is wrong about units. Not a typo — those fail
 immediately and teach nothing. A node that declares a unit its own formula cannot produce. A
 spreadsheet cannot see that class of error at all.
@@ -253,8 +253,8 @@ python3 -m pytest tests/what_a_workload_is/test_problem_4_broken.py
 
 ## Where to go next
 
-[ch03](#where-the-numbers-come-from) is the question this chapter kept deferring: given that you
+[ch02](#where-the-numbers-come-from) is the question this chapter kept deferring: given that you
 have written a quantity down, what are you actually claiming about it?
 
-[ch04](#peak-mean-and-growth) is the other one: given that demand moves, which value of it sizes
+[ch03](#peak-mean-and-growth) is the other one: given that demand moves, which value of it sizes
 you?

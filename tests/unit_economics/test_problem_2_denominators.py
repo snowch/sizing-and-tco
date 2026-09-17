@@ -1,4 +1,4 @@
-"""Problem 17.2 - four defensible denominators, four different answers.
+"""Problem 16.2 - four defensible denominators, four different answers.
 
 Every expected value is computed from the samples at test time.
 """

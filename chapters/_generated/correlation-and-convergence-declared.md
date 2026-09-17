@@ -2,7 +2,7 @@
 
 | Between | and | Rank correlation | Because |
 |---|---|---:|---|
-| annual_growth | label_values_accidental | +0.50 | A platform that is growing is a platform that is being changed, and labels arrive with changes. Treating the two as independent makes the metrics interval narrower than the estate warrants — ch14 measures by how much. |
+| annual_growth | label_values_accidental | +0.50 | A platform that is growing is a platform that is being changed, and labels arrive with changes. Treating the two as independent makes the metrics interval narrower than the estate warrants — ch13 measures by how much. |
 | request_rate | lines_per_request | +0.30 | Weak and positive: busier services tend to be the chattier ones. Small enough to be worth including as an example of a correlation that barely matters, which is a useful thing for a reader to see beside one that does. |
 | request_rate | queries_per_second | +0.40 | A busier platform is one more people are watching. Moderate rather than strong: most query load comes from alert rules and dashboards on timers, which do not care how busy anything is — right up until an incident, when they all fire at once and nobody is looking at the model. |
 

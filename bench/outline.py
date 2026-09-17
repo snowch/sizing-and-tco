@@ -58,7 +58,7 @@ class Chapter:
 
     @property
     def label(self) -> str:
-        """``ch13`` — how prose refers to a chapter. Derived from position, never an identifier."""
+        """``ch12`` — how prose refers to a chapter. Derived from position, never an identifier."""
         return f"ch{self.number:02d}"
 
     @property
@@ -161,7 +161,7 @@ PARTS = tuple(part.title for part in PART_PAGES)
 
 CHAPTERS: tuple[Chapter, ...] = (
     Chapter(
-        2,
+        1,
         "what_a_workload_is",
         "What a workload is",
         PARTS[0],
@@ -169,7 +169,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         owes="The workload table for both reference models, derived from their input nodes.",
     ),
     Chapter(
-        3,
+        2,
         "where_the_numbers_come_from",
         "Where the numbers come from",
         PARTS[0],
@@ -186,7 +186,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("what_a_workload_is",),
     ),
     Chapter(
-        4,
+        3,
         "peak_mean_and_growth",
         "Peak, mean and growth",
         PARTS[0],
@@ -195,7 +195,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         owes="The growth sensitivity of the storage model, as a swing across the declared range.",
     ),
     Chapter(
-        5,
+        4,
         "littles_law",
         "Little's law",
         PARTS[1],
@@ -204,7 +204,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         owes="A worked derivation against the observability ingest chain.",
     ),
     Chapter(
-        6,
+        5,
         "queueing_and_the_knee",
         "Queueing, and the knee",
         PARTS[1],
@@ -214,7 +214,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "asserted.",
     ),
     Chapter(
-        7,
+        6,
         "when_adding_servers_stops_helping",
         "When adding servers stops helping",
         PARTS[1],
@@ -224,7 +224,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "tier.",
     ),
     Chapter(
-        8,
+        7,
         "regime_changes",
         "Regime changes",
         PARTS[1],
@@ -233,7 +233,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("observability-reference",),
     ),
     Chapter(
-        9,
+        8,
         "capacity",
         "Capacity",
         PARTS[2],
@@ -242,7 +242,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("storage_cluster-reference",),
     ),
     Chapter(
-        10,
+        9,
         "bandwidth_and_the_binding_constraint",
         "Bandwidth, and the binding constraint",
         PARTS[2],
@@ -252,7 +252,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("storage_cluster-reference",),
     ),
     Chapter(
-        11,
+        10,
         "headroom_and_failure_domains",
         "Headroom and failure domains",
         PARTS[2],
@@ -261,7 +261,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("storage_cluster-reference", "observability-reference"),
     ),
     Chapter(
-        12,
+        11,
         "the_sizing_model",
         "The sizing model",
         PARTS[2],
@@ -271,7 +271,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("capacity", "bandwidth_and_the_binding_constraint", "headroom_and_failure_domains"),
     ),
     Chapter(
-        13,
+        12,
         "monte_carlo",
         "Monte Carlo",
         PARTS[3],
@@ -280,7 +280,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("the_sizing_model",),
     ),
     Chapter(
-        14,
+        13,
         "correlation_and_convergence",
         "Correlation and convergence",
         PARTS[3],
@@ -290,7 +290,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("monte_carlo",),
     ),
     Chapter(
-        15,
+        14,
         "capex_opex_and_lifecycle",
         "Capex, opex and where the total stops",
         PARTS[4],
@@ -300,7 +300,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("storage_cluster-reference",),
     ),
     Chapter(
-        16,
+        15,
         "power_first",
         "Power first",
         PARTS[4],
@@ -308,7 +308,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         owes="The storage model resized from a power budget inwards.",
     ),
     Chapter(
-        17,
+        16,
         "unit_economics",
         "Unit economics",
         PARTS[4],
@@ -317,7 +317,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("storage_cluster-reference",),
     ),
     Chapter(
-        18,
+        17,
         "the_five_year_model",
         "The five-year model",
         PARTS[4],
@@ -326,7 +326,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("storage_cluster-reference", "observability-reference"),
     ),
     Chapter(
-        19,
+        18,
         "which_input_is_the_answer",
         "Which input to go and measure",
         PARTS[5],
@@ -337,7 +337,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("monte_carlo",),
     ),
     Chapter(
-        20,
+        19,
         "the_missing_node",
         "The missing node",
         PARTS[5],
@@ -347,7 +347,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("correlation_and_convergence",),
     ),
     Chapter(
-        21,
+        20,
         "a_tco_for_finance",
         "A TCO for a finance audience",
         PARTS[6],
@@ -357,7 +357,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("the_five_year_model", "which_input_is_the_answer"),
     ),
     Chapter(
-        22,
+        21,
         "what_the_model_got_wrong",
         "What the model got wrong",
         PARTS[7],

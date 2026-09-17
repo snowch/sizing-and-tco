@@ -1,4 +1,4 @@
-"""Problem 18.1 - the quantity one model produces and the other one buys."""
+"""Problem 17.1 - the quantity one model produces and the other one buys."""
 
 from __future__ import annotations
 

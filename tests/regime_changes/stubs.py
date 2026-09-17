@@ -1,4 +1,4 @@
-"""Chapter 8's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 7's problems. Edit this file; the tests beside it say whether you are right.
 
 Both are about the same claim: some things a chain of multiplications cannot express, and no
 amount of care about the inputs to that chain will warn you.
@@ -10,7 +10,7 @@ import numpy as np
 
 
 def straight_line_forecast(known: list[tuple[float, float]], at: np.ndarray) -> np.ndarray:
-    """Problem 8.1 - do what a spreadsheet would do, and watch it fail.
+    """Problem 7.1 - do what a spreadsheet would do, and watch it fail.
 
     ``known`` is a list of ``(utilisation, residence_time)`` pairs measured on a system that has
     never been busy - all of them at low load, which is the data a healthy system actually has.
@@ -26,11 +26,11 @@ def straight_line_forecast(known: list[tuple[float, float]], at: np.ndarray) -> 
     the loads you fitted on, the line is excellent. Further out it is not wrong by a percentage;
     it is wrong by a multiple, and the multiple grows.
     """
-    raise NotImplementedError("problem 8.1")
+    raise NotImplementedError("problem 7.1")
 
 
 def combinatorial_spread(factors: list[np.ndarray]) -> tuple[float, float]:
-    """Problem 8.2 - why a cardinality node is the widest thing in any model that has one.
+    """Problem 7.2 - why a cardinality node is the widest thing in any model that has one.
 
     ``factors`` is a list of sample arrays, each one an uncertain count: distinct values of a
     label, distinct routes, distinct versions in flight. The quantity you care about is their
@@ -47,4 +47,4 @@ def combinatorial_spread(factors: list[np.ndarray]) -> tuple[float, float]:
     This is why the observability model's label cardinality dominates every tornado it appears in,
     and why it is the input nobody's control knobs can touch.
     """
-    raise NotImplementedError("problem 8.2")
+    raise NotImplementedError("problem 7.2")

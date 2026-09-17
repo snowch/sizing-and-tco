@@ -16,7 +16,7 @@ bytes-per-span are both plain numbers and multiplying the wrong pair gives a pla
 with it, ``request/second × span/request × byte/span`` is ``byte/second`` and nothing else is.
 
 It costs something, and the cost is the point: converting between two counting units requires a
-node that names the conversion. That node is exactly the *measured constant* of ch03 — an
+node that names the conversion. That node is exactly the *measured constant* of ch02 — an
 empirical, stack-specific number with provenance — so the unit system pushes you towards
 declaring the thing the book says you must declare.
 

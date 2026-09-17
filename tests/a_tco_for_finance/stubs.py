@@ -1,4 +1,4 @@
-"""Chapter 21's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 20's problems. Edit this file; the tests beside it say whether you are right.
 
 Neither is arithmetic. Both are about what to say.
 """
@@ -7,7 +7,7 @@ from __future__ import annotations
 
 
 def decision_table() -> list[dict]:
-    """Problem 21.1 - two designs, priced, with their risk.
+    """Problem 20.1 - two designs, priced, with their risk.
 
     Return a list of rows, one per scenario of the storage model that represents a purchasable
     design. Each row is a dictionary with exactly these keys:
@@ -26,11 +26,11 @@ def decision_table() -> list[dict]:
     should not be there. Four columns is not a constraint; it is the number that fits in somebody's
     head while they decide.
     """
-    raise NotImplementedError("problem 21.1")
+    raise NotImplementedError("problem 20.1")
 
 
 def one_number() -> tuple[float, str]:
-    """Problem 21.2 - they have asked for a single number.
+    """Problem 20.2 - they have asked for a single number.
 
     They will. Refusing is not an option that exists, and answering with a range is a way of
     refusing that annoys people without informing them.
@@ -47,4 +47,4 @@ def one_number() -> tuple[float, str]:
     The point is that the sentence is the deliverable. The number is what gets written down; the
     sentence is what makes it honest, and you get one.
     """
-    raise NotImplementedError("problem 21.2")
+    raise NotImplementedError("problem 20.2")

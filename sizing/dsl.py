@@ -152,7 +152,7 @@ class Measured(Node):
     def stack(self) -> str | None:
         """What was measured — the implementation and version this constant belongs to.
 
-        The reason a measured constant is not a fact about the world. ch03: change the encoder,
+        The reason a measured constant is not a fact about the world. ch02: change the encoder,
         change the version, change the shape of your data, and this number is about something
         else.
         """

@@ -51,7 +51,7 @@ a number, what produced it, and a command that fails when the two have parted co
 
 Your laptop cannot take a timing on the reference machine, and the toolkit will not pretend it
 can: `verify-setup.py` says so, and every figure that would need such a timing renders as a box
-saying it has not been measured. [ch03](#where-the-numbers-come-from) is about why.
+saying it has not been measured. [ch02](#where-the-numbers-come-from) is about why.
 
 ## What is in the repository
 
@@ -68,7 +68,7 @@ A model is a file. Here is what each one is made of:
 
 The last row says whether the build classifies the model as a cost model or a sizing one. It works
 that out from the file — a `measured` node or a `ceiling` makes it a sizing model — and
-[ch09](#capacity) is where the reader's own model crosses that line.
+[ch08](#capacity) is where the reader's own model crosses that line.
 
 ## What this cannot tell you
 
