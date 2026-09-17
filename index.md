@@ -70,13 +70,6 @@ combinations more chances to turn up. The ends drift. The middle settles, and se
 enough to be worth quoting. Ninety per cent is then a convention, and this book uses the same one
 everywhere so that two figures can be compared.
 
-Under the table is an italic line, and one appears under every table in this book. It is a link to
-the file the figure was computed from: every input, the conditions the run held under, and a
-fingerprint of the code that did the arithmetic. Change that code and the fingerprint changes, and
-the build refuses to publish a figure that no longer matches what the repository computes. The
-link is there so you can check the table instead of trusting it — and the name on it,
-`storage_cluster-reference`, is just which model was run and under which set of assumptions.
-
 ```{image} chapters/_figures/preface-tco-distribution.svg
 :alt: The five-year total cost as a distribution, with the point estimate marked on it
 :width: 100%
@@ -154,7 +147,9 @@ book is that nothing is asserted here that the repository could check instead. T
 in three ways.
 
 **Every number says where it came from.** No figure is typed into the prose; every one is
-computed, and the link under the table you just read is how you check any of them.
+computed. The italic line under each table links to the file it came from —
+`storage_cluster-reference` names which model was run and under which assumptions, and the file
+holds every input it used — so you can check a number instead of trusting it.
 
 **Every model is a file, not a spreadsheet.** Every quantity in it declares a unit, so the build
 can refuse a model that multiplies the wrong two things. Every input declares whether it is a
@@ -181,10 +176,10 @@ be, or what it will cost, and who wants to give an answer they would still defen
 You should be comfortable with code and with arithmetic. You are assumed to know **nothing**
 about statistics. [ch12](#monte-carlo) and [ch13](#correlation-and-convergence) are where the six
 words you need — distribution, sample, percentile, interval, correlation, convergence — get
-defined properly, each arriving because a model has just raised a question that needs it. This
-page has leaned on three of them loosely, and that is the last time it happens. Where a
-statistical term has a plain-English equivalent, this book uses the plain one first and names the
-term second.
+defined properly, each arriving because a model has just raised a question that needs it. One of
+them, *interval*, has already appeared on this page, defined at the point it was needed. That is
+how the rest arrive too. Where a statistical term has a plain-English equivalent, this book uses
+the plain one first and names the term second.
 
 No vendor is named anywhere in this book, and no product is recommended. Three models carry it,
 all written so that the structure is the point and the numbers are yours to replace: a scale-out

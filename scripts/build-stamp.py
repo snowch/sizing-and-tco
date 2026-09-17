@@ -51,11 +51,12 @@ def stamp() -> str:
     when = _git("show", "-s", "--format=%cs", "HEAD") or datetime.now(UTC).strftime("%Y-%m-%d")
     dirty = _git("status", "--porcelain")
     modified = " with uncommitted changes" if dirty else ""
+    # The commit and the date, and nothing else. What was there before went on to explain that
+    # newer commits would appear above this one in a commit list, which is a reader who can
+    # follow the link being told how the link works.
     return (
         f"{BANNER}\n\n"
-        f"*Built from [`{commit}`]({REPOSITORY}/commit/{commit}), committed {when}{modified}. "
-        f"[Anything newer]({REPOSITORY}/commits/main/) is on the repository's main branch; if that "
-        f"list has commits above this one, the site you are reading is behind them.*\n"
+        f"*Built from [`{commit}`]({REPOSITORY}/commit/{commit}), committed {when}{modified}.*\n"
     )
 
 
