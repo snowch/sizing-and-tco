@@ -50,7 +50,7 @@ The commonest error in sizing is turning a flow into a stock by multiplying it b
 of by an amount of time. It typechecks in a spreadsheet. It does not typecheck here, and problem
 2.2 is exactly that.
 
-### Writing the first one down
+### Turning the workload into a file
 
 Take the workload above: some amount held today, growing at some rate, over the life of whatever
 gets bought. The first node is the level you were given.
@@ -89,18 +89,40 @@ stated:
 :end-before: outputs:
 ```
 
-That is the whole of the demand side:
+That is the whole of the demand side.
 
-```{include} _generated/what-a-workload-is-stage-shape.md
+### The demand and the decisions
+
+A model's inputs are two different kinds of thing wearing the same clothes. Some describe what the
+world is doing to you. The rest describe what you have decided to do about it. Separating them is
+the first thing worth doing to any model, including this one:
+
+```{include} _generated/what-a-workload-is-storage.md
 ```
 
-The last row is not a label somebody typed. `sizing/dsl.py` works it out from what is in the file,
-and nothing here has a measured constant or a declared limit in it yet, so what the book has so far
-is a **cost model** — structure nobody doubts, with uncertain numbers in it. It will change kind in
-[ch09](#capacity), and it will change because the file changed rather than because a chapter said
-so.
+Every quantity is filed under *what you decide*, and one of them is the growth rate. Nobody decides
+a growth rate.
 
-### What it says, and what that is worth
+The table is not wrong about the model. The model is wrong, and the table is showing you the only
+signal it has: whether somebody gave the quantity a shape. A declared range says *the world settles
+this one*; a single value with a slider says *I do*. Nothing in the file has a shape yet, so
+everything reads as a choice. [ch04](#peak-mean-and-growth) gives the growth rate one, and this
+table splits in two for the first time.
+
+That is worth more here than a correct table would have been, because the failure is the useful
+one. **An input you gave a single value to and cannot actually control is an assumption you have
+stopped noticing**, and a model that files its inputs this way finds them by construction. Day-one
+capacity is sitting in the same list, and that one is not a decision either.
+
+Once the table does separate, the half worth arguing about is *what you decide*, because it is the
+half anybody can change. Most sizing conversations are spent on the other one.
+
+The *Claim* column is asking something else: how much the person who wrote each number down was
+claiming. **●** traceable to a measurement or a definition, **◐** supplied by whoever is selling
+it, **○** somebody's assumption. [ch03](#where-the-numbers-come-from) is about what that difference
+is worth.
+
+### What it says, and what the build calls it
 
 ```{include} _generated/what-a-workload-is-stage.md
 ```
@@ -110,31 +132,22 @@ not act on it, for a reason this chapter cannot yet name: every figure that went
 figure, and not one of them is known that precisely. [ch04](#peak-mean-and-growth) takes the first
 of them apart.
 
-### The demand and the decisions
+The build has already decided what kind of model this is, too:
 
-A model's inputs are two different kinds of thing wearing the same clothes. Some describe what the
-world is doing to you. The rest describe what you have decided to do about it. Separating them is
-the first thing worth doing to any model you inherit:
-
-```{include} _generated/what-a-workload-is-storage.md
+```{include} _generated/what-a-workload-is-stage-shape.md
 ```
 
-The *Claim* column is how much the person who wrote each number down was claiming, and the three
-marks run through every figure in the book: **●** something traceable to a measurement or a
-definition, **◐** a figure supplied by whoever is selling it, **○** somebody's assumption.
-[ch03](#where-the-numbers-come-from) is about what the difference is worth.
+The last row is not a label anybody typed. `sizing/dsl.py` works it out from what is in the file:
+nothing here has a measured constant or a declared limit in it, so what you have is a **cost
+model** — a structure nobody doubts, with uncertain numbers in it. It changes kind in
+[ch09](#capacity), and it changes because two nodes get added rather than because a chapter says
+so.
 
-Everything above the second heading is something you can argue about and cannot choose. Everything
-below is a choice somebody made and could unmake. A sizing conversation should be about the second
-list. Most are about the first.
+### The same split, on a model that is finished
 
-The heuristic that produced that split is crude and worth knowing: a quantity somebody gave a
-distribution to is one they think the world decides, and a quantity with a single value and a
-slider is one they think they decide. Splitting a model this way is far better than not splitting
-it, and where the heuristic is wrong the wrongness is interesting. An input you gave a single
-value to and cannot actually control is an assumption you have stopped noticing.
-
-### The same split, on a system with three of everything
+Here is the table doing what it is for. This is a different system — an observability platform,
+carrying metrics, logs and traces — and its model is complete, so every quantity has been given
+either a shape or a value and the two lists are both populated:
 
 ```{include} _generated/what-a-workload-is-observability.md
 ```

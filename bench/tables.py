@@ -720,13 +720,17 @@ def workload_table(name: str) -> str:
     # The last column carries the provenance mark, and carried no heading at all until a
     # reader arriving cold asked what the three symbols were.
     header = ["| Quantity | At the reference point | Unit | Claim |", "|---|---:|---|---|"]
+    # An empty half is a fact about the model, not a broken table. It happens in ch02, where
+    # nothing has been given a shape yet and the heuristic above therefore files every input as
+    # a decision — which is wrong, and is the reason ch04 exists.
+    empty = ["| *none* | | | |"]
     return "\n".join(
         [
             *header,
             "| **What the world does** | | | |",
-            *demand,
+            *(demand or empty),
             "| **What you decide** | | | |",
-            *choices,
+            *(choices or empty),
         ]
     )
 

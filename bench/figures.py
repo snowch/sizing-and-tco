@@ -244,7 +244,7 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.stage_shape, result="storage_cluster_demand-reference"
     ),
     "what-a-workload-is-storage": Table(
-        render=tables.workload_table, result="storage_cluster-reference"
+        render=tables.workload_table, result="storage_cluster_demand-reference"
     ),
     "what-a-workload-is-observability": Table(
         render=tables.workload_table, result="observability-reference"

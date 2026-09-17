@@ -3,28 +3,12 @@
 | Quantity | At the reference point | Unit | Claim |
 |---|---:|---|---|
 | **What the world does** | | | |
-| annual growth factor | 1.34 |  | ○ |
-| chassis price | $11,662 | USD/node | ◐ |
-| drive price | $14.12 | USD/TB | ◐ |
-| electricity price | $0.13 | USD/kWh | ○ |
-| fully loaded salary | $149,750 | USD / year | ○ |
-| metadata overhead | 1.07 |  | ○ |
-| network price per node | $1,689 | USD/node | ○ |
-| node power | 477 | W/node | ◐ |
-| node read throughput | 1.73 | GB/s/node | ◐ |
-| peak read throughput | 114 | GB/s | ○ |
-| PUE | 1.40 |  | ○ |
-| staff fte | 0.608 |  | ○ |
-| support rate | 0.118 | per year | ◐ |
+| *none* | | | |
 | **What you decide** | | | |
-| capacity headroom | 0.250 |  | ○ |
-| drive capacity | 20.0 | TB/drive | ◐ |
-| drives per node | 12.0 | drive/node | ○ |
+| annual growth factor | 1.30 |  | ○ |
 | horizon | 5.00 | year | ○ |
-| hours per year | 8,766 | hour/year | ● |
-| nodes purchased | 121 | node | ○ |
 | one year | 1.00 | year | ● |
-| replication factor | 3.00 |  | ○ |
+| peak read throughput | 85.0 | GB/s | ○ |
 | usable capacity, day one | 4,000 | TB | ○ |
 
-*Source — [`storage_cluster-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-reference.json)*
+*Source — [`storage_cluster_demand-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster_demand-reference.json)*
