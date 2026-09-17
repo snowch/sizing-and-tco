@@ -55,6 +55,11 @@ the first thing worth doing to any model you inherit:
 ```{include} _generated/what-a-workload-is-storage.md
 ```
 
+The *Claim* column is how much the person who wrote each number down was claiming, and the three
+marks run through every figure in the book: **●** something traceable to a measurement or a
+definition, **◐** a figure supplied by whoever is selling it, **○** somebody's assumption.
+[ch03](#where-the-numbers-come-from) is what the difference is worth.
+
 Everything above the second heading is something you can argue about and cannot choose. Everything
 below is a choice somebody made and could unmake — which is the list a sizing conversation should
 be about, and is not the list most sizing conversations are about.

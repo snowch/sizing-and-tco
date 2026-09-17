@@ -679,7 +679,9 @@ def workload_table(name: str) -> str:
         # slider is something you do. It is a heuristic, and it is right far more often than the
         # alternative of not distinguishing them at all.
         (demand if node.get("distribution") else choices).append(row)
-    header = ["| Quantity | At the reference point | Unit | |", "|---|---:|---|---|"]
+    # The last column carries the provenance mark, and carried no heading at all until a
+    # reader arriving cold asked what the three symbols were.
+    header = ["| Quantity | At the reference point | Unit | Claim |", "|---|---:|---|---|"]
     return "\n".join(
         [
             *header,
