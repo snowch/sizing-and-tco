@@ -85,6 +85,13 @@ echo "== the interactive pages assemble =="
 python3 scripts/build-viewers.py > /dev/null
 echo "  OK"
 
+echo "== the playground assembles =="
+# What CI can check is that the page builds and that the fixtures it holds itself to still have
+# the verdicts this build computes. Whether Python starts is a question about a reader's browser,
+# and the page answers that one itself, in front of them.
+python3 scripts/build-playground.py --out _build/playground > /dev/null
+echo "  OK"
+
 echo "== which commit this build is =="
 # Not one of the committed figures: it names the commit being built, so it is written here rather
 # than checked. The pages include it, so MyST needs it to exist before it parses anything.
