@@ -253,6 +253,12 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.workload_table, result="service_tier-reference"
     ),
     # -- ch03 Where the numbers come from ---------------------------------------------------------
+    "where-the-numbers-come-from-stage": Table(
+        render=tables.stage_outputs, result="storage_cluster_provenance-reference"
+    ),
+    "where-the-numbers-come-from-stage-shape": Table(
+        render=tables.stage_shape, result="storage_cluster_provenance-reference"
+    ),
     "where-the-numbers-come-from-constants": Table(
         render=tables.constants_index,
         computed_from="`bench/results/`, one row per stamped result",

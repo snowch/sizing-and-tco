@@ -11,9 +11,9 @@ short_title: "ch03 Where the numbers come from"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch01](#reading-a-model) |
-| **What it produces** | Every measured constant in the book, and the provenance census of a model |
-| **Built from** | `logs-line-bytes`, `metrics-sample-bytes`, `traces-span-bytes`, `storage-object-compression` |
+| **Prerequisites** | [ch02](#what-a-workload-is) |
+| **What it produces** | The model's first vendor claim, every measured constant in the book, and a provenance census |
+| **Built from** | `storage_cluster_provenance-reference`, `logs-line-bytes`, `metrics-sample-bytes`, `traces-span-bytes`, `storage-object-compression` |
 :::
 
 ## The question
@@ -42,7 +42,40 @@ never earned.
 with it. An assumption nobody can find is not a weaker claim than a measurement; it is a stronger
 one, because nothing can dislodge it.
 
-Here is the census of the observability model:
+### The first number somebody else supplied
+
+Every quantity in [ch02](#what-a-workload-is)'s file came from you or from the application: how
+much is held, how fast it grows, how long the cluster has to last. The next one does not. How much
+a drive holds is decided by whoever sells it, and this is the form that takes:
+
+```{literalinclude} ../models/storage_cluster/stages/02-provenance/model.yaml
+:language: yaml
+:start-at: drive_capacity:
+:end-before: drives_per_node:
+```
+
+Two sentences of source, and the second one earns its place. *Decimal TB, not TiB* is the gap
+between what a datasheet counts and what a filesystem counts, and it runs in the direction that
+makes the cluster smaller than the spreadsheet promised ([Appendix D](#appendix-d-units)). Writing
+that down is the whole of the discipline: the claim is recorded as a claim, and what is doubtful
+about it is recorded beside it.
+
+It takes one more decision — how many of those drives go in a chassis — to reach the first
+quantity in the model that is about hardware rather than about data:
+
+```{include} _generated/where-the-numbers-come-from-stage.md
+```
+
+```{include} _generated/where-the-numbers-come-from-stage-shape.md
+```
+
+Still a cost model. A vendor's claim is a claim about a number, and this book's distinction is not
+about who said a number — it is about whether the arithmetic around it stops applying somewhere.
+[ch09](#capacity) is where that changes.
+
+### Three claims, counted
+
+Here is the census of the observability model, which is finished and therefore has all three:
 
 ```{include} _generated/where-the-numbers-come-from-provenance.md
 ```
