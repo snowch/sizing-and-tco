@@ -54,7 +54,22 @@ class Stage:
         return f"storage_cluster_{self.stage}"
 
     @property
+    def is_the_finished_model(self) -> bool:
+        """True for the stage that has every node in it.
+
+        That stage is not an earlier version of anything — it is the model. Writing it out would
+        put a second copy of `models/storage_cluster/model.yaml` in the repository, and stamping
+        it would put a second copy of `storage_cluster-reference.json` beside the first. Both are
+        regenerated on every `make models`, and a duplicate that regenerates is a duplicate that
+        eventually disagrees.
+        """
+        return set(nodes_by(self.index)) == set(_raw_model()["nodes"])
+
+    @property
     def path(self) -> Path:
+        """Where this stage's model file is — which for the last one is the model itself."""
+        if self.is_the_finished_model:
+            return MODEL_PATH
         return OUT_DIR / f"{self.index:02d}-{self.stage}" / "model.yaml"
 
 
@@ -171,6 +186,8 @@ def write_all() -> tuple[Path, ...]:
     """Write every stage and its scenario, and return where the models landed."""
     written = []
     for stage in stages():
+        if stage.is_the_finished_model:
+            continue
         stage.path.parent.mkdir(parents=True, exist_ok=True)
         stage.path.write_text(
             GENERATED + yaml.safe_dump(build(stage), sort_keys=False, width=98, allow_unicode=True)
@@ -198,6 +215,8 @@ def main() -> int:
 
     stale = []
     for stage in stages():
+        if stage.is_the_finished_model:
+            continue
         want = GENERATED + yaml.safe_dump(
             build(stage), sort_keys=False, width=98, allow_unicode=True
         )

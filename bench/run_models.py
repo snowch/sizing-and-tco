@@ -125,7 +125,8 @@ def everything():
     """
     yield from discover()
     for stage in storage_stages():
-        if stage.path.exists():
+        # The last stage is the finished model, which discover() has already yielded.
+        if not stage.is_the_finished_model and stage.path.exists():
             yield load_model(stage.path)
 
 

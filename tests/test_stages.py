@@ -18,7 +18,7 @@ import pytest
 import yaml
 
 from bench.outline import CHAPTERS
-from bench.stages import MODEL_PATH, build, nodes_by, stages, write_all
+from bench.stages import MODEL_PATH, OUT_DIR, build, nodes_by, stages, write_all
 from sizing.dsl import load_model
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -159,3 +159,19 @@ def test_a_stage_changes_nothing_else_about_a_node(stage):
             f"{stage.stage} shows {name!r} differently from models/storage_cluster/model.yaml. A "
             "stage selects nodes; it does not rewrite them."
         )
+
+
+def test_the_last_stage_is_not_a_second_copy_of_the_model():
+    """The stage with every node in it is the model, and there is one of those.
+
+    It used to be written out and stamped like the rest, which put a byte-identical copy of
+    `models/storage_cluster/model.yaml` in the repository and a 223K copy of
+    `storage_cluster-reference.json` beside the original — both regenerated on every build.
+    """
+    finished = [stage for stage in STAGES if stage.is_the_finished_model]
+    assert len(finished) == 1, f"{len(finished)} stage(s) hold the whole model; expected exactly 1"
+    assert finished[0] is STAGES[-1], "the stage holding the whole model is not the last one"
+    assert finished[0].path == MODEL_PATH, "the finished stage should point at the model itself"
+    assert not (OUT_DIR / f"{finished[0].index:02d}-{finished[0].stage}").exists(), (
+        "the finished stage has been written out as a second copy of the model"
+    )

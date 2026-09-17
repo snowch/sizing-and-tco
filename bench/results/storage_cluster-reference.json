@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "fa1299523f48c73c",
+  "code_fingerprint": "35483e40aec44a9c",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-17T11:58:19+00:00",
-  "git_revision": "eaf3ff0",
+  "generated_at": "2026-09-17T12:31:03+00:00",
+  "git_revision": "9c5089f",
   "kind": "model",
   "name": "storage_cluster-reference",
   "produced_by": {
@@ -85,7 +85,7 @@
       "tco": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-17T11:58:18+00:00",
+    "generated_at": "2026-09-17T12:31:03+00:00",
     "model": "storage_cluster",
     "nodes": {
       "annual_energy": {
