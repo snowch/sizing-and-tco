@@ -80,8 +80,15 @@ RIG = "take it on the reference machine (`make measure-rig`) and commit the resu
 
 FIGURES: dict[str, Table | Diagram] = {
     # -- the preface ---------------------------------------------------------------------
+    # Two rows, not the model's eight. The page asks "how big" and "how much" and shows that
+    # each answer is a range; the other six are a chapter's subject arriving up to nineteen
+    # chapters early. Two of them are the model's ceilings, and a ceiling shown without its
+    # limit, its verdict or the probability of breaching it is the least readable row in the
+    # book — which is why ch12 gives them a table of their own with all three.
     "preface-storage-outputs": Table(
-        render=tables.outputs_table, result="storage_cluster-reference"
+        render=tables.outputs_table,
+        result="storage_cluster-reference",
+        args=("nodes_recommended", "tco"),
     ),
     "preface-tco-distribution": Diagram(
         draw=diagrams.distribution,

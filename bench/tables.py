@@ -182,19 +182,29 @@ def row_labels(payload: dict) -> dict[str, str]:
     }
 
 
-def outputs_table(name: str) -> str:
+def outputs_table(name: str, *only: str) -> str:
     """What the model says, at a point and across its uncertainty.
 
     Two columns that a spreadsheet would give one. The point estimate is what a plan is usually
     built on; the interval beside it is the same model saying how much that point is worth.
+
+    ``only`` names the outputs to show, in the order to show them. Without it the table is every
+    output the model declares, in the order the model file happens to declare them — which is the
+    right table for the chapter that has earned all of them and the wrong one for a page that has
+    earned two. A named output that the model does not have raises, so a renamed output fails the
+    build rather than silently removing a row from a page that talks about it.
     """
     payload = load_result(name)["summary"]
     labels = row_labels(payload)
+    shown = only or tuple(payload["outputs"])
+    unknown = [output for output in shown if output not in payload["outputs"]]
+    if unknown:
+        raise KeyError(f"{name} has no output(s) {unknown}; it declares {payload['outputs']}")
     rows = [
         "| Output | Point estimate | 90% interval | Unit |",
         "|---|---:|---:|---|",
     ]
-    for output in payload["outputs"]:
+    for output in shown:
         node = payload["nodes"][output]
         summary = node.get("summary")
         if node.get("blocked_by"):
