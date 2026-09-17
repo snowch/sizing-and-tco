@@ -74,10 +74,6 @@ the build refuses to publish a figure that no longer matches what the repository
 link is there so you can check the table instead of trusting it — and the name on it,
 `storage_cluster-reference`, is just which model was run and under which set of assumptions.
 
-% number-ok: settings this book chose, not figures it measured. Stated once because they never vary, and tests/test_book.py fails if they do.
-Every model run in this book draws 100,000 samples from seed 20260916, which is why neither
-appears under the tables. A test fails if that ever stops being true.
-
 ```{image} chapters/_figures/preface-tco-distribution.svg
 :alt: The five-year total cost as a distribution, with the point estimate marked on it
 :width: 100%
