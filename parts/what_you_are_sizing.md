@@ -8,9 +8,9 @@ short_title: "Part I — What you are sizing"
 
 > Which quantities size a system, where they come from, and how much any of them is worth?
 
-This part starts the model the rest of the book uses, and it starts it with the demand side:
-which quantities to write down, and what a number in a model file actually is — a claim, made by
-somebody.
+This part starts the storage cluster — the model Parts III and V size and cost — and it starts
+with the demand side: which quantities to write down, and what a number in a model file actually
+is, which is a claim made by somebody.
 
 [ch01](#what-a-workload-is) separates rates from levels, and what the world does to you from what
 you have decided to do about it. It writes the first nodes of the storage model, and ends with a

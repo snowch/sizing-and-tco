@@ -18,7 +18,7 @@
 | ◐ | node read throughput | vendor claim | sustained sequential read per node, as quoted. Unverified here — ch02. Triangular, and the lower bound is the one doing the work: the quoted figure is sequential and a real read pattern is not |
 | ○ | nodes purchased | assumption | the sizing decision, taken the way it is usually taken: nodes_recommended evaluated at every input's point estimate. That is exactly 121, and the ceilings below are what the same model says about that decision once the inputs are allowed to be uncertain. Change this number and watch them move — that is the exercise of ch11 |
 | ● | one year | fact | definition |
-| ○ | peak read throughput | assumption | ch02 — the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention. |
+| ○ | peak read throughput | assumption | ch03 — the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention. |
 | ○ | PUE | assumption | ch14 — facility overhead. A multiplier on IT load, and the single number a colocation contract is most likely to disagree with you about. Triangular: the minimum is a good building, the maximum is a poor one, and below one is impossible |
 | ○ | replication factor | assumption | three copies. An erasure-coded cluster substitutes its own overhead factor here and the rest of the model is unchanged, which is the point of it being a node. |
 | ○ | staff fte | assumption | fraction of one engineer this cluster occupies. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch07 calls a regime change |

@@ -49,8 +49,9 @@ ask the same model the same question. It no longer gives one answer.
 ```
 
 Read the *nodes the model recommends* row. Its point estimate is a real number, correctly
-computed. Beside it is the **90% interval** — the range that nine futures out of ten fall inside
-— and it spans most of an order of magnitude. Nothing in the first calculation was wrong. It
+computed. Beside it is the **90% interval** — the range nine runs in ten landed in, once every
+input was allowed to vary as far as it honestly might — and it spans most of an order of
+magnitude. Nothing in the first calculation was wrong. It
 simply had no way to mention that it was a bet.
 
 The italic line under that table appears under every one in this book, and it is a link. It names
@@ -73,9 +74,9 @@ appears under the tables. A test fails if that ever stops being true.
 The red line is where the point estimate falls. Everything else is the same model, told the truth
 about its own inputs.
 
-The method that produced that second column is [ch12](#monte-carlo)'s, not this page's. It is no
-use to you until you have built a model, got a number out of it, and felt that you could not
-defend the number.
+The method that produced the interval is [ch12](#monte-carlo)'s, not this page's. It is no use to
+you until you have built a model, got a number out of it, and felt that you could not defend the
+number.
 
 ## Why the interval was that wide
 
@@ -120,8 +121,7 @@ three ways.
 a stamped result recording what produced it, the conditions it holds under, and a hash of the code
 that made it. When a quoted figure stops matching what the repository computes, the build fails.
 
-**Every model is a file, not a spreadsheet.** A model here is a graph of named quantities in a
-text file. Every quantity declares a unit, so the build can refuse a model that multiplies the
+**Every model is a file, not a spreadsheet.** Every quantity in it declares a unit, so the build can refuse a model that multiplies the
 wrong two things. Every input declares whether it is a fact, a vendor's claim or somebody's
 assumption, and an uncertain one has to say what shape its uncertainty has and why that shape
 rather than another. Every measured constant names the measurement behind it.
@@ -173,7 +173,7 @@ Nothing in this book needs a datacentre, a cloud account, or a licence. The one 
 do on your laptop is take a `rig` measurement, and it refuses to pretend otherwise.
 
 :::{note} Where this book is
-The toolkit is complete, both reference models run end to end, and every chapter and appendix is
+The toolkit is complete, all three models run end to end, and every chapter and appendix is
 written.
 
 **[Download the whole book as a PDF](/sizing-and-tco.pdf)** — every chapter and appendix in one

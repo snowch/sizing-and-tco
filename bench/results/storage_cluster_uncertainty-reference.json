@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "940e6320454accac",
+  "code_fingerprint": "01b51bab4f425059",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/stages/03-uncertainty/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch13, ch18)"
   },
-  "generated_at": "2026-09-17T14:15:14+00:00",
-  "git_revision": "667b099",
+  "generated_at": "2026-09-17T15:26:34+00:00",
+  "git_revision": "e1e57ff",
   "kind": "model",
   "name": "storage_cluster_uncertainty-reference",
   "produced_by": {
@@ -51,7 +51,7 @@
       "node_raw_capacity": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-17T14:15:14+00:00",
+    "generated_at": "2026-09-17T15:26:34+00:00",
     "model": "storage_cluster_uncertainty",
     "nodes": {
       "annual_growth": {
@@ -499,7 +499,7 @@
         "point": 113.95437334044469,
         "provenance": {
           "kind": "assumption",
-          "source": "ch02 \u2014 the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention."
+          "source": "ch03 \u2014 the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention."
         },
         "row": 4,
         "slider": {

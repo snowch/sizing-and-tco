@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "849827ff1e85bc15",
+  "code_fingerprint": "a51ab346a1e9bc79",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch13, ch18)"
   },
-  "generated_at": "2026-09-17T14:15:12+00:00",
-  "git_revision": "667b099",
+  "generated_at": "2026-09-17T15:26:32+00:00",
+  "git_revision": "e1e57ff",
   "kind": "model",
   "name": "storage_cluster-reference",
   "produced_by": {
@@ -85,7 +85,7 @@
       "tco": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-17T14:15:12+00:00",
+    "generated_at": "2026-09-17T15:26:32+00:00",
     "model": "storage_cluster",
     "nodes": {
       "annual_energy": {
@@ -5196,8 +5196,8 @@
         "layer": 1,
         "measured": {
           "corpus": "bench.measure.mixed_objects \u2014 synthetic mixture of text, columnar, already-compressed and sparse objects, seeds 0-7",
-          "fingerprint": "fc1a2e5247a78a60",
-          "generated_at": "2026-09-16T16:11:39+00:00",
+          "fingerprint": "9a99ed2be07b1eac",
+          "generated_at": "2026-09-17T14:17:06+00:00",
           "sd": 0.07478653995392605,
           "stack": "python lzma (XZ preset 1)",
           "value": 2.548664901267576
@@ -5386,7 +5386,7 @@
         "point": 113.95437334044469,
         "provenance": {
           "kind": "assumption",
-          "source": "ch02 \u2014 the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention."
+          "source": "ch03 \u2014 the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention."
         },
         "row": 13,
         "slider": {
