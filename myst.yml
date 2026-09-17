@@ -39,6 +39,7 @@ project:
     - CLAUDE.md
     - AUTHORING_GUIDE.md
     - NEXT_STEPS.md
+    - BUILD-FROM-SCRATCH-PROMPT.md
   toc:
     - file: index.md
 

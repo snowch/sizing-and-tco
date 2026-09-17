@@ -36,23 +36,29 @@ conversation is about. The tables in this book put it in a column of that name.
 
 Point estimates do not lie by being wrong. They lie by being *silent*.
 
-Take a storage cluster with a stated workload and size it that way. This book has a model that
-does exactly that, and a model here is a text file of named quantities — how much data arrives,
-how well it compresses, how many copies you keep, what a drive holds — each one feeding the next
-until the chain reaches a number of machines. It recommends a node count. Buy that many.
+Think about what went into one. To size a storage cluster you need to know how much data arrives,
+how fast that grows, how well it compresses, how many copies you keep, what a drive holds and
+what a drive costs. Six numbers, and you know none of them exactly. The growth rate is a
+forecast. The compression ratio was measured on somebody else's data. The price is a quote that
+expires.
 
-Now let every input be as uncertain as it honestly is — the growth rate is a forecast, the
-compression ratio was measured on somebody else's data, the price is a quote that expires — and
-ask the same model the same question. It no longer gives one answer.
+Pick the middle of each, multiply along the chain, and you get one number. The arithmetic is
+right. But you never had six numbers — you had six ranges, and you threw the ranges away at the
+first step. Worse, multiplying uncertain quantities does not average their doubt out. It compounds
+it: each one can be wrong in the same direction as the others, and the answer stretches further
+than any single input does.
+
+So the honest answer to *how big* is not a number. It is a range, with some values in it far more
+likely than others. Here is that range for a real sizing problem — this book's worked example, a
+storage cluster, first as the single number and then with every input allowed to vary as far as it
+honestly might:
 
 ```{include} chapters/_generated/preface-storage-outputs.md
 ```
 
-Read the *nodes the model recommends* row. Its point estimate is a real number, correctly
-computed. Beside it is the **90% interval** — the range nine runs in ten landed in, once every
-input was allowed to vary as far as it honestly might — and it spans most of an order of
-magnitude. Nothing in the first calculation was wrong. It
-simply had no way to mention that it was a bet.
+Read the first row. Its point estimate is a real number, correctly computed — and beside it the
+**90% interval**, the range nine runs in ten landed in, spans most of an order of magnitude.
+Nothing in the first calculation was wrong. It simply had no way to mention that it was a bet.
 
 The italic line under that table appears under every one in this book, and it is a link. It names
 the stamped result the figure was rendered from — `storage_cluster-reference` is the storage model
