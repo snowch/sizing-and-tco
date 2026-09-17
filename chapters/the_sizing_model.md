@@ -40,7 +40,7 @@ margin ([ch11](#headroom-and-failure-domains)), and the larger-of-the-two at the
 Follow it left to right and there is nothing surprising in it. Sizing models are not clever: they
 are a dozen multiplications anybody could check, and the difficulty has never been the arithmetic.
 
-### It produces a number
+### What the model recommends
 
 ```{include} _generated/the-sizing-model-outputs.md
 ```

@@ -24,9 +24,10 @@ from __future__ import annotations
 import argparse
 import sys
 
+from bench.stages import stages as storage_stages
 from bench.stamp import RERUN_TOLERANCE, build_result, load_result, result_exists
 from sizing import export
-from sizing.dsl import discover, scenarios_for
+from sizing.dsl import ROOT, discover, load_model, scenarios_for
 
 #: Everything in a model result's fingerprint beyond the DSL core that KIND_SOURCES already
 #: covers. The model file and its scenario are added per result, below.
@@ -40,7 +41,7 @@ CHECKED = ("point", "p5", "p50", "p95")
 
 def run_one(model, scenario, write: bool = True) -> dict:
     payload = export.export_payload(model, scenario)
-    relative = str(model.path.relative_to(model.path.parent.parent.parent))  # type: ignore[union-attr]
+    relative = str(model.path.relative_to(ROOT))  # type: ignore[union-attr]
     return build_result(
         f"{model.name}-{scenario.name}",
         target="model",
@@ -66,7 +67,7 @@ def run_one(model, scenario, write: bool = True) -> dict:
         code_sources=[
             *SOURCES,
             relative,
-            str(scenario.path.relative_to(model.path.parent.parent.parent)),
+            str(scenario.path.relative_to(ROOT)),
         ],  # type: ignore[union-attr]
         write=write,
     )
@@ -80,7 +81,7 @@ def main() -> int:
 
     failures: list[str] = []
     count = 0
-    for model in discover():
+    for model in everything():
         if args.model and model.name != args.model:
             continue
         for scenario in scenarios_for(model):
@@ -112,6 +113,21 @@ def main() -> int:
         return 1
     print(f"\nrun_models: OK ({count} model run(s))")
     return 0
+
+
+def everything():
+    """Every model the book publishes a figure from, the staged ones included.
+
+    ``discover()`` globs ``models/*/model.yaml`` and so cannot see the staged storage models,
+    which are built under ``models/_out``. They are models all the same: the book quotes what
+    each one computes in the chapter that finishes building it, and a figure with no stamped
+    result behind it is the thing invariant 1 exists to refuse.
+    """
+    yield from discover()
+    for stage in storage_stages():
+        # The last stage is the finished model, which discover() has already yielded.
+        if not stage.is_the_finished_model and stage.path.exists():
+            yield load_model(stage.path)
 
 
 def compare(committed: dict, fresh: dict, outputs) -> list[str]:

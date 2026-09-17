@@ -1,14 +1,14 @@
 ---
-title: "Preface"
-short_title: Preface
+title: "Introduction"
+short_title: Introduction
 ---
 
 (preface)=
-# Preface
+# Introduction
 
 *How to size a system, cost it, and know how much to trust the answer.*
 
-## The question
+## You have been asked for a number
 
 Somebody has asked you how big the system needs to be. How many machines, how much storage, how
 much it will cost to run for the next three years — and they are going to spend real money on
@@ -19,21 +19,27 @@ number says nothing at all about how much of it you would actually bet.
 
 **How big, how much, and how wrong could I be?**
 
-*How big* is **sizing**: how much hardware a stated workload needs, and where it stops coping.
-*How much* is **total cost of ownership**: what that hardware costs over the years you keep it,
-which is not the same as what it costs to buy. Both are arithmetic, and most people can do them.
+Three questions, and the first two are arithmetic. **Sizing** is how much hardware a stated
+workload needs, and where it stops coping. **Total cost of ownership** is what that hardware
+costs over the years you keep it, which is not the same as what it costs to buy. Most people can
+do both.
 
-This book teaches the third part: how to find which input your answer rests on, how far the
-answer moves when that input moves, and what it would cost to find out. Almost nobody is taught
-this, and it is what decides whether anybody should act on your number.
+This book teaches the third: how to find which input your answer rests on, how far the answer
+moves when that input moves, and what it would cost to find out. Almost nobody is taught this,
+and it is what decides whether anybody should act on your number.
 
 ## Why point estimates lie
 
-Not because they are wrong. Because they are *silent*.
+A **point estimate** is the number you get by choosing one value for every input and doing the
+arithmetic once. It is what a spreadsheet gives you, and it is what almost every sizing
+conversation is about. The tables in this book put it in a column of that name.
 
-Take a storage cluster with a stated workload and size it the usual way: expected value of every
-input, multiply along the chain, read off the answer. The model in this book does exactly that,
-and recommends a node count. Buy that many.
+Point estimates do not lie by being wrong. They lie by being *silent*.
+
+Take a storage cluster with a stated workload and size it that way. This book has a model that
+does exactly that, and a model here is a text file of named quantities — how much data arrives,
+how well it compresses, how many copies you keep, what a drive holds — each one feeding the next
+until the chain reaches a number of machines. It recommends a node count. Buy that many.
 
 Now let every input be as uncertain as it honestly is — the growth rate is a forecast, the
 compression ratio was measured on somebody else's data, the price is a quote that expires — and
@@ -43,8 +49,9 @@ ask the same model the same question. It no longer gives one answer.
 ```
 
 Read the *nodes the model recommends* row. Its point estimate is a real number, correctly
-computed, and the interval beside it spans most of an order of magnitude. Nothing in the
-first calculation was wrong. It simply had no way to mention that it was a bet.
+computed. Beside it is the **90% interval** — the range that nine futures out of ten fall inside
+— and it spans most of an order of magnitude. Nothing in the first calculation was wrong. It
+simply had no way to mention that it was a bet.
 
 The italic line under that table appears under every one in this book, and it is a link. It names
 the stamped result the figure was rendered from — `storage_cluster-reference` is the storage model
@@ -131,7 +138,7 @@ as *not yet measured* and the affected chain is named — never a placeholder, a
 borrowed from a different stack. [Appendix F](#appendix-f-observability-model) publishes one of
 those figures, which is a deliberate choice and is argued there.
 
-## Who it is for
+## Who this book is for
 
 A self-study text and a toolkit, for an engineer who has been asked how big something needs to
 be, or what it will cost, and who wants to give an answer they would still defend a year later.

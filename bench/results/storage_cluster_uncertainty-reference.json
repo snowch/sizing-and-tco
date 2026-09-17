@@ -1,0 +1,951 @@
+{
+  "code_fingerprint": "11bcd85ad1056448",
+  "code_sources": [
+    "bench/run_models.py",
+    "models/storage_cluster/stages/03-uncertainty/model.yaml",
+    "models/storage_cluster/stages/03-uncertainty/scenarios/reference.yaml",
+    "sizing/export.py",
+    "sizing/expr.py",
+    "sizing/graph.py"
+  ],
+  "conditions": {
+    "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
+    "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
+  },
+  "generated_at": "2026-09-17T12:31:04+00:00",
+  "git_revision": "9c5089f",
+  "kind": "model",
+  "name": "storage_cluster_uncertainty-reference",
+  "produced_by": {
+    "classification": "cost",
+    "model": "storage_cluster_uncertainty",
+    "model_file": "models/storage_cluster/stages/03-uncertainty/model.yaml",
+    "sampler": "sizing.mc \u2014 inverse transform, Iman-Conover rank correlation",
+    "samples": 100000,
+    "scenario": "reference",
+    "seed": 20260916,
+    "unmeasured": []
+  },
+  "recorded_on": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "kind": "other",
+    "numpy": "2.4.6",
+    "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  },
+  "summary": {
+    "classification": "cost",
+    "correlations": [
+      {
+        "a": "annual_growth",
+        "b": "peak_read_throughput",
+        "because": "More data stored is usually more data read. This one changes the answer rather than just the interval: the two chains that compete inside nodes_total are driven by these two inputs, so correlating them changes how often each constraint binds.",
+        "rho": 0.6
+      }
+    ],
+    "currency": "USD",
+    "description": "The storage model as it stands at the end of peak_mean_and_growth, built by bench/stages.py from models/storage_cluster/model.yaml. Not a model anybody would ship: it is the finished model with everything the book has not introduced yet removed, so that a reader can see what it looked like when it had 10 nodes in it.",
+    "factors": {
+      "horizon_periods": 1.0,
+      "node_raw_capacity": 1.0,
+      "usable_capacity": 1.0
+    },
+    "generated_at": "2026-09-17T12:31:04+00:00",
+    "model": "storage_cluster_uncertainty",
+    "nodes": {
+      "annual_growth": {
+        "depends_on": [],
+        "distribution": {
+          "lognormal": {
+            "p10": 1.12,
+            "p90": 1.6
+          }
+        },
+        "histogram": {
+          "counts": [
+            4,
+            2,
+            3,
+            7,
+            20,
+            41,
+            76,
+            172,
+            261,
+            440,
+            663,
+            1023,
+            1379,
+            1962,
+            2442,
+            3209,
+            3581,
+            4150,
+            4764,
+            5136,
+            5585,
+            5815,
+            5875,
+            6054,
+            5568,
+            5420,
+            5077,
+            4577,
+            4196,
+            3691,
+            3221,
+            2925,
+            2403,
+            2073,
+            1692,
+            1338,
+            1083,
+            928,
+            667,
+            578,
+            428,
+            352,
+            270,
+            217,
+            166,
+            119,
+            90,
+            66,
+            54,
+            45,
+            29,
+            19,
+            9,
+            9,
+            6,
+            5,
+            6,
+            0,
+            3,
+            2,
+            2,
+            0,
+            0,
+            2
+          ],
+          "edges": [
+            0.696133279098424,
+            0.7234064254274535,
+            0.7506795717564829,
+            0.7779527180855125,
+            0.8052258644145419,
+            0.8324990107435714,
+            0.8597721570726009,
+            0.8870453034016303,
+            0.9143184497306598,
+            0.9415915960596892,
+            0.9688647423887187,
+            0.9961378887177482,
+            1.0234110350467778,
+            1.0506841813758072,
+            1.0779573277048367,
+            1.105230474033866,
+            1.1325036203628955,
+            1.159776766691925,
+            1.1870499130209544,
+            1.2143230593499839,
+            1.2415962056790133,
+            1.2688693520080427,
+            1.2961424983370724,
+            1.3234156446661018,
+            1.3506887909951313,
+            1.3779619373241607,
+            1.4052350836531902,
+            1.4325082299822198,
+            1.4597813763112493,
+            1.4870545226402787,
+            1.5143276689693081,
+            1.5416008152983376,
+            1.568873961627367,
+            1.5961471079563965,
+            1.623420254285426,
+            1.6506934006144554,
+            1.6779665469434848,
+            1.7052396932725145,
+            1.732512839601544,
+            1.7597859859305733,
+            1.7870591322596028,
+            1.8143322785886322,
+            1.8416054249176617,
+            1.868878571246691,
+            1.8961517175757208,
+            1.9234248639047502,
+            1.9506980102337796,
+            1.977971156562809,
+            2.0052443028918385,
+            2.032517449220868,
+            2.0597905955498974,
+            2.087063741878927,
+            2.1143368882079563,
+            2.1416100345369857,
+            2.1688831808660156,
+            2.1961563271950446,
+            2.2234294735240745,
+            2.2507026198531035,
+            2.2779757661821334,
+            2.3052489125111624,
+            2.3325220588401923,
+            2.3597952051692217,
+            2.387068351498251,
+            2.4143414978272806,
+            2.44161464415631
+          ],
+          "spacing": "linear"
+        },
+        "kind": "input",
+        "label": "annual growth factor",
+        "layer": 1,
+        "note": null,
+        "point": 1.338656042454521,
+        "provenance": {
+          "kind": "assumption",
+          "source": "ch04 \u2014 lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%."
+        },
+        "row": 0,
+        "slider": {
+          "max": 2.0,
+          "min": 1.0
+        },
+        "summary": {
+          "max": 2.44161464415631,
+          "mean": 1.351483560013934,
+          "min": 0.696133279098424,
+          "p25": 1.2187242233269187,
+          "p5": 1.0646401764234517,
+          "p50": 1.3384005386959914,
+          "p75": 1.470736528922783,
+          "p95": 1.6810496591794961,
+          "sd": 0.18914853134325182
+        },
+        "unit": "dimensionless"
+      },
+      "drive_capacity": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "drive capacity",
+        "layer": 0,
+        "note": null,
+        "point": 20.0,
+        "provenance": {
+          "kind": "vendor_claim",
+          "source": "datasheet capacity. Decimal TB, not TiB \u2014 appendix D, and it is a 10% difference"
+        },
+        "row": 2,
+        "unit": "TB/drive"
+      },
+      "drives_per_node": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "drives per node",
+        "layer": 0,
+        "note": null,
+        "point": 12.0,
+        "provenance": {
+          "kind": "assumption",
+          "source": "chassis choice"
+        },
+        "row": 3,
+        "slider": {
+          "max": 36.0,
+          "min": 6.0
+        },
+        "unit": "drive/node"
+      },
+      "horizon": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "horizon",
+        "layer": 0,
+        "note": null,
+        "point": 5.0,
+        "provenance": {
+          "kind": "assumption",
+          "source": "the refresh cycle this cluster is bought against"
+        },
+        "row": 0,
+        "slider": {
+          "max": 8.0,
+          "min": 3.0
+        },
+        "unit": "year"
+      },
+      "horizon_periods": {
+        "ast": {
+          "args": [
+            {
+              "name": "horizon",
+              "op": "ref"
+            },
+            {
+              "name": "one_year",
+              "op": "ref"
+            }
+          ],
+          "op": "/"
+        },
+        "depends_on": [
+          "horizon",
+          "one_year"
+        ],
+        "formula": "horizon / one_year",
+        "kind": "derived",
+        "label": "horizon periods",
+        "layer": 1,
+        "note": null,
+        "point": 5.0,
+        "row": 1,
+        "unit": "dimensionless"
+      },
+      "node_raw_capacity": {
+        "ast": {
+          "args": [
+            {
+              "name": "drive_capacity",
+              "op": "ref"
+            },
+            {
+              "name": "drives_per_node",
+              "op": "ref"
+            }
+          ],
+          "op": "*"
+        },
+        "depends_on": [
+          "drive_capacity",
+          "drives_per_node"
+        ],
+        "formula": "drive_capacity * drives_per_node",
+        "kind": "derived",
+        "label": "node raw capacity",
+        "layer": 1,
+        "note": null,
+        "point": 240.0,
+        "row": 3,
+        "unit": "TB/node"
+      },
+      "one_year": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "one year",
+        "layer": 0,
+        "note": "Here because a duration cannot be an exponent. In (1+r)^n the n is a pure number, so the horizon has to be divided by something with the same units before it can be used as one. Appendix D has the rest of the conversions that bite.",
+        "point": 1.0,
+        "provenance": {
+          "kind": "fact",
+          "source": "definition"
+        },
+        "row": 1,
+        "unit": "year"
+      },
+      "peak_read_throughput": {
+        "depends_on": [],
+        "distribution": {
+          "triangular": {
+            "likely": 85.0,
+            "maximum": 240.0,
+            "minimum": 35.0
+          }
+        },
+        "histogram": {
+          "counts": [
+            116,
+            287,
+            573,
+            696,
+            884,
+            1134,
+            1318,
+            1517,
+            1731,
+            1978,
+            2101,
+            2296,
+            2544,
+            2679,
+            2880,
+            3140,
+            3023,
+            2918,
+            2949,
+            2955,
+            2747,
+            2724,
+            2661,
+            2663,
+            2598,
+            2512,
+            2394,
+            2280,
+            2209,
+            2197,
+            2217,
+            2066,
+            1950,
+            1913,
+            1839,
+            1817,
+            1863,
+            1743,
+            1615,
+            1637,
+            1521,
+            1396,
+            1398,
+            1327,
+            1243,
+            1153,
+            1133,
+            1070,
+            984,
+            943,
+            833,
+            810,
+            725,
+            690,
+            639,
+            585,
+            508,
+            432,
+            411,
+            312,
+            227,
+            148,
+            106,
+            42
+          ],
+          "edges": [
+            35.3854376256156,
+            38.57676001257481,
+            41.768082399534016,
+            44.959404786493224,
+            48.150727173452424,
+            51.34204956041164,
+            54.53337194737084,
+            57.724694334330046,
+            60.91601672128925,
+            64.10733910824845,
+            67.29866149520767,
+            70.48998388216688,
+            73.68130626912608,
+            76.87262865608528,
+            80.06395104304448,
+            83.2552734300037,
+            86.44659581696291,
+            89.63791820392211,
+            92.82924059088131,
+            96.02056297784053,
+            99.21188536479974,
+            102.40320775175894,
+            105.59453013871814,
+            108.78585252567734,
+            111.97717491263654,
+            115.16849729959577,
+            118.35981968655497,
+            121.55114207351417,
+            124.74246446047337,
+            127.9337868474326,
+            131.1251092343918,
+            134.316431621351,
+            137.5077540083102,
+            140.6990763952694,
+            143.89039878222863,
+            147.08172116918783,
+            150.27304355614703,
+            153.46436594310623,
+            156.65568833006546,
+            159.84701071702466,
+            163.03833310398386,
+            166.22965549094306,
+            169.42097787790226,
+            172.61230026486146,
+            175.8036226518207,
+            178.9949450387799,
+            182.1862674257391,
+            185.3775898126983,
+            188.5689121996575,
+            191.76023458661672,
+            194.95155697357592,
+            198.14287936053512,
+            201.33420174749432,
+            204.52552413445355,
+            207.71684652141275,
+            210.90816890837195,
+            214.09949129533115,
+            217.29081368229035,
+            220.48213606924958,
+            223.67345845620878,
+            226.86478084316798,
+            230.05610323012718,
+            233.2474256170864,
+            236.4387480040456,
+            239.6300703910048
+          ],
+          "spacing": "linear"
+        },
+        "kind": "input",
+        "label": "peak read throughput",
+        "layer": 0,
+        "note": null,
+        "point": 113.95437334044469,
+        "provenance": {
+          "kind": "assumption",
+          "source": "ch03 \u2014 the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention."
+        },
+        "row": 4,
+        "slider": {
+          "max": 400.0,
+          "min": 10.0
+        },
+        "summary": {
+          "max": 239.6300703910048,
+          "mean": 120.0152885545151,
+          "min": 35.3854376256156,
+          "p25": 85.50588745331471,
+          "p5": 57.715260715663184,
+          "p50": 113.79851940231543,
+          "p75": 151.09601709611886,
+          "p95": 200.6059228369291,
+          "sd": 43.727131614362854
+        },
+        "unit": "GB/s"
+      },
+      "usable_capacity": {
+        "ast": {
+          "args": [
+            {
+              "name": "usable_capacity_t0",
+              "op": "ref"
+            },
+            {
+              "args": [
+                {
+                  "name": "annual_growth",
+                  "op": "ref"
+                },
+                {
+                  "name": "horizon_periods",
+                  "op": "ref"
+                }
+              ],
+              "op": "**"
+            }
+          ],
+          "op": "*"
+        },
+        "depends_on": [
+          "annual_growth",
+          "horizon_periods",
+          "usable_capacity_t0"
+        ],
+        "formula": "usable_capacity_t0 * annual_growth ** horizon_periods",
+        "histogram": {
+          "counts": [
+            6792,
+            21226,
+            20977,
+            15605,
+            10747,
+            7332,
+            5066,
+            3480,
+            2394,
+            1659,
+            1161,
+            870,
+            617,
+            457,
+            343,
+            265,
+            211,
+            167,
+            129,
+            96,
+            78,
+            55,
+            46,
+            44,
+            31,
+            28,
+            25,
+            16,
+            19,
+            9,
+            10,
+            9,
+            1,
+            3,
+            4,
+            4,
+            2,
+            3,
+            3,
+            1,
+            1,
+            3,
+            2,
+            0,
+            0,
+            2,
+            0,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            1
+          ],
+          "edges": [
+            653.9160112131773,
+            6067.023470881028,
+            11480.130930548878,
+            16893.238390216728,
+            22306.345849884576,
+            27719.453309552428,
+            33132.560769220276,
+            38545.66822888813,
+            43958.77568855598,
+            49371.88314822383,
+            54784.99060789168,
+            60198.09806755953,
+            65611.20552722737,
+            71024.31298689522,
+            76437.42044656308,
+            81850.52790623093,
+            87263.63536589878,
+            92676.74282556663,
+            98089.85028523448,
+            103502.95774490233,
+            108916.06520457019,
+            114329.17266423802,
+            119742.28012390588,
+            125155.38758357373,
+            130568.49504324158,
+            135981.60250290943,
+            141394.70996257727,
+            146807.81742224513,
+            152220.92488191297,
+            157634.03234158084,
+            163047.13980124868,
+            168460.24726091654,
+            173873.35472058438,
+            179286.46218025222,
+            184699.56963992008,
+            190112.67709958792,
+            195525.7845592558,
+            200938.89201892362,
+            206351.9994785915,
+            211765.10693825933,
+            217178.2143979272,
+            222591.32185759503,
+            228004.42931726287,
+            233417.53677693073,
+            238830.64423659857,
+            244243.75169626644,
+            249656.85915593427,
+            255069.96661560214,
+            260483.07407526998,
+            265896.1815349378,
+            271309.28899460565,
+            276722.3964542735,
+            282135.5039139413,
+            287548.6113736092,
+            292961.71883327706,
+            298374.8262929449,
+            303787.93375261273,
+            309201.0412122806,
+            314614.14867194847,
+            320027.2561316163,
+            325440.36359128414,
+            330853.471050952,
+            336266.5785106199,
+            341679.6859702877,
+            347092.79342995555
+          ],
+          "spacing": "linear"
+        },
+        "kind": "derived",
+        "label": "usable capacity at horizon",
+        "layer": 2,
+        "note": null,
+        "point": 17195.11183006671,
+        "row": 0,
+        "summary": {
+          "max": 347092.79342995555,
+          "mean": 21893.97198634376,
+          "min": 653.9160112131773,
+          "p25": 10754.425307562695,
+          "p5": 5471.094889198999,
+          "p50": 17178.70829295549,
+          "p75": 27525.447437842253,
+          "p95": 53698.56827924947,
+          "sd": 17292.093870905337
+        },
+        "unit": "TB"
+      },
+      "usable_capacity_t0": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "usable capacity, day one",
+        "layer": 1,
+        "note": null,
+        "point": 4000.0,
+        "provenance": {
+          "kind": "assumption",
+          "source": "stated workload (ch02) \u2014 what the application says it needs to store today"
+        },
+        "row": 2,
+        "slider": {
+          "max": 20000.0,
+          "min": 500.0
+        },
+        "unit": "TB"
+      }
+    },
+    "order": [
+      "annual_growth",
+      "drive_capacity",
+      "drives_per_node",
+      "horizon",
+      "node_raw_capacity",
+      "one_year",
+      "horizon_periods",
+      "peak_read_throughput",
+      "usable_capacity_t0",
+      "usable_capacity"
+    ],
+    "outputs": [
+      "usable_capacity",
+      "peak_read_throughput",
+      "node_raw_capacity"
+    ],
+    "scenario": {
+      "because": "The same conditions the finished model is quoted under, so that a number from a stage and a number from the whole model differ only by what the stage does not contain yet.",
+      "name": "reference",
+      "overrides": {},
+      "samples": 100000,
+      "seed": 20260916,
+      "title": "Reference scenario"
+    },
+    "scenarios": [
+      "reference"
+    ],
+    "title": "A generic scale-out storage cluster \u2014 The growth rate stops being a number",
+    "tornado": {
+      "node_raw_capacity": [
+        {
+          "base": 240.0,
+          "high": 240.0,
+          "high_input": 1.6,
+          "kind": "input",
+          "label": "annual growth factor",
+          "low": 240.0,
+          "low_input": 1.12,
+          "node": "annual_growth",
+          "span": 0.0
+        },
+        {
+          "base": 240.0,
+          "high": 240.0,
+          "high_input": 183.6306821045349,
+          "kind": "input",
+          "label": "peak read throughput",
+          "low": 240.0,
+          "low_input": 67.01562118716424,
+          "node": "peak_read_throughput",
+          "span": 0.0
+        }
+      ],
+      "peak_read_throughput": [
+        {
+          "base": 113.95437334044469,
+          "high": 183.6306821045349,
+          "high_input": 183.6306821045349,
+          "kind": "input",
+          "label": "peak read throughput",
+          "low": 67.01562118716424,
+          "low_input": 67.01562118716424,
+          "node": "peak_read_throughput",
+          "span": 116.61506091737067
+        },
+        {
+          "base": 113.95437334044469,
+          "high": 113.95437334044469,
+          "high_input": 1.6,
+          "kind": "input",
+          "label": "annual growth factor",
+          "low": 113.95437334044469,
+          "low_input": 1.12,
+          "node": "annual_growth",
+          "span": 0.0
+        }
+      ],
+      "usable_capacity": [
+        {
+          "base": 17195.11183006671,
+          "high": 41943.04000000001,
+          "high_input": 1.6,
+          "kind": "input",
+          "label": "annual growth factor",
+          "low": 7049.366732800003,
+          "low_input": 1.12,
+          "node": "annual_growth",
+          "span": 34893.67326720001
+        },
+        {
+          "base": 17195.11183006671,
+          "high": 17195.11183006671,
+          "high_input": 183.6306821045349,
+          "kind": "input",
+          "label": "peak read throughput",
+          "low": 17195.11183006671,
+          "low_input": 67.01562118716424,
+          "node": "peak_read_throughput",
+          "span": 0.0
+        }
+      ]
+    },
+    "unmeasured": [],
+    "viewer_expectations": [
+      {
+        "overrides": {
+          "annual_growth": 1.0,
+          "drives_per_node": 6.0,
+          "horizon": 3.0,
+          "peak_read_throughput": 10.0,
+          "usable_capacity_t0": 500.0
+        },
+        "values": {
+          "annual_growth": 1.0,
+          "drive_capacity": 20.0,
+          "drives_per_node": 6.0,
+          "horizon": 3.0,
+          "horizon_periods": 3.0,
+          "node_raw_capacity": 120.0,
+          "one_year": 1.0,
+          "peak_read_throughput": 10.0,
+          "usable_capacity": 500.0,
+          "usable_capacity_t0": 500.0
+        }
+      },
+      {
+        "overrides": {
+          "annual_growth": 1.25,
+          "drives_per_node": 13.5,
+          "horizon": 4.25,
+          "peak_read_throughput": 107.5,
+          "usable_capacity_t0": 5375.0
+        },
+        "values": {
+          "annual_growth": 1.25,
+          "drive_capacity": 20.0,
+          "drives_per_node": 13.5,
+          "horizon": 4.25,
+          "horizon_periods": 4.25,
+          "node_raw_capacity": 270.0,
+          "one_year": 1.0,
+          "peak_read_throughput": 107.5,
+          "usable_capacity": 13875.416359846271,
+          "usable_capacity_t0": 5375.0
+        }
+      },
+      {
+        "overrides": {
+          "annual_growth": 1.5,
+          "drives_per_node": 21.0,
+          "horizon": 5.5,
+          "peak_read_throughput": 205.0,
+          "usable_capacity_t0": 10250.0
+        },
+        "values": {
+          "annual_growth": 1.5,
+          "drive_capacity": 20.0,
+          "drives_per_node": 21.0,
+          "horizon": 5.5,
+          "horizon_periods": 5.5,
+          "node_raw_capacity": 420.0,
+          "one_year": 1.0,
+          "peak_read_throughput": 205.0,
+          "usable_capacity": 95329.16526308126,
+          "usable_capacity_t0": 10250.0
+        }
+      },
+      {
+        "overrides": {
+          "annual_growth": 1.9,
+          "drives_per_node": 33.0,
+          "horizon": 7.5,
+          "peak_read_throughput": 361.0,
+          "usable_capacity_t0": 18050.0
+        },
+        "values": {
+          "annual_growth": 1.9,
+          "drive_capacity": 20.0,
+          "drives_per_node": 33.0,
+          "horizon": 7.5,
+          "horizon_periods": 7.5,
+          "node_raw_capacity": 660.0,
+          "one_year": 1.0,
+          "peak_read_throughput": 361.0,
+          "usable_capacity": 2223971.478942745,
+          "usable_capacity_t0": 18050.0
+        }
+      },
+      {
+        "overrides": {
+          "annual_growth": 2.0,
+          "drives_per_node": 36.0,
+          "horizon": 8.0,
+          "peak_read_throughput": 400.0,
+          "usable_capacity_t0": 20000.0
+        },
+        "values": {
+          "annual_growth": 2.0,
+          "drive_capacity": 20.0,
+          "drives_per_node": 36.0,
+          "horizon": 8.0,
+          "horizon_periods": 8.0,
+          "node_raw_capacity": 720.0,
+          "one_year": 1.0,
+          "peak_read_throughput": 400.0,
+          "usable_capacity": 5120000.0,
+          "usable_capacity_t0": 20000.0
+        }
+      }
+    ]
+  },
+  "target": "model",
+  "units": {
+    "annual_growth": "dimensionless",
+    "drive_capacity": "TB/drive",
+    "drives_per_node": "drive/node",
+    "horizon": "year",
+    "horizon_periods": "dimensionless",
+    "node_raw_capacity": "TB/node",
+    "one_year": "year",
+    "peak_read_throughput": "GB/s",
+    "usable_capacity": "TB",
+    "usable_capacity_t0": "TB"
+  }
+}

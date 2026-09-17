@@ -33,7 +33,7 @@ whoever runs the system.
 
 ## The material
 
-### It was not a surprise
+### The model said this would happen
 
 Start with the uncomfortable half. The cluster [ch12](#the-sizing-model) bought was the one the
 point estimates recommended, and the same model reported this about it:

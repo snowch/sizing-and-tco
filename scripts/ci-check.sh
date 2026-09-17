@@ -34,6 +34,14 @@ echo "== every model typechecks, and says where its numbers came from =="
 # or a ceiling in it is a sizing model, and a sizing model must declare its headroom.
 python3 scripts/verify-models.py
 
+echo "== the storage model, as each chapter leaves it =="
+# The book builds this model a few nodes at a time, so the intermediate models have to be real:
+# they are derived from the finished file by bench/stages.py and held to the same rules above.
+# tests/test_stages.py is where the invariants live — every node introduced by some chapter, no
+# stage taking a node away, and the change from a cost model to a sizing model happening in the
+# chapter that claims it.
+python3 -m bench.stages --check
+
 echo "== the corpus constants still say what the book prints =="
 # The one class of measurement CI can re-derive rather than trust: a codec is deterministic, so
 # pointing the same code at the same bytes must give the same answer here as it did on the

@@ -9,7 +9,7 @@ short_title: "Part II — Ceilings"
 > Where does a chain of multiplications stop describing a real system?
 
 Part I described demand. This part is about what happens to a system when that demand arrives, and
-it justifies [the front matter](#preface)'s distinction between a cost model and a sizing one.
+it justifies [the introduction](#preface)'s distinction between a cost model and a sizing one.
 
 [ch05](#littles-law) is the one relationship that needs no assumptions at all, and can therefore
 explain nothing.

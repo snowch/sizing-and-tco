@@ -11,18 +11,22 @@ short_title: "ch02 What a workload is"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch01](#reading-a-model) |
-| **What it produces** | The workload table for all three reference models |
-| **Built from** | `storage_cluster-reference`, `observability-reference`, `service_tier-reference` |
+| **Prerequisites** | none |
+| **What it produces** | The demand side of the storage model, and the workload table for all three |
+| **Built from** | `storage_cluster_demand-reference`, `storage_cluster-reference`, `observability-reference`, `service_tier-reference` |
 :::
 
 ## The question
 
 Which quantities actually size a system, and which ones only look as though they do?
 
-[ch01](#reading-a-model) gave you a file that can hold a quantity and check it. This chapter is
-about which quantities are worth holding, and it starts with the difference between a rate and a
-level. That sounds like pedantry right up until somebody sizes a retention store from a rate.
+Somebody has told you what the system has to do. Before any of it can be multiplied into a number
+of machines, it has to be written down in a form that cannot quietly mean two things — and the
+first distinction that matters is between a rate and a level. That sounds like pedantry right up
+until somebody sizes a retention store from a rate.
+
+This chapter writes the first nodes of the model the rest of the book uses. By the end of it you
+will have a file that runs.
 
 ## The material
 
@@ -46,31 +50,104 @@ The commonest error in sizing is turning a flow into a stock by multiplying it b
 of by an amount of time. It typechecks in a spreadsheet. It does not typecheck here, and problem
 2.2 is exactly that.
 
+### Turning the workload into a file
+
+Take the workload above: some amount held today, growing at some rate, over the life of whatever
+gets bought. The first node is the level you were given.
+
+```{literalinclude} ../models/storage_cluster/stages/01-demand/model.yaml
+:language: yaml
+:start-at: usable_capacity_t0:
+:end-before: annual_growth:
+```
+
+A `unit`, so the build knows this is a level and not a rate. A `value`, because somebody said so.
+A `provenance`, because a number with no source is a rumour — that is
+[ch03](#where-the-numbers-come-from)'s subject, and the reason the field is mandatory from the
+very first node. The `range` is what a reader may drag it to on the published page.
+
+Growing it over the horizon takes one multiplication and one thing that is easy to miss:
+
+```{literalinclude} ../models/storage_cluster/stages/01-demand/model.yaml
+:language: yaml
+:start-at: one_year:
+:end-before: peak_read_throughput:
+```
+
+`horizon / one_year` looks like ceremony and is not. Growth compounds, so the horizon has to be an
+exponent, and an exponent is a pure number: five years cannot be one, but five can. Dividing a
+duration by a declared year is how it becomes the count of periods the formula can use. A
+spreadsheet does this silently and correctly, right until the quarter somebody types a horizon in
+months into the same cell.
+
+Then the level at the end, which is the first quantity in this book that is *computed* rather than
+stated:
+
+```{literalinclude} ../models/storage_cluster/stages/01-demand/model.yaml
+:language: yaml
+:start-at: usable_capacity:
+:end-before: outputs:
+```
+
+That is the whole of the demand side.
+
 ### The demand and the decisions
 
 A model's inputs are two different kinds of thing wearing the same clothes. Some describe what the
 world is doing to you. The rest describe what you have decided to do about it. Separating them is
-the first thing worth doing to any model you inherit:
+the first thing worth doing to any model, including this one:
 
 ```{include} _generated/what-a-workload-is-storage.md
 ```
 
-The *Claim* column is how much the person who wrote each number down was claiming, and the three
-marks run through every figure in the book: **●** something traceable to a measurement or a
-definition, **◐** a figure supplied by whoever is selling it, **○** somebody's assumption.
-[ch03](#where-the-numbers-come-from) is about what the difference is worth.
+Every quantity is filed under *what you decide*, and one of them is the growth rate. Nobody decides
+a growth rate.
 
-Everything above the second heading is something you can argue about and cannot choose. Everything
-below is a choice somebody made and could unmake. A sizing conversation should be about the second
-list. Most are about the first.
+The table is not wrong about the model. The model is wrong, and the table is showing you the only
+signal it has: whether somebody gave the quantity a shape. A declared range says *the world settles
+this one*; a single value with a slider says *I do*. Nothing in the file has a shape yet, so
+everything reads as a choice. [ch04](#peak-mean-and-growth) gives the growth rate one, and this
+table splits in two for the first time.
 
-The heuristic that produced that split is crude and worth knowing: a quantity somebody gave a
-distribution to is one they think the world decides, and a quantity with a single value and a
-slider is one they think they decide. Splitting a model this way is far better than not splitting
-it, and where the heuristic is wrong the wrongness is interesting. An input you gave a single
-value to and cannot actually control is an assumption you have stopped noticing.
+That is worth more here than a correct table would have been, because the failure is the useful
+one. **An input you gave a single value to and cannot actually control is an assumption you have
+stopped noticing**, and a model that files its inputs this way finds them by construction. Day-one
+capacity is sitting in the same list, and that one is not a decision either.
 
-### The same split, on a system with three of everything
+Once the table does separate, the half worth arguing about is *what you decide*, because it is the
+half anybody can change. Most sizing conversations are spent on the other one.
+
+The *Claim* column is asking something else: how much the person who wrote each number down was
+claiming. **●** traceable to a measurement or a definition, **◐** supplied by whoever is selling
+it, **○** somebody's assumption. [ch03](#where-the-numbers-come-from) is about what that difference
+is worth.
+
+### What it says, and what the build calls it
+
+```{include} _generated/what-a-workload-is-stage.md
+```
+
+A number, out of a handful of numbers and a multiplication. The arithmetic is right and you should
+not act on it, for a reason this chapter cannot yet name: every figure that went in was a single
+figure, and not one of them is known that precisely. [ch04](#peak-mean-and-growth) takes the first
+of them apart.
+
+The build has already decided what kind of model this is, too:
+
+```{include} _generated/what-a-workload-is-stage-shape.md
+```
+
+The last row is not a label anybody typed. `sizing/dsl.py` works it out from what is in the file:
+nothing here has a measured constant or a declared limit in it, so what you have is a **cost
+model** — a structure nobody doubts, with uncertain numbers in it. It changes kind in
+[ch09](#capacity), and it changes because two nodes get added rather than because a chapter says
+so.
+
+### The same split, on a model that is finished
+
+Here is the table doing what it is for. This is a different system — an observability platform,
+carrying metrics, logs and traces — and its model is complete, so every quantity has been given
+either a shape or a value and the two lists are both populated:
 
 ```{include} _generated/what-a-workload-is-observability.md
 ```
