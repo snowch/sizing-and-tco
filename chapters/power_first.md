@@ -11,7 +11,7 @@ short_title: "ch15 Power first"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch14](#capex-opex-and-lifecycle) |
+| **Prerequisites** | [ch14 · Capex, opex and where the total stops](#capex-opex-and-lifecycle) |
 | **What it produces** | The storage model resized from a power budget inwards |
 | **Built from** | `storage_cluster-reference`, `storage_cluster-power_first` |
 :::

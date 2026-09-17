@@ -72,6 +72,10 @@ verify:  ## Units, provenance, ceilings and shape, for every model
 figures:  ## Re-render every table and diagram from committed results
 	$(PYTHON) scripts/render-figures.py
 
+.PHONY: icons
+icons:  ## Redraw the favicon and home-screen icons into public/
+	$(PYTHON) scripts/build-icons.py
+
 .PHONY: viewers
 viewers:  ## Build the interactive model pages into _build/viewers/
 	$(PYTHON) scripts/build-viewers.py

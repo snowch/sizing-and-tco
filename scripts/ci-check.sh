@@ -76,6 +76,11 @@ python3 scripts/verify-numbers.py
 echo "== figures up to date =="
 python3 scripts/render-figures.py --check
 
+echo "== the site icon is what the script draws =="
+# Its proportions come from a stamped result, so a model change moves it. Same contract as the
+# figures: regenerate and commit, rather than let the repository and the site disagree.
+python3 scripts/build-icons.py --check
+
 echo "== the interactive pages assemble =="
 python3 scripts/build-viewers.py > /dev/null
 echo "  OK"

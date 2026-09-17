@@ -88,6 +88,14 @@ jobs:
         run: |
           python3 scripts/build-viewers.py --out _build/html/models
 
+      # The themes set a favicon and nothing else. A manifest and an apple-touch-icon are what a
+      # phone reads when somebody saves the page to a home screen, and they have to be at the
+      # site root with a link in every page's head — so this copies them in and adds the links.
+      - name: Add the site icons
+        env:
+          BASE_URL: ${{ steps.pages.outputs.base_path == '/' && '' || steps.pages.outputs.base_path }}
+        run: python3 scripts/build-icons.py --inject _build/html --base "${BASE_URL:-}/"
+
       - name: Install Chromium for the PDF build
         # The PDF is rendered by a browser rather than by LaTeX: no TeX distribution needed, and
         # the output is what a reader gets by pressing Print on the HTML.

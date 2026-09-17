@@ -11,7 +11,7 @@ short_title: "ch06 When adding servers stops helping"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch05](#queueing-and-the-knee) |
+| **Prerequisites** | [ch05 · Queueing, and the knee](#queueing-and-the-knee) |
 | **What it produces** | The scaling curve, and the peak the coefficients predict |
 | **Built from** | `scaling-curve`, `service_tier-reference`, `service_tier-twice_the_nodes` |
 :::

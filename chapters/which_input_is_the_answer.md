@@ -11,7 +11,7 @@ short_title: "ch18 Which input to go and measure"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch12](#monte-carlo) |
+| **Prerequisites** | [ch12 · Monte Carlo](#monte-carlo) |
 | **What it produces** | Tornado charts across both reference models, and what the widest bars have in common |
 | **Built from** | `storage_cluster-reference`, `observability-reference`, `service_tier-reference`, `value-of-information` |
 :::
@@ -198,9 +198,9 @@ a growth rate, which is a claim about the future and belongs to no target
 ([ch03](#peak-mean-and-growth)). The chart will keep pointing at it, and the honest response is to
 decide it rather than measure it.
 
-**Whether the model has the right inputs.** An input that is not there has no bar, and a tornado
-of a model missing a cost line is a confident ranking of the wrong list.
-[ch19](#the-missing-node).
+**Whether the model has the right inputs.** An input that is not there has no bar, and
+a tornado of a model missing a cost line is a confident ranking of the wrong list.
+[ch19 · The missing node](#the-missing-node).
 
 ## Problems
 

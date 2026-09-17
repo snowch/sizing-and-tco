@@ -11,7 +11,7 @@ short_title: "ch20 A TCO for a finance audience"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch17](#the-five-year-model), [ch18](#which-input-is-the-answer) |
+| **Prerequisites** | [ch17 · The five-year model](#the-five-year-model), [ch18 · Which input to go and measure](#which-input-is-the-answer) |
 | **What it produces** | The two storage scenarios as a decision, priced |
 | **Built from** | `storage_cluster-reference`, `storage_cluster-sized_for_growth` |
 :::

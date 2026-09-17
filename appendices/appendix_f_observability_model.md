@@ -44,10 +44,11 @@ what an honest sizing model looks like before the work is done, and putting it o
 is the clearest statement this book can make about the difference between a missing number and an
 invented one.
 
-The same is true of collector throughput per core. The model declares it twice on purpose: once as
-the vendor's quoted figure, which lets a ceiling be computed, and once as a measurement nobody has
-taken, which leaves a second ceiling with nothing in it but the words *not yet measured*.
-Reading those two rows next to each other is most of [ch02](#where-the-numbers-come-from).
+The same is true of collector throughput per core. The model declares it twice on
+purpose: once as the vendor's quoted figure, which lets a ceiling be computed, and
+once as a measurement nobody has taken, which leaves a second ceiling with nothing in
+it but the words *not yet measured*. Reading those two rows next to each other is most
+of [ch02 · Where the numbers come from](#where-the-numbers-come-from).
 
 ## The graph
 

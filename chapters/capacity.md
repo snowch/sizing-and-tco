@@ -11,7 +11,7 @@ short_title: "ch08 Capacity"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch01](#what-a-workload-is) |
+| **Prerequisites** | [ch01 · What a workload is](#what-a-workload-is) |
 | **What it produces** | The raw-to-usable chain of the storage model, node by node |
 | **Built from** | `storage_cluster-reference` |
 :::

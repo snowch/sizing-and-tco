@@ -11,7 +11,7 @@ short_title: "ch09 Bandwidth, and the binding constraint"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch08](#capacity) |
+| **Prerequisites** | [ch08 · Capacity](#capacity) |
 | **What it produces** | How often each of the storage model's two chains decides the answer |
 | **Built from** | `binding-constraint`, `storage_cluster-reference` |
 :::

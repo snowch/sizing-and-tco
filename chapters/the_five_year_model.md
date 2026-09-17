@@ -11,7 +11,7 @@ short_title: "ch17 The five-year model"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch16](#unit-economics) |
+| **Prerequisites** | [ch16 · Unit economics](#unit-economics) |
 | **What it produces** | Both reference models, and the seam where one buys from the other |
 | **Built from** | `storage_cluster-reference`, `observability-reference` |
 :::
@@ -117,8 +117,8 @@ book.
 nobody modelled, shared costs nobody allocated, and a network between them that appears in neither.
 
 **What the structure omits.** Same as [ch14](#capex-opex-and-lifecycle) and worse, because there
-are now two structures and the missing lines in each are invisible to the other.
-[ch19](#the-missing-node).
+are now two structures and the missing lines in each are invisible
+to the other. [ch19 · The missing node](#the-missing-node).
 
 ## Problems
 

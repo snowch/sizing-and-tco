@@ -117,7 +117,7 @@ The method transfers; the number does not. Point the runner at a sample of your 
 The left column buys what the point estimates recommend. The right buys for the growth case the
 model thinks is plausible but not expected. The difference in capital is a number, and so is the
 difference in how often each ceiling breaks. Choosing between them is a judgement somebody has to
-make and defend, which is [ch20](#a-tco-for-finance).
+make and defend, which is [ch20 · A TCO for a finance audience](#a-tco-for-finance).
 
 ## Running it yourself
 

@@ -11,7 +11,7 @@ short_title: "ch21 What the model got wrong"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch19](#the-missing-node), [ch20](#a-tco-for-finance) |
+| **Prerequisites** | [ch19 · The missing node](#the-missing-node), [ch20 · A TCO for a finance audience](#a-tco-for-finance) |
 | **What it produces** | The storage model's own failures, attributed — and the same method on a model with a hole in it |
 | **Built from** | `postmortem`, `storage_cluster-reference` |
 :::

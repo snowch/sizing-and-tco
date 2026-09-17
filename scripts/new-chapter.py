@@ -31,8 +31,15 @@ MARKER = "[To write"
 
 def chapter_stub(chapter: Chapter) -> str:
     previous = [c for c in CHAPTERS if c.number < chapter.number]
-    needs = ", ".join(f"[{c.label}](#{c.anchor})" for c in CHAPTERS if c.slug in chapter.needs) or (
-        f"[{previous[-1].label}](#{previous[-1].anchor})" if previous else "none"
+    # Title as well as number. A cell reading "ch13" tells a reader where to click and nothing
+    # about what they are expected to know, and unlike a reference in a sentence there is no
+    # surrounding prose to say. tests/test_book.py pins the title to bench/outline.py.
+    needs = ", ".join(
+        f"[{c.label} \u00b7 {c.title}](#{c.anchor})" for c in CHAPTERS if c.slug in chapter.needs
+    ) or (
+        f"[{previous[-1].label} \u00b7 {previous[-1].title}](#{previous[-1].anchor})"
+        if previous
+        else "none"
     )
     owes = chapter.owes or "[To write: what this chapter must produce.]"
     consumes = (

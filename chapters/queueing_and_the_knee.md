@@ -11,7 +11,7 @@ short_title: "ch05 Queueing, and the knee"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch04](#littles-law) |
+| **Prerequisites** | [ch04 · Little's law](#littles-law) |
 | **What it produces** | The utilisation curve, swept out of the model rather than asserted |
 | **Built from** | `queueing-curve`, `service_tier-reference` |
 :::

@@ -11,7 +11,7 @@ short_title: "ch12 Monte Carlo"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch11](#the-sizing-model) |
+| **Prerequisites** | [ch11 · The sizing model](#the-sizing-model) |
 | **What it produces** | The storage model sampled rather than evaluated, and the probability each of its ceilings is breached |
 | **Built from** | `storage_cluster-reference`, `storage_cluster-sized_for_growth` |
 :::
@@ -242,11 +242,12 @@ else, and has no reason to start allowing it here.
 
 ## What this cannot tell you
 
-**Whether the model has the right shape.** Everything above takes the structure as given and asks
-what the inputs are worth. If a cost line is missing, if a ceiling was never declared, if two
-quantities were multiplied that should have been added — sampling will propagate the error
-beautifully and report a confident interval around the wrong answer. That is *structural error*:
-invisible to every technique in this chapter, and the subject of [ch19](#the-missing-node).
+**Whether the model has the right shape.** Everything above takes the structure as given
+and asks what the inputs are worth. If a cost line is missing, if a ceiling was never
+declared, if two quantities were multiplied that should have been added — sampling will
+propagate the error beautifully and report a confident interval around the wrong answer.
+That is *structural error*: invisible to every technique in this chapter, and the subject
+of [ch19 · The missing node](#the-missing-node).
 
 **Whether the shapes were chosen honestly.** A triangular with generous bounds and a lognormal
 with tight ones will give different intervals for the same input, and nothing here can tell you

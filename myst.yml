@@ -20,6 +20,18 @@ project:
     - name: Chris Snow
       url: https://snowch.github.io
   github: https://github.com/snowch/sizing-and-tco
+  # Drawn by scripts/build-icons.py, which also injects the link tags the themes will not.
+  # Listed one by one because static_files copies by basename, so naming the folder would put
+  # them under /public/ instead of at the site root, where a manifest and an apple-touch-icon
+  # have to be.
+  static_files:
+    - public/favicon.svg
+    - public/favicon-32.png
+    - public/favicon-16.png
+    - public/apple-touch-icon.png
+    - public/icon-192.png
+    - public/icon-512.png
+    - public/site.webmanifest
   license:
     content: CC-BY-NC-4.0
     code: Apache-2.0
@@ -105,6 +117,7 @@ site:
   options:
     style: ./custom.css
     logo_text: Sizing and TCO
+    favicon: ./public/favicon.svg
   nav:
     - title: Chris Snow
       url: https://snowch.github.io

@@ -11,7 +11,7 @@ short_title: "ch14 Capex, opex and where the total stops"
 
 | | |
 |---|---|
-| **Prerequisites** | [ch11](#the-sizing-model) |
+| **Prerequisites** | [ch11 · The sizing model](#the-sizing-model) |
 | **What it produces** | The storage model's capital and running cost split, over its declared horizon |
 | **Built from** | `storage_cluster-reference` |
 :::
@@ -119,11 +119,16 @@ the other side of it belongs to somebody whose job it is.
 
 ## What this cannot tell you
 
-**What the model's structure omits.** Every cost line above is one somebody thought of. There is
-no line for rack space, cross-connects, backup, disaster recovery, licences, the network gear
-between racks, or the cost of the migration that fills the cluster. Each absent line is a cost the
-model reports as zero, confidently, and neither [ch12](#monte-carlo) nor
-[ch13](#correlation-and-convergence) can see it. That is [ch19](#the-missing-node).
+**What the model's structure omits.**
+Every cost line above is one somebody
+thought of. There is no line for rack
+space, cross-connects, backup, disaster
+recovery, licences, the network gear
+between racks, or the cost of the
+migration that fills the cluster. Each
+absent line is a cost the model reports as
+zero, confidently, and neither [ch12](#monte-carlo) nor [ch13](#correlation-and-convergence)
+can see it. That is [ch19 · The missing node](#the-missing-node).
 
 **Whether the prices are yours.** Every price in the model is marked as a vendor's claim or an
 assumption ([ch02](#where-the-numbers-come-from)). None was measured, because a price is not the
