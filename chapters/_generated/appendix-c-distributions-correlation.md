@@ -7,5 +7,4 @@
 | `observability` | known_ingest | 84.82 | 72.38 | +17.2% |
 | `observability` | query_utilisation | 1.658 | 1.648 | +0.6% |
 
-*Conditions — target `model` · sizing.mc — Iman-Conover rank correlation*\
-*Re-run — `bench/results/correlation-effect.json` · code hash `cc004a3fad2435cc` · stamped 2026-09-16*
+*Source — [`correlation-effect`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/correlation-effect.json) · sizing.mc — Iman-Conover rank correlation*

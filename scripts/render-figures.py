@@ -24,7 +24,7 @@ sys.path.insert(0, str(ROOT))
 
 from bench.figures import FIGURES, Diagram, Table  # noqa: E402
 from bench.stamp import shown  # noqa: E402
-from bench.tables import conditions  # noqa: E402
+from bench.tables import source  # noqa: E402
 
 FRAGMENTS = ROOT / "chapters" / "_generated"
 DIAGRAMS = ROOT / "chapters" / "_figures"
@@ -50,7 +50,7 @@ def render_table(figure: Table) -> str:
             ]
         )
     body = figure.render(figure.result, *figure.args)
-    caption = conditions(
+    caption = source(
         figure.conditions_from or figure.result, *figure.also, computed_from=figure.computed_from
     )
     return "\n".join([BANNER, "", body, "", caption, ""])

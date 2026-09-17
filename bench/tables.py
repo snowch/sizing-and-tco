@@ -1,10 +1,20 @@
 """Stamped results as markdown fragments. No chapter contains a number; they contain these.
 
-Every table here carries a *Conditions* line, because a figure without its conditions is an
-anecdote and the conditions are exactly what a reader needs in order to disagree with it. For a
-measured constant that means the corpus, the codec and the stack. For a model output it means the
-model file, the scenario, the seed, the sample count and the fingerprint of the code that did the
-arithmetic — all of which, together, are what makes "re-run it yourself" a complete instruction.
+Every table here carries a *Source* line, because a figure without one is an anecdote. It is a
+link to the stamped result the figure was rendered from, and that file holds the conditions in
+full: the model, the scenario, the seed, the sample count, the inputs and the fingerprint of the
+code that did the arithmetic.
+
+It used to print those fields instead of linking to them, across two lines and eight fields. Three
+of the eight were identical on every result in the book, so on ninety tables half the line was the
+same words again — and the fields a reader would actually use to re-run something are only useful
+to somebody who has cloned the repository and is therefore not reading the page. A link that
+resolves to a real stamped result is better evidence that the chain exists than reciting its
+fields, because the reader can look rather than take it on trust.
+
+Two things stay on the page rather than going behind the link. A constant nobody has measured is a
+fact about the figure, not a filing detail (invariant 3). And what a measured constant was measured
+*against* is what the number means.
 """
 
 from __future__ import annotations
@@ -87,76 +97,65 @@ def _interval(summary: dict | None) -> str:
 # -- conditions -------------------------------------------------------------------------------
 
 
-def _said_by(name: str) -> list[str]:
-    """What one stamped result says about how it was produced."""
-    result = load_result(name)
-    produced = result.get("produced_by", {})
-    said = [f"target `{result['target']}`"]
-    if result.get("kind") == "model":
-        said += [
-            f"model `{produced.get('model_file')}`",
-            f"scenario `{produced.get('scenario')}`",
-            f"{produced.get('samples'):,} samples",
-            f"seed `{produced.get('seed')}`",
-        ]
-        if produced.get("unmeasured"):
-            said.append(f"**{len(produced['unmeasured'])} constant(s) not yet measured**")
-    else:
-        said += [str(produced[key]) for key in MEASURED_KEYS if produced.get(key)]
-    return said
+#: Where a reader goes to see a stamped result in full. `main` rather than the commit being
+#: built: the build stamp in the preface already names that commit, and one mechanism per job.
+REPOSITORY = "https://github.com/snowch/sizing-and-tco/blob/main"
 
 
-def _from_source(what: str) -> str:
-    """What a fragment assembled at build time says instead of naming a run.
+def _what_it_measured(name: str) -> list[str]:
+    """For a measurement, what the number is *of* — which is not the same as where it is filed.
 
-    There is no single result to point at, and naming one anyway is what put a compression
-    benchmark under a table of unit conversions. Saying so is the honest option and the short one.
+    A compression ratio belongs to a codec and a body of data. That is what the figure means, so
+    it stays on the page rather than going behind a link with the filing details.
     """
-    return (
-        f"*Conditions — assembled at build time from {what} · no single stamped run*\\\n"
-        "*Re-run — `make figures`*"
-    )
+    produced = load_result(name).get("produced_by", {})
+    keys = list(MEASURED_KEYS)
+    # `codec` and `stack` say the same thing on every corpus result here — "zlib 1.3, DEFLATE
+    # level 6" beside "python zlib (DEFLATE level 6)". CLAUDE.md says a measured constant names
+    # the *implementation* it belongs to, so the stack is the one that survives.
+    if produced.get("stack") and produced.get("codec"):
+        keys.remove("codec")
+    return [str(produced[key]) for key in keys if produced.get(key)]
 
 
-def conditions(name: str | None, *also: str, computed_from: str | None = None) -> str:
-    """Where this figure came from, under every table that shows it.
+def source(name: str | None, *also: str, computed_from: str | None = None) -> str:
+    """One line under every figure: where it came from, as a link.
 
-    ``name`` is ``None`` for a fragment computed from the model files rather than from a run, and
-    ``also`` names any further results the fragment draws on — a scenario comparison prints two
-    columns from two runs, and naming one of them is a disclosure that is quietly false.
+    This used to be eight fields across two lines — target, model file, scenario, sample count,
+    seed, result path, code fingerprint and date. Three of those are the same on every result in
+    the book (every model run draws 100,000 samples from seed 20260916, and everything was
+    stamped on one day), so on ninety tables half the line was the same words again. The rest is
+    in the stamped result, and a reader who wants the seed has cloned the repository and is not
+    reading this page.
 
-    Two lines rather than one, split where the content already splits: the first is what a reader
-    needs in order to **disagree** with the figure, the second is what they need in order to
-    **re-run** it. As one line it reached two hundred and ninety-three characters, which on a
-    phone is five wrapped lines of italic — and a provenance note nobody reads is worth the same
-    as no provenance note. Nothing is dropped to get there. A book whose argument is that every
-    number carries its conditions does not then abbreviate them.
+    So the page points at the file and the file answers the questions. A link that resolves to a
+    real stamped result is better evidence that the chain exists than reciting its fields, because
+    the reader can look rather than take it on trust. The result's name carries the two things
+    worth knowing without clicking: `storage_cluster-reference` is the model and the scenario.
+
+    Two things stay on the page because they are not filing details. A constant nobody has
+    measured is a fact about the figure (invariant 3), and what a measured constant was measured
+    *against* is what the number means.
     """
     if name is None:
-        return _from_source(computed_from or "this repository")
-    # What was computed, and against what. This is the half somebody argues with. Every result
-    # the fragment draws on gets its own clause, because a table with two columns from two runs
-    # has two sets of conditions and a reader checking either one needs both.
+        return f"*Source — {computed_from or 'this repository'}*"
+
     names = (name, *also)
-    # Every scenario table in the book is one model run twice, so repeating the model and the
-    # sample count would be noise. Where the runs share a model, they share one clause and the
-    # scenarios are listed; where they do not, each gets its own.
-    models = {load_result(one).get("produced_by", {}).get("model_file") for one in names}
-    if also and len(models) == 1:
-        scenarios = [load_result(one).get("produced_by", {}).get("scenario") for one in names]
-        said = " · ".join(_said_by(name)).replace(
-            f"scenario `{scenarios[0]}`",
-            "scenarios " + " and ".join(f"`{one}`" for one in scenarios),
-        )
-    else:
-        said = " · ".join(_said_by(name))
-        for extra in also:
-            said += " · and " + " · ".join(_said_by(extra))
-    # And how to check it for yourself, which is a different question and gets its own line.
-    check = [f"`bench/results/{one}.json`" for one in names]
-    check.append(f"code hash `{load_result(name)['code_fingerprint']}`")
-    check.append(f"stamped {load_result(name)['generated_at'][:10]}")
-    return "*Conditions — " + said + "*\\\n*Re-run — " + " · ".join(check) + "*"
+    links = [f"[`{one}`]({REPOSITORY}/bench/results/{one}.json)" for one in names]
+    parts = [" and ".join(links)]
+
+    # What a measurement is of, for the results where that is the point.
+    if load_result(name).get("kind") != "model":
+        parts += _what_it_measured(name)
+
+    # And the one thing a reader must not have to click for.
+    blocked = sum(
+        len(load_result(one).get("produced_by", {}).get("unmeasured") or []) for one in names
+    )
+    if blocked:
+        parts.append(f"**{blocked} constant(s) not yet measured**")
+
+    return "*Source — " + " · ".join(parts) + "*"
 
 
 # -- model tables -----------------------------------------------------------------------------

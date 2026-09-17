@@ -300,3 +300,31 @@ def test_dollar_maths_stays_off_while_the_book_prints_money():
         "no generated fragment prints two dollar signs on a line any more. If the book has "
         "stopped writing money that way, this rule and the setting it guards can go."
     )
+
+
+def test_every_model_run_shares_one_sample_count_and_seed():
+    """The preface states them once and the tables no longer carry them.
+
+    That is only honest while they never vary. Before, every figure printed ``100,000 samples ·
+    seed 20260916`` — the same words on ninety tables, which is how a constant disguises itself
+    as information. The preface now says it once and points at this test.
+
+    If a run ever needs a different sample count or seed, this fails, and the choice is to put
+    them back under the figures that differ or to say in the preface which runs are exceptions.
+    """
+    import json
+
+    settings = {}
+    for path in sorted((ROOT / "bench" / "results").glob("*.json")):
+        produced = json.loads(path.read_text()).get("produced_by", {})
+        for field in ("samples", "seed"):
+            if produced.get(field) is not None:
+                settings.setdefault(field, {}).setdefault(produced[field], []).append(path.stem)
+
+    for field, values in settings.items():
+        assert len(values) == 1, (
+            f"results disagree about {field!r}: "
+            + "; ".join(f"{value} in {sorted(names)}" for value, names in values.items())
+            + f". index.md states one {field} for the whole book and no figure prints it, so a "
+            "second value is published nowhere a reader could find it."
+        )

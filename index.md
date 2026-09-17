@@ -46,12 +46,17 @@ Read the *nodes the model recommends* row. Its point estimate is a real number, 
 computed, and the interval beside it spans most of an order of magnitude. Nothing in the
 first calculation was wrong. It simply had no way to mention that it was a bet.
 
-The italic line under the table runs under every table in this book. **Conditions** says what was
-computed — which model file, which scenario, how many futures were drawn, and the seed that drew
-them. **Re-run** says how to check it: the stamped result on disk, and a hash of the code that did
-the arithmetic. Change that code and the hash changes, and the build refuses to publish a figure
-that no longer matches what the repository computes. It is there so you can check the table
-instead of trusting it.
+The italic line under the table runs under every table in this book, and it is a link. It names
+the stamped result the figure was rendered from — `storage_cluster-reference` is the storage model
+at its reference scenario — and following it gets you the file itself: every input, the seed, the
+sample count, the conditions the run held under, and a hash of the code that did the arithmetic.
+Change that code and the hash changes, and the build refuses to publish a figure that no longer
+matches what the repository computes. The link is there so you can check the table instead of
+trusting it.
+
+% number-ok: settings this book chose, not figures it measured. Stated once because they never vary, and tests/test_book.py fails if they do.
+Every model run in this book draws 100,000 samples from seed 20260916, which is why neither
+appears under the tables. A test fails if that ever stops being true.
 
 ```{image} chapters/_figures/preface-tco-distribution.svg
 :alt: The five-year total cost as a distribution, with the point estimate marked on it

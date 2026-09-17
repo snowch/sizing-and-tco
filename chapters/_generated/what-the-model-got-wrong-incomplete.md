@@ -12,5 +12,4 @@
 | bytes per log line, compressed | 32.4 | 32.4 | none | 10% of them |
 | **8 inputs** | | *21% of futures ended here* | | *something was beyond its p90 in 85% of them, against 55% of futures generally* |
 
-*Conditions — target `model` · sizing.evaluate*\
-*Re-run — `bench/results/postmortem.json` · code hash `f8023472e9cf11ec` · stamped 2026-09-16*
+*Source — [`postmortem`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/postmortem.json) · sizing.evaluate*

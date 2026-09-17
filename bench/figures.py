@@ -215,7 +215,7 @@ FIGURES: dict[str, Table | Diagram] = {
     # -- ch00 Prerequisites and setup ------------------------------------------------------
     "prerequisites-and-setup-constants": Table(
         render=tables.constants_index,
-        computed_from="every stamped result in `bench/results/`, each row naming its own",
+        computed_from="`bench/results/`, one row per stamped result",
     ),
     "prerequisites-and-setup-models": Table(
         render=tables.node_kinds_table, result="storage_cluster-reference"
@@ -234,7 +234,7 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     "reading-a-model-conversions": Table(
         render=tables.conversions_table,
-        computed_from="every model file in `models/`",
+        computed_from="`models/`",
     ),
     # -- ch02 What a workload is -------------------------------------------------------------
     "what-a-workload-is-storage": Table(
@@ -249,7 +249,7 @@ FIGURES: dict[str, Table | Diagram] = {
     # -- ch03 Where the numbers come from ------------------------------------------------------
     "where-the-numbers-come-from-constants": Table(
         render=tables.constants_index,
-        computed_from="every stamped result in `bench/results/`, each row naming its own",
+        computed_from="`bench/results/`, one row per stamped result",
     ),
     "where-the-numbers-come-from-provenance": Table(
         render=tables.provenance_table, result="observability-reference"
@@ -542,11 +542,11 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     "appendix-d-units-conversions": Table(
         render=tables.conversions_table,
-        computed_from="every model file in `models/`",
+        computed_from="`models/`",
     ),
     "appendix-g-glossary-terms": Table(
         render=tables.glossary_table,
-        computed_from="the book's outline and the terms `bench/tables.py` declares",
+        computed_from="`bench/outline.py` and `bench/tables.py`",
     ),
 }
 

@@ -20,5 +20,4 @@
 | **parameter uncertainty** | [ch13](#monte-carlo) | not knowing a value in a model whose shape is right | we do not know the number |
 | **scenario uncertainty** | [ch12](#the-sizing-model) | the world taking a path the model was not run for, which no interval covers | it might go differently |
 
-*Conditions — assembled at build time from the book's outline and the terms `bench/tables.py` declares · no single stamped run*\
-*Re-run — `make figures`*
+*Source — `bench/outline.py` and `bench/tables.py`*

@@ -18,5 +18,4 @@
 | 400 | 6,350 | 61,167 | 10% | 15.9 |
 | | | | *swept peak* | *160 nodes, against 164.4 predicted from the two coefficients* |
 
-*Conditions — target `model` · sizing.evaluate*\
-*Re-run — `bench/results/scaling-curve.json` · code hash `5dae44783a592596` · stamped 2026-09-16*
+*Source — [`scaling-curve`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/scaling-curve.json) · sizing.evaluate*
