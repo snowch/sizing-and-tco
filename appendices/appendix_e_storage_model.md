@@ -22,7 +22,7 @@ are placeholders for yours.
 
 This model is the book's **cost exemplar in shape and a sizing model by the rule**. Almost all of
 it is accounting identity and physics — watts times hours times price, capital plus running cost
-over a horizon — which is the structure [the front matter](#preface) says sampling the inputs is
+over a horizon — which is the structure [the introduction](#preface) says sampling the inputs is
 sufficient for. But it carries one measured constant and two ceilings, so
 `scripts/verify-models.py` classifies it a sizing model and holds it to the stricter rules. That
 is the right call: the compression ratio belongs to a codec, and a cluster that runs out of space

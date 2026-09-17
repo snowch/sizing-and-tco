@@ -149,7 +149,7 @@ being told. A model with a `measured` node or a `ceiling` in it **is** a sizing 
 neither **is** a cost model. `scripts/verify-models.py` holds the two to different rules, and a
 sizing model that declares a limit with no margin does not build.
 
-That is [the front matter](#preface)'s central claim, arranged so that the repository enforces it.
+That is [the introduction](#preface)'s central claim, arranged so that the repository enforces it.
 A thesis the build does not check is a paragraph.
 
 ## What the model says

@@ -1,14 +1,14 @@
 ---
-title: "Preface"
-short_title: Preface
+title: "Introduction"
+short_title: Introduction
 ---
 
 (preface)=
-# Preface
+# Introduction
 
 *How to size a system, cost it, and know how much to trust the answer.*
 
-## The question
+## How big, how much, and how wrong could I be?
 
 Somebody has asked you how big the system needs to be. How many machines, how much storage, how
 much it will cost to run for the next three years — and they are going to spend real money on
@@ -17,11 +17,10 @@ whatever you tell them.
 You can do the arithmetic. That is rarely the hard part. What comes out is one number, and that
 number says nothing at all about how much of it you would actually bet.
 
-**How big, how much, and how wrong could I be?**
-
-*How big* is **sizing**: how much hardware a stated workload needs, and where it stops coping.
-*How much* is **total cost of ownership**: what that hardware costs over the years you keep it,
-which is not the same as what it costs to buy. Both are arithmetic, and most people can do them.
+That question has three parts. **Sizing** is the first: how much hardware a stated workload
+needs, and where it stops coping. **Total cost of ownership** is the second: what that hardware
+costs over the years you keep it, which is not the same as what it costs to buy. Both are
+arithmetic, and most people can do them.
 
 This book teaches the third part: how to find which input your answer rests on, how far the
 answer moves when that input moves, and what it would cost to find out. Almost nobody is taught

@@ -22,7 +22,7 @@ Which ceilings can a chain of multiplications not model at all?
 
 Everything in Parts I and III is a product of quantities. This chapter is about the points where a
 system stops behaving like a product, and about why no amount of care over the inputs will warn
-you that you are near one. Those points are why [the front matter](#preface) separates a sizing
+you that you are near one. Those points are why [the introduction](#preface) separates a sizing
 model from a cost model.
 
 ## The material
