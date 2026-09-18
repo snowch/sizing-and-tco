@@ -82,6 +82,14 @@ The interval on the node count spans most of an order of magnitude, and almost a
 growth rate from [ch04](#peak-mean-and-growth) rather than anything in this chapter's chain. The
 capacity arithmetic is the well-understood part of the problem. What it is applied to is not.
 
+This chapter is also where the model changes kind, and the file says so before any chapter does:
+
+```{iframe} /playground/capacity/
+:width: 100%
+The chain above, running. Read the line under the table: it says *sizing model*, which it did not
+at either earlier stage. Nobody typed that — it is worked out from what is in the file.
+```
+
 ## What this cannot tell you
 
 **What your data compresses to.** The constant above was measured over a synthetic mixture this

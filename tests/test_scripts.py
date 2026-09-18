@@ -10,6 +10,7 @@ Printing a path is never important enough to fail a build. These check that it c
 
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -223,3 +224,36 @@ def test_the_foot_of_a_page_points_at_its_neighbours_in_the_reading_order():
             assert f'class="next" href="{hrefs[at + 1]}"' in foot, href
         else:
             assert 'class="next"' not in foot, f"{href} is the last page and offers a next"
+
+
+def playground():
+    """``scripts/build-playground.py``, imported so the tests can ask what it builds."""
+    from importlib import util
+
+    spec = util.spec_from_file_location(
+        "build_playground", ROOT / "scripts" / "build-playground.py"
+    )
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_every_playground_the_build_ships_is_reachable_from_its_chapter():
+    """A page nobody links is a page nobody reads, and nobody proofreads either.
+
+    The build shipped five of these and two were embedded. The three orphans deployed on every
+    push, cost a Pyodide fetch to anybody who found them, and one of them printed a sentence that
+    contradicted itself -- it told a reader the model had neither a measured constant nor a
+    ceiling while classifying it as a sizing model, which is only possible because it has one.
+    That survived because the only pages anybody looked at were the two that are linked.
+    """
+    embedded = {
+        directory
+        for path in (ROOT / "chapters").glob("*.md")
+        for directory in re.findall(r"\{iframe\}\s+/playground/([a-z0-9-]+)/", path.read_text())
+    }
+    built = set(playground().pages())
+    assert built == embedded, (
+        f"the build ships {sorted(built)} and the chapters embed {sorted(embedded)}. A playground "
+        "is built for a chapter, so the chapter embeds it -- or it should not be built."
+    )
