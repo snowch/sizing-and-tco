@@ -277,6 +277,9 @@ def main() -> int:
             raise SystemExit(f"no page matching {args.only!r}")
 
     args.out.mkdir(parents=True, exist_ok=True)
+    favicon = ROOT / "public" / "favicon.svg"
+    if favicon.exists():
+        (args.out / "favicon.svg").write_text(favicon.read_text())
     for source in wanted:
         if source not in index:
             continue

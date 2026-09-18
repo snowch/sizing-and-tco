@@ -97,6 +97,12 @@ jobs:
       - name: Build the model playgrounds
         run: python3 scripts/build-playground.py --out _build/html/playground
 
+      # The same book rendered from MyST's parse without MyST's theme, published beside it so
+      # the two can be compared on a real device. A proof, not the published book: /static/ is
+      # not linked from anywhere and the themed build above is still what a reader lands on.
+      - name: Build the static comparison
+        run: python3 scripts/build-site.py --out _build/html/static
+
       # The themes set a favicon and nothing else. A manifest and an apple-touch-icon are what a
       # phone reads when somebody saves the page to a home screen, and they have to be at the
       # site root with a link in every page's head — so this copies them in and adds the links.

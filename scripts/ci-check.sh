@@ -92,6 +92,12 @@ echo "== the playground assembles =="
 python3 scripts/build-playground.py --out _build/playground > /dev/null
 echo "  OK"
 
+echo "== the book renders without the theme =="
+# The comparison build at /static/. It shares build-pdf.py's renderer, so this is also the only
+# check that the renderer handles every node type as a *site* rather than as one bound document.
+python3 scripts/build-site.py --out _build/static > /dev/null
+echo "  OK"
+
 echo "== which commit this build is =="
 # Not one of the committed figures: it names the commit being built, so it is written here rather
 # than checked. The pages include it, so MyST needs it to exist before it parses anything.
