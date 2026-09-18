@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import html
 import importlib.util
+import json
 import sys
 from pathlib import Path
 
@@ -38,6 +39,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from bench.outline import APPENDICES, CHAPTERS, PART_PAGES  # noqa: E402
+from bench.stages import stages  # noqa: E402
 from bench.stamp import shown  # noqa: E402
 
 
@@ -52,6 +54,40 @@ def _pdf():
 PDF = _pdf()
 PDF.MEDIUM = "web"  # same renderer, different medium
 DEFAULT_OUT = ROOT / "_build" / "static"
+
+
+def stage_for(source: str):
+    """The stage of the storage model a chapter leaves the reader with, if it has one."""
+    slug = Path(source).stem
+    for stage in stages():
+        if stage.chapter == slug and not stage.is_the_finished_model:
+            return stage
+    return None
+
+
+def editable_excerpts(page: dict, stage) -> list[dict]:
+    """Where each quoted piece of the model sits inside the whole file.
+
+    The chapter shows the model in pieces, with prose between them. Those pieces are the reader's
+    natural place to edit it — not a fourth copy of the file in a box below. MyST keeps the
+    resolved text of a literalinclude but not its anchors, so each piece is located by finding it
+    in the file the chapter's stage points at. Locating it by content alone would not do: the
+    stages are subsets of one another, so the same node text appears in five files.
+    """
+    whole = stage.path.read_text()
+    found = []
+    for node in walk(page.get("mdast", page)):
+        if node.get("type") != "code" or not str(node.get("filename", "")).endswith(".yaml"):
+            continue
+        text = str(node.get("value", ""))
+        at = whole.find(text)
+        if at < 0 or whole.find(text, at + 1) >= 0:
+            # Not in this stage, or in it twice. Either way it is not safe to splice an edit
+            # back, so the piece stays read-only rather than silently editing the wrong lines.
+            continue
+        node["_editable"] = {"start": at, "end": at + len(text)}
+        found.append(node["_editable"])
+    return found
 
 
 def nav() -> list[dict]:
@@ -116,6 +152,101 @@ def walk(node):
 def slug(text: str) -> str:
     keep = [c.lower() if c.isalnum() else "-" for c in text]
     return "-".join("".join(keep).split("-")).strip("-")
+
+
+RUNNER = """
+<script type="application/json" id="model-whole">{whole}</script>
+<script type="application/json" id="model-modules">{modules}</script>
+<div id="runner" class="runner">
+  <div class="bar">
+    <button id="run">Run the model</button>
+    <span id="status">Edit any block above and press Run. The first press fetches Python.</span>
+  </div>
+  <div id="results"></div>
+</div>
+<script type="module">
+const WHOLE = JSON.parse(document.getElementById("model-whole").textContent);
+const MODULES = JSON.parse(document.getElementById("model-modules").textContent);
+const $ = (id) => document.getElementById(id);
+let pyodide = null, booting = null;
+
+// The document the toolkit is handed: the file on disk, with each edited block spliced back
+// into the range it came from. Later ranges first, so earlier offsets stay valid.
+function assemble() {{
+  const blocks = [...document.querySelectorAll("pre.editable")]
+    .map((el) => ({{start: +el.dataset.start, end: +el.dataset.end, text: el.innerText}}))
+    .sort((a, b) => b.start - a.start);
+  let out = WHOLE;
+  for (const b of blocks) out = out.slice(0, b.start) + b.text.replace(/\n$/, "") + out.slice(b.end);
+  return out;
+}}
+
+async function boot() {{
+  $("status").textContent = "Starting Python\u2026 about ten megabytes, once.";
+  const {{ loadPyodide }} = await import("{pyodide}pyodide.mjs");
+  pyodide = await loadPyodide({{ indexURL: "{pyodide}" }});
+  await pyodide.loadPackage(["numpy", "micropip"]);
+  await pyodide.pyimport("micropip").install(["Pint", "PyYAML"]);
+  pyodide.FS.mkdirTree("/sizing/playground");
+  for (const [name, source] of Object.entries(MODULES)) {{
+    pyodide.FS.writeFile("/sizing/" + name, source);
+  }}
+  await pyodide.runPythonAsync(
+    "import sys\nsys.path.insert(0, '/')\nfrom sizing.playground.driver import check");
+}}
+
+function show(result) {{
+  const r = $("results");
+  if (result.stage === "ok") {{
+    r.innerHTML = '<p class="verdict good">It runs. These are your numbers, not the book\u2019s '
+      + '\u2014 the tables above are what this repository stamped.</p>'
+      + '<div class="outputs">' + result.outputs.map((name) => {{
+          const n = result.nodes.find((x) => x.name === name) || {{}};
+          const v = n.value == null ? "\u2014"
+            : n.value.toLocaleString(undefined, {{maximumFractionDigits: Math.abs(n.value) >= 100 ? 0 : 2}});
+          return `<div class="output"><div class="figure">${{v}}</div>`
+               + `<div class="unit">${{n.unit || ""}}</div>`
+               + `<div class="what">${{n.label || name}}</div></div>`;
+        }}).join("") + "</div>";
+  }} else {{
+    r.innerHTML = '<p class="verdict bad">' + (result.stage === "load"
+      ? "It does not load." : "It loads, and the units do not work out.") + "</p><ul>"
+      + result.problems.map((p) => `<li>${{p.replace(/[<>&]/g, "")}}</li>`).join("") + "</ul>";
+  }}
+}}
+
+$("run").addEventListener("click", async () => {{
+  $("run").disabled = true;
+  try {{
+    booting = booting || boot();
+    await booting;
+    const began = performance.now();
+    pyodide.globals.set("_source", assemble());
+    const result = (await pyodide.runPythonAsync("check(_source)"))
+      .toJs({{dict_converter: Object.fromEntries}});
+    show(result);
+    $("status").textContent = "checked in " + Math.round(performance.now() - began) + "ms";
+  }} catch (error) {{
+    $("status").textContent = "Python did not start: " + error;
+  }} finally {{
+    $("run").disabled = false;
+  }}
+}});
+</script>
+"""
+
+#: Pinned, because an unpinned runtime changes what a reader sees without changing a line here.
+PYODIDE = "https://cdn.jsdelivr.net/pyodide/v0.28.3/full/"
+
+#: Every module the toolkit needs to load, typecheck and evaluate a model.
+MODULES = ("__init__", "units", "expr", "dsl", "normal", "mc", "evaluate", "graph")
+
+
+def toolkit() -> dict[str, str]:
+    out = {f"{name}.py": (ROOT / "sizing" / f"{name}.py").read_text() for name in MODULES}
+    out["playground/__init__.py"] = ""
+    out["playground/driver.py"] = (ROOT / "sizing" / "playground" / "driver.py").read_text()
+    return out
 
 
 PAGE = """<!doctype html>
@@ -211,6 +342,31 @@ img, svg { max-width: 100%; height: auto; }
 .admonition.important { border-left-color: #b3413a; }
 iframe { width: 100%; border: 1px solid var(--edge); border-radius: 4px; height: 680px; }
 @media (max-width: 720px) { iframe { height: 80vh; min-height: 540px; } }
+
+/* A quoted piece of the model the reader may edit where the chapter shows it. It has to look
+   like what it is: the same block, with an edge that says it will take a keystroke. */
+pre.editable { border-left: 3px solid var(--link); background: var(--code); }
+pre.editable:focus { outline: 2px solid var(--link); outline-offset: 2px; }
+.runner { border: 1px solid var(--edge); border-radius: 4px; padding: 14px 16px; margin: 22px 0;
+          background: var(--panel); }
+.runner .bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.runner button { font: inherit; padding: 6px 14px; border: 1px solid var(--edge);
+                 border-radius: 4px; background: var(--bg); color: var(--ink); cursor: pointer; }
+.runner button:disabled { opacity: .5; cursor: default; }
+#status { color: var(--muted); font-size: 14px; }
+.verdict { font-weight: 600; margin: 14px 0 6px; }
+.verdict.good { color: #2e7d32; }
+.verdict.bad { color: #b3413a; }
+@media (prefers-color-scheme: dark) {
+  .verdict.good { color: #81c784; } .verdict.bad { color: #e8756c; }
+}
+.outputs { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 8px; }
+.output .figure { font-size: 28px; font-weight: 600; line-height: 1.1; }
+.output .unit { color: var(--muted); font-size: 13px; }
+.output .what { font-size: 13px; }
+#results ul { padding-left: 18px; }
+#results li { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+              color: #b3413a; }
 """
 
 
@@ -244,7 +400,17 @@ def toc_html(page: dict) -> str:
 
 
 def render_page(source: str, page: dict) -> str:
+    # Editable excerpts have to be marked before the body is rendered, because the renderer
+    # decides from the mark whether a quoted block is a picture of the file or the file itself.
+    stage = stage_for(source)
+    spans = editable_excerpts(page, stage) if stage else []
     body = PDF.render(page.get("mdast", page))
+    if spans:
+        body += RUNNER.format(
+            whole=json.dumps(stage.path.read_text()),
+            modules=json.dumps(toolkit()),
+            pyodide=PYODIDE,
+        )
     title = str(page.get("frontmatter", {}).get("title") or page.get("title") or "Sizing and TCO")
     return PAGE.format(
         title=html.escape(title),

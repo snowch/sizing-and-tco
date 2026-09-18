@@ -164,6 +164,16 @@ def render(node: dict) -> str:
         return f"<em>{children()}</em>"
     if kind == "inlineCode":
         return f"<code>{html.escape(node.get('value', ''))}</code>"
+    if kind == "code" and node.get("_editable") and MEDIUM == "web":
+        # The piece of the model the chapter is quoting, made editable where the chapter shows
+        # it. `data-start`/`data-end` are where it sits in the whole file, so an edit here can be
+        # spliced back into the document the toolkit is handed.
+        span = node["_editable"]
+        return (
+            f'<pre class="editable" contenteditable="plaintext-only" spellcheck="false"'
+            f' data-start="{span["start"]}" data-end="{span["end"]}">'
+            f"<code>{html.escape(str(node.get('value', '')))}</code></pre>"
+        )
     if kind == "code":
         return f"<pre><code>{html.escape(node.get('value', ''))}</code></pre>"
     if kind == "break":
