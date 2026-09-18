@@ -27,6 +27,7 @@ Both are in the standard library.
 from __future__ import annotations
 
 import argparse
+import re
 import struct
 import sys
 import zlib
@@ -241,6 +242,23 @@ def files() -> dict[str, bytes]:
     return out
 
 
+#: A root-relative URL the theme emitted without the site's base path. MyST rewrites `href` on a
+#: project site and does not rewrite an `{iframe}` directive's `src`, so a panel embedded in a
+#: chapter asks the wrong address and gets a 404. Narrow on purpose: it matches the directories
+#: this repository publishes beside the book, not every absolute URL on the page.
+UNBASED = re.compile(r'(src|href)="/((?:playground|models)/[^"]*)"')
+
+
+def rebase(html: Path, base: str) -> bool:
+    """Give the theme's un-rewritten URLs the base path. True if the file changed."""
+    text = html.read_text()
+    fixed = UNBASED.sub(lambda m: f'{m.group(1)}="{base}{m.group(2)}"', text)
+    if fixed == text:
+        return False
+    html.write_text(fixed)
+    return True
+
+
 def inject(html: Path, base: str) -> bool:
     """Put the icon links in one built page's head. True if the file changed.
 
@@ -286,13 +304,14 @@ def main() -> int:
         base = args.base if args.base.endswith("/") else args.base + "/"
         pages = sorted(args.inject.rglob("*.html"))
         added = sum(inject(page, base) for page in pages)
+        rebased = sum(rebase(page, base) for page in pages)
         # A page that already carried the links is fine; the deploy may run this twice. A build
         # where no page carries them means the head was not what this script expects, and
         # publishing a site whose icons silently did not land is the failure worth catching.
         linked = sum(LINKED in page.read_text() for page in pages)
         print(
             f"build-icons: {len(wanted)} file(s) copied, {added} page(s) edited, "
-            f"{linked} of {len(pages)} page(s) linked"
+            f"{linked} of {len(pages)} page(s) linked, {rebased} page(s) rebased"
         )
         if pages and not linked:
             print("build-icons: no page's head was found \u2014 nothing was linked")
