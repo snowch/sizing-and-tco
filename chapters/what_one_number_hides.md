@@ -193,8 +193,8 @@ problem about a system you run, and this is the first of them — they work best
 ## Where to go next
 
 [ch02](#what-a-workload-is) starts the model this chapter has been quoting from. It writes the
-first nodes of it, and by the end of that chapter you have a file that runs and cannot yet tell
-you anything you did not type into it — which is the honest place to begin.
+first nodes of it, and by the end you have a file that computes a capacity at the horizon and
+refuses to get there by multiplying a rate by a plain number.
 
 [ch03](#where-the-numbers-come-from) is the question this chapter kept deferring: given that you
 have written a quantity down, what are you actually claiming about it?

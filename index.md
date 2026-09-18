@@ -35,7 +35,8 @@ referring to the others by name. Nothing more exotic than that: the file is the 
 read the whole of one in a sitting.
 
 It starts in [ch02 · What a workload is](#what-a-workload-is) as what arrives and what
-accumulates — a file that runs, and that cannot yet tell you anything you did not type into it.
+accumulates, and already refuses a formula whose units do not work out — the error a spreadsheet
+accepts without comment, and the one that sizes a retention store from a rate.
 Later chapters add to it as they earn the right to: where each number came from, what the hardware
 can hold, where it stops coping, what it costs to run.
 [ch12 · The sizing model](#the-sizing-model) is where it produces a node count, and
