@@ -4,6 +4,12 @@
 # CI invokes this same script, so the two cannot drift. Nothing here needs the reference machine:
 # `rig` measurements are refused on any other computer and the figures that would come from them
 # render as "not measured yet" instead.
+#
+# Nothing here needs the network either. The book is parsed by MyST and rendered by this
+# repository, and only the parse was ever MyST's — so what this builds is the site that deploys,
+# rather than a preview of one that could only be built by a runner with a template registry in
+# reach. What it cannot check is what only the deploy assembles: the PDF, the interactive model
+# pages and the playgrounds, and the links into them.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -155,11 +161,12 @@ if grep -rq '"type":"inlineMath"' _build/site/content/ 2>/dev/null; then
 fi
 echo "  no currency parsed as LaTeX"
 
-echo "== the book renders without the theme =="
-# The comparison build at /static/, which reads the parse above rather than the themed build —
-# so it has to come after it. It shares build-pdf.py's renderer, which makes this the only check
-# that the renderer handles every node type as a *site* rather than as one bound document.
+echo "== the book renders =="
+# This is the published site, not a preview of it: the deploy runs this same script against the
+# same parse. It shares build-pdf.py's renderer, which makes it the only check that the renderer
+# handles every node type as a *site* rather than as one bound document.
 python3 scripts/build-site.py --out _build/static > /dev/null
+python3 scripts/check-built-links.py _build/static > /dev/null
 echo "  OK"
 
 echo "== the PDF renderer sees every page =="
@@ -170,18 +177,6 @@ echo "== the PDF renderer sees every page =="
 # does not need to repeat.
 python3 scripts/build-pdf.py --no-myst --html-only --out _build/pdf-check/book.pdf > /dev/null
 echo "  every page rendered"
-
-echo "== myst themed HTML build =="
-# Needs the MyST template registry and GitHub. Mandatory in CI; locally a blocked host says
-# nothing about the book, since the content build above already validated everything authored.
-if [ -n "${CI:-}" ]; then
-  myst build --html --strict
-  echo "  themed build OK"
-elif myst build --html --strict > /dev/null 2>&1; then
-  echo "  themed build OK"
-else
-  echo "  SKIPPED: cannot reach the MyST template registry from this environment."
-fi
 
 echo
 echo "All checks passed."

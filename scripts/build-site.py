@@ -139,6 +139,14 @@ def promote_headings(page: dict) -> None:
             node["depth"] = max(1, int(node.get("depth", 1)) - 1)
 
 
+def title_for(source: str, page: dict) -> str:
+    """What this page is called: in the navigation, in the tab, and in a search result."""
+    for item in (*CHAPTERS, *APPENDICES):
+        if item.path == source:
+            return f"{item.label} \u00b7 {item.title}"
+    return str(page.get("frontmatter", {}).get("title") or "Sizing and TCO")
+
+
 def href_for(source: str) -> str:
     """Where a source file is published. Flat, and named for the slug a reader sees."""
     stem = Path(source).stem
@@ -146,13 +154,19 @@ def href_for(source: str) -> str:
 
 
 def contents_of(page: dict) -> list[dict]:
-    """The headings on one page, for the sidebar on the right."""
+    """The headings on one page, for the sidebar on the right.
+
+    The anchor comes from the renderer that writes the heading, not from a second slug function
+    that agrees with it most of the time. The two did disagree: one collapsed a run of
+    punctuation and the other did not, so every heading with a comma or a dash in it had a
+    contents entry pointing at an id that was never written.
+    """
     out = []
     for node in walk(page.get("mdast", page)):
         if node.get("type") == "heading" and node.get("depth") in (2, 3):
             text = "".join(t.get("value", "") for t in walk(node) if t.get("type") == "text")
             if text:
-                out.append({"depth": node["depth"], "text": text, "id": slug(text)})
+                out.append({"depth": node["depth"], "text": text, "id": PDF.heading_id(node)})
     return out
 
 
@@ -166,9 +180,62 @@ def walk(node):
             yield from walk(item)
 
 
-def slug(text: str) -> str:
-    keep = [c.lower() if c.isalnum() else "-" for c in text]
-    return "-".join("".join(keep).split("-")).strip("-")
+def in_order(node):
+    """Every node, in the order a reader meets it. `walk` does not promise that; sections do."""
+    if isinstance(node, dict):
+        yield node
+        for child in node.get("children") or []:
+            yield from in_order(child)
+    elif isinstance(node, list):
+        for item in node:
+            yield from in_order(item)
+
+
+#: Text that belongs to a section rather than describing one. A code block is in: a reader
+#: looking for `horizon_periods` is looking for the model file, not for the prose around it.
+SEARCHABLE = ("text", "inlineCode", "code")
+
+
+def sections_of(source: str, page: dict, title: str, href: str) -> list[dict]:
+    """One record per section of one page, for the whole-book index.
+
+    Section-level rather than page-level, because a hit in ch12 is no use unless it says *where*
+    in ch12. Built before `promote_headings` runs, so the depths are still MyST's.
+    """
+    out = [{"p": title, "h": "", "u": href, "t": []}]
+    # A chapter's leading heading is its own title, and belongs to the page record rather than
+    # standing as a section of it. Recognised by position, not by comparing it with the title:
+    # MyST curls the apostrophe in "Little's law" and the outline does not.
+    skip_first = source in TITLED_PAGES
+    titles: set[int] = set()  # nodes inside a heading: they name the section, they are not in it
+    for node in in_order(page.get("mdast", page)):
+        if id(node) in titles:
+            continue
+        kind = node.get("type")
+        if kind == "heading":
+            titles.update(id(n) for n in in_order(node) if n is not node)
+            text = "".join(t.get("value", "") for t in in_order(node) if t.get("type") == "text")
+            if not text:
+                continue
+            if skip_first:
+                skip_first = False
+                continue
+            anchor = PDF.heading_id(node)
+            out.append({"p": title, "h": text, "u": f"{href}#{anchor}", "t": []})
+        elif kind in SEARCHABLE:
+            value = str(node.get("value", "")).strip()
+            if value:
+                out[-1]["t"].append(value)
+    for record in out:
+        record["t"] = " ".join(record["t"])
+    if not out[0]["t"] and len(out) > 1:
+        # A chapter opens on its title and then straight into its first section, so the record
+        # standing for the whole page has nothing to show. Borrow the opening prose: searching a
+        # chapter's name should land on the chapter, not on whichever section says it most often.
+        out[0]["t"] = out[1]["t"][:400]
+    # A heading with no prose under it is a container for the sections below, and those are
+    # indexed in their own right. A result with nothing to quote is not worth offering.
+    return [r for r in out if r["t"]]
 
 
 RUNNER = r"""
@@ -292,6 +359,150 @@ def toolkit() -> dict[str, str]:
     return out
 
 
+#: Whole-book search, over `search.json`. Not an inverted index: the book's prose is 300 KB, so
+#: matching the text directly is smaller than an index over it and there is nothing to keep in
+#: step. Passed into the page as a value, never through `.format`, so its braces are its own.
+SEARCH = r"""<script>
+(() => {
+  const dialog = document.getElementById("find");
+  const box = document.getElementById("find-q");
+  const list = document.getElementById("find-results");
+  const opener = document.getElementById("find-open");
+  let index = null, fetching = null, chosen = 0;
+  opener.hidden = false;   // it does nothing without this script, so it is not there without it
+
+  const typing = (el) =>
+    !!el && (el.isContentEditable || /^(input|textarea|select)$/i.test(el.tagName));
+
+  function open() {
+    if (!dialog.open) dialog.showModal();
+    box.focus();
+    box.select();
+    fetching = fetching || fetch("search.json")
+      .then((r) => r.json())
+      .then((d) => { index = d; draw(); })
+      .catch(() => { index = []; draw(); });
+    draw();
+  }
+
+  opener.addEventListener("click", open);
+  document.addEventListener("keydown", (event) => {
+    if (dialog.open || typing(document.activeElement)) return;
+    if (event.key === "/" || ((event.metaKey || event.ctrlKey) && event.key === "k")) {
+      event.preventDefault();
+      open();
+    }
+  });
+
+  // The book's own prose, so `<` in it is text. Built as nodes rather than markup for that
+  // reason, with each matched run wrapped where it falls.
+  function into(parent, text, terms) {
+    const low = text.toLowerCase();
+    let at = 0;
+    while (at < text.length) {
+      let next = -1, width = 0;
+      for (const term of terms) {
+        const found = low.indexOf(term, at);
+        if (found >= 0 && (next < 0 || found < next)) { next = found; width = term.length; }
+      }
+      if (next < 0) break;
+      parent.appendChild(document.createTextNode(text.slice(at, next)));
+      const hit = document.createElement("mark");
+      hit.textContent = text.slice(next, next + width);
+      parent.appendChild(hit);
+      at = next + width;
+    }
+    parent.appendChild(document.createTextNode(text.slice(at)));
+  }
+
+  function excerpt(text, terms) {
+    const low = text.toLowerCase();
+    let first = -1;
+    for (const term of terms) {
+      const found = low.indexOf(term);
+      if (found >= 0 && (first < 0 || found < first)) first = found;
+    }
+    const from = first < 0 ? 0 : Math.max(0, first - 60);
+    const cut = text.slice(from, from + 200);
+    return (from > 0 ? "\u2026" : "") + cut + (from + 200 < text.length ? "\u2026" : "");
+  }
+
+  function score(record, terms) {
+    const heading = (record.h || "").toLowerCase();
+    const body = (record.t || "").toLowerCase();
+    const page = record.p.toLowerCase();
+    const all = page + " " + heading + " " + body;
+    if (!terms.every((term) => all.includes(term))) return 0;
+    let points = 1;
+    for (const term of terms) {
+      if (heading.includes(term)) points += 40;
+      if (page.includes(term)) points += record.h ? 25 : 70;
+      points += Math.min(8, body.split(term).length - 1);
+    }
+    return points;
+  }
+
+  function say(message) {
+    const note = document.createElement("p");
+    note.className = "find-note";
+    note.textContent = message;
+    list.appendChild(note);
+  }
+
+  function draw() {
+    const query = box.value.trim().toLowerCase();
+    list.textContent = "";
+    chosen = 0;
+    if (!query) { say("Type to search the book. Enter opens, Esc closes."); return; }
+    if (!index) { say("Fetching the index\u2026"); return; }
+    const terms = query.split(/\s+/).filter(Boolean);
+    const hits = index
+      .map((record) => [score(record, terms), record])
+      .filter(([points]) => points > 0)
+      .sort((a, b) => b[0] - a[0])
+      .slice(0, 40);
+    if (!hits.length) { say("Nothing in the book matches that."); return; }
+    for (const [, record] of hits) {
+      const link = document.createElement("a");
+      link.className = "hit";
+      link.href = record.u;
+      const where = document.createElement("div");
+      where.className = "where";
+      where.appendChild(document.createTextNode(record.p));
+      if (record.h) {
+        where.appendChild(document.createTextNode(" \u203a "));
+        const section = document.createElement("strong");
+        into(section, record.h, terms);
+        where.appendChild(section);
+      }
+      const line = document.createElement("div");
+      line.className = "excerpt";
+      into(line, excerpt(record.t || "", terms), terms);
+      link.append(where, line);
+      list.appendChild(link);
+    }
+    mark();
+  }
+
+  function mark() {
+    const hits = [...list.querySelectorAll("a.hit")];
+    hits.forEach((hit, i) => hit.classList.toggle("on", i === chosen));
+    if (hits[chosen]) hits[chosen].scrollIntoView({block: "nearest"});
+  }
+
+  box.addEventListener("input", draw);
+  box.addEventListener("keydown", (event) => {
+    const hits = [...list.querySelectorAll("a.hit")];
+    if (!hits.length) return;
+    if (event.key === "ArrowDown") { event.preventDefault(); chosen = (chosen + 1) % hits.length; mark(); }
+    else if (event.key === "ArrowUp") { event.preventDefault(); chosen = (chosen + hits.length - 1) % hits.length; mark(); }
+    else if (event.key === "Enter") { event.preventDefault(); hits[chosen].click(); }
+  });
+  dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+})();
+</script>"""
+
+
 PAGE = """<!doctype html>
 <html lang="en">
 <head>
@@ -305,6 +516,7 @@ PAGE = """<!doctype html>
 <a class="skip" href="#main">Skip to the chapter</a>
 <header class="top">
   <a class="brand" href="index.html">Sizing and TCO</a>
+  <button id="find-open" class="find" type="button" hidden>Search <kbd>/</kbd></button>
   <button id="menu" type="button" aria-label="Contents" aria-controls="nav">☰</button>
 </header>
 <div class="shell">
@@ -314,10 +526,16 @@ PAGE = """<!doctype html>
   </main>
   <aside class="toc">{toc}</aside>
 </div>
+<dialog id="find" aria-label="Search the book">
+  <input id="find-q" type="search" placeholder="Search the book…" autocomplete="off"
+         autocorrect="off" spellcheck="false">
+  <div id="find-results"></div>
+</dialog>
 <script>
 document.getElementById("menu").addEventListener("click", () =>
   document.getElementById("nav").classList.toggle("open"));
 </script>
+{search}
 </body>
 </html>
 """
@@ -374,8 +592,39 @@ a.xref:hover { text-decoration: underline; }
        backdrop-filter: saturate(1.6) blur(8px); }
 .brand { font-family: var(--chrome); font-weight: 600; font-size: 15px; letter-spacing: -.01em;
          text-decoration: none; color: var(--ink); }
-#menu { margin-left: auto; font: 16px/1 var(--chrome); background: none; color: var(--muted);
+#menu { font: 16px/1 var(--chrome); background: none; color: var(--muted);
         border: 1px solid var(--edge); border-radius: 5px; cursor: pointer; padding: .4rem .6rem; }
+
+/* Search. The control is hidden in the markup and shown by the script, because without the
+   script it does nothing at all. */
+.find { margin-left: auto; display: flex; align-items: center; gap: .5rem;
+        font: 13.5px/1 var(--chrome); color: var(--muted); background: var(--panel);
+        border: 1px solid var(--edge); border-radius: 6px; padding: .45rem .7rem;
+        cursor: pointer; }
+.find:hover { border-color: var(--accent); color: var(--accent); }
+.find kbd { font: 11px/1 var(--mono); border: 1px solid var(--edge); border-radius: 3px;
+            padding: .15rem .3rem; background: var(--bg); color: var(--faint); }
+dialog#find { width: min(46rem, calc(100vw - 2rem)); max-height: min(34rem, calc(100vh - 5rem));
+              padding: 0; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden;
+              background: var(--bg); color: var(--ink); margin-top: 8vh;
+              box-shadow: 0 16px 48px rgba(0,0,0,.22); }
+dialog#find::backdrop { background: rgba(20,25,28,.44); backdrop-filter: blur(2px); }
+#find-q { width: 100%; font: 17px/1.4 var(--chrome); color: var(--ink); background: var(--bg);
+          border: 0; border-bottom: 1px solid var(--edge); padding: .9rem 1.1rem; }
+#find-q:focus { outline: none; }
+#find-results { overflow-y: auto; max-height: calc(min(34rem, 100vh - 5rem) - 3.6rem);
+                padding: .4rem; }
+.find-note { font: 14px/1.5 var(--chrome); color: var(--faint); margin: .6rem .8rem; }
+a.hit { display: block; text-decoration: none; color: inherit; padding: .55rem .75rem;
+        border-radius: 6px; }
+a.hit.on, a.hit:hover { background: var(--wash); }
+a.hit .where { font: 13px/1.4 var(--chrome); color: var(--muted); }
+a.hit .where strong { color: var(--ink); font-weight: 600; }
+a.hit .excerpt { font: 13.5px/1.5 var(--text); color: var(--muted); margin-top: .15rem;
+                 display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+                 overflow: hidden; }
+mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .1em;
+       font-weight: 600; }
 
 /* Frame */
 .shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 82rem;
@@ -579,7 +828,7 @@ def render_page(source: str, page: dict) -> str:
         # The introduction and the part pages carry their name in the front matter and nowhere
         # in the text, so the page opens on a blockquote with nothing above it saying where
         # the reader is.
-        body = f"<h1>{html.escape(str(page.get('frontmatter', {}).get('title') or ''))}</h1>" + body
+        body = f"<h1>{html.escape(title_for(source, page))}</h1>" + body
     if blocks:
         runner = RUNNER.format(
             whole=json.dumps(stage.path.read_text()),
@@ -587,14 +836,30 @@ def render_page(source: str, page: dict) -> str:
             pyodide=PYODIDE,
         )
         body = body.replace(PDF.RUNNER_SLOT, runner, 1)
-    title = str(page.get("frontmatter", {}).get("title") or page.get("title") or "Sizing and TCO")
     return PAGE.format(
-        title=html.escape(title),
+        title=html.escape(title_for(source, page)),
         css=CSS,
         nav=nav_html(href_for(source)),
         toc=toc,
         body=body,
+        search=SEARCH,
     )
+
+
+def crawlables(out: Path, pages: list[str]) -> None:
+    """A sitemap and a robots.txt, which the theme used to publish and a reader never sees.
+
+    They are the difference between a book a search engine can find and one it cannot, and the
+    site URL is derived from the repository rather than typed, the same way the PDF derives it.
+    """
+    site = PDF._site()
+    urls = "".join(f"  <url><loc>{site}/{href}</loc></url>\n" for href in pages)
+    (out / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"{urls}</urlset>\n"
+    )
+    (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {site}/sitemap.xml\n")
 
 
 def main() -> int:
@@ -626,12 +891,30 @@ def main() -> int:
     favicon = ROOT / "public" / "favicon.svg"
     if favicon.exists():
         (args.out / "favicon.svg").write_text(favicon.read_text())
+    # The index is taken from every page before any page is rendered: rendering promotes the
+    # headings, and the index reads the depths MyST wrote.
+    records: list[dict] = []
+    for source in wanted:
+        if source in index:
+            page = index[source]
+            records += sections_of(source, page, title_for(source, page), href_for(source))
+    catalogue = args.out / "search.json"
+    catalogue.write_text(json.dumps(records, ensure_ascii=False, separators=(",", ":")))
+    print(
+        f"  wrote {shown(catalogue)} ({catalogue.stat().st_size:,} bytes, {len(records)} sections)"
+    )
+
+    written = []
     for source in wanted:
         if source not in index:
             continue
         target = args.out / href_for(source)
         target.write_text(render_page(source, index[source]))
+        written.append(href_for(source))
         print(f"  wrote {shown(target)} ({len(target.read_text()):,} bytes)")
+
+    crawlables(args.out, written)
+    print(f"  wrote {shown(args.out / 'sitemap.xml')} and robots.txt")
     return 0
 
 

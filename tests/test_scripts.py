@@ -101,3 +101,24 @@ def test_every_script_is_executable_and_parses():
         source = script.read_text()
         assert source.startswith("#!/usr/bin/env python3"), f"{script.name} has no shebang"
         compile(source, str(script), "exec")
+
+
+#: The constants in scripts/build-site.py that hold JavaScript rather than Python.
+JS_TEMPLATES = ("RUNNER", "SEARCH")
+
+
+@pytest.mark.parametrize("name", JS_TEMPLATES)
+def test_a_javascript_template_is_a_raw_string(name):
+    """Python must not eat the escapes in a script it is only carrying.
+
+    This has bitten twice. A ``\\n`` inside a JavaScript regex became a real newline, and a
+    regex literal cannot span lines, so the page shipped JavaScript that would not parse --
+    silently, because nothing on the Python side was wrong. The fix both times was a raw
+    string, and this is what stops the third time.
+    """
+    source = (ROOT / "scripts" / "build-site.py").read_text()
+    raw = f"{name} = r" + '"""'
+    assert raw in source, (
+        f"{name} in scripts/build-site.py carries JavaScript, so it must be a raw string, "
+        f"or Python will interpret its backslashes as its own."
+    )

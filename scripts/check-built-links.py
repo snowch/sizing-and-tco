@@ -8,6 +8,11 @@ cross-references. A broken link to a *file* is not: a download link to a PDF tha
 not produce, or an interactive model page that was never copied into place, resolves perfectly as
 markup and 404s for the reader. That is the failure this catches, and it can only be caught after
 the site has been assembled.
+
+A fragment is the quieter version of the same thing, and it shipped: four "On this page" entries
+pointed at ids nobody wrote, because the contents list and the renderer disagreed about what a
+comma does to a heading. Nothing 404s — the reader simply arrives at the top of the page and
+does not know why.
 """
 
 from __future__ import annotations
@@ -16,8 +21,11 @@ import re
 import sys
 from pathlib import Path
 
-#: Anything local the pages point at. Schemes and anchors are somebody else's problem.
-LINK = re.compile(r'(?:href|src)="([^"#?]+)"')
+#: Anything local the pages point at, with the fragment kept: a link to a heading that was never
+#: written resolves as markup and lands the reader at the top of the page instead.
+LINK = re.compile(r'(?:href|src)="([^"?]+)"')
+#: Every anchor the built pages offer.
+ANCHOR = re.compile(r'id="([^"]+)"')
 
 
 def main() -> int:
@@ -32,11 +40,24 @@ def main() -> int:
 
     missing: list[str] = []
     checked = 0
+    anchors: dict[Path, set[str]] = {}
+
+    def offers(path: Path) -> set[str]:
+        if path not in anchors:
+            anchors[path] = set(ANCHOR.findall(path.read_text(errors="ignore")))
+        return anchors[path]
+
     for page in sorted(root.rglob("*.html")):
         for target in LINK.findall(page.read_text(errors="ignore")):
             if target.startswith(("http://", "https://", "data:", "mailto:", "//")):
                 continue
             checked += 1
+            target, _, fragment = target.partition("#")
+            if not target:
+                # Same page. The anchor is the whole of the link, so it is the whole of the check.
+                if fragment and fragment not in offers(page):
+                    missing.append(f"{page.relative_to(root)} -> #{fragment} (no such id)")
+                continue
             if target.startswith("/"):
                 # A root-relative URL on a project site has to carry the base path, or the
                 # browser asks the wrong origin-relative address and gets a 404 — even though
@@ -54,13 +75,23 @@ def main() -> int:
                 candidate = page.parent / target
             if not candidate.exists() and not candidate.with_suffix(".html").exists():
                 missing.append(f"{page.relative_to(root)} -> {target}")
+            elif (
+                fragment
+                and candidate.suffix == ".html"
+                and candidate.exists()
+                and fragment not in offers(candidate)
+            ):
+                missing.append(f"{page.relative_to(root)} -> {target}#{fragment} (no such id)")
 
     if missing:
         print("check-built-links: FAILED")
         for line in sorted(set(missing)):
             print(f"  - {line}")
         return 1
-    print(f"check-built-links: OK ({checked} local link(s) across the built site)")
+    print(
+        f"check-built-links: OK ({checked} local link(s) and "
+        f"{sum(len(v) for v in anchors.values())} anchor(s) across the built site)"
+    )
     return 0
 
 

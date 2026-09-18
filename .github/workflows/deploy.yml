@@ -21,16 +21,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Restore MyST template cache
-        uses: actions/cache@v4
-        with:
-          path: _build/templates
-          # bench/results is in the key deliberately: a new measurement or a re-run model must
-          # invalidate anything cached, or the site publishes stale numbers.
-          key: myst-v1-${{ runner.os }}-node22-${{ hashFiles('package.json', 'myst.yml', 'bench/results/*.json') }}
-          restore-keys: |
-            myst-v1-${{ runner.os }}-node22-
-
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
@@ -75,12 +65,18 @@ jobs:
       - name: Stamp the build with its commit
         run: python3 scripts/build-stamp.py
 
-      - name: Build the book
+      # MyST parses and resolves every cross-reference; it no longer renders. Without --html it
+      # never reaches the template registry, so this step needs nothing but the repository — and
+      # `make check` runs exactly the same two commands on a laptop.
+      - name: Parse the book
         env:
           # base_path is "/" for a user site and "/repo" for a project site; MyST wants an empty
           # string at the root. Without this every asset and link 404s under /sizing-and-tco/.
           BASE_URL: ${{ steps.pages.outputs.base_path == '/' && '' || steps.pages.outputs.base_path }}
-        run: myst build --html --strict
+        run: myst build --strict
+
+      - name: Render the book
+        run: python3 scripts/build-site.py --out _build/html
 
       - name: Build the interactive model pages
         # One self-contained file per model and scenario, built from the same stamped results the
@@ -97,14 +93,8 @@ jobs:
       - name: Build the model playgrounds
         run: python3 scripts/build-playground.py --out _build/html/playground
 
-      # The same book rendered from MyST's parse without MyST's theme, published beside it so
-      # the two can be compared on a real device. A proof, not the published book: /static/ is
-      # not linked from anywhere and the themed build above is still what a reader lands on.
-      - name: Build the static comparison
-        run: python3 scripts/build-site.py --out _build/html/static
-
-      # The themes set a favicon and nothing else. A manifest and an apple-touch-icon are what a
-      # phone reads when somebody saves the page to a home screen, and they have to be at the
+      # The renderer sets a favicon and nothing else. A manifest and an apple-touch-icon are what
+      # a phone reads when somebody saves the page to a home screen, and they have to be at the
       # site root with a link in every page's head — so this copies them in and adds the links.
       - name: Add the site icons
         env:
@@ -128,8 +118,8 @@ jobs:
         run: rm -f _build/html/sizing-and-tco.html
 
       # After the PDF and the model pages are in place, so links to them are checked against
-      # files that exist. This runs here rather than in ci-check.sh because it needs the themed
-      # build, and the themed build needs the template registry.
+      # files that exist. This runs here rather than in ci-check.sh because it needs the whole
+      # site assembled, and the PDF and the playgrounds are built only here.
       - name: Check every file the pages link to was built
         env:
           BASE_URL: ${{ steps.pages.outputs.base_path == '/' && '' || steps.pages.outputs.base_path }}
