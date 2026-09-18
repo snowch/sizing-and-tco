@@ -10,6 +10,9 @@ __pycache__/
 .venv/
 venv/
 *.egg-info/
+# `pip install .` leaves these. pyproject's ruff exclude already names them; git did not.
+build/
+dist/
 
 # Node
 node_modules/

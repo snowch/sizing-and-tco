@@ -59,6 +59,11 @@ quantity in the model that is about hardware rather than about data:
 ```{include} _generated/where-the-numbers-come-from-stage-shape.md
 ```
 
+```{iframe} /playground/where-the-numbers-come-from/
+:width: 100%
+The same file, with the vendor's claim in it. Change the `provenance` of a node and run it again.
+```
+
 Still a cost model. A vendor's claim is a claim about a number, and this book's distinction is not
 about who said a number — it is about whether the arithmetic around it stops applying somewhere.
 [ch08](#capacity) is where that changes.

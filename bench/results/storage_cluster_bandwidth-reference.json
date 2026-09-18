@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "c89d12e0c6fcc23a",
+  "code_fingerprint": "4b80ba2cd44483ad",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/stages/05-bandwidth/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch13, ch18)"
   },
-  "generated_at": "2026-09-17T15:26:34+00:00",
-  "git_revision": "e1e57ff",
+  "generated_at": "2026-09-18T05:26:19+00:00",
+  "git_revision": "f54d4fe",
   "kind": "model",
   "name": "storage_cluster_bandwidth-reference",
   "produced_by": {
@@ -45,7 +45,7 @@
       }
     ],
     "currency": "USD",
-    "description": "The storage model as it stands at the end of bandwidth_and_the_binding_constraint, built by bench/stages.py from models/storage_cluster/model.yaml. Not a model anybody would ship: it is the finished model with everything the book has not introduced yet removed, so that a reader can see what it looked like when it had 25 nodes in it.",
+    "description": "The storage model as it stands at the end of ch09.",
     "factors": {
       "fill_level": 1.0,
       "fill_level.headroom": 1.0,
@@ -64,7 +64,7 @@
       "read_utilisation.limit": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-17T15:26:34+00:00",
+    "generated_at": "2026-09-18T05:26:19+00:00",
     "model": "storage_cluster_bandwidth",
     "nodes": {
       "annual_growth": {

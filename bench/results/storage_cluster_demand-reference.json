@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "395a6dce7b9b4b31",
+  "code_fingerprint": "4fdafb78f73b8264",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/stages/01-demand/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch13, ch18)"
   },
-  "generated_at": "2026-09-17T15:26:33+00:00",
-  "git_revision": "e1e57ff",
+  "generated_at": "2026-09-18T05:26:17+00:00",
+  "git_revision": "f54d4fe",
   "kind": "model",
   "name": "storage_cluster_demand-reference",
   "produced_by": {
@@ -38,12 +38,12 @@
     "classification": "cost",
     "correlations": [],
     "currency": "USD",
-    "description": "The storage model as it stands at the end of what_a_workload_is, built by bench/stages.py from models/storage_cluster/model.yaml. Not a model anybody would ship: it is the finished model with everything the book has not introduced yet removed, so that a reader can see what it looked like when it had 7 nodes in it.",
+    "description": "The storage model as it stands at the end of ch01.",
     "factors": {
       "horizon_periods": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-17T15:26:33+00:00",
+    "generated_at": "2026-09-18T05:26:17+00:00",
     "model": "storage_cluster_demand",
     "nodes": {
       "annual_growth": {

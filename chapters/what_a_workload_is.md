@@ -52,7 +52,10 @@ that person does. Nor does a cell have a unit: `=B4*C7` is as valid as any other
 multiplying series by requests gives a number that looks exactly like a number of bytes.
 
 So a model here is a text file of named quantities, each with a unit and a source, that diffs and
-reviews like code. The first node is the level you were given.
+reviews like code. One file. What follows is three pieces of the same one, in the order you would
+write them, and the whole thing is eighty lines by the end of this chapter.
+
+The first node is the level you were given.
 
 ```{literalinclude} ../models/storage_cluster/stages/01-demand/model.yaml
 :language: yaml
@@ -60,12 +63,16 @@ reviews like code. The first node is the level you were given.
 :end-before: annual_growth:
 ```
 
-A `unit`, so the build knows this is a level and not a rate. A
-`value`, because somebody said so. A `provenance`, because a number with no
-source is a rumour — that is [ch02](#where-the-numbers-come-from)'s subject, and the reason the
-field is mandatory from the very first node. The `range` is how
-far a slider may take it on the interactive version of this
-model, which [Appendix A](#appendix-a-dsl-reference) covers.
+Four of those lines are the argument of this book and the rest are convenience. `kind` and `unit`
+are what let the build tell a level from a rate. `value` is the number a spreadsheet would have
+held on its own. `provenance` is the line a cell has nowhere to put: a number with no source is a
+rumour, and the field is mandatory from the very first node —
+[ch02](#where-the-numbers-come-from) is about what that costs and what it buys.
+
+`label` and `range` are neither. A label reads better in a table than
+`usable_capacity_t0` does, and a range is how far a slider may drag the value on the interactive
+version of this model. Both are optional, and [Appendix A](#appendix-a-dsl-reference) lists
+everything a node may carry — which is longer than what a node needs.
 
 Growing it over the horizon takes one multiplication and one thing that is easy to miss:
 
@@ -90,10 +97,16 @@ stated:
 :end-before: outputs:
 ```
 
-That is the whole of the demand side, and you can [run it in your browser](/playground/) — the
-page opens on this file, and the thing reading it is this repository's toolkit rather than a copy
-of it. Change a number and the total moves. Change `usable_capacity`'s formula to multiply the
-read throughput by a count of periods, and it refuses, for the reason at the top of this chapter.
+That is the whole of the demand side. Here it is, and the toolkit that reads it — this
+repository's, not a copy of it. Press **Run**, then change a number and watch the total move.
+Change `usable_capacity`'s formula to multiply the read throughput by a count of periods, and it
+refuses, for the reason at the top of this chapter.
+
+```{iframe} /playground/what-a-workload-is/
+:width: 100%
+The file above, running. The first press fetches a Python runtime; after that a check takes milliseconds.
+```
+
 
 ### The demand and the decisions
 
@@ -128,6 +141,18 @@ definition, **◐** supplied by whoever is selling it, **○** somebody's
 assumption. [ch02](#where-the-numbers-come-from) is about what that difference is worth.
 
 ### What it says, and what the build calls it
+
+Nothing so far has run. The file is a description; what reads it is
+[`sizing`](#appendix-a-dsl-reference), and one command points it at every model in the
+repository:
+
+```bash
+make models
+```
+
+That parses each file, refuses any formula whose units do not work out, evaluates the graph in
+dependency order, and writes what it found to `bench/results/` — which is where every figure in
+this book comes from, including the next one. For the seven nodes above:
 
 ```{include} _generated/what-a-workload-is-stage.md
 ```

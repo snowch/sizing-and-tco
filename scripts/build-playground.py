@@ -30,14 +30,16 @@ import json
 import sys
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from bench.stages import label_of, stages  # noqa: E402
 from bench.stamp import shown  # noqa: E402
 from sizing.playground.driver import check  # noqa: E402
 
 DEFAULT_OUT = ROOT / "_build" / "playground"
-STAGE = ROOT / "models" / "storage_cluster" / "stages" / "01-demand" / "model.yaml"
 
 #: Pinned, because an unpinned runtime changes what a reader sees without changing a line here.
 PYODIDE = "https://cdn.jsdelivr.net/pyodide/v0.28.3/full/"
@@ -47,21 +49,18 @@ PYODIDE = "https://cdn.jsdelivr.net/pyodide/v0.28.3/full/"
 MODULES = ("__init__", "units", "expr", "dsl", "normal", "mc", "evaluate", "graph")
 
 
-def fixtures() -> list[dict]:
+def fixtures(path: Path) -> list[dict]:
     """Models whose verdict this build computed, for the browser to agree with.
 
-    The first is the file ch01 leaves the reader with. The second is the mistake ch01 says a
-    spreadsheet accepts, which is the one a reader is most likely to make on purpose.
+    The first is the file the chapter leaves the reader with. The second is the mistake ch01 says
+    a spreadsheet accepts, which is the one a reader is most likely to make on purpose, and every
+    stage can make it because every stage has a derived node.
     """
-    good = STAGE.read_text()
-    broken = good.replace(
-        "formula: usable_capacity_t0 * annual_growth ** horizon_periods",
-        "formula: peak_read_throughput * horizon_periods",
-    )
-    assert broken != good, "the fixture no longer matches the stage file it edits"
+    good = path.read_text()
+    broken = _break_a_formula(good)
     cases = [
-        ("the file as ch01 leaves it", good),
-        ("a rate multiplied by a plain number", broken),
+        ("the file as this chapter leaves it", good),
+        ("a formula whose units do not work out", broken),
         ("a file that is not valid YAML", "nodes:\n  x: {kind: input, unit: TB\n"),
     ]
     out = []
@@ -78,32 +77,53 @@ def fixtures() -> list[dict]:
     return out
 
 
+def _break_a_formula(text: str) -> str:
+    """The same file with one derived node given a formula that cannot produce its unit.
+
+    Done by editing the text rather than the parsed document, because what the fixture has to
+    exercise is the path a reader takes: they retype a line, and the build refuses.
+    """
+    document = yaml.safe_load(text)
+    for spec in document["nodes"].values():
+        if spec.get("kind") == "derived":
+            inputs = [n for n, s in document["nodes"].items() if s.get("kind") == "input"]
+            replacement = f"formula: {inputs[0]} * {inputs[-1]}" if len(inputs) > 1 else None
+            if replacement is None:
+                continue
+            original = f"formula: {spec['formula']}"
+            if original in text and replacement != original:
+                broken = text.replace(original, replacement, 1)
+                if check(broken)["stage"] == "units":
+                    return broken
+    raise AssertionError("no single-line edit to this stage produces a unit error")
+
+
 PAGE = """<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Run the model &mdash; Sizing and TCO</title>
+<title>{title} &mdash; Sizing and TCO</title>
 <style>{css}</style>
 </head>
 <body>
 <header>
-  <h1>Run the model</h1>
-  <p>The file ch01 leaves you with, and the toolkit that reads it. Edit it and press
-  <b>Check</b>. Nothing is sent anywhere &mdash; the whole thing runs in this tab.</p>
+  <h1>Run the model &mdash; {title}</h1>
+  <p>The model file as this chapter leaves it, and the toolkit that reads it.</p>
 </header>
 
-<div id="agreement" class="pending">Starting Python&hellip; the runtime is a few megabytes, so
-the first load is the slow one.</div>
+<div id="agreement" class="pending">Press <b>Run</b> to start. The first press fetches a
+Python runtime of about ten megabytes and takes a few seconds; after that a check takes
+milliseconds. Nothing is sent anywhere &mdash; it all runs in this tab.</div>
 
 <main>
   <section>
     <div class="bar">
-      <button id="run" disabled>Check</button>
-      <button id="reset" disabled>Back to the file</button>
+      <button id="run">Run</button>
+      <button id="reset">Back to the file</button>
       <span id="timing"></span>
     </div>
-    <textarea id="source" spellcheck="false" disabled>{model}</textarea>
+    <textarea id="source" spellcheck="false">{model}</textarea>
   </section>
   <section>
     <div id="verdict" class="verdict"></div>
@@ -133,8 +153,11 @@ const show = (el, text, cls) => {{ el.textContent = text; if (cls) el.className 
 
 let pyodide = null;
 
+let booting = null;
+
 async function boot() {{
   const began = performance.now();
+  show($("agreement"), "Starting Python\u2026", "pending");
   try {{
     const {{ loadPyodide }} = await import("{pyodide}pyodide.mjs");
     pyodide = await loadPyodide({{ indexURL: "{pyodide}" }});
@@ -155,6 +178,8 @@ async function boot() {{
   }}
   await pyodide.runPythonAsync(`
 import sys
+
+import yaml
 sys.path.insert(0, "/")
 from sizing.playground.driver import check
 `);
@@ -181,8 +206,6 @@ from sizing.playground.driver import check
       "This browser agrees with the build on all " + FIXTURES.length +
       " checked files, including the one ch01 says a spreadsheet would accept.", "good");
   }}
-  for (const id of ["run", "reset", "source"]) $(id).disabled = false;
-  report(await verdict($("source").value));
 }}
 
 async function verdict(text) {{
@@ -240,14 +263,20 @@ function report(result) {{
 
 $("run").addEventListener("click", async () => {{
   $("run").disabled = true;
-  const began = performance.now();
-  report(await verdict($("source").value));
-  $("timing").textContent = "checked in " + Math.round(performance.now() - began) + "ms";
-  $("run").disabled = false;
+  try {{
+    // The first press pays for the runtime; every press after it is arithmetic.
+    booting = booting || boot();
+    await booting;
+    if (!pyodide) return;
+    $("run").textContent = "Run";
+    const began = performance.now();
+    report(await verdict($("source").value));
+    $("timing").textContent = "checked in " + Math.round(performance.now() - began) + "ms";
+  }} finally {{
+    $("run").disabled = false;
+  }}
 }});
 $("reset").addEventListener("click", () => {{ $("source").value = START; }});
-
-boot();
 </script>
 </body>
 </html>
@@ -302,30 +331,47 @@ footer { margin-top: 24px; border-top: 1px solid var(--edge); padding-top: 12px;
 """
 
 
-def build() -> str:
+def build(stage) -> str:
+    """One page for one stage of the storage model."""
     modules = {f"{name}.py": (ROOT / "sizing" / f"{name}.py").read_text() for name in MODULES}
     modules["playground/__init__.py"] = ""
     modules["playground/driver.py"] = (ROOT / "sizing" / "playground" / "driver.py").read_text()
-    model = STAGE.read_text()
+    model = stage.path.read_text()
     return PAGE.format(
         css=CSS,
+        title=html.escape(f"{label_of(stage.chapter)} \u00b7 {stage.title}"),
         model=html.escape(model),
         model_json=json.dumps(model),
         modules=json.dumps(modules),
-        fixtures=json.dumps(fixtures()),
+        fixtures=json.dumps(fixtures(stage.path)),
         pyodide=PYODIDE,
-        stage=html.escape(shown(STAGE)),
+        stage=html.escape(shown(stage.path)),
     )
+
+
+def pages() -> dict[str, object]:
+    """Where each stage's page goes, keyed by the directory a chapter embeds.
+
+    Named for the chapter rather than the stage, because the chapter is what a reader is in when
+    they press Run, and a URL in a book should say where it belongs.
+    """
+    return {
+        stage.chapter.replace("_", "-"): stage
+        for stage in stages()
+        if not stage.is_the_finished_model
+    }
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     args = parser.parse_args()
-    args.out.mkdir(parents=True, exist_ok=True)
-    target = args.out / "index.html"
-    target.write_text(build())
-    print(f"  wrote {shown(target)} ({len(target.read_text()):,} bytes)")
+
+    for slug, stage in pages().items():
+        target = args.out / slug / "index.html"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(build(stage))
+        print(f"  wrote {shown(target)} ({len(target.read_text()):,} bytes)")
     return 0
 
 
