@@ -66,7 +66,7 @@ def stage_for(source: str):
 
 
 def editable_excerpts(page: dict, stage) -> list[dict]:
-    """Where each quoted piece of the model sits inside the whole file.
+    """The quoted pieces of the model, marked with where each sits inside the whole file.
 
     The chapter shows the model in pieces, with prose between them. Those pieces are the reader's
     natural place to edit it — not a fourth copy of the file in a box below. MyST keeps the
@@ -86,7 +86,7 @@ def editable_excerpts(page: dict, stage) -> list[dict]:
             # back, so the piece stays read-only rather than silently editing the wrong lines.
             continue
         node["_editable"] = {"start": at, "end": at + len(text)}
-        found.append(node["_editable"])
+        found.append(node)
     return found
 
 
@@ -122,6 +122,23 @@ def nav() -> list[dict]:
     return out
 
 
+#: The pages whose leading heading is their own title, written out with the chapter number.
+TITLED_PAGES = frozenset(c.path for c in (*CHAPTERS, *APPENDICES))
+
+
+def promote_headings(page: dict) -> None:
+    """Make a chapter's leading heading the page's `h1`, and move its sections up to match.
+
+    MyST parses a chapter's title as a depth-2 heading, so without this every page has sections
+    at `h3` and no `h1` at all: the document has no outline, and nothing in the type scale can
+    tell a section from a subsection because they sit one step apart at the bottom of it.
+    Call it after the contents list has been taken, which reads the depths as MyST wrote them.
+    """
+    for node in walk(page.get("mdast", page)):
+        if node.get("type") == "heading":
+            node["depth"] = max(1, int(node.get("depth", 1)) - 1)
+
+
 def href_for(source: str) -> str:
     """Where a source file is published. Flat, and named for the slug a reader sees."""
     stem = Path(source).stem
@@ -154,15 +171,15 @@ def slug(text: str) -> str:
     return "-".join("".join(keep).split("-")).strip("-")
 
 
-RUNNER = """
+RUNNER = r"""
 <script type="application/json" id="model-whole">{whole}</script>
 <script type="application/json" id="model-modules">{modules}</script>
 <div id="runner" class="runner">
   <div class="bar">
-    <button id="run">Run the model</button>
-    <span id="status">Edit any block above and press Run. The first press fetches Python.</span>
+    <button id="run" class="primary" type="button">Run the model</button>
+    <span id="status">Change any block above, then press Run. The first press fetches Python.</span>
   </div>
-  <div id="results"></div>
+  <div id="results" aria-live="polite"></div>
 </div>
 <script type="module">
 const WHOLE = JSON.parse(document.getElementById("model-whole").textContent);
@@ -209,14 +226,32 @@ function show(result) {{
                + `<div class="what">${{n.label || name}}</div></div>`;
         }}).join("") + "</div>";
   }} else {{
-    r.innerHTML = '<p class="verdict bad">' + (result.stage === "load"
-      ? "It does not load." : "It loads, and the units do not work out.") + "</p><ul>"
-      + result.problems.map((p) => `<li>${{p.replace(/[<>&]/g, "")}}</li>`).join("") + "</ul>";
+    r.textContent = "";
+    const head = document.createElement("p");
+    head.className = "verdict bad";
+    head.textContent = result.stage === "load"
+      ? "It does not load." : "It loads, and the units do not work out.";
+    const list = document.createElement("ul");
+    for (const problem of result.problems) {{
+      const item = document.createElement("li");
+      item.textContent = problem;   // a message about the reader's file is text, never markup
+      list.appendChild(item);
+    }}
+    r.append(head, list);
   }}
 }}
 
-$("run").addEventListener("click", async () => {{
-  $("run").disabled = true;
+// A block the reader has typed in says so, so that the page shows which of its own numbers
+// are no longer the book's.
+for (const block of document.querySelectorAll(".editable-block")) {{
+  block.querySelector("pre.editable").addEventListener("input", () => {{
+    block.classList.add("changed");
+    block.querySelector(".hint").textContent = "edited";
+  }}, {{once: true}});
+}}
+
+async function run(from) {{
+  for (const b of document.querySelectorAll("#run, .run-here")) b.disabled = true;
   try {{
     booting = booting || boot();
     await booting;
@@ -229,9 +264,17 @@ $("run").addEventListener("click", async () => {{
   }} catch (error) {{
     $("status").textContent = "Python did not start: " + error;
   }} finally {{
-    $("run").disabled = false;
+    for (const b of document.querySelectorAll("#run, .run-here")) b.disabled = false;
+    // Pressed from a block, the answer is further down the page than the block is. Take the
+    // reader to it rather than leaving them looking at what they typed.
+    if (from === "block") $("runner").scrollIntoView({{behavior: "smooth", block: "center"}});
   }}
-}});
+}}
+
+$("run").addEventListener("click", () => run("runner"));
+for (const button of document.querySelectorAll(".run-here")) {{
+  button.addEventListener("click", () => run("block"));
+}}
 </script>
 """
 
@@ -259,13 +302,14 @@ PAGE = """<!doctype html>
 <style>{css}</style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to the chapter</a>
 <header class="top">
   <a class="brand" href="index.html">Sizing and TCO</a>
-  <button id="menu" aria-label="Contents">☰</button>
+  <button id="menu" type="button" aria-label="Contents" aria-controls="nav">☰</button>
 </header>
 <div class="shell">
-  <nav id="nav" class="nav">{nav}</nav>
-  <main>
+  <nav id="nav" class="nav" aria-label="Chapters">{nav}</nav>
+  <main id="main" tabindex="-1">
 {body}
   </main>
   <aside class="toc">{toc}</aside>
@@ -279,94 +323,207 @@ document.getElementById("menu").addEventListener("click", () =>
 """
 
 CSS = """
+/* The figures in this book are drawn by `bench/diagrams.py`: blue-grey, with four accents that
+   each mean something. The page borrows that palette so a diagram sits on the page rather than
+   on top of it. Prose is a serif and every piece of furniture is a sans, which is what keeps a
+   bold lead-in inside a paragraph from reading as a heading. */
 :root {
   color-scheme: light dark;
-  --ink: #1f2933; --muted: #52606d; --edge: #dfe3e8; --bg: #ffffff;
-  --panel: #f7f9fa; --link: #1f6feb; --code: #f3f5f7;
-  --measure: 46rem;
+  --ink: #263238; --muted: #546e7a; --faint: #8da2ac;
+  --edge: #dfe5e8; --rule: #c4d0d6;
+  --bg: #fdfdfc; --panel: #f2f6f7; --code: #f0f4f6; --raise: rgba(38,50,56,.06);
+  --accent: #35648f; --on-accent: #ffffff; --wash: rgba(53,100,143,.09);
+  --warn: #c8791a; --stop: #b3413a; --go: #2e7d32;
+  --measure: 36rem;
+  --top: 3.1rem;
+  --chrome: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --text: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, "DejaVu Sans Mono", monospace;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --ink: #e4e7eb; --muted: #9aa5b1; --edge: #323d47; --bg: #12181d;
-          --panel: #1a2229; --link: #79b8ff; --code: #1a2229; }
+  :root {
+    --ink: #dde4e8; --muted: #9db0ba; --faint: #768993;
+    --edge: #2b363c; --rule: #3d4b53;
+    --bg: #14191c; --panel: #1b2327; --code: #1b2327; --raise: rgba(0,0,0,.4);
+    --accent: #7fb2dd; --on-accent: #10171b; --wash: rgba(127,178,221,.14);
+    --warn: #e0a34e; --stop: #e8756c; --go: #81c784;
+  }
 }
+
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body { margin: 0; background: var(--bg); color: var(--ink);
-       font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
-a { color: var(--link); }
-.top { display: flex; align-items: center; gap: 12px; padding: 10px 16px;
-       border-bottom: 1px solid var(--edge); position: sticky; top: 0; background: var(--bg);
-       z-index: 5; }
-.brand { font-weight: 600; text-decoration: none; color: var(--ink); }
-#menu { margin-left: auto; font-size: 20px; background: none; border: 1px solid var(--edge);
-        border-radius: 4px; color: var(--ink); cursor: pointer; padding: 2px 10px; }
-.shell { display: grid; grid-template-columns: 1fr; max-width: 1400px; margin-inline: auto; }
-@media (min-width: 1000px) {
-  .shell { grid-template-columns: 17rem minmax(0, 1fr) 15rem; }
+       font: 18px/1.62 var(--text); text-rendering: optimizeLegibility;
+       -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration-thickness: from-font; text-underline-offset: 2px; }
+/* A cross-reference is a link the reader steps over 259 times. Underlining every one of them
+   would turn the prose into a rash, so it keeps the italic it has on paper and takes a rule
+   only when the reader is pointing at it. */
+a.xref { font-style: italic; text-decoration: none; }
+a.xref:hover { text-decoration: underline; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: .6rem; top: .5rem; z-index: 20; background: var(--bg); padding: .4rem .7rem;
+              border: 1px solid var(--accent); border-radius: 4px; font-family: var(--chrome); }
+
+/* Header */
+.top { display: flex; align-items: center; gap: 12px; height: var(--top); padding: 0 1rem;
+       border-bottom: 1px solid var(--edge); position: sticky; top: 0; z-index: 5;
+       background: color-mix(in srgb, var(--bg) 97%, transparent);
+       backdrop-filter: saturate(1.6) blur(8px); }
+.brand { font-family: var(--chrome); font-weight: 600; font-size: 15px; letter-spacing: -.01em;
+         text-decoration: none; color: var(--ink); }
+#menu { margin-left: auto; font: 16px/1 var(--chrome); background: none; color: var(--muted);
+        border: 1px solid var(--edge); border-radius: 5px; cursor: pointer; padding: .4rem .6rem; }
+
+/* Frame */
+.shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 82rem;
+         margin-inline: auto; }
+@media (min-width: 1040px) {
+  .shell { grid-template-columns: 17rem minmax(0, 1fr) 14rem; }
   #menu { display: none; }
-  .nav, .toc { display: block !important; }
+  .nav, .toc { display: block !important; position: sticky; top: var(--top);
+               max-height: calc(100vh - var(--top)); overflow-y: auto;
+               overscroll-behavior: contain; }
 }
-.nav, .toc { display: none; padding: 20px 16px; font-size: 14px; }
+.nav, .toc { display: none; font: 14px/1.45 var(--chrome); padding: 1.4rem 1rem 3rem; }
 .nav.open { display: block; }
 .nav { border-right: 1px solid var(--edge); }
-.toc { border-left: 1px solid var(--edge); color: var(--muted); }
-.nav .part { font-weight: 600; margin: 14px 0 4px; }
-.nav a, .toc a { display: block; padding: 3px 0; text-decoration: none; color: var(--muted); }
-.nav a:hover, .toc a:hover { color: var(--link); }
-.nav a.here { color: var(--link); font-weight: 600; }
-.nav ul, .toc ul { list-style: none; margin: 0; padding: 0 0 0 10px; }
-.toc .d3 { padding-left: 12px; }
-main { padding: 8px 20px 80px; max-width: var(--measure); }
-h1 { font-size: 1.75rem; line-height: 1.25; margin: 24px 0 8px; }
-h2 { font-size: 1.3rem; margin: 32px 0 8px; }
-h3 { font-size: 1.08rem; margin: 24px 0 6px; }
+.toc { border-left: 1px solid var(--edge); }
+.nav .part, .toc .part { font-size: 11.5px; font-weight: 600; letter-spacing: .08em;
+                         text-transform: uppercase; color: var(--faint);
+                         margin: 1.5rem 0 .45rem; }
+.nav .part:first-child, .toc .part { margin-top: 0; }
+.nav .part a { color: inherit; text-decoration: none; }
+.nav ul, .toc ul { list-style: none; margin: 0; padding: 0; }
+.nav a, .toc a { display: block; text-decoration: none; color: var(--muted);
+                 border-radius: 4px; }
+.nav a { padding: .28rem .5rem .28rem .7rem; border-left: 2px solid transparent;
+         margin-left: -.2rem; }
+.nav a:hover, .toc a:hover { color: var(--ink); background: var(--panel); }
+.nav a.here { color: var(--accent); font-weight: 600; border-left-color: var(--accent);
+              background: var(--wash); }
+.toc a { padding: .26rem .45rem; }
+.toc .d3 a { padding-left: 1.2rem; font-size: 13.5px; }
+
+/* Prose */
+main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem; max-width: calc(var(--measure) + 5rem);
+       min-width: 0; }
+main :is(h1, h2, h3, h4) { font-family: var(--chrome); letter-spacing: -.012em;
+                           scroll-margin-top: calc(var(--top) + 1rem); }
+h1 { font-size: clamp(1.6rem, 5.4vw, 2rem); font-weight: 700; line-height: 1.18;
+     margin: 1.6rem 0 1.4rem; }
+h2 { font-size: 1.35rem; font-weight: 650; line-height: 1.25; margin: 2.5rem 0 .9rem;
+     padding-top: 1.1rem; border-top: 1px solid var(--edge); }
+h3 { font-size: 1.04rem; font-weight: 700; line-height: 1.3; margin: 1.9rem 0 .6rem; }
+h4 { font-size: .95rem; font-weight: 600; color: var(--muted); margin: 1.6rem 0 .4rem; }
 p, li { max-width: var(--measure); }
-code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13.5px; }
-code { background: var(--code); padding: 1px 4px; border-radius: 3px; }
-pre { background: var(--code); padding: 12px 14px; border-radius: 4px; overflow-x: auto;
-      border: 1px solid var(--edge); }
-pre code { background: none; padding: 0; }
-table { border-collapse: collapse; width: 100%; font-size: 14.5px; margin: 14px 0; }
-th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--edge);
+p { margin: 0 0 1.05rem; }
+ul, ol { padding-left: 1.4rem; }
+li { margin-bottom: .35rem; }
+blockquote { margin: 1.4rem 0; padding: .1rem 0 .1rem 1.1rem;
+             border-left: 2px solid var(--rule); color: var(--muted); }
+hr { border: 0; border-top: 1px solid var(--edge); margin: 2.4rem 0; }
+
+/* Code */
+code, pre, kbd { font-family: var(--mono); }
+code { font-size: .85em; background: var(--code); padding: .08em .3em; border-radius: 3px;
+       overflow-wrap: break-word; }   /* a test path is one long token, and phones are narrow */
+pre { font-size: 13.5px; line-height: 1.55; background: var(--code); color: var(--ink);
+      padding: .85rem 1rem; border-radius: 6px; border: 1px solid var(--edge);
+      margin: 1.3rem 0; white-space: pre; overflow-x: auto; overscroll-behavior-x: contain; }
+pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+
+/* Tables are data, not prose, so they take the furniture face and lining figures. */
+table { display: block; width: max-content; max-width: 100%; overflow-x: auto;
+        overscroll-behavior-x: contain; border-collapse: collapse; margin: 1.3rem 0;
+        font: 14.5px/1.45 var(--chrome); font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: .42rem .7rem; border-bottom: 1px solid var(--edge);
          vertical-align: top; }
-th { color: var(--muted); }
-blockquote { margin: 16px 0; padding: 2px 16px; border-left: 3px solid var(--edge);
-             color: var(--muted); }
-figure { margin: 20px 0; }
-figcaption { color: var(--muted); font-size: 14px; margin-top: 6px; }
+/* MyST writes bare rows, with no `thead` for a header-row selector to hang off. */
+th { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+     color: var(--faint); border-bottom: 1px solid var(--rule); padding-bottom: .3rem; }
+tr:last-child td { border-bottom: 1px solid var(--rule); }
+
+/* Pictures */
+figure { margin: 1.8rem 0; }
+figcaption { font: 14px/1.45 var(--chrome); color: var(--muted); margin-top: .5rem;
+             max-width: var(--measure); }
 img, svg { max-width: 100%; height: auto; }
-.admonition { border: 1px solid var(--edge); border-left-width: 4px; border-radius: 4px;
-              padding: 10px 14px; margin: 18px 0; background: var(--panel); font-size: 15.5px; }
-.admonition-title { font-weight: 600; margin: 0 0 6px; }
-.admonition.note { border-left-color: var(--link); }
-.admonition.tip { border-left-color: #2e7d32; }
-.admonition.important { border-left-color: #b3413a; }
-iframe { width: 100%; border: 1px solid var(--edge); border-radius: 4px; height: 680px; }
+figure img { background: #fff; border-radius: 4px; }
+.admonition { border: 1px solid var(--edge); border-left: 3px solid var(--rule); border-radius: 6px;
+              padding: .8rem 1rem; margin: 1.5rem 0; background: var(--panel); font-size: .94em; }
+.admonition > :last-child { margin-bottom: 0; }
+.admonition-title { font: 600 13px/1.4 var(--chrome); letter-spacing: .04em;
+                    text-transform: uppercase; color: var(--muted); margin: 0 0 .4rem; }
+.admonition.note { border-left-color: var(--accent); }
+.admonition.tip { border-left-color: var(--go); }
+.admonition.important { border-left-color: var(--stop); }
+iframe { width: 100%; border: 1px solid var(--rule); border-radius: 6px; height: 680px; }
 @media (max-width: 720px) { iframe { height: 80vh; min-height: 540px; } }
 
-/* A quoted piece of the model the reader may edit where the chapter shows it. It has to look
-   like what it is: the same block, with an edge that says it will take a keystroke. */
-pre.editable { border-left: 3px solid var(--link); background: var(--code); }
-pre.editable:focus { outline: 2px solid var(--link); outline-offset: 2px; }
-.runner { border: 1px solid var(--edge); border-radius: 4px; padding: 14px 16px; margin: 22px 0;
-          background: var(--panel); }
-.runner .bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-.runner button { font: inherit; padding: 6px 14px; border: 1px solid var(--edge);
-                 border-radius: 4px; background: var(--bg); color: var(--ink); cursor: pointer; }
-.runner button:disabled { opacity: .5; cursor: default; }
-#status { color: var(--muted); font-size: 14px; }
-.verdict { font-weight: 600; margin: 14px 0 6px; }
-.verdict.good { color: #2e7d32; }
-.verdict.bad { color: #b3413a; }
-@media (prefers-color-scheme: dark) {
-  .verdict.good { color: #81c784; } .verdict.bad { color: #e8756c; }
+/* A quoted piece of the model the reader may edit where the chapter shows it. Nothing but the
+   bar above it says so, so the bar has to carry its weight: what file this is, that it is
+   theirs, and the button that acts on it. */
+.editable-block { margin: 1.4rem 0; border: 1px solid var(--rule); border-radius: 6px;
+                  background: var(--bg); overflow: hidden; }
+.editable-block:focus-within { border-color: var(--accent);
+                               box-shadow: 0 0 0 3px var(--wash); }
+.editable-bar { display: flex; align-items: center; gap: .6rem; padding: .3rem .4rem .3rem .9rem;
+                background: var(--panel); border-bottom: 1px solid var(--edge);
+                font: 12.5px/1.6 var(--chrome); }
+.editable-bar .file { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+.editable-bar .hint { color: var(--faint); }
+.editable-block.changed .editable-bar { background: var(--wash); }
+.editable-block.changed .editable-bar .hint { color: var(--accent); font-weight: 600; }
+pre.editable { margin: 0; border: 0; border-radius: 0; background: var(--bg);
+               caret-color: var(--accent); white-space: pre-wrap; overflow-wrap: break-word; }
+pre.editable:focus { outline: none; }
+
+/* Buttons */
+button { font: 14px/1 var(--chrome); cursor: pointer; border-radius: 5px;
+         border: 1px solid var(--rule); background: var(--bg); color: var(--ink);
+         padding: .45rem .8rem; }
+button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+button:disabled { opacity: .45; cursor: progress; }
+button.primary { background: var(--accent); border-color: transparent; color: var(--on-accent);
+                 font-weight: 600; padding: .55rem 1.1rem; }
+button.primary:hover:not(:disabled) { color: var(--on-accent); filter: brightness(1.1); }
+.run-here { margin-left: auto; padding: .25rem .7rem; font-size: 12.5px; }
+
+/* The run control, spliced in after the last block of the model the chapter quotes. */
+.runner { margin: 1.8rem 0 2.4rem; border: 1px solid var(--rule); border-radius: 8px;
+          background: var(--panel); padding: 1rem 1.1rem; }
+.runner .bar { display: flex; gap: .9rem; align-items: center; flex-wrap: wrap; }
+#status { font: 13.5px/1.4 var(--chrome); color: var(--muted); }
+.verdict { font: 600 15px/1.4 var(--chrome); margin: 1rem 0 .3rem; }
+.verdict.good { color: var(--go); }
+.verdict.bad { color: var(--stop); }
+#results > .verdict + * { margin-top: .5rem; }
+.outputs { display: grid; gap: .9rem; margin-top: .9rem;
+           grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
+.output { border-top: 2px solid var(--rule); padding-top: .45rem; }
+.output .figure { font: 700 26px/1.1 var(--chrome); font-variant-numeric: tabular-nums;
+                  letter-spacing: -.02em; }
+.output .unit { font: 12px/1.4 var(--chrome); color: var(--faint); }
+.output .what { font: 13px/1.35 var(--chrome); color: var(--muted); margin-top: .15rem; }
+#results ul { margin: 0; padding: .7rem 1rem .7rem 2rem; list-style: square;
+              background: var(--bg); border: 1px solid var(--edge); border-radius: 6px; }
+#results li { font-family: var(--mono); font-size: 12.5px; line-height: 1.5; color: var(--stop);
+              margin-bottom: .3rem; }
+#results li::marker { color: var(--stop); }
+
+figure > .runner { margin: 0; }
+
+/* On paper the furniture is noise and the controls do nothing. */
+@media print {
+  .top, .nav, .toc, .runner, .editable-bar { display: none; }
+  .shell { display: block; }
+  main { max-width: none; padding: 0; }
+  .editable-block { border: 1px solid #ccc; }
+  a { color: inherit; }
 }
-.outputs { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 8px; }
-.output .figure { font-size: 28px; font-weight: 600; line-height: 1.1; }
-.output .unit { color: var(--muted); font-size: 13px; }
-.output .what { font-size: 13px; }
-#results ul { padding-left: 18px; }
-#results li { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
-              color: #b3413a; }
 """
 
 
@@ -403,20 +560,39 @@ def render_page(source: str, page: dict) -> str:
     # Editable excerpts have to be marked before the body is rendered, because the renderer
     # decides from the mark whether a quoted block is a picture of the file or the file itself.
     stage = stage_for(source)
-    spans = editable_excerpts(page, stage) if stage else []
+    blocks = editable_excerpts(page, stage) if stage else []
+    if blocks:
+        # The chapter's `{iframe}` is the same toolkit in a box, so with the model editable in
+        # place it comes out: two Run buttons is worse than one. The run control takes its slot
+        # rather than the end of the page, because the prose around the panel already introduces
+        # it — press this, change a number, watch the total move. Failing a panel, the control
+        # goes after the last piece of the file, which is where the reader has all of it.
+        panels = [n for n in walk(page.get("mdast", page)) if n.get("type") == "iframe"]
+        for node in panels:
+            node["_suppressed"] = True
+        (panels[0] if panels else blocks[-1])["_runner_here"] = True
+    toc = toc_html(page)  # taken before the promotion below, which renumbers what it reads
+    if source in TITLED_PAGES:
+        promote_headings(page)
     body = PDF.render(page.get("mdast", page))
-    if spans:
-        body += RUNNER.format(
+    if source not in TITLED_PAGES:
+        # The introduction and the part pages carry their name in the front matter and nowhere
+        # in the text, so the page opens on a blockquote with nothing above it saying where
+        # the reader is.
+        body = f"<h1>{html.escape(str(page.get('frontmatter', {}).get('title') or ''))}</h1>" + body
+    if blocks:
+        runner = RUNNER.format(
             whole=json.dumps(stage.path.read_text()),
             modules=json.dumps(toolkit()),
             pyodide=PYODIDE,
         )
+        body = body.replace(PDF.RUNNER_SLOT, runner, 1)
     title = str(page.get("frontmatter", {}).get("title") or page.get("title") or "Sizing and TCO")
     return PAGE.format(
         title=html.escape(title),
         css=CSS,
         nav=nav_html(href_for(source)),
-        toc=toc_html(page),
+        toc=toc,
         body=body,
     )
 
@@ -441,6 +617,10 @@ def main() -> int:
         ]
         if not wanted:
             raise SystemExit(f"no page matching {args.only!r}")
+
+    # What each page is called here, so a cross-reference resolves to this build rather than to
+    # the themed site it was parsed for.
+    PDF.PAGES = {Path(href_for(s)).stem: href_for(s) for s in wanted}
 
     args.out.mkdir(parents=True, exist_ok=True)
     favicon = ROOT / "public" / "favicon.svg"

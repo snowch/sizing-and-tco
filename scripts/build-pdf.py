@@ -122,6 +122,23 @@ class UnknownNodeError(Exception):
 #: thing on paper as on a screen, and this is how they find out which they are.
 MEDIUM = "print"
 
+#: Where a caller may splice a run control in. The caller marks the node it should follow with
+#: `_runner_here`, and this comes out in its place.
+RUNNER_SLOT = "<!-- runner -->"
+
+#: What a renderer publishing a site calls each page, keyed by the slug a site-root URL ends in.
+#: Empty on paper, where there is no site to link into.
+PAGES: dict[str, str] = {}
+
+
+def _published(url: str) -> str | None:
+    """The page this renderer is publishing for a site-root URL, if it is publishing one."""
+    if MEDIUM != "web" or not url.startswith("/"):
+        return None
+    path, _, anchor = url.partition("#")
+    target = PAGES.get(path.strip("/").rsplit("/", 1)[-1] or "index")
+    return None if target is None else target + (f"#{anchor}" if anchor else "")
+
 
 def heading_id(node: dict) -> str:
     """A heading's anchor, from its text, so a page's own contents can link to it."""
@@ -167,12 +184,19 @@ def render(node: dict) -> str:
     if kind == "code" and node.get("_editable") and MEDIUM == "web":
         # The piece of the model the chapter is quoting, made editable where the chapter shows
         # it. `data-start`/`data-end` are where it sits in the whole file, so an edit here can be
-        # spliced back into the document the toolkit is handed.
+        # spliced back into the document the toolkit is handed. The bar above it is the only
+        # thing that says so: a block a reader may type into has to look unlike one they may not.
         span = node["_editable"]
+        name = html.escape(str(node.get("filename") or "model.yaml"))
         return (
-            f'<pre class="editable" contenteditable="plaintext-only" spellcheck="false"'
+            '<div class="editable-block">'
+            f'<div class="editable-bar"><span class="file">{name}</span>'
+            '<span class="hint">yours to edit</span>'
+            '<button class="run-here" type="button">Run</button></div>'
+            '<pre class="editable" contenteditable="plaintext-only" spellcheck="false"'
             f' data-start="{span["start"]}" data-end="{span["end"]}">'
-            f"<code>{html.escape(str(node.get('value', '')))}</code></pre>"
+            f"<code>{html.escape(str(node.get('value', '')))}</code></pre></div>"
+            + (RUNNER_SLOT if node.get("_runner_here") else "")
         )
     if kind == "code":
         return f"<pre><code>{html.escape(node.get('value', ''))}</code></pre>"
@@ -201,6 +225,8 @@ def render(node: dict) -> str:
         classes = " ".join(["container", *str(node.get("kind", "")).split()])
         return f'<figure class="{classes}">{children()}</figure>'
     if kind == "iframe":
+        if node.get("_suppressed"):
+            return RUNNER_SLOT if node.get("_runner_here") else ""
         # A panel a reader presses is nothing on paper, so in print it becomes the link it
         # embeds; on a site it is the thing itself. The caption beside it is prose either way.
         src = str(node.get("src", ""))
@@ -209,11 +235,24 @@ def render(node: dict) -> str:
         url = _absolute(src)
         return f'<p class="iframe-fallback">Run it at <a href="{html.escape(url)}">{html.escape(url)}</a></p>'
     if kind == "link":
-        return f'<a href="{html.escape(_absolute(str(node.get("url", ""))))}">{children()}</a>'
+        url = str(node.get("url", ""))
+        return f'<a href="{html.escape(_published(url) or _absolute(url))}">{children()}</a>'
     if kind == "crossReference":
-        # Rendered as its own text: a PDF has no site to link into, and the chapter label the
-        # reference carries is what a reader on paper needs anyway.
-        return f"<em>{children()}</em>" if node.get("children") else ""
+        # On paper this is its own text: there is no site to link into, and the chapter label
+        # the reference carries is what a reader holding the book needs anyway. On a site it is
+        # the only way across the book, so it becomes the link it always meant.
+        inner = children()
+        if not inner:
+            return ""
+        url = str(node.get("url") or "")
+        anchor = str(node.get("html_id") or "")
+        page = url.strip("/").rsplit("/", 1)[-1]
+        target = _published(url if anchor in ("", page) else f"{url}#{anchor}")
+        return (
+            f'<a class="xref" href="{html.escape(target)}">{inner}</a>'
+            if target
+            else f"<em>{inner}</em>"
+        )
     if kind == "cite":
         return f"[{children()}]" if node.get("children") else ""
     if kind == "admonition":
