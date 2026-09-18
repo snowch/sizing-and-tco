@@ -220,11 +220,6 @@ FIGURES: dict[str, Table | Diagram] = {
         also=("observability-knobs_turned_down",),
     ),
     # -- Appendix H Running the toolkit -------------------------------------------------------------
-    # -- the preface's statement of what the book is still missing ----------------------------------
-    "preface-unmeasured": Table(
-        render=tables.unmeasured_constants,
-        computed_from="`models/`, every measured node with no result behind it",
-    ),
     "appendix-h-running-the-toolkit-constants": Table(
         render=tables.constants_index,
         computed_from="`bench/results/`, one row per stamped result",

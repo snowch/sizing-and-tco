@@ -19,6 +19,7 @@ import re
 
 import pytest
 
+from bench.figures import FIGURES as DECLARED
 from bench.stamp import ROOT
 
 FIGURES = sorted((ROOT / "chapters" / "_figures").glob("*.svg"))
@@ -148,3 +149,25 @@ def test_a_table_drawing_on_two_results_names_both():
             f"figure {name!r} compares against {other!r} and does not list it in `also`, so its "
             "conditions line names one of the two results its columns come from."
         )
+
+
+def test_every_declared_figure_is_included_somewhere():
+    """A figure nobody includes is rendered on every build and read by nobody.
+
+    ``bench/figures.py`` is the only place a figure is declared, and `render-figures.py` writes
+    one file per entry whether or not a page asks for it. Nothing noticed when the introduction
+    stopped including its table of unmeasured constants, so the declaration stayed and the
+    fragment kept being written — which is the quiet half of moving prose around.
+    """
+    pages = "\n".join(
+        path.read_text()
+        for pattern in ("chapters/*.md", "appendices/*.md", "parts/*.md", "index.md")
+        for path in ROOT.glob(pattern)
+    )
+    orphaned = sorted(
+        name for name in DECLARED if f"{name}.md" not in pages and f"{name}.svg" not in pages
+    )
+    assert not orphaned, (
+        f"declared in bench/figures.py and included by no page: {orphaned}. Either a page should "
+        "be using it, or the declaration should go."
+    )

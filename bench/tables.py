@@ -628,47 +628,6 @@ def constants_index(_name: str = "") -> str:
     return "\n".join(rows)
 
 
-#: Small counts read as words in prose. Beyond this a numeral is clearer than "seventeen".
-COUNTS = {1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six", 7: "Seven"}
-
-
-def unmeasured_constants(_name: str = "") -> str:
-    """One sentence naming every constant nobody has measured, across every model.
-
-    The introduction used to say this in prose, and prose of that kind rots: the count is right
-    until somebody takes a measurement or adds a model, and nothing in the build can see that the
-    sentence has stopped being true. Three claims on that page had already gone stale this way.
-
-    What each measurement would take is *not* generated, because a model does not declare it — it
-    is in the node's note, and ch03 is about it. What is generated is the part that goes wrong on
-    its own: which constants, and how many.
-    """
-    from sizing.dsl import Measured, discover
-
-    missing = []
-    for model in discover():
-        for node in model.of_kind("measured"):
-            assert isinstance(node, Measured)
-            if not node.is_measured:
-                missing.append((node.label, node.result))
-    missing.sort()
-
-    if not missing:
-        return (
-            "Every constant these models rest on has been measured, so there is no figure in "
-            "this book waiting on one."
-        )
-
-    named = [f"**{label}** (`{result}`)" for label, result in missing]
-    joined = named[0] if len(named) == 1 else ", ".join(named[:-1]) + " and " + named[-1]
-    count = COUNTS.get(len(missing), str(len(missing)))
-    verb = "has" if len(missing) == 1 else "have"
-    return (
-        f"{count} of the constants these models rest on {verb} not been measured: {joined}. "
-        "Every figure downstream of them renders as *not yet measured* rather than filled in."
-    )
-
-
 def _unmeasured_across_models() -> set[str]:
     from sizing.dsl import Measured, discover
 

@@ -114,12 +114,6 @@ Nothing in this book needs a datacentre, a cloud account, or a licence.
 **[Download the whole book as a PDF](/sizing-and-tco.pdf)** — every chapter and appendix in one
 file, built from the same source as this site, so the two cannot disagree about what a page says.
 
-```{include} chapters/_generated/preface-unmeasured.md
-```
-
-What it would take to fill each of them, and why this book would rather print a gap than a
-plausible number, is [ch03](#where-the-numbers-come-from).
-
 ```{include} chapters/_generated/build.md
 ```
 :::
