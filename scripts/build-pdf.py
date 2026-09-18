@@ -118,6 +118,30 @@ class UnknownNodeError(Exception):
     """A node type the renderer does not handle. Raised, never skipped."""
 
 
+#: Which medium is being rendered. The node types are the same; two of them are not the same
+#: thing on paper as on a screen, and this is how they find out which they are.
+MEDIUM = "print"
+
+
+def heading_id(node: dict) -> str:
+    """A heading's anchor, from its text, so a page's own contents can link to it."""
+    words = []
+
+    def text_of(n):
+        if isinstance(n, dict):
+            if n.get("type") == "text":
+                words.append(str(n.get("value", "")))
+            for v in n.values():
+                text_of(v)
+        elif isinstance(n, list):
+            for x in n:
+                text_of(x)
+
+    text_of(node)
+    keep = "".join(c.lower() if c.isalnum() else "-" for c in "".join(words))
+    return "-".join(part for part in keep.split("-") if part)
+
+
 def render(node: dict) -> str:
     kind = node.get("type")
     children = lambda: "".join(render(child) for child in node.get("children", []))  # noqa: E731
@@ -130,7 +154,10 @@ def render(node: dict) -> str:
         return f"<p>{children()}</p>"
     if kind == "heading":
         level = min(int(node.get("depth", 2)), 6)
-        return f"<h{level}>{children()}</h{level}>"
+        # An id only earns its place on a site, where something links to it. In one bound
+        # document every heading would carry one and nothing would ever follow it.
+        at = f' id="{heading_id(node)}"' if MEDIUM == "web" else ""
+        return f"<h{level}{at}>{children()}</h{level}>"
     if kind == "strong":
         return f"<strong>{children()}</strong>"
     if kind == "emphasis":
@@ -164,9 +191,12 @@ def render(node: dict) -> str:
         classes = " ".join(["container", *str(node.get("kind", "")).split()])
         return f'<figure class="{classes}">{children()}</figure>'
     if kind == "iframe":
-        # A panel a reader presses is nothing on paper, so it becomes the link it embeds. The
-        # caption beside it is already prose and renders as prose.
-        url = _absolute(str(node.get("src", "")))
+        # A panel a reader presses is nothing on paper, so in print it becomes the link it
+        # embeds; on a site it is the thing itself. The caption beside it is prose either way.
+        src = str(node.get("src", ""))
+        if MEDIUM == "web":
+            return f'<iframe src="{html.escape(src)}" loading="lazy"></iframe>'
+        url = _absolute(src)
         return f'<p class="iframe-fallback">Run it at <a href="{html.escape(url)}">{html.escape(url)}</a></p>'
     if kind == "link":
         return f'<a href="{html.escape(_absolute(str(node.get("url", ""))))}">{children()}</a>'
