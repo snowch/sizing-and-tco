@@ -87,9 +87,10 @@ with a hole in it where a measurement should be; and a request-serving tier, who
 load is not a chain of multiplications at all, which is why the chapters on ceilings are built on
 it.
 
-Every chapter ends with problems. Most are tests you run, and they fail until you have solved
-them. At least one in each chapter is about a system you actually run and has no test, because
-there is no oracle for judgement and pretending otherwise would be worse than leaving it ungraded.
+Every chapter ends with problems, and most of them are tests you run: they fail until you have
+solved them, and the answer is nowhere in the repository. Some have no test at all, because they
+are about a system you actually run and there is no oracle for judgement — those say instead what
+a good answer contains and what would falsify it. Every chapter in Part I ends with one.
 
 ## What you will need
 

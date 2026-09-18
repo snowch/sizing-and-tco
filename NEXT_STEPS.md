@@ -17,6 +17,14 @@ it comes out rather than being ticked.
 
 Every chapter and every appendix is written. What is left is the work a first draft leaves:
 
+- **The ungraded problem, in the other eighteen chapters.** Invariant 5 used to require every
+  problem to be a test, which meant every problem had to be about a model this repository owns:
+  of fifty-two, one mentioned the reader's own system. The rule now allows a problem with no
+  oracle, and Part I has one in each of its four chapters — the reader's own workload, their own
+  provenance labels, their own growth rate. The rest of the book has none yet, and the
+  introduction is careful to promise only Part I until they exist. When they do, the promise
+  becomes general and a test can hold it there; a test that passes for four chapters out of
+  twenty-two by construction would be decoration.
 - **The two chapters that are waiting on measurements.** ch19 and ch21 both describe the
   observability model's traces chain around a hole. They read correctly today and they will
   read better when the chain lights up; neither needs a rewrite, which was the point of building

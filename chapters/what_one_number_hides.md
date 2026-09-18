@@ -123,7 +123,8 @@ becomes a sizing model partway through being built, and the exact node that does
 Problem 1.2 is finding it, on the same model at five stages of construction.
 
 That is also why the change is worth watching rather than being told: nobody declares it. It
-happens because two nodes get added, in [ch09](#capacity) and [ch10](#bandwidth-and-the-binding-constraint), and the build notices.
+happens because two nodes get added, in [ch09](#capacity) and
+[ch10](#bandwidth-and-the-binding-constraint), and the build notices.
 
 ## What this cannot tell you
 

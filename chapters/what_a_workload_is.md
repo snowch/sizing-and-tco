@@ -236,7 +236,7 @@ makes every interval in the book too narrow ([ch14](#correlation-and-convergence
 
 ## Problems
 
-Four, in `tests/what_a_workload_is/`.
+Five, in `tests/what_a_workload_is/`. The first four have tests. The last does not, and says why.
 
 **2.1 — Levels and rates.**
 Classify every node in the observability model as a stock, a flow or neither — by reading what it
@@ -272,6 +272,22 @@ spreadsheet cannot see that class of error at all.
 ```bash
 python3 -m pytest tests/what_a_workload_is/test_problem_4_broken.py
 ```
+
+**2.5 — Your own workload, written down.** No test: this is about a system you run, and there is
+no oracle for it.
+
+Take something you operate and write down the quantities that describe what it has to do. Not the
+metrics you happen to collect — the quantities somebody would need in order to size it. Give each
+one a unit, and then sort them: which are rates, which are levels, which are neither.
+
+Two things to look for when you have finished. Is there a quantity you could not give a unit to?
+That is usually two quantities that have been sharing a name, and splitting them is the work.
+And is there anywhere you have sized a store from a rate — a retention volume derived from a
+per-second figure with no duration anywhere in the chain? That is the error this chapter exists
+to prevent, and it is much easier to find in your own notes than to believe in the abstract.
+
+A good answer fits on one page, has a unit against every line, and leaves you less sure about at
+least one quantity than you were before you wrote it down.
 
 ## Where to go next
 

@@ -95,10 +95,9 @@ version is "the last three years, extrapolated, with a distribution wide enough 
 next three might not resemble them" — and the width of that distribution is a judgement nobody can
 check.
 
-So this book gives growth a lognormal: growth compounds, and the multiplier it compounds
-cannot be zero or less. Its
-percentiles are stated as a sentence somebody could disagree with: *surprised below this,
-surprised above that*. That is the most honest form available, and it is not a measurement — the
+So this book gives growth a lognormal: growth compounds, and the multiplier it compounds cannot
+be zero or less. Its percentiles are stated as a sentence somebody could disagree with:
+*surprised below this, surprised above that*. That is the most honest form available, and it is not a measurement — the
 model does not pretend otherwise.
 
 ### Three ways a demand curve is described badly
@@ -136,7 +135,7 @@ shape, and the busy hour moves.
 
 ## Problems
 
-Two, in `tests/peak_mean_and_growth/`.
+Three, in `tests/peak_mean_and_growth/`. The first two have tests. The third does not, and says why.
 
 **4.1 — The busy hour.**
 Given a day's shape as relative weights and a daily total, return the rate during the busiest
@@ -154,6 +153,25 @@ most.
 ```bash
 python3 -m pytest tests/peak_mean_and_growth/test_problem_2_growth_gap.py
 ```
+
+**4.3 — What is your growth rate a claim about?** No test. This chapter has already said that
+nobody can check the width of a growth distribution, and writing a test for it would contradict
+that on the same page.
+
+Find the growth rate somebody is currently using to plan the system you work on. Then answer
+three questions about it. What is it extrapolating — users, requests, retained data, or revenue
+that somebody has converted into one of those? Over what period was it measured, and is that
+period long enough to contain the thing that would break it? And what would have to happen for it
+to be wrong by half in either direction?
+
+Now write the two percentiles as a sentence: *I would be surprised if it came in under this, and
+surprised if it came in over that.* Say it out loud to whoever owns the plan. The sentence is the
+deliverable, not the number — a range you are willing to be quoted on is worth more than a point
+estimate nobody will defend.
+
+A good answer names the mechanism, not just the trend, and its band is wide enough to be
+uncomfortable. If the band is narrow and comfortable, you have described the last three years
+rather than the next three.
 
 ## Where to go next
 
