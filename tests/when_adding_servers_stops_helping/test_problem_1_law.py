@@ -1,4 +1,4 @@
-"""Problem 6.1 - graded against the sweep the book publishes."""
+"""Problem 7.1 - graded against the sweep the book publishes."""
 
 from __future__ import annotations
 

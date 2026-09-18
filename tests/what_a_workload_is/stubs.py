@@ -1,4 +1,4 @@
-"""Chapter 1's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 2's problems. Edit this file; the tests beside it say whether you are right.
 
 The first two are about telling three kinds of quantity apart, which sounds like pedantry until
 the first time somebody sizes a retention store from a rate. The other two are about the file
@@ -11,7 +11,7 @@ from sizing.dsl import Model
 
 
 def stocks_and_flows(model: Model) -> dict[str, str]:
-    """Problem 1.1 - which quantities are levels, and which are rates?
+    """Problem 2.1 - which quantities are levels, and which are rates?
 
     Return a dictionary mapping **every node name** in ``model`` to one of three strings:
 
@@ -33,11 +33,11 @@ def stocks_and_flows(model: Model) -> dict[str, str]:
     commonest sizing errors in this book's experience are multiplying a flow by nothing and
     calling it a stock, and sizing a store from a peak rate that only holds for an hour.
     """
-    raise NotImplementedError("problem 1.1")
+    raise NotImplementedError("problem 2.1")
 
 
 def daily_volume(model: Model) -> Model:
-    """Problem 1.2 - turn a rate into a volume, and make the build agree.
+    """Problem 2.2 - turn a rate into a volume, and make the build agree.
 
     The observability model knows how many bytes a second arrive. Nobody reasons in bytes a
     second; people reason in "how much a day", because that is what a retention conversation is
@@ -55,11 +55,11 @@ def daily_volume(model: Model) -> Model:
     The test checks the unit typechecks, and that the answer is the ingest rate multiplied by a
     day - derived from the model's own numbers at test time, so there is nothing to look up.
     """
-    raise NotImplementedError("problem 1.2")
+    raise NotImplementedError("problem 2.2")
 
 
 def smallest_model_that_builds() -> str:
-    """Problem 1.3 - the smallest model this repository will accept.
+    """Problem 2.3 - the smallest model this repository will accept.
 
     Return the *text* of a model file, as YAML, that:
 
@@ -76,11 +76,11 @@ def smallest_model_that_builds() -> str:
     Return the YAML as a string. The test writes it to a file and loads it exactly as the build
     would.
     """
-    raise NotImplementedError("problem 1.3")
+    raise NotImplementedError("problem 2.3")
 
 
 def a_model_that_does_not_typecheck() -> str:
-    """Problem 1.4 - break it on purpose, in a way that still loads.
+    """Problem 2.4 - break it on purpose, in a way that still loads.
 
     Return the text of another model file: structurally valid, loadable, and **wrong about
     units**. A node must declare a unit that its own formula cannot produce.
@@ -93,4 +93,4 @@ def a_model_that_does_not_typecheck() -> str:
     The test asserts the model loads, that ``check_units`` reports at least one problem, and that
     the message names the node. Make the error one you could imagine somebody making.
     """
-    raise NotImplementedError("problem 1.4")
+    raise NotImplementedError("problem 2.4")

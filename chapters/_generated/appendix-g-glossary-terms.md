@@ -2,22 +2,22 @@
 
 | Term | Introduced in | What it means here | Said plainly |
 |---|---|---|---|
-| **distribution** | [ch12](#monte-carlo) | the bag of values an uncertain quantity could take | a range of plausible values |
-| **sample** | [ch12](#monte-carlo) | one value drawn from that bag | one guess |
-| **percentile** | [ch12](#monte-carlo) | the value a given fraction of the bag is below | the value nine tenths are under |
-| **interval** | [ch12](#monte-carlo) | the gap between two percentiles | how wide the answer is |
-| **correlation** | [ch13](#correlation-and-convergence) | the tendency of two inputs to move together | they move together |
-| **convergence** | [ch13](#correlation-and-convergence) | the answer ceasing to move between runs | it has settled |
-| **provenance** | [ch02](#where-the-numbers-come-from) | how much somebody is claiming when they write a number down | where it came from |
-| **measured constant** | [ch02](#where-the-numbers-come-from) | an empirical number belonging to one implementation at one version | a number somebody measured |
-| **ceiling** | [ch07](#regime-changes) | a limit past which a chain of multiplications stops describing anything | where it breaks |
-| **headroom** | [ch10](#headroom-and-failure-domains) | the margin a design keeps below a ceiling, and the reason for it | the slack you keep |
-| **binding constraint** | [ch09](#bandwidth-and-the-binding-constraint) | the chain that decides the answer, out of several that could | whichever runs out first |
-| **utilisation** | [ch05](#queueing-and-the-knee) | the fraction of a system that is busy | how busy it is |
-| **unit economics** | [ch16](#unit-economics) | a cost divided by a denominator you can defend | cost per something |
-| **structural error** | [ch19](#the-missing-node) | a model that is wrong in shape rather than in its numbers | something is missing |
-| **measurement uncertainty** | [ch02](#where-the-numbers-come-from) | the standard error beside a number somebody measured | how much the measuring wobbled |
-| **parameter uncertainty** | [ch12](#monte-carlo) | not knowing a value in a model whose shape is right | we do not know the number |
-| **scenario uncertainty** | [ch11](#the-sizing-model) | the world taking a path the model was not run for, which no interval covers | it might go differently |
+| **distribution** | [ch13](#monte-carlo) | the bag of values an uncertain quantity could take | a range of plausible values |
+| **sample** | [ch13](#monte-carlo) | one value drawn from that bag | one guess |
+| **percentile** | [ch13](#monte-carlo) | the value a given fraction of the bag is below | the value nine tenths are under |
+| **interval** | [ch13](#monte-carlo) | the gap between two percentiles | how wide the answer is |
+| **correlation** | [ch14](#correlation-and-convergence) | the tendency of two inputs to move together | they move together |
+| **convergence** | [ch14](#correlation-and-convergence) | the answer ceasing to move between runs | it has settled |
+| **provenance** | [ch03](#where-the-numbers-come-from) | how much somebody is claiming when they write a number down | where it came from |
+| **measured constant** | [ch03](#where-the-numbers-come-from) | an empirical number belonging to one implementation at one version | a number somebody measured |
+| **ceiling** | [ch08](#regime-changes) | a limit past which a chain of multiplications stops describing anything | where it breaks |
+| **headroom** | [ch11](#headroom-and-failure-domains) | the margin a design keeps below a ceiling, and the reason for it | the slack you keep |
+| **binding constraint** | [ch10](#bandwidth-and-the-binding-constraint) | the chain that decides the answer, out of several that could | whichever runs out first |
+| **utilisation** | [ch06](#queueing-and-the-knee) | the fraction of a system that is busy | how busy it is |
+| **unit economics** | [ch17](#unit-economics) | a cost divided by a denominator you can defend | cost per something |
+| **structural error** | [ch20](#the-missing-node) | a model that is wrong in shape rather than in its numbers | something is missing |
+| **measurement uncertainty** | [ch03](#where-the-numbers-come-from) | the standard error beside a number somebody measured | how much the measuring wobbled |
+| **parameter uncertainty** | [ch13](#monte-carlo) | not knowing a value in a model whose shape is right | we do not know the number |
+| **scenario uncertainty** | [ch12](#the-sizing-model) | the world taking a path the model was not run for, which no interval covers | it might go differently |
 
 *Source — `bench/outline.py` and `bench/tables.py`*

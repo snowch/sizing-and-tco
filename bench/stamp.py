@@ -238,7 +238,7 @@ def require_rig() -> dict:
         raise WrongMachineError(
             f"Refusing to measure: this is not the reference machine. {expected}; this machine is "
             f"{_cpu_model()!r}. A throughput taken on the wrong computer is indistinguishable from "
-            "a real one once it is a number in a table, which is why this check exists (ch02)."
+            "a real one once it is a number in a table, which is why this check exists (ch03)."
         )
     return declared or {}
 

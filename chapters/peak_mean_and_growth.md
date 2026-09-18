@@ -1,17 +1,17 @@
 ---
 title: "Peak, mean and growth"
-short_title: "ch03 Peak, mean and growth"
+short_title: "ch04 Peak, mean and growth"
 ---
 
 (peak-mean-and-growth)=
-# ch03 · Peak, mean and growth
+# ch04 · Peak, mean and growth
 
 ## The question
 
 Which number in a demand curve sizes you, and what is a five-year growth rate actually a claim
 about?
 
-[ch01](#what-a-workload-is) established that a workload is a set of quantities. Each of those
+[ch02](#what-a-workload-is) established that a workload is a set of quantities. Each of those
 quantities is a *distribution over time* that somebody has collapsed into one number. This chapter
 is about which collapse is the right one.
 
@@ -29,7 +29,7 @@ Which of those you should use depends on your traffic and your tolerance, and so
 decide it.
 
 The arithmetic is trivial — the busiest hour's share of the day, times the day's total — and
-problem 3.1 is that arithmetic. The peak-to-mean ratio behind it is not trivial. It is a measured
+problem 4.1 is that arithmetic. The peak-to-mean ratio behind it is not trivial. It is a measured
 quantity, it varies by workload, and quoting somebody else's is how a system gets sized for a
 shape it does not have.
 
@@ -79,7 +79,7 @@ They are not the same number, and the second is always larger — for any spread
 compounding is convex. The gap widens with the spread of the growth rates and with the horizon, so
 it is largest exactly when somebody reaches for a five-year plan.
 
-Problem 3.2 is that comparison. Write down which way you think it goes before you run it.
+Problem 4.2 is that comparison. Write down which way you think it goes before you run it.
 
 The practical consequence: a capacity plan built by compounding a single "expected" growth rate
 understates the expected capacity. Not the p95 capacity — the *expected* one. The plan is
@@ -87,7 +87,7 @@ optimistic before any of its other assumptions have been questioned.
 
 ### What a growth rate is a claim about
 
-Nothing in [ch02](#where-the-numbers-come-from) helps here.
+Nothing in [ch03](#where-the-numbers-come-from) helps here.
 
 A compression ratio can be measured. A price can be quoted. A growth rate is a claim about the
 future, and no amount of provenance discipline turns one into a measurement. The best available
@@ -119,7 +119,7 @@ model.
 ## What this cannot tell you
 
 **What your peak-to-mean ratio is.** Nothing in this repository can measure it — it is a property
-of your traffic, and it belongs to the `estate` target ([ch02](#where-the-numbers-come-from)).
+of your traffic, and it belongs to the `estate` target ([ch03](#where-the-numbers-come-from)).
 Everything above tells you what to do with one once you have it.
 
 **Whether growth will continue.** The model extrapolates. Extrapolation is the assumption that the
@@ -138,7 +138,7 @@ shape, and the busy hour moves.
 
 Two, in `tests/peak_mean_and_growth/`.
 
-**3.1 — The busy hour.**
+**4.1 — The busy hour.**
 Given a day's shape as relative weights and a daily total, return the rate during the busiest
 hour. The weights do not sum to anything in particular, which is most of the problem.
 
@@ -146,7 +146,7 @@ hour. The weights do not sum to anything in particular, which is most of the pro
 python3 -m pytest tests/peak_mean_and_growth/test_problem_1_busy_hour.py
 ```
 
-**3.2 — Compound the average, or average the compounds?**
+**4.2 — Compound the average, or average the compounds?**
 Compute both, and find out which is larger and by how much. Predict the direction before you run
 it. The gap widens with the spread and with the horizon, so it is worst when the plan matters
 most.
@@ -157,8 +157,8 @@ python3 -m pytest tests/peak_mean_and_growth/test_problem_2_growth_gap.py
 
 ## Where to go next
 
-[ch04](#littles-law) begins Part II, and changes the subject from how much demand there is to what
+[ch05](#littles-law) begins Part II, and changes the subject from how much demand there is to what
 happens to a system when it arrives.
 
-[ch12](#monte-carlo) is where the distribution in this chapter's second figure comes from, and
-[ch18](#which-input-is-the-answer) is what to do about growth sitting at the top of the tornado.
+[ch13](#monte-carlo) is where the distribution in this chapter's second figure comes from, and
+[ch19](#which-input-is-the-answer) is what to do about growth sitting at the top of the tornado.

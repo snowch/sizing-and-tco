@@ -10,10 +10,23 @@ ownership, organised around one question: **how big, how much, and how wrong cou
 Read **PLAN.md** first: outline, settled decisions, conventions. Read **AUTHORING_GUIDE.md**
 before writing or editing a page. **NEXT_STEPS.md** is the working list of what is left.
 
+## Where these rules came from
+
+This repository was bootstrapped from `snowch/computer-systems`, a book about operating systems.
+Four of the five invariants came with it — no code pasted into prose, no numbers typed into
+prose, no invented figures, problems are tests — along with the chapter shape and most of
+AUTHORING_GUIDE.md. They transfer, because both books are about not being believed without
+evidence. Invariant 5 is the one that did not, and it says why in its own entry.
+
+Invariant 4, the distinction below, and the `model` target were written for this book.
+
+So the rules predate the chapters: they were set at scaffold time rather than learned by writing.
+When a rule and the material fight, the rule is the more likely to be wrong.
+
 ## The distinction the book is built on
 
-Everything follows from this, so do not work around it. The front matter states it;
-`scripts/verify-models.py` enforces it.
+Everything follows from this, so do not work around it. ch01 teaches it, the introduction points
+at ch01, and `scripts/verify-models.py` enforces it.
 
 - **A cost model** has a deterministic structure with uncertain parameters. Accounting identities
   and physics. Sampling the inputs is sufficient.
@@ -84,11 +97,20 @@ make machine   # what this computer is, and whether it may take a rig measuremen
 4. **Every input says where it came from.** A provenance kind (`fact` / `vendor_claim` /
    `assumption`) and a non-empty source. A `fact` must cite something. A `vendor_claim` is
    coloured differently in every figure and is never silently promoted.
-5. **Problems are tests.** Each is a stub under `tests/<chapter-slug>/` with a test that passes
-   only when solved, marked `problem` so CI deselects it, with **unmarked scaffolding tests beside
-   it** that CI does run and that assert the problem is answerable. Never write the answer
-   anywhere in the repository. The expected values are derived at test time from an oracle, never
-   stored.
+5. **Problems are tests where a test is possible.** Most are: a stub under
+   `tests/<chapter-slug>/` with a test that passes only when solved, marked `problem` so CI
+   deselects it, with **unmarked scaffolding tests beside it** that CI does run and that assert
+   the problem is answerable. Never write the answer anywhere in the repository. The expected
+   values are derived at test time from an oracle, never stored.
+
+   **A problem about the reader's own system has no oracle, and is still a problem.** This rule
+   arrived from a book whose exercises were code, where a passing test or a booting kernel is the
+   oracle. Here the reader's output is judgement — how much headroom to keep, which input to go
+   and measure, whether what they have is a cost model or a sizing one — and demanding an oracle
+   for that left the book with fifty-two problems of which fifty-one were arithmetic on its own
+   models. A problem of the second kind carries no test. It says what a good answer contains and
+   what would falsify it, and sits in the same `## Problems` section, numbered the same way. The
+   book is not doing its job if a chapter has none.
 
 ## 4. Originality — non-negotiable
 
@@ -128,8 +150,10 @@ marketing tone, no filler, no "in this chapter we will". Figures are drawn by co
 mechanism.
 
 **Length follows the material.** There is no page target. A chapter is as long as what it has to
-convey and no longer. The test is per section: every section earns its place or comes out, and a
-short chapter still owes the reader *What this cannot tell you*.
+convey and no longer. The five headings in `bench.outline.CHAPTER_SHAPE` are the book's shape and
+stay whatever the length — the repetition is what makes twenty-one chapters read as one book. The
+test is per *sub*section inside them: every one earns its place or comes out, and a short chapter
+still owes the reader *What this cannot tell you*.
 
 **Statistics vocabulary is rationed.** Distribution, sample, percentile, interval, correlation,
 convergence — and that is the list. Each arrives because a model has just raised a question that
@@ -193,7 +217,11 @@ until it is; that marker is what everything below keys off.
 **A chapter's number is never an identifier.** Identity is the slug: `(#monte-carlo)`,
 `chapters/monte_carlo.md`, `tests/monte_carlo/`. The number survives only where a reader sees it,
 and is derived from `bench/outline.py`. `tests/test_book.py` fails an identifier containing a
-digit. Inserting a chapter is an edit to `bench/outline.py` and `myst.yml`, and nothing else moves.
+digit. Inserting a chapter is an edit to `bench/outline.py` and `myst.yml`. The pages are right
+immediately: the renderer derives every `chNN` in the prose from the outline rather than trusting
+the text it was given, so no reference can go stale in a paragraph nobody rereads. The markdown
+still says the old number, because a renderer cannot edit source — run
+`python3 scripts/relabel-references.py` to catch it up, and `tests/test_book.py` fails until you do.
 
 Do not write the list of what is written into this file. Ask the repository:
 

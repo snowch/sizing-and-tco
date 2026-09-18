@@ -1,6 +1,6 @@
 """A model is a text file, and this is what one is allowed to say.
 
-The argument for this whole package is in ch01, and it is short: a spreadsheet cannot tell you
+The argument for this whole package is in ch02, and it is short: a spreadsheet cannot tell you
 where a number came from. A cell holds a value. It does not hold the fact that the value was
 measured last March against version 2.4 of something, or that it is a vendor's claim nobody has
 checked, or that it was invented in a meeting. Those facts live in the head of whoever built the
@@ -152,7 +152,7 @@ class Measured(Node):
     def stack(self) -> str | None:
         """What was measured — the implementation and version this constant belongs to.
 
-        The reason a measured constant is not a fact about the world. ch02: change the encoder,
+        The reason a measured constant is not a fact about the world. ch03: change the encoder,
         change the version, change the shape of your data, and this number is about something
         else.
         """

@@ -1,6 +1,6 @@
 """What the browser calls. The real toolkit, in front of a reader who has just been shown a file.
 
-ch01 ends by telling a reader they have a file that runs, and that a rate multiplied by a number
+ch02 ends by telling a reader they have a file that runs, and that a rate multiplied by a number
 is refused rather than accepted. Until now both were claims: running the file needed a checkout,
 a pip install and three make targets, in a chapter whose whole argument is not to take a number
 on trust.

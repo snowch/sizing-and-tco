@@ -1,15 +1,15 @@
 {
-  "code_fingerprint": "6cbda2394eb7cdd1",
+  "code_fingerprint": "c2e7a64094537c85",
   "code_sources": [
     "bench/run_information.py"
   ],
   "conditions": {
-    "removals_do_not_add": "the sum of the individual removals is not one. Uncertainty in a chain of multiplications is not a quantity that divides between the inputs, and a figure read that way is read wrongly (ch18)",
+    "removals_do_not_add": "the sum of the individual removals is not one. Uncertainty in a chain of multiplications is not a quantity that divides between the inputs, and a figure read that way is read wrongly (ch19)",
     "this_is_an_upper_bound": "each figure is what knowing the input *exactly* would remove. A real measurement leaves a standard error behind and removes less, by an amount nobody can know before doing the work",
-    "what_it_cannot_say": "whether the input can be measured at all. A growth rate has the largest bound in this table and belongs to no target \u2014 the honest response to it is to decide it rather than to commission a measurement (ch03)"
+    "what_it_cannot_say": "whether the input can be measured at all. A growth rate has the largest bound in this table and belongs to no target \u2014 the honest response to it is to decide it rather than to commission a measurement (ch04)"
   },
-  "generated_at": "2026-09-17T14:17:43+00:00",
-  "git_revision": "667b099",
+  "generated_at": "2026-09-18T16:35:06+00:00",
+  "git_revision": "f107d32",
   "kind": "measurement",
   "name": "value-of-information",
   "produced_by": {
@@ -21,7 +21,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",

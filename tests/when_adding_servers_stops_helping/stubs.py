@@ -1,4 +1,4 @@
-"""Chapter 6's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 7's problems. Edit this file; the tests beside it say whether you are right.
 
 Two coefficients, fitted from measurements you could actually take, and one square root that tells
 you where the money stops working.
@@ -12,7 +12,7 @@ import numpy as np
 def throughput(
     nodes: np.ndarray | float, one_node: float, contention: float, crosstalk: float
 ) -> np.ndarray:
-    """Problem 6.1 - the scalability law, written out.
+    """Problem 7.1 - the scalability law, written out.
 
     ``one_node`` is what a single machine achieves alone. ``contention`` is the fraction of the
     work that cannot be done in parallel. ``crosstalk`` is the cost of machines having to agree
@@ -31,11 +31,11 @@ def throughput(
     The test checks it against the sweep the book publishes, so it has to be the model's formula
     and not one that happens to be close near the middle.
     """
-    raise NotImplementedError("problem 6.1")
+    raise NotImplementedError("problem 7.1")
 
 
 def fit(measurements: list[tuple[float, float]]) -> tuple[float, float, float]:
-    """Problem 6.2 - the two coefficients, from measurements somebody could actually take.
+    """Problem 7.2 - the two coefficients, from measurements somebody could actually take.
 
     ``measurements`` is a list of ``(nodes, throughput)`` pairs. You will usually have three: one
     machine, the cluster you have, and the cluster you had before you grew it. That is not much
@@ -49,13 +49,13 @@ def fit(measurements: list[tuple[float, float]]) -> tuple[float, float, float]:
     side. Write the rearrangement down before you code it; it is the part worth understanding.
 
     Then notice what you have done. You have fitted a two-parameter curve, extending to hundreds
-    of machines, from three points clustered at the low end. ch06 says what that is worth.
+    of machines, from three points clustered at the low end. ch07 says what that is worth.
     """
-    raise NotImplementedError("problem 6.2")
+    raise NotImplementedError("problem 7.2")
 
 
 def peak_nodes(contention: float, crosstalk: float) -> float:
-    """Problem 6.3 - where adding machines stops helping.
+    """Problem 7.3 - where adding machines stops helping.
 
     Return the node count at which throughput is greatest, from the two coefficients alone.
 
@@ -67,4 +67,4 @@ def peak_nodes(contention: float, crosstalk: float) -> float:
     Handle zero crosstalk. With no coordination cost the curve never turns over, and the honest
     answer is that there is no peak.
     """
-    raise NotImplementedError("problem 6.3")
+    raise NotImplementedError("problem 7.3")

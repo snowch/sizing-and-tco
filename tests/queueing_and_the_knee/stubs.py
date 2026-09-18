@@ -1,4 +1,4 @@
-"""Chapter 5's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 6's problems. Edit this file; the tests beside it say whether you are right.
 
 The first asks you to write the formula the whole chapter is about. The second asks you to define
 "the knee", which turns out not to have a definition and to need a decision instead.
@@ -10,7 +10,7 @@ import numpy as np
 
 
 def residence_time(service_time: float, utilisation: np.ndarray | float) -> np.ndarray:
-    """Problem 5.1 - the formula, and the division that is the whole subject.
+    """Problem 6.1 - the formula, and the division that is the whole subject.
 
     A request takes ``service_time`` seconds of work. The system is ``utilisation`` busy, as a
     fraction between zero and one. Return how long the request takes in total, including the time
@@ -27,11 +27,11 @@ def residence_time(service_time: float, utilisation: np.ndarray | float) -> np.n
     The test checks it against the curve the book publishes, swept out of the model, so your
     formula has to be the model's formula rather than one that happens to be close.
     """
-    raise NotImplementedError("problem 5.1")
+    raise NotImplementedError("problem 6.1")
 
 
 def knee_at(tolerance: float) -> float:
-    """Problem 5.2 - where is the knee?
+    """Problem 6.2 - where is the knee?
 
     Return the utilisation at which a request takes ``tolerance`` times as long as it would on an
     idle system. For ``tolerance`` of 2.0, the utilisation at which everything takes twice as long.
@@ -43,7 +43,7 @@ def knee_at(tolerance: float) -> float:
     Then read what comes out for a few tolerances, and notice that **there is no knee**. The curve
     has no special point - it is smooth everywhere, and the place people point at when they say
     "the knee" is simply the place where the slope first exceeded what they were willing to put up
-    with. That is a decision about tolerance, not a discovery about queues, and ch10 is about
+    with. That is a decision about tolerance, not a discovery about queues, and ch11 is about
     making it deliberately.
     """
-    raise NotImplementedError("problem 5.2")
+    raise NotImplementedError("problem 6.2")

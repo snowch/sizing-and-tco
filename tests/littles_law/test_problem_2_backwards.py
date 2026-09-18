@@ -1,4 +1,4 @@
-"""Problem 4.2 - the law used the way it is actually used.
+"""Problem 5.2 - the law used the way it is actually used.
 
 The oracle is the same model, run forwards: take its arrival rate and its concurrency, hand them
 to the reader's function, and check the residence time that comes back is the one the model

@@ -14,6 +14,20 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+#: The headings every written chapter carries, in order.
+#:
+#: One place, because it was three and they disagreed: PLAN.md said six parts, the chapter
+#: command said seven, and the generator made five. The count came from the book this repository
+#: was bootstrapped from, and nobody reconciled it. ``tests/test_book.py`` holds every written
+#: chapter to this, so the next disagreement fails a build instead of sitting in a guide.
+CHAPTER_SHAPE = (
+    "The question",
+    "The material",
+    "What this cannot tell you",
+    "Problems",
+    "Where to go next",
+)
+
 #: What a chapter means when it says where its figures came from.
 SOURCE_MEANING = {
     "corpus": "a deterministic measurement over a declared corpus with a named codec",
@@ -58,7 +72,7 @@ class Chapter:
 
     @property
     def label(self) -> str:
-        """``ch12`` — how prose refers to a chapter. Derived from position, never an identifier."""
+        """``ch13`` — how prose refers to a chapter. Derived from position, never an identifier."""
         return f"ch{self.number:02d}"
 
     @property
@@ -162,6 +176,17 @@ PARTS = tuple(part.title for part in PART_PAGES)
 CHAPTERS: tuple[Chapter, ...] = (
     Chapter(
         1,
+        "what_one_number_hides",
+        "What one number hides",
+        PARTS[0],
+        "What is a single number worth, and what can it not tell you even when the arithmetic "
+        "is right?",
+        owes="The storage model's point estimates beside their intervals, and the spread of the "
+        "five-year total.",
+        consumes=("storage_cluster-reference",),
+    ),
+    Chapter(
+        2,
         "what_a_workload_is",
         "What a workload is",
         PARTS[0],
@@ -169,7 +194,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         owes="The workload table for both reference models, derived from their input nodes.",
     ),
     Chapter(
-        2,
+        3,
         "where_the_numbers_come_from",
         "Where the numbers come from",
         PARTS[0],
@@ -186,7 +211,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("what_a_workload_is",),
     ),
     Chapter(
-        3,
+        4,
         "peak_mean_and_growth",
         "Peak, mean and growth",
         PARTS[0],
@@ -195,7 +220,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         owes="The growth sensitivity of the storage model, as a swing across the declared range.",
     ),
     Chapter(
-        4,
+        5,
         "littles_law",
         "Little's law",
         PARTS[1],
@@ -204,7 +229,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         owes="A worked derivation against the observability ingest chain.",
     ),
     Chapter(
-        5,
+        6,
         "queueing_and_the_knee",
         "Queueing, and the knee",
         PARTS[1],
@@ -214,7 +239,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "asserted.",
     ),
     Chapter(
-        6,
+        7,
         "when_adding_servers_stops_helping",
         "When adding servers stops helping",
         PARTS[1],
@@ -224,7 +249,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "tier.",
     ),
     Chapter(
-        7,
+        8,
         "regime_changes",
         "Regime changes",
         PARTS[1],
@@ -233,7 +258,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("observability-reference",),
     ),
     Chapter(
-        8,
+        9,
         "capacity",
         "Capacity",
         PARTS[2],
@@ -242,7 +267,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("storage_cluster-reference",),
     ),
     Chapter(
-        9,
+        10,
         "bandwidth_and_the_binding_constraint",
         "Bandwidth, and the binding constraint",
         PARTS[2],
@@ -252,7 +277,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("storage_cluster-reference",),
     ),
     Chapter(
-        10,
+        11,
         "headroom_and_failure_domains",
         "Headroom and failure domains",
         PARTS[2],
@@ -261,7 +286,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("storage_cluster-reference", "observability-reference"),
     ),
     Chapter(
-        11,
+        12,
         "the_sizing_model",
         "The sizing model",
         PARTS[2],
@@ -271,7 +296,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("capacity", "bandwidth_and_the_binding_constraint", "headroom_and_failure_domains"),
     ),
     Chapter(
-        12,
+        13,
         "monte_carlo",
         "Monte Carlo",
         PARTS[3],
@@ -280,7 +305,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("the_sizing_model",),
     ),
     Chapter(
-        13,
+        14,
         "correlation_and_convergence",
         "Correlation and convergence",
         PARTS[3],
@@ -290,7 +315,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("monte_carlo",),
     ),
     Chapter(
-        14,
+        15,
         "capex_opex_and_lifecycle",
         "Capex, opex and where the total stops",
         PARTS[4],
@@ -300,7 +325,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("storage_cluster-reference",),
     ),
     Chapter(
-        15,
+        16,
         "power_first",
         "Power first",
         PARTS[4],
@@ -308,7 +333,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         owes="The storage model resized from a power budget inwards.",
     ),
     Chapter(
-        16,
+        17,
         "unit_economics",
         "Unit economics",
         PARTS[4],
@@ -317,7 +342,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("storage_cluster-reference",),
     ),
     Chapter(
-        17,
+        18,
         "the_five_year_model",
         "The five-year model",
         PARTS[4],
@@ -326,7 +351,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         consumes=("storage_cluster-reference", "observability-reference"),
     ),
     Chapter(
-        18,
+        19,
         "which_input_is_the_answer",
         "Which input to go and measure",
         PARTS[5],
@@ -337,7 +362,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("monte_carlo",),
     ),
     Chapter(
-        19,
+        20,
         "the_missing_node",
         "The missing node",
         PARTS[5],
@@ -347,7 +372,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("correlation_and_convergence",),
     ),
     Chapter(
-        20,
+        21,
         "a_tco_for_finance",
         "A TCO for a finance audience",
         PARTS[6],
@@ -357,7 +382,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         needs=("the_five_year_model", "which_input_is_the_answer"),
     ),
     Chapter(
-        21,
+        22,
         "what_the_model_got_wrong",
         "What the model got wrong",
         PARTS[7],

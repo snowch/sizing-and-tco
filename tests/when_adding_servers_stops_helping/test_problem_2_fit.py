@@ -1,4 +1,4 @@
-"""Problems 7.2 and 7.3 - fitting the coefficients, and finding the peak they imply.
+"""Problem 8.2 and 7.3 - fitting the coefficients, and finding the peak they imply.
 
 Graded by round trip: the test generates measurements from known coefficients, hands them over,
 and checks what comes back reproduces them. Nothing is stored and the coefficients change between

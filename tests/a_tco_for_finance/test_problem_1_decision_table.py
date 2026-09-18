@@ -1,4 +1,4 @@
-"""Problem 20.1 - graded against the stamped results the table is supposed to come from."""
+"""Problem 21.1 - graded against the stamped results the table is supposed to come from."""
 
 from __future__ import annotations
 

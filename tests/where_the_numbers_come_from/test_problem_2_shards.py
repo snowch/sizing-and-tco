@@ -1,4 +1,4 @@
-"""Problem 2.2 - what it would cost to be more sure.
+"""Problem 3.2 - what it would cost to be more sure.
 
 Graded against the square-root law, computed at test time from the arguments.
 """

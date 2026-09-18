@@ -1,10 +1,10 @@
 ---
 title: "What the model got wrong"
-short_title: "ch21 What the model got wrong"
+short_title: "ch22 What the model got wrong"
 ---
 
 (what-the-model-got-wrong)=
-# ch21 · What the model got wrong
+# ch22 · What the model got wrong
 
 ## The question
 
@@ -17,7 +17,7 @@ the only chapter in the book where the model is the defendant.
 No system was watched and no invoice was read. What follows is the model's *own* futures, filtered
 to the ones in which the design failed — which is what makes it reproducible, and is also exactly
 what bounds what it can say. A real post-mortem compares a prediction against something that
-happened, which is the `estate` target ([ch02](#where-the-numbers-come-from)) and belongs to
+happened, which is the `estate` target ([ch03](#where-the-numbers-come-from)) and belongs to
 whoever runs the system.
 :::
 
@@ -25,7 +25,7 @@ whoever runs the system.
 
 ### The model said this would happen
 
-Start with the uncomfortable half. The cluster [ch11](#the-sizing-model) bought was the one the
+Start with the uncomfortable half. The cluster [ch12](#the-sizing-model) bought was the one the
 point estimates recommended, and the same model reported this about it:
 
 ```{include} _generated/what-the-model-got-wrong-ceilings.md
@@ -37,7 +37,7 @@ plausible. Nobody was misled, nothing was hidden, and the figure was on a page.
 That is the first finding of most post-mortems worth doing: **the failure was forecast, in
 writing, by the people it later surprised.** What went wrong was not the model. It was that a
 percentage in a table is not an event, and a number nobody has to sign for is a number nobody
-reads out loud — which is the whole of [ch20](#a-tco-for-finance) arriving too late to help.
+reads out loud — which is the whole of [ch21](#a-tco-for-finance) arriving too late to help.
 
 ### Where the failures actually were
 
@@ -52,8 +52,8 @@ Read the *Shift* column. One input is somewhere else in the failures than it is 
 other two are exactly where they always are. Compression did not cause this. The overhead
 multiplier did not cause this. The growth rate did.
 
-Which is the same answer [ch03](#peak-mean-and-growth)'s tornado gave, and the same answer
-[ch18](#which-input-is-the-answer)'s value-of-information table gave. Three different questions —
+Which is the same answer [ch04](#peak-mean-and-growth)'s tornado gave, and the same answer
+[ch19](#which-input-is-the-answer)'s value-of-information table gave. Three different questions —
 *what moves the answer*, *what is worth measuring*, *what broke it* — and one input. When those
 three agree, the model is at least coherent about its own weakest point.
 
@@ -72,7 +72,7 @@ makes a poor slide:
 > The design did not fail because something remarkable happened. It failed because something
 > unremarkable happened and there was no margin for unremarkable.
 
-Which is an argument about [ch10](#headroom-and-failure-domains) rather than about the world, and
+Which is an argument about [ch11](#headroom-and-failure-domains) rather than about the world, and
 it is the kind of conclusion that only exists if somebody looked. The story that gets told instead
 is always about the one dramatic thing, because a dramatic thing can be pointed at.
 
@@ -87,7 +87,7 @@ inputs the model has.
 
 Here is what this technique does when the cause is not in the file. The observability model's
 ingest total excludes traces entirely, because nobody has measured spans per request
-([ch19](#the-missing-node)):
+([ch20](#the-missing-node)):
 
 ```{include} _generated/what-the-model-got-wrong-unmeasured.md
 ```
@@ -108,12 +108,12 @@ and it will not decline to answer.
 
 ### The loop this closes
 
-The book has been going round the same circle since [ch02](#where-the-numbers-come-from), and this
+The book has been going round the same circle since [ch03](#where-the-numbers-come-from), and this
 is the first chapter where it closes:
 
 > **model → measure → predict → build → observe → compare → update**
 
-Parts I to V do the first four. [ch18](#which-input-is-the-answer) is about doing the second one
+Parts I to V do the first four. [ch19](#which-input-is-the-answer) is about doing the second one
 better, and about knowing whether it is worth it. This chapter is *compare*. The step after it,
 *update*, is the only one that makes the next model better than this one.
 
@@ -128,12 +128,12 @@ make the comparison without taking anybody's word for it.
 
 **Whether the cause was in the model at all.** The whole chapter is conditioning on the model's
 own samples, so every answer it can give is drawn from the list of things somebody already
-declared. [ch19](#the-missing-node) is the failure mode and this chapter demonstrates it rather
+declared. [ch20](#the-missing-node) is the failure mode and this chapter demonstrates it rather
 than escaping it.
 
 **A cause from a correlate.** Two inputs that move together are equally implicated by this method,
 and the model's declared correlations guarantee there are such pairs
-([ch13](#correlation-and-convergence)). Attribution finds what is *associated* with failure. What
+([ch14](#correlation-and-convergence)). Attribution finds what is *associated* with failure. What
 caused it is a claim about mechanism, and the mechanism is the part of the model nobody sampled.
 
 **Anything about a failure with no ceiling.** The filter is a ceiling being breached. A design
@@ -153,7 +153,7 @@ observe the system afterwards — neither of which a book can do for you.
 Two, in `tests/what_the_model_got_wrong/` — the chapter's two halves. The second is worth
 predicting before you run it.
 
-**21.1 — Attribute the failure.**
+**22.1 — Attribute the failure.**
 Given the draws and which of them failed, rank the inputs by how far each one had to be from its
 ordinary self. Use a median, and order by the size of the shift rather than its sign — an input
 that is unusually *low* in the failures is just as much of a cause.
@@ -162,7 +162,7 @@ that is unusually *low* in the failures is just as much of a cause.
 python3 -m pytest tests/what_the_model_got_wrong/test_problem_1_attribute.py
 ```
 
-**21.2 — How often is there a culprit?**
+**22.2 — How often is there a culprit?**
 Work out the share of failures in which nothing was beyond its own ninetieth percentile. Write
 your prediction in a comment first. Then do it again with eight inputs that have nothing to do
 with the failure, and watch the same statistic find a villain anyway.
@@ -173,11 +173,11 @@ python3 -m pytest tests/what_the_model_got_wrong/test_problem_2_extreme.py
 
 ## Where to go next
 
-[ch19](#the-missing-node) is the limitation this chapter keeps running into, and it is worth
+[ch20](#the-missing-node) is the limitation this chapter keeps running into, and it is worth
 re-reading now rather than before: the argument lands differently once you have watched an
 attribution name three innocent inputs without hesitating.
 
-[ch02](#where-the-numbers-come-from) is the target a real post-mortem belongs to, and the rules
+[ch03](#where-the-numbers-come-from) is the target a real post-mortem belongs to, and the rules
 that make somebody's observation of their own system worth anything to anybody else.
 
 [Appendix E](#appendix-e-storage-model) is the model this chapter convicted, in full.
@@ -187,7 +187,7 @@ twenty-two chapters behind it. **How big** it answered, in Part III, with a chai
 and a number you could put on a purchase order. **How much** it answered in Part V, over a horizon,
 split between the invoice that gets a meeting and the one that does not. **How wrong could I be**
 it answered in the only way anything can: by sampling what was written down, and then — in
-[ch19](#the-missing-node) and in the second half of this chapter — by showing you the part of the
+[ch20](#the-missing-node) and in the second half of this chapter — by showing you the part of the
 answer that sampling cannot reach. A model can tell you how wrong its inputs might be. Nothing in
 it can tell you that the model is the wrong shape, and a method that claimed otherwise would be
 the most dangerous thing in this book.

@@ -236,7 +236,7 @@ def test_scenario_files_load_from_disk():
 
 
 def test_pinning_every_uncertain_input_leaves_no_interval():
-    """The premise ch18's value-of-information table rests on.
+    """The premise ch19's value-of-information table rests on.
 
     A model whose inputs are all known is arithmetic, and arithmetic has no interval. If this
     ever stops being true, something is generating randomness that is not a declared input, and
@@ -256,7 +256,7 @@ def test_pinning_every_uncertain_input_leaves_no_interval():
 def test_knowing_one_input_never_widens_the_interval():
     """Removing uncertainty cannot add any, and the bound has to be a bound.
 
-    Sampling noise means the two runs are not exactly ordered, so this allows the noise ch13
+    Sampling noise means the two runs are not exactly ordered, so this allows the noise ch14
     measures and nothing beyond it.
     """
     from bench.run_information import without_uncertainty

@@ -1,4 +1,4 @@
-"""Problem 15.2 - a ratio quoted, a fraction paid."""
+"""Problem 16.2 - a ratio quoted, a fraction paid."""
 
 from __future__ import annotations
 

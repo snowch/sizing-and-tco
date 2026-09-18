@@ -10,7 +10,7 @@
 # `introduces` is the whole of it. Every node in model.yaml appears in exactly one stage, and a
 # stage whose nodes refer to something no earlier stage introduced will not load.
 
-# Two inputs are plain numbers until ch03 gives them shapes. A stage before that declares the
+# Two inputs are plain numbers until ch04 gives them shapes. A stage before that declares the
 # value somebody would have chosen, and a provenance that says the distribution is coming — the
 # only edit a stage may make to a node, because any other would let it show something the
 # finished model does not say.
@@ -19,13 +19,13 @@ certain_until:
     stage: uncertainty
     value: 1.3
     source: >-
-      ch01 - one growth rate, chosen rather than measured. ch03 replaces it with a distribution,
+      ch02 - one growth rate, chosen rather than measured. ch04 replaces it with a distribution,
       because a single number cannot say how sure anybody is of it.
   peak_read_throughput:
     stage: uncertainty
     value: 85
     source: >-
-      ch01 - the busy hour, as one number. ch03 replaces it with a distribution, because an
+      ch02 - the busy hour, as one number. ch04 replaces it with a distribution, because an
       engineer who gives you this figure is giving you a range and rounding it.
 
 stages:
@@ -64,8 +64,8 @@ stages:
     chapter: capacity
     title: A measured constant, a ceiling, and a change of kind
     classification: sizing
-    # peak_read_throughput is still only an echo of what ch01 was given: nothing consumes it
-    # until ch09 adds the second chain. A stage reports the workload it was handed.
+    # peak_read_throughput is still only an echo of what ch02 was given: nothing consumes it
+    # until ch10 adds the second chain. A stage reports the workload it was handed.
     outputs: [usable_capacity, peak_read_throughput, nodes_for_capacity, fill_level]
     introduces:
       - object_compression

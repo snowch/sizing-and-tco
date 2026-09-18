@@ -25,7 +25,7 @@ nodes:
     kind: input
     unit: host
     value: 1200
-    provenance: {kind: assumption, source: "stated estate size (ch01)"}
+    provenance: {kind: assumption, source: "stated estate size (ch02)"}
     range: [50, 3000]
 
   request_rate:
@@ -34,7 +34,7 @@ nodes:
     distribution: {triangular: {minimum: 8000.0, likely: 25000.0, maximum: 90000.0}}
     provenance:
       kind: assumption
-      source: "ch02 — the busy hour across the estate, not the daily mean. Triangular: a
+      source: "ch03 — the busy hour across the estate, not the daily mean. Triangular: a
         minimum, a likely and a maximum is the whole of what a dashboard gives you, and the
         maximum is the busiest hour anybody has looked at rather than the busiest one there
         will be"
@@ -46,7 +46,7 @@ nodes:
     distribution: {lognormal: {p10: 1.15, p90: 1.70}}
     provenance:
       kind: assumption
-      source: "ch03 — telemetry grows faster than the traffic it describes, because teams add
+      source: "ch04 — telemetry grows faster than the traffic it describes, because teams add
         instrumentation as well as load. Lognormal like any growth rate — it compounds and
         cannot go negative — and wider than the storage model's for the same reason its
         median is higher"
@@ -109,7 +109,7 @@ nodes:
     distribution: {lognormal: {p10: 1.0, p90: 6.0}}
     provenance:
       kind: assumption
-      source: "ch07 — the cardinality explosion, as a distribution rather than as a warning.
+      source: "ch08 — the cardinality explosion, as a distribution rather than as a warning.
         Lognormal because this one has no ceiling: a label carrying a user id multiplies the
         series count by a number nobody chose, and a triangular would assert a maximum that
         does not exist"
@@ -144,7 +144,7 @@ nodes:
     kind: input
     unit: second
     value: 30
-    provenance: {kind: assumption, source: "a control knob (ch11): doubling it halves the metrics
+    provenance: {kind: assumption, source: "a control knob (ch12): doubling it halves the metrics
       chain and loses resolution that cannot be recovered afterwards"}
     range: [10, 120]
 
@@ -177,7 +177,7 @@ nodes:
     kind: input
     unit: day
     value: 400
-    provenance: {kind: assumption, source: "a control knob (ch11)"}
+    provenance: {kind: assumption, source: "a control knob (ch12)"}
     range: [15, 800]
 
   metrics_stored:
@@ -202,7 +202,7 @@ nodes:
     unit: dimensionless
     value: 1.0
     label: fraction of log lines kept
-    provenance: {kind: assumption, source: "a control knob (ch11): drop and aggregation rules"}
+    provenance: {kind: assumption, source: "a control knob (ch12): drop and aggregation rules"}
     range: [0.05, 1.0]
 
   log_line_rate:
@@ -226,7 +226,7 @@ nodes:
     kind: input
     unit: day
     value: 30
-    provenance: {kind: assumption, source: "a control knob (ch11)"}
+    provenance: {kind: assumption, source: "a control knob (ch12)"}
     range: [3, 365]
 
   logs_stored:
@@ -243,7 +243,7 @@ nodes:
     note: >-
       Not measurable from anything in this repository. It is a property of one instrumented
       application at one version, so it belongs to the `estate` target — an observation somebody
-      takes of a system they run, disclosed rather than verified (ch02). Until somebody takes it,
+      takes of a system they run, disclosed rather than verified (ch03). Until somebody takes it,
       every figure below is absent rather than estimated.
     result: traces-spans-per-request
 
@@ -252,7 +252,7 @@ nodes:
     unit: dimensionless
     value: 0.05
     label: trace sampling rate
-    provenance: {kind: assumption, source: "a control knob (ch11), and the one with the widest
+    provenance: {kind: assumption, source: "a control knob (ch12), and the one with the widest
       range: head sampling at 1% and at 100% are two different platforms"}
     range: [0.001, 1.0]
 
@@ -277,7 +277,7 @@ nodes:
     kind: input
     unit: day
     value: 14
-    provenance: {kind: assumption, source: "a control knob (ch11)"}
+    provenance: {kind: assumption, source: "a control knob (ch12)"}
     range: [1, 90]
 
   traces_stored:
@@ -293,7 +293,7 @@ nodes:
     label: ingest, metrics and logs only
     note: >-
       Metrics plus logs, and deliberately *not* the total. It is a lower bound with a whole chain
-      missing from it, and ch18 is about exactly this shape of error: a number that is correct
+      missing from it, and ch19 is about exactly this shape of error: a number that is correct
       arithmetic over an incomplete structure looks identical to a number that is right.
     formula: metrics_ingest + logs_ingest
 
@@ -326,7 +326,7 @@ nodes:
       The same quantity as the node above, taken rather than quoted. It needs the reference
       machine (`rig`) and nobody has run it, so the ceiling built on it is absent while the
       ceiling built on the vendor's claim is not. Reading those two rows next to each other is
-      most of ch02.
+      most of ch03.
     result: collector-throughput-per-core
 
   quoted_pipeline_capacity:
@@ -347,7 +347,7 @@ nodes:
     limit: 1
     headroom: 0.4
     because: >-
-      A queueing ceiling, not a capacity one (ch05), so the margin is large: a pipeline at 80% of
+      A queueing ceiling, not a capacity one (ch06), so the margin is large: a pipeline at 80% of
       quoted throughput has a queue in front of it, and a queue in front of an ingest pipeline is
       dropped telemetry exactly when something is going wrong. Understated twice over — the
       numerator excludes traces and the denominator is a vendor's claim.
@@ -398,7 +398,7 @@ nodes:
     limit: 1
     headroom: 0.3
     because: >-
-      Capacity, with a rebuild reserve (ch10) — and again a lower bound, because the traces chain
+      Capacity, with a rebuild reserve (ch11) — and again a lower bound, because the traces chain
       is not in the numerator. A verdict of `ok` here means "ok, ignoring traces", which is a
       different claim and one the reader should be made to notice.
 
@@ -432,7 +432,7 @@ nodes:
       different route: a label that multiplies the series a scrape produces also multiplies the
       series a query has to walk past to ignore. That is why one accidental label breaks two
       ceilings at once, and why turning down scrape interval and retention — which fix the first
-      — does nothing at all for the second (ch11).
+      — does nothing at all for the second (ch12).
     formula: series_per_query_base * label_cardinality
 
   query_series_rate:
@@ -479,8 +479,8 @@ nodes:
     provenance:
       kind: assumption
       source: "all-in cost of a usable TB-month on this tier, taken from the storage model's
-        own unit economics (ch16). Lognormal because it is a price — and carried across by
-        hand rather than by sampling, which is the seam ch17 is about"
+        own unit economics (ch17). Lognormal because it is a price — and carried across by
+        hand rather than by sampling, which is the seam ch18 is about"
 
   known_storage_cost:
     kind: derived
@@ -510,7 +510,7 @@ correlations:
     because: >-
       A platform that is growing is a platform that is being changed, and labels arrive with
       changes. Treating the two as independent makes the metrics interval narrower than the
-      estate warrants — ch13 measures by how much.
+      estate warrants — ch14 measures by how much.
 
   - a: request_rate
     b: lines_per_request

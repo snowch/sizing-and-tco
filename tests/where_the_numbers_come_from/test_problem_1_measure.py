@@ -1,4 +1,4 @@
-"""Problem 2.1 - take a constant and stamp it.
+"""Problem 3.1 - take a constant and stamp it.
 
 Graded by the repository's own rules, applied to whatever the reader produced. There is nothing to
 compare against, because the point is not the value - it is whether somebody else could check it.

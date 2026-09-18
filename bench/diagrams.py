@@ -271,7 +271,7 @@ def distribution(result: str, node_name: str) -> str:
 
     The point estimate is drawn as a line through the histogram deliberately. Seeing where the
     single number a plan was built on actually sits in the distribution it came from is the whole
-    of ch12's argument, and it is much harder to argue with than a paragraph.
+    of ch13's argument, and it is much harder to argue with than a paragraph.
     """
     payload = load_result(result)["summary"]
     node = payload["nodes"][node_name]
@@ -418,7 +418,7 @@ def _decade(power: int) -> str:
 
 
 def convergence(result: str) -> str:
-    """The two quantities ch13 is at pains to separate, drawn on one pair of axes.
+    """The two quantities ch14 is at pains to separate, drawn on one pair of axes.
 
     The width of the interval is a property of the model, and more samples do not move it. The
     gap between one run and the next is a property of how hard you looked, and falls at one over

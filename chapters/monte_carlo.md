@@ -1,16 +1,16 @@
 ---
 title: "Monte Carlo"
-short_title: "ch12 Monte Carlo"
+short_title: "ch13 Monte Carlo"
 ---
 
 (monte-carlo)=
-# ch12 · Monte Carlo
+# ch13 · Monte Carlo
 
 ## The question
 
 The sizing model has produced a node count. How sure are we?
 
-[ch11](#the-sizing-model) took a stated workload, multiplied along two chains, took the larger of
+[ch12](#the-sizing-model) took a stated workload, multiplied along two chains, took the larger of
 the two answers, and produced a number. Every step was arithmetic you could check by hand. The
 number is correct. Whether it is *right* is a different question: every input to that chain was
 itself uncertain, and the chain has no way to say so.
@@ -22,7 +22,7 @@ and do arithmetic, and it assumes nothing about statistics.
 
 ### A single number is a bet you did not know you placed
 
-Start with the model as [ch11](#the-sizing-model) left it.
+Start with the model as [ch12](#the-sizing-model) left it.
 
 ```{include} _generated/monte-carlo-outputs.md
 ```
@@ -77,7 +77,7 @@ is the entire sampler, and it is why adding a distribution to this book is three
 than a new dependency.
 
 The technique is called **inverse transform sampling**. Any distribution whose percentile
-function you can write down, you can sample. Problem 12.1 asks you to write one.
+function you can write down, you can sample. Problem 13.1 asks you to write one.
 
 Here is the simplest:
 
@@ -201,7 +201,7 @@ table.
 ```{include} _generated/monte-carlo-ceilings.md
 ```
 
-At the point estimate, every ceiling is fine. That is not surprising — [ch11](#the-sizing-model)
+At the point estimate, every ceiling is fine. That is not surprising — [ch12](#the-sizing-model)
 sized the cluster from the point estimates, so of course it satisfies them. The last two columns
 are the same model asked a different question: across everything this model thinks could happen,
 how often is this limit breached?
@@ -217,7 +217,7 @@ cluster bought:
 ```
 
 What the extra capital buys is the difference between two percentages. Whether it is worth it is
-not a modelling question, and [ch20](#a-tco-for-finance) is about how to put it to the person
+not a modelling question, and [ch21](#a-tco-for-finance) is about how to put it to the person
 whose decision it is.
 
 ### The seed
@@ -237,7 +237,7 @@ and asks what the inputs are worth. If a cost line is missing, if a ceiling was 
 declared, if two quantities were multiplied that should have been added — sampling will
 propagate the error beautifully and report a confident interval around the wrong answer.
 That is *structural error*: invisible to every technique in this chapter, and the subject
-of [ch19 · The missing node](#the-missing-node).
+of [ch20 · The missing node](#the-missing-node).
 
 **Whether the shapes were chosen honestly.** A triangular with generous bounds and a lognormal
 with tight ones will give different intervals for the same input, and nothing here can tell you
@@ -250,10 +250,10 @@ drives and chassis, quoted by the same supply chain; growth and read load, the s
 twice — and the evaluator applies the pairing after the draw. So every figure on this page
 already carries it, and this chapter has not said so until now. Drawing those pairs independently
 would make every interval here *narrower*, which is the direction that gets a plan approved.
-[ch13](#correlation-and-convergence) names the pairs, and measures what they were worth.
+[ch14](#correlation-and-convergence) names the pairs, and measures what they were worth.
 
 **Whether a hundred thousand samples was enough.** This chapter assumed it and did not establish
-it. [ch13](#correlation-and-convergence) has the argument, and the way to work it out for a model
+it. [ch14](#correlation-and-convergence) has the argument, and the way to work it out for a model
 of your own.
 
 **How likely any of this actually is.** The interval is a statement about the model's declared
@@ -266,7 +266,7 @@ deal more than a single number, and a great deal less than knowledge.
 Four. The first three are in `tests/monte_carlo/` and are graded against definitions the tests
 compute for themselves. The fourth has no test and no known answer.
 
-**12.1 — Add a distribution.**
+**13.1 — Add a distribution.**
 Implement the percentile function for a distribution this book does not have, and show that
 inverse-transform sampling reproduces the properties its parameters claim. Both targets are
 derived from the parameters at test time, so there is nothing to look up.
@@ -275,7 +275,7 @@ derived from the parameters at test time, so there is nothing to look up.
 python3 -m pytest tests/monte_carlo/test_problem_1_ppf.py
 ```
 
-**12.2 — Sample a model by hand.**
+**13.2 — Sample a model by hand.**
 Take the storage model, sample two of its inputs yourself without using `sizing.evaluate`, and
 reproduce the interval the build publishes for one output to within sampling error. The point is
 to discover how small the machinery actually is.
@@ -284,7 +284,7 @@ to discover how small the machinery actually is.
 python3 -m pytest tests/monte_carlo/test_problem_2_by_hand.py
 ```
 
-**12.3 — Make the point estimate lie.**
+**13.3 — Make the point estimate lie.**
 Find a set of input distributions, within the ranges the model already declares, for which the
 point estimate of the five-year total falls outside the 50% interval of the sampled answer. Then
 say in one sentence what property of the model made it possible.
@@ -293,7 +293,7 @@ say in one sentence what property of the model made it possible.
 python3 -m pytest tests/monte_carlo/test_problem_3_point_lies.py
 ```
 
-**12.4 — Defend a distribution.**
+**13.4 — Defend a distribution.**
 No test. Take a price you actually pay, find two years of invoices for it, and decide which of
 the four shapes in this chapter you would use and why. Then check what the last two years would
 have looked like under your choice. If the answer embarrasses you, that is the exercise working.
@@ -306,5 +306,5 @@ statistics, and is a useful corrective to the idea that this is a modern techniq
 `numpy.random`'s documentation on generators and seeding is worth twenty minutes, particularly
 the part about why `default_rng` exists and what it replaced.
 
-[ch13](#correlation-and-convergence) picks up the two things this chapter used without
+[ch14](#correlation-and-convergence) picks up the two things this chapter used without
 establishing: the correlations the intervals above already carry, and the sample count.

@@ -1,4 +1,4 @@
-"""Problem 8.3 - TB against TiB, which is ten per cent and a lot of arguments."""
+"""Problem 9.3 - TB against TiB, which is ten per cent and a lot of arguments."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ def scenario():
 def test_every_terabyte_node_changed_unit(base):
     converted = in_binary_units(base)
     was = {n for n, node in base.nodes.items() if node.unit == "TB"}
-    assert was, "the model has no TB nodes; problem 8.3 needs rewriting"
+    assert was, "the model has no TB nodes; problem 9.3 needs rewriting"
     for name in was:
         assert converted.nodes[name].unit == "TiB", (
             f"{name} is still in {converted.nodes[name].unit}"

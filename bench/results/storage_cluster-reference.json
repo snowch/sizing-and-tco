@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "a51ab346a1e9bc79",
+  "code_fingerprint": "ee227f7605864759",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/model.yaml",
@@ -10,10 +10,10 @@
   ],
   "conditions": {
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
-    "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch13, ch18)"
+    "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-18T05:26:16+00:00",
-  "git_revision": "f54d4fe",
+  "generated_at": "2026-09-18T16:25:41+00:00",
+  "git_revision": "f107d32",
   "kind": "model",
   "name": "storage_cluster-reference",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
@@ -85,7 +85,7 @@
       "tco": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-18T05:26:16+00:00",
+    "generated_at": "2026-09-18T16:25:41+00:00",
     "model": "storage_cluster",
     "nodes": {
       "annual_energy": {
@@ -587,7 +587,7 @@
         "point": 1.338656042454521,
         "provenance": {
           "kind": "assumption",
-          "source": "ch03 \u2014 lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%."
+          "source": "ch04 \u2014 lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%."
         },
         "row": 7,
         "slider": {
@@ -1306,7 +1306,7 @@
         "kind": "derived",
         "label": "average usable capacity",
         "layer": 7,
-        "note": "The mean of the day-one and horizon capacities: a straight line drawn under a curve that is not straight, which understates the area. Stated rather than hidden, because a unit cost is only as defensible as its denominator (ch16).",
+        "note": "The mean of the day-one and horizon capacities: a straight line drawn under a curve that is not straight, which understates the area. Stated rather than hidden, because a unit cost is only as defensible as its denominator (ch17).",
         "point": 10597.555915033356,
         "row": 0,
         "summary": {
@@ -1332,7 +1332,7 @@
         "point": 0.25,
         "provenance": {
           "kind": "assumption",
-          "source": "ch10 \u2014 rebuild reserve plus allocator behaviour near full. One node's worth of data has to land somewhere when a node dies, and a filesystem at 97% is a different filesystem."
+          "source": "ch11 \u2014 rebuild reserve plus allocator behaviour near full. One node's worth of data has to land somewhere when a node dies, and a filesystem at 97% is a different filesystem."
         },
         "row": 6,
         "slider": {
@@ -1850,7 +1850,7 @@
         "point": 11661.903789690605,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "chassis, CPU, memory and boot media, less drives. Lognormal like any price, and wider than the drives' because a chassis is a configuration rather than a commodity \u2014 which is why ch18 finds it at the top of the tornado"
+          "source": "chassis, CPU, memory and boot media, less drives. Lognormal like any price, and wider than the drives' because a chassis is a configuration rather than a commodity \u2014 which is why ch19 finds it at the top of the tornado"
         },
         "row": 0,
         "summary": {
@@ -2833,7 +2833,7 @@
         },
         "ceiling": {
           "allowed": 0.75,
-          "because": "A cluster that is full cannot rebuild a failed node, and one that is nearly full allocates badly long before that. The margin is the same node the sizing used, so the two cannot drift apart (ch10). Over the limit means out of space; inside the headroom means the rebuild reserve has been spent on data.",
+          "because": "A cluster that is full cannot rebuild a failed node, and one that is nearly full allocates badly long before that. The margin is the same node the sizing used, so the two cannot drift apart (ch11). Over the limit means out of space; inside the headroom means the rebuild reserve has been spent on data.",
           "headroom": 0.25,
           "headroom_text": "capacity_headroom",
           "limit": 1.0,
@@ -3759,7 +3759,7 @@
         "point": 1.070717967697245,
         "provenance": {
           "kind": "assumption",
-          "source": "filesystem, index and journal overhead as a multiplier on stored bytes. Triangular, and the bounds are for objects of the size this model assumes \u2014 the real spread is a function of object size, which is a term ch08 says this model lacks"
+          "source": "filesystem, index and journal overhead as a multiplier on stored bytes. Triangular, and the bounds are for objects of the size this model assumes \u2014 the real spread is a function of object size, which is a term ch09 says this model lacks"
         },
         "row": 10,
         "summary": {
@@ -4464,7 +4464,7 @@
         "point": 1.725463121838398,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "sustained sequential read per node, as quoted. Unverified here \u2014 ch02. Triangular, and the lower bound is the one doing the work: the quoted figure is sequential and a real read pattern is not"
+          "source": "sustained sequential read per node, as quoted. Unverified here \u2014 ch03. Triangular, and the lower bound is the one doing the work: the quoted figure is sequential and a real read pattern is not"
         },
         "row": 4,
         "summary": {
@@ -4869,7 +4869,7 @@
         "point": 121.0,
         "provenance": {
           "kind": "assumption",
-          "source": "the sizing decision, taken the way it is usually taken: nodes_recommended evaluated at every input's point estimate. That is exactly 121, and the ceilings below are what the same model says about that decision once the inputs are allowed to be uncertain. Change this number and watch them move \u2014 that is the exercise of ch11"
+          "source": "the sizing decision, taken the way it is usually taken: nodes_recommended evaluated at every input's point estimate. That is exactly 121, and the ceilings below are what the same model says about that decision once the inputs are allowed to be uncertain. Change this number and watch them move \u2014 that is the exercise of ch12"
         },
         "row": 3,
         "slider": {
@@ -5386,7 +5386,7 @@
         "point": 113.95437334044469,
         "provenance": {
           "kind": "assumption",
-          "source": "ch03 \u2014 the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention."
+          "source": "ch04 \u2014 the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention."
         },
         "row": 13,
         "slider": {
@@ -5558,7 +5558,7 @@
         "point": 1.4035898384862247,
         "provenance": {
           "kind": "assumption",
-          "source": "ch14 \u2014 facility overhead. A multiplier on IT load, and the single number a colocation contract is most likely to disagree with you about. Triangular: the minimum is a good building, the maximum is a poor one, and below one is impossible"
+          "source": "ch15 \u2014 facility overhead. A multiplier on IT load, and the single number a colocation contract is most likely to disagree with you about. Triangular: the minimum is a good building, the maximum is a poor one, and below one is impossible"
         },
         "row": 5,
         "slider": {
@@ -5952,7 +5952,7 @@
         },
         "ceiling": {
           "allowed": 0.7,
-          "because": "Not a hard limit but a queueing one (ch05). Response time climbs long before a device is saturated, so the margin here is about latency rather than capacity \u2014 which is why it is a different number from capacity_headroom and declared separately rather than shared.",
+          "because": "Not a hard limit but a queueing one (ch06). Response time climbs long before a device is saturated, so the margin here is about latency rather than capacity \u2014 which is why it is a different number from capacity_headroom and declared separately rather than shared.",
           "headroom": 0.3,
           "headroom_text": "0.3",
           "limit": 1.0,
@@ -6293,7 +6293,7 @@
         "point": 0.6083920216900384,
         "provenance": {
           "kind": "assumption",
-          "source": "fraction of one engineer this cluster occupies. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch07 calls a regime change"
+          "source": "fraction of one engineer this cluster occupies. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch08 calls a regime change"
         },
         "row": 4,
         "summary": {
@@ -6845,7 +6845,7 @@
         "point": 4000.0,
         "provenance": {
           "kind": "assumption",
-          "source": "stated workload (ch01) \u2014 what the application says it needs to store today"
+          "source": "stated workload (ch02) \u2014 what the application says it needs to store today"
         },
         "row": 6,
         "slider": {

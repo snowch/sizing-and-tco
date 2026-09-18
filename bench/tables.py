@@ -226,7 +226,7 @@ def stage_outputs(name: str) -> str:
     """What the model says while the book is still building it.
 
     One column, not two. `outputs_table` puts a 90% interval beside every point estimate, and
-    that column is ch12's: a reader in ch01 has not been told what an interval is, and a header
+    that column is ch13's: a reader in ch02 has not been told what an interval is, and a header
     naming one would be the book teaching a term by using it. The chapters that build the model
     show what it computes; the chapter that teaches sampling adds the second column.
     """
@@ -384,7 +384,7 @@ def value_of_information_table(name: str, model: str, output: str) -> str:
 
     The total row is the one to read twice. The individual figures do not add to a hundred per
     cent and are not shares of anything; a chain of multiplications does not divide its
-    uncertainty between its inputs (ch18).
+    uncertainty between its inputs (ch19).
     """
     payload = load_result(name)["summary"]
     rows = [row for row in payload["rows"] if row["model"] == model and row["output"] == output]
@@ -498,7 +498,7 @@ def not_yet_measured(name: str) -> str:
     return "\n".join(lines)
 
 
-# -- ch13's two experiments ---------------------------------------------------------------
+# -- ch14's two experiments ---------------------------------------------------------------
 
 
 def convergence_table(name: str) -> str:
@@ -561,7 +561,7 @@ def scenario_comparison(name: str, other: str) -> str:
     """Two scenarios of the same model, side by side.
 
     A decision is a comparison. One column of numbers is a position; two is an argument, and the
-    difference between them is what somebody is being asked to buy (ch20).
+    difference between them is what somebody is being asked to buy (ch21).
     """
     left, right = load_result(name)["summary"], load_result(other)["summary"]
     labels = row_labels(left)
@@ -640,7 +640,7 @@ def unmeasured_constants(_name: str = "") -> str:
     sentence has stopped being true. Three claims on that page had already gone stale this way.
 
     What each measurement would take is *not* generated, because a model does not declare it — it
-    is in the node's note, and ch02 is about it. What is generated is the part that goes wrong on
+    is in the node's note, and ch03 is about it. What is generated is the part that goes wrong on
     its own: which constants, and how many.
     """
     from sizing.dsl import Measured, discover
@@ -771,9 +771,9 @@ def workload_table(name: str) -> str:
     # The last column carries the provenance mark, and carried no heading at all until a
     # reader arriving cold asked what the three symbols were.
     header = ["| Quantity | At the reference point | Unit | Claim |", "|---|---:|---|---|"]
-    # An empty half is a fact about the model, not a broken table. It happens in ch01, where
+    # An empty half is a fact about the model, not a broken table. It happens in ch02, where
     # nothing has been given a shape yet and the heuristic above therefore files every input as
-    # a decision — which is wrong, and is the reason ch03 exists.
+    # a decision — which is wrong, and is the reason ch04 exists.
     empty = ["| *none* | | | |"]
     return "\n".join(
         [

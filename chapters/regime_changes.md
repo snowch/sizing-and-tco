@@ -1,10 +1,10 @@
 ---
 title: "Regime changes"
-short_title: "ch07 Regime changes"
+short_title: "ch08 Regime changes"
 ---
 
 (regime-changes)=
-# ch07 · Regime changes
+# ch08 · Regime changes
 
 ## The question
 
@@ -27,7 +27,7 @@ A product covers an enormous amount of the world, which is why the technique wor
 express a **regime change**: a point at which the system stops obeying one rule and starts obeying
 another.
 
-Problem 7.1 puts a straight line through a system that has a regime change in it. Fit the line to
+Problem 8.1 puts a straight line through a system that has a regime change in it. Fit the line to
 the loads the system has actually run at, which for a healthy one means nothing above half, then
 extrapolate to the loads you are planning for. The fit is excellent where it was made. Out where
 it matters it is not wrong by a percentage: it is wrong by a multiple, and the multiple grows.
@@ -43,7 +43,7 @@ data it was fitted to was clean.
 
 ### Four regime changes, and what each one does
 
-**The queueing knee.** [ch05](#queueing-and-the-knee). Response time is work divided by what is
+**The queueing knee.** [ch06](#queueing-and-the-knee). Response time is work divided by what is
 left of the system, so it goes from flat to vertical with no warning in between. A multiplicative
 model of latency says load times some constant, and that constant does not exist.
 
@@ -51,7 +51,7 @@ model of latency says load times some constant, and that constant does not exist
 using bandwidth it was using for something else, for as long as the rebuild takes. During that
 window the system is a different system: less capacity, less bandwidth, and less tolerance for a
 second failure. No term in a capacity chain represents it — which is why
-[ch10](#headroom-and-failure-domains) handles it with a reserved margin rather than a formula.
+[ch11](#headroom-and-failure-domains) handles it with a reserved margin rather than a formula.
 
 **Cardinality explosion.** A label multiplies every series that carries it. Add one with a
 thousand values and the series count is multiplied, not incremented. A chain of multiplications
@@ -64,7 +64,7 @@ expresses this one correctly. The trouble is what that arithmetic does to the un
 
 That is three counts, none of which anybody would describe as alarming, multiplied together. The
 product is far wider than any of the three: uncertainty compounds when quantities multiply, and
-problem 7.2 is where you measure by how much. The same spread shows up in every tornado the series
+problem 8.2 is where you measure by how much. The same spread shows up in every tornado the series
 count appears in:
 
 ```{include} _generated/regime-changes-tornado.md
@@ -118,11 +118,11 @@ the regime you are trying to avoid.
 has more — a connection limit, a file-descriptor ceiling, a licence tier, a garbage collector that
 changes behaviour at some heap size, a network that reorders under load. Each one you have not
 declared is a ceiling the model cannot report on, and the model will not tell you it is missing.
-[ch19](#the-missing-node) is about that gap.
+[ch20](#the-missing-node) is about that gap.
 
 **What happens past one.** A ceiling says where the model stops applying and says nothing about
 the other side. That is deliberate: extrapolating into a regime nobody has characterised is the
-mistake problem 7.1 measures.
+mistake problem 8.1 measures.
 
 **Whether the margin is enough.** A headroom is a decision, and this chapter argues only that it
 must exist and have a reason. Whether a given one is generous or reckless depends on how fast your
@@ -132,7 +132,7 @@ load moves and how long you take to notice, neither of which this book can see.
 
 Two, in `tests/regime_changes/`.
 
-**7.1 — Do what a spreadsheet would do.**
+**8.1 — Do what a spreadsheet would do.**
 Fit the line, extrapolate it well past everything it was fitted to, and measure how wrong it is
 where it matters.
 
@@ -140,7 +140,7 @@ where it matters.
 python3 -m pytest tests/regime_changes/test_problem_1_straight_line.py
 ```
 
-**7.2 — Why cardinality dominates.**
+**8.2 — Why cardinality dominates.**
 Take three counts that nobody would describe as alarming, multiply them, and compare the spread of
 the product against the spread of the widest factor. Predict the direction and the rough size
 before you run it.
@@ -151,10 +151,10 @@ python3 -m pytest tests/regime_changes/test_problem_2_combinatorial.py
 
 ## Where to go next
 
-Part III begins at [ch08](#capacity), and puts everything in Parts I and II to work: a chain of
+Part III begins at [ch09](#capacity), and puts everything in Parts I and II to work: a chain of
 multiplications from a stated workload to a number of machines, with ceilings declared where the
 chain stops applying.
 
-[ch19](#the-missing-node) is the version of this chapter's limitation that no technique in the
+[ch20](#the-missing-node) is the version of this chapter's limitation that no technique in the
 book can address — a threshold nobody declared is indistinguishable, from inside the model, from
 a threshold that is not there.

@@ -1,4 +1,4 @@
-"""Problem 13.1 — show the square-root law.
+"""Problem 14.1 — show the square-root law.
 
 The target is the law itself, not a stored number: the test asks whether the reader's measured
 spread falls by a factor of root ten per decade, with a tolerance derived from how many

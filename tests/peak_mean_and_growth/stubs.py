@@ -1,4 +1,4 @@
-"""Chapter 3's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 4's problems. Edit this file; the tests beside it say whether you are right.
 
 Both are about the same mistake in two disguises: using an average where an average does not
 answer the question.
@@ -10,7 +10,7 @@ import numpy as np
 
 
 def busy_hour_rate(hourly_shape: np.ndarray, daily_total: float) -> float:
-    """Problem 3.1 - the number that sizes you is not the daily mean.
+    """Problem 4.1 - the number that sizes you is not the daily mean.
 
     ``hourly_shape`` is twenty-four relative weights describing how a day's demand is distributed:
     a flat day is twenty-four equal numbers, a spiky one is not. ``daily_total`` is how much
@@ -25,11 +25,11 @@ def busy_hour_rate(hourly_shape: np.ndarray, daily_total: float) -> float:
     The test also checks a flat day, where the busy-hour rate and the daily mean rate must agree,
     because a system with no peak has nothing to size for.
     """
-    raise NotImplementedError("problem 3.1")
+    raise NotImplementedError("problem 4.1")
 
 
 def growth_gap(t0: float, growth_samples: np.ndarray, years: float) -> tuple[float, float]:
-    """Problem 3.2 - compound the average, or average the compounds?
+    """Problem 4.2 - compound the average, or average the compounds?
 
     You have a starting capacity ``t0`` and a bag of plausible annual growth factors
     (``growth_samples``: 1.2 means twenty per cent a year). You want the capacity after ``years``.
@@ -48,4 +48,4 @@ def growth_gap(t0: float, growth_samples: np.ndarray, years: float) -> tuple[flo
     The test asserts the order and that the gap is material. It does not tell you the answer; the
     values come from the samples you are handed.
     """
-    raise NotImplementedError("problem 3.2")
+    raise NotImplementedError("problem 4.2")

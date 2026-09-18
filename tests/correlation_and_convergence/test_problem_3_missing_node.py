@@ -1,4 +1,4 @@
-"""Problem 13.3 — find the missing node.
+"""Problem 14.3 — find the missing node.
 
 The oracle is an observation the model does not contain. It is a fixture for this exercise, not a
 measurement the book publishes: it lives here rather than under ``bench/results/`` precisely so

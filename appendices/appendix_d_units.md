@@ -44,7 +44,7 @@ of those two is well formed.
 
 The cost of that is a node. Converting between two counting units *requires one that names the
 conversion* — how many spans a request emits, how many samples a series produces per scrape. That
-node is exactly the measured constant of [ch02](#where-the-numbers-come-from): an empirical number
+node is exactly the measured constant of [ch03](#where-the-numbers-come-from): an empirical number
 belonging to one implementation at one version, with provenance attached. The unit system makes
 you declare what the book says you must declare, which a rule in a style guide cannot do.
 

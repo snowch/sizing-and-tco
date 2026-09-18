@@ -1,10 +1,10 @@
 ---
 title: "Headroom and failure domains"
-short_title: "ch10 Headroom and failure domains"
+short_title: "ch11 Headroom and failure domains"
 ---
 
 (headroom-and-failure-domains)=
-# ch10 · Headroom and failure domains
+# ch11 · Headroom and failure domains
 
 ## The question
 
@@ -35,9 +35,9 @@ immediately. What the margin buys is the time between noticing and doing somethi
 a failed machine's data needs to land in.
 
 **A queueing margin protects against a slope.** Nothing fails. There is no page. The system slides
-down [ch05](#queueing-and-the-knee)'s curve, paying in latency on every request, for as long as
+down [ch06](#queueing-and-the-knee)'s curve, paying in latency on every request, for as long as
 nobody looks. This margin is larger, because the failure mode is invisible and because recovering
-from it means adding machines — which [ch06](#when-adding-servers-stops-helping) showed works
+from it means adding machines — which [ch07](#when-adding-servers-stops-helping) showed works
 badly.
 
 **A scaling margin protects a budget.** Nothing fails and nothing gets slow; the tier simply costs
@@ -55,7 +55,7 @@ A cluster that has to survive losing machines needs somewhere for those machines
 space has to be there *beforehand* — a cluster discovering it needs a rebuild reserve during a
 rebuild has already failed.
 
-Problem 10.1 is that fraction. It has a consequence people rarely state as a capacity argument: a
+Problem 11.1 is that fraction. It has a consequence people rarely state as a capacity argument: a
 small cluster pays an enormous margin, because one machine in five is a fifth of the estate, while
 a large cluster pays almost nothing per machine. That is a real and quantitative argument for
 larger failure domains, and it is not the argument people usually give for them.
@@ -74,7 +74,7 @@ each is granted.
 
 They do not add. Each one takes its share of what the previous one left, so applying them in
 sequence is multiplication — and three separately modest margins leave you with well under half of
-the cluster doing the work it was bought for. Problem 10.2 is that composition.
+the cluster doing the work it was bought for. Problem 11.2 is that composition.
 
 Nobody in the room multiplied them. That is how a cluster ends up twice the size anybody intended,
 with every individual decision in the chain defensible.
@@ -102,8 +102,8 @@ Not a verdict. A probability.
 
 Read the last two columns of the tables above. They answer one question: across everything this
 model thinks could happen, how often does the design end up past this limit? A point estimate
-comfortably inside the margin tells you about one future only. [ch12](#monte-carlo) is where the
-other futures come from, and [ch11](#the-sizing-model) is what the difference between the two
+comfortably inside the margin tells you about one future only. [ch13](#monte-carlo) is where the
+other futures come from, and [ch12](#the-sizing-model) is what the difference between the two
 readings costs.
 
 ## What this cannot tell you
@@ -130,7 +130,7 @@ event, not three, and the model has no term for it.
 
 Three, in `tests/headroom_and_failure_domains/`.
 
-**10.1 — What a node loss costs.**
+**11.1 — What a node loss costs.**
 The one piece of headroom that is arithmetic rather than judgement. Then notice what it says about
 small clusters, and what it says about planned work.
 
@@ -138,7 +138,7 @@ small clusters, and what it says about planned work.
 python3 -m pytest tests/headroom_and_failure_domains/test_problem_1_rebuild.py
 ```
 
-**10.2 — Two margins are not one margin twice.**
+**11.2 — Two margins are not one margin twice.**
 Compose several independent margins. Do not add them — the clue that you cannot is what addition
 does to three large ones. Then look at what three separately reasonable requests leave you.
 
@@ -146,7 +146,7 @@ does to three large ones. Then look at what three separately reasonable requests
 python3 -m pytest tests/headroom_and_failure_domains/test_problem_2_compose.py
 ```
 
-**10.3 — Add a ceiling.**
+**11.3 — Add a ceiling.**
 Add one to the storage model, with a margin and a reason, and get a verdict and a breach
 probability out of it. The build will refuse it three different ways before it accepts it, and
 each refusal is a rule this chapter argues for.
@@ -157,8 +157,8 @@ python3 -m pytest tests/headroom_and_failure_domains/test_problem_3_ceiling.py
 
 ## Where to go next
 
-[ch11](#the-sizing-model) is Part III assembled: every chain, every margin, and a number at the
+[ch12](#the-sizing-model) is Part III assembled: every chain, every margin, and a number at the
 end of it.
 
-[ch12](#monte-carlo) is what the last two columns of every table in this chapter actually came
+[ch13](#monte-carlo) is what the last two columns of every table in this chapter actually came
 from.

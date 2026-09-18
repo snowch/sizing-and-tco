@@ -1,4 +1,4 @@
-"""Problem 14.2 - a refresh cycle, and the convention nobody writes down.
+"""Problem 15.2 - a refresh cycle, and the convention nobody writes down.
 
 The test checks consistency rather than a particular convention, because which one is right is a
 modelling choice and the chapter says so.

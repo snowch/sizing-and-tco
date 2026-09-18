@@ -37,14 +37,16 @@ Not the order the chapter is read in.
 
 Writing the prose first produces a chapter that explains what you meant to model.
 
-## The six-part shape
+## The five-part shape
 
-PLAN.md §5, and it is not negotiable — the repetition is what makes twenty-three chapters read as
-one book. `python3 scripts/new-chapter.py <slug>` generates the shape with the question,
-prerequisites and owed figures already filled in from `bench/outline.py`.
+`bench.outline.CHAPTER_SHAPE`, PLAN.md §5, and it is not negotiable — the repetition is what makes
+every chapter read as one book. `python3 scripts/new-chapter.py <slug>` generates the shape with
+the question already filled in from `bench/outline.py`, and `tests/test_book.py` fails a chapter
+that grows a sixth heading or loses one. A section a chapter needs and the shape does not have is
+a subsection of **The material**.
 
-The section that matters most is the fifth: **What this cannot tell you**. It is the easiest to
-skip and the one that makes the other six believable. For a chapter with a model in it, it must
+The section that matters most is the third: **What this cannot tell you**. It is the easiest to
+skip and the one that makes the other four believable. For a chapter with a model in it, it must
 name **what the model's structure omits** — because that is the error no amount of sampling can
 see, and a chapter that only lists its input uncertainties has described the easy half.
 

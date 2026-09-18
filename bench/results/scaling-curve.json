@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "cfc4e7a838e9920b",
+  "code_fingerprint": "5dae44783a592596",
   "code_sources": [
     "bench/run_curves.py"
   ],
@@ -7,8 +7,8 @@
     "coefficients_are_assumptions": "contention and crosstalk are fitted in practice, and in this model they are assumptions. The shape is the claim, not the position",
     "swept_and_predicted": "the peak found by sweeping and the peak the two coefficients predict are computed independently and must agree; if they ever stop agreeing, one of them is wrong"
   },
-  "generated_at": "2026-09-17T14:17:14+00:00",
-  "git_revision": "667b099",
+  "generated_at": "2026-09-18T16:26:02+00:00",
+  "git_revision": "f107d32",
   "kind": "measurement",
   "name": "scaling-curve",
   "produced_by": {
@@ -20,7 +20,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",

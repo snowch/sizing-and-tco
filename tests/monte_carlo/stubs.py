@@ -1,4 +1,4 @@
-"""Chapter 12's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 13's problems. Edit this file; the tests beside it say whether you are right.
 
 There is no answer key anywhere in this repository. Each test derives what it expects from the
 problem's own statement — from the parameters of a distribution, or from an independent
@@ -15,7 +15,7 @@ import numpy as np
 
 
 def pert_ppf(u: np.ndarray, minimum: float, likely: float, maximum: float) -> np.ndarray:
-    """Problem 12.1 — the percentile function of a distribution this book does not have.
+    """Problem 13.1 — the percentile function of a distribution this book does not have.
 
     The *PERT* distribution is the triangular's better-behaved cousin, and it is the one most
     estimation tools reach for. Same three parameters — the least it could be, the most, and the
@@ -45,11 +45,11 @@ def pert_ppf(u: np.ndarray, minimum: float, likely: float, maximum: float) -> np
     out why those give the right mean before you use them; it is two lines of algebra and it is
     the only part of this problem worth remembering.
     """
-    raise NotImplementedError("problem 12.1")
+    raise NotImplementedError("problem 13.1")
 
 
 def sample_two_inputs(seed: int, samples: int) -> dict[str, np.ndarray]:
-    """Problem 12.2 — sample a model by hand.
+    """Problem 13.2 — sample a model by hand.
 
     Return a dictionary with two keys, ``drive_price`` and ``chassis_price``, each holding
     ``samples`` draws from the distributions the storage model declares for them. Read the
@@ -64,11 +64,11 @@ def sample_two_inputs(seed: int, samples: int) -> dict[str, np.ndarray]:
     to within the sampling error the count allows — which means it also checks that you understood
     what "to within sampling error" has to mean here.
     """
-    raise NotImplementedError("problem 12.2")
+    raise NotImplementedError("problem 13.2")
 
 
 def make_the_point_estimate_lie() -> dict[str, dict]:
-    """Problem 12.3 — find a model whose point estimate is not a typical answer.
+    """Problem 13.3 — find a model whose point estimate is not a typical answer.
 
     Return a dictionary mapping input node names to replacement distributions, in the same form a
     model file uses::
@@ -88,4 +88,4 @@ def make_the_point_estimate_lie() -> dict[str, dict]:
     model that makes this possible. The test does not grade the sentence. Somebody reviewing your
     model will.
     """
-    raise NotImplementedError("problem 12.3")
+    raise NotImplementedError("problem 13.3")
