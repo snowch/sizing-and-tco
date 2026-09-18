@@ -94,7 +94,18 @@ a good answer contains and what would falsify it. Every chapter ends with one of
 
 ## What you will need
 
-Python, Node for the book build, and about twenty minutes:
+To read it and run its models, nothing. [ch02](#what-a-workload-is) and
+[ch03](#where-the-numbers-come-from) carry the model file running in the page: press **Run**,
+change a number, and try to multiply a rate by a count of periods to see the build refuse it.
+That is this repository's own loader and unit checker, fetched as a Python runtime and run in
+your browser, so what the page does and what `make check` does cannot come apart. The finished
+models in [Appendix E](#appendix-e-storage-model) and
+[Appendix F](#appendix-f-observability-model) have a slider against every input; those are
+evaluated by a small JavaScript version, which `tests/test_viewer.py` runs against Python's
+answers for every node of every model before it ships.
+
+To do the problems, a checkout. They are tests, and a test needs an interpreter. Python, Node for
+the book build, and about twenty minutes:
 
 ```bash
 git clone https://github.com/snowch/sizing-and-tco.git
