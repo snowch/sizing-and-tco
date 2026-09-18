@@ -122,3 +122,53 @@ def test_a_javascript_template_is_a_raw_string(name):
         f"{name} in scripts/build-site.py carries JavaScript, so it must be a raw string, "
         f"or Python will interpret its backslashes as its own."
     )
+
+
+def renderer():
+    """``scripts/build-pdf.py``, imported. Its name has a dash in it."""
+    from importlib import util
+
+    spec = util.spec_from_file_location("build_pdf", ROOT / "scripts" / "build-pdf.py")
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.mark.parametrize(
+    ("written", "anchor", "expected"),
+    [
+        # The short form, which is most of the book.
+        ("ch01", "what-one-number-hides", "ch01"),
+        # The long form. The separator and the title belong to the author; only the label moves.
+        (
+            "ch01 · What one number hides",
+            "what-one-number-hides",
+            "ch01 · What one number hides",
+        ),
+        # A label left behind by a chapter that moved, in both forms.
+        ("ch99", "what-one-number-hides", "ch01"),
+        (
+            "ch99 · What one number hides",
+            "what-one-number-hides",
+            "ch01 · What one number hides",
+        ),
+        (
+            "Appendix A · The DSL, in full",
+            "appendix-a-dsl-reference",
+            "Appendix A · The DSL, in full",
+        ),
+        # Text that is not a label at all is the author's, and is left alone.
+        ("the introduction", "what-one-number-hides", None),
+    ],
+)
+def test_a_reference_keeps_everything_but_its_label(written, anchor, expected):
+    """Deriving the number must not eat the separator, which it did.
+
+    The first version of this matched the label *and* the middle dot, so the text after the
+    match began at the title: every long-form reference in the book rendered as
+    ``ch01What one number hides``. It survived because the check was a renumbering round-trip
+    over the *source*, which a different code path fixes, and because the pages looked at
+    afterwards were chapters, whose own heading does not go through here. A part page would have
+    shown it immediately.
+    """
+    assert renderer()._relabel({"identifier": anchor}, written) == expected
