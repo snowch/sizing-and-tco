@@ -488,3 +488,64 @@ def test_every_model_run_shares_one_sample_count_and_seed():
             + f". index.md states one {field} for the whole book and no figure prints it, so a "
             "second value is published nowhere a reader could find it."
         )
+
+
+#: Product names, for the rule CLAUDE.md calls absolute. Necessarily a list rather than a
+#: principle — no check can recognise a product it has not been told about — so it is the common
+#: ones, and it is worth extending when a new one nearly gets in.
+PRODUCTS = (
+    "aws",
+    "amazon",
+    "azure",
+    "google cloud",
+    "gcp",
+    "kubernetes",
+    "prometheus",
+    "grafana",
+    "elasticsearch",
+    "kafka",
+    "postgres",
+    "mysql",
+    "mongodb",
+    "redis",
+    "ceph",
+    "minio",
+    "datadog",
+    "splunk",
+    "nvidia",
+    "intel",
+    "amd",
+    "dell",
+    "seagate",
+    "western digital",
+    "cloudflare",
+    "snowflake",
+    "databricks",
+    "clickhouse",
+    "influxdb",
+    "jaeger",
+    "opentelemetry",
+    "hadoop",
+    "spark",
+    "terraform",
+    "openstack",
+    "vmware",
+)
+
+
+@pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
+def test_no_product_is_named(path):
+    """Vendor neutrality, which CLAUDE.md calls absolute and nothing was checking.
+
+    The introduction tells a reader "no vendor is named anywhere in this book", and that was
+    true — but true because everybody had remembered, which is the kind of true this repository
+    does not accept anywhere else. A measured constant may name the *implementation* it belongs
+    to, because that is what makes it a measurement; a chapter may not name a product.
+    """
+    body = re.sub(r"`[^`]*`", " ", path.read_text().lower())  # code spans are not prose
+    named = sorted({p for p in PRODUCTS if re.search(rf"\b{re.escape(p)}\b", body)})
+    assert not named, (
+        f"{path.name} names {named}. CLAUDE.md §4: no product is named in any chapter, model or "
+        "figure. Describe what it does instead, or name the implementation a measurement "
+        "belongs to."
+    )
