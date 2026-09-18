@@ -38,6 +38,16 @@ def main() -> int:
                 continue
             checked += 1
             if target.startswith("/"):
+                # A root-relative URL on a project site has to carry the base path, or the
+                # browser asks the wrong origin-relative address and gets a 404 — even though
+                # the file is sitting in the build exactly where this check would look for it.
+                # That is how a broken embed shipped: the file existed, the URL did not.
+                if base and not target.startswith(base + "/"):
+                    missing.append(
+                        f"{page.relative_to(root)} -> {target} (missing the base path {base!r}; "
+                        f"a reader would ask for {target} and this site is served from {base}/)"
+                    )
+                    continue
                 relative = target[len(base) :] if base and target.startswith(base) else target
                 candidate = root / relative.lstrip("/")
             else:
