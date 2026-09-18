@@ -195,7 +195,8 @@ a tornado of a model missing a cost line is a confident ranking of the wrong lis
 
 ## Problems
 
-Two, in `tests/which_input_is_the_answer/`.
+Three, in `tests/which_input_is_the_answer/`. The first two have tests. The last does not, and says
+why.
 
 **19.1 — Build the chart.**
 Reproduce the tornado the build publishes. Swing from each input's distribution rather than from
@@ -212,6 +213,21 @@ in a product and a pair that meets in a sum, and predict which will show a gap.
 ```bash
 python3 -m pytest tests/which_input_is_the_answer/test_problem_2_interaction.py
 ```
+
+**19.3 — Which input yours rests on.** No test: the ranges are the ones you would defend, and only
+you can say what those are.
+
+Before computing anything, ask two colleagues which input they think the answer is most sensitive
+to. Write down their answers. Then work it out — swing each input across the range you would
+defend, one at a time, and see which moves the result most.
+
+The disagreement is the point. In this book's models the growth rate wins almost every time and
+it is rarely what anybody guesses; in yours it may be a price, a ratio or a constant nobody has
+measured. Being wrong about where the sensitivity is means measuring the wrong thing next.
+
+A good answer has a ranking, and a note of where it differed from what people expected. If it
+matched everybody's intuition exactly, check that your ranges are the ones you would defend rather
+than the ones that were easy to write.
 
 ## Where to go next
 

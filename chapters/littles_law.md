@@ -124,7 +124,7 @@ incident.
 
 ## Problems
 
-Two, in `tests/littles_law/`.
+Three, in `tests/littles_law/`. The first two have tests. The last does not, and says why.
 
 **5.1 — The law.**
 One multiplication, checked against the model's own node. The node reaches the same quantity by a
@@ -143,6 +143,21 @@ judgement, not arithmetic.
 ```bash
 python3 -m pytest tests/littles_law/test_problem_2_backwards.py
 ```
+
+**5.3 — Your own steady state.** No test: the measurement is of your queue, and nothing here can
+see it.
+
+Pick a queue you run — a request tier, a job pipeline, anything with work arriving and leaving.
+Measure two of the three quantities over a window: how fast work arrives, how much is in flight,
+how long a unit takes. Infer the third and then go and measure it too.
+
+The chapter's first limit is the one to watch. The law holds in a steady state, and your window
+almost certainly was not one. If the inferred and measured values disagree, you have not found an
+error in arithmetic that has been true since 1961 — you have found out that arrivals and
+departures did not balance over your window, which is worth more than the number was.
+
+A good answer states the window, the three values, and the gap between inferred and measured. If
+there is no gap at all, check whether your window was long enough to contain a busy period.
 
 ## Where to go next
 

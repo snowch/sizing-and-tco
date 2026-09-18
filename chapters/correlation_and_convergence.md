@@ -185,7 +185,8 @@ uncertain, and the only things that narrow it are measuring something or decidin
 
 ## Problems
 
-Four. The first three are graded, in `tests/correlation_and_convergence/`.
+Five. The first three are graded, in `tests/correlation_and_convergence/`. The last two are not,
+and say why.
 
 **14.1 — Show the square-root law.**
 Run one output of the storage model at several sample counts, with several independent seeds at
@@ -215,11 +216,25 @@ key; the oracle is an independent figure the model does not contain.
 python3 -m pytest tests/correlation_and_convergence/test_problem_3_missing_node.py
 ```
 
-**14.4 — Break the convergence experiment.**
-No test. The experiment in this chapter uses a different seed for every replicate. Change it so
-that every replicate at a given sample count shares one seed, re-run it, and explain what the
-figure now shows and why it is worthless. Then say what else in this repository would have to be
-wrong for that mistake to survive review.
+**14.4 — Break the convergence experiment.** No test. The experiment in this chapter uses a
+different seed for every replicate. Change it so that every replicate at a given sample count
+shares one seed, re-run it, and explain what the figure now shows and why it is worthless. Then say
+what else in this repository would have to be wrong for that mistake to survive review.
+
+**14.5 — Which of your inputs move together.** No test: nothing here can see which of your
+quantities move together.
+
+Nothing in this book discovers a correlation; they are all declared. Go through your own inputs in
+pairs and find the ones that are not independent — the growth rate and the peak ratio, the price
+and the quantity, the compression ratio and the kind of data.
+
+For each pair, say which direction and roughly how strongly, and then say what it does to your
+answer: correlated inputs moving the same way widen the result, and treating them as independent
+is the commonest way a model quietly reports less doubt than it has.
+
+A good answer names at least one pair and says whether ignoring it makes your interval too narrow
+or too wide. If you find no pairs at all in a chain of six quantities about one system, look
+again — independence is a strong claim and it is rarely true.
 
 ## Where to go next
 

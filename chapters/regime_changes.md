@@ -130,7 +130,7 @@ load moves and how long you take to notice, neither of which this book can see.
 
 ## Problems
 
-Two, in `tests/regime_changes/`.
+Three, in `tests/regime_changes/`. The first two have tests. The last does not, and says why.
 
 **8.1 — Do what a spreadsheet would do.**
 Fit the line, extrapolate it well past everything it was fitted to, and measure how wrong it is
@@ -148,6 +148,20 @@ before you run it.
 ```bash
 python3 -m pytest tests/regime_changes/test_problem_2_combinatorial.py
 ```
+
+**8.3 — Every threshold you actually have.** No test: nothing here knows what your system runs into
+first.
+
+Four ceilings appear in this book because four were thought of. List yours: every limit your
+system runs into before it runs out of the thing you normally count. Memory before storage. File
+handles. A connection pool. A licence tier. A queue depth somebody set in 2019.
+
+For each, write what happens when it is crossed — not what you would do about it, what the system
+does. The ones where the honest answer is "I do not know" are the expensive ones.
+
+A good answer has more than four entries and at least one nobody in your team had written down
+before. If the list has exactly the ceilings this book names, you have listed the book's system
+rather than yours.
 
 ## Where to go next
 

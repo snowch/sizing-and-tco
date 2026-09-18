@@ -164,7 +164,7 @@ structure nobody has checked, however good its interval looks.
 
 ## Problems
 
-Two, in `tests/the_missing_node/`.
+Three, in `tests/the_missing_node/`. The first two have tests. The last does not, and says why.
 
 **20.1 — What would count as evidence?**
 An observation falls outside the interval. Decide what it would take to call the model refuted,
@@ -181,6 +181,21 @@ A model that cannot be wrong has stopped being able to be useful, and this is wh
 ```bash
 python3 -m pytest tests/the_missing_node/test_problem_2_widening.py
 ```
+
+**20.3 — The node you have not written down.** No test: if a check could find what is missing, the
+chapter would not be necessary.
+
+Take your own model and go looking for what is missing, using whichever of this chapter's
+techniques applies: compare it against a system that already exists, look for a quantity that
+appears in an invoice and nowhere in the model, ask somebody who operates it rather than plans it.
+
+The last one is usually the fastest. The people who carry a system know about the quantity that
+doubles the storage and appears in no design document, and they are rarely asked.
+
+A good answer names at least one quantity that was not in the model and says how much it moves
+the answer. If you find nothing, the honest conclusion is that you have not looked hard enough
+rather than that the model is complete — there is no test for completeness, which is what this
+chapter is about.
 
 ## Where to go next
 

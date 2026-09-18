@@ -134,7 +134,8 @@ budget.
 
 ## Problems
 
-Two, in `tests/capex_opex_and_lifecycle/`.
+Three, in `tests/capex_opex_and_lifecycle/`. The first two have tests. The last does not, and says
+why.
 
 **15.1 — When does running cost overtake the purchase?**
 One division. Then look at where it falls relative to the horizon, and at which of the two halves
@@ -151,6 +152,21 @@ comment, and be consistent. The difference is a whole cluster.
 ```bash
 python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_2_refresh.py
 ```
+
+**15.3 — Prices you can actually get.** No test: the prices are the ones you can get, and nobody
+else can get them.
+
+Every price in this book's model is a vendor's claim or an assumption, and the chapter says so.
+Try to get yours. For each cost line — hardware, power, support, the people — find the real
+figure and record where it came from.
+
+Count how many you could actually obtain. In most organisations the hardware price is easy, the
+power price is held by a facilities team who have never been asked, and the cost of the people is
+either unavailable or politically impossible to write down.
+
+A good answer has a source per line and an honest count of the gaps. The gaps are the finding: a
+five-year total built from two real prices and four guesses is not a cost model, and knowing which
+is which is the difference between a number and a negotiating position.
 
 ## Where to go next
 

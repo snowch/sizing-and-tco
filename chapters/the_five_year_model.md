@@ -112,7 +112,7 @@ to the other. [ch20 · The missing node](#the-missing-node).
 
 ## Problems
 
-Two, in `tests/the_five_year_model/`.
+Three, in `tests/the_five_year_model/`. The first two have tests. The last does not, and says why.
 
 **18.1 — Carry a distribution across a boundary.**
 Pull the storage model's unit cost out as a sample array, not a summary. The whole array — the
@@ -129,6 +129,22 @@ say, in a comment, whether you think the DSL should have a node kind for this.
 ```bash
 python3 -m pytest tests/the_five_year_model/test_problem_2_seam.py
 ```
+
+**18.3 — What your total leaves out.** No test: what a total leaves out is not something a total
+can be asked.
+
+Build the five-year total for something you run, then list what is not in it. This chapter's model
+joins two models at a price and says so; yours will join more, and the seams are where the money
+hides.
+
+Start with the things that are not hardware: the people who run it, the migration at the end of
+life, the second environment nobody counts, the software that is licensed per machine. Then ask
+whether the horizon is a plan or a habit — five years is a convention, and the equipment's actual
+life is a different number.
+
+A good answer has a total and a list of exclusions longer than you expected. If the list is short,
+you have costed the hardware and called it the total, which is the error the whole part is
+about.
 
 ## Where to go next
 

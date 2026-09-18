@@ -293,10 +293,12 @@ say in one sentence what property of the model made it possible.
 python3 -m pytest tests/monte_carlo/test_problem_3_point_lies.py
 ```
 
-**13.4 — Defend a distribution.**
-No test. Take a price you actually pay, find two years of invoices for it, and decide which of
-the four shapes in this chapter you would use and why. Then check what the last two years would
-have looked like under your choice. If the answer embarrasses you, that is the exercise working.
+**13.4 — Defend a distribution.** No test: the invoices are yours, and so is the shape you would
+defend.
+
+Take a price you actually pay, find two years of invoices for it, and decide which of the four
+shapes in this chapter you would use and why. Then check what the last two years would have looked
+like under your choice. If the answer embarrasses you, that is the exercise working.
 
 ## Where to go next
 
