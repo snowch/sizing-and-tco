@@ -102,7 +102,7 @@ the terms that decide whether a plan can change, and they are not quantities.
 The line this chapter draws is: **cash out, over time, from physics and prices**. Everything on
 the other side of it belongs to somebody whose job it is.
 
-## What the model says
+### What the model says
 
 ```{include} _generated/capex-opex-and-lifecycle-outputs.md
 ```

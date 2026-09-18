@@ -14,7 +14,14 @@ import pytest
 import yaml
 
 from bench.figures import FIGURES
-from bench.outline import APPENDICES, CHAPTERS, PART_PAGES, Appendix, Chapter
+from bench.outline import (
+    APPENDICES,
+    CHAPTER_SHAPE,
+    CHAPTERS,
+    PART_PAGES,
+    Appendix,
+    Chapter,
+)
 from bench.stamp import ROOT, result_exists
 
 MYST = yaml.safe_load((ROOT / "myst.yml").read_text())
@@ -276,6 +283,24 @@ def test_every_figure_belongs_to_a_page_by_name():
 
 
 # -- house rules about finished prose ------------------------------------------------------------
+
+
+@pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
+def test_a_written_chapter_has_the_shape_the_outline_declares(path):
+    """Every chapter, the same five headings, in the same order.
+
+    The repetition is what makes the book read as one book, so the shape is a contract rather
+    than a default. It is checked here because it was written down in three places that
+    disagreed — PLAN.md said six parts, the chapter command said seven, the generator made five —
+    which is what happens to a convention nothing enforces.
+    """
+    if path.parent.name != "chapters":
+        pytest.skip("parts and appendices have their own shapes")
+    found = tuple(re.findall(r"^## (.+)$", path.read_text(), re.M))
+    assert found == CHAPTER_SHAPE, (
+        f"{path.name} has sections {found}, and a chapter has {CHAPTER_SHAPE}. "
+        "A section a chapter needs and the shape does not have is a subsection of The material."
+    )
 
 
 @pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)

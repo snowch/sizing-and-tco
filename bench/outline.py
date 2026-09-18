@@ -14,6 +14,20 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+#: The headings every written chapter carries, in order.
+#:
+#: One place, because it was three and they disagreed: PLAN.md said six parts, the chapter
+#: command said seven, and the generator made five. The count came from the book this repository
+#: was bootstrapped from, and nobody reconciled it. ``tests/test_book.py`` holds every written
+#: chapter to this, so the next disagreement fails a build instead of sitting in a guide.
+CHAPTER_SHAPE = (
+    "The question",
+    "The material",
+    "What this cannot tell you",
+    "Problems",
+    "Where to go next",
+)
+
 #: What a chapter means when it says where its figures came from.
 SOURCE_MEANING = {
     "corpus": "a deterministic measurement over a declared corpus with a named codec",
