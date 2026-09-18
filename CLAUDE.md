@@ -48,14 +48,21 @@ keeping it separate is what stops the distinction going soft.
 
 ## Build
 
-Jupyter Book 2, whose CLI is `mystmd`. Pinned in `package.json` (npm), **not** in
-`requirements.txt` — one source of truth.
+**MyST parses. This repository renders.** `mystmd` is pinned in `package.json` (npm), **not** in
+`requirements.txt` — one source of truth. It is a parser and a reference checker here, not a
+theme: `myst build --strict` resolves every cross-reference and fails on a broken one, and
+`scripts/build-site.py` turns that parse into the pages that publish. There is no `--html`
+anywhere, so nothing reaches the MyST template registry and the whole site builds offline —
+which is why `make check` builds the site that deploys rather than a preview of one.
+
+The renderer is `scripts/build-pdf.py`, shared with the PDF and told which medium it is by
+`MEDIUM`. It raises on a node type it does not handle rather than dropping it.
 
 ```bash
 make check     # ./scripts/ci-check.sh — exactly what CI runs
 make models    # evaluate and stamp every model
 make measure   # re-take the corpus constants
-make book      # live preview
+make book      # build the site and serve it
 make machine   # what this computer is, and whether it may take a rig measurement
 ```
 
@@ -161,8 +168,14 @@ whether the reader has to decode it.
 - **A rate or a duration in a `corpus` result.** `provenance_problems` checks it dimensionally,
   via Pint, and rejects it correctly.
 - **A new MyST directive without a branch in `scripts/build-pdf.py`.** The renderer raises on a
-  node type it does not handle, deliberately — the alternative is content silently missing from
-  the PDF.
+  node type it does not handle, deliberately — the alternative is content silently missing. It
+  renders the site as well as the PDF, so this now stops a deploy rather than quietly thinning a
+  PDF nobody opened.
+
+- **JavaScript in a Python string that is not raw.** `RUNNER` and `SEARCH` in
+  `scripts/build-site.py` carry JavaScript. Without `r"""`, Python eats `\n` and the page ships a
+  regex literal that cannot parse — silently, because nothing on the Python side is wrong. This
+  has happened twice; `tests/test_scripts.py` now fails without the `r`.
 - **Changing `sizing/viewer/evaluate.js` without re-running the tests.** `tests/test_viewer.py`
   runs it against values Python computed, for every node of every model. The published page and
   the build must not disagree.

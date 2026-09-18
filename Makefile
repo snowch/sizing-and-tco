@@ -83,9 +83,15 @@ viewers:  ## Build the interactive model pages into _build/viewers/
 # -- the book ------------------------------------------------------------------------------
 
 .PHONY: book
-book:  ## Live preview at localhost:3000
+book:  ## Build the site and serve it at localhost:3000 (re-run to pick up an edit)
 	$(PYTHON) scripts/build-stamp.py
-	myst start
+	myst build --strict
+	$(PYTHON) scripts/build-site.py --out _build/html
+	@echo
+	@echo '  http://localhost:3000 — this is the published site, not a preview of one.'
+	@echo '  An edit needs "make book" again; the whole build takes about three seconds.'
+	@echo
+	@cd _build/html && $(PYTHON) -m http.server 3000
 
 .PHONY: pdf
 pdf:  ## Build the whole book as one PDF
