@@ -172,3 +172,54 @@ def test_a_reference_keeps_everything_but_its_label(written, anchor, expected):
     shown it immediately.
     """
     assert renderer()._relabel({"identifier": anchor}, written) == expected
+
+
+def site():
+    """``scripts/build-site.py``, imported, with the renderer it carries."""
+    from importlib import util
+
+    spec = util.spec_from_file_location("build_site", ROOT / "scripts" / "build-site.py")
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.mark.parametrize(
+    ("url", "expected"),
+    [
+        ("/monte-carlo", "monte-carlo.html"),
+        ("/monte-carlo#a-section", "monte-carlo.html#a-section"),
+        ("/", "index.html"),
+        # A playground directory is named after the chapter it was built from, so taking the last
+        # segment of a path resolved every one of them to the wrong page. One segment only.
+        ("/playground/monte-carlo/", None),
+        ("/models/observability-reference.html", None),
+        ("https://example.com/monte-carlo", None),
+        ("relative.html", None),
+    ],
+)
+def test_only_a_top_level_path_resolves_to_a_page(url, expected):
+    build = site()
+    build.PDF.PAGES = {
+        Path(build.href_for(s)).stem: build.href_for(s) for s in build.PDF.page_order()
+    }
+    assert build.PDF._published(url) == expected
+
+
+def test_the_foot_of_a_page_points_at_its_neighbours_in_the_reading_order():
+    """prev and next come from page_order(), and the ends of the book have one link, not two."""
+    build = site()
+    order = [s for s in build.PDF.page_order() if s in build.PDF.parsed_pages()]
+    hrefs = [build.href_for(s) for s in order]
+    for at, href in enumerate(hrefs):
+        before = (hrefs[at - 1], "before") if at else None
+        after = (hrefs[at + 1], "after") if at + 1 < len(hrefs) else None
+        _, foot = build.turning(before, after)
+        if at:
+            assert f'class="prev" href="{hrefs[at - 1]}"' in foot, href
+        else:
+            assert 'class="prev"' not in foot, f"{href} is the first page and offers a previous"
+        if at + 1 < len(hrefs):
+            assert f'class="next" href="{hrefs[at + 1]}"' in foot, href
+        else:
+            assert 'class="next"' not in foot, f"{href} is the last page and offers a next"

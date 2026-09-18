@@ -158,11 +158,21 @@ PAGES: dict[str, str] = {}
 
 
 def _published(url: str) -> str | None:
-    """The page this renderer is publishing for a site-root URL, if it is publishing one."""
+    """The page this renderer is publishing for a site-root URL, if it is publishing one.
+
+    One segment only. This used to take the last segment of any path, which meant
+    ``/playground/capacity/`` resolved to the *chapter* named capacity — the playground
+    directories are named after the chapters they belong to, so every one of them collided with
+    the page it was built from. Nothing linked to one in prose, so nothing broke; a link saying
+    "run it in your browser" would have gone quietly to the wrong place.
+    """
     if MEDIUM != "web" or not url.startswith("/"):
         return None
     path, _, anchor = url.partition("#")
-    target = PAGES.get(path.strip("/").rsplit("/", 1)[-1] or "index")
+    segments = [part for part in path.split("/") if part]
+    if len(segments) > 1:
+        return None
+    target = PAGES.get(segments[0] if segments else "index")
     return None if target is None else target + (f"#{anchor}" if anchor else "")
 
 
