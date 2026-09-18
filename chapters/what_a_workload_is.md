@@ -157,9 +157,10 @@ this book comes from, including the next one. For the seven nodes above:
 ```
 
 A number, out of a handful of numbers and a multiplication. The arithmetic is right and you should
-not act on it, for a reason this chapter cannot yet name: every figure that went in was a single
-figure, and not one of them is known that precisely. [ch04](#peak-mean-and-growth) takes the first
-of them apart.
+not act on it, for the reason [ch01](#what-one-number-hides) gave: every figure that went in was a
+single figure, and not one of them is known that precisely. Here that stops being an argument and
+becomes a file you are holding. [ch04](#peak-mean-and-growth) takes the first of those figures
+apart.
 
 The build has already decided what kind of model this is, too:
 
@@ -168,9 +169,9 @@ The build has already decided what kind of model this is, too:
 
 The last row is not a label anybody typed. `sizing/dsl.py` works it out from what is in the file:
 nothing here has a measured constant or a declared limit in it, so what you have is a **cost
-model** — a structure nobody doubts, with uncertain numbers in it. It changes kind in
-[ch09](#capacity), and it changes because two nodes get added rather than because a chapter says
-so.
+model** — a structure nobody doubts, with uncertain numbers in it. It does not stay one. What
+changes it is something added to the file rather than a chapter announcing it, which is why
+[ch01](#what-one-number-hides)'s second problem is to find the stage where it happens.
 
 ### The same split, on a model that is finished
 
