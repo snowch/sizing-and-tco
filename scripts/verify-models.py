@@ -92,7 +92,7 @@ def check_model(model: Model, problems: list[str]) -> None:
                     f"{where}: input {name!r} is sampled as a {shape} and its provenance never "
                     f"says so. The shape is a claim about what can happen — that a price cannot "
                     f"go negative, that a count has a hard maximum — and it is the claim a "
-                    f"reviewer should argue with first. Name it in the source and say why (ch12, "
+                    f"reviewer should argue with first. Name it in the source and say why (ch13, "
                     "appendix C)."
                 )
             elif provenance.kind == "fact" and not any(
@@ -134,7 +134,7 @@ def check_model(model: Model, problems: list[str]) -> None:
             if not node.declares_headroom:
                 problems.append(
                     f"{where}: ceiling {name!r} declares no headroom. A limit with no margin is "
-                    "not a sizing rule — see ch10, and the front matter's distinction between a "
+                    "not a sizing rule — see ch11, and the front matter's distinction between a "
                     "cost model and a sizing one."
                 )
             if not node.because.strip():

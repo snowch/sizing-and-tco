@@ -1,17 +1,17 @@
 ---
 title: "When adding servers stops helping"
-short_title: "ch06 When adding servers stops helping"
+short_title: "ch07 When adding servers stops helping"
 ---
 
 (when-adding-servers-stops-helping)=
-# ch06 · When adding servers stops helping
+# ch07 · When adding servers stops helping
 
 ## The question
 
 How far does a system scale, and how would you find out from the two measurements you actually
 have?
 
-[ch05](#queueing-and-the-knee) ended with a tier too close to its margin and an obvious remedy:
+[ch06](#queueing-and-the-knee) ended with a tier too close to its margin and an obvious remedy:
 buy more machines. This chapter is about how much less that buys than the arithmetic promises,
 and about the count past which each new machine takes capacity away.
 
@@ -61,7 +61,7 @@ less than nothing.
 
 The last row checks the peak twice. One comes from sweeping the model, the other from its two
 coefficients; the calculations are independent, and they agree. That agreement is why the closed
-form in problem 6.3 is worth having.
+form in problem 7.3 is worth having.
 
 ### What doubling actually buys
 
@@ -71,7 +71,7 @@ form in problem 6.3 is worth having.
 Twice the machines. Read down.
 
 Utilisation halves, exactly as arithmetic says it should. Waiting time falls by a great deal more
-than half, because [ch05](#queueing-and-the-knee)'s division is not linear and the non-linearity
+than half, because [ch06](#queueing-and-the-knee)'s division is not linear and the non-linearity
 runs in your favour in this direction.
 
 Throughput goes up by not much more than a quarter, for a doubling of the fleet. Efficiency falls
@@ -82,7 +82,7 @@ different purchases, they are usually conflated, and the model tells them apart.
 
 ### The utilisation you were quoted was optimistic
 
-[ch05](#queueing-and-the-knee) had no scaling term, so its utilisation was the work arriving
+[ch06](#queueing-and-the-knee) had no scaling term, so its utilisation was the work arriving
 divided by what the machines could do *if each of them worked alone*. They do not work alone. Some
 of their capacity is spent on each other, and the honest utilisation is the arriving work divided
 by what the tier can actually deliver.
@@ -107,7 +107,7 @@ Three unknowns, so three measurements determine them exactly. You will usually h
 on a bench, the cluster you are running, and the cluster you were running before you grew it.
 That is not much data and it is what exists.
 
-Problem 6.2 is the algebra, and it is worth doing by hand once. Rearranging the law into a
+Problem 7.2 is the algebra, and it is worth doing by hand once. Rearranging the law into a
 straight line shows why three points are the minimum and why they must be at *different* counts:
 two measurements at the same size determine nothing at all.
 
@@ -134,7 +134,7 @@ measurement can establish.
 
 **Anything about failure.** Every figure above is a healthy tier. Machines coordinating while one
 of them is unreachable behave differently and worse, and this model has no term for it —
-[ch10](#headroom-and-failure-domains) is where that gets a margin rather than a model.
+[ch11](#headroom-and-failure-domains) is where that gets a margin rather than a model.
 
 **Whether the tier is even the constraint.** The whole chapter assumes throughput is what you are
 buying. If the system is bounded by something else — a database, a licence, a single-threaded
@@ -144,7 +144,7 @@ step — the curve above is a description of a queue in front of the real proble
 
 Three, in `tests/when_adding_servers_stops_helping/`.
 
-**6.1 — Write the law.**
+**7.1 — Write the law.**
 Two terms in the denominator, behaving differently. The tests check that contention alone flattens
 the curve and that crosstalk alone turns it over, so the two cannot stand in for each other.
 
@@ -152,10 +152,10 @@ the curve and that crosstalk alone turns it over, so the two cannot stand in for
 python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_1_law.py
 ```
 
-**6.2 — Fit it from three measurements.**
+**7.2 — Fit it from three measurements.**
 Rearrange the law until it is linear, then solve. Write the rearrangement down before you code it.
 
-**6.3 — Find the peak.**
+**7.3 — Find the peak.**
 Differentiate and set to zero. It comes out as a square root, and it says the peak belongs to the
 software rather than to the budget. Handle zero crosstalk honestly: there is no peak, and a large
 number is not the same answer.
@@ -171,6 +171,6 @@ python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_2_fit.py
 Gunther's paper @gunther2007usl derives the law from a queueing argument rather than by fitting a
 curve to data. Read it if the crosstalk term has so far felt like a free parameter.
 
-[ch07](#regime-changes) is what this chapter and the last one have in common: a point where the
+[ch08](#regime-changes) is what this chapter and the last one have in common: a point where the
 chain of multiplications stops describing the system, and no care over the inputs would have
 warned you.

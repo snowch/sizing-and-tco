@@ -9,7 +9,7 @@ and is the reason the DSL exists.
 
 **A point**, in plain floats. One value per node, from the scenario's overrides, each input's
 stated value or the median of its distribution, and each measured constant's stamped figure. This
-is the number a reader sees first, and ch12 exists because it is not an answer on its own.
+is the number a reader sees first, and ch13 exists because it is not an answer on its own.
 
 **A sample**, in numpy arrays. Every uncertain input becomes a hundred thousand draws, the draws
 are correlated where the model says they move together, and then the *same* formulas propagate
@@ -47,7 +47,7 @@ from sizing.units import UNITS, compatible, dimensionality
 from sizing.units import parse as parse_unit
 
 #: The percentiles a tornado swings an input between. Wide enough to matter, narrow enough that
-#: the input is still plausibly there — ch17 argues about the choice, which is a real argument.
+#: the input is still plausibly there — ch18 argues about the choice, which is a real argument.
 TORNADO_LOW, TORNADO_HIGH = 0.1, 0.9
 
 
@@ -320,7 +320,7 @@ def sampled_inputs(model: Model) -> tuple[str, ...]:
 
     Inputs with a declared distribution, and measured constants with a stated standard error.
     Those are the only two places randomness enters a model: everything else is arithmetic, which
-    is the whole reason Monte Carlo over the inputs is the right tool for a cost model (ch12) and
+    is the whole reason Monte Carlo over the inputs is the right tool for a cost model (ch13) and
     not sufficient on its own for a sizing one.
     """
     names = []
@@ -473,7 +473,7 @@ def ceiling_report(
 def verdict(value: float, limit: float, allowed: float) -> str:
     """``ok``, ``inside headroom`` or ``over``.
 
-    Three states rather than two, because the middle one is the whole argument of ch10. A design
+    Three states rather than two, because the middle one is the whole argument of ch11. A design
     under the hard limit but inside the margin it declared has not failed — it has spent the
     reserve it was keeping for the failure it has not had yet.
     """
@@ -510,7 +510,7 @@ def swing_of(model: Model, name: str) -> tuple[float, float] | None:
 def tornado(model: Model, scenario: Scenario, output: str) -> list[dict]:
     """How far one output moves when each uncertain input is swung on its own.
 
-    One at a time, everything else held at its point value. That is a real limitation and ch17
+    One at a time, everything else held at its point value. That is a real limitation and ch18
     names it: an input whose effect only shows up in combination with another gets a short bar
     here and can still be the thing that sinks you. A tornado says which input is worth going and
     *measuring*; the sampled interval says what the model currently believes.

@@ -1,4 +1,4 @@
-"""Problem 10.1 - what a node loss costs, and why cluster size changes the answer."""
+"""Problem 11.1 - what a node loss costs, and why cluster size changes the answer."""
 
 from __future__ import annotations
 

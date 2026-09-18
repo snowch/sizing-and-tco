@@ -1,4 +1,4 @@
-"""Problem 10.3 - add a ceiling, and meet the three things declaring one commits you to."""
+"""Problem 11.3 - add a ceiling, and meet the three things declaring one commits you to."""
 
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ def test_it_declares_a_margin_and_a_reason(extended):
     node = extended.nodes[NAME]
     assert node.declares_headroom, (
         "a limit with no margin is not a sizing rule - it is a number with an inequality "
-        "next to it (ch10)"
+        "next to it (ch11)"
     )
     assert node.because.strip(), (
         "a margin nobody can argue with gets copied into the next model by somebody who does "
@@ -66,4 +66,4 @@ def test_it_reports_a_verdict_and_a_probability(extended, scenario):
 def test_the_expression_the_problem_names_is_real(base):
     """Scaffolding: the nodes the reader is asked to watch exist in the model as shipped."""
     for needed in ("raw_capacity", "installed_raw_capacity"):
-        assert needed in base.nodes, f"{needed} is gone; problem 10.3 needs rewriting"
+        assert needed in base.nodes, f"{needed} is gone; problem 11.3 needs rewriting"

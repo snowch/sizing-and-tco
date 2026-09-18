@@ -35,7 +35,7 @@ BINARY = {
 
 #: Functions a formula may call. ``ceil`` is the one a sizing model cannot do without — you
 #: cannot buy two thirds of a node — and it is also where a chain of multiplications stops being
-#: a smooth function of its inputs, which ch07 has something to say about.
+#: a smooth function of its inputs, which ch08 has something to say about.
 FUNCTIONS: dict[str, Any] = {
     "min": min,
     "max": max,

@@ -2,7 +2,7 @@
 """The book as static pages, rendered from MyST's parse rather than MyST's theme.
 
     python3 scripts/build-site.py                    # every page, into _build/static/
-    python3 scripts/build-site.py --only ch01        # one page, to look at
+    python3 scripts/build-site.py --only ch02        # one page, to look at
     python3 scripts/build-site.py --out DIR
 
 A proof, not a replacement. The question it answers is whether this repository can own the page
@@ -199,8 +199,8 @@ SEARCHABLE = ("text", "inlineCode", "code")
 def sections_of(source: str, page: dict, title: str, href: str) -> list[dict]:
     """One record per section of one page, for the whole-book index.
 
-    Section-level rather than page-level, because a hit in ch12 is no use unless it says *where*
-    in ch12. Built before `promote_headings` runs, so the depths are still MyST's.
+    Section-level rather than page-level, because a hit in ch13 is no use unless it says *where*
+    in ch13. Built before `promote_headings` runs, so the depths are still MyST's.
     """
     out = [{"p": title, "h": "", "u": href, "t": []}]
     # A chapter's leading heading is its own title, and belongs to the page record rather than

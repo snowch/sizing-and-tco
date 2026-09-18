@@ -1,4 +1,4 @@
-"""The two experiments ch12 and ch13 are built on.
+"""The two experiments ch13 and ch14 are built on.
 
     python3 -m bench.run_uncertainty            # run them and write the results
     python3 -m bench.run_uncertainty --check    # re-run and fail if a published figure moved
@@ -154,7 +154,7 @@ def convergence(write: bool = True) -> dict:
         conditions={
             "what_this_measures": "sampling noise, and nothing else. An interval that has stopped "
             "moving is an interval whose *arithmetic* has settled; whether the model is right is "
-            "a different question and Monte Carlo cannot answer it (ch13, ch18)",
+            "a different question and Monte Carlo cannot answer it (ch14, ch19)",
             "the_interval_does_not_shrink": "the half_width column settles rather than falling. "
             "More samples locate the interval more precisely; they do not narrow the uncertainty "
             "the model describes",

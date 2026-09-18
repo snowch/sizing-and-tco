@@ -1,4 +1,4 @@
-"""Problem 11.1 - sizing to a risk rather than to a point estimate.
+"""Problem 12.1 - sizing to a risk rather than to a point estimate.
 
 Graded by asking the model, at the reader's answer, whether the risk is what they claimed. The
 oracle is the model itself, so nothing is stored and changing the model changes the answer.

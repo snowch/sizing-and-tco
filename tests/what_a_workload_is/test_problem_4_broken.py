@@ -1,4 +1,4 @@
-"""Problem 1.4 - a model that loads and is still wrong.
+"""Problem 2.4 - a model that loads and is still wrong.
 
 The error has to survive loading and be caught by the dimensional pass. That is the whole
 distinction: a typo fails immediately and teaches nothing, while a unit error is confidently

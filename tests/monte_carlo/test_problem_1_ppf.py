@@ -1,4 +1,4 @@
-"""Problem 12.1 — add a distribution.
+"""Problem 13.1 — add a distribution.
 
 Graded against the PERT distribution's own definition. The expected mean is computed from the
 parameters at test time by the formula the problem statement gives, so there is no stored answer

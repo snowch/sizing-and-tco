@@ -60,7 +60,7 @@ def run_one(model, scenario, write: bool = True) -> dict:
         units={name: node["unit"] for name, node in payload["nodes"].items()},
         conditions={
             "what_an_interval_here_is": "a statement about this model's declared inputs, and "
-            "nothing about whether the model has the right structure (ch13, ch18)",
+            "nothing about whether the model has the right structure (ch14, ch19)",
             "unmeasured": "figures downstream of a constant nobody has measured are absent "
             "rather than estimated",
         },

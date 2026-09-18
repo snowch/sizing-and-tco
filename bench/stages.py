@@ -11,7 +11,7 @@ longer has is the failure this whole repository exists to prevent. ``build-order
 chapter introduces which node, and everything else is computed.
 
 Two nodes are not simply added. The growth rate and the peak read throughput are single numbers
-until ch03 gives them shapes, so an earlier stage declares them under ``certain_until`` — a value,
+until ch04 gives them shapes, so an earlier stage declares them under ``certain_until`` — a value,
 and a provenance that says the distribution is coming. That is the only kind of edit a stage may
 make to a node, because any other would let a staged model say something the real one does not.
 """
@@ -81,7 +81,7 @@ def stages() -> tuple[Stage, ...]:
     """The manifest, in reading order.
 
     ``certain_until`` is declared once for the whole book and resolved here, so that a node whose
-    shape arrives in ch03 cannot be held back in one stage and not the next.
+    shape arrives in ch04 cannot be held back in one stage and not the next.
     """
     spec = yaml.safe_load(STAGES_PATH.read_text())
     held = spec.get("certain_until") or {}
@@ -146,7 +146,7 @@ def build(stage: Stage) -> dict:
         # A correlation is a statement about two quantities that vary. An input the stage has
         # not introduced is not there to correlate, and one it is still holding certain does
         # not vary, so neither can carry one yet. The pairs the finished model declares are
-        # ch13's subject in any case.
+        # ch14's subject in any case.
         "correlations": [
             c
             for c in raw.get("correlations", [])

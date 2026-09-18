@@ -57,6 +57,7 @@ project:
 
     - file: parts/what_you_are_sizing.md
       children:
+        - file: chapters/what_one_number_hides.md
         - file: chapters/what_a_workload_is.md
         - file: chapters/where_the_numbers_come_from.md
         - file: chapters/peak_mean_and_growth.md

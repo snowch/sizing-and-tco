@@ -15,8 +15,14 @@ on it.
 
 ## 2. The distinction everything rests on
 
-Stated in the front matter, demonstrated by the two reference models, and enforced by
+Taught in ch01, demonstrated by the two reference models, and enforced by
 `scripts/verify-models.py`.
+
+It used to be stated in the front matter, which is where the book this repository was
+bootstrapped from put its definitions. That left the idea seven chapters depend on sitting in a
+preface, with no problems, nothing the reader could run against it, and no *What this cannot tell
+you* — none of which front matter can have. The introduction now says what the book is and points
+at the chapter.
 
 **A cost model** has a deterministic structure with uncertain parameters. Its relationships are
 accounting identities and physics. Cost scales roughly in proportion to its inputs. Monte Carlo

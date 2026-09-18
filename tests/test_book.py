@@ -150,8 +150,8 @@ def test_a_chapter_declares_its_own_label(chapter: Chapter):
     )
 
 
-#: A link to a chapter, as a page writes it: ``[ch12](#monte-carlo)`` or
-#: ``[ch12 · Monte Carlo](#monte-carlo)``.
+#: A link to a chapter, as a page writes it: ``[ch13](#monte-carlo)`` or
+#: ``[ch13 · Monte Carlo](#monte-carlo)``.
 CHAPTER_LINK = re.compile(r"\[(ch\d+)([^\]]*)\]\(#([a-z-]+)\)")
 
 #: What separates a chapter's number from its title, here and in every chapter's own heading.
@@ -169,13 +169,13 @@ PROBLEM_DECLARED = re.compile(r"^\*\*(\d+\.\d+) \u2014", re.M)
 def test_a_problem_reference_points_at_a_problem_that_exists(chapter: Chapter):
     """A problem number is a chapter number and a position, and chapters move.
 
-    Both halves of this failed. Renumbering left ch01 pointing at "problem 2.2", which exists and
-    is about something else entirely, and ch08 pointing at "problem 9.3", which never existed at
+    Both halves of this failed. Renumbering left ch02 pointing at "problem 2.2", which exists and
+    is about something else entirely, and ch09 pointing at "problem 9.3", which never existed at
     all. Neither is visible from the chapter doing the pointing.
 
     A bare reference means this chapter's own problem: that is what thirty-five of the book's
     thirty-eight do. The exception is a reference that names the owning chapter in the same
-    breath — "ch02's discipline and problem 2.2's arithmetic" — which reads correctly and is
+    breath — "ch03's discipline and problem 2.2's arithmetic" — which reads correctly and is
     allowed, because the link beside it is what a reader follows.
     """
     declared = {
@@ -226,7 +226,7 @@ def test_a_chapter_reference_names_the_chapter_the_outline_names(path):
     Both forms are deliberate. Inside a sentence a bare number is enough, because the sentence
     says what the chapter is about. Where the reference stands alone — a prerequisites row, the
     opening of a paragraph on a part page — it carries the title too, because there is no prose
-    to carry it and ``ch13`` on its own tells a reader where to click and nothing else.
+    to carry it and ``ch14`` on its own tells a reader where to click and nothing else.
 
     Either way the text is derived from ``bench/outline.py``, and neither the number nor the
     title is the chapter's identity, so both move without warning. This is the check that makes
@@ -390,13 +390,25 @@ def test_a_written_page_uses_no_marketing_tone(path):
         assert phrase not in body, f"{path.name} contains {phrase!r}"
 
 
-def test_the_preface_states_the_distinction_the_book_is_built_on():
-    body = (ROOT / "index.md").read_text()
+def test_a_chapter_states_the_distinction_the_book_is_built_on():
+    """And the front matter does not, which is the change this replaced.
+
+    The distinction used to be stated in the introduction, because that is what PLAN.md said and
+    PLAN.md said it because the book this repository was bootstrapped from put its definitions
+    there. The result was that the idea seven chapters depend on was taught in a preface, with no
+    problems, nothing the reader could run, and no *What this cannot tell you* — front matter
+    cannot have those. It is a chapter now, and a chapter is where an argument goes.
+    """
+    body = (ROOT / "chapters" / "what_one_number_hides.md").read_text().lower()
     for required in ("deterministic structure", "measured constants", "ceiling"):
-        assert required.lower() in body.lower(), (
-            f"the front matter must explain the cost-model / sizing-model distinction; "
-            f"{required!r} is missing"
+        assert required in body, (
+            f"ch01 must explain the cost-model / sizing-model distinction; {required!r} is missing"
         )
+    preface = (ROOT / "index.md").read_text().lower()
+    assert "deterministic structure" not in preface, (
+        "the introduction is explaining the distinction again. It points at the chapter that "
+        "teaches it; saying it twice is how the two versions start to disagree."
+    )
 
 
 def test_dollar_maths_stays_off_while_the_book_prints_money():

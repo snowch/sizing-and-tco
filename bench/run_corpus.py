@@ -11,7 +11,7 @@ book's figures.
 
 What these are **not** is facts about your data. Every one of them is measured over a corpus this
 repository generates, and every chapter that quotes one says so and says what to run against a
-sample of your own. ch02 is about precisely that distinction.
+sample of your own. ch03 is about precisely that distinction.
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ def object_compression() -> dict:
     """How much smaller a general-purpose object store's contents get.
 
     The storage cluster's one measured constant, and the model is built so that it is the only
-    one — that book-keeping is deliberate. ch16's argument is that a cost model's structure is
+    one — that book-keeping is deliberate. ch17's argument is that a cost model's structure is
     accounting identities with uncertain prices hung off it, and a model stuffed with empirical
     constants would be quietly making the opposite case.
     """
@@ -131,7 +131,7 @@ def metric_sample_bytes() -> dict:
 
     The encoder is ``bench.measure.encode_series``, in this repository, byte-aligned and therefore
     perhaps a third worse than a production format that packs bits. That is a *property of this
-    measurement*, recorded here, and ch02's argument in one line: change the implementation and
+    measurement*, recorded here, and ch03's argument in one line: change the implementation and
     this constant is about something else.
     """
     shards = measure.over_shards(measure.metric_samples)
@@ -174,7 +174,7 @@ def trace_span_bytes() -> dict:
     The traces chain's byte-level constant. Its sibling — how many spans a request actually makes
     — is not here and cannot be: that is a property of somebody's instrumented application, not of
     any corpus, and the observability model leaves it unmeasured on purpose so that the reader
-    meets a blocked chain on a published page rather than in a footnote (ch02).
+    meets a blocked chain on a published page rather than in a footnote (ch03).
     """
     shards = measure.over_shards(measure.trace_spans)
     codec, description = measure.CODECS["deflate-6"]

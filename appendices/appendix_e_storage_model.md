@@ -52,7 +52,7 @@ of the last thing it depends on.
 Read two things off it directly. The graph is **wide at the left and narrow at the right**: two
 dozen quantities collapsing into a handful of answers, which is what makes a single wrong input so
 hard to spot downstream. And **two separate chains reach the node count** — capacity and bandwidth
-— which is [ch09](#bandwidth-and-the-binding-constraint)'s whole subject.
+— which is [ch10](#bandwidth-and-the-binding-constraint)'s whole subject.
 
 ## The outputs
 
@@ -66,7 +66,7 @@ hard to spot downstream. And **two separate chains reach the node count** — ca
 
 The verdict column is about the plan; the last two columns are about the world. A design that is
 under its hard limit and inside the margin it declared has not failed — it has spent the reserve
-it was keeping for the failure it has not had yet ([ch10](#headroom-and-failure-domains)).
+it was keeping for the failure it has not had yet ([ch11](#headroom-and-failure-domains)).
 
 ## What moves the answer
 
@@ -80,7 +80,7 @@ it was keeping for the failure it has not had yet ([ch10](#headroom-and-failure-
 
 Each bar swings one input across the middle of its own declared range with everything else held
 still. The ordering is the useful part: it says which input to go and measure first
-([ch18](#which-input-is-the-answer)). It is also a one-at-a-time analysis, so an input whose
+([ch19](#which-input-is-the-answer)). It is also a one-at-a-time analysis, so an input whose
 effect only appears in combination with another gets a short bar here and can still be the thing
 that sinks you.
 
@@ -107,7 +107,7 @@ neither.
 One measured constant, and its conditions are on the row: a compression ratio belongs to a codec
 and a body of data, and this one was measured over a synthetic corpus this repository generates.
 The method transfers; the number does not. Point the runner at a sample of your own estate
-([ch02](#where-the-numbers-come-from)).
+([ch03](#where-the-numbers-come-from)).
 
 ## Two scenarios, side by side
 
@@ -117,7 +117,7 @@ The method transfers; the number does not. Point the runner at a sample of your 
 The left column buys what the point estimates recommend. The right buys for the growth case the
 model thinks is plausible but not expected. The difference in capital is a number, and so is the
 difference in how often each ceiling breaks. Choosing between them is a judgement somebody has to
-make and defend, which is [ch20 · A TCO for a finance audience](#a-tco-for-finance).
+make and defend, which is [ch21 · A TCO for a finance audience](#a-tco-for-finance).
 
 ## Running it yourself
 

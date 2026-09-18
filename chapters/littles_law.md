@@ -1,10 +1,10 @@
 ---
 title: "Little's law"
-short_title: "ch04 Little's law"
+short_title: "ch05 Little's law"
 ---
 
 (littles-law)=
-# ch04 · Little's law
+# ch05 · Little's law
 
 ## The question
 
@@ -47,7 +47,7 @@ But the other two are trivial. Every system counts requests. Every system can ex
 how many are in flight — a connection count, a thread-pool depth, a semaphore.
 
 So divide. The residence time that comes out is the *true* one, including every queue the request
-sat in on the way. Problem 4.2 is that division.
+sat in on the way. Problem 5.2 is that division.
 
 ### What the tier says
 
@@ -78,7 +78,7 @@ straight through. Both the width and the wall come from the other multiplicand, 
 :width: 100%
 ```
 
-[ch05](#queueing-and-the-knee) explains why residence time behaves like that.
+[ch06](#queueing-and-the-knee) explains why residence time behaves like that.
 
 ### Three things the law lets you catch
 
@@ -126,7 +126,7 @@ incident.
 
 Two, in `tests/littles_law/`.
 
-**4.1 — The law.**
+**5.1 — The law.**
 One multiplication, checked against the model's own node. The node reaches the same quantity by a
 different route through the graph, so agreement is evidence rather than tautology. Checked at the
 point estimate first, then across every sample.
@@ -135,7 +135,7 @@ point estimate first, then across every sample.
 python3 -m pytest tests/littles_law/test_problem_1_the_law.py
 ```
 
-**4.2 — The law backwards.**
+**5.2 — The law backwards.**
 Infer residence time from in-flight requests and arrival rate — the two things every system
 already exposes. Then decide what to return when nothing is arriving. That decision is a
 judgement, not arithmetic.
@@ -149,5 +149,5 @@ python3 -m pytest tests/littles_law/test_problem_2_backwards.py
 Little's original proof @little1961proof is five pages, and worth reading for how little it
 assumes.
 
-[ch05](#queueing-and-the-knee) buys a mechanism. It costs assumptions, and it explains the shape
+[ch06](#queueing-and-the-knee) buys a mechanism. It costs assumptions, and it explains the shape
 of the distribution above.

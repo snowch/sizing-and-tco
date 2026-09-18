@@ -1,4 +1,4 @@
-"""Problem 5.2 - inverting the formula, and discovering there is no knee.
+"""Problem 6.2 - inverting the formula, and discovering there is no knee.
 
 Graded against the forward formula rather than against a stored utilisation: whatever your
 inverse returns, putting it back through the model's own curve has to give the tolerance you
@@ -48,7 +48,7 @@ def test_the_knee_moves_a_long_way_for_a_small_change_in_taste():
     assert tolerant > strict
     assert tolerant - strict > 0.5, (
         f"between a 1.5x tolerance ({strict:.2f}) and a 10x one ({tolerant:.2f}) lies most of the "
-        "useful range of a system. That gap is a decision, and it is the whole of ch10."
+        "useful range of a system. That gap is a decision, and it is the whole of ch11."
     )
 
 

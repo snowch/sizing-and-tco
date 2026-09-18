@@ -1,14 +1,14 @@
 ---
 title: "Correlation and convergence"
-short_title: "ch13 Correlation and convergence"
+short_title: "ch14 Correlation and convergence"
 ---
 
 (correlation-and-convergence)=
-# ch13 · Correlation and convergence
+# ch14 · Correlation and convergence
 
 ## The question
 
-[ch12](#monte-carlo) produced an interval, and it rested on two things nobody checked: that every
+[ch13](#monte-carlo) produced an interval, and it rested on two things nobody checked: that every
 input moves on its own, and that a hundred thousand samples was enough to settle the answer.
 
 Both are testable, and this chapter tests both. More samples do not make an interval narrower,
@@ -40,7 +40,7 @@ somebody will copy into the next model without knowing what it was for.
 
 The obvious way is to correlate the *values*: nudge each drive price up a little when the chassis
 price is up. Do that and you have changed the drive price distribution — the thing you carefully
-chose in [ch12](#monte-carlo), with its own percentiles and its own shape. You set out to encode
+chose in [ch13](#monte-carlo), with its own percentiles and its own shape. You set out to encode
 one belief and quietly overwrote another.
 
 The method this book uses only ever **reorders**. Every value that was going to be in a column is
@@ -67,7 +67,7 @@ relation is inverted before use:
 :end-before: def correlate(
 ```
 
-Problem 13.2 checks both halves of the claim: that the correlation comes out where it was asked
+Problem 14.2 checks both halves of the claim: that the correlation comes out where it was asked
 for, and that the marginal distributions did not move.
 
 ### What the correlations bought
@@ -93,7 +93,7 @@ removes an assumption that was making the model look better than it was.
 
 ### How many samples is enough
 
-Now the second thing [ch12](#monte-carlo) assumed. The obvious experiment is to run the model at
+Now the second thing [ch13](#monte-carlo) assumed. The obvious experiment is to run the model at
 rising sample counts and watch the interval narrow.
 
 That experiment does not work.
@@ -167,7 +167,7 @@ the calculation, never about the thing being calculated.
 **Which correlations exist.** Everything above takes the declared pairs as given. Nothing here
 discovers a correlation, and nothing here warns you about one you failed to declare. From inside
 the model, an undeclared correlation is indistinguishable from a correlation of zero. That is the
-same failure as a missing node, and it belongs to [ch19](#the-missing-node).
+same failure as a missing node, and it belongs to [ch20](#the-missing-node).
 
 **Whether the coefficient is right.** A rank correlation declared as moderate rather than strong
 is a guess with the same standing as any other assumption in the model. The `because` field
@@ -181,13 +181,13 @@ coefficient at all, and this book does not pretend otherwise.
 **That more samples are ever the answer to a wide interval.** They are not. More samples
 tell you where the interval is, not how wide it is. A wide interval means the inputs are
 uncertain, and the only things that narrow it are measuring something or deciding something
-— [ch18 · Which input to go and measure](#which-input-is-the-answer).
+— [ch19 · Which input to go and measure](#which-input-is-the-answer).
 
 ## Problems
 
 Four. The first three are graded, in `tests/correlation_and_convergence/`.
 
-**13.1 — Show the square-root law.**
+**14.1 — Show the square-root law.**
 Run one output of the storage model at several sample counts, with several independent seeds at
 each, and assert that the run-to-run spread falls as one over the square root of the count. The
 tolerance is itself a sampling question, and the test makes you confront that.
@@ -196,7 +196,7 @@ tolerance is itself a sampling question, and the test makes you confront that.
 python3 -m pytest tests/correlation_and_convergence/test_problem_1_root_n.py
 ```
 
-**13.2 — Correlate without disturbing the marginals.**
+**14.2 — Correlate without disturbing the marginals.**
 Add a correlation to a model and assert two things: that the interval on a shared output widens,
 and that every input's own distribution is unchanged. The second is the property that makes the
 method trustworthy, and it is one line to check.
@@ -205,7 +205,7 @@ method trustworthy, and it is one line to check.
 python3 -m pytest tests/correlation_and_convergence/test_problem_2_marginals.py
 ```
 
-**13.3 — Find the missing node.**
+**14.3 — Find the missing node.**
 A model file in the test directory is deliberately incomplete, and its stated interval is a lie:
 an observed total, stamped separately, falls outside it. Repair the model so the observation lands
 inside the interval, without widening any input's distribution to get there. There is no answer
@@ -215,7 +215,7 @@ key; the oracle is an independent figure the model does not contain.
 python3 -m pytest tests/correlation_and_convergence/test_problem_3_missing_node.py
 ```
 
-**13.4 — Break the convergence experiment.**
+**14.4 — Break the convergence experiment.**
 No test. The experiment in this chapter uses a different seed for every replicate. Change it so
 that every replicate at a given sample count shares one seed, re-run it, and explain what the
 figure now shows and why it is worthless. Then say what else in this repository would have to be
@@ -227,8 +227,8 @@ Iman and Conover's paper @imanconover1982 is the method in this chapter, and is 
 readable for a statistics paper of its era. The section on what the method does *not*
 guarantee is the part to read twice.
 
-[ch18](#which-input-is-the-answer) is the question this chapter keeps deferring: given that the
+[ch19](#which-input-is-the-answer) is the question this chapter keeps deferring: given that the
 interval is wide, which single input should you go and measure?
 
-[ch19](#the-missing-node) is the failure that neither this chapter nor [ch12](#monte-carlo) can
+[ch20](#the-missing-node) is the failure that neither this chapter nor [ch13](#monte-carlo) can
 see.

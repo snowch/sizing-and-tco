@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "fdcc83a5ce091ea9",
+  "code_fingerprint": "8f6875a2c7eb1835",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/stages/03-uncertainty/model.yaml",
@@ -10,10 +10,10 @@
   ],
   "conditions": {
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
-    "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch13, ch18)"
+    "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-18T05:26:18+00:00",
-  "git_revision": "f54d4fe",
+  "generated_at": "2026-09-18T16:25:43+00:00",
+  "git_revision": "f107d32",
   "kind": "model",
   "name": "storage_cluster_uncertainty-reference",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
@@ -45,13 +45,13 @@
       }
     ],
     "currency": "USD",
-    "description": "The storage model as it stands at the end of ch03.",
+    "description": "The storage model as it stands at the end of ch04.",
     "factors": {
       "horizon_periods": 1.0,
       "node_raw_capacity": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-18T05:26:18+00:00",
+    "generated_at": "2026-09-18T16:25:43+00:00",
     "model": "storage_cluster_uncertainty",
     "nodes": {
       "annual_growth": {
@@ -205,7 +205,7 @@
         "point": 1.338656042454521,
         "provenance": {
           "kind": "assumption",
-          "source": "ch03 \u2014 lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%."
+          "source": "ch04 \u2014 lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%."
         },
         "row": 0,
         "slider": {
@@ -499,7 +499,7 @@
         "point": 113.95437334044469,
         "provenance": {
           "kind": "assumption",
-          "source": "ch03 \u2014 the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention."
+          "source": "ch04 \u2014 the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention."
         },
         "row": 4,
         "slider": {
@@ -713,7 +713,7 @@
         "point": 4000.0,
         "provenance": {
           "kind": "assumption",
-          "source": "stated workload (ch01) \u2014 what the application says it needs to store today"
+          "source": "stated workload (ch02) \u2014 what the application says it needs to store today"
         },
         "row": 2,
         "slider": {

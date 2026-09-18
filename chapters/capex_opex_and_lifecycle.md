@@ -1,16 +1,16 @@
 ---
 title: "Capex, opex and where the total stops"
-short_title: "ch14 Capex, opex and where the total stops"
+short_title: "ch15 Capex, opex and where the total stops"
 ---
 
 (capex-opex-and-lifecycle)=
-# ch14 · Capex, opex and where the total stops
+# ch15 · Capex, opex and where the total stops
 
 ## The question
 
 What do you pay once, what do you pay every month, and what does this book deliberately not model?
 
-[ch11](#the-sizing-model) chose the cluster; this chapter prices it. The arithmetic is easy. The
+[ch12](#the-sizing-model) chose the cluster; this chapter prices it. The arithmetic is easy. The
 hard parts are the split between the invoice somebody signs and the bills that arrive afterwards,
 and knowing where a cost model should stop.
 
@@ -33,7 +33,7 @@ comparison, a negotiation. Running cost arrives in pieces, monthly, from several
 is nobody's decision in particular: an electricity bill, a support renewal, a fraction of a
 salary. Each piece is too small to argue about and the total is not.
 
-Problem 14.1 is that division. Run it against the table above and the running cost overtakes the
+Problem 15.1 is that division. Run it against the table above and the running cost overtakes the
 purchase inside the horizon the cluster was bought for. The argument was had about the smaller
 half.
 
@@ -46,7 +46,7 @@ way this model does not capture.
 The three running rows are three different kinds of number.
 
 **Energy** is physics: watts times hours times price, with a facility multiplier on top. It is the
-one line in the model with no judgement in it at all, and [ch15](#power-first) is about what
+one line in the model with no judgement in it at all, and [ch16](#power-first) is about what
 happens when it becomes the binding constraint rather than a line item.
 
 **Support** is a percentage of capital, so it is not really a running cost. It is a deferred part
@@ -76,7 +76,7 @@ the refresh at the end counts. Nobody writes the convention down. The difference
 cluster — the largest single line in the model — and two people can produce two totals from the
 same inputs and both be right.
 
-Problem 14.2 is that boundary. Which convention is correct is a modelling choice rather than a
+Problem 15.2 is that boundary. Which convention is correct is a modelling choice rather than a
 fact, so the test accepts either and checks only that you are consistent. Saying which you chose
 is the part that is not optional.
 
@@ -117,15 +117,15 @@ recovery, licences, the network gear
 between racks, or the cost of the
 migration that fills the cluster. Each
 absent line is a cost the model reports as
-zero, confidently, and neither [ch12](#monte-carlo) nor [ch13](#correlation-and-convergence)
-can see it. That is [ch19 · The missing node](#the-missing-node).
+zero, confidently, and neither [ch13](#monte-carlo) nor [ch14](#correlation-and-convergence)
+can see it. That is [ch20 · The missing node](#the-missing-node).
 
 **Whether the prices are yours.** Every price in the model is marked as a vendor's claim or an
-assumption ([ch02](#where-the-numbers-come-from)). None was measured, because a price is not the
+assumption ([ch03](#where-the-numbers-come-from)). None was measured, because a price is not the
 sort of thing this repository can measure.
 
 **What happens if the cluster is wrong.** The cost model takes the node count as given. If
-[ch11](#the-sizing-model)'s cluster runs out of space partway through its horizon, the real total
+[ch12](#the-sizing-model)'s cluster runs out of space partway through its horizon, the real total
 includes an unplanned purchase that no line here represents.
 
 **Anything about when the money is spent.** The split above is a total over a horizon. Whether the
@@ -136,7 +136,7 @@ budget.
 
 Two, in `tests/capex_opex_and_lifecycle/`.
 
-**14.1 — When does running cost overtake the purchase?**
+**15.1 — When does running cost overtake the purchase?**
 One division. Then look at where it falls relative to the horizon, and at which of the two halves
 got the meeting.
 
@@ -144,7 +144,7 @@ got the meeting.
 python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_1_crossover.py
 ```
 
-**14.2 — The refresh, and the convention nobody writes down.**
+**15.2 — The refresh, and the convention nobody writes down.**
 Decide what happens when a refresh lands exactly on the end of the horizon, defend it in a
 comment, and be consistent. The difference is a whole cluster.
 
@@ -154,8 +154,8 @@ python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_2_refresh.py
 
 ## Where to go next
 
-[ch15](#power-first) takes the one line in this chapter that is physics rather than negotiation,
+[ch16](#power-first) takes the one line in this chapter that is physics rather than negotiation,
 and asks what changes when it stops being a line item and becomes the constraint.
 
-[ch16](#unit-economics) turns the total into a number somebody outside the team can compare
+[ch17](#unit-economics) turns the total into a number somebody outside the team can compare
 against something.

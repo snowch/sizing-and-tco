@@ -1,4 +1,4 @@
-"""Chapter 21's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 22's problems. Edit this file; the tests beside it say whether you are right.
 
 The design failed. Both problems are about what the model can say afterwards — and the second is
 about the thing it says with complete confidence and no basis whatsoever.
@@ -10,7 +10,7 @@ import numpy as np
 
 
 def attribute(draws: dict[str, np.ndarray], failed: np.ndarray) -> list[tuple[str, float]]:
-    """Problem 21.1 - which input was doing something unusual when the design failed?
+    """Problem 22.1 - which input was doing something unusual when the design failed?
 
     ``draws`` is one array per uncertain input, all the same length: the values that were drawn
     together, sample by sample. ``failed`` is a boolean array of the same length, true in the
@@ -28,13 +28,13 @@ def attribute(draws: dict[str, np.ndarray], failed: np.ndarray) -> list[tuple[st
     must not raise. And the ordering is by *size* of shift, not by sign: an input that is unusually
     low in the failures is exactly as much of a cause as one that is unusually high.
     """
-    raise NotImplementedError("problem 21.1")
+    raise NotImplementedError("problem 22.1")
 
 
 def was_anything_extreme(
     draws: dict[str, np.ndarray], failed: np.ndarray, percentile: float = 90.0
 ) -> float:
-    """Problem 21.2 - how often the story afterwards is allowed to be about one dramatic thing.
+    """Problem 22.2 - how often the story afterwards is allowed to be about one dramatic thing.
 
     Same arguments. Return the fraction of the failing samples in which *no* input was beyond its
     own ``percentile`` — that is, the share of failures for which there is no culprit to point at,
@@ -47,4 +47,4 @@ def was_anything_extreme(
     was extreme is a failure of the *design* rather than of the world: the margin was too thin to
     absorb an ordinary week. That is a much less satisfying story and a much more useful one.
     """
-    raise NotImplementedError("problem 21.2")
+    raise NotImplementedError("problem 22.2")

@@ -1,4 +1,4 @@
-"""Problem 20.2 - the single number, and the sentence that goes with it.
+"""Problem 21.2 - the single number, and the sentence that goes with it.
 
 Nothing here grades the choice. It grades whether the number came from the model, whether it is
 rounded to a precision the model can support, and whether the sentence names something.

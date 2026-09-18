@@ -15,7 +15,7 @@ short_title: "Appendix B · sizing/mc.py"
 | **Source** | `sizing/mc.py`, `sizing/normal.py` |
 :::
 
-[ch12](#monte-carlo) and [ch13](#correlation-and-convergence) quote pieces of this module where
+[ch13](#monte-carlo) and [ch14](#correlation-and-convergence) quote pieces of this module where
 they need them. This page is the whole of it, in the order it is written, for a reader who wants
 to see that there is nothing else in it.
 
@@ -70,7 +70,7 @@ derived from, and the rule that derives them.
 
 Two branches meeting at the mode. Below it the area under the triangle grows as the square of the
 distance from the minimum, so inverting it is a square root; above it, the same thing from the
-other end. That derivation is the whole of adding a distribution to this book, and problem 12.1
+other end. That derivation is the whole of adding a distribution to this book, and problem 13.1
 asks for it again for a shape that is not here.
 
 ### Lognormal
@@ -210,7 +210,7 @@ ship.
 The bins are equal in width unless the quantity spans orders of magnitude, in which case they are
 equal in *ratio* and the payload says so. A queue near saturation does this: half the draws land
 in the first equal-width bin and the picture becomes a spike beside an empty page. The figure
-reads that flag and labels its axis accordingly; [ch04](#littles-law)'s concurrency figure is one
+reads that flag and labels its axis accordingly; [ch05](#littles-law)'s concurrency figure is one
 that does.
 
 ## What is deliberately absent
@@ -227,7 +227,7 @@ sign for the money. This book's bottleneck was never compute.
 
 Fitting is absent for a different reason. A function that reads your data and tells you which
 shape it is produces a model whose central assumption nobody ever wrote down. Choosing a shape is
-an editorial act with provenance attached ([ch02](#where-the-numbers-come-from)), and it belongs
+an editorial act with provenance attached ([ch03](#where-the-numbers-come-from)), and it belongs
 in the model file where a reviewer can argue with it.
 
 ## The inverse normal

@@ -1,10 +1,10 @@
 ---
 title: "The five-year model"
-short_title: "ch17 The five-year model"
+short_title: "ch18 The five-year model"
 ---
 
 (the-five-year-model)=
-# ch17 · The five-year model
+# ch18 · The five-year model
 
 ## The question
 
@@ -23,7 +23,7 @@ Here is a seam that exists in this repository.
 ```
 
 The storage model produces a cost per usable terabyte per month
-([ch16](#unit-economics)). And the observability model buys storage:
+([ch17](#unit-economics)). And the observability model buys storage:
 
 ```{include} _generated/the-five-year-model-observability.md
 ```
@@ -48,7 +48,7 @@ which is correct, because it is uncertain.
 downstream model treats it as known. This is what happens in practice. It happens in a meeting,
 between two teams, and often between two quarters.
 
-Problem 17.2 measures the second one, and the result is worth predicting before running: the
+Problem 18.2 measures the second one, and the result is worth predicting before running: the
 interval on the downstream answer gets **narrower**.
 
 Not wrong. Narrower. The headline number stays roughly where it was, and the doubt disappears.
@@ -68,13 +68,13 @@ usually driven by the same growth: a year when there is more telemetry is a year
 more of everything, so the price and the quantity move together. Put them in two models and each
 gets its own independent growth rate, which understates the joint uncertainty twice over — once by
 the point estimate at the seam, and once by the correlation that no longer has anywhere to be
-declared ([ch13](#correlation-and-convergence)).
+declared ([ch14](#correlation-and-convergence)).
 
 ### The gap in this book's own toolkit
 
 The DSL has four node kinds and none of them is *"a distribution that came from another model"*.
 
-Problem 17.2 walks you into the gap: to carry the price across, you have to sample the downstream
+Problem 18.2 walks you into the gap: to carry the price across, you have to sample the downstream
 model by hand, outside `sizing.evaluate`. A test asserts the gap is still there, so adding a fifth
 node kind fails that test and the problem gets rewritten.
 
@@ -106,15 +106,15 @@ book.
 **Anything about the organisation.** Two models is not an estate. The real total includes tiers
 nobody modelled, shared costs nobody allocated, and a network between them that appears in neither.
 
-**What the structure omits.** Same as [ch14](#capex-opex-and-lifecycle) and worse, because there
+**What the structure omits.** Same as [ch15](#capex-opex-and-lifecycle) and worse, because there
 are now two structures and the missing lines in each are invisible
-to the other. [ch19 · The missing node](#the-missing-node).
+to the other. [ch20 · The missing node](#the-missing-node).
 
 ## Problems
 
 Two, in `tests/the_five_year_model/`.
 
-**17.1 — Carry a distribution across a boundary.**
+**18.1 — Carry a distribution across a boundary.**
 Pull the storage model's unit cost out as a sample array, not a summary. The whole array — the
 next problem is about what a summary costs.
 
@@ -122,7 +122,7 @@ next problem is about what a summary costs.
 python3 -m pytest tests/the_five_year_model/test_problem_1_carry.py
 ```
 
-**17.2 — What a point estimate costs at the seam.**
+**18.2 — What a point estimate costs at the seam.**
 Drive the downstream model both ways and compare the intervals. Predict the direction first. Then
 say, in a comment, whether you think the DSL should have a node kind for this.
 
@@ -132,7 +132,7 @@ python3 -m pytest tests/the_five_year_model/test_problem_2_seam.py
 
 ## Where to go next
 
-[ch18](#which-input-is-the-answer) begins Part VI and asks the only actionable question about a
+[ch19](#which-input-is-the-answer) begins Part VI and asks the only actionable question about a
 wide interval: which input should you go and measure?
 
-[ch19](#the-missing-node) is the error that every chapter in Parts V and VI has deferred.
+[ch20](#the-missing-node) is the error that every chapter in Parts V and VI has deferred.

@@ -11,19 +11,19 @@ short_title: "Part III — Sizing"
 Everything so far has been preparation. This part does the arithmetic, and then looks at what it
 produced.
 
-**[ch08 · Capacity](#capacity)** is the chain from what an application stores to what a purchase
+**[ch09 · Capacity](#capacity)** is the chain from what an application stores to what a purchase
 order says, and the asymmetry in it: every term that hurts is certain, and the one term that helps
 is a measurement.
 
-**[ch09 · Bandwidth, and the binding constraint](#bandwidth-and-the-binding-constraint)** is the
+**[ch10 · Bandwidth, and the binding constraint](#bandwidth-and-the-binding-constraint)** is the
 second chain, the fact that the two disagree, and the number nobody computes: how far short you
 fall in the cases where the chain you dropped is the one that binds.
 
-**[ch10 · Headroom and failure domains](#headroom-and-failure-domains)** is the margin under both,
+**[ch11 · Headroom and failure domains](#headroom-and-failure-domains)** is the margin under both,
 why it is a rule rather than a number, and the arithmetic that catches people: margins compose by
 multiplication, and nobody in the room multiplies them.
 
-**[ch11 · The sizing model](#the-sizing-model)** assembles all of it and produces the number the
+**[ch12 · The sizing model](#the-sizing-model)** assembles all of it and produces the number the
 book is about. Then it asks the model what that number is worth, and the answer is the reason Part
 IV exists.
 

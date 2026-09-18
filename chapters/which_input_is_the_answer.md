@@ -1,10 +1,10 @@
 ---
 title: "Which input to go and measure"
-short_title: "ch18 Which input to go and measure"
+short_title: "ch19 Which input to go and measure"
 ---
 
 (which-input-is-the-answer)=
-# ch18 · Which input to go and measure
+# ch19 · Which input to go and measure
 
 ## The question
 
@@ -12,13 +12,13 @@ Which input should you go and measure first, and how would the model tell you?
 
 An interval describes a problem. Choosing which input to go and measure is the only actionable
 thing you can do with one. Everything here operates on a model that has already been sampled, so
-it needs [ch12](#monte-carlo) behind it rather than the chapter before.
+it needs [ch13](#monte-carlo) behind it rather than the chapter before.
 
 ## The material
 
 ### More samples never help
 
-The instinct is to run more samples, which is why [ch13](#correlation-and-convergence) is worth
+The instinct is to run more samples, which is why [ch14](#correlation-and-convergence) is worth
 restating: a wide interval is not sampling noise. The interval is a property of the model's
 inputs, and more draws locate it more precisely rather than narrowing it.
 
@@ -37,7 +37,7 @@ the model has dozens of uncertain inputs and only one of them matters.
 ```
 
 Each bar swings one input across the middle eighty per cent of its own distribution, with
-everything else held still. Problem 18.1 is building it.
+everything else held still. Problem 19.1 is building it.
 
 The swing comes from the input's **declared distribution**, not from its slider range. Otherwise
 an input somebody gave a generous slider gets a long bar for free, and the chart measures
@@ -60,10 +60,10 @@ Two charts and a table, because the third is short enough to read as a table. Lo
 the top of each.
 
 **Cardinality**, in the observability model — a product of uncertain counts, whose uncertainty
-compounds ([ch07](#regime-changes)).
+compounds ([ch08](#regime-changes)).
 
 **Arrival rate**, in the service tier, with service demand a distant second — the two that meet in
-a division by what is left of the system ([ch05](#queueing-and-the-knee)).
+a division by what is left of the system ([ch06](#queueing-and-the-knee)).
 
 **The chassis price**, in the storage model. Which breaks the pattern the other two make, and the
 break is the most useful thing on this page.
@@ -72,7 +72,7 @@ The pattern the first two make is that **the widest bar is somewhere the model i
 exponent, a product of uncertain things, a division by a small remainder. Inputs that are merely
 multiplied by constants, or added, hardly move anything, however uncertain they are. So the
 storage model ought to be topped by its growth rate, which is raised to a power — and
-[ch03](#peak-mean-and-growth)'s tornado, which swings the same inputs against the *recommended*
+[ch04](#peak-mean-and-growth)'s tornado, which swings the same inputs against the *recommended*
 node count, is topped by growth with nothing else close.
 
 This chart is against the five-year total, and growth is not on it at all. It cannot be. The cost
@@ -100,7 +100,7 @@ and neither chart will say so.
 
 ### What one-at-a-time misses
 
-Problem 18.2 measures a sharper version of the same limitation.
+Problem 19.2 measures a sharper version of the same limitation.
 
 Swing input A alone. Swing B alone. Swing both. If the model were additive in them, the third
 would be the sum of the first two. In a model built out of multiplications it is not — and the
@@ -124,7 +124,7 @@ comes back is the interval the model would report if that one thing were known.
 ```
 
 The last column is a **ceiling**. No real measurement is perfect: one leaves a standard error
-behind, that error propagates like any other ([ch02](#where-the-numbers-come-from)), and the
+behind, that error propagates like any other ([ch03](#where-the-numbers-come-from)), and the
 interval closes by less than the column says. That bound is what makes the column useful. A small
 number in it says the measurement is not worth commissioning *however well it goes*, and somebody
 can take that decision before spending anything.
@@ -140,7 +140,7 @@ Then the same experiment on the other model, where the answer has a different sh
 
 Two inputs tie at the top, and **the same number is not the same decision**. One is a count of
 label values somebody could go and query this afternoon. The other is a growth rate, which
-belongs to no target and cannot be measured at all ([ch03](#peak-mean-and-growth)) — the only
+belongs to no target and cannot be measured at all ([ch04](#peak-mean-and-growth)) — the only
 thing available for it is to *decide* it, by policy, and accept the flexibility that costs.
 
 Now the two rows at the bottom of that table.
@@ -153,7 +153,7 @@ better, is work that would produce a nicer provenance and the same interval.
 
 **And the rows do not add up.** They come to rather more or rather less than the whole, depending
 on the model, and they are not shares of anything. Uncertainty in a chain of multiplications does
-not divide between the inputs. Problem 18.2 measures the same fact from the other direction, where
+not divide between the inputs. Problem 19.2 measures the same fact from the other direction, where
 it is harder to argue with.
 
 ### After you measure it
@@ -161,7 +161,7 @@ it is harder to argue with.
 The point of running a sensitivity analysis is to change something, so it ends in a plan:
 
 - **measure it** — turn an assumption into a measured constant with a standard error, which is
-  [ch02](#where-the-numbers-come-from)'s discipline and problem 2.2's arithmetic for how much
+  [ch03](#where-the-numbers-come-from)'s discipline and problem 3.2's arithmetic for how much
   measuring is enough;
 - **decide it** — turn an uncertainty into a policy, which costs flexibility rather than money;
 - **design around it** — make the answer less sensitive to it, which is usually the most expensive
@@ -178,7 +178,7 @@ behind, and how large that error would be is not knowable before doing the work 
 figure is the ceiling, and the shortfall against it is somebody's judgement about how good a
 measurement they can take.
 
-**Anything about interactions.** One at a time, by construction. Problem 18.2 measures the gap and
+**Anything about interactions.** One at a time, by construction. Problem 19.2 measures the gap and
 the gap is not small in a multiplicative model. An input whose effect appears only in combination
 with another gets a short bar and can still be the thing that sinks you.
 
@@ -186,18 +186,18 @@ with another gets a short bar and can still be the thing that sinks you.
 
 **Whether the input can be measured at all.** In the observability model the joint-widest bar is
 a growth rate, which is a claim about the future and belongs to no target
-([ch03](#peak-mean-and-growth)). The chart will keep pointing at it, and the honest response is to
+([ch04](#peak-mean-and-growth)). The chart will keep pointing at it, and the honest response is to
 decide it rather than measure it.
 
 **Whether the model has the right inputs.** An input that is not there has no bar, and
 a tornado of a model missing a cost line is a confident ranking of the wrong list.
-[ch19 · The missing node](#the-missing-node).
+[ch20 · The missing node](#the-missing-node).
 
 ## Problems
 
 Two, in `tests/which_input_is_the_answer/`.
 
-**18.1 — Build the chart.**
+**19.1 — Build the chart.**
 Reproduce the tornado the build publishes. Swing from each input's distribution rather than from
 its slider, so that every bar answers the same question.
 
@@ -205,7 +205,7 @@ its slider, so that every bar answers the same question.
 python3 -m pytest tests/which_input_is_the_answer/test_problem_1_tornado.py
 ```
 
-**18.2 — What one-at-a-time misses.**
+**19.2 — What one-at-a-time misses.**
 Move two inputs separately, then together, and measure the difference. Do it for a pair that meets
 in a product and a pair that meets in a sum, and predict which will show a gap.
 
@@ -215,5 +215,5 @@ python3 -m pytest tests/which_input_is_the_answer/test_problem_2_interaction.py
 
 ## Where to go next
 
-[ch19](#the-missing-node) is the input that has no bar because it is not in the model, and the one
+[ch20](#the-missing-node) is the input that has no bar because it is not in the model, and the one
 error nothing in this book can rank.

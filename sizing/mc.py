@@ -1,9 +1,9 @@
 """Monte Carlo, from first principles.
 
-This module is small on purpose. It is quoted into ch12 and ch13 and it is meant to be read, not
+This module is small on purpose. It is quoted into ch13 and ch14 and it is meant to be read, not
 imported and trusted, so there is no simulation framework underneath it and no statistics package
 beside it — numpy for arrays, :mod:`sizing.normal` for one rational approximation, and nothing
-else. A reader who finishes ch13 should be able to delete this file and write it again.
+else. A reader who finishes ch14 should be able to delete this file and write it again.
 
 ## One idea
 
@@ -23,7 +23,7 @@ harder to explain to the person who has to sign for the money. This book's bottl
 compute; it is whether the reader believes the answer.
 
 No fitted distributions either. Nothing here reads data and tells you which shape it is. Choosing
-a shape is an editorial act with provenance attached (ch02), and a function that guesses it for
+a shape is an editorial act with provenance attached (ch03), and a function that guesses it for
 you produces a model whose central assumption nobody ever wrote down.
 """
 
@@ -41,7 +41,7 @@ Z90 = float(normal_ppf(0.9))
 
 #: How many draws a model is sampled with unless a scenario says otherwise.
 #:
-#: Not a magic number: ch13 derives it. At this count the 90% interval of the reference storage
+#: Not a magic number: ch14 derives it. At this count the 90% interval of the reference storage
 #: model is stable to within the precision the book reports it to, which is the only definition of
 #: "enough samples" that means anything. A model whose answer is still moving at 100,000 draws is
 #: telling you something about itself, and :func:`samples_needed` says how many it wants.
@@ -126,7 +126,7 @@ def lognormal_ppf(u: np.ndarray, p10: float, p90: float) -> np.ndarray:
 def normal_ppf_scaled(u: np.ndarray, mean: float, sd: float) -> np.ndarray:
     """Symmetric error around a central value.
 
-    In this book it means one thing: the measurement uncertainty of a ``measured`` node (ch02).
+    In this book it means one thing: the measurement uncertainty of a ``measured`` node (ch03).
     A constant was measured, the measurement has a standard error, and that error is as likely to
     be high as low. It is the wrong default for a price — see :func:`lognormal_ppf` — and the
     wrong shape for anything that cannot go negative, which it happily will.
@@ -179,7 +179,7 @@ def one_shape(spec: dict) -> tuple[str, dict]:
 def correlation_matrix(names: list[str], pairs: list[dict]) -> np.ndarray:
     """A full correlation matrix from the pairs a model bothered to declare.
 
-    Everything not named is left at zero, which is an assumption and not a fact — ch13 is mostly
+    Everything not named is left at zero, which is an assumption and not a fact — ch14 is mostly
     about how much that assumption costs. Stating it here rather than hiding it in a default is
     the point of building the matrix explicitly.
     """
@@ -296,7 +296,7 @@ def interval(x: np.ndarray, lo: float = 5, hi: float = 95) -> tuple[float, float
     """The range the model puts ``hi - lo`` per cent of its belief in.
 
     Not a confidence interval and not a guarantee. It is a statement about this model's inputs,
-    and it is exactly as good as they are — which is what ch13's closing section is about.
+    and it is exactly as good as they are — which is what ch14's closing section is about.
     """
     low, high = np.percentile(np.asarray(x, dtype=float), [lo, hi])
     return float(low), float(high)
@@ -312,7 +312,7 @@ def samples_needed(observed_half_width: float, at_n: int, target_half_width: flo
     """How many draws to get the interval down to a width you would report.
 
     Straight from the square-root law: the width falls as one over the square root of the sample
-    count, so to halve it you need four times as many. ch13 shows the law rather than asserting
+    count, so to halve it you need four times as many. ch14 shows the law rather than asserting
     it, and this is the arithmetic that follows once you believe it.
 
     This is a statement about *sampling noise only* — how much the answer wobbles because it was

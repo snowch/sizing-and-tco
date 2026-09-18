@@ -77,8 +77,8 @@ def _relabel(node: dict, text: str) -> str | None:
 
     ``Chapter.anchor`` already states the rule: a chapter number is a number, so it is derived
     and never typed. The prose types it anyway, because MyST resolves the *target* from the slug
-    but will only fill in the whole heading, and this book says ``ch12`` inline. So the renderer
-    has the last word. A reference reading ``ch12``, or ``ch12 · Monte Carlo``, is re-derived
+    but will only fill in the whole heading, and this book says ``ch13`` inline. So the renderer
+    has the last word. A reference reading ``ch13``, or ``ch13 · Monte Carlo``, is re-derived
     from the outline and cannot go stale when a chapter moves; the rest of the text is left
     exactly as written, which keeps MyST's typography in the part that is prose.
     """

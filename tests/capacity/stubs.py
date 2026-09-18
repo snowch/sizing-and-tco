@@ -1,4 +1,4 @@
-"""Chapter 8's problems. Edit this file; the tests beside it say whether you are right."""
+"""Chapter 9's problems. Edit this file; the tests beside it say whether you are right."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from sizing.dsl import Model
 
 
 def raw_for(usable: float, replication: float, compression: float, overhead: float) -> float:
-    """Problem 8.1 - the chain from what you need to what you must buy.
+    """Problem 9.1 - the chain from what you need to what you must buy.
 
     ``usable`` is the bytes the application wants to store. ``replication`` is how many copies you
     keep. ``compression`` is the ratio the data achieves - a two means it halves. ``overhead`` is
@@ -21,11 +21,11 @@ def raw_for(usable: float, replication: float, compression: float, overhead: flo
     The order matters less than people think and the direction matters more. Check yours against
     a case you can do in your head before running the test.
     """
-    raise NotImplementedError("problem 8.1")
+    raise NotImplementedError("problem 9.1")
 
 
 def erasure_crossover(data_shards: int, parity_shards: int) -> float:
-    """Problem 8.2 - when is erasure coding cheaper than copies?
+    """Problem 9.2 - when is erasure coding cheaper than copies?
 
     Replication keeps whole copies: three copies costs three times the space and survives two
     losses. Erasure coding splits an object into ``data_shards`` pieces and computes
@@ -38,14 +38,14 @@ def erasure_crossover(data_shards: int, parity_shards: int) -> float:
     It is one line and the point is what it exposes. Erasure coding is not cheaper because it is
     cleverer; it is cheaper because it amortises the same protection over more pieces. The saving
     grows with ``data_shards``, and so does the number of machines a single read has to touch -
-    which is a bandwidth and latency cost this model has no term for, and ch09 is why that
+    which is a bandwidth and latency cost this model has no term for, and ch10 is why that
     matters.
     """
-    raise NotImplementedError("problem 8.2")
+    raise NotImplementedError("problem 9.2")
 
 
 def in_binary_units(model: Model) -> Model:
-    """Problem 8.3 - the same model, read in the other kind of terabyte.
+    """Problem 9.3 - the same model, read in the other kind of terabyte.
 
     A vendor's TB is a trillion bytes. A filesystem's TiB is 2^40 of them, about ten per cent
     more. Both are spelled "terabyte" in conversation and the difference has bought a lot of
@@ -62,11 +62,11 @@ def in_binary_units(model: Model) -> Model:
     If you find yourself editing a value to compensate, stop. The build does that conversion, and
     doing it by hand is how the two copies of a model start to disagree.
     """
-    raise NotImplementedError("problem 8.3")
+    raise NotImplementedError("problem 9.3")
 
 
 def make_it_a_cost_model(model: Model) -> Model:
-    """Problem 8.4 - turn a sizing model back into a cost model, honestly.
+    """Problem 9.4 - turn a sizing model back into a cost model, honestly.
 
     ``scripts/verify-models.py`` classifies a model by what is in it: a ``measured`` node or a
     ``ceiling`` makes it a sizing model, and a model with neither is a cost model whose inputs
@@ -80,4 +80,4 @@ def make_it_a_cost_model(model: Model) -> Model:
     resulting model can no longer tell anybody. If you cannot name it, you have removed something
     that was not doing any work, and the original model should not have had it.
     """
-    raise NotImplementedError("problem 8.4")
+    raise NotImplementedError("problem 9.4")

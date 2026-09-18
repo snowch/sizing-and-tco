@@ -79,24 +79,24 @@ class Diagram:
 RIG = "take it on the reference machine (`make measure-rig`) and commit the result"
 
 FIGURES: dict[str, Table | Diagram] = {
-    # -- the preface ---------------------------------------------------------------------
+    # -- ch01 What one number hides -----------------------------------------------------------
     # Two rows, not the model's eight. The page asks "how big" and "how much" and shows that
     # each answer is a range; the other six are a chapter's subject arriving up to nineteen
     # chapters early. Two of them are the model's ceilings, and a ceiling shown without its
     # limit, its verdict or the probability of breaching it is the least readable row in the
-    # book — which is why ch12 gives them a table of their own with all three.
-    "preface-storage-outputs": Table(
+    # book — which is why ch13 gives them a table of their own with all three.
+    "what-one-number-hides-outputs": Table(
         render=tables.outputs_table,
         result="storage_cluster-reference",
         args=("nodes_recommended", "tco"),
     ),
-    "preface-tco-distribution": Diagram(
+    "what-one-number-hides-tco-distribution": Diagram(
         draw=diagrams.distribution,
         result="storage_cluster-reference",
         args=("tco",),
         alt="The five-year total cost as a distribution, with the point estimate marked on it",
     ),
-    # -- ch12 Monte Carlo -------------------------------------------------------------------------
+    # -- ch13 Monte Carlo -------------------------------------------------------------------------
     "monte-carlo-outputs": Table(render=tables.outputs_table, result="storage_cluster-reference"),
     "monte-carlo-nodes-distribution": Diagram(
         draw=diagrams.distribution,
@@ -123,7 +123,7 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("tco",),
         alt="The sub-graph that feeds the five-year total",
     ),
-    # -- ch13 Correlation and convergence ---------------------------------------------------------
+    # -- ch14 Correlation and convergence ---------------------------------------------------------
     "correlation-and-convergence-table": Table(
         render=tables.convergence_table, result="convergence-storage-tco"
     ),
@@ -232,7 +232,7 @@ FIGURES: dict[str, Table | Diagram] = {
     "appendix-h-running-the-toolkit-models": Table(
         render=tables.node_kinds_table, result="storage_cluster-reference"
     ),
-    # -- ch01 What a workload is ------------------------------------------------------------------
+    # -- ch02 What a workload is ------------------------------------------------------------------
     "what-a-workload-is-stage": Table(
         render=tables.stage_outputs, result="storage_cluster_demand-reference"
     ),
@@ -248,7 +248,7 @@ FIGURES: dict[str, Table | Diagram] = {
     "what-a-workload-is-service": Table(
         render=tables.workload_table, result="service_tier-reference"
     ),
-    # -- ch02 Where the numbers come from ---------------------------------------------------------
+    # -- ch03 Where the numbers come from ---------------------------------------------------------
     "where-the-numbers-come-from-stage": Table(
         render=tables.stage_outputs, result="storage_cluster_provenance-reference"
     ),
@@ -273,7 +273,7 @@ FIGURES: dict[str, Table | Diagram] = {
         result="collector-throughput-per-core",
         pending=f"Collector throughput per core is a timing: {RIG}.",
     ),
-    # -- ch03 Peak, mean and growth ---------------------------------------------------------------
+    # -- ch04 Peak, mean and growth ---------------------------------------------------------------
     "peak-mean-and-growth-tornado": Table(
         render=tables.tornado_table, result="storage_cluster-reference", args=("nodes_recommended",)
     ),
@@ -289,7 +289,7 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("usable_capacity",),
         alt="Usable capacity at the horizon, as a distribution",
     ),
-    # -- ch04 Little's law ------------------------------------------------------------------------
+    # -- ch05 Little's law ------------------------------------------------------------------------
     "littles-law-outputs": Table(render=tables.outputs_table, result="service_tier-reference"),
     "littles-law-concurrency": Diagram(
         draw=diagrams.distribution,
@@ -303,7 +303,7 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("concurrency",),
         alt="The sub-graph that produces the number of requests in the system",
     ),
-    # -- ch05 Queueing and the knee ---------------------------------------------------------------
+    # -- ch06 Queueing and the knee ---------------------------------------------------------------
     "queueing-and-the-knee-curve": Diagram(
         draw=diagrams.queueing_curve,
         result="queueing-curve",
@@ -313,7 +313,7 @@ FIGURES: dict[str, Table | Diagram] = {
     "queueing-and-the-knee-ceilings": Table(
         render=tables.ceilings_table, result="service_tier-reference"
     ),
-    # -- ch06 When adding servers stops helping ---------------------------------------------------
+    # -- ch07 When adding servers stops helping ---------------------------------------------------
     "when-adding-servers-stops-helping-curve": Diagram(
         draw=diagrams.scaling_curve,
         result="scaling-curve",
@@ -328,7 +328,7 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("service_tier-twice_the_nodes",),
         also=("service_tier-twice_the_nodes",),
     ),
-    # -- ch07 Regime changes ----------------------------------------------------------------------
+    # -- ch08 Regime changes ----------------------------------------------------------------------
     "regime-changes-cardinality": Diagram(
         draw=diagrams.distribution,
         result="observability-reference",
@@ -346,7 +346,7 @@ FIGURES: dict[str, Table | Diagram] = {
     "regime-changes-tornado": Table(
         render=tables.tornado_table, result="observability-reference", args=("active_series",)
     ),
-    # -- ch08 Capacity ----------------------------------------------------------------------------
+    # -- ch09 Capacity ----------------------------------------------------------------------------
     "capacity-graph": Diagram(
         draw=diagrams.dependency_graph,
         result="storage_cluster-reference",
@@ -355,7 +355,7 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     "capacity-outputs": Table(render=tables.outputs_table, result="storage_cluster-reference"),
     "capacity-measured": Table(render=tables.measured_table, result="storage_cluster-reference"),
-    # -- ch09 Bandwidth and the binding constraint ------------------------------------------------
+    # -- ch10 Bandwidth and the binding constraint ------------------------------------------------
     "bandwidth-and-the-binding-constraint-table": Table(
         render=tables.binding_table, result="binding-constraint"
     ),
@@ -371,7 +371,7 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("nodes_for_throughput",),
         alt="The node count the bandwidth chain asks for",
     ),
-    # -- ch10 Headroom and failure domains --------------------------------------------------------
+    # -- ch11 Headroom and failure domains --------------------------------------------------------
     "headroom-and-failure-domains-storage": Table(
         render=tables.ceilings_table, result="storage_cluster-reference"
     ),
@@ -381,7 +381,7 @@ FIGURES: dict[str, Table | Diagram] = {
     "headroom-and-failure-domains-service": Table(
         render=tables.ceilings_table, result="service_tier-reference"
     ),
-    # -- ch11 The sizing model --------------------------------------------------------------------
+    # -- ch12 The sizing model --------------------------------------------------------------------
     "the-sizing-model-outputs": Table(
         render=tables.outputs_table, result="storage_cluster-reference"
     ),
@@ -403,7 +403,7 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("nodes_recommended",),
         alt="The recommended node count, as a distribution",
     ),
-    # -- ch14 Capex, opex and where the total stops -----------------------------------------------
+    # -- ch15 Capex, opex and where the total stops -----------------------------------------------
     "capex-opex-and-lifecycle-split": Table(
         render=tables.cost_split_table, result="storage_cluster-reference"
     ),
@@ -413,7 +413,7 @@ FIGURES: dict[str, Table | Diagram] = {
     "capex-opex-and-lifecycle-tornado": Table(
         render=tables.tornado_table, result="storage_cluster-reference", args=("annual_opex",)
     ),
-    # -- ch15 Power first -------------------------------------------------------------------------
+    # -- ch16 Power first -------------------------------------------------------------------------
     "power-first-scenarios": Table(
         render=tables.scenario_comparison,
         result="storage_cluster-reference",
@@ -426,7 +426,7 @@ FIGURES: dict[str, Table | Diagram] = {
     "power-first-tornado": Table(
         render=tables.tornado_table, result="storage_cluster-reference", args=("annual_energy",)
     ),
-    # -- ch16 Unit economics ----------------------------------------------------------------------
+    # -- ch17 Unit economics ----------------------------------------------------------------------
     "unit-economics-distribution": Diagram(
         draw=diagrams.distribution,
         result="storage_cluster-reference",
@@ -444,7 +444,7 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("cost_per_usable_tb_month",),
         alt="Everything that feeds the unit cost, including its denominator",
     ),
-    # -- ch17 The five-year model -----------------------------------------------------------------
+    # -- ch18 The five-year model -----------------------------------------------------------------
     "the-five-year-model-storage": Table(
         render=tables.outputs_table, result="storage_cluster-reference"
     ),
@@ -454,7 +454,7 @@ FIGURES: dict[str, Table | Diagram] = {
     "the-five-year-model-split": Table(
         render=tables.cost_split_table, result="storage_cluster-reference"
     ),
-    # -- ch18 Which input to go and measure -------------------------------------------------------
+    # -- ch19 Which input to go and measure -------------------------------------------------------
     "which-input-is-the-answer-storage": Diagram(
         draw=diagrams.tornado_chart,
         result="storage_cluster-reference",
@@ -483,7 +483,7 @@ FIGURES: dict[str, Table | Diagram] = {
         result="value-of-information",
         args=("observability", "known_stored"),
     ),
-    # -- ch21 What the model got wrong ------------------------------------------------------------
+    # -- ch22 What the model got wrong ------------------------------------------------------------
     "what-the-model-got-wrong-attribution": Table(
         render=tables.postmortem_table, result="postmortem", args=("complete",)
     ),
@@ -496,7 +496,7 @@ FIGURES: dict[str, Table | Diagram] = {
     "what-the-model-got-wrong-unmeasured": Table(
         render=tables.not_yet_measured, result="observability-reference"
     ),
-    # -- ch19 The missing node --------------------------------------------------------------------
+    # -- ch20 The missing node --------------------------------------------------------------------
     "the-missing-node-outputs": Table(
         render=tables.outputs_table, result="observability-reference"
     ),
@@ -509,7 +509,7 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("known_ingest",),
         alt="What feeds the ingest total, and what is missing from it",
     ),
-    # -- ch20 A TCO for a finance audience --------------------------------------------------------
+    # -- ch21 A TCO for a finance audience --------------------------------------------------------
     "a-tco-for-finance-scenarios": Table(
         render=tables.scenario_comparison,
         result="storage_cluster-reference",

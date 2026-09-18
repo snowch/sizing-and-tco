@@ -25,8 +25,8 @@ When a rule and the material fight, the rule is the more likely to be wrong.
 
 ## The distinction the book is built on
 
-Everything follows from this, so do not work around it. The front matter states it;
-`scripts/verify-models.py` enforces it.
+Everything follows from this, so do not work around it. ch01 teaches it, the introduction points
+at ch01, and `scripts/verify-models.py` enforces it.
 
 - **A cost model** has a deterministic structure with uncertain parameters. Accounting identities
   and physics. Sampling the inputs is sufficient.

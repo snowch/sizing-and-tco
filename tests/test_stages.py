@@ -85,7 +85,7 @@ def test_a_stage_never_takes_a_node_away(stage):
 
 
 def test_the_stages_run_in_the_book_s_own_order():
-    """A node cannot arrive in ch08 and be shown in ch02."""
+    """A node cannot arrive in ch09 and be shown in ch03."""
     position = {chapter.slug: i for i, chapter in enumerate(CHAPTERS)}
     for stage in STAGES:
         assert stage.chapter in position, (

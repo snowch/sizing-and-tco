@@ -1,4 +1,4 @@
-"""Problem 14.1 - graded against the storage model's own split."""
+"""Problem 15.1 - graded against the storage model's own split."""
 
 from __future__ import annotations
 
@@ -47,5 +47,5 @@ def test_the_reference_cluster_crosses_inside_its_horizon(values):
     crossover = values["capex"] / values["annual_opex"]
     assert crossover < values["horizon"], (
         f"running cost overtakes capital at year {crossover:.1f} of a {values['horizon']:.0f}-year "
-        "horizon; if that ever stops being true, ch14 needs a different argument"
+        "horizon; if that ever stops being true, ch15 needs a different argument"
     )

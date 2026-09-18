@@ -1,4 +1,4 @@
-"""Problem 3.1 - the busy hour, graded against the shape it is drawn from."""
+"""Problem 4.1 - the busy hour, graded against the shape it is drawn from."""
 
 from __future__ import annotations
 

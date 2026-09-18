@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""The model file from ch01, runnable in a browser.
+"""The model file from ch02, runnable in a browser.
 
     python3 scripts/build-playground.py                # into _build/playground/
     python3 scripts/build-playground.py --out DIR
 
-ch01 ends by telling a reader they have a file that runs, and that multiplying a rate by a plain
+ch02 ends by telling a reader they have a file that runs, and that multiplying a rate by a plain
 number is refused here where a spreadsheet would accept it. Both were claims a reader could not
 check without a checkout, in a chapter arguing that numbers should not be taken on trust.
 
@@ -52,7 +52,7 @@ MODULES = ("__init__", "units", "expr", "dsl", "normal", "mc", "evaluate", "grap
 def fixtures(path: Path) -> list[dict]:
     """Models whose verdict this build computed, for the browser to agree with.
 
-    The first is the file the chapter leaves the reader with. The second is the mistake ch01 says
+    The first is the file the chapter leaves the reader with. The second is the mistake ch02 says
     a spreadsheet accepts, which is the one a reader is most likely to make on purpose, and every
     stage can make it because every stage has a derived node.
     """
@@ -167,7 +167,7 @@ async function boot() {{
   }} catch (error) {{
     show($("agreement"),
       "Python did not start, so this page cannot check anything: " + error +
-      " \\u2014 everything the page would have told you is in ch01 and in `make check`.",
+      " \\u2014 everything the page would have told you is in ch02 and in `make check`.",
       "bad");
     return;
   }}
@@ -204,7 +204,7 @@ from sizing.playground.driver import check
   }} else {{
     show($("agreement"),
       "This browser agrees with the build on all " + FIXTURES.length +
-      " checked files, including the one ch01 says a spreadsheet would accept.", "good");
+      " checked files, including the one ch02 says a spreadsheet would accept.", "good");
   }}
 }}
 

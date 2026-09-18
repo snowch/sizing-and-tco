@@ -1,4 +1,4 @@
-"""Problem 1.2 - a rate times an amount of time, and not a rate times a number."""
+"""Problem 2.2 - a rate times an amount of time, and not a rate times a number."""
 
 from __future__ import annotations
 
@@ -59,5 +59,5 @@ def test_the_two_computable_chains_are_still_there(base):
     blocked = base.blocked()
     for name in ("metrics_ingest", "logs_ingest"):
         assert name in base.nodes and name not in blocked, (
-            f"{name} is missing or blocked; problem 1.2 needs rewriting"
+            f"{name} is missing or blocked; problem 2.2 needs rewriting"
         )

@@ -1,4 +1,4 @@
-"""Problem 11.2 - what a percentage point of risk costs, and why the last ones cost most."""
+"""Problem 12.2 - what a percentage point of risk costs, and why the last ones cost most."""
 
 from __future__ import annotations
 

@@ -11,18 +11,18 @@ short_title: "Part II — Ceilings"
 Part I described demand. This part is about what happens to a system when that demand arrives, and
 it justifies [the introduction](#preface)'s distinction between a cost model and a sizing one.
 
-**[ch04 · Little's law](#littles-law)** is the one relationship that needs no assumptions at all,
+**[ch05 · Little's law](#littles-law)** is the one relationship that needs no assumptions at all,
 and can therefore explain nothing.
 
-**[ch05 · Queueing, and the knee](#queueing-and-the-knee)** buys a mechanism and pays for it in
+**[ch06 · Queueing, and the knee](#queueing-and-the-knee)** buys a mechanism and pays for it in
 assumptions. It also takes the knee out of its own title: the curve has no corner in it, and what
 people point at is their own tolerance.
 
-**[ch06 · When adding servers stops helping](#when-adding-servers-stops-helping)** is the obvious
+**[ch07 · When adding servers stops helping](#when-adding-servers-stops-helping)** is the obvious
 response to a system that is too busy: buy more machines. It works considerably less well than the
 arithmetic suggests, and past some count it works in reverse.
 
-**[ch07 · Regime changes](#regime-changes)** is the argument the other three have been assembling:
+**[ch08 · Regime changes](#regime-changes)** is the argument the other three have been assembling:
 a threshold with different physics on either side is something no product of quantities can
 express, however careful anybody is about the inputs. That is why the DSL has a node kind for it,
 and why a model that declares a limit without a margin does not build.
