@@ -30,18 +30,25 @@
   border-left-width: 4px;
 }
 
-/* The runnable model panels. `{iframe}` has no height option, and the default aspect ratio is
-   made for video: an editor beside its output wants to be tall, and on a phone it wants to be
-   taller still because the two stack. */
-figure iframe[src*="/playground/"],
-iframe[src*="/playground/"] {
-  height: 660px;
-  min-height: 660px;
-  aspect-ratio: auto;
+/* The runnable model panels.
+
+   The theme sizes an `{iframe}` with the padding-bottom trick: a wrapper whose height is 60% of
+   its width, with the iframe absolutely positioned to fill it. That ratio is made for video, and
+   an editor beside its output wants to be taller — but the height has to go on the wrapper.
+   Putting it on the iframe grew an absolutely positioned element straight out of its box and sat
+   it on top of the prose below, which is what shipped first. */
+div:has(> iframe[src*="/playground/"]) {
+  padding-bottom: 0 !important;
+  height: 680px;
   border: 1px solid #cfd8dc;
   border-radius: 4px;
+  overflow: hidden;
 }
+
+/* On a phone the editor and its output stack, so the panel needs most of the screen. */
 @media (max-width: 720px) {
-  figure iframe[src*="/playground/"],
-  iframe[src*="/playground/"] { height: 78vh; min-height: 520px; }
+  div:has(> iframe[src*="/playground/"]) {
+    height: 80vh;
+    min-height: 540px;
+  }
 }
