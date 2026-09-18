@@ -62,7 +62,32 @@ def _absolute(url: str) -> str:
 
 sys.path.insert(0, str(ROOT))
 
+from bench.outline import APPENDICES, CHAPTERS  # noqa: E402
 from bench.stamp import shown  # noqa: E402
+
+#: Every chapter and appendix by the anchor a cross-reference carries.
+BY_ANCHOR = {item.anchor: item for item in (*CHAPTERS, *APPENDICES)}
+
+#: A reference whose text is the chapter's label, optionally followed by its title.
+LABELLED = re.compile(r"^(ch\d+|Appendix [A-Z])(\s*\u00b7\s*)?")
+
+
+def _relabel(node: dict, text: str) -> str | None:
+    """The current label for the chapter a reference points at, if its text carries one.
+
+    ``Chapter.anchor`` already states the rule: a chapter number is a number, so it is derived
+    and never typed. The prose types it anyway, because MyST resolves the *target* from the slug
+    but will only fill in the whole heading, and this book says ``ch12`` inline. So the renderer
+    has the last word. A reference reading ``ch12``, or ``ch12 · Monte Carlo``, is re-derived
+    from the outline and cannot go stale when a chapter moves; the rest of the text is left
+    exactly as written, which keeps MyST's typography in the part that is prose.
+    """
+    item = BY_ANCHOR.get(str(node.get("identifier") or ""))
+    if item is None:
+        return None
+    found = LABELLED.match(text.strip())
+    return item.label + text.strip()[found.end() :] if found else None
+
 
 CONTENT = ROOT / "_build" / "site" / "content"
 #: Where MyST writes the assets it has content-hashed. An image URL in the parsed content points
@@ -138,6 +163,16 @@ def _published(url: str) -> str | None:
     path, _, anchor = url.partition("#")
     target = PAGES.get(path.strip("/").rsplit("/", 1)[-1] or "index")
     return None if target is None else target + (f"#{anchor}" if anchor else "")
+
+
+def _walk(node):
+    if isinstance(node, dict):
+        yield node
+        for value in node.values():
+            yield from _walk(value)
+    elif isinstance(node, list):
+        for item in node:
+            yield from _walk(item)
 
 
 def heading_id(node: dict) -> str:
@@ -244,6 +279,12 @@ def render(node: dict) -> str:
         inner = children()
         if not inner:
             return ""
+        plain = "".join(
+            str(n.get("value", "")) for n in _walk(node) if n.get("type") in ("text", "inlineCode")
+        )
+        current = _relabel(node, plain)
+        if current and current != plain:
+            inner = html.escape(current)
         url = str(node.get("url") or "")
         anchor = str(node.get("html_id") or "")
         page = url.strip("/").rsplit("/", 1)[-1]

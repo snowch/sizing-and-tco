@@ -193,7 +193,11 @@ until it is; that marker is what everything below keys off.
 **A chapter's number is never an identifier.** Identity is the slug: `(#monte-carlo)`,
 `chapters/monte_carlo.md`, `tests/monte_carlo/`. The number survives only where a reader sees it,
 and is derived from `bench/outline.py`. `tests/test_book.py` fails an identifier containing a
-digit. Inserting a chapter is an edit to `bench/outline.py` and `myst.yml`, and nothing else moves.
+digit. Inserting a chapter is an edit to `bench/outline.py` and `myst.yml`. The pages are right
+immediately: the renderer derives every `chNN` in the prose from the outline rather than trusting
+the text it was given, so no reference can go stale in a paragraph nobody rereads. The markdown
+still says the old number, because a renderer cannot edit source — run
+`python3 scripts/relabel-references.py` to catch it up, and `tests/test_book.py` fails until you do.
 
 Do not write the list of what is written into this file. Ask the repository:
 
