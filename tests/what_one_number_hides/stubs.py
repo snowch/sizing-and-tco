@@ -35,11 +35,11 @@ def spread_of_the_chain(model: Model) -> float:
     of a product of uncertain quantities, in the same units as ``spread_of_each`` — a ratio of a
     high estimate to a low one.
 
-    This is the crude version on purpose. It assumes every input is at its p10 at the same moment
-    and then at its p90 at the same moment, which is a stronger claim than anybody's data
-    supports, and ch13 is where it gets replaced by something defensible. It is worth computing
-    anyway, because the honest answer and this one are both far wider than any single input, and
-    that is the point a point estimate cannot make.
+    This calculation assumes every input is at its p10 at the same moment and then at its p90 at
+    the same moment — a stronger claim than anybody's data supports, and ch13 is where sampling
+    replaces it. What this version has over that one is that it needs nothing but the numbers
+    already in the file, and what comes out is still far wider than any single input. That is the thing a
+    point estimate cannot say, and you can reach it on paper.
     """
     raise NotImplementedError("problem 1.1")
 
