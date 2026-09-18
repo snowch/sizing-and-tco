@@ -68,8 +68,9 @@ from bench.stamp import shown  # noqa: E402
 #: Every chapter and appendix by the anchor a cross-reference carries.
 BY_ANCHOR = {item.anchor: item for item in (*CHAPTERS, *APPENDICES)}
 
-#: A reference whose text is the chapter's label, optionally followed by its title.
-LABELLED = re.compile(r"^(ch\d+|Appendix [A-Z])(\s*\u00b7\s*)?")
+#: A reference whose text opens with the chapter's label. The label and nothing after it: what
+#: follows is the separator and the title, and both are the author's to keep.
+LABELLED = re.compile(r"^(ch\d+|Appendix [A-Z])\b")
 
 
 def _relabel(node: dict, text: str) -> str | None:
