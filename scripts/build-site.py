@@ -631,12 +631,21 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
 /* Frame */
 .shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 82rem;
          margin-inline: auto; }
-@media (min-width: 1040px) {
-  .shell { grid-template-columns: 17rem minmax(0, 1fr) 14rem; }
+/* Two steps, not one. A column of 41rem needs 58rem beside the navigation and 72rem beside both
+   sidebars, and a single breakpoint at the larger of those left a 1024px tablet with no
+   navigation and a third of its width empty. */
+@media (min-width: 58rem) {
+  .shell { grid-template-columns: 17rem minmax(0, 1fr); }
   #menu { display: none; }
-  .nav, .toc { display: block !important; position: sticky; top: var(--top);
-               max-height: calc(100vh - var(--top)); overflow-y: auto;
-               overscroll-behavior: contain; }
+  .nav { display: block !important; position: sticky; top: var(--top);
+         max-height: calc(100vh - var(--top)); overflow-y: auto;
+         overscroll-behavior: contain; }
+}
+@media (min-width: 72rem) {
+  .shell { grid-template-columns: 17rem minmax(0, 1fr) 14rem; }
+  .toc { display: block !important; position: sticky; top: var(--top);
+         max-height: calc(100vh - var(--top)); overflow-y: auto;
+         overscroll-behavior: contain; }
 }
 .nav, .toc { display: none; font: 14px/1.45 var(--chrome); padding: 1.4rem 1rem 3rem; }
 .nav.open { display: block; }
@@ -659,8 +668,10 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
 .toc .d3 a { padding-left: 1.2rem; font-size: 13.5px; }
 
 /* Prose */
+/* Centred, because the slack has to go somewhere and all of it on the right reads as a mistake.
+   Below the first breakpoint that is the whole viewport; above it, the column it sits in. */
 main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem; max-width: calc(var(--measure) + 5rem);
-       min-width: 0; }
+       min-width: 0; width: 100%; margin-inline: auto; }
 main :is(h1, h2, h3, h4) { font-family: var(--chrome); letter-spacing: -.012em;
                            scroll-margin-top: calc(var(--top) + 1rem); }
 h1 { font-size: clamp(1.6rem, 5.4vw, 2rem); font-weight: 700; line-height: 1.18;
