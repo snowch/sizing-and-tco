@@ -83,13 +83,29 @@ def main() -> int:
             ):
                 missing.append(f"{page.relative_to(root)} -> {target}#{fragment} (no such id)")
 
+    # The search index is a second set of links into the same pages, written by a different code
+    # path and read by nobody until a reader types. Three hundred of them, checked by nothing.
+    catalogue = root / "search.json"
+    records = 0
+    if catalogue.exists():
+        import json
+
+        for record in json.loads(catalogue.read_text()):
+            records += 1
+            page, _, fragment = str(record.get("u", "")).partition("#")
+            target = root / page
+            if not page or not target.exists():
+                missing.append(f"search.json -> {record.get('u')} (no such page)")
+            elif fragment and fragment not in offers(target):
+                missing.append(f"search.json -> {record.get('u')} (no such id)")
+
     if missing:
         print("check-built-links: FAILED")
         for line in sorted(set(missing)):
             print(f"  - {line}")
         return 1
     print(
-        f"check-built-links: OK ({checked} local link(s) and "
+        f"check-built-links: OK ({checked} local link(s), {records} search record(s) and "
         f"{sum(len(v) for v in anchors.values())} anchor(s) across the built site)"
     )
     return 0
