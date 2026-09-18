@@ -29,3 +29,19 @@
 .myst-content .admonition.warning {
   border-left-width: 4px;
 }
+
+/* The runnable model panels. `{iframe}` has no height option, and the default aspect ratio is
+   made for video: an editor beside its output wants to be tall, and on a phone it wants to be
+   taller still because the two stack. */
+figure iframe[src*="/playground/"],
+iframe[src*="/playground/"] {
+  height: 660px;
+  min-height: 660px;
+  aspect-ratio: auto;
+  border: 1px solid #cfd8dc;
+  border-radius: 4px;
+}
+@media (max-width: 720px) {
+  figure iframe[src*="/playground/"],
+  iframe[src*="/playground/"] { height: 78vh; min-height: 520px; }
+}

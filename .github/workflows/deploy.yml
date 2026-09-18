@@ -92,7 +92,9 @@ jobs:
       # was wired up here: Pyodide boots in about five seconds, micropip resolves Pint and
       # PyYAML from PyPI, and the page's own fixtures agree with the verdicts this build
       # computed for them. It disables its own button and says so when Python does not start.
-      - name: Build the model playground
+      # One page per chapter that builds the model, embedded in that chapter with `{iframe}`.
+      # Nothing boots until a reader presses Run, so a chapter page costs no more than before.
+      - name: Build the model playgrounds
         run: python3 scripts/build-playground.py --out _build/html/playground
 
       # The themes set a favicon and nothing else. A manifest and an apple-touch-icon are what a

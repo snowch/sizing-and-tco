@@ -157,6 +157,17 @@ def render(node: dict) -> str:
     if kind == "tableCell":
         tag = "th" if node.get("header") else "td"
         return f"<{tag}>{children()}</{tag}>"
+    if kind == "caption":
+        return f"<figcaption>{children()}</figcaption>"
+    if kind == "container":
+        # What `{iframe}` and `{figure}` wrap their content in: the thing itself and a caption.
+        classes = " ".join(["container", *str(node.get("kind", "")).split()])
+        return f'<figure class="{classes}">{children()}</figure>'
+    if kind == "iframe":
+        # A panel a reader presses is nothing on paper, so it becomes the link it embeds. The
+        # caption beside it is already prose and renders as prose.
+        url = _absolute(str(node.get("src", "")))
+        return f'<p class="iframe-fallback">Run it at <a href="{html.escape(url)}">{html.escape(url)}</a></p>'
     if kind == "link":
         return f'<a href="{html.escape(_absolute(str(node.get("url", ""))))}">{children()}</a>'
     if kind == "crossReference":

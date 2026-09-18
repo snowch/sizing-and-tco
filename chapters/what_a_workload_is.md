@@ -97,10 +97,16 @@ stated:
 :end-before: outputs:
 ```
 
-That is the whole of the demand side, and you can [run it in your browser](/playground/) — the
-page opens on this file, and the thing reading it is this repository's toolkit rather than a copy
-of it. Change a number and the total moves. Change `usable_capacity`'s formula to multiply the
-read throughput by a count of periods, and it refuses, for the reason at the top of this chapter.
+That is the whole of the demand side. Here it is, and the toolkit that reads it — this
+repository's, not a copy of it. Press **Run**, then change a number and watch the total move.
+Change `usable_capacity`'s formula to multiply the read throughput by a count of periods, and it
+refuses, for the reason at the top of this chapter.
+
+```{iframe} /playground/what-a-workload-is/
+:width: 100%
+The file above, running. The first press fetches a Python runtime; after that a check takes milliseconds.
+```
+
 
 ### The demand and the decisions
 
