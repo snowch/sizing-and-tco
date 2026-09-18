@@ -510,6 +510,7 @@ PAGE = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title} — Sizing and TCO</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+{headlinks}
 <style>{css}</style>
 </head>
 <body>
@@ -523,6 +524,7 @@ PAGE = """<!doctype html>
   <nav id="nav" class="nav" aria-label="Chapters">{nav}</nav>
   <main id="main" tabindex="-1">
 {body}
+{turn}
   </main>
   <aside class="toc">{toc}</aside>
 </div>
@@ -765,9 +767,26 @@ button.primary:hover:not(:disabled) { color: var(--on-accent); filter: brightnes
 
 figure > .runner { margin: 0; }
 
+/* Carrying on reading. Two targets at the foot of every page, because the contents list is a
+   place to look something up and this is the one a reader going front to back actually uses. */
+.turn { display: flex; gap: .9rem; margin: 3.5rem 0 0; padding-top: 1.4rem;
+        border-top: 1px solid var(--edge); }
+.turn a { flex: 1 1 0; min-width: 0; display: block; text-decoration: none; color: var(--ink);
+          font-family: var(--chrome); border: 1px solid var(--edge); border-radius: 8px;
+          padding: .7rem .9rem; }
+.turn a:hover { border-color: var(--accent); background: var(--panel); }
+.turn .next { margin-left: auto; text-align: right; }
+.turn .way { display: block; font-size: 11.5px; font-weight: 600; letter-spacing: .08em;
+             text-transform: uppercase; color: var(--faint); margin-bottom: .15rem; }
+.turn .what { font-size: 15px; font-weight: 600; line-height: 1.3; }
+@media (max-width: 560px) {
+  .turn { flex-direction: column; }
+  .turn .next { text-align: left; margin-left: 0; }
+}
+
 /* On paper the furniture is noise and the controls do nothing. */
 @media print {
-  .top, .nav, .toc, .runner, .editable-bar { display: none; }
+  .top, .nav, .toc, .runner, .editable-bar, .turn, .find { display: none; }
   .shell { display: block; }
   main { max-width: none; padding: 0; }
   .editable-block { border: 1px solid #ccc; }
@@ -805,7 +824,7 @@ def toc_html(page: dict) -> str:
     return f'<div class="part">On this page</div><ul>{body}</ul>'
 
 
-def render_page(source: str, page: dict) -> str:
+def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) -> str:
     # Editable excerpts have to be marked before the body is rendered, because the renderer
     # decides from the mark whether a quoted block is a picture of the file or the file itself.
     stage = stage_for(source)
@@ -836,6 +855,7 @@ def render_page(source: str, page: dict) -> str:
             pyodide=PYODIDE,
         )
         body = body.replace(PDF.RUNNER_SLOT, runner, 1)
+    headlinks, turn = turning(before, after)
     return PAGE.format(
         title=html.escape(title_for(source, page)),
         css=CSS,
@@ -843,7 +863,35 @@ def render_page(source: str, page: dict) -> str:
         toc=toc,
         body=body,
         search=SEARCH,
+        headlinks=headlinks,
+        turn=turn,
     )
+
+
+#: Where a page sits in the reading order, as (href, title). None at either end of the book.
+Neighbour = tuple[str, str] | None
+
+
+def turning(before: Neighbour, after: Neighbour) -> tuple[str, str]:
+    """The foot of a page: the two links that carry on reading.
+
+    The order is `page_order()`, which is the order this build writes the pages in and the order
+    the PDF binds them in, so the book cannot disagree with itself about what comes next. `rel`
+    in the head as well as links in the page: a browser and a crawler both read the first, and
+    only a person reads the second.
+    """
+    head, foot = [], []
+    for way, where, label in (("prev", before, "Previous"), ("next", after, "Next")):
+        if not where:
+            continue
+        href, title = where
+        head.append(f'<link rel="{way}" href="{html.escape(href)}">')
+        foot.append(
+            f'<a class="{way}" href="{html.escape(href)}">'
+            f'<span class="way">{label}</span>'
+            f'<span class="what">{html.escape(title)}</span></a>'
+        )
+    return "\n".join(head), (f'<nav class="turn">{"".join(foot)}</nav>' if foot else "")
 
 
 def crawlables(out: Path, pages: list[str]) -> None:
@@ -904,12 +952,22 @@ def main() -> int:
         f"  wrote {shown(catalogue)} ({catalogue.stat().st_size:,} bytes, {len(records)} sections)"
     )
 
+    # The reading order, so each page knows what comes before and after it. Built from the
+    # pages that are actually being written, so `--only` cannot produce a link to nothing.
+    order = [s for s in wanted if s in index]
+    reading: list[Neighbour] = [(href_for(s), title_for(s, index[s])) for s in order]
+
     written = []
-    for source in wanted:
-        if source not in index:
-            continue
+    for at, source in enumerate(order):
         target = args.out / href_for(source)
-        target.write_text(render_page(source, index[source]))
+        target.write_text(
+            render_page(
+                source,
+                index[source],
+                reading[at - 1] if at else None,
+                reading[at + 1] if at + 1 < len(reading) else None,
+            )
+        )
         written.append(href_for(source))
         print(f"  wrote {shown(target)} ({len(target.read_text()):,} bytes)")
 
