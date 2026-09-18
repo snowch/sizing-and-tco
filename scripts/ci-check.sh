@@ -155,6 +155,13 @@ if grep -rq '"type":"inlineMath"' _build/site/content/ 2>/dev/null; then
 fi
 echo "  no currency parsed as LaTeX"
 
+echo "== the book renders without the theme =="
+# The comparison build at /static/, which reads the parse above rather than the themed build —
+# so it has to come after it. It shares build-pdf.py's renderer, which makes this the only check
+# that the renderer handles every node type as a *site* rather than as one bound document.
+python3 scripts/build-site.py --out _build/static > /dev/null
+echo "  OK"
+
 echo "== the PDF renderer sees every page =="
 # The mdast-to-HTML renderer is the one part of the pipeline that is not MyST's, and it raises on
 # a node type it does not handle rather than dropping content. Running it over every page on every
