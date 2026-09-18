@@ -134,7 +134,7 @@ to a whole machine, and no average can express that ([ch08](#regime-changes)).
 
 ## Problems
 
-Two, in `tests/unit_economics/`.
+Three, in `tests/unit_economics/`. The first two have tests. The last does not, and says why.
 
 **17.1 — A total, a quantity, a period.**
 Two divisions. If your answer is out by twelve, one of you is working in years.
@@ -150,6 +150,21 @@ you would be willing to say which it was.
 ```bash
 python3 -m pytest tests/unit_economics/test_problem_2_denominators.py
 ```
+
+**17.3 — Your denominator, and who chose it.** No test: the denominator is a choice, and there is
+no right one to check it against.
+
+Work out your own cost per unit, then interrogate the denominator. Per terabyte stored, per
+terabyte ingested, per request, per user, per team — all defensible, all different numbers, and
+the choice usually predates anybody currently looking at it.
+
+Then find out what the figure is used for. A unit cost quoted in a budget meeting and a unit cost
+used to decide whether to build or buy need different denominators, and the same number is
+routinely used for both.
+
+A good answer gives the figure, the denominator, who chose it and what it is used for. If the
+denominator turns out to have been chosen because it made an earlier comparison look favourable,
+you have found something worth more than the number.
 
 ## Where to go next
 

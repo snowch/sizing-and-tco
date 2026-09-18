@@ -155,7 +155,8 @@ cannot say by how much.
 
 ## Problems
 
-Two, in `tests/queueing_and_the_knee/`.
+Three, in `tests/queueing_and_the_knee/`. The first two have tests. The last does not, and says
+why.
 
 **6.1 — The formula.**
 Write the division. Work out what you are dividing by before you look it up, then decide what to
@@ -174,6 +175,22 @@ two answers is a decision, not a discovery.
 ```bash
 python3 -m pytest tests/queueing_and_the_knee/test_problem_2_knee.py
 ```
+
+**6.3 — Where your own knee is.** No test: the curve is your system's, and this repository has no
+access to it.
+
+Your monitoring already has this. Plot response time against utilisation for one device or one
+tier — a scatter of the last few weeks, not an average — and find where the curve stops being
+flat.
+
+Then answer the question the chart cannot: what utilisation is your system actually run at, and
+who chose it? In most places the answer is that nobody chose it; it is wherever the last capacity
+argument left off.
+
+A good answer is a picture with a knee visible in it and a number beside it. If the scatter is a
+flat line, either you are nowhere near the knee — which is worth knowing and probably worth
+money — or your utilisation metric is averaged over a window long enough to hide every peak,
+which is the commoner of the two.
 
 ## Where to go next
 

@@ -134,7 +134,7 @@ defend.
 
 ## Problems
 
-Two, in `tests/the_sizing_model/`.
+Three, in `tests/the_sizing_model/`. The first two have tests. The last does not, and says why.
 
 **12.1 — Size to a risk, not to a point estimate.**
 Find the smallest cluster whose capacity ceiling is breached in at most some fraction of samples.
@@ -153,6 +153,21 @@ between an argument and a preference.
 ```bash
 python3 -m pytest tests/the_sizing_model/test_problem_2_cost_of_certainty.py
 ```
+
+**12.3 — Your own model, as far as it goes.** No test: it is your chain, and the marks on it are
+judgements.
+
+Take the quantities from your workload and assemble them into a chain that ends in a count of
+machines. Not in a file, unless you want to — on paper is fine. The point is to get from what
+arrives to what you buy without skipping a step.
+
+Then find the two things that make it a sizing model rather than a cost model: a constant somebody
+measured on a particular version of a particular piece of software, and a limit your system runs
+into. Mark each one.
+
+A good answer reaches a number and has at least one mark on it. A chain with no marks is a cost
+model, and either your system genuinely has no measured constants and no ceilings — rare — or
+you have not found them yet, which is the more likely reading and the more expensive one.
 
 ## Where to go next
 

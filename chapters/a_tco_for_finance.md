@@ -197,7 +197,8 @@ the book arguing from experience rather than from a stamped result.
 
 ## Problems
 
-Two, in `tests/a_tco_for_finance/`. Neither is arithmetic.
+Three, in `tests/a_tco_for_finance/`. The first two have tests and neither is arithmetic. The last
+has no test, and says why.
 
 **21.1 — The decision table.**
 Build the two-design comparison from the stamped results, with the columns that answer the
@@ -216,6 +217,20 @@ sentence names something specific.
 ```bash
 python3 -m pytest tests/a_tco_for_finance/test_problem_2_one_number.py
 ```
+
+**21.3 — Write the page, and hand it over.** No test: a page is graded by the person it is for.
+
+Write the one-page version for your own system and give it to whoever signs for it. A
+recommendation, what it rests on, what would change it, and the cost of being wrong in each
+direction.
+
+Then do the part that is not writing: watch what they ask. The question they ask first is the
+thing your page failed to answer, and it is almost never the one you expected to spend a page on.
+
+A good answer is one page and gets a decision. If it gets a request for more detail, the detail
+they asked for belongs on the page and something currently on it does not. This book has no
+measurement of whether a document like this works, which is why the only test available is
+handing it to somebody.
 
 ## Where to go next
 

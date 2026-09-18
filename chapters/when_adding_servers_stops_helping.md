@@ -142,7 +142,8 @@ step — the curve above is a description of a queue in front of the real proble
 
 ## Problems
 
-Three, in `tests/when_adding_servers_stops_helping/`.
+Four, in `tests/when_adding_servers_stops_helping/`. The first three have tests. The last does not,
+and says why.
 
 **7.1 — Write the law.**
 Two terms in the denominator, behaving differently. The tests check that contention alone flattens
@@ -165,6 +166,20 @@ Both are checked by one file, because the peak is what the fit is for:
 ```bash
 python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_2_fit.py
 ```
+
+**7.4 — The time adding machines did not help.** No test: the answer is in somebody's memory, not
+in a file.
+
+Ask the people who were there. Somewhere in your organisation there is a tier that got a bigger
+fleet and did not get proportionally faster, and somebody has a theory about why.
+
+Write down the theory, then write down which of this chapter's two costs it corresponds to:
+contention for something shared, or the cost of machines agreeing with each other. If it is
+neither, you have found a third mechanism, which is more interesting than the chapter.
+
+A good answer names the tier, the change in machine count, the change in throughput, and which
+mechanism it was. If nobody can remember a case, that is an answer too — it means you have never
+been near the peak, and the coefficients in this chapter are not about you.
 
 ## Where to go next
 

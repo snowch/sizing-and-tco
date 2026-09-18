@@ -150,8 +150,8 @@ observe the system afterwards — neither of which a book can do for you.
 
 ## Problems
 
-Two, in `tests/what_the_model_got_wrong/` — the chapter's two halves. The second is worth
-predicting before you run it.
+Three, in `tests/what_the_model_got_wrong/`. The first two have tests — the chapter's two halves —
+and the second is worth predicting before you run it. The last does not, and says why.
 
 **22.1 — Attribute the failure.**
 Given the draws and which of them failed, rank the inputs by how far each one had to be from its
@@ -170,6 +170,20 @@ with the failure, and watch the same statistic find a villain anyway.
 ```bash
 python3 -m pytest tests/what_the_model_got_wrong/test_problem_2_extreme.py
 ```
+
+**22.3 — A post-mortem on one of yours.** No test: it is your history, and nobody else has it.
+
+Find an estimate you or your team made that turned out badly — a cluster that filled early, a
+budget that overran, a tier that needed replacing sooner than planned. Reconstruct what was
+assumed at the time, not what is known now.
+
+Then apply this chapter's question: was the cause an input that moved, or a structure that was
+wrong? An input that moved is a wider distribution next time. A structure that was wrong is a
+quantity nobody had written down, and no amount of sampling would have found it.
+
+A good answer identifies which of the two it was and says what would have caught it. If the honest
+answer is that nothing available at the time would have caught it, write that down — it is the
+most useful entry in the list, and the one most often rewritten into a lesson nobody learned.
 
 ## Where to go next
 

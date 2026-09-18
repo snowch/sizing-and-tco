@@ -128,7 +128,8 @@ event, not three, and the model has no term for it.
 
 ## Problems
 
-Three, in `tests/headroom_and_failure_domains/`.
+Four, in `tests/headroom_and_failure_domains/`. The first three have tests. The last does not, and
+says why.
 
 **11.1 — What a node loss costs.**
 The one piece of headroom that is arithmetic rather than judgement. Then notice what it says about
@@ -154,6 +155,20 @@ each refusal is a rule this chapter argues for.
 ```bash
 python3 -m pytest tests/headroom_and_failure_domains/test_problem_3_ceiling.py
 ```
+
+**11.4 — Your margin, and who chose it.** No test: the answer is a number somebody chose, and the
+interesting part is who.
+
+Find the headroom your system is planned to, then find the person or the document that chose it.
+This is usually the shortest problem in the book and the most uncomfortable.
+
+Two follow-ups. Does the margin have a reason attached that is not "it is what we have always
+used"? And does your failure domain match the physical layout — are the machines you assume fail
+independently in the same rack, the same power feed, the same availability zone?
+
+A good answer has a number, a name or a document, and a reason. If the reason is round — twenty
+per cent, thirty per cent — ask what it would have been if the first person to say it had said a
+different round number, because that is usually the whole derivation.
 
 ## Where to go next
 

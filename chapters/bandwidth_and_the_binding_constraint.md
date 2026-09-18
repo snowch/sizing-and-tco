@@ -112,7 +112,8 @@ and opposite answers.
 
 ## Problems
 
-Two, in `tests/bandwidth_and_the_binding_constraint/`.
+Three, in `tests/bandwidth_and_the_binding_constraint/`. The first two have tests. The last does
+not, and says why.
 
 **10.1 — Two chains, one purchase.**
 One function call. Work out what happens under each of the three obvious wrong answers before
@@ -129,6 +130,21 @@ Nobody computes the second, and it is what stops a rarely-binding constraint loo
 ```bash
 python3 -m pytest tests/bandwidth_and_the_binding_constraint/test_problem_2_cost.py
 ```
+
+**10.3 — Which chain binds for you.** No test: which chain binds depends on quantities only you
+have.
+
+This chapter has two chains because this model has two. Work out the ones for your system — the
+quantities that each independently decide how many machines you need — and then work out which
+binds first.
+
+The useful part is the margin. If one chain binds at twice the other, the second is free capacity
+you are paying for and nobody is counting. If they bind within a few per cent of each other, your
+sizing is balanced and also brittle: a small change in either moves which one is in charge, and
+the argument you rehearsed about the first chain stops applying.
+
+A good answer names at least two chains, says which binds, and by how much. If you can only find
+one chain, you have found an assumption rather than a fact.
 
 ## Where to go next
 

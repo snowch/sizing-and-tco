@@ -106,7 +106,7 @@ decides the answer.
 
 ## Problems
 
-Four, in `tests/capacity/`.
+Five, in `tests/capacity/`. The first four have tests. The last does not, and says why.
 
 **9.1 — The chain.**
 Four terms, one of which divides. Getting the division upside down gives an answer wrong by the
@@ -143,6 +143,21 @@ something that was doing no work — and the model should not have had it.
 ```bash
 python3 -m pytest tests/capacity/test_problem_4_classification.py
 ```
+
+**9.5 — What your data actually compresses to.** No test: the corpus is your data, and this
+repository has never seen it.
+
+The constant in this chapter was measured over a synthetic mixture, and the chapter says so.
+Measure your own: take a real sample of what you store, compress it with the codec you actually
+run at the setting you actually run it at, and record the ratio and how much you measured.
+
+Then compare it with the figure your capacity plan is currently using, and find out where that
+figure came from. In this book's experience it is a vendor's marketing number, a different
+codec's, or nobody remembers.
+
+A good answer has a ratio, a sample size, the codec and its setting, and a sentence about the
+number it replaces. If your measured ratio matches the planning figure exactly, find out who
+measured it first — you may have just re-derived a guess.
 
 ## Where to go next
 

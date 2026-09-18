@@ -90,7 +90,7 @@ it.
 Every chapter ends with problems, and most of them are tests you run: they fail until you have
 solved them, and the answer is nowhere in the repository. Some have no test at all, because they
 are about a system you actually run and there is no oracle for judgement — those say instead what
-a good answer contains and what would falsify it. Every chapter in Part I ends with one.
+a good answer contains and what would falsify it. Every chapter ends with one of those.
 
 ## What you will need
 

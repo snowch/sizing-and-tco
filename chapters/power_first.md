@@ -126,7 +126,7 @@ decision, and [ch21](#a-tco-for-finance) is about putting one to somebody.
 
 ## Problems
 
-Two, in `tests/power_first/`.
+Three, in `tests/power_first/`. The first two have tests. The last does not, and says why.
 
 **16.1 — Sizing backwards.**
 From an allocation to a machine count. Get the multiplier the right way up, and round the way a
@@ -144,6 +144,21 @@ conversation about money.
 ```bash
 python3 -m pytest tests/power_first/test_problem_2_pue.py
 ```
+
+**16.3 — What you are actually allowed to draw.** No test: the numbers are held by people, not by
+this repository.
+
+Find out your real power allocation, and find out who knows it. Contracted supply, breaker
+capacity, cooling capacity and what the machines currently draw are four different numbers, and
+the smallest is the one that sizes you.
+
+Expect this to be hard. In most organisations the people who plan capacity and the people who
+hold the power contract have never been in the same meeting, and the constraint that binds first
+is owned by neither.
+
+A good answer has four numbers, or has fewer and names who would have to be asked for the rest. If
+you already knew all four without asking anybody, you are in an unusual organisation and the rest
+of this chapter is easier for you than for most readers.
 
 ## Where to go next
 

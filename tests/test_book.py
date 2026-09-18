@@ -164,6 +164,9 @@ PROBLEM_REFERENCE = re.compile(r"[Pp]roblems?\s+(\d+)\.(\d+)")
 #: A problem as its chapter declares it: "**3.2 — Take a constant...**"
 PROBLEM_DECLARED = re.compile(r"^\*\*(\d+\.\d+) \u2014", re.M)
 
+#: A problem with no oracle, which says so in its first sentence: "**3.3 — ...** No test: ..."
+PROBLEM_UNGRADED = re.compile(r"^\*\*(\d+\.\d+) \u2014 [^\n]*?\*\* No test\b", re.M)
+
 
 @pytest.mark.parametrize("chapter", CHAPTERS, ids=lambda c: c.slug)
 def test_a_problem_is_numbered_for_its_own_chapter(chapter: Chapter):
@@ -183,6 +186,36 @@ def test_a_problem_is_numbered_for_its_own_chapter(chapter: Chapter):
     assert declared == expected, (
         f"{chapter.path} declares problems {declared}. They belong to {chapter.label}, so they "
         f"are {expected} — the chapter's own number, and their position in it, with no gaps."
+    )
+
+
+@pytest.mark.parametrize("chapter", CHAPTERS, ids=lambda c: c.slug)
+def test_a_chapter_ends_on_a_problem_about_the_reader_s_own_system(chapter: Chapter):
+    """The one problem in each chapter that this repository cannot mark.
+
+    Invariant 5 used to require every problem to be a test, which meant every problem had to be
+    about a model this repository owns: of fifty-two, one mentioned a system the reader runs. The
+    rule now allows a problem with no oracle, and this is what holds it — not that a chapter has
+    problems, which the test above covers, but that it has the kind whose answer is the reader's
+    judgement rather than arithmetic on the book's own numbers.
+
+    It is the last one because that is where it is useful: after the chapter has been worked
+    through on a model somebody else built, and while the method is still in the reader's hands.
+    """
+    if not is_written(ROOT / chapter.path):
+        pytest.skip("a stub has no problems yet")
+    body = (ROOT / chapter.path).read_text()
+    declared = PROBLEM_DECLARED.findall(body)
+    ungraded = PROBLEM_UNGRADED.findall(body)
+    assert ungraded, (
+        f"{chapter.path} has no problem about a system the reader runs. Every chapter owes one: "
+        "take the limit its 'What this cannot tell you' names, and ask the reader for the thing "
+        "only they have. Write it as '**N.M \u2014 Title.** No test: <why there is no oracle>'."
+    )
+    assert declared[-1] == ungraded[-1], (
+        f"{chapter.path}'s last problem is {declared[-1]}, and its last ungraded one is "
+        f"{ungraded[-1]}. The ungraded problem goes last, after the chapter has been worked "
+        "through on a model somebody else built."
     )
 
 
