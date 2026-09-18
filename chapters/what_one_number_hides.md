@@ -122,8 +122,9 @@ half of this book applies to what you are holding. The storage model starts as a
 becomes a sizing model partway through being built, and the exact node that does it is nameable.
 Problem 1.2 is finding it, on the same model at five stages of construction.
 
-That is also why the change is worth watching rather than being told: nobody declares it. It
-happens because two nodes get added, in [ch09](#capacity) and [ch10](#bandwidth-and-the-binding-constraint), and the build notices.
+Nobody declares the change. It happens because of what gets added to the file, and the build
+works the rest out — which is why the stage where it happens is worth finding rather than being
+told, and why this page does not tell you.
 
 ## What this cannot tell you
 

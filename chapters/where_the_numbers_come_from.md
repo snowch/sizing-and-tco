@@ -194,7 +194,7 @@ A model can be all assumptions, all sourced, all defensible-sounding, and comple
 
 ## Problems
 
-Two, in `tests/where_the_numbers_come_from/`.
+Three, in `tests/where_the_numbers_come_from/`. The first two have tests. The third does not, and says why.
 
 **3.1 — Take a constant, and stamp it so somebody else could check it.**
 Pick a quantity a codec decides, measure it over a corpus you generate deterministically, and
@@ -213,6 +213,24 @@ worth more than knowing it during one.
 ```bash
 python3 -m pytest tests/where_the_numbers_come_from/test_problem_2_shards.py
 ```
+
+**3.3 — Label your own numbers.** No test: these are your numbers, and nothing here can check
+them.
+
+Take the quantities you wrote down for [ch02](#what-a-workload-is)'s problem 2.5 and put one
+of three words against each:
+`fact`, `vendor_claim`, `assumption`. Then, for every `fact`, write the source you would hand
+somebody who asked — a document, an invoice, a measurement with a date on it. Not where you think
+it came from. The thing you would actually send.
+
+The useful part is the reclassification. Count how many started as facts and ended as vendor
+claims once you looked for the source, and how many ended as assumptions because the source was a
+conversation. In this book's own storage model that exercise moved more numbers than anybody
+expected, which is why the labels are mandatory rather than encouraged.
+
+A good answer has a source line for every `fact` that you could paste into an email, and at least
+one line that changed category while you were writing it. If nothing changed category, you have
+labelled what you believe rather than what you can show.
 
 ## Where to go next
 
