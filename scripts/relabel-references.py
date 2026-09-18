@@ -34,6 +34,15 @@ PAGES = ("chapters/*.md", "appendices/*.md", "parts/*.md", "index.md")
 #: A markdown link whose text opens with a chapter or appendix label.
 REFERENCE = re.compile(r"\[(ch\d+|Appendix [A-Z])([^\]]*)\]\(#([a-z0-9-]+)\)")
 
+#: A problem as its chapter declares it: ``**3.2 — Take a constant...**``.
+DECLARED = re.compile(r"^\*\*(\d+\.\d+) \u2014", re.M)
+
+#: A problem as anything refers to it: "problem 3.2", in prose or in a test's docstring.
+MENTIONED = re.compile(r"\b([Pp]roblems?)\s+(\d+\.\d+)")
+
+#: Where problem numbers live besides the prose. The chapter declares them; its tests repeat them.
+CODE = ("tests/*/*.py",)
+
 #: A page's own label, in the two places it writes it: its front matter and its title heading.
 OWN = (
     re.compile(r'^(short_title: ")(ch\d+|Appendix [A-Z])', re.M),
@@ -51,12 +60,39 @@ def owner() -> dict[str, str]:
     return {item.path: item.label for item in (*CHAPTERS, *APPENDICES)}
 
 
-def restate(text: str, labels: dict[str, str], own: str | None) -> tuple[str, list[str]]:
+def problems() -> dict[str, str]:
+    """Every problem's number as the book currently writes it, and the number it should have.
+
+    A problem's number is its chapter's number and its position in that chapter, both derived.
+    The map is keyed on the *old* number, which is what makes it safe: a bare "problem 2.2"
+    somewhere else in the book can be moved with the problem it names, without anybody having to
+    work out which chapter was meant.
+    """
+    out: dict[str, str] = {}
+    for chapter in CHAPTERS:
+        page = ROOT / chapter.path
+        if not page.exists():
+            continue
+        for position, old in enumerate(DECLARED.findall(page.read_text()), start=1):
+            new = f"{chapter.number}.{position}"
+            if old in out and out[old] != new:
+                raise SystemExit(
+                    f"problem {old} is declared by two chapters ({out[old]} and {new}). "
+                    "Fix the duplicate by hand; renumbering it automatically would guess."
+                )
+            out[old] = new
+    return out
+
+
+def restate(
+    text: str, labels: dict[str, str], numbers: dict[str, str], own: str | None
+) -> tuple[str, list[str]]:
     """The text with every stale label corrected, and a note of each correction.
 
-    Two kinds: the labels this page uses to point at other pages, and the label it writes for
-    itself in its front matter and its title heading. Both are the chapter's number, and the
-    chapter's number is derived from the outline.
+    Three kinds: the labels this page uses to point at other pages, the label it writes for
+    itself in its front matter and its title heading, and the problem numbers it declares or
+    refers to. All of them are a chapter's number, and a chapter's number is derived from the
+    outline.
     """
     changed: list[str] = []
 
@@ -69,6 +105,23 @@ def restate(text: str, labels: dict[str, str], own: str | None) -> tuple[str, li
         return f"[{current}{rest}](#{anchor})"
 
     text = REFERENCE.sub(one, text)
+
+    def declared(found: re.Match[str]) -> str:
+        current = numbers.get(found.group(1))
+        if current is None or current == found.group(1):
+            return found.group(0)
+        changed.append(f"problem {found.group(1)} -> {current}")
+        return f"**{current} \u2014"
+
+    def mentioned(found: re.Match[str]) -> str:
+        current = numbers.get(found.group(2))
+        if current is None or current == found.group(2):
+            return found.group(0)
+        changed.append(f"problem {found.group(2)} -> {current}")
+        return f"{found.group(1)} {current}"
+
+    text = DECLARED.sub(declared, text)
+    text = MENTIONED.sub(mentioned, text)
     if own:
         for pattern in OWN:
 
@@ -89,11 +142,12 @@ def main() -> int:
 
     labels = outline()
     mine = owner()
+    numbers = problems()
     stale = 0
-    for pattern in PAGES:
+    for pattern in (*PAGES, *CODE):
         for page in sorted(ROOT.glob(pattern)):
             before = page.read_text()
-            after, changed = restate(before, labels, mine.get(str(page.relative_to(ROOT))))
+            after, changed = restate(before, labels, numbers, mine.get(str(page.relative_to(ROOT))))
             if not changed:
                 continue
             stale += len(changed)

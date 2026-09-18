@@ -166,6 +166,27 @@ PROBLEM_DECLARED = re.compile(r"^\*\*(\d+\.\d+) \u2014", re.M)
 
 
 @pytest.mark.parametrize("chapter", CHAPTERS, ids=lambda c: c.slug)
+def test_a_problem_is_numbered_for_its_own_chapter(chapter: Chapter):
+    """A problem number is its chapter's number and a position, and both are derived.
+
+    The same rule as ``Chapter.label``, one level down, and it was the last typed number left in
+    the book. Inserting ch01 moved fifty-two of these, which is fine when a script does it and a
+    check says whether it worked; the failure that is worth preventing is the quiet one, where a
+    chapter moves and its problems keep the old number while still reading plausibly.
+
+    ``python3 scripts/relabel-references.py`` fixes what this reports.
+    """
+    if not is_written(ROOT / chapter.path):
+        pytest.skip("a stub has no problems yet")
+    declared = PROBLEM_DECLARED.findall((ROOT / chapter.path).read_text())
+    expected = [f"{chapter.number}.{position}" for position in range(1, len(declared) + 1)]
+    assert declared == expected, (
+        f"{chapter.path} declares problems {declared}. They belong to {chapter.label}, so they "
+        f"are {expected} — the chapter's own number, and their position in it, with no gaps."
+    )
+
+
+@pytest.mark.parametrize("chapter", CHAPTERS, ids=lambda c: c.slug)
 def test_a_problem_reference_points_at_a_problem_that_exists(chapter: Chapter):
     """A problem number is a chapter number and a position, and chapters move.
 
