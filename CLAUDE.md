@@ -125,7 +125,8 @@ This book covers ground other books cover. It must be **entirely original work**
 - Ideas, facts, algorithms and public specifications are not copyrightable; **expression is**.
   Published algorithms (Iman–Conover, Acklam's inverse normal CDF, delta-of-delta encoding) may be
   implemented and must be cited; their code must be this repository's own.
-- **Vendor neutrality is absolute.** No product is named in any chapter, model or figure. A
+- **Vendor neutrality is absolute.** No product is named in any chapter, model or figure, and
+  `tests/test_book.py::test_no_product_is_named` is what makes that a rule rather than a habit. A
   measured constant names the *implementation* it belongs to — which may be this repository's own
   encoder — because that is what makes it a measurement rather than a claim.
 - Every factual claim cites either a stamped result in `bench/results/` or a primary source in
@@ -156,9 +157,16 @@ test is per *sub*section inside them: every one earns its place or comes out, an
 still owes the reader *What this cannot tell you*.
 
 **Statistics vocabulary is rationed.** Distribution, sample, percentile, interval, correlation,
-convergence — and that is the list. Each arrives because a model has just raised a question that
-needs it, never as a definition. Where a term has a plain-English equivalent, use the plain one
-first and name the term second.
+convergence. Each arrives because a model has just raised a question that needs it, never as a
+definition. Where a term has a plain-English equivalent, use the plain one first and name the term
+second.
+
+Those six are what the book *teaches*. A seventh may be named where the point is to tell it apart
+from one of the six — ch13 names the standard deviation of a logarithm to say nobody has an
+intuition for one, the glossary names a confidence interval to say the book's intervals are not
+that, and ch19 names variance decomposition to warn a reader off reading a tornado as one. A term
+named in order to be rejected is not vocabulary creep; it is the fence around the vocabulary. The
+rule used to read "and that is the list", which would have forbidden all three.
 
 **Say the thing. Do not perform it.** "Direct" above was not specific enough to hold, and the
 prose drifted into three habits that make a reader extract the point instead of receiving it. The
