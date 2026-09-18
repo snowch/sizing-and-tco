@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch13, ch18)"
   },
-  "generated_at": "2026-09-17T15:26:31+00:00",
-  "git_revision": "e1e57ff",
+  "generated_at": "2026-09-18T05:26:14+00:00",
+  "git_revision": "f54d4fe",
   "kind": "model",
   "name": "service_tier-reference",
   "produced_by": {
@@ -72,7 +72,7 @@
       "utilisation_including_coordination": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-17T15:26:30+00:00",
+    "generated_at": "2026-09-18T05:26:14+00:00",
     "model": "service_tier",
     "nodes": {
       "achievable_throughput": {
