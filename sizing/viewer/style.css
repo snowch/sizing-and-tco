@@ -49,10 +49,14 @@ button:hover { border-color: var(--muted); }
 #canvas { overflow: auto; }
 #graph { display: block; height: auto; }
 .node rect { cursor: pointer; }
-.node.dim { opacity: .22; }
+.node.hot rect { stroke: #1a73e8; stroke-width: 2.2; }
 .node text { pointer-events: none; font-size: 9.5px; }
 .edge { fill: none; stroke: #607d8b; stroke-width: 1.1; }
-.edge.dim { stroke: #e4e7e9; }
+.edge.hot { stroke: #1a73e8; stroke-width: 2.2; }
+button.link { border: 0; background: none; padding: 0; color: #1a73e8; text-decoration: underline; cursor: pointer; font: inherit; }
+#outputs tr { cursor: pointer; }
+#outputs tr:hover td { background: #eef3f8; }
+#outputs tr.focused td { background: #dbe7f3; }
 table { border-collapse: collapse; width: 100%; font-size: 12px; }
 td, th { padding: 3px 6px; border-bottom: 1px solid var(--line); text-align: left; }
 td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
