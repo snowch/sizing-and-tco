@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T12:27:02+00:00",
-  "git_revision": "9140da7",
+  "generated_at": "2026-09-19T12:34:39+00:00",
+  "git_revision": "c264eea",
   "kind": "model",
   "name": "web_service_sizing-reference",
   "produced_by": {
@@ -100,7 +100,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-19T12:27:01+00:00",
+    "generated_at": "2026-09-19T12:34:39+00:00",
     "model": "web_service_sizing",
     "nodes": {
       "achievable_throughput": {
@@ -6377,8 +6377,8 @@
         "layer": 1,
         "measured": {
           "corpus": "bench.measure.application_records \u2014 JSON user profiles, orders and events in a 20/50/30 mixture, 128-bit identifiers, seeds 0-7",
-          "fingerprint": "f9c144a7eb6e201f",
-          "generated_at": "2026-09-19T09:37:48+00:00",
+          "fingerprint": "e08fbd954e7a4c8d",
+          "generated_at": "2026-09-19T12:34:06+00:00",
           "sd": 0.000854733297721808,
           "stack": "python zlib (DEFLATE level 6)",
           "value": 3.5828437962482282
