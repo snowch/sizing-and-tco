@@ -73,6 +73,12 @@ def main() -> int:
                 candidate = root / relative.lstrip("/")
             else:
                 candidate = page.parent / target
+            if target.endswith("/"):
+                # A trailing slash asks for a directory, and Pages answers with its index.html
+                # or a 404. Path() drops the slash, so without this a link to `/models/x/` was
+                # passed on the strength of `models/x.html` existing — a page the browser would
+                # never be sent to.
+                candidate = candidate / "index.html"
             if not candidate.exists() and not candidate.with_suffix(".html").exists():
                 missing.append(f"{page.relative_to(root)} -> {target}")
             elif (

@@ -286,3 +286,24 @@ def test_a_table_links_a_viewer_exactly_when_one_is_built():
         f"viewers are built for {sorted(built)} and tables link {sorted(sent)}. A table points a "
         "reader at a viewer exactly when there is one to point at."
     )
+
+
+def test_every_stage_viewer_is_embedded_by_its_chapter():
+    """The reader watches the graph grow, so every stage's viewer has to be on its chapter's page.
+
+    Each stage of the running model has an interactive page built from its stamped result, and
+    the chapter that introduces the stage embeds it: seven nodes in ch02, ten in ch03, fifty by
+    the time the model is finished. A stage whose viewer nobody embeds is a stage the reader
+    never sees drawn, and a chapter embedding a stage that is not its own is showing the reader
+    nodes the book has not built yet.
+    """
+    from bench.stages import stages
+
+    for stage in stages():
+        name = "storage_cluster" if stage.is_the_finished_model else stage.name
+        chapter = (ROOT / "chapters" / f"{stage.chapter}.md").read_text()
+        wanted = f"{{iframe}} /models/{name}-reference.html"
+        assert wanted in chapter, (
+            f"chapters/{stage.chapter}.md does not embed its stage's viewer. Add a "
+            f"```{wanted}``` panel where the chapter shows what the stage adds."
+        )

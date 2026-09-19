@@ -94,6 +94,14 @@ This book has not resolved it. It names the seam and measures what crossing it b
 Part V ends there: a total, its composition, and the knowledge that half of it was never argued
 about and a good deal of it rests on numbers that crossed a seam.
 
+And here is the whole file, as a graph, for the first time: everything [ch02](#what-a-workload-is)
+started with and everything the chapters between added to it. Every input has a slider.
+
+```{iframe} /models/storage_cluster-reference.html
+:width: 100%
+The finished model, nine layers deep. Click *five-year total cost of ownership* to see how much of the graph feeds it.
+```
+
 ## What this cannot tell you
 
 **Whether the seam is in the right place.** Two models joined at a price is one choice. Joined at

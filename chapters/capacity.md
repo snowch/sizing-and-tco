@@ -25,6 +25,15 @@ can use. Four terms separate the two, and nobody writes them down together.
 Four terms stand between an application's storage requirement and a purchase order. Two multiply
 what you must buy, one divides it, and one is a surcharge.
 
+Here is that chain with the rest of the model around it. Two nodes are a colour nothing earlier in
+the book has had: the measured constant is orange and the ceiling is red, and they are what make
+this a sizing model rather than a cost one.
+
+```{iframe} /models/storage_cluster_capacity-reference.html
+:width: 100%
+The capacity chain in the graph. Drag *replication factor* and watch how many nodes the chain asks for.
+```
+
 **Replication.** Whole copies. Three copies cost three times the space, survive two losses, and
 are the simplest thing that works. Erasure coding buys the same durability for less space by
 spreading it over more pieces, and problem 9.2 is that comparison. Erasure coding is not cleverer,

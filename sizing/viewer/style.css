@@ -15,7 +15,13 @@ header h1 { margin: 0 0 2px; font-size: 17px; font-weight: 600; }
 header p { margin: 0; color: var(--muted); font-size: 12.5px; }
 header .kind { display: inline-block; padding: 1px 7px; border-radius: 3px; background: var(--panel); border: 1px solid var(--line); font-size: 11px; margin-left: 6px; }
 main { display: grid; grid-template-columns: 290px 1fr 300px; gap: 0; height: calc(100vh - 62px); }
-@media (max-width: 1100px) { main { grid-template-columns: 1fr; height: auto; } }
+@media (max-width: 1100px) {
+  main { grid-template-columns: 1fr; height: auto; }
+  /* Stacked, the graph goes first and the node detail right under it: that is what the page is
+     for, and a chapter embeds it at this width. The sliders follow; the outputs are with them. */
+  #canvas { order: -2; }
+  #detail { order: -1; }
+}
 section { overflow-y: auto; padding: 14px 16px; }
 #controls { border-right: 1px solid var(--line); background: var(--panel); }
 #detail { border-left: 1px solid var(--line); background: var(--panel); }

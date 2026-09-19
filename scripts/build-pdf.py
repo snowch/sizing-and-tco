@@ -277,9 +277,14 @@ def render(node: dict) -> str:
         # embeds; on a site it is the thing itself. The caption beside it is prose either way.
         src = str(node.get("src", ""))
         if MEDIUM == "web":
-            return f'<iframe src="{html.escape(src)}" loading="lazy"></iframe>'
+            # Which kind of panel this is comes from where it points, not from an option an
+            # author has to remember: a viewer needs more height than a playground.
+            kind_class = "viewer" if src.startswith("/models/") else "playground"
+            return f'<iframe class="{kind_class}" src="{html.escape(src)}" loading="lazy"></iframe>'
         url = _absolute(src)
-        return f'<p class="iframe-fallback">Run it at <a href="{html.escape(url)}">{html.escape(url)}</a></p>'
+        # A playground is something you run; a viewer is something you open and move.
+        verb = "Open" if src.startswith("/models/") else "Run"
+        return f'<p class="iframe-fallback">{verb} it at <a href="{html.escape(url)}">{html.escape(url)}</a></p>'
     if kind == "link":
         url = str(node.get("url", ""))
         return f'<a href="{html.escape(_published(url) or _absolute(url))}">{children()}</a>'
