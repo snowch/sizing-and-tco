@@ -72,19 +72,20 @@ Everything this book does depends on those three things being written down besid
 file is where they can be. A file also diffs and reviews like code.
 
 The toolkit checks the units of every formula. A rate times a duration is an amount, so
-`requests per second × seconds = requests`. A formula that multiplies a rate by a count of periods
-instead is refused. A spreadsheet accepts that calculation without complaining. The toolkit
-refuses it. Here is the check, drawn: in the top row the seconds cancel; in the bottom row nothing
-does.
+`requests per second × seconds = requests`. Multiply the rate by a plain number instead, such as
+the number of years rather than the years themselves, and the answer is still a rate. A
+spreadsheet accepts that calculation without complaining. The toolkit refuses it, because the
+node says it holds requests and the formula does not produce them. Here is the check, drawn: in
+the top row the seconds cancel; in the bottom row nothing does.
 
 ```{image} chapters/_figures/what-a-workload-is-units.svg
 :alt: A rate times a duration is an amount; a rate times a plain number is still a rate
 :width: 100%
 ```
 
-[ch02](#what-a-workload-is) writes the first node, at four lines a number. The **build**, the set
-of checks that turns these files into this book, refuses a node that leaves out its unit or its
-source.
+[ch02](#what-a-workload-is) writes the first nodes of the model. Each number in the file carries
+a unit and a line saying where it came from, and the **build**, the set of checks that turns
+these files into this book, refuses a node that leaves either out.
 
 ## Every number can be checked
 
@@ -157,8 +158,8 @@ answer looks like, and what would show that yours is wrong.
 To read the book and run its models: nothing.
 
 [ch02](#what-a-workload-is) and [ch03](#where-the-numbers-come-from) carry the model file running
-in the page. Press **Run**, change a number, and try to multiply a rate by a count of periods.
-The build refuses it. That is the book's own loader and unit checker, fetched as a Python runtime
+in the page. Press **Run**, change a number, and try to multiply a rate by a plain number where
+the file expects an amount. The build refuses it. That is the book's own loader and unit checker, fetched as a Python runtime
 and run in your browser. What the page does and what the book was computed from cannot come
 apart.
 

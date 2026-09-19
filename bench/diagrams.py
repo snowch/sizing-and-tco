@@ -810,7 +810,7 @@ def unit_cancellation(_result: str | None = None) -> str:
         row(62, "seconds", True, "requests", None),
         f'<text x="{MARGIN}" y="98" font-size="11.5" fill="{muted}">The seconds cancel. '
         "A rate times a duration is an amount.</text>",
-        row(136, "periods", False, "requests", "second"),
+        row(136, "a plain number", False, "requests", "second"),
         f'<text x="{MARGIN}" y="172" font-size="11.5" fill="{muted}">A plain number cancels '
         "nothing. The answer is still a rate, and the check refuses it.</text>",
     ]
