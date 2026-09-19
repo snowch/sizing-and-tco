@@ -11,12 +11,12 @@ from tests.capacity.stubs import make_it_a_cost_model
 
 @pytest.fixture(scope="module")
 def base():
-    return load_model("models/storage_cluster/model.yaml")
+    return load_model("models/web_service/model.yaml")
 
 
 @pytest.fixture(scope="module")
 def scenario():
-    return load_scenario("models/storage_cluster/scenarios/reference.yaml")
+    return load_scenario("models/web_service/scenarios/reference.yaml")
 
 
 @pytest.mark.problem
@@ -53,7 +53,7 @@ def test_you_said_what_was_lost():
     )
 
 
-def test_the_storage_model_is_a_sizing_model_to_begin_with(base):
+def test_the_web_service_model_is_a_sizing_model_to_begin_with(base):
     """Scaffolding: there is something to remove."""
     assert base.classification == "sizing"
     assert base.of_kind("measured") and base.of_kind("ceiling")

@@ -25,8 +25,8 @@ bargain: nothing is published that the repository cannot re-derive.
   hundred and fifty lines, written to be read: inverse-transform sampling, four distributions,
   rank correlation, and the arithmetic of how many samples is enough. No simulation framework,
   because you cannot learn sampling from a library call.
-- **Two worked models** (`models/`). A scale-out storage cluster, which is the cost exemplar, and
-  an observability platform, which is the sizing exemplar and has a hole in it on purpose.
+- **Two worked models** (`models/`). A web service and its data on a fleet of Linux hosts, which
+  is sized and costed end to end, and an observability platform, which has a hole in it on purpose.
 - **The checks that make it worth reading** (`scripts/`). Dimensional analysis that fails the
   build. Provenance that cannot be left blank. A rule against typing a measured figure into a
   sentence. And a test pinning the browser's copy of the evaluator to Python's.

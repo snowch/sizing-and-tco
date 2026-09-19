@@ -2,28 +2,41 @@
 
 | | Input | Provenance | Source |
 |---|---|---|---|
-| ○ | annual growth factor | assumption | ch04 — lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%. |
-| ○ | capacity headroom | assumption | ch11 — rebuild reserve plus allocator behaviour near full. One node's worth of data has to land somewhere when a node dies, and a filesystem at 97% is a different filesystem. |
-| ◐ | chassis price | vendor claim | chassis, CPU, memory and boot media, less drives. Lognormal like any price, and wider than the drives' because a chassis is a configuration rather than a commodity — which is why ch19 finds it at the top of the tornado |
-| ◐ | drive capacity | vendor claim | datasheet capacity. Decimal TB, not TiB — appendix D, and it is a 10% difference |
-| ◐ | drive price | vendor claim | street price per decimal TB at this capacity point, three quotes. Lognormal because prices move by ratios rather than by amounts, and because three quotes give a centre and a spread rather than a shape |
-| ○ | drives per node | assumption | chassis choice |
+| ○ | annual growth factor | assumption | ch04 — lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%. One factor for requests and for records, because users drive both. |
+| ○ | cache margin | assumption | ch08 — how much of the fleet's memory is kept free of the working set, for its own daily swing and for the process heaps. Declared once and used by the chain and by the ceiling |
+| ○ | contention | assumption | ch07 — fitted from two measurements, where two exist. Triangular because a fit gives a central value and a range rather than a shape, and its maximum is the claim to distrust: a serial fraction can always be worse than the one you measured |
+| ◐ | cores per host | vendor claim | spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts threads doubles this number without doubling the work a host does (ch07) |
+| ○ | crosstalk | assumption | ch07 — fitted, and the harder of the two to fit. Lognormal because it spans an order of magnitude and cannot be negative, and because a shape should not assert a hard upper bound on a quantity this weakly fitted |
+| ○ | disk margin | assumption | ch11 — room to re-replicate a dead host's records onto the survivors, plus what a filesystem needs to keep allocating well. Declared once and used by the chain and by the ceiling |
+| ◐ | disk per host | vendor claim | spec sheet: one local drive. Decimal TB, not TiB — appendix D, and it is a 10% difference |
 | ○ | electricity price | assumption | all-in delivered rate including transmission. Lognormal: it cannot go negative and its history is multiplicative |
 | ○ | fully loaded salary | assumption | salary, employer costs, tooling and overhead. Lognormal because pay is right-skewed and cannot go negative; the p90 is a senior engineer in an expensive city |
-| ○ | horizon | assumption | the refresh cycle this cluster is bought against |
+| ○ | horizon | assumption | the refresh cycle this fleet is bought against |
+| ◐ | host power | vendor claim | typical draw under load, per host as configured. Triangular, and one of the few inputs here whose bounds are physical rather than editorial: a host cannot draw less than it idles at, or more than its supply will give it |
+| ◐ | host price | vendor claim | chassis, CPU, memory, drives and boot media, as configured. Lognormal like any price, and wide because a host is a configuration rather than a commodity |
+| ○ | hosts in the fleet | assumption | the sizing decision, taken the way it is usually taken: hosts_recommended evaluated at every input's point estimate. Change this number and watch the ceilings move — that is the exercise of ch12 |
+| ○ | share of records touched in a busy hour | assumption | ch08 — the working set as a share of everything held. Triangular; nobody measures this and everybody has an opinion, and the maximum is a service whose users all look at the same week's data |
 | ● | hours per year | fact | by definition, 365.25 x 24. The quarter-day is worth about a fifth of a per cent over five years — less than this model's other errors, and free to get right |
-| ○ | metadata overhead | assumption | filesystem, index and journal overhead as a multiplier on stored bytes. Triangular, and the bounds are for objects of the size this model assumes — the real spread is a function of object size, which is a term ch09 says this model lacks |
-| ○ | network price per node | assumption | switch ports, optics and cabling, amortised per node. Triangular rather than lognormal, although it is a price: it is a bill of materials divided by a node count somebody chose, so the bounds are the plausible designs rather than a market |
-| ◐ | node power | vendor claim | typical draw under load, per chassis as configured. Triangular, and one of the few inputs here whose bounds are physical rather than editorial: a chassis cannot draw less than it idles at, or more than its supply will give it |
-| ◐ | node read throughput | vendor claim | sustained sequential read per node, as quoted. Unverified here — ch03. Triangular, and the lower bound is the one doing the work: the quoted figure is sequential and a real read pattern is not |
-| ○ | nodes purchased | assumption | the sizing decision, taken the way it is usually taken: nodes_recommended evaluated at every input's point estimate. That is exactly 121, and the ceilings below are what the same model says about that decision once the inputs are allowed to be uncertain. Change this number and watch them move — that is the exercise of ch12 |
+| ○ | index overhead | assumption | indexes, the write-ahead log and journals as a multiplier on stored bytes. Triangular, and the bounds are for a service with a few indexes per table — a search-heavy one is off the top of this range |
+| ◐ | licence per core | vendor claim | the platform software's per-core licence, as quoted. Lognormal: a price, and a wide one, because it is the line item most often negotiated. It is what makes the core count a cost as well as a capacity (ch17) |
+| ○ | network price per host | assumption | switch ports, optics and cabling, amortised per host. Triangular rather than lognormal, although it is a price: it is a bill of materials divided by a host count somebody chose, so the bounds are the plausible designs rather than a market |
+| ● | one core | fact | definition |
+| ● | one host | fact | definition |
+| ● | one request | fact | definition |
 | ● | one year | fact | definition |
-| ○ | peak read throughput | assumption | ch04 — the busy hour, not the average. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention. |
-| ○ | PUE | assumption | ch15 — facility overhead. A multiplier on IT load, and the single number a colocation contract is most likely to disagree with you about. Triangular: the minimum is a good building, the maximum is a poor one, and below one is impossible |
-| ○ | replication factor | assumption | three copies. An erasure-coded cluster substitutes its own overhead factor here and the rest of the model is unchanged, which is the point of it being a node. |
-| ○ | staff fte | assumption | fraction of one engineer this cluster occupies. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch08 calls a regime change |
+| ○ | os reserve | assumption | the share of memory the kernel, the agents and the page cache floor keep before the service sees any. Triangular: a floor, a usual figure, and a host with too many agents on it |
+| ○ | peak request rate, day one | assumption | ch04 — the busy hour, not the daily mean. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention. |
+| ○ | peak-to-mean ratio | assumption | ch04 — the busy hour against the daily mean. Triangular, and it is a property of your traffic that belongs to the estate target: nothing here can measure it |
+| ○ | PUE | assumption | ch16 — facility overhead. A multiplier on IT load, and the single number a colocation contract is most likely to disagree with you about. Triangular: the minimum is a good building, the maximum is a poor one, and below one is impossible |
+| ○ | queueing margin | assumption | ch06 — how far under the knee the fleet is sized to run at the busy hour. Declared once, here, and used by the sizing chain and by the ceiling that checks it, so the two cannot drift apart |
+| ◐ | ram per host | vendor claim | spec sheet: the modules fitted. The sheet says 64 GB and means GiB — appendix D — and the operating system will report less than either, which is os_reserve's job |
+| ○ | replication factor | assumption | three copies of every record, so that a host can die and take its disks with it. A different durability scheme substitutes its own factor here and the rest of the model is unchanged, which is the point of it being a node |
+| ● | seconds per year | fact | by definition, 365.25 x 86,400 |
+| ○ | CPU time per request | assumption | held as an assumption because no reference machine is declared in rig/machine.yml; `make measure-rig` on a declared machine replaces this node with a measured one. Triangular *because* it has not been measured: once it is, the shape becomes a normal around the measurement, which is a change of claim and not only of numbers (ch13) |
+| ○ | staff fte | assumption | engineers this fleet occupies, full-time equivalent. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch08 calls a regime change |
+| ○ | records held, day one | assumption | stated workload (ch02) — what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression |
 | ◐ | support rate | vendor claim | annual support as a fraction of capital cost. Triangular because it is negotiated inside a band the market sets rather than drawn from one: the spread is what different buyers get, not what varies from year to year |
-| ○ | usable capacity, day one | assumption | stated workload (ch02) — what the application says it needs to store today |
-| | **22 inputs** | | **2 fact, 6 vendor claim, 14 assumption** |
+| ○ | utilisation the model will admit to | assumption | where this model stops being about queues (ch06) |
+| | **35 inputs** | | **6 fact, 7 vendor claim, 22 assumption** |
 
-*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*

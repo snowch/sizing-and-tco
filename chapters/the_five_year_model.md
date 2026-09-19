@@ -19,11 +19,11 @@ model becomes a confident wrong number.
 
 Here is a seam that exists in this repository.
 
-```{include} _generated/the-five-year-model-storage.md
+```{include} _generated/the-five-year-model-service.md
 ```
 
-The storage model produces a cost per usable terabyte per month
-([ch17](#unit-economics)). And the observability model buys storage:
+The web service model produces a cost per stored terabyte per month, for the records on its own
+fleet ([ch17](#unit-economics)). And the observability model buys storage:
 
 ```{include} _generated/the-five-year-model-observability.md
 ```
@@ -33,8 +33,9 @@ the same units, that the other model computes. `tests/the_five_year_model/` chec
 units still match, because if they ever stop matching the two models have quietly stopped
 describing the same trade.
 
-So the observability model could be driven by the storage model. It is not. It declares the price
-as an assumption with its own invented distribution, so the two models are not joined at all.
+So the observability model could be driven by the web service model — suppose its retention store
+ran on the same kind of fleet, at what a terabyte costs there. It is not. It declares the price as
+an assumption with its own invented distribution, so the two models are not joined at all.
 
 ### What happens when you do join them
 
@@ -59,7 +60,7 @@ looks like tidying up.
 
 ### Why every real estate has this seam
 
-Nobody models an organisation. They model a storage tier, and separately a compute tier, and
+Nobody models an organisation. They model a web service, and separately the store under it, and
 separately the observability platform, and the numbers pass between them as figures in documents.
 Each model is defensible on its own terms and the joins are undefended.
 
@@ -91,15 +92,16 @@ This book has not resolved it. It names the seam and measures what crossing it b
 ```{include} _generated/the-five-year-model-split.md
 ```
 
-Part V ends there: a total, its composition, and the knowledge that half of it was never argued
+Part V ends there: a total, its composition, and the knowledge that most of it was never argued
 about and a good deal of it rests on numbers that crossed a seam.
 
 And here is the whole file, as a graph, for the first time: everything [ch02](#what-a-workload-is)
 started with and everything the chapters between added to it. Every input has a slider.
 
-```{iframe} /models/storage_cluster-reference.html
+```{iframe} /models/web_service-reference.html
 :width: 100%
-The finished model, nine layers deep. Click *five-year total cost of ownership* to see how much of the graph feeds it.
+The finished model. Click *five-year total cost of ownership* to see how much of the graph feeds
+it, and how much does not.
 ```
 
 ## What this cannot tell you
@@ -123,7 +125,7 @@ to the other. [ch20 · The missing node](#the-missing-node).
 Three, in `tests/the_five_year_model/`. The first two have tests. The last does not, and says why.
 
 **18.1 — Carry a distribution across a boundary.**
-Pull the storage model's unit cost out as a sample array, not a summary. The whole array — the
+Pull the web service model's unit cost out as a sample array, not a summary. The whole array — the
 next problem is about what a summary costs.
 
 ```bash

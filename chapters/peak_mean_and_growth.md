@@ -33,6 +33,20 @@ problem 4.1 is that arithmetic. The peak-to-mean ratio behind it is not trivial.
 quantity, it varies by workload, and quoting somebody else's is how a system gets sized for a
 shape it does not have.
 
+This chapter puts that ratio into the model, as an input with a shape rather than a figure —
+nobody has measured it on this service, and the file says so — and derives the mean rate from
+the busy hour with it:
+
+```{literalinclude} ../models/web_service/stages/03-uncertainty/model.yaml
+:language: yaml
+:start-at: peak_to_mean:
+:end-before: outputs:
+```
+
+The busy hour sizes the fleet. The mean is what the fleet spends most of its life serving, and it
+is the denominator of every cost per request in [ch17](#unit-economics), which is why the model
+carries both.
+
 ### Growth is a bet, and the bet compounds
 
 Growth does most of the damage in this book.
@@ -45,32 +59,36 @@ columns in the table are the ends of each swing: low enough that only about one 
 comes in under, high enough that only about one in ten comes in over.
 
 ```{image} _figures/peak-mean-and-growth-chart.svg
-:alt: Which input moves the recommended node count most, when swung across its middle 80%
+:alt: Which input moves the recommended host count most, when swung across its middle 80%
 :width: 100%
 ```
 
 ```{include} _generated/peak-mean-and-growth-tornado.md
 ```
 
-The growth rate is at the top, by a distance, and it is at the top of almost every tornado in this
-book. That is not a quirk of these numbers. It is structural: a growth rate is the one input that
-is *raised to a power*, and everything else is multiplied. Over a five-year horizon, the exponent
-turns an uncertainty in the rate into a much larger uncertainty in the capacity.
+The growth rate is at the top, by a distance, and it is at the top of every tornado in this book
+whose answer depends on the future. Not every answer does — the cost of a fleet somebody has
+already bought is a question about prices, and [ch15](#capex-opex-and-lifecycle) is where that
+difference is drawn — but wherever the future is in the chain, growth is at the top of it. That is
+not a quirk of these numbers. It is structural: a growth rate is the one input that is *raised to
+a power*, and everything else is multiplied. Over a five-year horizon, the exponent turns an
+uncertainty in the rate into a much larger uncertainty in the demand.
 
-```{image} _figures/peak-mean-and-growth-capacity.svg
-:alt: Usable capacity at the horizon, as a distribution
+```{image} _figures/peak-mean-and-growth-demand.svg
+:alt: The busy-hour request rate at the horizon, as a distribution
 :width: 100%
 ```
 
-That is what a five-year capacity plan actually looks like when its growth assumption is stated
-honestly. The point estimate is somewhere in the middle of it.
+That is what a five-year demand forecast actually looks like when its growth assumption is stated
+honestly: the busy hour the fleet will have to serve, as a band. The point estimate is somewhere
+in the middle of it.
 
-The graph has not gained a node since [ch03](#where-the-numbers-come-from); one node has gained a
-shape. Click *annual growth factor* and the band that produced the figure above is written there.
-Drag its slider and the point moves while the band stays, which is the difference this chapter is
-about.
+The graph has gained two nodes since [ch03](#where-the-numbers-come-from) — the peak-to-mean
+ratio and the mean it implies — and three inputs have gained a shape. Click *annual growth
+factor* and the band that produced the figure above is written there. Drag its slider and the
+point moves while the band stays, which is the difference this chapter is about.
 
-```{iframe} /models/storage_cluster_uncertainty-reference.html
+```{iframe} /models/web_service_uncertainty-reference.html
 :width: 100%
 The same graph, with the growth rate as a band rather than a figure. Clicking it shows the band.
 ```
@@ -110,7 +128,7 @@ be zero or less. Its percentiles are stated as a sentence somebody could disagre
 *surprised below this, surprised above that*. That is the most honest form available, and it is not a measurement — the
 model does not pretend otherwise.
 
-Here is that stage of the storage model, with two percentiles where a number used to be:
+Here is that stage of the web service model, with two percentiles where a number used to be:
 
 ```{iframe} /playground/peak-mean-and-growth/
 :width: 100%

@@ -24,20 +24,22 @@ inputs, and more draws locate it more precisely rather than narrowing it.
 
 So there are exactly two things that narrow an interval. **Measure something**, and replace a guess
 with a figure that has a standard error. Or **decide something**, and replace an uncertainty with a
-constraint — pin the retention, cap the growth by policy, fix the sampling rate.
+constraint — cap the growth by policy, fix how long records are kept, shed load above a
+stated rate.
 
 Both are work. The question is which one is worth doing, and the answer is not obvious because
 the model has dozens of uncertain inputs and only one of them matters.
 
 ### Swing one thing at a time
 
-```{image} _figures/which-input-is-the-answer-storage.svg
+```{image} _figures/which-input-is-the-answer-tco.svg
 :alt: Which input moves the five-year total most
 :width: 100%
 ```
 
 Each bar swings one input across the middle eighty per cent of its own distribution, with
-everything else held still. Problem 19.1 is building it.
+everything else held still. Problem 19.1 is building it, against the host count rather than the
+total.
 
 The swing comes from the input's **declared distribution**, not from its slider range. Otherwise
 an input somebody gave a generous slider gets a long bar for free, and the chart measures
@@ -53,7 +55,7 @@ only question a tornado answers well.
 :width: 100%
 ```
 
-```{include} _generated/which-input-is-the-answer-service.md
+```{include} _generated/which-input-is-the-answer-residence.md
 ```
 
 Two charts and a table, because the third is short enough to read as a table. Look at what is at
@@ -62,23 +64,27 @@ the top of each.
 **Cardinality**, in the observability model — a product of uncertain counts, whose uncertainty
 compounds ([ch08](#regime-changes)).
 
-**Arrival rate**, in the service tier, with service demand a distant second — the two that meet in
-a division by what is left of the system ([ch06](#queueing-and-the-knee)).
+**The busy hour**, in the web service's residence time: the day-one rate and the growth that
+multiplies it, tied at the top, with the cost of a request a distant third and nothing else on
+the chart at all. Those are the inputs that meet in a division by what is left of the system
+([ch06](#queueing-and-the-knee)), and a bar that long is the knee.
 
-**The chassis price**, in the storage model. Which breaks the pattern the other two make, and the
-break is the most useful thing on this page.
+**The head count**, in the web service's five-year total. Which breaks the pattern the other two
+make, and the break is the most useful thing on this page.
 
 The pattern the first two make is that **the widest bar is somewhere the model is not linear**: an
 exponent, a product of uncertain things, a division by a small remainder. Inputs that are merely
 multiplied by constants, or added, hardly move anything, however uncertain they are. So the
-storage model ought to be topped by its growth rate, which is raised to a power — and
+five-year total ought to be topped by the growth rate, which is raised to a power — and
 [ch04](#peak-mean-and-growth)'s tornado, which swings the same inputs against the *recommended*
-node count, is topped by growth with nothing else close.
+host count, is topped by growth with nothing else close.
 
-This chart is against the five-year total, and growth is not on it at all. It cannot be. The cost
-chain starts at *nodes purchased*, which is a decision somebody took, and a decision has no
-distribution. The exponent left the cost model at the moment the cluster was chosen, and what
-remains downstream of that choice is a bill of materials, where the largest line item wins.
+The first chart is against the five-year total, and growth is not on it at all. It cannot be.
+The cost chain starts at *hosts in the fleet*, which is a decision somebody took, and a decision
+has no distribution. The exponent left the cost model at the moment the fleet was chosen, and
+what remains downstream of that choice is a bill of materials, where the largest line item wins:
+how many people run the fleet, what a licence costs per core, what those people are paid, and
+only then what a host costs.
 
 Which is the rule worth carrying: **a tornado is about the output you point it at, and pinning a
 decision can remove the dominant input from everything downstream of it.** Neither chart is wrong.
@@ -120,7 +126,7 @@ That is computable, and the computation is simple. Take one uncertain input, pin
 median — pretend somebody went and measured it, perfectly — and re-sample the whole model. What
 comes back is the interval the model would report if that one thing were known.
 
-```{include} _generated/which-input-is-the-answer-worth-storage.md
+```{include} _generated/which-input-is-the-answer-worth-service.md
 ```
 
 The last column is a **ceiling**. No real measurement is perfect: one leaves a standard error
@@ -129,32 +135,45 @@ interval closes by less than the column says. That bound is what makes the colum
 number in it says the measurement is not worth commissioning *however well it goes*, and somebody
 can take that decision before spending anything.
 
-Read down the column. One input is worth most of the interval and everything below it is
-rounding. A campaign to pin down *support rate* would be a quarter's work for a result nobody
-could see on a chart.
+Read down the column. No single input is worth much of the interval. The four at the top — the
+people and the prices the tornado put first — are each worth a modest share, and everything below
+them is rounding. A campaign to pin down the *electricity price*, the line a review of a fleet's
+running cost spends longest on, would be a quarter's work for a result nobody could see on a
+chart.
 
-Then the same experiment on the other model, where the answer has a different shape:
+Then the same experiment against the host count, which is the question
+[ch12](#the-sizing-model) actually asked, and the answer has the opposite shape:
+
+```{include} _generated/which-input-is-the-answer-worth-hosts.md
+```
+
+One input is worth most of the interval and everything below it is rounding. It is the growth
+rate, which belongs to no target and cannot be measured at all ([ch04](#peak-mean-and-growth)).
+The table will keep pointing at it, and the only thing available for it is to *decide* it, by
+policy, and accept the flexibility that costs.
+
+And on the observability model, where the answer has a third shape:
 
 ```{include} _generated/which-input-is-the-answer-worth-observability.md
 ```
 
 Two inputs tie at the top, and **the same number is not the same decision**. One is a count of
-label values somebody could go and query this afternoon. The other is a growth rate, which
-belongs to no target and cannot be measured at all ([ch04](#peak-mean-and-growth)) — the only
-thing available for it is to *decide* it, by policy, and accept the flexibility that costs.
+label values somebody could go and query this afternoon. The other is a growth rate again, with
+the same answer: decide it.
 
-Now the two rows at the bottom of that table.
+Now the bottom rows of the last two tables.
 
-**The measured constants buy nothing.** Bytes per sample and bytes per log line were measured over
-a declared corpus, with a standard error, by the most careful machinery in this book — and
-removing that standard error entirely does not move the interval. Their *values* matter enormously;
-they scale the answer. Their *uncertainty* is not what the answer rests on. Measuring them again,
-better, is work that would produce a nicer provenance and the same interval.
+**The measured constants buy nothing.** The record compression ratio in one, bytes per sample and
+bytes per log line in the other, were measured over a declared corpus, with a standard error, by
+the most careful machinery in this book — and removing that standard error entirely does not move
+either interval. Their *values* matter enormously; they scale the answer. Their *uncertainty* is
+not what the answer rests on. Measuring them again, better, is work that would produce a nicer
+provenance and the same interval.
 
 **And the rows do not add up.** They come to rather more or rather less than the whole, depending
-on the model, and they are not shares of anything. Uncertainty in a chain of multiplications does
-not divide between the inputs. Problem 19.2 measures the same fact from the other direction, where
-it is harder to argue with.
+on the model and the output, and they are not shares of anything. Uncertainty in a chain of
+multiplications does not divide between the inputs. Problem 19.2 measures the same fact from the
+other direction, where it is harder to argue with.
 
 ### After you measure it
 
@@ -184,10 +203,10 @@ with another gets a short bar and can still be the thing that sinks you.
 
 **Anything about correlated inputs.** As above: a bar is one input and a correlation is two.
 
-**Whether the input can be measured at all.** In the observability model the joint-widest bar is
-a growth rate, which is a claim about the future and belongs to no target
-([ch04](#peak-mean-and-growth)). The chart will keep pointing at it, and the honest response is to
-decide it rather than measure it.
+**Whether the input can be measured at all.** Against the host count, and again in the
+observability model, the input worth most is a growth rate, which is a claim about the future and
+belongs to no target ([ch04](#peak-mean-and-growth)). The chart will keep pointing at it, and the
+honest response is to decide it rather than measure it.
 
 **Whether the model has the right inputs.** An input that is not there has no bar, and
 a tornado of a model missing a cost line is a confident ranking of the wrong list.
@@ -221,9 +240,9 @@ Before computing anything, ask two colleagues which input they think the answer 
 to. Write down their answers. Then work it out — swing each input across the range you would
 defend, one at a time, and see which moves the result most.
 
-The disagreement is the point. In this book's models the growth rate wins almost every time and
-it is rarely what anybody guesses; in yours it may be a price, a ratio or a constant nobody has
-measured. Being wrong about where the sensitivity is means measuring the wrong thing next.
+The disagreement is the point. In this book's model the growth rate wins whenever the output is a
+size and vanishes whenever it is a bill, and neither is what anybody guesses first; in yours it
+may be a price, a ratio or a constant nobody has measured. Being wrong about where the sensitivity is means measuring the wrong thing next.
 
 A good answer has a ranking, and a note of where it differed from what people expected. If it
 matched everybody's intuition exactly, check that your ranges are the ones you would defend rather

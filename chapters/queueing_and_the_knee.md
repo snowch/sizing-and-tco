@@ -22,7 +22,7 @@ A request costs some amount of work. The system is already busy some fraction of
 what is left over is available to do that work. The time it takes is the work divided by what is
 left.
 
-```{literalinclude} ../models/service_tier/model.yaml
+```{literalinclude} ../models/web_service/stages/05-queueing/model.yaml
 :language: yaml
 :start-at: residence_time:
 :end-before: waiting_time:
@@ -80,21 +80,30 @@ estimate alone: `ok` under the allowed line, **over** past the limit, *into the 
 the two, where the design is spending the reserve that was declared to protect it. The last two
 columns ignore the point estimate: across everything the model thinks could happen, they give the
 share of futures past the allowed line and the share past the limit. A design can read `ok` and
-still be over the limit in a third of its futures. [ch12](#the-sizing-model) builds exactly that
-design.
+still be over the limit in a good share of its futures, and the table above is one.
+[ch12](#the-sizing-model) is where that becomes a decision.
 
 A margin is a decision, it belongs to somebody, and a ceiling's `because` field is where they
 say what they were protecting. The build refuses a ceiling that leaves it empty.
 [ch11](#headroom-and-failure-domains) is where that decision gets made deliberately instead of
 inherited.
 
+The whole of it is in the graph now: the division, the clamp and the ceiling. Drag *hosts in the
+fleet* down and watch the verdict change before the number under it looks alarming.
+
+```{iframe} /models/web_service_queueing-reference.html
+:width: 100%
+The graph as ch06 leaves it, with the first ceiling in it. Click *utilisation at the busy hour* for
+its margin and its reason.
+```
+
 ### Why the margin is so large
 
-Two ceilings in that table have wide margins and one is wider still. A percentage on its own says
-nothing about what it is protecting against.
+The margin in that table is wide, and a percentage on its own says nothing about what it is
+protecting against.
 
-A capacity ceiling is a cliff you fall off: the disk is full, and you find out immediately. A
-queueing ceiling is not. You slide down it, paying in latency, on every single request, for as
+A capacity ceiling — a full disk, which [ch09](#capacity) adds to this model — is a cliff you fall
+off: you find out immediately. A queueing ceiling is not. You slide down it, paying in latency, on every single request, for as
 long as nobody looks. There is no page, no alert, no failure — just a system that is worse than it
 was in a way that shows up in somebody else's dashboards.
 
@@ -121,9 +130,10 @@ optimistic case.
 ### The cap, and why it is declared
 
 At a utilisation of one the formula divides by zero. Infinity is not a prediction, so the model
-clamps — and says so, in a node with a name and a stated reason:
+clamps — and says so, in a node with a name and a stated reason. Beside it is the margin the
+ceiling above audits against, declared once so that the sizing and the audit cannot drift apart:
 
-```{literalinclude} ../models/service_tier/model.yaml
+```{literalinclude} ../models/web_service/stages/05-queueing/model.yaml
 :language: yaml
 :start-at: utilisation_cap:
 :end-before: effective_utilisation:
@@ -133,6 +143,12 @@ Past that point the formula has stopped describing a queue and started describin
 accident. The clamp does not hide that: the ceiling watches the real utilisation rather than the
 capped one, so a sample out there is still reported **over**. The model does not know what happens
 past the cap, and says so rather than extrapolating.
+
+```{iframe} /playground/queueing-and-the-knee/
+:width: 100%
+The same file, running. Change the margin and run it again; the ceiling's reason is the one field
+the build refuses to let you leave empty.
+```
 
 ## What this cannot tell you
 

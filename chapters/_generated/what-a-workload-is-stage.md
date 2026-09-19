@@ -2,7 +2,7 @@
 
 | Output | What the model says | Unit |
 |---|---:|---|
-| usable capacity at horizon | 14,852 | TB |
-| peak read throughput | 85.0 | GB/s |
+| peak request rate at horizon | 29,703 | request/second |
+| records held at horizon | 55.7 | TB |
 
-*Source — [`storage_cluster_demand-reference`](/models/storage_cluster_demand-reference.html) · every input on a slider*
+*Source — [`web_service_demand-reference`](/models/web_service_demand-reference.html) · every input on a slider*

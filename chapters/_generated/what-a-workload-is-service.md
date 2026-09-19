@@ -3,15 +3,12 @@
 | Quantity | At the reference point | Unit | Claim |
 |---|---:|---|---|
 | **What the world does** | | | |
-| arrival rate | 5,519 | request/second | ○ |
-| contention | 0.0069 |  | ○ |
-| crosstalk | 0.0000 |  | ○ |
-| service demand per request | 0.0068 | second * node / request | ○ |
-| single node throughput | 153 | request/second/node | ◐ |
+| *none* | | | |
 | **What you decide** | | | |
-| nodes in the tier | 64 | node | ○ |
-| one node | 1 | node | ● |
-| one request | 1.00 | request | ● |
-| utilisation the model will admit to | 0.980 |  | ○ |
+| annual growth factor | 1.30 |  | ○ |
+| horizon | 5.00 | year | ○ |
+| one year | 1.00 | year | ● |
+| peak request rate, day one | 8,000 | request/second | ○ |
+| records held, day one | 15.0 | TB | ○ |
 
-*Source — [`service_tier-reference`](/models/service_tier-reference.html) · every input on a slider*
+*Source — [`web_service_demand-reference`](/models/web_service_demand-reference.html) · every input on a slider*

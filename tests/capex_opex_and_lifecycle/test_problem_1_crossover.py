@@ -1,4 +1,4 @@
-"""Problem 15.1 - graded against the storage model's own split."""
+"""Problem 15.1 - graded against the web service's own split."""
 
 from __future__ import annotations
 
@@ -12,8 +12,8 @@ from tests.capex_opex_and_lifecycle.stubs import crossover_year
 @pytest.fixture(scope="module")
 def values():
     return point(
-        load_model("models/storage_cluster/model.yaml"),
-        load_scenario("models/storage_cluster/scenarios/reference.yaml"),
+        load_model("models/web_service/model.yaml"),
+        load_scenario("models/web_service/scenarios/reference.yaml"),
     )
 
 
@@ -38,7 +38,7 @@ def test_free_to_run_never_crosses():
     )
 
 
-def test_the_reference_cluster_crosses_inside_its_horizon(values):
+def test_the_reference_fleet_crosses_inside_its_horizon(values):
     """Scaffolding: the problem is about something.
 
     If running cost never caught up with capital within the horizon, this chapter's argument would

@@ -2,9 +2,9 @@
 
 | Input | Its usual value | In the failures | Shift | Extreme in |
 |---|---:|---:|---:|---:|
-| annual growth factor | 1.34 | 1.53 | +14% | 30% of them |
-| object compression ratio | 2.55 | 2.55 | none | 9% of them |
-| metadata overhead | 1.07 | 1.07 | none | 11% of them |
-| **3 inputs** | | *34% of futures ended here* | | *something was beyond its p90 in 43% of them, against 27% of futures generally* |
+| peak request rate, day one | 9,905 | 12,463 | +26% | 21% of them |
+| annual growth factor | 1.34 | 1.52 | +14% | 31% of them |
+| CPU time per request | 0.0131 | 0.0145 | +11% | 19% of them |
+| **3 inputs** | | *30% of futures ended here* | | *something was beyond its p90 in 58% of them, against 25% of futures generally* |
 
 *Source — [`postmortem`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/postmortem.json) · sizing.evaluate*

@@ -41,12 +41,12 @@ of by an amount of time. It typechecks in a spreadsheet. It does not typecheck h
 
 ### The whole of it, before any of it is written down
 
-Here is the demand side of the model this book builds, as a graph. Seven quantities: four you
-were given, one the world settles, two computed. Drag *annual growth factor* and watch *usable
-capacity at horizon* move; that is a flow, a stock and one multiplication, and it is the whole of
-this chapter.
+Here is the demand side of the model this book builds, as a graph. Eight quantities: four you
+were given, one a definition, three computed. Drag *annual growth factor* and watch *peak request
+rate at horizon* and *records held at horizon* move together; that is a flow, a stock and one
+exponent, and it is the whole of this chapter.
 
-```{iframe} /models/storage_cluster_demand-reference.html
+```{iframe} /models/web_service_demand-reference.html
 :width: 100%
 The demand side, with a slider on every input. Click a node to see what fed it.
 ```
@@ -56,9 +56,10 @@ The demand side, with a slider on every input. Click a node to see what fed it.
 That graph was drawn from a file, and the file is what you will actually write.
 
 
-The workload you have been given is the one this book carries all the way through: some amount
-of data held today, growing at some rate, over the life of whatever gets bought. You could put
-that in a spreadsheet, and most people do. A cell holds a value. It
+The workload you have been given is the one this book carries all the way through: a busy hour of
+requests today and some amount of data held today, both growing at some rate, over the life of
+whatever gets bought. You could put that in a spreadsheet, and most people do. A cell holds a
+value. It
 does not hold the fact that the value was measured last March against version 2.4 of something,
 or that it is a vendor's claim nobody has checked, or that it was agreed in a meeting by people
 who have since left. Those facts live in the head of whoever built the sheet, and they leave when
@@ -69,31 +70,32 @@ So a model here is a text file of named quantities, each with a unit and a sourc
 reviews like code. One file. What follows is three pieces of the same one, in the order you would
 write them, and the whole thing is eighty lines by the end of this chapter.
 
-The first node is the level you were given.
+The first two nodes are the rate and the level you were given: what arrives, and what
+accumulates.
 
-```{literalinclude} ../models/storage_cluster/stages/01-demand/model.yaml
+```{literalinclude} ../models/web_service/stages/01-demand/model.yaml
 :language: yaml
-:start-at: usable_capacity_t0:
+:start-at: peak_request_rate_t0:
 :end-before: annual_growth:
 ```
 
-Four of those lines are the argument of this book and the rest are convenience. `kind` and `unit`
-are what let the build tell a level from a rate. `value` is the number a spreadsheet would have
+Four lines in each of those are the argument of this book and the rest are convenience. `kind`
+and `unit` are what let the build tell a level from a rate. `value` is the number a spreadsheet would have
 held on its own. `provenance` is the line a cell has nowhere to put: a number with no source is a
 rumour, and the field is mandatory from the very first node —
 [ch03](#where-the-numbers-come-from) is about what that costs and what it buys.
 
 `label` and `range` are neither. A label reads better in a table than
-`usable_capacity_t0` does, and a range is how far a slider may drag the value on the interactive
+`stored_data_t0` does, and a range is how far a slider may drag the value on the interactive
 version of this model. Both are optional, and [Appendix A](#appendix-a-dsl-reference) lists
 everything a node may carry — which is longer than what a node needs.
 
-Growing it over the horizon takes one multiplication and one thing that is easy to miss:
+Growing them over the horizon takes one exponent and one thing that is easy to miss:
 
-```{literalinclude} ../models/storage_cluster/stages/01-demand/model.yaml
+```{literalinclude} ../models/web_service/stages/01-demand/model.yaml
 :language: yaml
-:start-at: one_year:
-:end-before: peak_read_throughput:
+:start-at: annual_growth:
+:end-before: peak_request_rate:
 ```
 
 `horizon / one_year` looks like ceremony and is not. Growth compounds, so the horizon has to be an
@@ -102,18 +104,18 @@ Dividing a duration by a declared year is how the first becomes the second. A
 spreadsheet does this silently and correctly, right until the quarter somebody types a horizon in
 months into the same cell.
 
-Then the level at the end, which is the first quantity in this book that is *computed* rather than
-stated:
+Then the two quantities at the end, which are the first in this book that are *computed* rather
+than stated:
 
-```{literalinclude} ../models/storage_cluster/stages/01-demand/model.yaml
+```{literalinclude} ../models/web_service/stages/01-demand/model.yaml
 :language: yaml
-:start-at: usable_capacity:
+:start-at: peak_request_rate:
 :end-before: outputs:
 ```
 
 That is the whole of the demand side. Here it is, and the toolkit that reads it — this
 repository's, not a copy of it. Press **Run**, then change a number and watch the total move.
-Change `usable_capacity`'s formula to multiply the read throughput by a count of periods, and it
+Change `stored_data`'s formula to multiply the request rate by a count of periods, and it
 refuses, for the reason at the top of this chapter.
 
 ```{iframe} /playground/what-a-workload-is/
@@ -128,7 +130,7 @@ A model's inputs are two different kinds of thing wearing the same clothes. Some
 world is doing to you. The rest describe what you have decided to do about it. Separating them is
 the first thing worth doing to any model, including this one:
 
-```{include} _generated/what-a-workload-is-storage.md
+```{include} _generated/what-a-workload-is-service.md
 ```
 
 Every quantity is filed under *what you decide*, and one of them is the growth rate. Nobody
@@ -143,8 +145,8 @@ first time.
 
 That is worth more here than a correct table would have been, because the failure is the useful
 one. **An input you gave a single value to and cannot actually control is an assumption you have
-stopped noticing**, and a model that files its inputs this way finds them by construction. Day-one
-capacity is sitting in the same list, and that one is not a decision either.
+stopped noticing**, and a model that files its inputs this way finds them by construction. The
+busy hour on day one is sitting in the same list, and that one is not a decision either.
 
 Once the table does separate, the half worth arguing about is *what you decide*, because it is the
 half anybody can change. Most sizing conversations are spent on the other one.
@@ -166,7 +168,7 @@ make models
 
 That parses each file, refuses any formula whose units do not work out, evaluates the graph in
 dependency order, and writes what it found to `bench/results/` — which is where every figure in
-this book comes from, including the next one. For the seven nodes above:
+this book comes from, including the next one. For the eight nodes above:
 
 ```{include} _generated/what-a-workload-is-stage.md
 ```
@@ -216,26 +218,24 @@ translation between the two is a measured constant and usually the shakiest numb
 **As a single point in time.** A workload that does not state a growth rate is a workload stated
 for today, and nobody buys infrastructure for today.
 
-### The smallest useful workload
+### What the demand side leaves out
 
-Here is the whole demand side of a request-serving tier:
-
-```{include} _generated/what-a-workload-is-service.md
-```
-
-Two of those rows are the workload proper: how fast requests arrive, and how much work each one
-costs. [ch05](#littles-law) through [ch07](#when-adding-servers-stops-helping) are built on that
-pair and a count of machines. The other three describe how the tier behaves under load rather than
-what is asked of it, and each one is a chapter of Part II — which is the distinction this table
-cannot draw and the next part exists to make.
+Two of the rows in the table above are the workload proper: how fast requests arrive, and how much
+is held. What is not in the file yet is what each request *costs* — how much of a processor's
+time it takes — and that quantity, with the arrival rate and a count of machines, is what
+[ch05](#littles-law) through [ch07](#when-adding-servers-stops-helping) are built on. It is not
+here because it is not a fact about the workload. It is a fact about a build of the software on
+a kind of machine, somebody has to measure it, and [ch05](#littles-law) says what that changes.
+The demand side describes what is asked of the system; how the system behaves under it is the
+distinction this table cannot draw and the next part exists to make.
 
 ## What this cannot tell you
 
 **Whether the quantities are the right ones.** A workload description is a model of demand, and
-like every model it omits things. The storage model has no notion of object size distribution, the
-observability model has no notion of query shape, and the service tier has no notion of requests
-that differ from each other. Each omission is defensible and each one is a place the answer could
-be wrong in a way nothing here would show.
+like every model it omits things. The web service model has no notion of requests that differ
+from each other — a busy hour of cheap reads and one of expensive writes are the same number in
+it — and the observability model has no notion of query shape. Each omission is defensible and
+each one is a place the answer could be wrong in a way nothing here would show.
 
 **Where the numbers come from.** Every figure in the tables above is an input somebody wrote down.
 Some are measured, most are not, and this chapter has said nothing about the difference.

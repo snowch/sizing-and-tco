@@ -92,18 +92,15 @@ nodes:
   os_reserve:
     kind: input
     unit: dimensionless
-    distribution:
-      triangular:
-        minimum: 0.06
-        likely: 0.1
-        maximum: 0.18
     provenance:
       kind: assumption
-      source: 'the share of memory the kernel, the agents and the page cache floor keep before the service
-        sees any. Triangular: a floor, a usual figure, and a host with too many agents on it'
+      source: ch03 - the share of memory the kernel, the agents and the page cache floor keep before
+        the service sees any, as one number. ch04 gives it a shape, because it differs from host to
+        host and nobody has measured it on these.
     range:
     - 0.0
     - 0.4
+    value: 0.1
   ram_for_service:
     kind: derived
     unit: TB/host

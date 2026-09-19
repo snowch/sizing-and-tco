@@ -24,10 +24,11 @@ A **point estimate** is the number you get by choosing one value for every input
 arithmetic once. It is what a spreadsheet gives you, and it is what almost every sizing
 conversation is about. The tables in this book put it in a column of that name.
 
-Think about what goes into one. To size a storage cluster you need to know how much data arrives,
-how fast that grows, how well it compresses, how many copies you keep, what a drive holds and what
-a drive costs. Six numbers, and you know none of them exactly. The growth rate is a forecast. The
-compression ratio was measured on somebody else's data. The price is a quote that expires.
+Think about what goes into one. To size a fleet for a web service you need to know how many
+requests arrive in the busy hour, how fast that grows, how much processor time each request takes,
+how much of the data has to stay in memory, what a host holds and what a host costs. Six numbers,
+and you know none of them exactly. The growth rate is a forecast. The time per request was
+measured on somebody else's build. The price is a quote that expires.
 
 Pick the middle of each, multiply along the chain, and you get one number. The arithmetic is
 right. But you never had six numbers — you had six ranges, and you threw the ranges away at the
@@ -35,23 +36,22 @@ first step.
 
 Worse, multiplying uncertain quantities does not average their doubt out. It compounds it. Each
 one can be wrong in the same direction as the others, and the answer stretches further than any
-single input does. Problem 1.1 is that arithmetic, done on this book's storage model with nothing
-but the widths the model already declares: the compounded width is not the widest input, and it is
-not their average.
+single input does. Problem 1.1 is that arithmetic, done on this book's web service model with
+nothing but the widths the model already declares: the compounded width is not the widest input,
+and it is not their average.
 
 So the honest answer to *how big* is not a number. It is a range, with some values in it far more
 likely than others. You get one by doing the arithmetic over and over — each time picking a
 different value for every input, from the spread that input honestly has — and keeping every
-answer that comes out. Here is that for this book's storage cluster: the single number first, and
+answer that comes out. Here is that for this book's web service: the single number first, and
 then what the repeated answers did.
 
 ```{include} _generated/what-one-number-hides-outputs.md
 ```
 
 Read the first row. Its point estimate is a real number, correctly computed — and beside it the
-**90% interval**, the range nine of those answers in ten fell into, spans most of an order of
-magnitude. Nothing in the first calculation was wrong. It simply had no way to mention that it
-was a bet.
+**90% interval**, the range nine of those answers in ten fell into, spans an order of magnitude.
+Nothing in the first calculation was wrong. It simply had no way to mention that it was a bet.
 
 Why nine in ten, rather than the smallest and largest answers? Because the smallest and largest
 are not properties of the problem. They are properties of how many answers you collected: collect
@@ -76,10 +76,12 @@ they do not agree with each other.
 
 ### The error an interval cannot show
 
-Almost all of that width came from one input. The growth rate is a forecast, it compounds over
-five years, and it moves the answer further than everything else in the model put together.
+Almost all of the first row's width came from one input. The growth rate is a forecast, it
+compounds over five years, and it moves the host count further than any other input in the model.
 Finding that out rather than guessing it is [ch19](#which-input-is-the-answer)'s subject, and it
-is the most useful thing you can do with a model you already have.
+is the most useful thing you can do with a model you already have. The second row moves for
+different reasons — it is the cost of the fleet somebody decided to buy, and the growth rate never
+reaches it — and keeping those two kinds of doubt apart is most of Parts III and V.
 
 Letting inputs vary and watching what happens is honest work, and most of this book is about
 doing it well. But it can only ever report the doubt somebody wrote down. There is a second kind
@@ -95,17 +97,18 @@ because the system it describes started behaving differently.
 
 **A sizing model has the same structure and adds two things.**
 
-*Measured constants.* How many bytes a stored measurement takes once it is compressed. How many
-records one request leaves behind when a system is traced. How much work a single processing core
-gets through in a second. These are empirical, they belong to a particular implementation at a
-particular version, they have measurement error, and none of them is a fact about the world. A
-chain of multiplications built on them inherits every one of those properties, and a model that
-treats them as constants hides them all.
+*Measured constants.* How much smaller a record is on disk than in memory, once it is compressed.
+How many records one request leaves behind when a system is traced. How much work a single
+processing core gets through in a second. These are empirical, they belong to a particular
+implementation at a particular version, they have measurement error, and none of them is a fact
+about the world. A chain of multiplications built on them inherits every one of those properties,
+and a model that treats them as constants hides them all.
 
-*Non-linear ceilings.* The queueing knee, where response time climbs steeply while a device still
-has capacity to spare. Rebuild under failure, where losing one machine costs capacity you were
-using. A new field attached to a measurement, which multiplies how many separate things you have
-to store by however many values that field turns out to take. A working set outgrowing memory.
+*Non-linear ceilings.* The queueing knee, where response time climbs steeply while a fleet still
+has capacity to spare. A host failing at the busy hour, whose share of the requests lands on
+survivors that were already busy. A new field attached to a measurement, which multiplies how
+many separate things you have to store by however many values that field turns out to take. A
+working set outgrowing memory.
 These are regime changes, and **a chain of multiplications cannot model a regime change**. It will
 happily report that a system is running at several times its own limit, which is not a description
 of anything that can happen.
@@ -119,9 +122,9 @@ no room below it does not build.
 ### Where the kind changes
 
 You do not have to take the distinction on trust, and you should not, because it decides which
-half of this book applies to what you are holding. The storage model starts as a cost model and
-becomes a sizing model partway through being built, and the exact node that does it is nameable.
-Problem 1.2 is finding it, on the same model at five stages of construction.
+half of this book applies to what you are holding. The web service model starts as a cost model
+and becomes a sizing model partway through being built, and the exact node that does it is
+nameable. Problem 1.2 is finding it, on the same model at six stages of construction.
 
 Nobody declares the change. It happens because of what gets added to the file, and the build
 works the rest out — which is why the stage where it happens is worth finding rather than being
@@ -153,7 +156,7 @@ supports, rather than hiding the doubt inside a single figure.
 Three, in `tests/what_one_number_hides/`. The first two have tests; run them with
 `python3 -m pytest tests/what_one_number_hides/`. The third does not, and says why.
 
-**1.1 — The width of a product.** Read each uncertain input's declared spread off the storage
+**1.1 — The width of a product.** Read each uncertain input's declared spread off the web service
 model, and work out what those spreads become when the quantities are multiplied together. The
 answer is neither the widest input nor the average of them. Do it the way you could do it on
 paper — every input at its low together, then every input at its high together — and then set
@@ -164,7 +167,7 @@ your answer beside the interval in the table above. The gap between the two is w
 python3 -m pytest tests/what_one_number_hides/test_problem_1_compounding.py
 ```
 
-**1.2 — Find where it changes kind.** The storage model appears at five stages of being built.
+**1.2 — Find where it changes kind.** The web service model appears at six stages of being built.
 Classify each as a cost model or a sizing model, and name the nodes that decide it. Then say, in
 one sentence and to yourself, why the chapter that adds those nodes could not have been written
 earlier.
@@ -193,8 +196,8 @@ problem about a system you run, and this is the first of them — they work best
 ## Where to go next
 
 [ch02](#what-a-workload-is) starts the model this chapter has been quoting from. It writes the
-first nodes of it, and by the end you have a file that computes a capacity at the horizon and
-refuses to get there by multiplying a rate by a plain number.
+first nodes of it, and by the end you have a file that computes a busy hour and a data volume at
+the horizon, and refuses to get there by multiplying a rate by a plain number.
 
 [ch03](#where-the-numbers-come-from) is the question this chapter kept deferring: given that you
 have written a quantity down, what are you actually claiming about it?

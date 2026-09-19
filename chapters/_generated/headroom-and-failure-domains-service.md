@@ -2,8 +2,11 @@
 
 | Ceiling | At the plan | Headroom | Allowed | Limit | Verdict | Over allowed | Over limit |
 |---|---:|---:|---:|---:|---|---:|---:|
-| utilisation, counting coordination | 0.89 | 30% | 0.70 | 1.00 | into the margin | 71% | 43% |
-| utilisation | 0.59 | 30% | 0.70 | 1.00 | ok | 38% | 16% |
-| fraction of the tier doing nothing useful | 0.37 | 50% | 0.50 | 1.00 | ok | 7% | 0% |
+| working set against memory | 0.75 | 25% | 0.75 | 1.00 | ok | 49% | 35% |
+| utilisation, counting coordination | 0.95 | 30% | 0.70 | 1.00 | into the margin | 65% | 48% |
+| disk fill at horizon | 0.67 | 25% | 0.75 | 1.00 | ok | 44% | 29% |
+| utilisation with one host down | 0.66 | 30% | 0.70 | 1.00 | ok | 46% | 30% |
+| utilisation at the busy hour | 0.64 | 30% | 0.70 | 1.00 | ok | 46% | 30% |
+| fraction of the fleet doing nothing useful | 0.32 | 50% | 0.50 | 1.00 | ok | 1% | 0% |
 
-*Source — [`service_tier-reference`](/models/service_tier-reference.html) · every input on a slider*
+*Source — [`web_service_headroom-reference`](/models/web_service_headroom-reference.html) · every input on a slider*

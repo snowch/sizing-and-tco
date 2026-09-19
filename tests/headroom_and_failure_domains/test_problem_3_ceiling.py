@@ -8,17 +8,17 @@ from sizing.dsl import Ceiling, load_model
 from sizing.evaluate import check_units, evaluate, load_scenario
 from tests.headroom_and_failure_domains.stubs import add_a_ceiling
 
-NAME, OF, LIMIT, HEADROOM = "drive_pressure", "raw_capacity / installed_raw_capacity", 1.0, 0.2
+NAME, OF, LIMIT, HEADROOM = "connections_per_host", "concurrency / host_count", 256.0, 0.2
 
 
 @pytest.fixture(scope="module")
 def base():
-    return load_model("models/storage_cluster/model.yaml")
+    return load_model("models/web_service/model.yaml")
 
 
 @pytest.fixture(scope="module")
 def scenario():
-    return load_scenario("models/storage_cluster/scenarios/reference.yaml")
+    return load_scenario("models/web_service/scenarios/reference.yaml")
 
 
 @pytest.fixture
@@ -65,5 +65,5 @@ def test_it_reports_a_verdict_and_a_probability(extended, scenario):
 
 def test_the_expression_the_problem_names_is_real(base):
     """Scaffolding: the nodes the reader is asked to watch exist in the model as shipped."""
-    for needed in ("raw_capacity", "installed_raw_capacity"):
+    for needed in ("concurrency", "host_count"):
         assert needed in base.nodes, f"{needed} is gone; problem 11.3 needs rewriting"

@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "5010d382dfe492a6",
+  "code_fingerprint": "2f98e1783a02c765",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T09:47:29+00:00",
-  "git_revision": "342807a",
+  "generated_at": "2026-09-19T11:57:01+00:00",
+  "git_revision": "c7b0215",
   "kind": "model",
   "name": "web_service-sized_for_growth",
   "produced_by": {
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-19T09:47:27+00:00",
+    "generated_at": "2026-09-19T11:57:00+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {
@@ -13298,6 +13298,7 @@
       "cost_per_stored_tb_month",
       "capex",
       "annual_opex",
+      "annual_energy",
       "queueing_headroom",
       "failure_headroom",
       "cache_fill",
@@ -13325,10 +13326,222 @@
     "scenarios": [
       "power_first",
       "reference",
-      "sized_for_growth"
+      "sized_for_growth",
+      "twice_the_hosts"
     ],
     "title": "A web service and its data, on a fleet of Linux hosts",
     "tornado": {
+      "annual_energy": [
+        {
+          "base": 500394.2602158819,
+          "high": 597996.7628639964,
+          "high_input": 371.01020514433645,
+          "kind": "input",
+          "label": "host power",
+          "low": 419069.76193323854,
+          "low_input": 260.0,
+          "node": "host_power",
+          "span": 178927.0009307579
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 568662.7161567835,
+          "high_input": 1.5950806661517034,
+          "kind": "input",
+          "label": "PUE",
+          "low": 449040.6148289591,
+          "low_input": 1.259544511501033,
+          "node": "pue",
+          "span": 119622.1013278244
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 1.6,
+          "kind": "input",
+          "label": "annual growth factor",
+          "low": 500394.2602158819,
+          "low_input": 1.12,
+          "node": "annual_growth",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 0.01139444872453601,
+          "kind": "input",
+          "label": "contention",
+          "low": 500394.2602158819,
+          "low_input": 0.0039748417658131505,
+          "node": "contention",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 9.000000000000003e-05,
+          "kind": "input",
+          "label": "crosstalk",
+          "low": 500394.2602158819,
+          "low_input": 1.5000000000000014e-05,
+          "node": "crosstalk",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 0.20999999999999996,
+          "kind": "input",
+          "label": "electricity price",
+          "low": 500394.2602158819,
+          "low_input": 0.08499999999999996,
+          "node": "electricity_price",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 194999.99999999994,
+          "kind": "input",
+          "label": "fully loaded salary",
+          "low": 500394.2602158819,
+          "low_input": 115000.00000000029,
+          "node": "fully_loaded_salary",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 9499.999999999995,
+          "kind": "input",
+          "label": "host price",
+          "low": 500394.2602158819,
+          "low_input": 4500.000000000001,
+          "node": "host_price",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 0.06129171306613029,
+          "kind": "input",
+          "label": "share of records touched in a busy hour",
+          "low": 500394.2602158819,
+          "low_input": 0.02183215956619923,
+          "node": "hot_fraction",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 1.4838104996137775,
+          "kind": "input",
+          "label": "index overhead",
+          "low": 500394.2602158819,
+          "low_input": 1.2321583836257748,
+          "node": "index_overhead",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 159.99999999999994,
+          "kind": "input",
+          "label": "licence per core",
+          "low": 500394.2602158819,
+          "low_input": 39.99999999999998,
+          "node": "licence_per_core",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 1780.4764607319394,
+          "kind": "input",
+          "label": "network price per host",
+          "low": 500394.2602158819,
+          "low_input": 882.842712474619,
+          "node": "network_price_per_host",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 0.14901613323034066,
+          "kind": "input",
+          "label": "os reserve",
+          "low": 500394.2602158819,
+          "low_input": 0.08190890230020664,
+          "node": "os_reserve",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 15483.364083745513,
+          "kind": "input",
+          "label": "peak request rate, day one",
+          "low": 500394.2602158819,
+          "low_input": 5915.47594742265,
+          "node": "peak_request_rate_t0",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 5.0,
+          "kind": "input",
+          "label": "peak-to-mean ratio",
+          "low": 500394.2602158819,
+          "low_input": 2.7745966692414834,
+          "node": "peak_to_mean",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 3.5839391810428465,
+          "kind": "measured",
+          "label": "record compression ratio",
+          "low": 500394.2602158819,
+          "low_input": 3.58174841145361,
+          "node": "record_compression",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 0.016901613323034068,
+          "kind": "input",
+          "label": "CPU time per request",
+          "low": 500394.2602158819,
+          "low_input": 0.010190890230020665,
+          "node": "service_demand",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 1.6127016653792583,
+          "kind": "input",
+          "label": "staff fte",
+          "low": 500394.2602158819,
+          "low_input": 0.7738612787525831,
+          "node": "staff_fte",
+          "span": 0.0
+        },
+        {
+          "base": 500394.2602158819,
+          "high": 500394.2602158819,
+          "high_input": 0.1522511261489768,
+          "kind": "input",
+          "label": "support rate",
+          "low": 500394.2602158819,
+          "low_input": 0.09097617696340304,
+          "node": "support_rate",
+          "span": 0.0
+        }
+      ],
       "annual_opex": [
         {
           "base": 524874.1560254801,

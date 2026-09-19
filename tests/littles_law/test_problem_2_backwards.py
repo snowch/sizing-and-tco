@@ -18,15 +18,15 @@ from tests.littles_law.stubs import residence_from_observation
 @pytest.fixture(scope="module")
 def evaluated():
     return evaluate(
-        load_model("models/service_tier/model.yaml"),
-        load_scenario("models/service_tier/scenarios/reference.yaml"),
+        load_model("models/web_service/model.yaml"),
+        load_scenario("models/web_service/scenarios/reference.yaml"),
     )
 
 
 @pytest.mark.problem
 def test_the_round_trip_returns_what_it_started_with(evaluated):
     recovered = residence_from_observation(
-        evaluated.samples["concurrency"], evaluated.samples["arrival_rate"]
+        evaluated.samples["concurrency"], evaluated.samples["peak_request_rate"]
     )
     assert np.allclose(recovered, evaluated.samples["residence_time"], rtol=1e-9), (
         "inferring residence time from what you can observe has to give back the residence time "
@@ -56,5 +56,5 @@ def test_a_system_with_nothing_arriving_is_refused_or_infinite():
 
 def test_the_two_observables_are_things_a_system_exposes(evaluated):
     """Scaffolding: the problem's premise holds — both are nodes, and both vary."""
-    for name in ("concurrency", "arrival_rate"):
+    for name in ("concurrency", "peak_request_rate"):
         assert name in evaluated.samples and evaluated.samples[name].std() > 0

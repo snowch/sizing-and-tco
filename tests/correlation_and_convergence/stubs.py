@@ -11,7 +11,7 @@ from sizing.dsl import Model
 def spread_at(samples: int, replicates: int) -> float:
     """Problem 14.1 — show the square-root law yourself.
 
-    Return the *run-to-run spread* of the 95th percentile of the storage model's five-year total:
+    Return the *run-to-run spread* of the 95th percentile of the web service's five-year total:
     run the model ``replicates`` times at ``samples`` draws, each with a different seed, take the
     p95 of each run, and return the standard deviation of those p95 values.
 

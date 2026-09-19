@@ -42,11 +42,11 @@ installed by pipx or uv has its own environment and cannot import this repositor
 
 ## How to check a number in this book
 
-Every figure on every page came out of a file under `bench/results/`. Pick one — the compression
-ratio in the storage model, say — and follow it backwards:
+Every figure on every page came out of a file under `bench/results/`. Pick one — how well the
+web service's records compress, say — and follow it backwards:
 
 ```bash
-python3 -c "import json; print(json.load(open('bench/results/storage-object-compression.json'))['produced_by'])"
+python3 -c "import json; print(json.load(open('bench/results/records-compression.json'))['produced_by'])"
 python3 -m bench.run_corpus --check
 ```
 

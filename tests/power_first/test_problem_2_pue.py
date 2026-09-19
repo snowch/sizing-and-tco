@@ -47,7 +47,7 @@ def test_the_models_own_multiplier_is_in_range():
     from sizing.evaluate import point
 
     pue = point(
-        load_model("models/storage_cluster/model.yaml"),
-        load_scenario("models/storage_cluster/scenarios/reference.yaml"),
+        load_model("models/web_service/model.yaml"),
+        load_scenario("models/web_service/scenarios/reference.yaml"),
     )["pue"]
     assert CASES[0] <= pue <= CASES[-1]

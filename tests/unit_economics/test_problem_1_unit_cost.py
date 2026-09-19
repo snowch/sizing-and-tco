@@ -14,18 +14,16 @@ MONTHS_PER_YEAR = 12.0
 @pytest.fixture(scope="module")
 def values():
     return point(
-        load_model("models/storage_cluster/model.yaml"),
-        load_scenario("models/storage_cluster/scenarios/reference.yaml"),
+        load_model("models/web_service/model.yaml"),
+        load_scenario("models/web_service/scenarios/reference.yaml"),
     )
 
 
 @pytest.mark.problem
 def test_it_agrees_with_the_model(values):
-    mine = unit_cost(
-        values["tco"], values["average_usable_capacity"], values["horizon"] * MONTHS_PER_YEAR
-    )
-    assert mine == pytest.approx(values["cost_per_usable_tb_month"], rel=1e-6), (
-        f"the model publishes {values['cost_per_usable_tb_month']:.4f} and you make {mine:.4f}. "
+    mine = unit_cost(values["tco"], values["average_stored"], values["horizon"] * MONTHS_PER_YEAR)
+    assert mine == pytest.approx(values["cost_per_stored_tb_month"], rel=1e-6), (
+        f"the model publishes {values['cost_per_stored_tb_month']:.4f} and you make {mine:.4f}. "
         "If you are out by twelve, one of you is working in years."
     )
 
@@ -52,5 +50,5 @@ def test_the_model_declares_the_period_in_its_unit(values):
     """Scaffolding: the model cannot make this mistake, because the unit says which."""
     from sizing.dsl import load_model
 
-    node = load_model("models/storage_cluster/model.yaml").nodes["cost_per_usable_tb_month"]
+    node = load_model("models/web_service/model.yaml").nodes["cost_per_stored_tb_month"]
     assert "month" in node.unit, node.unit

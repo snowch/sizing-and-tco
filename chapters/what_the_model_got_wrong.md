@@ -25,14 +25,15 @@ whoever runs the system.
 
 ### The model said this would happen
 
-Start with the uncomfortable half. The cluster [ch12](#the-sizing-model) bought was the one the
+Start with the uncomfortable half. The fleet [ch12](#the-sizing-model) bought was the one the
 point estimates recommended, and the same model reported this about it:
 
 ```{include} _generated/what-the-model-got-wrong-ceilings.md
 ```
 
-The last column said it would run out of space in a third of the futures the model thought were
-plausible. Nobody was misled, nothing was hidden, and the figure was on a page.
+The last column said it would be over the knee at the busy hour in a substantial share of the
+futures the model thought plausible, and that the working set would outgrow memory in more of them
+still. Nobody was misled, nothing was hidden, and the figures were on a page.
 
 That is the first finding of most post-mortems worth doing: **the failure was forecast, in
 writing, by the people it later surprised.** What went wrong was not the model. It was that a
@@ -42,35 +43,44 @@ reads out loud — which is the whole of [ch21](#a-tco-for-finance) arriving too
 ### Where the failures actually were
 
 Now the part the model can do well. The sampled futures already contain the failures: they are the
-draws where the capacity ceiling came out over its limit. So the question *what went wrong* is a
-filter. Take those draws, and look at what each input had been doing in them.
+draws where the queueing ceiling — utilisation at the busy hour — came out over its limit. So
+the question *what went wrong* is a filter. Take those draws, and look at what each input had been
+doing in them.
 
 ```{include} _generated/what-the-model-got-wrong-attribution.md
 ```
 
-Read the *Shift* column. One input is somewhere else in the failures than it is generally, and the
-other two are exactly where they always are. Compression did not cause this. The overhead
-multiplier did not cause this. The growth rate did.
+Read the *Shift* column. All three inputs sit higher in the failures than they do generally, and
+none of them by much: the busy hour on day one is the furthest from its usual self, growth next,
+the cost of a request last. Nothing is exactly where it always is, because the three meet in one
+multiplication and any of them can carry the product over the knee.
 
-Which is the same answer [ch04](#peak-mean-and-growth)'s tornado gave, and the same answer
-[ch19](#which-input-is-the-answer)'s value-of-information table gave. Three different questions —
-*what moves the answer*, *what is worth measuring*, *what broke it* — and one input. When those
-three agree, the model is at least coherent about its own weakest point.
+Now read it against [ch04](#peak-mean-and-growth)'s tornado and
+[ch19](#which-input-is-the-answer)'s value-of-information table, which both put growth first and
+nothing close. The column ranks by how far each input moved, not by what the move did, and the
+two orderings differ for a structural reason: growth moved less than the busy hour did and did
+more, because the horizon raises it to a power. Three different questions — *what moves the
+answer*, *what is worth measuring*, *what broke it* — and the third has to be read with the
+model's shape beside it, or it ranks the inputs by how they were written down rather than by what
+they do.
 
 ### There was no smoking gun
 
 Now the last column, which is the finding.
 
 An input is *extreme* here when it came out beyond its own ninetieth percentile — the kind of
-value somebody would describe afterwards as unusual. And in most of the futures where this cluster
-ran out of space, **nothing was extreme**. Growth was a little above average. Everything else was
-ordinary. That was enough.
+value somebody would describe afterwards as unusual. Something was extreme in most of the futures
+where this fleet went over the knee, and the base rate says that is real: the failures contain an
+unusual input far more often than futures at large do. It is also not the finding. Turn the
+number round. In a large minority of the failures, **nothing was extreme**. The busy hour was a
+little above its usual. Growth was a little above average. A request took a little longer. That
+was enough.
 
 This is the sentence a post-mortem culture is worst at accepting, because it is nobody's fault and
 makes a poor slide:
 
-> The design did not fail because something remarkable happened. It failed because something
-> unremarkable happened and there was no margin for unremarkable.
+> Some of the failures have a story. A large share of them do not: nothing remarkable happened,
+> something unremarkable did, and there was no margin for unremarkable.
 
 Which is an argument about [ch11](#headroom-and-failure-domains) rather than about the world, and
 it is the kind of conclusion that only exists if somebody looked. The story that gets told instead
@@ -140,8 +150,8 @@ caused it is a claim about mechanism, and the mechanism is the part of the model
 that failed in a way nobody declared a limit for produces no failing samples to condition on, and
 this chapter reports serenely that nothing went wrong.
 
-**What to do about it.** The growth rate being the cause does not say whether to buy more machines,
-keep less data, or move the margin. Attribution is a diagnosis, and this book has been careful
+**What to do about it.** The busy hour being the cause does not say whether to buy more hosts,
+shed load, or move the margin. Attribution is a diagnosis, and this book has been careful
 throughout not to pretend a diagnosis is a remedy.
 
 **Whether any of this happened.** It did not. These are computed futures, and the only honest way
@@ -173,7 +183,7 @@ python3 -m pytest tests/what_the_model_got_wrong/test_problem_2_extreme.py
 
 **22.3 — A post-mortem on one of yours.** No test: it is your history, and nobody else has it.
 
-Find an estimate you or your team made that turned out badly — a cluster that filled early, a
+Find an estimate you or your team made that turned out badly — a fleet that hit its knee early, a
 budget that overran, a tier that needed replacing sooner than planned. Reconstruct what was
 assumed at the time, not what is known now.
 
@@ -194,7 +204,7 @@ attribution name three innocent inputs without hesitating.
 [ch03](#where-the-numbers-come-from) is the target a real post-mortem belongs to, and the rules
 that make somebody's observation of their own system worth anything to anybody else.
 
-[Appendix E](#appendix-e-storage-model) is the model this chapter convicted, in full.
+[Appendix E](#appendix-e-web-service-model) is the model this chapter convicted, in full.
 
 And the question the book opened with, which it is worth answering out loud now that there are
 twenty-two chapters behind it. **How big** it answered, in Part III, with a chain of multiplications

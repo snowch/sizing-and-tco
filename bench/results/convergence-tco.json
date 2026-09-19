@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "4029f7adcc8ed0f3",
+  "code_fingerprint": "49168dd935e7b3d6",
   "code_sources": [
     "bench/run_uncertainty.py"
   ],
@@ -8,13 +8,13 @@
     "the_interval_does_not_shrink": "the half_width column settles rather than falling. More samples locate the interval more precisely; they do not narrow the uncertainty the model describes",
     "what_this_measures": "sampling noise, and nothing else. An interval that has stopped moving is an interval whose *arithmetic* has settled; whether the model is right is a different question and Monte Carlo cannot answer it (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T09:48:04+00:00",
-  "git_revision": "342807a",
+  "generated_at": "2026-09-19T12:10:03+00:00",
+  "git_revision": "c7b0215",
   "kind": "measurement",
-  "name": "convergence-storage-tco",
+  "name": "convergence-tco",
   "produced_by": {
     "method": "resampled 32 times at each sample count, each replicate's seed derived from the scenario's as seed + count * 977 + replicate",
-    "model": "storage_cluster",
+    "model": "web_service",
     "output": "tco",
     "scenario": "reference",
     "seed": 20260916,
@@ -31,44 +31,44 @@
   "summary": {
     "convergence": [
       {
-        "half_width": 1187217.6021314086,
-        "p50_spread": 90386.3825299365,
-        "p95_mean": 5591389.924329001,
-        "p95_spread": 139902.84178718444,
+        "half_width": 675023.9971853638,
+        "p50_spread": 56707.37398882315,
+        "p95_mean": 2884559.6671789633,
+        "p95_spread": 96863.93437822821,
         "replicates": 32,
         "samples": 100
       },
       {
-        "half_width": 1254997.805406376,
-        "p50_spread": 29099.44574138873,
-        "p95_mean": 5722721.474178343,
-        "p95_spread": 61531.904619130204,
+        "half_width": 707485.1975083855,
+        "p50_spread": 15239.96461704089,
+        "p95_mean": 2923099.7506819195,
+        "p95_spread": 29419.472715483684,
         "replicates": 32,
         "samples": 1000
       },
       {
-        "half_width": 1260037.6918039117,
-        "p50_spread": 9253.768170565972,
-        "p95_mean": 5726727.921416532,
-        "p95_spread": 22689.939117379916,
+        "half_width": 707757.5642467726,
+        "p50_spread": 4791.093656629204,
+        "p95_mean": 2925372.603525907,
+        "p95_spread": 14421.80581685032,
         "replicates": 32,
         "samples": 10000
       },
       {
-        "half_width": 1260623.613168837,
-        "p50_spread": 3215.29117537096,
-        "p95_mean": 5727637.636453874,
-        "p95_spread": 5650.063117380693,
+        "half_width": 708422.0443077427,
+        "p50_spread": 1661.7693602062727,
+        "p95_mean": 2925830.8081615213,
+        "p95_spread": 4230.962612988799,
         "replicates": 32,
         "samples": 100000
       }
     ],
     "law_measured_from": 1000,
-    "mean_ratio": 3.363866040743236,
-    "overall_ratio_per_decade": 3.300072867001886,
+    "mean_ratio": 2.7242822747493944,
+    "overall_ratio_per_decade": 2.6369254298115963,
     "ratios_per_decade": [
-      2.7118585158299666,
-      4.015873565656506
+      2.039929887359197,
+      3.4086346621395918
     ],
     "root_ten": 3.1622776601683795
   },

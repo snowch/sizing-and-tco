@@ -19,7 +19,8 @@ short_title: "Appendix F · Observability model"
 Metrics, logs and traces, for an estate stated in [ch02](#what-a-workload-is)'s terms. Vendor
 neutral: nothing on this page names a product, and the structure is what transfers.
 
-This is the **sizing exemplar**: it shows what [Appendix E](#appendix-e-storage-model) could not.
+This is the book's **second model**, and it shows what [Appendix E](#appendix-e-web-service-model)
+does not.
 Three multiplicative chains hang off the same few roots, so they move together whether or not
 anybody says so. Label cardinality is a product of uncertain counts and therefore dominates
 everything downstream of it. The control knobs are sampling and retention rather than money. Three

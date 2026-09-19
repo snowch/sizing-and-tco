@@ -68,5 +68,5 @@ def test_the_verifier_is_real_and_has_something_to_say():
     verifier = _verifier()
     assert hasattr(verifier, "check_model")
     problems: list[str] = []
-    verifier.check_model(load_model("models/storage_cluster/model.yaml"), problems)
+    verifier.check_model(load_model("models/web_service/model.yaml"), problems)
     assert not problems, "the book's own model must pass the rules the reader is held to"

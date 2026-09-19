@@ -47,12 +47,19 @@ from sizing.evaluate import evaluate, point_value_of_input, sampled_inputs
 
 SOURCES = ["bench/run_information.py"]
 
-#: One model, one output, per row of the published table. Two models rather than one because the
-#: shape of the answer differs: the storage model's uncertainty is concentrated in a single input
-#: and the observability model's is spread across a product, which is exactly the distinction
-#: that decides whether commissioning one measurement is worth anything at all.
+#: One model, one output, per row of the published table. Three subjects rather than one because
+#: the shape of the answer differs, and the difference is the point. The web service's five-year
+#: total spreads its uncertainty across what people and licences cost, and no single input is
+#: worth much on its own; its recommended host count rests almost entirely on a growth rate; the
+#: observability model's retention store is concentrated in two inputs. Which of those a table
+#: describes decides whether commissioning one measurement is worth anything at all.
 SUBJECTS = (
-    ("models/storage_cluster/model.yaml", "models/storage_cluster/scenarios/reference.yaml", "tco"),
+    ("models/web_service/model.yaml", "models/web_service/scenarios/reference.yaml", "tco"),
+    (
+        "models/web_service/model.yaml",
+        "models/web_service/scenarios/reference.yaml",
+        "hosts_recommended",
+    ),
     (
         "models/observability/model.yaml",
         "models/observability/scenarios/reference.yaml",
@@ -155,7 +162,7 @@ def value_of_information(write: bool = True) -> dict:
             "method": "each uncertain input pinned at its median in turn, and the model resampled",
             "model": " and ".join(sorted({row["model"] for row in rows})),
             "scenario": "reference",
-            "seed": load_scenario("models/storage_cluster/scenarios/reference.yaml").seed,
+            "seed": load_scenario("models/web_service/scenarios/reference.yaml").seed,
             "stack": "sizing.evaluate",
         },
         summary={"rows": rows, "totals": totals},
@@ -172,9 +179,11 @@ def value_of_information(write: bool = True) -> dict:
             "removals_do_not_add": "the sum of the individual removals is not one. Uncertainty in "
             "a chain of multiplications is not a quantity that divides between the inputs, and a "
             "figure read that way is read wrongly (ch19)",
-            "what_it_cannot_say": "whether the input can be measured at all. A growth rate has "
-            "the largest bound in this table and belongs to no target — the honest response to it "
-            "is to decide it rather than to commission a measurement (ch04)",
+            "what_it_cannot_say": "whether the input can be measured at all. The web service's "
+            "total rests on how many people it takes and what a licence costs, which are decided "
+            "and negotiated rather than measured; its host count and the observability model's "
+            "store both rest on a growth rate, which belongs to no target. The honest response "
+            "to those is to decide them rather than to commission a measurement (ch04)",
         },
         code_sources=SOURCES,
         write=write,

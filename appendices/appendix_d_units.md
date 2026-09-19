@@ -67,9 +67,9 @@ to produce, and the build makes the arithmetic agree or refuses to continue.
 ## Five places a unit goes wrong
 
 **Decimal against binary.** A drive is sold in decimal terabytes. An operating system reports
-tebibytes. The gap is nearly a tenth of the capacity, it is in the direction that makes a cluster
-smaller than the spreadsheet said, and it compounds with the replication factor. The storage
-model's drive capacity input says *decimal* in its provenance for this reason.
+tebibytes. The gap is nearly a tenth of the capacity, it is in the direction that makes a fleet's
+disks smaller than the spreadsheet said, and it compounds with the replication factor. The web
+service model's disk-per-host input says *decimal* in its provenance for this reason.
 
 **Bits against bytes.** Network is quoted in bits per second and storage in bytes per second, and
 the factor of eight between them sits at exactly the boundary between two teams. A model that
@@ -83,7 +83,7 @@ The distinction is invisible until somebody in finance does the reconciling, whi
 conversion appears in the table above rather than inside somebody's head.
 
 **Years.** The same problem, smaller: a year is not exactly three hundred and sixty-five days. The
-storage model's `hours per year` input carries the quarter-day and says in its provenance what
+web service model's `hours per year` input carries the quarter-day and says in its provenance what
 that is worth over the horizon — less than the model's other errors, and free to get right.
 
 **Exponents are pure numbers.** A duration cannot be an exponent. Compounding growth over a

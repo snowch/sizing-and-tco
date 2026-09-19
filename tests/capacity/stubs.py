@@ -5,14 +5,15 @@ from __future__ import annotations
 from sizing.dsl import Model
 
 
-def raw_for(usable: float, replication: float, compression: float, overhead: float) -> float:
-    """Problem 9.1 - the chain from what you need to what you must buy.
+def raw_for(stored: float, replication: float, compression: float, overhead: float) -> float:
+    """Problem 9.1 - the chain from what you must keep to what you must buy.
 
-    ``usable`` is the bytes the application wants to store. ``replication`` is how many copies you
-    keep. ``compression`` is the ratio the data achieves - a two means it halves. ``overhead`` is
-    a multiplier for filesystem, index and journal, so 1.05 means five per cent.
+    ``stored`` is the bytes of records the service has to keep. ``replication`` is how many
+    copies the store keeps of each. ``compression`` is the ratio the records achieve on disk - a
+    two means they halve. ``overhead`` is a multiplier for the indexes and the write-ahead log
+    kept beside them, so 1.3 means thirty per cent.
 
-    Return the raw bytes you have to buy.
+    Return the raw bytes of disk you have to buy.
 
     Two of those four multiply and one divides, and getting the division the wrong way up gives an
     answer that is wrong by the square of the compression ratio while still looking entirely
@@ -70,7 +71,8 @@ def make_it_a_cost_model(model: Model) -> Model:
 
     ``scripts/verify-models.py`` classifies a model by what is in it: a ``measured`` node or a
     ``ceiling`` makes it a sizing model, and a model with neither is a cost model whose inputs
-    can simply be sampled. This chapter is where the storage model crossed that line.
+    can simply be sampled. The web service model crossed that line in ch06, when its first
+    ceiling arrived; this chapter adds the measured constant that would have crossed it anyway.
 
     Return a copy of ``model`` that classifies as a **cost** model, while still evaluating and
     still producing at least one of the outputs it produced before.

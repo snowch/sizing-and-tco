@@ -107,7 +107,7 @@ project:
         - file: appendices/appendix_b_monte_carlo_module.md
         - file: appendices/appendix_c_distributions.md
         - file: appendices/appendix_d_units.md
-        - file: appendices/appendix_e_storage_model.md
+        - file: appendices/appendix_e_web_service_model.md
         - file: appendices/appendix_f_observability_model.md
         - file: appendices/appendix_g_glossary.md
         - file: appendices/appendix_h_running_the_toolkit.md

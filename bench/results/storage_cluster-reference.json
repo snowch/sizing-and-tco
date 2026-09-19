@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T09:47:20+00:00",
-  "git_revision": "342807a",
+  "generated_at": "2026-09-19T11:31:47+00:00",
+  "git_revision": "74b82b3",
   "kind": "model",
   "name": "storage_cluster-reference",
   "produced_by": {
@@ -85,7 +85,7 @@
       "tco": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-19T09:47:20+00:00",
+    "generated_at": "2026-09-19T11:31:47+00:00",
     "model": "storage_cluster",
     "nodes": {
       "annual_energy": {

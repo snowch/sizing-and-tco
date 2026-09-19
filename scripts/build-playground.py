@@ -316,7 +316,7 @@ footer { margin-top: 24px; border-top: 1px solid var(--edge); padding-top: 12px;
 
 
 def build(stage) -> str:
-    """One page for one stage of the storage model."""
+    """One page for one stage of the running example."""
     model = stage.path.read_text()
     return PAGE.format(
         css=CSS,

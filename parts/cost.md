@@ -8,7 +8,7 @@ short_title: "Part V — Cost"
 
 > What does the thing you have sized cost, over its life, and per unit of what it does?
 
-Cost comes after sizing because it consumes sizing's output. The cluster has already been chosen;
+Cost comes after sizing because it consumes sizing's output. The fleet has already been chosen;
 this part is what it costs, and what that figure is and is not comparable with.
 
 **[ch15 · Capex, opex and where the total stops](#capex-opex-and-lifecycle)** splits what you pay

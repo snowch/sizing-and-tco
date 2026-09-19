@@ -51,9 +51,9 @@ def pert_ppf(u: np.ndarray, minimum: float, likely: float, maximum: float) -> np
 def sample_two_inputs(seed: int, samples: int) -> dict[str, np.ndarray]:
     """Problem 13.2 — sample a model by hand.
 
-    Return a dictionary with two keys, ``drive_price`` and ``chassis_price``, each holding
-    ``samples`` draws from the distributions the storage model declares for them. Read the
-    distributions out of ``models/storage_cluster/model.yaml`` — do not copy the numbers here,
+    Return a dictionary with two keys, ``host_price`` and ``network_price_per_host``, each
+    holding ``samples`` draws from the distributions the web service model declares for them.
+    Read the distributions out of ``models/web_service/model.yaml`` — do not copy the numbers here,
     because a problem that goes stale when the model changes is not testing anything.
 
     Use ``numpy`` and ``sizing.normal`` if you like. Do **not** use ``sizing.mc`` or
@@ -73,7 +73,7 @@ def make_the_point_estimate_lie() -> dict[str, dict]:
     Return a dictionary mapping input node names to replacement distributions, in the same form a
     model file uses::
 
-        {"annual_growth": {"lognormal": {"p10": 1.05, "p90": 2.4}}}
+        {"host_price": {"lognormal": {"p10": 3000, "p90": 14000}}}
 
     Every input you replace must keep the same *kind* of distribution it already has, and its p10
     and p90 must stay inside the ``range:`` the model declares for it — you are choosing a

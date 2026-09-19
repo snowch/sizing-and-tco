@@ -33,6 +33,13 @@ certain_until:
     source: >-
       ch02 - the busy hour, as one number. ch04 replaces it with a distribution, because an
       engineer who gives you this figure is giving you a range and rounding it.
+  os_reserve:
+    stage: uncertainty
+    value: 0.1
+    source: >-
+      ch03 - the share of memory the kernel, the agents and the page cache floor keep before the
+      service sees any, as one number. ch04 gives it a shape, because it differs from host to
+      host and nobody has measured it on these.
 
 stages:
   - stage: demand
@@ -342,6 +349,7 @@ stages:
       - cost_per_stored_tb_month
       - capex
       - annual_opex
+      - annual_energy
       - queueing_headroom
       - failure_headroom
       - cache_fill

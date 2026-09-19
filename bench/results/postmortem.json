@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "407922d9c6543d70",
+  "code_fingerprint": "9ae72347a4298603",
   "code_sources": [
     "bench/run_postmortem.py"
   ],
@@ -7,15 +7,15 @@
     "it_cannot_find_a_missing_cause": "the second attribution is run on a model known to exclude an entire chain, and it blames the inputs that are present without hesitating. A post-mortem inside a model is a post-mortem of that model (ch20)",
     "medians_not_means": "these inputs are skewed, and a shift in means would mostly be the tail moving rather than the typical case",
     "no_observation_was_used": "nothing here is a measurement of a real outcome. It is the model's own futures, filtered to the ones in which the design failed \u2014 which is what makes it reproducible and also what bounds what it can say",
-    "read_the_base_rate": "`something_extreme_share` must be read against `something_extreme_everywhere`. A model with eight uncertain inputs has one of them beyond its own p90 in most of its futures, failure or not, and a post-mortem that does not say so has discovered the number of inputs"
+    "read_the_base_rate": "`something_extreme_share` must be read against `something_extreme_everywhere`. Even with three uncertain inputs feeding a ceiling, one of them is beyond its own p90 in a fair share of all futures, failure or not, and the share rises with every input added. A post-mortem that does not say so has discovered the number of inputs"
   },
-  "generated_at": "2026-09-19T09:53:10+00:00",
-  "git_revision": "342807a",
+  "generated_at": "2026-09-19T12:10:29+00:00",
+  "git_revision": "c7b0215",
   "kind": "measurement",
   "name": "postmortem",
   "produced_by": {
     "method": "the sampled futures filtered to the ones where a ceiling was breached, and each input's median in them compared against its median overall",
-    "model": "storage_cluster and observability",
+    "model": "web_service and observability",
     "scenario": "reference",
     "seed": 20260916,
     "stack": "sizing.evaluate"
@@ -31,39 +31,39 @@
   "summary": {
     "blocked_nodes": 8,
     "complete": {
-      "ceiling": "fill_level",
+      "ceiling": "queueing_headroom",
       "inputs": 3,
-      "model": "storage_cluster",
-      "nothing_extreme_share": 0.5716438194280312,
+      "model": "web_service",
+      "nothing_extreme_share": 0.415230420207903,
       "rows": [
         {
-          "extreme_in_failures": 0.2954384306310565,
-          "in_failures": 1.5297750327385282,
+          "extreme_in_failures": 0.21179697287779772,
+          "in_failures": 12463.034565587419,
+          "input": "peak_request_rate_t0",
+          "label": "peak request rate, day one",
+          "overall": 9904.5783904358,
+          "shift": 0.2583104574771353
+        },
+        {
+          "extreme_in_failures": 0.3103308163749027,
+          "in_failures": 1.5239823664289007,
           "input": "annual_growth",
           "label": "annual growth factor",
           "overall": 1.3384005386959914,
-          "shift": 0.14298746041225718
+          "shift": 0.13865940902394014
         },
         {
-          "extreme_in_failures": 0.0930631056487828,
-          "in_failures": 2.545358288150686,
-          "input": "object_compression",
-          "label": "object compression ratio",
-          "overall": 2.5484866902774517,
-          "shift": -0.0012275528605664165
-        },
-        {
-          "extreme_in_failures": 0.10691916804537935,
-          "in_failures": 1.071703855318551,
-          "input": "metadata_overhead",
-          "label": "metadata overhead",
-          "overall": 1.0707592645660349,
-          "shift": 0.0008821691147344879
+          "extreme_in_failures": 0.19046490366708427,
+          "in_failures": 0.014471940407696168,
+          "input": "service_demand",
+          "label": "CPU time per request",
+          "overall": 0.013077441712566001,
+          "shift": 0.10663390636948544
         }
       ],
-      "share_of_futures": 0.33848,
-      "something_extreme_everywhere": 0.27015,
-      "something_extreme_share": 0.4283561805719688
+      "share_of_futures": 0.29533,
+      "something_extreme_everywhere": 0.25447,
+      "something_extreme_share": 0.584769579792097
     },
     "incomplete": {
       "ceiling": "quoted_pipeline_utilisation",

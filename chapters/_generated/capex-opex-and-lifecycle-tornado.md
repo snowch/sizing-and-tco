@@ -2,13 +2,13 @@
 
 | Input | Kind | annual opex at its p10 | at its p90 | Swing |
 |---|---|---:|---:|---:|
-| support rate | input | $370,246 | $494,365 | $124,118 |
-| chassis price | input | $379,761 | $486,802 | $107,041 |
-| electricity price | input | $390,379 | $479,129 | $88,750 |
-| staff fte | input | $389,669 | $473,861 | $84,192 |
-| fully loaded salary | input | $403,746 | $452,418 | $48,671 |
-| node power | input | $411,620 | $442,820 | $31,201 |
-| drive price | input | $412,473 | $441,588 | $29,115 |
-| PUE | input | $415,153 | $437,829 | $22,677 |
+| staff fte | input | $262,247 | $387,863 | $125,616 |
+| licence per core | input | $281,614 | $385,294 | $103,680 |
+| fully loaded salary | input | $276,768 | $367,486 | $90,718 |
+| host price | input | $303,191 | $335,038 | $31,847 |
+| support rate | input | $304,811 | $330,621 | $25,810 |
+| electricity price | input | $306,148 | $331,932 | $25,784 |
+| host power | input | $311,695 | $321,549 | $9,854 |
+| PUE | input | $313,346 | $319,934 | $6,588 |
 
-*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*

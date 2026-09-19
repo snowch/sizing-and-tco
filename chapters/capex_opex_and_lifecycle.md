@@ -10,7 +10,7 @@ short_title: "ch15 Capex, opex and where the total stops"
 
 What do you pay once, what do you pay every month, and what does this book deliberately not model?
 
-[ch12](#the-sizing-model) chose the cluster; this chapter prices it. The arithmetic is easy. The
+[ch12](#the-sizing-model) chose the fleet; this chapter prices it. The arithmetic is easy. The
 hard parts are the split between the invoice somebody signs and the bills that arrive afterwards,
 and knowing where a cost model should stop.
 
@@ -21,8 +21,8 @@ and knowing where a cost model should stop.
 ```{include} _generated/capex-opex-and-lifecycle-split.md
 ```
 
-Read the two headline rows before anything else. Over the declared horizon, the capital cost and
-the running cost are roughly the same size. Only the capital half got argued about.
+Read the two headline rows before anything else. Over the declared horizon, the running cost is
+several times the capital cost. Only the capital got argued about.
 
 Capital cost — *capex* — is what you pay once. Running cost — *opex* — is what you pay every
 month for as long as you keep it. Those are the words the tables use and the words the room will
@@ -34,20 +34,24 @@ is nobody's decision in particular: an electricity bill, a support renewal, a fr
 salary. Each piece is too small to argue about and the total is not.
 
 Problem 15.1 is that division. Run it against the table above and the running cost overtakes the
-purchase inside the horizon the cluster was bought for. The argument was had about the smaller
-half.
+purchase well inside the horizon the fleet was bought for. The argument was had about the smaller
+part.
 
 ### What is in each
 
-The capital rows split three ways. The chassis dominates. The drives are a smaller share than
-most people guess. The network is the smallest of the three, and it grows with cluster size in a
-way this model does not capture.
+The capital rows split two ways. The hosts dominate. The network port each one needs is the
+smaller share, and it grows with fleet size in a way this model does not capture: a fleet twice
+the size needs more than twice the switching.
 
-The three running rows are three different kinds of number.
+The four running rows are four different kinds of number.
 
 **Energy** is physics: watts times hours times price, with a facility multiplier on top. It is the
 one line in the model with no judgement in it at all, and [ch16](#power-first) is about what
 happens when it becomes the binding constraint rather than a line item.
+
+**Licences** are a vendor's price per core per year, and they are the line that turns a decision
+about hosts into a recurring bill nobody remembers agreeing to: every core the fleet has is a core
+somebody pays for annually, busy or idle. Here it is the second-largest running line.
 
 **Support** is a percentage of capital, so it is not really a running cost. It is a deferred part
 of the purchase, indexed to the purchase. Negotiate the capital down and the support falls with
@@ -55,7 +59,9 @@ it, which is worth knowing before you negotiate.
 
 **People** is the line most models omit and the one that is hardest to defend either way. The
 model carries a fraction of an engineer at a fully loaded rate, both of them assumptions. It is
-in the model because leaving it out is a decision too, and a less honest one.
+in the model because leaving it out is a decision too, and a less honest one. Here it is the
+largest line in the total, which is the usual state of affairs and the usual reason it is left
+out.
 
 ### What moves the running cost
 
@@ -63,8 +69,9 @@ in the model because leaving it out is a decision too, and a less honest one.
 ```
 
 The running cost moves with the things you would expect, in an order most people get wrong. The
-support rate — a percentage nobody negotiates, because it is presented as standard — moves the
-annual figure more than the electricity price does.
+top three bars are people and licences — how many engineers, what a licence costs per core, what
+an engineer costs — and the electricity price, the line everybody expects to argue about, is near
+the bottom with the support rate beside it.
 
 ### The refresh, and the convention nobody writes down
 
@@ -73,8 +80,8 @@ decides how many purchases the total contains.
 
 A five-year horizon with a five-year refresh is either one purchase or two, depending on whether
 the refresh at the end counts. Nobody writes the convention down. The difference is an entire
-cluster — the largest single line in the model — and two people can produce two totals from the
-same inputs and both be right.
+fleet of hosts — the largest capital line in the model — and two people can produce two totals
+from the same inputs and both be right.
 
 Problem 15.2 is that boundary. Which convention is correct is a modelling choice rather than a
 fact, so the test accepts either and checks only that you are consistent. Saying which you chose
@@ -113,9 +120,10 @@ the other side of it belongs to somebody whose job it is.
 Every cost line above is one somebody
 thought of. There is no line for rack
 space, cross-connects, backup, disaster
-recovery, licences, the network gear
-between racks, or the cost of the
-migration that fills the cluster. Each
+recovery, the database's own licence if it
+has one, the network gear between racks,
+or the cost of the migration that fills
+the fleet. Each
 absent line is a cost the model reports as
 zero, confidently, and neither [ch13](#monte-carlo) nor [ch14](#correlation-and-convergence)
 can see it. That is [ch20 · The missing node](#the-missing-node).
@@ -124,8 +132,8 @@ can see it. That is [ch20 · The missing node](#the-missing-node).
 assumption ([ch03](#where-the-numbers-come-from)). None was measured, because a price is not the
 sort of thing this repository can measure.
 
-**What happens if the cluster is wrong.** The cost model takes the node count as given. If
-[ch12](#the-sizing-model)'s cluster runs out of space partway through its horizon, the real total
+**What happens if the fleet is wrong.** The cost model takes the host count as given. If
+[ch12](#the-sizing-model)'s fleet goes over the knee partway through its horizon, the real total
 includes an unplanned purchase that no line here represents.
 
 **Anything about when the money is spent.** The split above is a total over a horizon. Whether the
@@ -147,7 +155,7 @@ python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_1_crossover.py
 
 **15.2 — The refresh, and the convention nobody writes down.**
 Decide what happens when a refresh lands exactly on the end of the horizon, defend it in a
-comment, and be consistent. The difference is a whole cluster.
+comment, and be consistent. The difference is a whole fleet.
 
 ```bash
 python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_2_refresh.py
@@ -157,7 +165,7 @@ python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_2_refresh.py
 else can get them.
 
 Every price in this book's model is a vendor's claim or an assumption, and the chapter says so.
-Try to get yours. For each cost line — hardware, power, support, the people — find the real
+Try to get yours. For each cost line — hardware, power, licences, support, the people — find the real
 figure and record where it came from.
 
 Count how many you could actually obtain. In most organisations the hardware price is easy, the

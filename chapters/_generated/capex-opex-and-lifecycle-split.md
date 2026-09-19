@@ -2,14 +2,14 @@
 
 | | Amount | Share of the total |
 |---|---:|---:|
-| Capital, paid once | $2,025,596 | 49% |
-| Drives | $410,174 | 10% |
-| Chassis | $1,411,090 | 34% |
-| Network | $204,332 | 5% |
-| Running, over 5 years | $2,124,439 | 51% |
-| Energy | $474,294 | 11% |
-| Support | $1,194,612 | 29% |
-| People | $455,533 | 11% |
-| **Total** | **$4,150,036** | |
+| Capital, paid once | $421,214 | 21% |
+| Hosts | $353,071 | 18% |
+| Network | $68,144 | 3% |
+| Running, over 5 years | $1,580,869 | 79% |
+| Energy | $137,792 | 7% |
+| Licences | $345,600 | 17% |
+| Support | $248,415 | 12% |
+| People | $849,062 | 42% |
+| **Total** | **$2,002,083** | |
 
-*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*

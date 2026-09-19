@@ -1,7 +1,7 @@
 """Problem 1.2 - cost model or sizing model, graded against the rule the build enforces.
 
-Not three different models: one model at five stages of being built, which is how the book builds
-it. The kind changes partway along, and the reader who can say exactly where has understood the
+Not several different models: one model at six stages of being built, which is how the book
+builds it. The kind changes partway along, and the reader who can say exactly where has understood the
 distinction the rest of the book rests on.
 
 The reader decides by reading the files. The test decides from the node types the loader
@@ -16,14 +16,15 @@ import pytest
 from sizing.dsl import load_model
 from tests.what_one_number_hides.stubs import kind_of, what_decides_it
 
-#: The storage model as ch02 to ch10 leave it, in order. Derived files, checked by
+#: The web service model as ch02 to ch07 leave it, in order. Derived files, checked by
 #: ``python3 -m bench.stages --check``, so they cannot drift from the finished model.
 STAGES = (
-    "models/storage_cluster/stages/01-demand/model.yaml",
-    "models/storage_cluster/stages/02-provenance/model.yaml",
-    "models/storage_cluster/stages/03-uncertainty/model.yaml",
-    "models/storage_cluster/stages/04-capacity/model.yaml",
-    "models/storage_cluster/stages/05-bandwidth/model.yaml",
+    "models/web_service/stages/01-demand/model.yaml",
+    "models/web_service/stages/02-provenance/model.yaml",
+    "models/web_service/stages/03-uncertainty/model.yaml",
+    "models/web_service/stages/04-littles_law/model.yaml",
+    "models/web_service/stages/05-queueing/model.yaml",
+    "models/web_service/stages/06-scaling/model.yaml",
 )
 
 

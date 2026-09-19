@@ -9,9 +9,9 @@ short_title: "Part I — What you are sizing"
 > Which quantities size a system, where they come from, and how much any of them is worth?
 
 Four chapters. The first is about what a single number is worth, and is the reason for the other
-three. Those three begin the model the book carries all the way through — a storage cluster, sized
-in Part III and costed in Part V — and all of them are about demand: what arrives, what
-accumulates, and how sure anybody is of either.
+three. Those three begin the model the book carries all the way through — a web service and its
+data on a fleet of hosts, sized in Part III and costed in Part V — and all of them are about
+demand: what arrives, what accumulates, and how sure anybody is of either.
 
 **[ch01 · What one number hides](#what-one-number-hides)** is the argument the rest of the book
 answers. A point estimate is not wrong; it is silent, about the spread it threw away at the first
@@ -21,7 +21,7 @@ measured constant or runs into a limit.
 
 **[ch02 · What a workload is](#what-a-workload-is)** separates rates from levels, and what the
 world does to you from what you have decided to do about it. It writes the first nodes of the
-storage model, and ends with a file that runs and a table that cannot yet tell the two apart.
+web service model, and ends with a file that runs and a table that cannot yet tell the two apart.
 
 **[ch03 · Where the numbers come from](#where-the-numbers-come-from)** is the difference between a
 number you measured, a number you were told and a number you decided — which is invisible once all

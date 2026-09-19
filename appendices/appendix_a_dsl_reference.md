@@ -24,9 +24,9 @@ system to read is a model nobody reads.
 
 ## The file
 
-```{literalinclude} ../models/storage_cluster/model.yaml
+```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
-:start-at: model: storage_cluster
+:start-at: model: web_service
 :end-before: nodes:
 ```
 
@@ -60,7 +60,7 @@ Here are the kinds, as the loader defines them:
 A value, or a distribution, or both. Plus a provenance kind, and a source the build will not let
 you leave empty:
 
-```{literalinclude} ../models/storage_cluster/model.yaml
+```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
 :start-at: annual_growth:
 :end-before: horizon:
@@ -74,10 +74,10 @@ distribution.
 
 A formula over other nodes, and a unit that has to agree with what the formula produces:
 
-```{literalinclude} ../models/storage_cluster/model.yaml
+```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
-:start-at: raw_per_usable:
-:end-before: raw_capacity:
+:start-at: peak_request_rate:
+:end-before: stored_data:
 ```
 
 The formula language is deliberately not Python. It is parsed with Python's own parser and then
@@ -97,9 +97,9 @@ running a stranger's model is reading their arithmetic rather than executing the
 
 Not a value. A reference to a stamped result:
 
-```{literalinclude} ../models/storage_cluster/model.yaml
+```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
-:start-at: object_compression:
+:start-at: record_compression:
 :end-before: replication_factor:
 ```
 
@@ -113,10 +113,10 @@ than showing an estimate ([ch03](#where-the-numbers-come-from)).
 
 A quantity, a limit, a margin, and a reason:
 
-```{literalinclude} ../models/service_tier/model.yaml
+```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
 :start-at: queueing_headroom:
-:end-before: # -- what more machines buy
+:end-before: # -- what more hosts buy
 ```
 
 `of`, `limit` and `headroom` are all expressions rather than numbers, so that a margin a sizing
@@ -157,7 +157,7 @@ function and a line:
 
 Which nodes are answers. Everything else in the graph is working:
 
-```{literalinclude} ../models/storage_cluster/model.yaml
+```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
 :start-at: outputs:
 :end-before: correlations:
@@ -172,7 +172,7 @@ be asked about.
 
 A model may declare that two inputs move together, with a reason:
 
-```{literalinclude} ../models/storage_cluster/model.yaml
+```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
 :start-at: correlations:
 ```
@@ -186,7 +186,7 @@ into the next model without knowing what it was for
 A scenario is a small file beside the model. It overrides inputs, names why, and pins the sample
 count and the seed so the run can be reproduced exactly:
 
-```{literalinclude} ../models/storage_cluster/scenarios/sized_for_growth.yaml
+```{literalinclude} ../models/web_service/scenarios/sized_for_growth.yaml
 :language: yaml
 ```
 
@@ -222,12 +222,13 @@ Scenarios are how you compare two designs without editing either one into the ot
 ## The graph
 
 ```{image} ../chapters/_figures/appendix-a-dsl-reference-graph.svg
-:alt: The smallest model in the book as a dependency graph, coloured by node kind
+:alt: The smallest graph in the book, coloured by node kind
 :width: 100%
 ```
 
-The service tier model, the smallest in the book: nine inputs, three ceilings and the arithmetic
-between them. It has no measured constant, so its ceilings alone make it a sizing model.
+The running example as [ch02](#what-a-workload-is) leaves it, the smallest graph in the book:
+five inputs, three derived nodes and nothing else. It has no ceiling and no measured constant, so
+it is a cost model, and [ch06](#queueing-and-the-knee) is where it stops being one.
 [Appendix F](#appendix-f-observability-model) is the model with all four kinds in it. Reading
 right to left from any answer gives exactly the quantities it rests on; reading left to right
 shows how few inputs most of the graph is downstream of.

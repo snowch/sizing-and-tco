@@ -1,18 +1,19 @@
 {
-  "code_fingerprint": "86061949e1c505e9",
+  "code_fingerprint": "eb1b8382abc92cb0",
   "code_sources": [
     "bench/run_curves.py"
   ],
   "conditions": {
-    "two_chains_only": "this model has two. A real estate has more - rebuild bandwidth, metadata operations, a control plane - and each one is another chance for the answer to be set by something nobody was watching"
+    "the_largest_of_three": "the recommended count is the largest of three uncertain numbers, and the largest of three sits above where any one of them usually does. Sizing on the chain that wins most often is still sizing on one chain, and the other two are larger whenever it loses",
+    "three_chains_only": "this model has three. A real service has more - a database's connection limit, a cache's eviction rate, the network between them - and each one is another chance for the answer to be set by something nobody was watching"
   },
-  "generated_at": "2026-09-19T09:48:07+00:00",
-  "git_revision": "342807a",
+  "generated_at": "2026-09-19T11:57:12+00:00",
+  "git_revision": "c7b0215",
   "kind": "measurement",
   "name": "binding-constraint",
   "produced_by": {
-    "method": "sampled, and the two node-count chains compared draw by draw",
-    "model": "storage_cluster",
+    "method": "sampled, and the three host-count chains compared draw by draw",
+    "model": "web_service",
     "scenario": "reference",
     "seed": 20260916,
     "stack": "sizing.evaluate"
@@ -26,20 +27,34 @@
     "python": "3.11.15"
   },
   "summary": {
-    "capacity_binds": 0.85998,
-    "median_capacity_nodes": 121.0,
-    "median_gap": 54.0,
-    "median_throughput_nodes": 67.0,
-    "p95_gap": 283.0,
-    "throughput_binds": 0.14002000000000003
+    "median_gap": 14.0,
+    "median_largest": 68.0,
+    "median_memory_hosts": 53.0,
+    "median_requests_hosts": 50.0,
+    "median_storage_hosts": 49.0,
+    "memory_binds": 0.42149,
+    "p95_gap": 81.0,
+    "requests_binds": 0.36335,
+    "short_if_memory": 0.55902,
+    "short_if_requests": 0.62028,
+    "short_if_storage": 0.79242,
+    "storage_binds": 0.18766,
+    "tied": 0.02750000000000008
   },
   "target": "model",
   "units": {
-    "capacity_binds": "dimensionless",
-    "median_capacity_nodes": "node",
-    "median_gap": "node",
-    "median_throughput_nodes": "node",
-    "p95_gap": "node",
-    "throughput_binds": "dimensionless"
+    "median_gap": "host",
+    "median_largest": "host",
+    "median_memory_hosts": "host",
+    "median_requests_hosts": "host",
+    "median_storage_hosts": "host",
+    "memory_binds": "dimensionless",
+    "p95_gap": "host",
+    "requests_binds": "dimensionless",
+    "short_if_memory": "dimensionless",
+    "short_if_requests": "dimensionless",
+    "short_if_storage": "dimensionless",
+    "storage_binds": "dimensionless",
+    "tied": "dimensionless"
   }
 }

@@ -15,7 +15,7 @@ import pytest
 from sizing.dsl import load_model
 from tests.what_one_number_hides.stubs import spread_of_each, spread_of_the_chain
 
-MODEL = "models/storage_cluster/model.yaml"
+MODEL = "models/web_service/model.yaml"
 
 
 @pytest.fixture(scope="module")

@@ -15,7 +15,7 @@ produced.
 order says, and the asymmetry in it: every term that hurts is certain, and the one term that helps
 is a measurement.
 
-**[ch10 · Bandwidth, and the binding constraint](#bandwidth-and-the-binding-constraint)** is the
+**[ch10 · Three chains, and the binding constraint](#bandwidth-and-the-binding-constraint)** is the
 second chain, the fact that the two disagree, and the number nobody computes: how far short you
 fall in the cases where the chain you dropped is the one that binds.
 

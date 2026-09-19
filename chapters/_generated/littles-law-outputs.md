@@ -2,19 +2,11 @@
 
 | Output | Point estimate | 90% interval | Unit |
 |---|---:|---:|---|
-| utilisation | 0.588 | 0.232 to 1.32 |  |
-| utilisation, counting coordination | 0.894 | 0.413 to 1.84 |  |
-| how much the queueing view understated it | 1.52 | 0.964 to 2.56 |  |
-| residence time | 0.0165 | 0.0067 to 0.472 | second |
-| time spent queueing | 0.0097 | 0.0016 to 0.462 | second |
-| requests in the system | 91.3 | 19.3 to 4,220 | request |
-| nodes busy on average | 38 | 15 to 84 | node |
-| throughput the tier can actually reach | 6,174 | 4,208 to 8,385 | request/second |
-| scaling efficiency | 0.631 | 0.487 to 0.749 |  |
-| where adding nodes stops helping | 164 | 92 to 291 | node |
-| fraction of the peak already built | 0.389 | 0.220 to 0.692 |  |
-| utilisation, against its limit | 0.588 | 0.232 to 1.32 |  |
-| fraction of the tier doing nothing useful | 0.369 | 0.251 to 0.513 |  |
-| utilisation, counting coordination, against its limit | 0.894 | 0.413 to 1.84 |  |
+| records held at horizon | 64.5 | 20.5 to 201 | TB |
+| memory the service can use, per host | 0.0611 | 0.0578 to 0.0635 | TB/host |
+| mean request rate at horizon | 11,307 | 2,882 to 42,360 | request/second |
+| utilisation | 0.644 | 0.156 to 2.48 |  |
+| cores busy at the busy hour | 556 | 134 to 2,147 | core |
+| requests in flight, if none waited | 556 | 134 to 2,147 | request |
 
-*Source — [`service_tier-reference`](/models/service_tier-reference.html) · every input on a slider*
+*Source — [`web_service_littles_law-reference`](/models/web_service_littles_law-reference.html) · every input on a slider*

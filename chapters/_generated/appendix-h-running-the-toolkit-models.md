@@ -2,10 +2,10 @@
 
 | Node kind | Count | What it carries |
 |---|---:|---|
-| `input` | 22 | a value or a distribution, a provenance kind and a source |
-| `derived` | 25 | a formula, whose declared unit is checked against what it produces |
+| `input` | 35 | a value or a distribution, a provenance kind and a source |
+| `derived` | 51 | a formula, whose declared unit is checked against what it produces |
 | `measured` | 1 | a stamped result, a standard error, and the implementation it belongs to |
-| `ceiling` | 2 | a limit, a declared headroom, and a reason |
+| `ceiling` | 6 | a limit, a declared headroom, and a reason |
 | | | **classified as a sizing model** — it has measured constants or ceilings in it, so sampling the inputs is not sufficient on its own |
 
-*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*

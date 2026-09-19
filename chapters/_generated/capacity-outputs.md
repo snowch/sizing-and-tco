@@ -2,13 +2,8 @@
 
 | Output | Point estimate | 90% interval | Unit |
 |---|---:|---:|---|
-| nodes the model recommends | 121 | 46 to 379 | node |
-| nodes purchased | 121 | *fixed* | node |
-| five-year total cost of ownership | $4,150,036 | $3,207,411 to $5,732,007 | USD |
-| cost per usable TB per month | $6.53 | $2.37 to $15.87 | USD / TB / month |
-| capex | $2,025,596 | $1,475,272 to $2,859,544 | USD |
-| annual opex | $424,888 | $318,062 to $611,522 | USD / year |
-| fill level at horizon | 0.746 | 0.238 to 2.35 |  |
-| read utilisation at peak | 0.546 | 0.267 to 1.02 |  |
+| raw disk needed at horizon | 72.4 | 22.9 to 229 | TB |
+| hosts for storage | 49 | 16 to 153 | host |
+| disk fill at horizon | 0.670 | 0.212 to 2.12 |  |
 
-*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*
+*Source — [`web_service_capacity-reference`](/models/web_service_capacity-reference.html) · every input on a slider*

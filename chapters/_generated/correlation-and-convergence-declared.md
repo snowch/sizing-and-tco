@@ -2,8 +2,7 @@
 
 | Between | and | Rank correlation | Because |
 |---|---|---:|---|
-| annual_growth | label_values_accidental | +0.50 | A platform that is growing is a platform that is being changed, and labels arrive with changes. Treating the two as independent makes the metrics interval narrower than the estate warrants — ch14 measures by how much. |
-| request_rate | lines_per_request | +0.30 | Weak and positive: busier services tend to be the chattier ones. Small enough to be worth including as an example of a correlation that barely matters, which is a useful thing for a reader to see beside one that does. |
-| request_rate | queries_per_second | +0.40 | A busier platform is one more people are watching. Moderate rather than strong: most query load comes from alert rules and dashboards on timers, which do not care how busy anything is — right up until an incident, when they all fire at once and nobody is looking at the model. |
+| peak_request_rate_t0 | service_demand | +0.40 | The unhappy one. A busier service is usually a slower one per request — caches miss more, locks are held longer, the garbage collector runs while somebody is waiting. Treating the two as independent understates the tail of every figure in this model, and it understates it exactly when the fleet is busiest. |
+| host_price | network_price_per_host | +0.50 | Both are quoted by the same supply chain in the same quarter. A year when hosts are scarce is usually a year when optics are, and treating them as independent narrows the interval on capital cost by pretending one can save you from the other. |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*

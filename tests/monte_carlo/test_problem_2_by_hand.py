@@ -15,12 +15,12 @@ from sizing.dsl import load_model
 from tests.monte_carlo.stubs import sample_two_inputs
 
 SAMPLES = 50_000
-WANTED = ("drive_price", "chassis_price")
+WANTED = ("host_price", "network_price_per_host")
 
 
 @pytest.fixture(scope="module")
 def declared():
-    model = load_model("models/storage_cluster/model.yaml")
+    model = load_model("models/web_service/model.yaml")
     return {name: model.nodes[name].distribution for name in WANTED}
 
 

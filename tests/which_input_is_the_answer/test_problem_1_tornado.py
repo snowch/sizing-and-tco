@@ -8,22 +8,22 @@ from bench.stamp import load_result
 from sizing.dsl import load_model, load_scenario
 from tests.which_input_is_the_answer.stubs import tornado
 
-OUTPUT = "tco"
+OUTPUT = "hosts_recommended"
 
 
 @pytest.fixture(scope="module")
 def model():
-    return load_model("models/storage_cluster/model.yaml")
+    return load_model("models/web_service/model.yaml")
 
 
 @pytest.fixture(scope="module")
 def scenario():
-    return load_scenario("models/storage_cluster/scenarios/reference.yaml")
+    return load_scenario("models/web_service/scenarios/reference.yaml")
 
 
 @pytest.fixture(scope="module")
 def published():
-    return load_result("storage_cluster-reference")["summary"]["tornado"][OUTPUT]
+    return load_result("web_service-reference")["summary"]["tornado"][OUTPUT]
 
 
 @pytest.mark.problem

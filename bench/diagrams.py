@@ -210,7 +210,10 @@ def tornado_chart(result: str, output: str, limit: int = 9) -> str:
     if not bars:
         return _svg(360, 40, '<text x="8" y="24" font-size="11">no uncertain input</text>', "empty")
 
-    label_width, chart_width, bar_height = 168.0, 300.0, 24.0
+    # The label column fits the longest label rather than assuming one. The web service names
+    # its inputs in sentences, and a fixed column put the longest of them off the left of the page.
+    longest = max(len(bar["label"]) for bar in bars)
+    label_width, chart_width, bar_height = max(168.0, longest * 9.5 * 0.55 + 8), 300.0, 24.0
     width = label_width + chart_width + MARGIN * 2 + 96
     height = MARGIN * 2 + 42 + len(bars) * bar_height + (14 if still else 0)
 
@@ -539,7 +542,7 @@ def queueing_curve(result: str) -> str:
     )
     body = [
         f'<text x="{MARGIN}" y="20" font-size="11.5" fill="#263238">How much longer a request '
-        f"takes than it would on an idle tier</text>",
+        f"takes than it would on an idle fleet</text>",
         f'<text x="{MARGIN}" y="34" font-size="9.5" fill="#546e7a">The arrival rate moves; the '
         f"software and the machines do not</text>",
     ]
@@ -588,7 +591,7 @@ def queueing_curve(result: str) -> str:
 
 
 def scaling_curve(result: str) -> str:
-    """Throughput against node count, against the straight line nobody gets.
+    """Throughput against host count, against the straight line nobody gets.
 
     Two curves and the gap between them. The straight line is what a budget assumes; the other is
     what the machines do. The place they stop diverging and start converging on nothing is the
@@ -599,23 +602,23 @@ def scaling_curve(result: str) -> str:
     width, height = 500.0, 260.0
     left, right, top, bottom = 56.0, width - 20, 42.0, height - 42
 
-    most_nodes = max(row["nodes"] for row in rows)
-    # Scaled to what the tier can actually reach, not to the straight line — which is nine times
+    most_hosts = max(row["hosts"] for row in rows)
+    # Scaled to what the fleet can actually reach, not to the straight line — which is nine times
     # taller and would squash the real curve onto the axis. So the line a budget assumes runs off
     # the top of the figure, which is a fair description of what it does in practice.
     tallest = max(row["achievable_throughput"] for row in rows) * 1.35
 
-    def at(nodes: float, throughput: float) -> tuple[float, float]:
+    def at(hosts: float, throughput: float) -> tuple[float, float]:
         return (
-            left + nodes / most_nodes * (right - left),
+            left + hosts / most_hosts * (right - left),
             bottom - min(throughput / tallest, 1.0) * (bottom - top),
         )
 
     def path_of(key: str) -> str:
-        return " L".join(f"{x:.1f},{y:.1f}" for x, y in (at(r["nodes"], r[key]) for r in rows))
+        return " L".join(f"{x:.1f},{y:.1f}" for x, y in (at(r["hosts"], r[key]) for r in rows))
 
     leaves_at = next(
-        (row["nodes"] for row in rows if row["linear_throughput"] > tallest), most_nodes
+        (row["hosts"] for row in rows if row["linear_throughput"] > tallest), most_hosts
     )
 
     body = [
@@ -631,11 +634,11 @@ def scaling_curve(result: str) -> str:
     exit_x, _ = at(leaves_at, tallest)
     body.append(
         f'<text x="{exit_x + 6:.1f}" y="{top + 12:.0f}" font-size="9" fill="#b3413a">'
-        f"the budget's line leaves the page at {leaves_at:.0f} nodes</text>"
+        f"the budget's line leaves the page at {leaves_at:.0f} hosts</text>"
     )
 
     peak = max(rows, key=lambda row: row["achievable_throughput"])
-    peak_x, peak_y = at(peak["nodes"], peak["achievable_throughput"])
+    peak_x, peak_y = at(peak["hosts"], peak["achievable_throughput"])
     body.append(
         f'<circle cx="{peak_x:.1f}" cy="{peak_y:.1f}" r="4" fill="none" stroke="#b3413a" '
         f'stroke-width="1.5"/>'
@@ -647,16 +650,16 @@ def scaling_curve(result: str) -> str:
         f'<line x1="{left}" y1="{top}" x2="{left}" y2="{bottom}" stroke="#90a4ae"/>'
     )
     for row in rows:
-        if row["nodes"] not in (1, 64, 128, 256, most_nodes):
+        if row["hosts"] not in (rows[0]["hosts"], 64, 128, 256, most_hosts):
             continue
-        x, _ = at(row["nodes"], 0)
+        x, _ = at(row["hosts"], 0)
         body.append(
             f'<text x="{x:.1f}" y="{bottom + 15:.0f}" font-size="9" text-anchor="middle" '
-            f'fill="#546e7a">{row["nodes"]:.0f}</text>'
+            f'fill="#546e7a">{row["hosts"]:.0f}</text>'
         )
     body.append(
         f'<text x="{(left + right) / 2:.0f}" y="{height - 8:.0f}" font-size="9.5" '
-        f'text-anchor="middle" fill="#455a64">nodes</text>'
+        f'text-anchor="middle" fill="#455a64">hosts</text>'
         f'<text x="{left - 6:.0f}" y="{top + 4:.0f}" font-size="9" text-anchor="end" '
         f'fill="#546e7a">{tallest / 1000:.0f}k</text>'
         f'<text x="{left - 6:.0f}" y="{bottom:.0f}" font-size="9" text-anchor="end" '
@@ -665,7 +668,7 @@ def scaling_curve(result: str) -> str:
         f'y="{(top + bottom) / 2:.0f}" font-size="9.5" text-anchor="middle" fill="#455a64">'
         f"requests per second</text>"
     )
-    return _svg(width, height, "".join(body), "Throughput against node count")
+    return _svg(width, height, "".join(body), "Throughput against host count")
 
 
 def distribution_shapes(_result: str | None = None) -> str:

@@ -22,12 +22,12 @@ OUTPUT = "tco"
 
 @pytest.fixture(scope="module")
 def model():
-    return load_model("models/storage_cluster/model.yaml")
+    return load_model("models/web_service/model.yaml")
 
 
 @pytest.fixture(scope="module")
 def scenario():
-    return load_scenario("models/storage_cluster/scenarios/reference.yaml")
+    return load_scenario("models/web_service/scenarios/reference.yaml")
 
 
 def _rebuilt(model, proposal):
@@ -68,7 +68,7 @@ def test_the_point_estimate_falls_outside_the_middle_half(model, scenario):
     assert not (p25 <= at_point <= p75), (
         f"the point estimate {at_point:,.0f} is still inside the middle half "
         f"({p25:,.0f} to {p75:,.0f}). Look for the place where the model is least linear — a "
-        "product of skewed inputs, or a ceil, or a max of two chains — and widen what feeds it."
+        "product of skewed inputs, or a ceil, or a max of three chains — and widen what feeds it."
     )
 
 

@@ -32,7 +32,7 @@ CHAPTER_SHAPE = (
 #: is staged by carrying a ``build-order.yaml``; more than one may be staged at once, and every
 #: staged model is built, stamped and checked, but the chapters are about this one. Changing it
 #: is the switch of running example, and it goes with the chapters in the same change.
-RUNNING_EXAMPLE = "storage_cluster"
+RUNNING_EXAMPLE = "web_service"
 
 #: What a chapter means when it says where its figures came from.
 SOURCE_MEANING = {
@@ -187,9 +187,9 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[0],
         "What is a single number worth, and what can it not tell you even when the arithmetic "
         "is right?",
-        owes="The storage model's point estimates beside their intervals, and the spread of the "
-        "five-year total.",
-        consumes=("storage_cluster-reference",),
+        owes="The web service model's point estimates beside their intervals, and the spread of "
+        "the five-year total.",
+        consumes=("web_service-reference",),
     ),
     Chapter(
         2,
@@ -212,7 +212,7 @@ CHAPTERS: tuple[Chapter, ...] = (
             "logs-line-bytes",
             "metrics-sample-bytes",
             "traces-span-bytes",
-            "storage-object-compression",
+            "records-compression",
         ),
         needs=("what_a_workload_is",),
     ),
@@ -223,7 +223,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[0],
         "Which number in a demand curve sizes you, and what is a five-year growth rate actually "
         "a claim about?",
-        owes="The growth sensitivity of the storage model, as a swing across the declared range.",
+        owes="The growth sensitivity of the web service model, as a swing across the declared range.",
     ),
     Chapter(
         5,
@@ -232,7 +232,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[1],
         "What can you infer about a system from the one relationship that is always true, and "
         "what can you not?",
-        owes="A worked derivation against the observability ingest chain.",
+        owes="Requests in flight at the busy hour, derived from the rate and the time each one takes.",
     ),
     Chapter(
         6,
@@ -251,8 +251,8 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[1],
         "How far does a system scale, and how would you find out from the two measurements you "
         "actually have?",
-        owes="A universal scalability law fit, and what it predicts for the observability ingest "
-        "tier.",
+        owes="The universal scalability law's curve, drawn from the model's two coefficients, and "
+        "where the fleet's peak is.",
     ),
     Chapter(
         8,
@@ -269,18 +269,18 @@ CHAPTERS: tuple[Chapter, ...] = (
         "Capacity",
         PARTS[2],
         "How far is what you buy from what you can use?",
-        owes="The raw-to-usable chain of the storage model, node by node.",
-        consumes=("storage_cluster-reference",),
+        owes="The chain from what the service must keep to the disks it must buy, node by node.",
+        consumes=("web_service_capacity-reference",),
     ),
     Chapter(
         10,
         "bandwidth_and_the_binding_constraint",
-        "Bandwidth, and the binding constraint",
+        "Three chains, and the binding constraint",
         PARTS[2],
-        "When two independent chains each demand a different size, which one are you actually "
+        "When three independent chains each demand a different size, which one are you actually "
         "buying?",
-        owes="How often each chain binds across the storage model's uncertainty.",
-        consumes=("storage_cluster-reference",),
+        owes="How often each of the three chains binds across the web service's uncertainty.",
+        consumes=("web_service_binding-reference", "binding-constraint"),
     ),
     Chapter(
         11,
@@ -289,7 +289,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[2],
         "Why is headroom a rule rather than a number?",
         owes="Each ceiling's declared margin and the reason for it, from both models.",
-        consumes=("storage_cluster-reference", "observability-reference"),
+        consumes=("web_service_headroom-reference", "observability-reference"),
     ),
     Chapter(
         12,
@@ -297,8 +297,8 @@ CHAPTERS: tuple[Chapter, ...] = (
         "The sizing model",
         PARTS[2],
         "What does the whole chain produce, and how much of it would you defend?",
-        owes="The storage model end to end, and the node count it recommends.",
-        consumes=("storage_cluster-reference", "storage_cluster-sized_for_growth"),
+        owes="The web service model end to end, and the host count it recommends.",
+        consumes=("web_service_sizing-reference", "web_service-sized_for_growth"),
         needs=("capacity", "bandwidth_and_the_binding_constraint", "headroom_and_failure_domains"),
     ),
     Chapter(
@@ -306,8 +306,8 @@ CHAPTERS: tuple[Chapter, ...] = (
         "monte_carlo",
         "Monte Carlo",
         PARTS[3],
-        "The sizing model has produced a node count. How sure are we?",
-        consumes=("storage_cluster-reference", "storage_cluster-sized_for_growth"),
+        "The sizing model has produced a host count. How sure are we?",
+        consumes=("web_service-reference", "web_service-sized_for_growth"),
         needs=("the_sizing_model",),
     ),
     Chapter(
@@ -317,7 +317,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[3],
         "That interval assumed every input moves on its own, and that more samples would settle "
         "it. Are either of those true?",
-        consumes=("correlation-effect", "convergence-storage-tco", "observability-reference"),
+        consumes=("correlation-effect", "convergence-tco", "web_service-reference"),
         needs=("monte_carlo",),
     ),
     Chapter(
@@ -327,8 +327,8 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[4],
         "What do you pay once, what do you pay every month, and what does this book deliberately "
         "not model?",
-        owes="The storage model's capital and running cost split, over its declared horizon.",
-        consumes=("storage_cluster-reference",),
+        owes="The web service's capital and running cost split, over its declared horizon.",
+        consumes=("web_service-reference",),
     ),
     Chapter(
         16,
@@ -336,7 +336,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "Power first",
         PARTS[4],
         "What changes when watts are the binding constraint rather than money?",
-        owes="The storage model resized from a power budget inwards.",
+        owes="The web service resized from a power budget inwards.",
     ),
     Chapter(
         17,
@@ -344,8 +344,8 @@ CHAPTERS: tuple[Chapter, ...] = (
         "Unit economics",
         PARTS[4],
         "What does a cost per unit have to have before it means anything?",
-        owes="Cost per usable TB-month from the storage model, and what its denominator assumes.",
-        consumes=("storage_cluster-reference",),
+        owes="Cost per million requests from the web service, and what its denominator assumes.",
+        consumes=("web_service-reference",),
     ),
     Chapter(
         18,
@@ -354,7 +354,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[4],
         "How does a cost model consume a sizing model's output without swallowing its uncertainty?",
         owes="Both models joined at the unit price, end to end.",
-        consumes=("storage_cluster-reference", "observability-reference"),
+        consumes=("web_service-reference", "observability-reference"),
     ),
     Chapter(
         19,
@@ -364,7 +364,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "Which input should you go and measure first, and how would the model tell you?",
         owes="Tornado charts for every output of both models, and what the widest bar has in "
         "common across them.",
-        consumes=("storage_cluster-reference", "observability-reference"),
+        consumes=("web_service-reference", "observability-reference"),
         needs=("monte_carlo",),
     ),
     Chapter(
@@ -383,8 +383,8 @@ CHAPTERS: tuple[Chapter, ...] = (
         "A TCO for a finance audience",
         PARTS[6],
         "How do you present an interval to somebody who has asked you for a number?",
-        owes="The two storage scenarios as a decision, priced.",
-        consumes=("storage_cluster-reference", "storage_cluster-sized_for_growth"),
+        owes="The two web service scenarios as a decision, priced.",
+        consumes=("web_service-reference", "web_service-sized_for_growth"),
         needs=("the_five_year_model", "which_input_is_the_answer"),
     ),
     Chapter(
@@ -393,9 +393,9 @@ CHAPTERS: tuple[Chapter, ...] = (
         "What the model got wrong",
         PARTS[7],
         "The design failed. Can the model say why, and what can it never say?",
-        owes="The storage model's own failures, attributed — and the same method on a model with "
-        "a hole in it.",
-        consumes=("postmortem", "storage_cluster-reference"),
+        owes="The web service's own failures, attributed — and the same method on a model with a "
+        "hole in it.",
+        consumes=("postmortem", "web_service-reference"),
         needs=("the_missing_node", "a_tco_for_finance"),
     ),
 )
@@ -427,16 +427,16 @@ APPENDICES: tuple[Appendix, ...] = (
     ),
     Appendix(
         "E",
-        "appendix_e_storage_model",
-        "The storage cluster model, in full",
-        "All six outputs for the book's cost exemplar.",
-        consumes=("storage_cluster-reference", "storage_cluster-sized_for_growth"),
+        "appendix_e_web_service_model",
+        "The web service model, in full",
+        "Every output of the book's running example.",
+        consumes=("web_service-reference", "web_service-sized_for_growth"),
     ),
     Appendix(
         "F",
         "appendix_f_observability_model",
         "The observability model, in full",
-        "All six outputs for the book's sizing exemplar, including what is not yet measured.",
+        "Every output of the book's second model, including what is not yet measured.",
         consumes=("observability-reference", "observability-knobs_turned_down"),
     ),
     Appendix(

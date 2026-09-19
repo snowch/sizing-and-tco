@@ -5,24 +5,24 @@ from __future__ import annotations
 from sizing.dsl import Model
 
 
-def rebuild_reserve(nodes: int, tolerated_losses: int) -> float:
-    """Problem 11.1 - the margin a node loss actually costs.
+def failure_reserve(hosts: int, tolerated_losses: int) -> float:
+    """Problem 11.1 - the margin a host loss actually costs.
 
-    A cluster of ``nodes`` machines has to survive losing ``tolerated_losses`` of them and still
-    hold all its data. Return the fraction of the cluster's capacity that has to be kept free for
+    A fleet of ``hosts`` machines has to survive losing ``tolerated_losses`` of them and still
+    serve the busy hour. Return the fraction of the fleet's capacity that has to be kept free for
     that, as a number between zero and one.
 
     Two things fall out of this that people get wrong in opposite directions.
 
-    A small cluster pays an enormous margin. Losing one machine out of five costs a fifth of the
-    capacity, and if the margin is not there beforehand there is nowhere for that machine's data
-    to go. A large cluster pays almost nothing per machine, which is a real argument for large
-    failure domains and is not the argument people usually give for them.
+    A small fleet pays an enormous margin. Losing one host out of five costs a fifth of the
+    capacity, and if the margin is not there beforehand its share of the requests lands on
+    survivors that are already busy. A large fleet pays almost nothing per host, which is a real
+    argument for large failure domains and is not the argument people usually give for them.
 
-    And the margin is for a *loss*, not for a failure. A machine that is being replaced, or
-    drained for an upgrade, costs exactly the same capacity as one that has died - and planned
-    work is far more common than failure, which is why this margin is spent most often on a
-    Tuesday afternoon rather than on an incident.
+    And the margin is for a *loss*, not for a failure. A host that is being drained for a kernel
+    upgrade costs exactly the same capacity as one that has died - and planned work is far more
+    common than failure, which is why this margin is spent most often on a Tuesday afternoon
+    rather than on an incident.
     """
     raise NotImplementedError("problem 11.1")
 

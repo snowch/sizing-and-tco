@@ -1,0 +1,10 @@
+scenario: twice_the_hosts
+title: Twice the hosts
+because: >-
+  The same workload on twice the fleet. Here so that ch06 and ch07 can be read against each
+  other: doubling the hosts halves the utilisation and does far less than halve the residence
+  time, and it does not double the throughput either.
+samples: 100000
+seed: 20260916
+overrides:
+  hosts: 108

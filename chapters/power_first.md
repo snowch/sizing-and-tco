@@ -26,12 +26,12 @@ to be satisfied, so it rounds up; this one is a supply that cannot be exceeded. 
 that inversion. People get the facility multiplier backwards: an inefficient building buys you
 *fewer* machines, not more.
 
-### What a power budget does to a cluster sized for demand
+### What a power budget does to a fleet sized for demand
 
 ```{include} _generated/power-first-scenarios.md
 ```
 
-The left column is the cluster [ch12](#the-sizing-model) recommended. The right is what fits in
+The left column is the fleet [ch12](#the-sizing-model) recommended. The right is what fits in
 the allocation.
 
 It is smaller. Everything downstream is smaller with it: less capital, less running cost, a lower
@@ -42,17 +42,19 @@ Then read the ceilings:
 ```{include} _generated/power-first-ceilings.md
 ```
 
-Neither is comfortable, and they are uncomfortable in different ways. The capacity ceiling is over
-its hard limit at the point estimate — not at some unlucky percentile, at the expected case — and
-the model puts it over in most of the futures it thinks are plausible. The bandwidth ceiling is
-still under its limit, but it has spent the whole margin that was keeping it there. That is the
-verdict column saying *into the margin* rather than *ok*.
+None of them is comfortable, and they are uncomfortable in different ways. Three are over their
+hard limit at the point estimate — the working set no longer fits in the fleet's memory, the
+disks are full, and the fleet spends more of itself on coordination than its margin allows — not
+at some unlucky percentile, at the expected case — and the model puts each of them over in a
+large share of the futures it thinks are plausible. The two queueing ceilings are still under
+their limit, but they have spent the whole margin that was keeping them there. That is the verdict
+column saying *into the margin* rather than *ok*.
 
-So the honest output of this chapter is not a cluster. **It is the statement that this workload
+So the honest output of this chapter is not a fleet. **It is the statement that this workload
 does not fit in this power envelope**, with the numbers to say so.
 
 That is a useful answer, and a spreadsheet does not produce it: sized from a power budget, a
-spreadsheet gives a node count and stops. The node count is real. The cluster it describes cannot
+spreadsheet gives a host count and stops. The host count is real. The fleet it describes cannot
 do the job it would be bought for.
 
 ### Four ways out of a power budget that does not fit
@@ -71,8 +73,8 @@ Problem 16.2 is worth doing for the framing alone: a multiplier quoted as a smal
 substantial *share* of the bill. Halving the overhead is equivalent to finding machines that draw
 materially less, and is often cheaper.
 
-**Want less.** Reduce retention, sample harder, accept a lower service level. Nobody proposes
-this in a sizing meeting, and it is frequently the right answer.
+**Want less.** Shed the least valuable requests at the busy hour, keep fewer records, accept a
+longer tail. Nobody proposes this in a sizing meeting, and it is frequently the right answer.
 
 ### Why power is not a price like the others
 
@@ -87,7 +89,7 @@ multiplier and a tariff. Three of the four are properties of hardware and buildi
 contracts, and the one that is a price is set by a market nobody in the room influences.
 
 Energy is also the only cost line that is simultaneously a **constraint**. Nobody is told they
-may not spend more on drives; they are regularly told the rack has no more power.
+may not spend more on hosts; they are regularly told the rack has no more power.
 
 ### A note on carbon
 
@@ -110,11 +112,12 @@ usually the same one. This chapter takes one number; getting the right one is a 
 whoever runs the building.
 
 **What a machine really draws.** The model uses a typical figure under load, marked as a vendor's
-claim. Draw varies with workload, with ambient temperature, and with how full the drives are. The
+claim. Draw varies with workload, with ambient temperature, and with how busy the processors
+are. The
 number that matters for an allocation is a sustained peak rather than a typical figure.
 
 **Anything about the shape of the draw.** Power is billed on energy and constrained on peak. A
-cluster that idles overnight and saturates at noon has an energy bill of one shape and a capacity
+fleet that idles overnight and saturates at noon has an energy bill of one shape and a capacity
 problem of another, and this model has only the average.
 
 **Whether the building's multiplier is stable.** It varies with outside temperature and with how

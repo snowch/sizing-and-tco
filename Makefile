@@ -61,7 +61,7 @@ information:  ## What knowing each uncertain input exactly would buy (ch19)
 	$(PYTHON) -m bench.run_information
 
 .PHONY: postmortem
-postmortem:  ## Attribute the storage model's own failures (ch22)
+postmortem:  ## Attribute the running example's own failures (ch22)
 	$(PYTHON) -m bench.run_postmortem
 
 .PHONY: verify
