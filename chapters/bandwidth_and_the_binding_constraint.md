@@ -10,22 +10,25 @@ short_title: "ch10 Three chains, and the binding constraint"
 
 When three independent chains each demand a different size, which one are you actually buying?
 
-[ch09](#capacity) followed one chain from stored bytes to hosts. There are two more — one from the
-requests, one from the working set — and the three disagree with each other in a way that is not
-to be averaged away.
+[ch09](#capacity) followed one chain from stored bytes to hosts. There are two more: one from the
+requests, one from the working set. The three disagree with each other, and the disagreement is
+not to be averaged away.
 
 ## The material
 
 ### Three chains, sharing a workload and nothing else
 
 A web service has to serve its requests, keep its working set in memory, and hold its records on
-disk. Those are three requirements with three different arithmetics, and none of them is
-derivable from the others.
+disk. Those are three requirements with three different arithmetics, and none of them can be
+derived from the others.
 
-The request chain runs from the busy hour through the cost of a request and the margin under the
-knee to a number of hosts. The memory chain runs from the records held, through the share of them
-a busy hour touches, to the hosts whose memory can hold that with room to spare. The disk chain is
-[ch09](#capacity)'s. They share the workload and nothing else.
+- The request chain runs from the busy hour, through the cost of a request and the margin under
+  the knee, to a number of hosts.
+- The memory chain runs from the records held, through the share of them a busy hour touches, to
+  the hosts whose memory can hold that with room to spare.
+- The disk chain is [ch09](#capacity)'s.
+
+They share the workload and nothing else.
 
 ```{image} _figures/bandwidth-and-the-binding-constraint-requests.svg
 :alt: The host count the request chain asks for
@@ -42,8 +45,7 @@ a busy hour touches, to the hosts whose memory can hold that with room to spare.
 :width: 100%
 ```
 
-Three distributions, three different shapes, and a great deal of overlap. None of them is the
-answer.
+Three spreads, three different shapes, and a great deal of overlap. None of them is the answer.
 
 All three chains are in one file, and it is short enough to read in a sitting:
 
@@ -58,36 +60,36 @@ Change the cost of a request and watch which chain is in charge.
 The count that satisfies all three is the largest of them, and problem 10.1 is that one function
 call. Spend a minute on the three wrong answers first. Each of them has shipped:
 
-**The average.** Satisfies at least one chain badly, by construction, and which one depends on
+**The average.** It satisfies at least one chain badly, by construction, and which one depends on
 the day. A fleet sized between what the requests need and what the working set needs is too small
 for one of them in every sample where they differ.
 
-**The usual winner.** Take the memory chain because it asks for the most more often than either
-of the others. The commonest of the three, and defensible until somebody asks the model what
-"more often than either" actually comes to.
+**The usual winner.** Take the memory chain, because it asks for the most more often than either
+of the others. This is the commonest of the three. It is defensible until somebody asks the model
+what "more often than either" actually comes to.
 
-**The sum.** Buys a fleet for a workload that does not exist. The three chains describe the same
-hosts doing three things, not three sets of hosts.
+**The sum.** It buys a fleet for a workload that does not exist. The three chains describe the
+same hosts doing three things, not three sets of hosts.
 
 ### How often each one wins
 
 ```{include} _generated/bandwidth-and-the-binding-constraint-table.md
 ```
 
-No chain decides most of the time. The working set wins more often than the others, the request
-rate is close behind, and the disk chain — the one [ch09](#capacity) spent a chapter on — wins
-least. Then read the three rows after the tie. Size on any one chain alone, even the usual winner,
-and the fleet is too small more often than not. *Wins most often* is a fact about a three-way
-race; *too small* is a fact about losing to anybody.
+No chain decides most of the time. The working set wins more often than the others. The request
+rate is close behind. The disk chain, the one [ch09](#capacity) spent a chapter on, wins least.
+Then read the three rows after the tie. Size on any one chain alone, even the usual winner, and
+the fleet is too small more often than not. *Wins most often* is a fact about a three-way race.
+*Too small* is a fact about losing to anybody.
 
 The median gap between the winner and the runner-up is large. These are not three estimates of
-the same thing that differ slightly; they are three different questions with three different
+the same thing that differ slightly. They are three different questions with three different
 answers. The gap at the 95th percentile is larger still.
 
-And the last row is the one that surprises people. The largest of three uncertain counts sits
-well above where any one of them usually does, so the fleet the model recommends is bigger than
-every chain's typical answer. That is not waste. It is what buying for three requirements at once
-costs when each of them is uncertain on its own.
+The last row is the one that surprises people. The largest of three uncertain counts sits well
+above where any one of them usually does, so the fleet the model recommends is bigger than every
+chain's typical answer. That is not waste. It is what buying for three requirements at once
+costs, when each of them is uncertain on its own.
 
 All three chains are in the graph now, meeting at the node that takes the largest. Drag *CPU time
 per request* down and watch which chain is in charge change hands.
@@ -100,15 +102,15 @@ three feeding it.
 
 ### The shortfall, and the chain that usually wins
 
-Size on the chain that wins most often — it is the natural thing to do, and it is what most sizing
-does without saying so — and two numbers describe what that costs: how often the fleet is too
-small because another chain wanted more, and by how much when it is. Problem 10.2 computes both.
+Sizing on the chain that wins most often is the natural thing to do, and it is what most sizing
+does without saying so. Two numbers describe what it costs: how often the fleet is too small
+because another chain wanted more, and by how much when it is. Problem 10.2 computes both.
 
 Neither is small here, and the second is the one people do not compute. Averaged over every
 sample, including the ones where the chosen chain was the right one and the shortfall is zero, it
-looks like a rounding error. Conditional on being short, it is not — because a chain overtakes
-another only when its own inputs have gone somewhere unusual, and by the time they have, the gap
-is wide.
+looks like a rounding error. Counted only over the samples where the fleet is short, it is not. A
+chain overtakes another only when its own inputs have gone somewhere unusual, and by the time
+they have, the gap is wide.
 
 So the honest summary of sizing on one chain is two numbers: how often it is wrong, and how badly
 when it is. One of them alone is a way of not answering.
@@ -119,10 +121,9 @@ The web service has three. A real service has more: a database's connection limi
 eviction rate, the network between the hosts, a licence tier. Each is another chance for the
 answer to be set by something nobody was watching.
 
-The probability that *some* constraint binds unexpectedly rises with the number of chains, even
-while the probability of any particular one doing so stays small. A model with six chains, each
-binding a fraction of the time, spends most of its life with at least one of them unexpectedly in
-charge.
+The chance that *some* constraint binds unexpectedly rises with the number of chains, even while
+the chance of any particular one doing so stays small. A model with six chains, each binding a
+fraction of the time, spends most of its life with at least one of them unexpectedly in charge.
 
 The observability model in [Appendix F](#appendix-f-observability-model) has three parallel chains
 and three separate ceilings for exactly this reason. There is no single number that summarises
@@ -140,9 +141,9 @@ one is a `rig` result nobody has taken, and it is the kind of figure that is quo
 with nothing else running.
 
 **Anything about the three chains interacting.** They are treated as independent demands on the
-same hosts. They are not: a working set that no longer fits turns memory reads into disk reads,
-which raises the cost of a request, which moves the request chain — [ch08](#regime-changes)'s
-regime change running straight through the sizing arithmetic.
+same hosts. They are not. A working set that no longer fits turns memory reads into disk reads,
+which raises the cost of a request, which moves the request chain. That is
+[ch08](#regime-changes)'s regime change running straight through the sizing arithmetic.
 
 **Which chain binds *for you*.** The shares above come from one model's uncertainty over one
 stated workload. A service that serves small records to many users and one that holds large
@@ -173,13 +174,13 @@ python3 -m pytest tests/bandwidth_and_the_binding_constraint/test_problem_2_cost
 **10.3 — Which chain binds for you.** No test: which chain binds depends on quantities only you
 have.
 
-This chapter has three chains because this model has three. Work out the ones for your system —
-the quantities that each independently decide how many machines you need — and then work out
-which binds first.
+This chapter has three chains because this model has three. Work out the ones for your system:
+the quantities that each, on their own, decide how many machines you need. Then work out which
+binds first.
 
 The useful part is the margin. If one chain binds at twice the other, the second is free capacity
 you are paying for and nobody is counting. If they bind within a few per cent of each other, your
-sizing is balanced and also brittle: a small change in either moves which one is in charge, and
+sizing is balanced and also brittle. A small change in either moves which one is in charge, and
 the argument you rehearsed about the first chain stops applying.
 
 A good answer names at least two chains, says which binds, and by how much. If you can only find

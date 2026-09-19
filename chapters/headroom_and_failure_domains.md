@@ -11,14 +11,14 @@ short_title: "ch11 Headroom and failure domains"
 Why is headroom a rule rather than a number?
 
 Because the number is different for every ceiling, for reasons that have nothing to do with each
-other — and because the moment it becomes a single number, it becomes a number somebody rounds.
+other. And because the moment it becomes a single number, it becomes a number somebody rounds.
 
 ## The material
 
 ### Three margins, three different things being protected
 
-Here is every ceiling in the book's two models, with its declared margin — the running example's
-as this chapter leaves it, and then the observability platform's:
+Here is every ceiling in the book's two models, with its declared margin. First the running
+example's, as this chapter leaves it, then the observability platform's:
 
 ```{include} _generated/headroom-and-failure-domains-service.md
 ```
@@ -26,22 +26,22 @@ as this chapter leaves it, and then the observability platform's:
 ```{include} _generated/headroom-and-failure-domains-observability.md
 ```
 
-They are all percentages and they are not the same kind of thing at all.
+They are all percentages, and they are not the same kind of thing at all.
 
 **A capacity margin protects against a cliff.** The disk fills, or the working set stops fitting
-in memory, and you find out immediately — one as failed writes, the other as a service time that
+in memory, and you find out immediately: one as failed writes, the other as a service time that
 has doubled. What the margin buys is the time between noticing and doing something, plus the
 space a failed host's copies need to land in.
 
 **A queueing margin protects against a slope.** Nothing fails. There is no page. The system slides
 down [ch06](#queueing-and-the-knee)'s curve, paying in latency on every request, for as long as
-nobody looks. This margin is larger, because the failure mode is invisible and because recovering
-from it means adding machines — which [ch07](#when-adding-servers-stops-helping) showed works
-badly.
+nobody looks. This margin is larger, for two reasons. The failure mode is invisible, and
+recovering from it means adding machines, which [ch07](#when-adding-servers-stops-helping) showed
+works badly.
 
-**A scaling margin protects a budget.** Nothing fails and nothing gets slow; the fleet simply costs
-more than its work is worth. It is the loosest margin in the book and it is still worth declaring,
-because a cost that nobody has bounded is a cost that grows.
+**A scaling margin protects a budget.** Nothing fails and nothing gets slow. The fleet simply costs
+more than its work is worth. It is the loosest margin in the book, and it is still worth
+declaring, because a cost that nobody has bounded is a cost that grows.
 
 A single "keep thirty per cent free" rule applied to all three would be too tight for one, too
 loose for another, and unexplainable for the third.
@@ -50,14 +50,14 @@ loose for another, and unexplainable for the third.
 
 Most headroom is judgement. One piece of it is arithmetic.
 
-A fleet that has to survive losing hosts needs somewhere for those hosts' work to go. That capacity
-has to be there *beforehand* — a fleet discovering it needs a failure reserve during a failure is
-already over the knee.
+A fleet that has to survive losing hosts needs somewhere for those hosts' work to go. That
+capacity has to be there *beforehand*. A fleet that discovers it needs a failure reserve during a
+failure is already over the knee.
 
-Problem 11.1 is that fraction. It has a consequence people rarely state as a capacity argument: a
-small fleet pays an enormous margin, because one host in five is a fifth of the fleet, while a
-large fleet pays almost nothing per host. That is a real and quantitative argument for larger
-failure domains, and it is not the argument people usually give for them.
+Problem 11.1 is that fraction. It has a consequence people rarely state as a capacity argument. A
+small fleet pays an enormous margin, because one host in five is a fifth of the fleet. A large
+fleet pays almost nothing per host. That is a real and quantitative argument for larger failure
+domains, and it is not the argument people usually give for them.
 
 The second half of that problem is worth more than the arithmetic. **The margin is for a loss, not
 for a failure.** A host drained for a kernel upgrade costs exactly the same capacity as one that
@@ -65,8 +65,8 @@ has died, and planned work is far more common than failure. Most fleets spend th
 reserve on a Tuesday afternoon. A reserve sized for annual hardware failure is not there when
 somebody starts a rolling upgrade.
 
-The running example carries this as a ceiling of its own — the queueing margin again, audited
-with one host gone, because a host lost at the busy hour is a queueing problem for the survivors:
+The running example carries this as a ceiling of its own: the queueing margin again, audited with
+one host gone, because a host lost at the busy hour is a queueing problem for the survivors:
 
 ```{literalinclude} ../models/web_service/stages/10-headroom/model.yaml
 :language: yaml
@@ -93,15 +93,15 @@ now and the next purchase wants some. Each request arrives separately, each is d
 each is granted.
 
 They do not add. Each one takes its share of what the previous one left, so applying them in
-sequence is multiplication — and three separately modest margins leave you with well under half of
-the fleet doing the work it was bought for. Problem 11.2 is that composition.
+sequence is multiplication. Three separately modest margins leave you with well under half of the
+fleet doing the work it was bought for. Problem 11.2 is that composition.
 
 Nobody in the room multiplied them. That is how a fleet ends up twice the size anybody intended,
 with every individual decision in the chain defensible.
 
 Push the margins up and addition stops describing anything. Three margins of ninety per cent add
 to nearly three whole fleets, and no system has negative capacity. Taking nine tenths three times
-over leaves a sliver — severe, and at least a quantity that exists.
+over leaves a sliver. That is severe, and at least it is a quantity that exists.
 
 ### What a margin is for, written down
 
@@ -113,8 +113,8 @@ when the reason goes away. A margin that is just a number gets carried into the 
 the one after that, by people who were not in the room. Ten years later an organisation has a
 thirty-per-cent rule that everybody follows and nobody can source.
 
-The build refuses a ceiling without one, which is the only enforcement available and is better
-than none.
+The toolkit refuses a ceiling without one. That is the only enforcement available, and it is
+better than none.
 
 ### The output a margin actually produces
 
@@ -123,7 +123,7 @@ Not a verdict. A probability.
 Read the last two columns of the tables above. They answer one question: across everything this
 model thinks could happen, how often does the design end up past this limit? A point estimate
 comfortably inside the margin tells you about one future only. [ch13](#monte-carlo) is where the
-other futures come from, and [ch12](#the-sizing-model) is what the difference between the two
+other futures come from. [ch12](#the-sizing-model) is what the difference between the two
 readings costs.
 
 ## What this cannot tell you
@@ -138,9 +138,9 @@ How much time depends on how fast your load moves and how quickly anybody notice
 in any model here. A generous margin on a system nobody watches is not generous.
 
 **Whether the failure domain is what you think.** The failure arithmetic assumes hosts fail
-independently. They do not: they share racks, power, switches, firmware versions and the engineer
-who is applying an update to all of them. A margin sized for one host and spent on a rack is a
-margin that was not there.
+independently. They do not. They share racks, power, switches, firmware versions, and the
+engineer who is applying an update to all of them. A margin sized for one host and spent on a
+rack is a margin that was not there.
 
 **What happens when two margins are needed at once.** The composition arithmetic above assumes the
 margins are for independent things. A host lost during a growth spike during a busy hour is one
@@ -160,7 +160,7 @@ python3 -m pytest tests/headroom_and_failure_domains/test_problem_1_rebuild.py
 ```
 
 **11.2 — Two margins are not one margin twice.**
-Compose several independent margins. Do not add them — the clue that you cannot is what addition
+Compose several independent margins. Do not add them; the clue that you cannot is what addition
 does to three large ones. Then look at what three separately reasonable requests leave you.
 
 ```bash
@@ -169,7 +169,7 @@ python3 -m pytest tests/headroom_and_failure_domains/test_problem_2_compose.py
 
 **11.3 — Add a ceiling.**
 Add one to the web service model, with a margin and a reason, and get a verdict and a breach
-probability out of it. The build will refuse it three different ways before it accepts it, and
+probability out of it. The toolkit will refuse it three different ways before it accepts it, and
 each refusal is a rule this chapter argues for.
 
 ```bash
@@ -183,12 +183,12 @@ Find the headroom your system is planned to, then find the person or the documen
 This is usually the shortest problem in the book and the most uncomfortable.
 
 Two follow-ups. Does the margin have a reason attached that is not "it is what we have always
-used"? And does your failure domain match the physical layout — are the machines you assume fail
+used"? And does your failure domain match the physical layout? Are the machines you assume fail
 independently in the same rack, the same power feed, the same availability zone?
 
-A good answer has a number, a name or a document, and a reason. If the reason is round — twenty
-per cent, thirty per cent — ask what it would have been if the first person to say it had said a
-different round number, because that is usually the whole derivation.
+A good answer has a number, a name or a document, and a reason. If the reason is round, twenty
+per cent or thirty per cent, ask what it would have been if the first person to say it had said a
+different round number. That is usually the whole derivation.
 
 ## Where to go next
 
