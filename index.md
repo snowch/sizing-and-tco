@@ -43,8 +43,8 @@ Almost nobody is taught this. It is what decides whether anybody should act on y
 
 You build one model, and it lasts the whole book.
 
-A model here is a file. It holds the numbers that went into an answer and the arithmetic that
-joins them. Each number has a name, a unit, and a note saying where its value came from. Each
+A model here is a YAML file: plain text you can read and edit. It holds the numbers that went
+into an answer and the arithmetic that joins them. Each number has a name, a unit, and a note saying where its value came from. Each
 computed number has a formula that refers to the others by name. That is all there is to it. You
 can read a whole model in one sitting.
 

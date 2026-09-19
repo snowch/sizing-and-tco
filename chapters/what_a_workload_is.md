@@ -66,7 +66,7 @@ who have since left. Those facts live in the head of whoever built the sheet, an
 that person does. Nor does a cell have a unit: `=B4*C7` is as valid as any other product, and
 multiplying series by requests gives a number that looks exactly like a number of bytes.
 
-So a model here is a text file of named quantities, each with a unit and a source, that diffs and
+So a model here is a YAML file of named quantities, each with a unit and a source, that diffs and
 reviews like code. One file. What follows is three pieces of the same one, in the order you would
 write them, and the whole thing is eighty lines by the end of this chapter.
 
