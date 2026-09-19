@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "6d9a0b44985283da",
+  "code_fingerprint": "cad350d695135b66",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T12:34:23+00:00",
-  "git_revision": "c264eea",
+  "generated_at": "2026-09-19T18:26:51+00:00",
+  "git_revision": "229ed18",
   "kind": "model",
   "name": "web_service-reference",
   "produced_by": {
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-19T12:34:21+00:00",
+    "generated_at": "2026-09-19T18:26:50+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {
@@ -866,7 +866,7 @@
           "kind": "assumption",
           "source": "ch04 \u2014 lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%. One factor for requests and for records, because users drive both."
         },
-        "row": 7,
+        "row": 8,
         "slider": {
           "max": 2.0,
           "min": 1.0
@@ -888,21 +888,41 @@
         "ast": {
           "args": [
             {
-              "name": "cores",
-              "op": "ref"
+              "args": [
+                {
+                  "name": "cores",
+                  "op": "ref"
+                },
+                {
+                  "name": "licence_per_core",
+                  "op": "ref"
+                }
+              ],
+              "op": "*"
             },
             {
-              "name": "licence_per_core",
-              "op": "ref"
+              "args": [
+                {
+                  "name": "hosts",
+                  "op": "ref"
+                },
+                {
+                  "name": "licence_per_host",
+                  "op": "ref"
+                }
+              ],
+              "op": "*"
             }
           ],
-          "op": "*"
+          "op": "+"
         },
         "depends_on": [
           "cores",
-          "licence_per_core"
+          "hosts",
+          "licence_per_core",
+          "licence_per_host"
         ],
-        "formula": "cores * licence_per_core",
+        "formula": "cores * licence_per_core + hosts * licence_per_host",
         "histogram": {
           "counts": [
             790,
@@ -1042,7 +1062,7 @@
         "kind": "derived",
         "label": "annual licences",
         "layer": 3,
-        "note": null,
+        "note": "Both licence lines, whichever of them a quote uses. One of the two is a declared zero on any given quote, and keeping both is what lets two quotes with different licence models be subtracted from each other (ch22).",
         "point": 69119.99999999997,
         "row": 2,
         "summary": {
@@ -2136,7 +2156,7 @@
         "layer": 3,
         "note": "Arrival rate times service demand. It is a count of cores doing work, it has nothing to do with how many you own, and it is the numerator of every utilisation figure below.",
         "point": 556.3360618821654,
-        "row": 6,
+        "row": 8,
         "summary": {
           "max": 16579.7189544242,
           "mean": 774.1049673712322,
@@ -3035,7 +3055,7 @@
         "layer": 5,
         "note": null,
         "point": 0.9483835953428347,
-        "row": 9,
+        "row": 10,
         "summary": {
           "max": 27.859383838219312,
           "mean": 1.364849050104787,
@@ -3073,7 +3093,7 @@
         "layer": 2,
         "note": null,
         "point": 864.0,
-        "row": 7,
+        "row": 8,
         "unit": "core"
       },
       "cores_per_host": {
@@ -3088,7 +3108,7 @@
           "kind": "vendor_claim",
           "source": "spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts threads doubles this number without doubling the work a host does (ch07)"
         },
-        "row": 7,
+        "row": 8,
         "slider": {
           "max": 128.0,
           "min": 4.0
@@ -3793,7 +3813,7 @@
         "layer": 4,
         "note": null,
         "point": 0.6699972825041127,
-        "row": 6,
+        "row": 5,
         "summary": {
           "max": 15.141346175540209,
           "mean": 0.8592275378651331,
@@ -3819,7 +3839,7 @@
           "kind": "assumption",
           "source": "ch11 \u2014 room to re-replicate a dead host's records onto the survivors, plus what a filesystem needs to keep allocating well. Declared once and used by the chain and by the ceiling"
         },
-        "row": 7,
+        "row": 9,
         "slider": {
           "max": 0.45,
           "min": 0.0
@@ -3838,7 +3858,7 @@
           "kind": "vendor_claim",
           "source": "spec sheet: one local drive. Decimal TB, not TiB \u2014 appendix D, and it is a 10% difference"
         },
-        "row": 12,
+        "row": 13,
         "slider": {
           "max": 60.0,
           "min": 1.0
@@ -4006,7 +4026,7 @@
         "layer": 5,
         "note": null,
         "point": 0.643907479030284,
-        "row": 3,
+        "row": 4,
         "summary": {
           "max": 0.98,
           "mean": 0.6339445873111978,
@@ -4538,7 +4558,7 @@
         "layer": 5,
         "note": null,
         "point": 0.6560566767478365,
-        "row": 8,
+        "row": 9,
         "summary": {
           "max": 19.551555370783255,
           "mean": 0.9128596313340002,
@@ -4712,7 +4732,7 @@
         "layer": 3,
         "note": null,
         "point": 3.2999937802508867,
-        "row": 14,
+        "row": 15,
         "summary": {
           "max": 3.4867002460011522,
           "mean": 3.2904038431629283,
@@ -5063,7 +5083,7 @@
         "layer": 2,
         "note": null,
         "point": 0.32846489726073863,
-        "row": 16,
+        "row": 17,
         "summary": {
           "max": 1.3935123805973235,
           "mean": 0.3496577732583297,
@@ -5120,7 +5140,7 @@
         "layer": 1,
         "note": null,
         "point": 5.0,
-        "row": 8,
+        "row": 9,
         "unit": "dimensionless"
       },
       "host_capex": {
@@ -5321,7 +5341,7 @@
         "layer": 1,
         "note": null,
         "point": 54.0,
-        "row": 14,
+        "row": 16,
         "unit": "dimensionless"
       },
       "host_power": {
@@ -5702,7 +5722,7 @@
         "layer": 3,
         "note": null,
         "point": 53.0,
-        "row": 11,
+        "row": 13,
         "unit": "host"
       },
       "hosts_for_memory": {
@@ -6468,7 +6488,7 @@
         "layer": 5,
         "note": "Where a reader meets a binding constraint. Three chains produce three host counts and you buy the largest, which means that across this model's uncertainty the answer is sometimes set by CPU, sometimes by memory and sometimes by disk \u2014 and an average of the three is a fleet that satisfies none of them.",
         "point": 54.0,
-        "row": 7,
+        "row": 8,
         "summary": {
           "max": 1481.0,
           "mean": 89.68485,
@@ -6636,7 +6656,7 @@
           "kind": "assumption",
           "source": "ch08 \u2014 the working set as a share of everything held. Triangular; nobody measures this and everybody has an opinion, and the maximum is a service whose users all look at the same week's data"
         },
-        "row": 14,
+        "row": 15,
         "slider": {
           "max": 0.3,
           "min": 0.005
@@ -6829,7 +6849,7 @@
         "layer": 3,
         "note": "Little's law with the residence time equal to the service time: the fewest requests that can be in the system at this arrival rate. ch06 replaces the service time with what a request actually waits, and this number goes up.",
         "point": 556.3360618821654,
-        "row": 15,
+        "row": 6,
         "summary": {
           "max": 16579.7189544242,
           "mean": 774.1049673712322,
@@ -7035,7 +7055,7 @@
         "layer": 3,
         "note": null,
         "point": 108.0,
-        "row": 8,
+        "row": 7,
         "unit": "TB"
       },
       "licence_per_core": {
@@ -7204,6 +7224,25 @@
           "sd": 54.07002041203752
         },
         "unit": "USD/core/year"
+      },
+      "licence_per_host": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "licence per host",
+        "layer": 2,
+        "note": "A declared zero, not an absent line. This quote licenses the platform software per core, so its per-host charge is nil and the model says so, with a source. A comparison needs the same lines on both sides: a line that one quote does not have is a cost that quote never pays, and the only honest way to leave it out is to put it in at zero (ch22).",
+        "point": 0.0,
+        "provenance": {
+          "kind": "vendor_claim",
+          "source": "the price list: per core, with no per-host charge. A quote that licenses per host instead puts its figure here and zero in licence_per_core, and the two totals are then compared like for like"
+        },
+        "row": 5,
+        "slider": {
+          "max": 12000.0,
+          "min": 0.0
+        },
+        "unit": "USD/host/year"
       },
       "lifecycle_opex": {
         "ast": {
@@ -7539,7 +7578,7 @@
         "layer": 2,
         "note": null,
         "point": 66096.49883794898,
-        "row": 8,
+        "row": 12,
         "summary": {
           "max": 107886.78206790212,
           "mean": 67101.4897807653,
@@ -7726,6 +7765,25 @@
           "sd": 14897.45514487518
         },
         "unit": "request/second"
+      },
+      "migration_cost": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "one-off cost of moving to this design",
+        "layer": 5,
+        "note": "A declared zero. This is the design the plan was built on, so there is nothing to move. A design that would replace it carries the cost of the move here: the months of running both, the data copied twice, the people doing that instead of their jobs. It is the line an incumbent's comparison never shows and a challenger's never includes, which is why it is a node with a source rather than a footnote (ch22).",
+        "point": 0.0,
+        "provenance": {
+          "kind": "assumption",
+          "source": "nothing to migrate: the platform the plan already runs on, on the hosts already quoted. A challenger's scenario overrides this with the team's own estimate of the move, marked as what it is"
+        },
+        "row": 3,
+        "slider": {
+          "max": 1000000.0,
+          "min": 0.0
+        },
+        "unit": "USD"
       },
       "network_capex": {
         "ast": {
@@ -8081,7 +8139,7 @@
           "kind": "fact",
           "source": "definition"
         },
-        "row": 9,
+        "row": 6,
         "unit": "core"
       },
       "one_host": {
@@ -8111,7 +8169,7 @@
           "kind": "fact",
           "source": "definition"
         },
-        "row": 10,
+        "row": 7,
         "unit": "request"
       },
       "one_year": {
@@ -8289,7 +8347,7 @@
         "layer": 5,
         "note": null,
         "point": 1.4728569339978588,
-        "row": 4,
+        "row": 5,
         "summary": {
           "max": 3.374918399813507,
           "mean": 1.5233323171968525,
@@ -8457,7 +8515,7 @@
           "kind": "assumption",
           "source": "the share of memory the kernel, the agents and the page cache floor keep before the service sees any. Triangular: a floor, a usual figure, and a host with too many agents on it"
         },
-        "row": 15,
+        "row": 14,
         "slider": {
           "max": 0.4,
           "min": 0.0
@@ -8844,7 +8902,7 @@
         "layer": 2,
         "note": null,
         "point": 42560.029939471824,
-        "row": 9,
+        "row": 10,
         "summary": {
           "max": 1100453.8658618461,
           "mean": 56555.902097025086,
@@ -9537,7 +9595,7 @@
         "layer": 5,
         "note": null,
         "point": 0.643907479030284,
-        "row": 6,
+        "row": 7,
         "summary": {
           "max": 19.189489530583565,
           "mean": 0.8959548233463335,
@@ -9563,7 +9621,7 @@
           "kind": "assumption",
           "source": "ch06 \u2014 how far under the knee the fleet is sized to run at the busy hour. Declared once, here, and used by the sizing chain and by the ceiling that checks it, so the two cannot drift apart"
         },
-        "row": 10,
+        "row": 11,
         "slider": {
           "max": 0.6,
           "min": 0.0
@@ -9739,7 +9797,7 @@
         "layer": 2,
         "note": "Gibibytes in, decimal terabytes out \u2014 the build converts (appendix D). Declared in the unit the working set is counted in, so that the chain which divides one by the other rounds a count of hosts and not a count of hosts times nine hundred and thirty-one.",
         "point": 0.061110995930571975,
-        "row": 15,
+        "row": 16,
         "summary": {
           "max": 0.06456852307409541,
           "mean": 0.0609334045030172,
@@ -9765,7 +9823,7 @@
           "kind": "vendor_claim",
           "source": "spec sheet: the modules fitted. The sheet says 64 GB and means GiB \u2014 appendix D \u2014 and the operating system will report less than either, which is os_reserve's job"
         },
-        "row": 16,
+        "row": 15,
         "slider": {
           "max": 1024.0,
           "min": 8.0
@@ -9932,7 +9990,7 @@
         "layer": 3,
         "note": null,
         "point": 72.35970651044417,
-        "row": 9,
+        "row": 10,
         "summary": {
           "max": 1635.2653869583426,
           "mean": 92.79657408943437,
@@ -10116,7 +10174,7 @@
         "layer": 2,
         "note": null,
         "point": 1.1221748324066343,
-        "row": 13,
+        "row": 14,
         "summary": {
           "max": 1.3393597147070777,
           "mean": 1.1302217631764706,
@@ -11027,7 +11085,7 @@
         "layer": 5,
         "note": null,
         "point": 0.3210474303939056,
-        "row": 5,
+        "row": 6,
         "summary": {
           "max": 0.7036965397281136,
           "mean": 0.33459392793401244,
@@ -11210,7 +11268,7 @@
           "kind": "assumption",
           "source": "held as an assumption because no reference machine is declared in rig/machine.yml; `make measure-rig` on a declared machine replaces this node with a measured one. Triangular *because* it has not been measured: once it is, the shape becomes a normal around the measurement, which is a change of claim and not only of numbers (ch13)"
         },
-        "row": 8,
+        "row": 7,
         "slider": {
           "max": 0.05,
           "min": 0.002
@@ -11398,7 +11456,7 @@
         "layer": 2,
         "note": "service demand with the core divided out: how long one request would take alone",
         "point": 0.01307179676972449,
-        "row": 11,
+        "row": 9,
         "summary": {
           "max": 0.019974878631266877,
           "mean": 0.01333633894630663,
@@ -11572,7 +11630,7 @@
         "layer": 1,
         "note": "Every core of a host busy on requests and nothing else: the cores divided by the CPU time each request costs. The straight line of ch07 is this times the host count, and it is the line nobody has ever measured.",
         "point": 1224.009237739796,
-        "row": 6,
+        "row": 10,
         "summary": {
           "max": 1997.903371627817,
           "mean": 1242.6201811252834,
@@ -11732,7 +11790,7 @@
           "spacing": "linear"
         },
         "kind": "input",
-        "label": "staff fte",
+        "label": "engineers, full-time equivalent",
         "layer": 2,
         "note": null,
         "point": 1.1339745962155614,
@@ -11740,7 +11798,7 @@
           "kind": "assumption",
           "source": "engineers this fleet occupies, full-time equivalent. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch08 calls a regime change"
         },
-        "row": 5,
+        "row": 6,
         "summary": {
           "max": 1.99820826984669,
           "mean": 1.1651758817049662,
@@ -11924,7 +11982,7 @@
         "layer": 2,
         "note": null,
         "point": 64.48166936275017,
-        "row": 10,
+        "row": 11,
         "summary": {
           "max": 1301.5979753623335,
           "mean": 82.10239494878911,
@@ -12111,7 +12169,7 @@
           "kind": "vendor_claim",
           "source": "annual support as a fraction of capital cost. Triangular because it is negotiated inside a band the market sets rather than drawn from one: the spread is what different buyers get, not what varies from year to year"
         },
-        "row": 6,
+        "row": 7,
         "summary": {
           "max": 0.17989449724527912,
           "mean": 0.11995598502139335,
@@ -12129,11 +12187,20 @@
         "ast": {
           "args": [
             {
-              "name": "capex",
-              "op": "ref"
+              "args": [
+                {
+                  "name": "capex",
+                  "op": "ref"
+                },
+                {
+                  "name": "lifecycle_opex",
+                  "op": "ref"
+                }
+              ],
+              "op": "+"
             },
             {
-              "name": "lifecycle_opex",
+              "name": "migration_cost",
               "op": "ref"
             }
           ],
@@ -12141,9 +12208,10 @@
         },
         "depends_on": [
           "capex",
-          "lifecycle_opex"
+          "lifecycle_opex",
+          "migration_cost"
         ],
-        "formula": "capex + lifecycle_opex",
+        "formula": "capex + lifecycle_opex + migration_cost",
         "histogram": {
           "counts": [
             3,
@@ -12283,7 +12351,7 @@
         "kind": "derived",
         "label": "five-year total cost of ownership",
         "layer": 6,
-        "note": null,
+        "note": "Capital, running cost over the horizon, and whatever it costs to get there. The last term is zero for the design the plan was built on and is the first thing to look for in a comparison that was not (ch22).",
         "point": 2002083.1707651545,
         "row": 1,
         "summary": {
@@ -12832,7 +12900,7 @@
         "layer": 4,
         "note": "The same fleet's utilisation, worked out from what it can actually deliver rather than from what one host could deliver alone. It is higher than the row above, always, and the gap is the work the hosts are doing on each other's behalf.",
         "point": 0.9483835953428347,
-        "row": 5,
+        "row": 6,
         "summary": {
           "max": 27.859383838219312,
           "mean": 1.364849050104787,
@@ -13180,7 +13248,7 @@
         "layer": 3,
         "note": null,
         "point": 2.461071789020011,
-        "row": 13,
+        "row": 14,
         "summary": {
           "max": 67.44573683033414,
           "mean": 3.2865818238075635,
@@ -13216,7 +13284,9 @@
       "index_overhead",
       "installed_disk",
       "licence_per_core",
+      "licence_per_host",
       "annual_licences",
+      "migration_cost",
       "network_price_per_host",
       "network_capex",
       "capex",
@@ -13322,6 +13392,8 @@
       "title": "Reference scenario"
     },
     "scenarios": [
+      "challenger",
+      "incumbent",
       "power_first",
       "reference",
       "sized_for_growth",
@@ -13522,7 +13594,7 @@
           "high": 206269.38970731013,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 206269.38970731013,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -13546,7 +13618,7 @@
           "high": 387863.04801477643,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 262246.8751677178,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -13944,7 +14016,7 @@
           "high": 0.7457807356330546,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 0.7457807356330546,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -14155,7 +14227,7 @@
           "high": 421214.32422070147,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 421214.32422070147,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -14366,7 +14438,7 @@
           "high": 1562.3357108628495,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 1562.3357108628495,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -14577,7 +14649,7 @@
           "high": 0.9483835953428347,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 0.9483835953428347,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -14634,7 +14706,7 @@
           "high": 2.146716069189204,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 1.5755258988144163,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -14823,7 +14895,7 @@
           "high": 989.9681202052809,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 726.561111070984,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -15210,7 +15282,7 @@
           "high": 0.6699972825041127,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 0.6699972825041127,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -15421,7 +15493,7 @@
           "high": 0.6560566767478365,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 0.6560566767478365,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -15632,7 +15704,7 @@
           "high": 0.32846489726073863,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 0.32846489726073863,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -15843,7 +15915,7 @@
           "high": 54.0,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 54.0,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -16054,7 +16126,7 @@
           "high": 54.0,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 54.0,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -16265,7 +16337,7 @@
           "high": 556.3360618821654,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 556.3360618821654,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -16476,7 +16548,7 @@
           "high": 1.4728569339978588,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 1.4728569339978588,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -16687,7 +16759,7 @@
           "high": 0.643907479030284,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 0.643907479030284,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -16898,7 +16970,7 @@
           "high": 0.03670898993926409,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 0.03670898993926409,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -17109,7 +17181,7 @@
           "high": 0.3210474303939056,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 0.3210474303939056,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -17133,7 +17205,7 @@
           "high": 2360529.5642945836,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 1732448.7000592905,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -17531,7 +17603,7 @@
           "high": 0.643907479030284,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 0.643907479030284,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -17742,7 +17814,7 @@
           "high": 0.0236371931695396,
           "high_input": 1.6127016653792583,
           "kind": "input",
-          "label": "staff fte",
+          "label": "engineers, full-time equivalent",
           "low": 0.0236371931695396,
           "low_input": 0.7738612787525831,
           "node": "staff_fte",
@@ -17774,6 +17846,8 @@
           "horizon": 3.0,
           "hosts": 4.0,
           "hot_fraction": 0.005,
+          "licence_per_host": 0.0,
+          "migration_cost": 0.0,
           "os_reserve": 0.0,
           "peak_request_rate_t0": 500.0,
           "peak_to_mean": 1.0,
@@ -17835,9 +17909,11 @@
           "index_overhead": 1.3401923788646684,
           "installed_disk": 4.0,
           "licence_per_core": 79.99999999999997,
+          "licence_per_host": 0.0,
           "lifecycle_opex": 525624.322974487,
           "linear_throughput": 8000.0,
           "mean_request_rate": 500.0,
+          "migration_cost": 0.0,
           "network_capex": 5047.667392141257,
           "network_price_per_host": 1261.9168480353142,
           "one_core": 1.0,
@@ -17891,6 +17967,8 @@
           "horizon": 4.25,
           "hosts": 53.0,
           "hot_fraction": 0.07875,
+          "licence_per_host": 3000.0,
+          "migration_cost": 250000.0,
           "os_reserve": 0.1,
           "peak_request_rate_t0": 10375.0,
           "peak_to_mean": 3.25,
@@ -17906,8 +17984,8 @@
           "annual_energy": 187508.09875933584,
           "annual_energy_cost": 26719.90407320536,
           "annual_growth": 1.25,
-          "annual_licences": 148399.99999999994,
-          "annual_opex": 393695.2260679128,
+          "annual_licences": 307399.99999999994,
+          "annual_opex": 552695.2260679128,
           "annual_staff_cost": 169812.45914400957,
           "annual_support": 48762.86285069793,
           "average_request_rate": 5716.581602387265,
@@ -17921,8 +17999,8 @@
           "coordination_headroom": 0.29552514133910407,
           "cores": 1855.0,
           "cores_per_host": 35.0,
-          "cost_per_million_requests": 2.721534256539915,
-          "cost_per_stored_tb_month": 450.1997236767256,
+          "cost_per_million_requests": 3.928971079462069,
+          "cost_per_stored_tb_month": 649.9354876967457,
           "crosstalk": 3.67423461417477e-05,
           "disk_fill": 0.10273643523706305,
           "disk_margin": 0.1125,
@@ -17952,9 +18030,11 @@
           "index_overhead": 1.3401923788646684,
           "installed_disk": 834.75,
           "licence_per_core": 79.99999999999997,
-          "lifecycle_opex": 1673204.7107886295,
+          "licence_per_host": 3000.0,
+          "lifecycle_opex": 2348954.710788629,
           "linear_throughput": 132500.0,
           "mean_request_rate": 8240.855512466836,
+          "migration_cost": 250000.0,
           "network_capex": 66881.59294587166,
           "network_price_per_host": 1261.9168480353142,
           "one_core": 1.0,
@@ -17988,7 +18068,7 @@
           "stored_data": 131.00974516506014,
           "stored_data_t0": 50.75,
           "support_rate": 0.11795163177004572,
-          "tco": 2086618.7697459846,
+          "tco": 3012368.769745984,
           "utilisation": 0.20213419181522432,
           "utilisation_after_failure": 0.20602138781167093,
           "utilisation_cap": 0.98,
@@ -18008,6 +18088,8 @@
           "horizon": 5.5,
           "hosts": 102.0,
           "hot_fraction": 0.1525,
+          "licence_per_host": 6000.0,
+          "migration_cost": 500000.0,
           "os_reserve": 0.2,
           "peak_request_rate_t0": 20250.0,
           "peak_to_mean": 5.5,
@@ -18023,8 +18105,8 @@
           "annual_energy": 444141.0989480931,
           "annual_energy_cost": 108814.56924228281,
           "annual_growth": 1.5,
-          "annual_licences": 538559.9999999998,
-          "annual_opex": 911032.5380234844,
+          "annual_licences": 1150559.9999999998,
+          "annual_opex": 1523032.5380234842,
           "annual_staff_cost": 169812.45914400957,
           "annual_support": 93845.50963719223,
           "average_request_rate": 18962.11172130728,
@@ -18038,8 +18120,8 @@
           "coordination_headroom": 1.5123735159336922,
           "cores": 6732.0,
           "cores_per_host": 66.0,
-          "cost_per_million_requests": 1.7641949053124912,
-          "cost_per_stored_tb_month": 169.96737255597196,
+          "cost_per_million_requests": 2.938844929812554,
+          "cost_per_stored_tb_month": 283.1363754455475,
           "crosstalk": 3.67423461417477e-05,
           "disk_fill": 0.28096178522793597,
           "disk_margin": 0.225,
@@ -18069,9 +18151,11 @@
           "index_overhead": 1.3401923788646684,
           "installed_disk": 3111.0,
           "licence_per_core": 79.99999999999997,
-          "lifecycle_opex": 5010678.959129164,
+          "licence_per_host": 6000.0,
+          "lifecycle_opex": 8376678.959129163,
           "linear_throughput": 258923.07692307688,
           "mean_request_rate": 34242.405260796375,
+          "migration_cost": 500000.0,
           "network_capex": 128715.51849960204,
           "network_price_per_host": 1261.9168480353142,
           "one_core": 1.0,
@@ -18105,7 +18189,7 @@
           "stored_data": 934.6908398965528,
           "stored_data_t0": 100.5,
           "support_rate": 0.11795163177004572,
-          "tco": 5806306.015990489,
+          "tco": 9672306.015990488,
           "utilisation": 0.7273713535790081,
           "utilisation_after_failure": 0.7345730501490972,
           "utilisation_cap": 0.98,
@@ -18125,6 +18209,8 @@
           "horizon": 7.5,
           "hosts": 180.4,
           "hot_fraction": 0.2705,
+          "licence_per_host": 10800.0,
+          "migration_cost": 900000.0,
           "os_reserve": 0.36000000000000004,
           "peak_request_rate_t0": 36050.0,
           "peak_to_mean": 9.1,
@@ -18140,8 +18226,8 @@
           "annual_energy": 1021176.1816206548,
           "annual_energy_cost": 417661.0582828478,
           "annual_growth": 1.9,
-          "annual_licences": 1668339.1999999995,
-          "annual_opex": 2421790.46192244,
+          "annual_licences": 3616659.1999999993,
+          "annual_opex": 4370110.46192244,
           "annual_staff_cost": 169812.45914400957,
           "annual_support": 165977.74449558315,
           "average_request_rate": 246034.7457182002,
@@ -18155,8 +18241,8 @@
           "coordination_headroom": 33.05751451570868,
           "cores": 20854.24,
           "cores_per_host": 115.60000000000001,
-          "cost_per_million_requests": 0.33607978032265634,
-          "cost_per_stored_tb_month": 19.440850905080453,
+          "cost_per_million_requests": 0.6024694140152116,
+          "cost_per_stored_tb_month": 34.85040974942382,
           "crosstalk": 3.67423461417477e-05,
           "disk_fill": 3.1468273444697368,
           "disk_margin": 0.405,
@@ -18186,9 +18272,11 @@
           "index_overhead": 1.3401923788646684,
           "installed_disk": 9759.640000000001,
           "licence_per_core": 79.99999999999997,
-          "lifecycle_opex": 18163428.464418303,
+          "licence_per_host": 10800.0,
+          "lifecycle_opex": 32775828.4644183,
           "linear_throughput": 461376.99115044245,
           "mean_request_rate": 488107.95297486195,
+          "migration_cost": 900000.0,
           "network_capex": 227649.7993855707,
           "network_price_per_host": 1261.9168480353142,
           "one_core": 1.0,
@@ -18222,7 +18310,7 @@
           "stored_data": 22190.430102913484,
           "stored_data_t0": 180.1,
           "support_rate": 0.11795163177004572,
-          "tco": 19570596.31792598,
+          "tco": 35082996.317925975,
           "utilisation": 9.627229916679784,
           "utilisation_after_failure": 9.680893405624488,
           "utilisation_cap": 0.98,
@@ -18242,6 +18330,8 @@
           "horizon": 8.0,
           "hosts": 200.0,
           "hot_fraction": 0.3,
+          "licence_per_host": 12000.0,
+          "migration_cost": 1000000.0,
           "os_reserve": 0.4,
           "peak_request_rate_t0": 40000.0,
           "peak_to_mean": 10.0,
@@ -18257,8 +18347,8 @@
           "annual_energy": 1197439.237360055,
           "annual_energy_cost": 538847.6568120248,
           "annual_growth": 2.0,
-          "annual_licences": 2047999.9999999993,
-          "annual_opex": 2940670.9191662148,
+          "annual_licences": 4447999.999999999,
+          "annual_opex": 5340670.919166214,
           "annual_staff_cost": 169812.45914400957,
           "annual_support": 184010.80321018083,
           "average_request_rate": 514000.0,
@@ -18272,8 +18362,8 @@
           "coordination_headroom": 76.85912169060295,
           "cores": 25600.0,
           "cores_per_host": 128.0,
-          "cost_per_million_requests": 0.19331444666272604,
-          "cost_per_stored_tb_month": 10.167566636672738,
+          "cost_per_million_requests": 0.3489806367997359,
+          "cost_per_stored_tb_month": 18.35498557311891,
           "crosstalk": 3.67423461417477e-05,
           "disk_fill": 6.3839279354688525,
           "disk_margin": 0.45,
@@ -18303,9 +18393,11 @@
           "index_overhead": 1.3401923788646684,
           "installed_disk": 12000.0,
           "licence_per_core": 79.99999999999997,
-          "lifecycle_opex": 23525367.353329718,
+          "licence_per_host": 12000.0,
+          "lifecycle_opex": 42725367.35332971,
           "linear_throughput": 512000.0,
           "mean_request_rate": 1024000.0,
+          "migration_cost": 1000000.0,
           "network_capex": 252383.36960706284,
           "network_price_per_host": 1261.9168480353142,
           "one_core": 1.0,
@@ -18339,7 +18431,7 @@
           "stored_data": 51200.0,
           "stored_data_t0": 200.0,
           "support_rate": 0.11795163177004572,
-          "tco": 25085420.405998982,
+          "tco": 45285420.405998975,
           "utilisation": 20.0,
           "utilisation_after_failure": 20.100502512562816,
           "utilisation_cap": 0.98,
@@ -18402,9 +18494,11 @@
     "index_overhead": "dimensionless",
     "installed_disk": "TB",
     "licence_per_core": "USD/core/year",
+    "licence_per_host": "USD/host/year",
     "lifecycle_opex": "USD",
     "linear_throughput": "request/second",
     "mean_request_rate": "request/second",
+    "migration_cost": "USD",
     "network_capex": "USD",
     "network_price_per_host": "USD/host",
     "one_core": "core",

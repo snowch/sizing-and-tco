@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T12:34:29+00:00",
-  "git_revision": "c264eea",
+  "generated_at": "2026-09-19T18:26:58+00:00",
+  "git_revision": "229ed18",
   "kind": "model",
   "name": "web_service_provenance-reference",
   "produced_by": {
@@ -45,7 +45,7 @@
       "ram_for_service": 0.001073741824,
       "stored_data": 1.0
     },
-    "generated_at": "2026-09-19T12:34:29+00:00",
+    "generated_at": "2026-09-19T18:26:58+00:00",
     "model": "web_service_provenance",
     "nodes": {
       "annual_growth": {

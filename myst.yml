@@ -96,6 +96,7 @@ project:
     - file: parts/presenting_it.md
       children:
         - file: chapters/a_tco_for_finance.md
+        - file: chapters/comparing_two_tcos.md
 
     - file: parts/afterwards.md
       children:

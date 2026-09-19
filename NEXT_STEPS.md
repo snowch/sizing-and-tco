@@ -35,6 +35,11 @@ page. What is left is the work a first draft leaves:
   input is worth on its own, which is most of what ch19 needed. A variance-based decomposition
   over the samples already drawn would answer the interaction question the tornado cannot, and is
   still not much code.
+- **A scenario that replaces a distribution.** A scenario can pin an input at a value and cannot
+  give it a different shape, so ch22 holds both quotes exactly. A price band per quote would need
+  an override that carries a distribution, and the paired subtraction would then need the shared
+  inputs' draws injected rather than drawn, so that an input one design samples and the other
+  does not cannot shift the stream for everything drawn after it.
 - **A second ceiling kind.** Every ceiling here is "a value against a limit". A queueing ceiling
   that took a service time and an arrival rate and derived the knee would let ch05 stop describing
   the shape and start drawing it.

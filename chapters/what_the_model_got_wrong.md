@@ -1,10 +1,10 @@
 ---
 title: "What the model got wrong"
-short_title: "ch22 What the model got wrong"
+short_title: "ch23 What the model got wrong"
 ---
 
 (what-the-model-got-wrong)=
-# ch22 · What the model got wrong
+# ch23 · What the model got wrong
 
 ## The question
 
@@ -164,7 +164,7 @@ observe the system afterwards, and a book can do neither for you.
 Three, in `tests/what_the_model_got_wrong/`. The first two have tests, one for each half of the
 chapter, and the second is worth predicting before you run it. The last does not, and says why.
 
-**22.1 — Attribute the failure.**
+**23.1 — Attribute the failure.**
 Given the draws and which of them failed, rank the inputs by how far each one had to be from its
 ordinary self. Use a median, and order by the size of the shift rather than its sign. An input
 that is unusually *low* in the failures is just as much of a cause.
@@ -173,7 +173,7 @@ that is unusually *low* in the failures is just as much of a cause.
 python3 -m pytest tests/what_the_model_got_wrong/test_problem_1_attribute.py
 ```
 
-**22.2 — How often is there a culprit?**
+**23.2 — How often is there a culprit?**
 Work out the share of failures in which nothing was beyond its own ninetieth percentile. Write
 your prediction in a comment first. Then do it again with eight inputs that have nothing to do
 with the failure, and watch the same statistic find a villain anyway.
@@ -182,7 +182,7 @@ with the failure, and watch the same statistic find a villain anyway.
 python3 -m pytest tests/what_the_model_got_wrong/test_problem_2_extreme.py
 ```
 
-**22.3 — A post-mortem on one of yours.** No test: it is your history, and nobody else has it.
+**23.3 — A post-mortem on one of yours.** No test: it is your history, and nobody else has it.
 
 Find an estimate you or your team made that turned out badly: a fleet that hit its knee early, a
 budget that overran, a tier that needed replacing sooner than planned. Reconstruct what was
@@ -208,7 +208,7 @@ that make somebody's observation of their own system worth anything to anybody e
 [Appendix E](#appendix-e-web-service-model) is the model this chapter convicted, in full.
 
 And the question the book opened with, which is worth answering out loud now that there are
-twenty-two chapters behind it. **How big** it answered in Part III, with a chain of
+twenty-three chapters behind it. **How big** it answered in Part III, with a chain of
 multiplications and a number you could put on a purchase order. **How much** it answered in Part
 V, over a horizon, split between the invoice that gets a meeting and the one that does not. **How
 wrong could I be** it answered in the only way anything can: by sampling what was written down,

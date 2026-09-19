@@ -122,6 +122,15 @@ The switch landed in three moves, so that `main` was never half-swapped: the new
 beside the old until every stage loaded, classified and stamped; every chapter, figure,
 experiment and test moved in one change; the old models went in a third.
 
+**Two quotes are two scenarios of one model, held exactly.** A comparison between designs
+([ch22](#comparing-two-tcos)) pins every line of each quote, because a quote is a number, and
+pins the same inputs on both sides, so that everything neither quote fixes is drawn once and
+reaches both designs. The difference between the totals is then taken sample by sample, and the
+runner refuses to subtract until it has checked the shared draws are identical. A scenario can
+pin a value and cannot replace a distribution, and that is why the quotes are pinned rather than
+given bands of their own: two designs drawn in two different worlds have a difference that is
+about the worlds, and nobody can decide anything with it.
+
 **No vendor is named, anywhere.** A measured constant names the *implementation* it belongs to —
 which for the metrics encoder is this repository's own — because that is what makes it a
 measurement rather than a claim.

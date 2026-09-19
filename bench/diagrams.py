@@ -21,7 +21,7 @@ import html
 import math
 
 from bench.stamp import load_result
-from bench.tables import fmt, unit_label
+from bench.tables import fmt, signed_money, unit_label
 
 #: Node kinds, by fill. The distinction the whole book rests on is visible here: a model with no
 #: amber and no red in it is a cost model, and one with either is a sizing model.
@@ -820,3 +820,92 @@ def unit_cancellation(_result: str | None = None) -> str:
         "".join(body),
         "A rate times a duration is an amount; a rate times a plain number is still a rate",
     )
+
+
+# -- two quotes for one workload (ch22) ------------------------------------------------------
+
+
+def paired_difference(result: str) -> str:
+    """The difference between two totals, taken over the same futures, with the tie marked.
+
+    One histogram, split at zero. Everything to the left is a future in which the challenger's
+    quote came out cheaper; everything to the right is one in which the incumbent's did. The
+    two shares are written on the figure, because they are the number a comparison is for and
+    the one a pair of intervals side by side cannot give (ch22).
+    """
+    payload = load_result(result)["summary"]
+    node = payload["nodes"]["difference"]
+    paired = payload["paired"]
+    histogram, summary = node["histogram"], node["summary"]
+    counts, edges = histogram["counts"], histogram["edges"]
+
+    width, height = 520.0, 250.0
+    plot_left, plot_right, plot_top, plot_bottom = 46.0, width - 24, 72.0, height - 42
+    low, high = edges[0], edges[-1]
+    span = (high - low) or 1.0
+    tallest = max(counts) or 1
+
+    def at_x(value: float) -> float:
+        return plot_left + (value - low) / span * (plot_right - plot_left)
+
+    cheaper, dearer = "#5b8fb9", "#c98a6b"
+    body = [
+        f'<text x="{MARGIN}" y="20" font-size="11.5" fill="#263238">'
+        f"{_esc(node['label'])} — {payload['paired']['shared_inputs']} inputs drawn once for "
+        "both</text>",
+        f'<text x="{MARGIN}" y="34" font-size="9.5" fill="#546e7a">'
+        f"middle nine in ten {_esc(signed_money(summary['p5']))} to "
+        f"{_esc(signed_money(summary['p95']))} · median "
+        f"{_esc(signed_money(summary['p50']))}</text>",
+    ]
+    for i, count in enumerate(counts):
+        x1, x2 = at_x(edges[i]), at_x(edges[i + 1])
+        bar = (count / tallest) * (plot_bottom - plot_top)
+        middle = (edges[i] + edges[i + 1]) / 2
+        body.append(
+            f'<rect x="{x1:.2f}" y="{plot_bottom - bar:.2f}" width="{max(x2 - x1 - 0.4, 0.4):.2f}" '
+            f'height="{bar:.2f}" fill="{cheaper if middle < 0 else dearer}"/>'
+        )
+    # The tie, and the two shares either side of it. The shares sit in a legend at the top
+    # left, where the histogram's thin tail is, so that they never land on the tie line or on
+    # each other however the mass falls.
+    zero = at_x(0.0)
+    body.append(
+        f'<line x1="{zero:.1f}" y1="{plot_top - 8:.0f}" x2="{zero:.1f}" y2="{plot_bottom:.0f}" '
+        f'stroke="#263238" stroke-width="1.2"/>'
+        f'<text x="{zero:.1f}" y="{plot_top - 12:.0f}" font-size="8.5" text-anchor="middle" '
+        f'fill="#263238">the two totals tie</text>'
+    )
+    for i, (colour, text) in enumerate(
+        (
+            (cheaper, f"challenger cheaper in {paired['share_challenger_cheaper']:.0%} of futures"),
+            (dearer, f"incumbent cheaper in {paired['share_incumbent_cheaper']:.0%}"),
+        )
+    ):
+        y = plot_top + 10 + i * 14
+        body.append(
+            f'<rect x="{plot_left + 6:.1f}" y="{y - 8:.1f}" width="9" height="9" fill="{colour}"/>'
+            f'<text x="{plot_left + 20:.1f}" y="{y:.1f}" font-size="9.5" fill="{colour}">'
+            f"{_esc(text)}</text>"
+        )
+    for value, label in ((summary["p5"], "p5"), (summary["p95"], "p95")):
+        x = at_x(value)
+        body.append(
+            f'<line x1="{x:.1f}" y1="{plot_top + 20:.0f}" x2="{x:.1f}" y2="{plot_bottom:.0f}" '
+            f'stroke="#455a64" stroke-width="1" stroke-dasharray="3 2"/>'
+            f'<text x="{x:.1f}" y="{plot_top + 30:.0f}" font-size="8.5" text-anchor="middle" '
+            f'fill="#455a64">{label}</text>'
+        )
+    body.append(
+        f'<line x1="{plot_left}" y1="{plot_bottom}" x2="{plot_right}" y2="{plot_bottom}" '
+        f'stroke="#90a4ae" stroke-width="1"/>'
+    )
+    for value, anchor in _ticks(low, high, False):
+        x = at_x(value)
+        body.append(
+            f'<line x1="{x:.1f}" y1="{plot_bottom}" x2="{x:.1f}" y2="{plot_bottom + 4}" '
+            f'stroke="#90a4ae"/>'
+            f'<text x="{x:.1f}" y="{plot_bottom + 16}" font-size="8.5" text-anchor="{anchor}" '
+            f'fill="#546e7a">{_esc(signed_money(value))}</text>'
+        )
+    return _svg(width, height, "".join(body), "The difference between two totals, paired")

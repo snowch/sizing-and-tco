@@ -1,4 +1,4 @@
-"""Problem 22.1 - attributing a failure to the inputs that were doing something unusual.
+"""Problem 23.1 - attributing a failure to the inputs that were doing something unusual.
 
 Graded twice over. Against a synthetic case whose answer is arithmetic, so the test knows what
 the right answer is without anybody storing one; and against the book's own web service model, where

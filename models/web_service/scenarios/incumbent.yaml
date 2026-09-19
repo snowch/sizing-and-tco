@@ -1,0 +1,22 @@
+scenario: incumbent
+title: The incumbent's quote, held exactly
+because: >-
+  The design the plan was built on, priced as a quote rather than as a band. Every line a vendor
+  would put on a quote is pinned at the value the model's point estimate already uses, so this
+  scenario's point figures are the reference scenario's, and its interval is only what a quote
+  does not fix: the workload, the growth, the electricity, the people. It is one side of ch22's
+  comparison, and it pins the same inputs as the challenger so that the two totals can be
+  subtracted future by future.
+samples: 100000
+seed: 20260916
+overrides:
+  cores_per_host: 16
+  ram_per_host: 64
+  disk_per_host: 2
+  host_price: 6538.348415311009
+  host_power: 310.45548849896676
+  licence_per_core: 79.99999999999997
+  licence_per_host: 0
+  support_rate: 0.11795163177004572
+  hosts: 54
+  migration_cost: 0

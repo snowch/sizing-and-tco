@@ -60,8 +60,12 @@ models:  ## Evaluate and sample every model, and stamp what each one said
 information:  ## What knowing each uncertain input exactly would buy (ch19)
 	$(PYTHON) -m bench.run_information
 
+.PHONY: comparison
+comparison:  ## Subtract two quotes for one workload, future by future (ch22)
+	$(PYTHON) -m bench.run_comparison
+
 .PHONY: postmortem
-postmortem:  ## Attribute the running example's own failures (ch22)
+postmortem:  ## Attribute the running example's own failures (ch23)
 	$(PYTHON) -m bench.run_postmortem
 
 .PHONY: verify

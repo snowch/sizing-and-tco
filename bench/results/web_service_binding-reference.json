@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T12:34:36+00:00",
-  "git_revision": "c264eea",
+  "generated_at": "2026-09-19T18:27:04+00:00",
+  "git_revision": "229ed18",
   "kind": "model",
   "name": "web_service_binding-reference",
   "produced_by": {
@@ -95,7 +95,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-19T12:34:35+00:00",
+    "generated_at": "2026-09-19T18:27:04+00:00",
     "model": "web_service_binding",
     "nodes": {
       "achievable_throughput": {

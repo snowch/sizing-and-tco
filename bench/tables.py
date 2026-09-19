@@ -70,9 +70,11 @@ def fmt(value: float | None, unit: str = "dimensionless") -> str:
         # Anything with money in it gets a currency mark, including a rate like USD/year and a
         # unit cost like USD/TB/month — the "per what" lives in the column heading, and a table
         # of costs where some cells are marked and some are not reads as an error.
+        # The minus goes before the dollar sign: "$-10,722" is nobody's notation.
+        sign = "\u2212" if value < 0 else ""
         if abs(value) >= 1000:
-            return f"${value:,.0f}"
-        return f"${value:,.2f}"
+            return f"{sign}${abs(value):,.0f}"
+        return f"{sign}${abs(value):,.2f}"
     if unit in ("node", "drive", "core", "host"):
         return f"{value:,.0f}"
     if value == 0:
@@ -1003,4 +1005,186 @@ def glossary_table(_name: str = "") -> str:
     for term, (slug, meaning, plain) in terms.items():
         chapter = BY_SLUG[slug]
         rows.append(f"| **{term}** | [{chapter.label}](#{chapter.anchor}) | {meaning} | {plain} |")
+    return "\n".join(rows)
+
+
+# -- two quotes for one workload (ch22) ------------------------------------------------------
+
+
+#: How a quote's units read in a table. Local to these tables: the rest of the book prints an
+#: input's unit as the model spells it, and changing that would move every table that does.
+QUOTE_UNITS = {
+    "core/host": "cores per host",
+    "GiB/host": "GiB per host",
+    "TB/host": "TB per host",
+    "USD/host": "per host",
+    "W/host": "W per host",
+    "USD/core/year": "per core per year",
+    "USD/host/year": "per host per year",
+    "1/year": "of capital, per year",
+    "host": "hosts",
+    "USD": "",
+}
+
+
+def signed_money(value: float) -> str:
+    """A difference in money: signed, to the dollar, and never "$-": a minus goes before the sign."""
+    if abs(value) < 0.5:
+        return "$0"
+    sign = "\u2212" if value < 0 else "+"
+    return f"{sign}${abs(value):,.0f}"
+
+
+def _quoted(row: dict) -> str:
+    unit, value = row["unit"], row["value"]
+    if unit == "1/year":
+        return f"{value:.1%} {QUOTE_UNITS[unit]}"
+    if unit == "USD" and value == 0:
+        return "$0, declared"
+    if unit == "USD/core/year" and value == 0:
+        return "$0 per core, declared"
+    if unit == "USD/host/year" and value == 0:
+        return "$0 per host, declared"
+    if unit == "host":
+        return f"{value:,.0f} hosts" if float(value).is_integer() else f"{value:,.1f} hosts"
+    if unit == "dimensionless":
+        return f"{value:.3g}"
+    if unit in ("core/host", "GiB/host", "TB/host", "W/host"):
+        shown = f"{value:,.0f}" if float(value).is_integer() else f"{value:.3g}"
+        return f"{shown} {QUOTE_UNITS[unit]}"
+    if unit == "USD/kWh":
+        return f"${value:.3f} per kWh"
+    return f"{fmt(value, unit)} {QUOTE_UNITS.get(unit, unit)}".rstrip()
+
+
+def comparison_quotes(name: str) -> str:
+    """The two quotes, line by line, with what kind of claim each line is.
+
+    Both sides carry a mark, and most of both sides carry the same mark: a quote is a vendor's
+    claim whoever the vendor is. The two lines that are not are the ones a buyer supplied.
+    """
+    designs = load_result(name)["summary"]["designs"]
+    left = {row["input"]: row for row in designs["incumbent"]["quote"]}
+    right = {row["input"]: row for row in designs["challenger"]["quote"]}
+    rows = [
+        "| Line | The incumbent's quote | The challenger's quote |",
+        "|---|---:|---:|",
+    ]
+    for key, row in left.items():
+        other = right[key]
+        rows.append(
+            f"| {row['label']} | {PROVENANCE_MARK[row['provenance']]} {_quoted(row)} "
+            f"| {PROVENANCE_MARK[other['provenance']]} {_quoted(other)} |"
+        )
+    marks = " · ".join(
+        f"{mark} {PROVENANCE_MEANING[kind]}" for kind, mark in PROVENANCE_MARK.items()
+    )
+    rows.append(f"| | {marks} | |")
+    return "\n".join(rows)
+
+
+def _money(value: float) -> str:
+    return "$0" if abs(value) < 0.5 else fmt(value, "USD")
+
+
+def comparison_lines(name: str) -> str:
+    """Where the money moves: every line of both totals, over the same horizon, and the gap."""
+    lines = load_result(name)["summary"]["lines"]
+    rows = [
+        "| Over five years | Incumbent | Challenger | Challenger minus incumbent |",
+        "|---|---:|---:|---:|",
+    ]
+    for row in lines:
+        label = f"**{row['label']}**" if row["node"] == "tco" else row["label"]
+        gap = "none" if abs(row["difference"]) < 0.5 else signed_money(row["difference"])
+        rows.append(
+            f"| {label} | {_money(row['incumbent'])} | {_money(row['challenger'])} "
+            f"| {'**' + gap + '**' if row['node'] == 'tco' else gap} |"
+        )
+    return "\n".join(rows)
+
+
+def comparison_paired(name: str) -> str:
+    """The difference between the two totals, four ways, only one of which is honest.
+
+    The first row is what a spreadsheet prints. The second is what the model says about the
+    difference when both designs face the same future. The third and fourth are what a reader
+    gets by subtracting two independent intervals, which is the mistake two totals side by side
+    invite (ch22).
+    """
+    summary = load_result(name)["summary"]
+    node, paired = summary["nodes"]["difference"], summary["paired"]
+    spread = node["summary"]
+
+    def span(low: float, high: float) -> str:
+        return f"{signed_money(low)} to {signed_money(high)}"
+
+    rows = [
+        "| Challenger minus incumbent, five-year total | |",
+        "|---|---:|",
+        f"| At the point estimate | {signed_money(node['point'])} |",
+        f"| Across the same futures, middle nine in ten | **{span(spread['p5'], spread['p95'])}** |",
+        f"| With each design in a future of its own | "
+        f"{span(paired['independent']['p5'], paired['independent']['p95'])} |",
+        f"| Subtracting the ends of the two intervals | "
+        f"{span(paired['ends']['low'], paired['ends']['high'])} |",
+        f"| Futures in which the challenger is cheaper | {paired['share_challenger_cheaper']:.0%} |",
+        f"| Futures in which the incumbent is cheaper | {paired['share_incumbent_cheaper']:.0%} |",
+    ]
+    return "\n".join(rows)
+
+
+def comparison_ceilings(name: str) -> str:
+    """How often each design copes, side by side. Cheaper is a claim about a fleet that works."""
+    designs = load_result(name)["summary"]["designs"]
+    left, right = designs["incumbent"]["ceilings"], designs["challenger"]["ceilings"]
+    rows = [
+        "| Ceiling | Incumbent | Challenger |",
+        "|---|---:|---:|",
+    ]
+
+    def cell(report: dict) -> str:
+        return (
+            f"{report['p_over_limit']:.0%} over its limit<br>"
+            f"*{report['p_over_allowed']:.0%} past the allowed line*"
+        )
+
+    for key, report in left.items():
+        rows.append(f"| {report['label']} | {cell(report)} | {cell(right[key])} |")
+    return "\n".join(rows)
+
+
+def comparison_break_even(name: str) -> str:
+    """Where the two totals tie, input by input, and whether that value is one to worry about."""
+    rows_in = load_result(name)["summary"]["break_even"]
+    rows = [
+        "| Input | Whose | As quoted, or at the point | The totals tie at | Verdict |",
+        "|---|---|---:|---:|---|",
+    ]
+    for row in rows_in:
+        unit = row["unit"]
+        at = _quoted({"value": row["at"], "unit": unit})
+        if row["ties_at"] is None:
+            tie, verdict = "—", "no value of it moves the difference"
+        else:
+            tie = _quoted({"value": row["ties_at"], "unit": unit})
+            if row["input"] == "staff_fte":
+                verdict = (
+                    f"{row['from_quote']:+.1%} of an engineer's time, on the challenger's side"
+                )
+            elif row["whose"] == "challenger":
+                verdict = f"{row['from_quote']:+.1%} on the quote"
+            elif row["in_swing"]:
+                verdict = "inside the middle eighty per cent of what it could be"
+            elif row["in_range"]:
+                verdict = "outside the middle eighty per cent, inside the range the model admits"
+            else:
+                verdict = "outside the range the model admits"
+        if row["input"] == "staff_fte":
+            whose = "a claim about your people"
+        elif row["whose"] == "challenger":
+            whose = "the challenger's quote"
+        else:
+            whose = "shared by both"
+        rows.append(f"| {row['label']} | {whose} | {at} | {tie} | {verdict} |")
     return "\n".join(rows)

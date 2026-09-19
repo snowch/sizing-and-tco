@@ -66,8 +66,13 @@ echo "== what a measurement would buy is still what the book says it would =="
 # for the same reason as everything else here: it is a claim about what this book's models say.
 python3 -m bench.run_information --check
 
+echo "== the two quotes still differ by what the book says they differ by =="
+# ch22: both quotes on the same draws, subtracted future by future, with the break-evens that
+# say what would flip the ordering. Re-derived rather than trusted, like everything else here.
+python3 -m bench.run_comparison --check
+
 echo "== the post-mortem still attributes what the book says it attributes =="
-# ch21, and the half of it that matters: the same method on a model with a known hole in it,
+# ch23, and the half of it that matters: the same method on a model with a known hole in it,
 # which has to keep confidently blaming the inputs that are present.
 python3 -m bench.run_postmortem --check
 

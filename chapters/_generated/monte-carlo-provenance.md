@@ -19,6 +19,8 @@
 | ● | hours per year | fact | by definition, 365.25 x 24. The quarter-day is worth about a fifth of a per cent over five years — less than this model's other errors, and free to get right |
 | ○ | index overhead | assumption | indexes, the write-ahead log and journals as a multiplier on stored bytes. Triangular, and the bounds are for a service with a few indexes per table — a search-heavy one is off the top of this range |
 | ◐ | licence per core | vendor claim | the platform software's per-core licence, as quoted. Lognormal: a price, and a wide one, because it is the line item most often negotiated. It is what makes the core count a cost as well as a capacity (ch17) |
+| ◐ | licence per host | vendor claim | the price list: per core, with no per-host charge. A quote that licenses per host instead puts its figure here and zero in licence_per_core, and the two totals are then compared like for like |
+| ○ | one-off cost of moving to this design | assumption | nothing to migrate: the platform the plan already runs on, on the hosts already quoted. A challenger's scenario overrides this with the team's own estimate of the move, marked as what it is |
 | ○ | network price per host | assumption | switch ports, optics and cabling, amortised per host. Triangular rather than lognormal, although it is a price: it is a bill of materials divided by a host count somebody chose, so the bounds are the plausible designs rather than a market |
 | ● | one core | fact | definition |
 | ● | one host | fact | definition |
@@ -33,10 +35,10 @@
 | ○ | replication factor | assumption | three copies of every record, so that a host can die and take its disks with it. A different durability scheme substitutes its own factor here and the rest of the model is unchanged, which is the point of it being a node |
 | ● | seconds per year | fact | by definition, 365.25 x 86,400 |
 | ○ | CPU time per request | assumption | held as an assumption because no reference machine is declared in rig/machine.yml; `make measure-rig` on a declared machine replaces this node with a measured one. Triangular *because* it has not been measured: once it is, the shape becomes a normal around the measurement, which is a change of claim and not only of numbers (ch13) |
-| ○ | staff fte | assumption | engineers this fleet occupies, full-time equivalent. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch08 calls a regime change |
+| ○ | engineers, full-time equivalent | assumption | engineers this fleet occupies, full-time equivalent. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch08 calls a regime change |
 | ○ | records held, day one | assumption | stated workload (ch02) — what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression |
 | ◐ | support rate | vendor claim | annual support as a fraction of capital cost. Triangular because it is negotiated inside a band the market sets rather than drawn from one: the spread is what different buyers get, not what varies from year to year |
 | ○ | utilisation the model will admit to | assumption | where this model stops being about queues (ch06) |
-| | **35 inputs** | | **6 fact, 7 vendor claim, 22 assumption** |
+| | **37 inputs** | | **6 fact, 8 vendor claim, 23 assumption** |
 
 *Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*

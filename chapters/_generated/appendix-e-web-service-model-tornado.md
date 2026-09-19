@@ -2,7 +2,7 @@
 
 | Input | Kind | five-year total cost of ownership at its p10 | at its p90 | Swing |
 |---|---|---:|---:|---:|
-| staff fte | input | $1,732,449 | $2,360,530 | $628,081 |
+| engineers, full-time equivalent | input | $1,732,449 | $2,360,530 | $628,081 |
 | licence per core | input | $1,829,283 | $2,347,683 | $518,400 |
 | fully loaded salary | input | $1,805,056 | $2,258,646 | $453,590 |
 | host price | input | $1,827,097 | $2,256,332 | $429,235 |

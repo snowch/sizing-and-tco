@@ -233,8 +233,12 @@ handing it to somebody.
 
 ## Where to go next
 
-That is the argument. [ch22](#what-the-model-got-wrong) is what happens afterwards: three years
-later, when one of the futures in that table turned out to be the one you got.
+[ch22](#comparing-two-tcos) is the last step of the argument. When the two columns are two quotes
+rather than two sizes of one fleet, the difference between them is what somebody is deciding, and
+it has an interval of its own.
+
+[ch23](#what-the-model-got-wrong) is what happens afterwards: three years later, when one of the
+futures in that table turned out to be the one you got.
 
 What remains after it is reference material:
 [Appendix A](#appendix-a-dsl-reference) for the model file format in full,
