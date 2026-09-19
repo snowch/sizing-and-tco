@@ -49,6 +49,9 @@ class Table:
     conditions_from: str | None = None
     #: Why this has not been produced, and what to run. None means it has been.
     pending: str | None = None
+    #: What the *Source* line says after the link, in place of "every input on a slider". For
+    #: the one page where the link leads somewhere the reader has not been prepared for.
+    source_note: str | None = None
 
     @property
     def sources(self) -> tuple[str, ...]:
@@ -95,6 +98,7 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.outputs_in_plain_words,
         result="web_service-reference",
         args=("hosts_recommended", "tco"),
+        source_note="the finished model, which ch02 starts building from nothing",
     ),
     "point-estimates-tco-spread": Diagram(
         draw=diagrams.spread_of_answers,

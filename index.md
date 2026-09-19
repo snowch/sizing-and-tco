@@ -137,8 +137,8 @@ about statistics. The book uses six statistical words:
 
 Each is used in plain English first and named second, in the chapter where a model first needs
 it. [ch01](#point-estimates) shows the first spread of answers this book produces and names none
-of the six. It says where nine answers in ten fell, and that is all it needs. The words arrive
-one at a time from there on, and Part IV, in [ch13](#monte-carlo) and
+of the six. It shows the smallest and the largest of those answers and how the rest piled up
+between them, and that is all it needs. The words arrive one at a time from there on, and Part IV, in [ch13](#monte-carlo) and
 [ch14](#correlation-and-convergence), builds the method that produces the spread and defines all
 six properly. Until then you take the spread on trust, which is a fair trade: the method is not
 useful until you have a number you cannot defend.

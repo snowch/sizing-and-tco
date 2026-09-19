@@ -273,10 +273,10 @@ def distribution(result: str, node_name: str, plain: bool = False) -> str:
     """One node's sampled distribution, with the interval and the point estimate on it.
 
     ``plain`` labels the same drawing without a statistical word on it, for the chapter that
-    comes before the words: the arithmetic done over and over, where nine answers in ten fell,
-    and where the single number sits. Not even the count of runs, which is a sample size by
-    another name. Nothing else changes, so a reader who meets the figure again in ch13 is
-    looking at the same picture with its names on.
+    comes before the words: the arithmetic done over and over, the smallest and largest answer,
+    and where the single number sits. Not the count of runs, which is a sample size by another
+    name, and not the band's edges, which are a convention. Nothing else changes, so a reader
+    who meets the figure again in ch13 is looking at the same picture with its names on.
 
     The point estimate is drawn as a line through the histogram deliberately. Seeing where the
     single number a plan was built on actually sits in the distribution it came from is the whole
@@ -312,9 +312,8 @@ def distribution(result: str, node_name: str, plain: bool = False) -> str:
     if plain:
         heading = "the arithmetic done over and over"
         detail = (
-            f"every answer kept · nine in ten fell between "
-            f"{_esc(fmt(summary['p5'], node['unit']))} and "
-            f"{_esc(fmt(summary['p95'], node['unit']))}"
+            f"every answer kept · the smallest was {_esc(fmt(summary['min'], node['unit']))} "
+            f"and the largest {_esc(fmt(summary['max'], node['unit']))}"
         )
     else:
         heading = f"{payload['scenario']['samples']:,} samples"
@@ -332,15 +331,17 @@ def distribution(result: str, node_name: str, plain: bool = False) -> str:
     for i, count in enumerate(counts[:drawn]):
         x1, x2 = at_x(edges[i]), at_x(edges[i + 1])
         bar = (count / tallest) * (plot_bottom - plot_top)
-        inside = summary["p5"] <= (edges[i] + edges[i + 1]) / 2 <= summary["p95"]
+        inside = plain or summary["p5"] <= (edges[i] + edges[i + 1]) / 2 <= summary["p95"]
         body.append(
             f'<rect x="{x1:.2f}" y="{plot_bottom - bar:.2f}" width="{max(x2 - x1 - 0.4, 0.4):.2f}" '
             f'height="{bar:.2f}" fill="{"#9fc0dd" if inside else "#dde5ec"}"/>'
         )
+    # In plain mode the band's edges are not drawn either: a band is a convention, and the
+    # chapter before the convention shows only the answers and the single number.
     markers = [
-        (summary["p5"], "#455a64", "" if plain else "p5"),
+        (None if plain else summary["p5"], "#455a64", "p5"),
         (node.get("point"), "#b3413a", "the single number" if plain else "point"),
-        (summary["p95"], "#455a64", "" if plain else "p95"),
+        (None if plain else summary["p95"], "#455a64", "p95"),
     ]
     # Two rows, so that a point estimate sitting almost on top of a percentile does not print
     # one label over the other. Both rows clear the subtitle and the line below them.
