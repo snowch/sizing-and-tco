@@ -269,8 +269,13 @@ def tornado_chart(result: str, output: str, limit: int = 9) -> str:
 SHOWN_MASS = 0.99
 
 
-def distribution(result: str, node_name: str) -> str:
+def distribution(result: str, node_name: str, plain: bool = False) -> str:
     """One node's sampled distribution, with the interval and the point estimate on it.
+
+    ``plain`` labels the same drawing without a statistical word on it, for the chapter that
+    comes before the words: how many times the arithmetic was run, where nine answers in ten
+    fell, and where the single number sits. Nothing else changes, so a reader who meets the
+    figure again in ch13 is looking at the same picture with its names on.
 
     The point estimate is drawn as a line through the histogram deliberately. Seeing where the
     single number a plan was built on actually sits in the distribution it came from is the whole
@@ -303,13 +308,23 @@ def distribution(result: str, node_name: str) -> str:
         travelled = math.log10(max(value, low) / low) if logarithmic else value - low
         return plot_left + travelled / span * (plot_right - plot_left)
 
+    if plain:
+        heading = f"the arithmetic run {payload['scenario']['samples']:,} times over"
+        detail = (
+            f"nine answers in ten fell between {_esc(fmt(summary['p5'], node['unit']))} and "
+            f"{_esc(fmt(summary['p95'], node['unit']))}"
+        )
+    else:
+        heading = f"{payload['scenario']['samples']:,} samples"
+        detail = (
+            f"90% interval {_esc(fmt(summary['p5'], node['unit']))} to "
+            f"{_esc(fmt(summary['p95'], node['unit']))} · median "
+            f"{_esc(fmt(summary['p50'], node['unit']))}"
+        )
     body = [
         f'<text x="{MARGIN}" y="20" font-size="11.5" fill="#263238">'
-        f"{_esc(node['label'])} — {payload['scenario']['samples']:,} samples</text>",
-        f'<text x="{MARGIN}" y="34" font-size="9.5" fill="#546e7a">'
-        f"90% interval {_esc(fmt(summary['p5'], node['unit']))} to "
-        f"{_esc(fmt(summary['p95'], node['unit']))} · median "
-        f"{_esc(fmt(summary['p50'], node['unit']))}"
+        f"{_esc(node['label'])} — {heading}</text>",
+        f'<text x="{MARGIN}" y="34" font-size="9.5" fill="#546e7a">{detail}'
         f"{' · horizontal axis logarithmic' if logarithmic else ''}</text>",
     ]
     for i, count in enumerate(counts[:drawn]):
@@ -321,9 +336,9 @@ def distribution(result: str, node_name: str) -> str:
             f'height="{bar:.2f}" fill="{"#9fc0dd" if inside else "#dde5ec"}"/>'
         )
     markers = [
-        (summary["p5"], "#455a64", "p5"),
-        (node.get("point"), "#b3413a", "point"),
-        (summary["p95"], "#455a64", "p95"),
+        (summary["p5"], "#455a64", "" if plain else "p5"),
+        (node.get("point"), "#b3413a", "the single number" if plain else "point"),
+        (summary["p95"], "#455a64", "" if plain else "p95"),
     ]
     # Two rows, so that a point estimate sitting almost on top of a percentile does not print
     # one label over the other. Both rows clear the subtitle and the line below them.
@@ -338,13 +353,16 @@ def distribution(result: str, node_name: str) -> str:
         if row is None:  # both taken: the less crowded one, and accept the crowding
             row = row_ends.index(min(row_ends))
         row_ends[row] = x + half
-        dash = "" if label == "point" else ' stroke-dasharray="3 2"'
+        dash = "" if label in ("point", "the single number") else ' stroke-dasharray="3 2"'
         body.append(
             f'<line x1="{x:.1f}" y1="{plot_top - 6:.0f}" x2="{x:.1f}" '
             f'y2="{plot_bottom:.0f}" stroke="{colour}" stroke-width="1.2"{dash}/>'
-            f'<text x="{x:.1f}" y="{row_y[row]:.0f}" font-size="8.5" '
-            f'text-anchor="middle" fill="{colour}">{label}</text>'
         )
+        if label:
+            body.append(
+                f'<text x="{x:.1f}" y="{row_y[row]:.0f}" font-size="8.5" '
+                f'text-anchor="middle" fill="{colour}">{label}</text>'
+            )
     body.append(
         f'<line x1="{plot_left}" y1="{plot_bottom}" x2="{plot_right}" y2="{plot_bottom}" '
         f'stroke="#90a4ae" stroke-width="1"/>'
@@ -362,10 +380,20 @@ def distribution(result: str, node_name: str) -> str:
         body.append(
             f'<text x="{plot_right:.0f}" y="{plot_top - 22:.0f}" font-size="8.5" '
             f'text-anchor="end" fill="#90a4ae">'
-            f"{hidden / total * 100:.1f}% of samples run on to "
+            f"{hidden / total * 100:.1f}% of {'answers' if plain else 'samples'} run on to "
             f"{_esc(fmt(edges[-1], node['unit']))}</text>"
         )
-    return _svg(width, height, "".join(body), f"Distribution of {node['label']}")
+    return _svg(
+        width,
+        height,
+        "".join(body),
+        f"{'The spread of' if plain else 'Distribution of'} {node['label']}",
+    )
+
+
+def spread_of_answers(result: str, node_name: str) -> str:
+    """:func:`distribution`, labelled without a statistical word, for ch01."""
+    return distribution(result, node_name, plain=True)
 
 
 def _ticks(low: float, high: float, logarithmic: bool) -> list[tuple[float, str]]:

@@ -136,9 +136,9 @@ about statistics. The book uses six statistical words:
 - convergence.
 
 Each is used in plain English first and named second, in the chapter where a model first needs
-it. [ch01](#point-estimates) already needs one. A model run many times over gives a spread of
-answers, ch01 shows that spread, and the band that holds nine answers in ten is an **interval**.
-That is all ch01 uses. Part IV, in [ch13](#monte-carlo) and
+it. [ch01](#point-estimates) shows the first spread of answers this book produces and names none
+of the six. It says where nine answers in ten fell, and that is all it needs. The words arrive
+one at a time from there on, and Part IV, in [ch13](#monte-carlo) and
 [ch14](#correlation-and-convergence), builds the method that produces the spread and defines all
 six properly. Until then you take the spread on trust, which is a fair trade: the method is not
 useful until you have a number you cannot defend.

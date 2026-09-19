@@ -212,7 +212,7 @@ def row_labels(payload: dict) -> dict[str, str]:
     }
 
 
-def outputs_table(name: str, *only: str) -> str:
+def outputs_table(name: str, *only: str, spread: str = "90% interval") -> str:
     """What the model says, at a point and across its uncertainty.
 
     Two columns that a spreadsheet would give one. The point estimate is what a plan is usually
@@ -231,7 +231,7 @@ def outputs_table(name: str, *only: str) -> str:
     if unknown:
         raise KeyError(f"{name} has no output(s) {unknown}; it declares {payload['outputs']}")
     rows = [
-        "| Output | Point estimate | 90% interval | Unit |",
+        f"| Output | Point estimate | {spread} | Unit |",
         "|---|---:|---:|---|",
     ]
     for output in shown:
@@ -250,6 +250,15 @@ def outputs_table(name: str, *only: str) -> str:
             )
         rows.append(f"| {labels[output]} | {point} | {interval} | {unit_label(node['unit'])} |")
     return "\n".join(rows)
+
+
+def outputs_in_plain_words(name: str, *only: str) -> str:
+    """The outputs table for the one chapter that comes before the word *interval* (ch01).
+
+    Same rows, same figures. The column that ch13 will call a 90% interval is headed by what it
+    is: the range nine of the repeated answers in ten fell into.
+    """
+    return outputs_table(name, *only, spread="Nine answers in ten fell within")
 
 
 def stage_outputs(name: str) -> str:

@@ -260,7 +260,7 @@ the wrong one is expensive in both directions.
 
 **How the demand quantities move together.** Every table above lists them separately, as though
 request rate and log volume were unrelated. They are not. Treating them as unrelated makes every
-interval in the book too narrow ([ch14](#correlation-and-convergence)).
+range this book reports too narrow ([ch14](#correlation-and-convergence)).
 
 ## Problems
 

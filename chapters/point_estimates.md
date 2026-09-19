@@ -58,15 +58,15 @@ then what the repeated answers did.
 ```
 
 Read the first row. The point estimate is a real number, correctly computed. Beside it is the
-**90% interval**: the range that nine of those answers in ten fell into. It spans an order of
-magnitude. Nothing in the first calculation was wrong. It had no way to say that it was a bet.
+range that nine of those answers in ten fell into. It spans an order of magnitude. Nothing in the
+first calculation was wrong. It had no way to say that it was a bet.
 
 Why nine in ten, rather than the smallest and the largest answer, is [ch13](#monte-carlo)'s
 question. For now it is a convention. This book uses the same one everywhere, so that any two
 figures can be compared.
 
-```{image} _figures/point-estimates-tco-distribution.svg
-:alt: The five-year total cost as a distribution, with the point estimate marked on it
+```{image} _figures/point-estimates-tco-spread.svg
+:alt: The five-year total cost as a spread of answers, with the single number marked on it
 :width: 100%
 ```
 
@@ -76,10 +76,10 @@ second row, drawn. The red line is where the single-number answer falls.
 Doing that arithmetic thousands of times needs a sampler, and [ch13](#monte-carlo) builds one. You
 do not need one to feel the force of it. Problem 1.1 does the same job on paper: every input at
 the bottom of its range together, then every input at the top together. It asks you to set what
-comes out beside the interval in the table. Those are two honest ways of admitting the same doubt,
+comes out beside the range in the table. Those are two honest ways of admitting the same doubt,
 and they do not agree with each other.
 
-### The error an interval cannot show
+### The error a range cannot show
 
 Almost all of the first row's width came from one input: the growth rate. It is a forecast, it
 compounds over five years, and it moves the host count further than any other input in the model.
@@ -139,22 +139,22 @@ page does not tell you.
 ## What this cannot tell you
 
 **What the model's structure omits.** Everything above is about a model that has already been
-written down. A quantity nobody thought of appears in no point estimate, no interval and no
+written down. A quantity nobody thought of appears in no point estimate, no range and no
 ceiling, and no amount of sampling will put it there. This book's observability model has a hole
 of exactly that shape, argued in [Appendix F](#appendix-f-observability-model).
 [ch23](#what-the-model-got-wrong) is a post-mortem on a model that was confidently wrong for this
 reason.
 
-**Whether the spread anybody declared is the right spread.** The interval above faithfully reports
-the spreads in the model file. If the growth rate's range was somebody's mood on a Tuesday, the
-interval inherits that and says nothing about it. [ch03](#where-the-numbers-come-from) is about
-telling a measurement from a claim from a guess. That difference decides whether an interval is a
+**Whether the spread anybody declared is the right spread.** The range above faithfully reports
+the spreads in the model file. If the growth rate's spread was somebody's mood on a Tuesday, the
+range inherits that and says nothing about it. [ch03](#where-the-numbers-come-from) is about
+telling a measurement from a claim from a guess. That difference decides whether a range is a
 finding or a decoration.
 
-**How much the interval should worry you.** A wide interval on a number nobody will act on for a
+**How much the range should worry you.** A wide range on a number nobody will act on for a
 year is not a problem. A narrow one on a purchase order signed on Friday might be. Nothing in the
 arithmetic knows which you have, and this book has no opinion about your appetite for risk.
-[ch21](#a-tco-for-finance) is about handing somebody an interval and the decision it supports,
+[ch21](#a-tco-for-finance) is about handing somebody a range and the decision it supports,
 instead of hiding the doubt inside a single figure.
 
 ## Problems
@@ -165,7 +165,7 @@ Three, in `tests/point_estimates/`. The first two have tests; run them with
 **1.1 — The width of a product.** Read each uncertain input's declared spread off the web service
 model. Work out what those spreads become when the inputs are multiplied together. The answer is
 neither the widest input nor the average of them. Do it the way you could on paper: every input at
-its low together, then every input at its high together. Then set your answer beside the interval
+its low together, then every input at its high together. Then set your answer beside the range
 in the table above. The gap between the two is what [ch13](#monte-carlo) exists to close.
 
 ```bash
