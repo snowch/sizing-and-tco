@@ -653,10 +653,19 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
   .nav { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
-  /* The same button closes it here. The column it held goes back to the chapter, which sits
-     centred in what is left; the prose keeps its measure. */
+  /* The same button closes it here, and the column it held goes to the chapter. The line
+     length does not change: prose, headings, code and notes keep the measure and stay centred
+     in the wider column. What spreads into the room is what a reader closes the list to see
+     more of -- an embedded model, which reaches its two-column layout inside a chapter on a
+     tablet once the list is away, the runner, and a table wider than the prose. A browser
+     without :has() leaves the model at the measure, which is what every browser did before. */
   html.nav-closed .shell { grid-template-columns: minmax(0, 1fr); }
   html.nav-closed .nav { display: none; }
+  html.nav-closed main { max-width: none; }
+  html.nav-closed main > * { max-width: var(--measure); margin-inline: auto; }
+  html.nav-closed main > :is(figure:has(> iframe), figure:has(> .runner), table) {
+    max-width: 100%; }
+  html.nav-closed main > figure > figcaption { margin-inline: auto; }
 }
 @media (min-width: 72rem) {
   .shell { grid-template-columns: 17rem minmax(0, 1fr) 14rem; }
