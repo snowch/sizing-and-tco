@@ -10,6 +10,7 @@ Printing a path is never important enough to fail a build. These check that it c
 
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import sys
@@ -341,3 +342,63 @@ def test_the_toolkit_does_not_import_the_harness():
         if re.search(r"^\s*(from|import) bench\b", path.read_text(), re.M)
     ]
     assert not offenders, f"the toolkit imports the harness in {offenders}"
+
+
+def test_the_offline_worker_lists_exactly_what_the_build_produced(tmp_path):
+    """A service worker's precache is a promise: every path on it is fetched on install, and one
+    missing path fails the whole install in the reader's browser. So the list is derived from the
+    tree rather than written, and this holds it to the tree."""
+    import subprocess
+    import sys
+
+    site = tmp_path / "site"
+    (site / "models").mkdir(parents=True)
+    (site / "playground" / "capacity").mkdir(parents=True)
+    (site / "index.html").write_text("<html><head><title>x</title></head><body></body></html>")
+    (site / "capacity.html").write_text("<html><head></head><body></body></html>")
+    (site / "models" / "web_service-reference.html").write_text("<html><head></head></html>")
+    (site / "playground" / "capacity" / "index.html").write_text("<html><head></head></html>")
+    (site / "search.json").write_text("[]")
+    (site / "favicon.svg").write_text("<svg/>")
+    (site / "sitemap.xml").write_text("<urlset/>")  # not a page: not kept
+    (site / "sizing-and-tco.html").write_text("<html/>")  # the PDF's intermediate: not kept
+
+    def run():
+        return subprocess.run(
+            [sys.executable, "scripts/build-offline.py", "--inject", str(site), "--base", "/b"],
+            capture_output=True,
+            text=True,
+            cwd=ROOT,
+        )
+
+    first = run()
+    assert first.returncode == 0, first.stdout + first.stderr
+    worker = (site / "sw.js").read_text()
+    assert '"/b/"' in worker, "the base path the site is served from"
+    kept = re.search(r"const PRECACHE = (\[.*?\]);", worker, re.S).group(1)
+    assert json.loads(kept) == [
+        "capacity.html",
+        "favicon.svg",
+        "index.html",
+        "models/web_service-reference.html",
+        "playground/capacity/index.html",
+        "search.json",
+    ]
+    for page in site.rglob("*.html"):
+        if page.name == "sizing-and-tco.html":
+            continue
+        assert page.read_text().count("serviceWorker.register(") == (
+            1 if "<head>" in page.read_text() else 0
+        )
+    # Idempotent: the deploy may run it twice, and a page that registers two workers is a bug.
+    version = re.search(r'const VERSION = "([0-9a-f]+)";', worker).group(1)
+    second = run()
+    assert second.returncode == 0
+    assert (site / "index.html").read_text().count("serviceWorker.register(") == 1
+    assert (
+        re.search(r'const VERSION = "([0-9a-f]+)";', (site / "sw.js").read_text()).group(1)
+        != version
+    ), (
+        "registering the worker changed every page, so the content hash must change too; "
+        "a version that ignores the pages' own bytes would leave readers on a stale copy"
+    )

@@ -333,5 +333,25 @@ async function resample() {
 }
 
 if (TOOLKIT) $("resample").addEventListener("click", resample);
+
+// Shown only when the columns have stacked. Inside a chapter that is the embed's width, and the
+// page itself is a click away; on a phone it is the screen, and the sliders still work.
+{
+  const note = $("narrow-note");
+  if (window.self !== window.top) {
+    note.textContent = "Embedded at the chapter\u2019s width. ";
+    const open = document.createElement("a");
+    open.href = location.href;
+    open.target = "_blank";
+    open.rel = "noopener";
+    open.textContent = "Open this model on its own";
+    note.appendChild(open);
+    note.appendChild(document.createTextNode(" for the full layout."));
+  } else {
+    note.textContent = "This graph wants a wider screen \u2014 a tablet held sideways, or larger. " +
+      "The sliders below still work here.";
+  }
+}
+
 buildControls();
 render();
