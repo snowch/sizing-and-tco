@@ -871,6 +871,177 @@ def node_kinds_table(name: str) -> str:
 # -- appendices ----------------------------------------------------------------------------
 
 
+#: How units combine: what is multiplied or divided, the unit the answer is read in, and what
+#: happened. The registry the build uses works out every result; the last column is the reason.
+UNIT_ALGEBRA: tuple[tuple[str, tuple[str, ...], str, str, str], ...] = (
+    (
+        "a request rate, for a duration",
+        ("request/second", "second"),
+        "*",
+        "request",
+        "the seconds cancel: a rate times a duration is an amount",
+    ),
+    (
+        "a request rate, times a plain number",
+        ("request/second", "dimensionless"),
+        "*",
+        "request/second",
+        "nothing cancels: a plain number leaves a rate a rate",
+    ),
+    (
+        "disk per host, times the hosts",
+        ("TB/host", "host"),
+        "*",
+        "TB",
+        "the hosts cancel: an amount per host times a count of hosts is an amount",
+    ),
+    (
+        "raw data, divided by disk per host",
+        ("TB", "TB/host"),
+        "/",
+        "host",
+        "the terabytes cancel and the hosts come up: the last step of a sizing chain",
+    ),
+    (
+        "CPU time per request, times the request rate",
+        ("second*core/request", "request/second"),
+        "*",
+        "core",
+        "the requests and the seconds both cancel, leaving cores busy (ch05)",
+    ),
+    (
+        "watts per host, times the hosts, times a building multiplier",
+        ("W/host", "host", "dimensionless"),
+        "*",
+        "W",
+        "the hosts cancel and the multiplier changes nothing but the size",
+    ),
+    (
+        "watts, times the hours in a year",
+        ("W", "hour/year"),
+        "*",
+        "kWh/year",
+        "power times time is energy, and the build converts to the unit the price is in",
+    ),
+    (
+        "energy, times the price of it",
+        ("kWh/year", "USD/kWh"),
+        "*",
+        "USD/year",
+        "the kilowatt-hours cancel: energy times a price is money per year",
+    ),
+    (
+        "a running cost, over the horizon",
+        ("USD/year", "year"),
+        "*",
+        "USD",
+        "the years cancel: a rate of spending over a duration is an amount of money",
+    ),
+    (
+        "a per-host licence, times the hosts",
+        ("USD/host/year", "host"),
+        "*",
+        "USD/year",
+        "the hosts cancel and the years stay: still a running cost",
+    ),
+    (
+        "a link rate, for a duration, read in bytes",
+        ("Mbit/second", "second"),
+        "*",
+        "MB",
+        "the seconds cancel and the build divides by eight, because the link was quoted in bits",
+    ),
+    (
+        "memory per host as the sheet quotes it, times the hosts",
+        ("GiB/host", "host"),
+        "*",
+        "TB",
+        "the hosts cancel and the build converts binary gibibytes to decimal terabytes",
+    ),
+    (
+        "a price per terabyte-year, read per month",
+        ("USD/TB/year",),
+        "*",
+        "USD/TB/month",
+        "nothing cancels and nothing is wrong: the same dimensions, a twelfth of the size",
+    ),
+    (
+        "the horizon, divided by one year",
+        ("year", "year"),
+        "/",
+        "dimensionless",
+        "the years cancel to a plain number, which is the only thing an exponent may be",
+    ),
+)
+
+
+def _combine(units: tuple[str, ...], operation: str):
+    """The registry's answer to multiplying or dividing the given units, as a quantity of one."""
+    from sizing.units import quantity
+
+    result = quantity(1, units[0])
+    for unit in units[1:]:
+        result = result * quantity(1, unit) if operation == "*" else result / quantity(1, unit)
+    return result
+
+
+def _spelled(units: tuple[str, ...], operation: str) -> str:
+    joiner = " × " if operation == "*" else " ÷ "
+    return joiner.join(f"`{unit}`" for unit in units)
+
+
+def unit_algebra_table(_name: str = "") -> str:
+    """How units combine and cancel, every result worked out by the build's own registry.
+
+    Nothing in the table is typed: each row multiplies or divides the units it names with
+    :mod:`sizing.units` and converts to the unit the answer is read in, and a factor other than
+    one is printed because it is what the build would apply. A row that could not be converted
+    would raise here, so the page cannot show a combination the registry disagrees with.
+    """
+    rows = ["| Calculation | The units | Result | What happened |", "|---|---|---|---|"]
+    for what, units, operation, target, why in UNIT_ALGEBRA:
+        factor = _combine(units, operation).to(target).magnitude
+        shown = f"`{target}`"
+        if abs(factor - 1.0) > 1e-12:
+            shown += f", and the build multiplies by {factor:,.6g}"
+        rows.append(f"| {what} | {_spelled(units, operation)} | {shown} | {why} |")
+    return "\n".join(rows)
+
+
+#: What a node declares against what its formula produces, and the three things the check does.
+UNIT_VERDICTS: tuple[tuple[str, tuple[str, ...], str, str], ...] = (
+    ("a request rate, for a duration", ("request/second", "second"), "*", "request"),
+    ("a request rate, times a plain number", ("request/second", "dimensionless"), "*", "request"),
+    ("a price per terabyte-year", ("USD/TB/year",), "*", "USD/TB/month"),
+    ("watts, times the hours in a year", ("W", "hour/year"), "*", "kWh/year"),
+    ("a drive as the sheet quotes it", ("TB",), "*", "TiB"),
+    ("a link rate, for a duration", ("Mbit/second", "second"), "*", "MB"),
+    ("bytes per span, times spans per request", ("byte/span", "span/request"), "*", "byte/request"),
+    ("bytes per span, times spans per request", ("byte/span", "span/request"), "*", "byte/second"),
+)
+
+
+def unit_check_table(_name: str = "") -> str:
+    """The three verdicts the unit check can reach, on hand-picked formulas, worked out by it."""
+    import pint
+
+    rows = ["| Formula | Produces | Node declares | Verdict |", "|---|---|---|---|"]
+    for what, units, operation, declared in UNIT_VERDICTS:
+        produced = _combine(units, operation)
+        try:
+            factor = produced.to(declared).magnitude
+        except pint.DimensionalityError:
+            verdict = "**refused**: not the same kind of quantity, and no factor makes it one"
+        else:
+            verdict = (
+                "accepted as written"
+                if abs(factor - 1.0) < 1e-12
+                else f"converted: the build multiplies by {factor:,.6g}"
+            )
+        rows.append(f"| {what} | {_spelled(units, operation)} | `{declared}` | {verdict} |")
+    return "\n".join(rows)
+
+
 def conversions_table(_name: str = "") -> str:
     """Every conversion the build applies, across every model.
 

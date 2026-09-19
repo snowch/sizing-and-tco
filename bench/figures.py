@@ -236,11 +236,6 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.node_kinds_table, result="web_service-reference"
     ),
     # -- ch02 What a workload is ------------------------------------------------------------------
-    "what-a-workload-is-units": Diagram(
-        draw=diagrams.unit_cancellation,
-        computed_from="`sizing/units.py`, the rule every formula is checked against",
-        alt="A rate times a duration is an amount; a rate times a plain number is still a rate",
-    ),
     "what-a-workload-is-stage": Table(
         render=tables.stage_outputs, result="web_service_demand-reference"
     ),
@@ -618,6 +613,14 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     "appendix-c-distributions-correlation": Table(
         render=tables.correlation_table, result="correlation-effect"
+    ),
+    "appendix-d-units-algebra": Table(
+        render=tables.unit_algebra_table,
+        computed_from="`sizing/units.py`, which worked out every row",
+    ),
+    "appendix-d-units-verdicts": Table(
+        render=tables.unit_check_table,
+        computed_from="`sizing/units.py`, which reached every verdict",
     ),
     "appendix-d-units-conversions": Table(
         render=tables.conversions_table,
