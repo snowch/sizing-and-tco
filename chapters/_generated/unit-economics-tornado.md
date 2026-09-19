@@ -5,7 +5,7 @@
 | annual growth factor | input | $3.49 | $0.84 | $2.65 |
 | peak request rate, day one | input | $3.05 | $1.16 | $1.88 |
 | peak-to-mean ratio | input | $1.34 | $2.42 | $1.08 |
-| staff fte | input | $1.58 | $2.15 | $0.57 |
+| engineers, full-time equivalent | input | $1.58 | $2.15 | $0.57 |
 | licence per core | input | $1.66 | $2.14 | $0.47 |
 | fully loaded salary | input | $1.64 | $2.05 | $0.41 |
 | host price | input | $1.66 | $2.05 | $0.39 |

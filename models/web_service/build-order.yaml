@@ -392,3 +392,7 @@ stages:
       - cost_per_million_requests
       - average_stored
       - cost_per_stored_tb_month
+      # Two lines that are zero on this quote and exist so that a second quote has somewhere
+      # to put its figures: a per-host licence, and the one-off cost of moving (ch22).
+      - licence_per_host
+      - migration_cost

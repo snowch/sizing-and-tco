@@ -192,7 +192,9 @@ def test_the_web_service_accounting_adds_up():
         + values["annual_support"]
         + values["annual_staff_cost"]
     )
-    assert values["tco"] == pytest.approx(values["capex"] + values["lifecycle_opex"])
+    assert values["tco"] == pytest.approx(
+        values["capex"] + values["lifecycle_opex"] + values["migration_cost"]
+    )
     assert values["tco"] > values["capex"], "a five-year total that is not above its capital cost"
 
 

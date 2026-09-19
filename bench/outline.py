@@ -389,6 +389,18 @@ CHAPTERS: tuple[Chapter, ...] = (
     ),
     Chapter(
         22,
+        "comparing_two_tcos",
+        "Comparing two TCOs",
+        PARTS[6],
+        "Two quotes for the same workload, each with an interval on it. Which is cheaper, and "
+        "how often would that turn out to be wrong?",
+        owes="Both quotes held exactly, the difference between their five-year totals as a "
+        "distribution over the same futures, and what would flip it.",
+        consumes=("comparison", "web_service-incumbent", "web_service-challenger"),
+        needs=("a_tco_for_finance", "the_five_year_model"),
+    ),
+    Chapter(
+        23,
         "what_the_model_got_wrong",
         "What the model got wrong",
         PARTS[7],

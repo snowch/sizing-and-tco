@@ -12,7 +12,7 @@ Every part before this one ends before anything happens. The model is built, the
 reported, the decision is taken, and then the book stops. That is where books about modelling
 usually stop, and where the interesting part begins.
 
-**[ch22 · What the model got wrong](#what-the-model-got-wrong)** is what happens next. It takes
+**[ch23 · What the model got wrong](#what-the-model-got-wrong)** is what happens next. It takes
 the fleet [ch12](#the-sizing-model) recommended and the futures in which its busy hour went over
 the knee, and asks the two questions somebody asks three years later: *what went wrong*, and
 *could we have known*.

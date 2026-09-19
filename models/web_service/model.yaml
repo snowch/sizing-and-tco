@@ -746,10 +746,31 @@ nodes:
         wide one, because it is the line item most often negotiated. It is what makes the core
         count a cost as well as a capacity (ch17)"
 
+  licence_per_host:
+    kind: input
+    unit: USD/host/year
+    value: 0
+    label: licence per host
+    note: >-
+      A declared zero, not an absent line. This quote licenses the platform software per core,
+      so its per-host charge is nil and the model says so, with a source. A comparison needs
+      the same lines on both sides: a line that one quote does not have is a cost that quote
+      never pays, and the only honest way to leave it out is to put it in at zero (ch22).
+    provenance:
+      kind: vendor_claim
+      source: "the price list: per core, with no per-host charge. A quote that licenses per host
+        instead puts its figure here and zero in licence_per_core, and the two totals are then
+        compared like for like"
+    range: [0, 12000]
+
   annual_licences:
     kind: derived
     unit: USD/year
-    formula: cores * licence_per_core
+    note: >-
+      Both licence lines, whichever of them a quote uses. One of the two is a declared zero on
+      any given quote, and keeping both is what lets two quotes with different licence models
+      be subtracted from each other (ch22).
+    formula: cores * licence_per_core + hosts * licence_per_host
 
   support_rate:
     kind: input
@@ -769,6 +790,7 @@ nodes:
   staff_fte:
     kind: input
     unit: dimensionless
+    label: engineers, full-time equivalent
     distribution: {triangular: {minimum: 0.5, likely: 1.0, maximum: 2.0}}
     provenance:
       kind: assumption
@@ -800,11 +822,33 @@ nodes:
     unit: USD
     formula: annual_opex * horizon
 
+  migration_cost:
+    kind: input
+    unit: USD
+    value: 0
+    label: one-off cost of moving to this design
+    note: >-
+      A declared zero. This is the design the plan was built on, so there is nothing to move.
+      A design that would replace it carries the cost of the move here: the months of running
+      both, the data copied twice, the people doing that instead of their jobs. It is the line
+      an incumbent's comparison never shows and a challenger's never includes, which is why it
+      is a node with a source rather than a footnote (ch22).
+    provenance:
+      kind: assumption
+      source: "nothing to migrate: the platform the plan already runs on, on the hosts already
+        quoted. A challenger's scenario overrides this with the team's own estimate of the move,
+        marked as what it is"
+    range: [0, 1000000]
+
   tco:
     kind: derived
     unit: USD
     label: five-year total cost of ownership
-    formula: capex + lifecycle_opex
+    note: >-
+      Capital, running cost over the horizon, and whatever it costs to get there. The last term
+      is zero for the design the plan was built on and is the first thing to look for in a
+      comparison that was not (ch22).
+    formula: capex + lifecycle_opex + migration_cost
 
   # -- unit economics: two denominators for one fleet ------------------------------------------
 

@@ -99,7 +99,8 @@ about and a good deal of it rests on numbers that crossed a seam.
 
 And here is the whole file as a graph, for the first time. It holds everything
 [ch02](#what-a-workload-is) started with and everything the chapters between added to it. Every
-input has a slider.
+input has a slider. Two of the inputs are zero and stay zero until [ch22](#comparing-two-tcos),
+where a second quote arrives and needs them.
 
 ```{iframe} /models/web_service-reference.html
 :width: 100%

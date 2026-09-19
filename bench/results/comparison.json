@@ -1,0 +1,845 @@
+{
+  "code_fingerprint": "19a6cf0c20fa2bba",
+  "code_sources": [
+    "bench/run_comparison.py"
+  ],
+  "conditions": {
+    "break_evens_at_the_point": "each break-even is where the two totals tie with everything else at its point value. It says which input could flip the ordering and where, not how likely that is",
+    "one_model": "a line neither quote has is a line neither total has. The comparison is as complete as the model, and no more (ch20)",
+    "quotes_held_exactly": "a quote is a number, so every line of both quotes is pinned. Nothing here is about what either vendor would charge after negotiation, and the incumbent's quote is the model's own point estimate held exactly",
+    "shared_futures": "both scenarios pin the same inputs and share a seed, so every input neither quote fixes is drawn once and reaches both designs. The runner checks the shared columns are identical before subtracting",
+    "the_move_is_an_estimate": "migration_cost on the challenger's side is the team's own figure, marked as an assumption; the incumbent's is a declared zero"
+  },
+  "generated_at": "2026-09-19T18:26:14+00:00",
+  "git_revision": "229ed18",
+  "kind": "measurement",
+  "name": "comparison",
+  "produced_by": {
+    "method": "both quotes evaluated on the same draws and subtracted sample by sample; lines and break-evens at the point estimate",
+    "model": "web_service",
+    "samples": 100000,
+    "scenario": "incumbent and challenger",
+    "seed": 20260916,
+    "stack": "sizing.evaluate"
+  },
+  "recorded_on": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "kind": "other",
+    "numpy": "2.4.6",
+    "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  },
+  "summary": {
+    "break_even": [
+      {
+        "at": 250000.0,
+        "from_quote": 0.04288881762768421,
+        "in_range": true,
+        "in_swing": false,
+        "input": "migration_cost",
+        "label": "one-off cost of moving to this design",
+        "range_high": 1000000.0,
+        "range_low": 0.0,
+        "rises_with_input": 1.0,
+        "swing_high": null,
+        "swing_low": null,
+        "ties_at": 260722.20440692105,
+        "unit": "USD",
+        "whose": "challenger"
+      },
+      {
+        "at": 26000.0,
+        "from_quote": 0.0178524881900118,
+        "in_range": false,
+        "in_swing": false,
+        "input": "host_price",
+        "label": "host price",
+        "range_high": null,
+        "range_low": null,
+        "rises_with_input": 1.0,
+        "swing_high": null,
+        "swing_low": null,
+        "ties_at": 26464.164692940307,
+        "unit": "USD/host",
+        "whose": "challenger"
+      },
+      {
+        "at": 2600.0,
+        "from_quote": 0.05891321102703877,
+        "in_range": true,
+        "in_swing": false,
+        "input": "licence_per_host",
+        "label": "licence per host",
+        "range_high": 12000.0,
+        "range_low": 0.0,
+        "rises_with_input": 1.0,
+        "swing_high": null,
+        "swing_low": null,
+        "ties_at": 2753.174348670301,
+        "unit": "USD/host/year",
+        "whose": "challenger"
+      },
+      {
+        "at": 14.0,
+        "from_quote": 0.012016385051041618,
+        "in_range": true,
+        "in_swing": false,
+        "input": "hosts",
+        "label": "hosts in the fleet",
+        "range_high": 200.0,
+        "range_low": 4.0,
+        "rises_with_input": 1.0,
+        "swing_high": null,
+        "swing_low": null,
+        "ties_at": 14.168229390714583,
+        "unit": "host",
+        "whose": "challenger"
+      },
+      {
+        "at": 1.1339745962155614,
+        "from_quote": 0.01262828942112898,
+        "in_range": false,
+        "in_swing": false,
+        "input": "staff_fte",
+        "label": "engineers, full-time equivalent",
+        "range_high": null,
+        "range_low": null,
+        "rises_with_input": 1.0,
+        "swing_high": null,
+        "swing_low": null,
+        "ties_at": 1.1482947556127794,
+        "unit": "dimensionless",
+        "whose": "challenger"
+      },
+      {
+        "at": 0.13360389215887386,
+        "from_quote": -0.1873084341611693,
+        "in_range": true,
+        "in_swing": true,
+        "input": "electricity_price",
+        "label": "electricity price",
+        "range_high": 0.45,
+        "range_low": 0.04,
+        "rises_with_input": -1.0,
+        "swing_high": 0.20999999999999996,
+        "swing_low": 0.08499999999999996,
+        "ties_at": 0.10857875632075747,
+        "unit": "USD/kWh",
+        "whose": "shared"
+      },
+      {
+        "at": 1.4035898384862247,
+        "from_quote": -0.18730843416117113,
+        "in_range": true,
+        "in_swing": false,
+        "input": "pue",
+        "label": "PUE",
+        "range_high": 2.2,
+        "range_low": 1.0,
+        "rises_with_input": -1.0,
+        "swing_high": 1.5950806661517034,
+        "swing_low": 1.259544511501033,
+        "ties_at": 1.1406856236348388,
+        "unit": "dimensionless",
+        "whose": "shared"
+      },
+      {
+        "at": 1261.9168480353142,
+        "from_quote": -0.13541313362136784,
+        "in_range": false,
+        "in_swing": true,
+        "input": "network_price_per_host",
+        "label": "network price per host",
+        "range_high": null,
+        "range_low": null,
+        "rises_with_input": -1.0,
+        "swing_high": 1780.4764607319394,
+        "swing_low": 882.842712474619,
+        "ties_at": 1091.0367332732528,
+        "unit": "USD/host",
+        "whose": "shared"
+      },
+      {
+        "at": 1.338656042454521,
+        "from_quote": null,
+        "in_range": false,
+        "in_swing": false,
+        "input": "annual_growth",
+        "label": "annual growth factor",
+        "range_high": 2.0,
+        "range_low": 1.0,
+        "rises_with_input": 0.0,
+        "swing_high": 1.6,
+        "swing_low": 1.12,
+        "ties_at": null,
+        "unit": "dimensionless",
+        "whose": "shared"
+      }
+    ],
+    "designs": {
+      "challenger": {
+        "ceilings": {
+          "cache_fill": {
+            "label": "working set against memory",
+            "p_over_allowed": 0.47339,
+            "p_over_limit": 0.33379
+          },
+          "coordination_headroom": {
+            "label": "utilisation, counting coordination",
+            "p_over_allowed": 0.48461,
+            "p_over_limit": 0.32253
+          },
+          "disk_fill": {
+            "label": "disk fill at horizon",
+            "p_over_allowed": 0.41842,
+            "p_over_limit": 0.26907
+          },
+          "failure_headroom": {
+            "label": "utilisation with one host down",
+            "p_over_allowed": 0.47387,
+            "p_over_limit": 0.31145
+          },
+          "queueing_headroom": {
+            "label": "utilisation at the busy hour",
+            "p_over_allowed": 0.43984,
+            "p_over_limit": 0.28144
+          },
+          "scaling_loss": {
+            "label": "fraction of the fleet doing nothing useful",
+            "p_over_allowed": 0.0,
+            "p_over_limit": 0.0
+          }
+        },
+        "hosts": 14.0,
+        "quote": [
+          {
+            "input": "cores_per_host",
+            "label": "cores per host",
+            "provenance": "vendor_claim",
+            "unit": "core/host",
+            "value": 64.0
+          },
+          {
+            "input": "ram_per_host",
+            "label": "ram per host",
+            "provenance": "vendor_claim",
+            "unit": "GiB/host",
+            "value": 256.0
+          },
+          {
+            "input": "disk_per_host",
+            "label": "disk per host",
+            "provenance": "vendor_claim",
+            "unit": "TB/host",
+            "value": 8.0
+          },
+          {
+            "input": "host_price",
+            "label": "host price",
+            "provenance": "vendor_claim",
+            "unit": "USD/host",
+            "value": 26000.0
+          },
+          {
+            "input": "host_power",
+            "label": "host power",
+            "provenance": "vendor_claim",
+            "unit": "W/host",
+            "value": 700.0
+          },
+          {
+            "input": "licence_per_core",
+            "label": "licence per core",
+            "provenance": "vendor_claim",
+            "unit": "USD/core/year",
+            "value": 0.0
+          },
+          {
+            "input": "licence_per_host",
+            "label": "licence per host",
+            "provenance": "vendor_claim",
+            "unit": "USD/host/year",
+            "value": 2600.0
+          },
+          {
+            "input": "support_rate",
+            "label": "support rate",
+            "provenance": "vendor_claim",
+            "unit": "1/year",
+            "value": 0.13
+          },
+          {
+            "input": "hosts",
+            "label": "hosts in the fleet",
+            "provenance": "assumption",
+            "unit": "host",
+            "value": 14.0
+          },
+          {
+            "input": "migration_cost",
+            "label": "one-off cost of moving to this design",
+            "provenance": "assumption",
+            "unit": "USD",
+            "value": 250000.0
+          }
+        ],
+        "tco": {
+          "p5": 1616826.76838653,
+          "p50": 1999332.7223874242,
+          "p95": 2609452.695719168,
+          "point": 1991360.9663582335
+        },
+        "title": "The challenger's quote, held exactly"
+      },
+      "incumbent": {
+        "ceilings": {
+          "cache_fill": {
+            "label": "working set against memory",
+            "p_over_allowed": 0.49112,
+            "p_over_limit": 0.3503
+          },
+          "coordination_headroom": {
+            "label": "utilisation, counting coordination",
+            "p_over_allowed": 0.64428,
+            "p_over_limit": 0.48259
+          },
+          "disk_fill": {
+            "label": "disk fill at horizon",
+            "p_over_allowed": 0.43739,
+            "p_over_limit": 0.28629
+          },
+          "failure_headroom": {
+            "label": "utilisation with one host down",
+            "p_over_allowed": 0.46527,
+            "p_over_limit": 0.30348
+          },
+          "queueing_headroom": {
+            "label": "utilisation at the busy hour",
+            "p_over_allowed": 0.45644,
+            "p_over_limit": 0.29579
+          },
+          "scaling_loss": {
+            "label": "fraction of the fleet doing nothing useful",
+            "p_over_allowed": 0.01224,
+            "p_over_limit": 0.0
+          }
+        },
+        "hosts": 54.0,
+        "quote": [
+          {
+            "input": "cores_per_host",
+            "label": "cores per host",
+            "provenance": "vendor_claim",
+            "unit": "core/host",
+            "value": 16.0
+          },
+          {
+            "input": "ram_per_host",
+            "label": "ram per host",
+            "provenance": "vendor_claim",
+            "unit": "GiB/host",
+            "value": 64.0
+          },
+          {
+            "input": "disk_per_host",
+            "label": "disk per host",
+            "provenance": "vendor_claim",
+            "unit": "TB/host",
+            "value": 2.0
+          },
+          {
+            "input": "host_price",
+            "label": "host price",
+            "provenance": "vendor_claim",
+            "unit": "USD/host",
+            "value": 6538.348415311009
+          },
+          {
+            "input": "host_power",
+            "label": "host power",
+            "provenance": "vendor_claim",
+            "unit": "W/host",
+            "value": 310.45548849896676
+          },
+          {
+            "input": "licence_per_core",
+            "label": "licence per core",
+            "provenance": "vendor_claim",
+            "unit": "USD/core/year",
+            "value": 79.99999999999997
+          },
+          {
+            "input": "licence_per_host",
+            "label": "licence per host",
+            "provenance": "vendor_claim",
+            "unit": "USD/host/year",
+            "value": 0.0
+          },
+          {
+            "input": "support_rate",
+            "label": "support rate",
+            "provenance": "vendor_claim",
+            "unit": "1/year",
+            "value": 0.11795163177004572
+          },
+          {
+            "input": "hosts",
+            "label": "hosts in the fleet",
+            "provenance": "assumption",
+            "unit": "host",
+            "value": 54.0
+          },
+          {
+            "input": "migration_cost",
+            "label": "one-off cost of moving to this design",
+            "provenance": "assumption",
+            "unit": "USD",
+            "value": 0.0
+          }
+        ],
+        "tco": {
+          "p5": 1623448.566310489,
+          "p50": 2017960.6360967155,
+          "p95": 2630730.0331860376,
+          "point": 2002083.1707651545
+        },
+        "title": "The incumbent's quote, held exactly"
+      }
+    },
+    "lines": [
+      {
+        "challenger": 364000.0,
+        "difference": 10929.185573205468,
+        "incumbent": 353070.81442679453,
+        "label": "Hosts",
+        "node": "host_capex"
+      },
+      {
+        "challenger": 17666.835872494397,
+        "difference": -50476.67392141257,
+        "incumbent": 68143.50979390697,
+        "label": "Network",
+        "node": "network_capex"
+      },
+      {
+        "challenger": 250000.0,
+        "difference": 250000.0,
+        "incumbent": 0.0,
+        "label": "The move",
+        "node": "migration_cost"
+      },
+      {
+        "challenger": 80548.39144857001,
+        "difference": -57243.575042090946,
+        "incumbent": 137791.96649066094,
+        "label": "Energy",
+        "node": "annual_energy_cost"
+      },
+      {
+        "challenger": 182000.0,
+        "difference": -163599.99999999985,
+        "incumbent": 345599.9999999999,
+        "label": "Licences",
+        "node": "annual_licences"
+      },
+      {
+        "challenger": 248083.44331712136,
+        "difference": -331.1410166228234,
+        "incumbent": 248414.58433374416,
+        "label": "Support",
+        "node": "annual_support"
+      },
+      {
+        "challenger": 849062.2957200478,
+        "difference": 0.0,
+        "incumbent": 849062.2957200478,
+        "label": "People",
+        "node": "annual_staff_cost"
+      },
+      {
+        "challenger": 1991360.9663582335,
+        "difference": -10722.204406921053,
+        "incumbent": 2002083.1707651545,
+        "label": "Five-year total",
+        "node": "tco"
+      }
+    ],
+    "nodes": {
+      "difference": {
+        "histogram": {
+          "counts": [
+            1,
+            1,
+            1,
+            1,
+            2,
+            0,
+            2,
+            1,
+            3,
+            5,
+            6,
+            6,
+            8,
+            10,
+            10,
+            17,
+            14,
+            24,
+            36,
+            54,
+            50,
+            66,
+            104,
+            121,
+            134,
+            194,
+            254,
+            288,
+            418,
+            458,
+            660,
+            789,
+            989,
+            1220,
+            1528,
+            1740,
+            2164,
+            2672,
+            3044,
+            3431,
+            3920,
+            4467,
+            4723,
+            5056,
+            5390,
+            5505,
+            5696,
+            5830,
+            5716,
+            5477,
+            5178,
+            4873,
+            4299,
+            3683,
+            3046,
+            2347,
+            1634,
+            1156,
+            745,
+            392,
+            207,
+            106,
+            19,
+            9
+          ],
+          "edges": [
+            -222028.81190331327,
+            -217526.76673161951,
+            -213024.72155992576,
+            -208522.67638823198,
+            -204020.63121653823,
+            -199518.58604484447,
+            -195016.5408731507,
+            -190514.49570145694,
+            -186012.45052976318,
+            -181510.40535806943,
+            -177008.36018637568,
+            -172506.3150146819,
+            -168004.26984298814,
+            -163502.2246712944,
+            -159000.1794996006,
+            -154498.13432790685,
+            -149996.0891562131,
+            -145494.04398451935,
+            -140991.9988128256,
+            -136489.9536411318,
+            -131987.90846943806,
+            -127485.8632977443,
+            -122983.81812605054,
+            -118481.77295435677,
+            -113979.72778266302,
+            -109477.68261096926,
+            -104975.6374392755,
+            -100473.59226758173,
+            -95971.54709588797,
+            -91469.50192419422,
+            -86967.45675250044,
+            -82465.41158080669,
+            -77963.36640911293,
+            -73461.32123741918,
+            -68959.27606572543,
+            -64457.23089403164,
+            -59955.18572233789,
+            -55453.14055064414,
+            -50951.095378950355,
+            -46449.0502072566,
+            -41947.00503556285,
+            -37444.959863869095,
+            -32942.91469217534,
+            -28440.86952048156,
+            -23938.824348787806,
+            -19436.779177094053,
+            -14934.73400540027,
+            -10432.688833706517,
+            -5930.643662012764,
+            -1428.598490319011,
+            3073.446681374742,
+            7575.4918530685245,
+            12077.537024762278,
+            16579.58219645603,
+            21081.627368149813,
+            25583.672539843566,
+            30085.71771153732,
+            34587.76288323107,
+            39089.808054924826,
+            43591.85322661861,
+            48093.89839831239,
+            52595.943570006115,
+            57097.9887416999,
+            61600.03391339362,
+            66102.0790850874
+          ],
+          "spacing": "linear"
+        },
+        "label": "challenger minus incumbent, five-year total",
+        "point": -10722.204406921053,
+        "summary": {
+          "max": 66102.0790850874,
+          "mean": -17331.72463195011,
+          "min": -222028.81190331327,
+          "p25": -36812.16444892227,
+          "p5": -72388.60903175519,
+          "p50": -14620.54293863033,
+          "p75": 5374.631168438878,
+          "p95": 28521.479257173894,
+          "sd": 31264.694842785924
+        },
+        "unit": "USD"
+      }
+    },
+    "paired": {
+      "ends": {
+        "high": 986004.129408679,
+        "low": -1013903.2647995076,
+        "width": 1999907.3942081865
+      },
+      "independent": {
+        "p5": -734933.371005471,
+        "p95": 701940.4413485992,
+        "width": 1436873.8123540701
+      },
+      "share_challenger_cheaper": 0.68673,
+      "share_incumbent_cheaper": 0.31327,
+      "shared_inputs": 15,
+      "width": 100910.08828892908
+    },
+    "tornado": {
+      "difference": [
+        {
+          "base": -10722.204406921053,
+          "high": -43260.23361090105,
+          "kind": "input",
+          "label": "network price per host",
+          "low": 13063.537851729896,
+          "node": "network_price_per_host",
+          "span": 56323.771462630946
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -43454.68144379323,
+          "kind": "input",
+          "label": "electricity price",
+          "low": 10102.492412732448,
+          "node": "electricity_price",
+          "span": 53557.17385652568
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -18531.907257977873,
+          "kind": "input",
+          "label": "PUE",
+          "low": -4847.504221265437,
+          "node": "pue",
+          "span": 13684.403036712436
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -10722.204406921053,
+          "kind": "input",
+          "label": "annual growth factor",
+          "low": -10722.204406921053,
+          "node": "annual_growth",
+          "span": 0.0
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -10722.204406921053,
+          "kind": "input",
+          "label": "contention",
+          "low": -10722.204406921053,
+          "node": "contention",
+          "span": 0.0
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -10722.204406921053,
+          "kind": "input",
+          "label": "crosstalk",
+          "low": -10722.204406921053,
+          "node": "crosstalk",
+          "span": 0.0
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -10722.204406921053,
+          "kind": "input",
+          "label": "fully loaded salary",
+          "low": -10722.204406921053,
+          "node": "fully_loaded_salary",
+          "span": 0.0
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -10722.204406921053,
+          "kind": "input",
+          "label": "share of records touched in a busy hour",
+          "low": -10722.204406921053,
+          "node": "hot_fraction",
+          "span": 0.0
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -10722.204406921053,
+          "kind": "input",
+          "label": "index overhead",
+          "low": -10722.204406921053,
+          "node": "index_overhead",
+          "span": 0.0
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -10722.204406921053,
+          "kind": "input",
+          "label": "os reserve",
+          "low": -10722.204406921053,
+          "node": "os_reserve",
+          "span": 0.0
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -10722.204406921053,
+          "kind": "input",
+          "label": "peak request rate, day one",
+          "low": -10722.204406921053,
+          "node": "peak_request_rate_t0",
+          "span": 0.0
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -10722.204406921053,
+          "kind": "input",
+          "label": "peak-to-mean ratio",
+          "low": -10722.204406921053,
+          "node": "peak_to_mean",
+          "span": 0.0
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -10722.204406921053,
+          "kind": "measured",
+          "label": "record compression ratio",
+          "low": -10722.204406921053,
+          "node": "record_compression",
+          "span": 0.0
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -10722.204406921053,
+          "kind": "input",
+          "label": "CPU time per request",
+          "low": -10722.204406921053,
+          "node": "service_demand",
+          "span": 0.0
+        },
+        {
+          "base": -10722.204406921053,
+          "high": -10722.204406921053,
+          "kind": "input",
+          "label": "engineers, full-time equivalent",
+          "low": -10722.204406921053,
+          "node": "staff_fte",
+          "span": 0.0
+        }
+      ]
+    }
+  },
+  "target": "model",
+  "units": {
+    "break_even[0]": "USD",
+    "break_even[0].from_quote": "dimensionless",
+    "break_even[0].rises_with_input": "dimensionless",
+    "break_even[1]": "USD/host",
+    "break_even[1].from_quote": "dimensionless",
+    "break_even[1].rises_with_input": "dimensionless",
+    "break_even[2]": "USD/host/year",
+    "break_even[2].from_quote": "dimensionless",
+    "break_even[2].rises_with_input": "dimensionless",
+    "break_even[3]": "host",
+    "break_even[3].from_quote": "dimensionless",
+    "break_even[3].rises_with_input": "dimensionless",
+    "break_even[4]": "dimensionless",
+    "break_even[4].from_quote": "dimensionless",
+    "break_even[4].rises_with_input": "dimensionless",
+    "break_even[5]": "USD/kWh",
+    "break_even[5].from_quote": "dimensionless",
+    "break_even[5].rises_with_input": "dimensionless",
+    "break_even[6]": "dimensionless",
+    "break_even[6].from_quote": "dimensionless",
+    "break_even[6].rises_with_input": "dimensionless",
+    "break_even[7]": "USD/host",
+    "break_even[7].from_quote": "dimensionless",
+    "break_even[7].rises_with_input": "dimensionless",
+    "break_even[8]": "dimensionless",
+    "break_even[8].rises_with_input": "dimensionless",
+    "designs.challenger.ceilings": "dimensionless",
+    "designs.challenger.hosts": "host",
+    "designs.challenger.quote[0]": "core/host",
+    "designs.challenger.quote[1]": "GiB/host",
+    "designs.challenger.quote[2]": "TB/host",
+    "designs.challenger.quote[3]": "USD/host",
+    "designs.challenger.quote[4]": "W/host",
+    "designs.challenger.quote[5]": "USD/core/year",
+    "designs.challenger.quote[6]": "USD/host/year",
+    "designs.challenger.quote[7]": "1/year",
+    "designs.challenger.quote[8]": "host",
+    "designs.challenger.quote[9]": "USD",
+    "designs.challenger.tco": "USD",
+    "designs.incumbent.ceilings": "dimensionless",
+    "designs.incumbent.hosts": "host",
+    "designs.incumbent.quote[0]": "core/host",
+    "designs.incumbent.quote[1]": "GiB/host",
+    "designs.incumbent.quote[2]": "TB/host",
+    "designs.incumbent.quote[3]": "USD/host",
+    "designs.incumbent.quote[4]": "W/host",
+    "designs.incumbent.quote[5]": "USD/core/year",
+    "designs.incumbent.quote[6]": "USD/host/year",
+    "designs.incumbent.quote[7]": "1/year",
+    "designs.incumbent.quote[8]": "host",
+    "designs.incumbent.quote[9]": "USD",
+    "designs.incumbent.tco": "USD",
+    "lines": "USD",
+    "nodes.difference.histogram.counts": "dimensionless",
+    "nodes.difference.histogram.edges": "USD",
+    "nodes.difference.point": "USD",
+    "nodes.difference.summary": "USD",
+    "paired.ends": "USD",
+    "paired.independent": "USD",
+    "paired.share_challenger_cheaper": "dimensionless",
+    "paired.share_incumbent_cheaper": "dimensionless",
+    "paired.shared_inputs": "dimensionless",
+    "paired.width": "USD",
+    "tornado.difference": "USD"
+  }
+}

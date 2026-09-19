@@ -2,7 +2,7 @@
 
 | Input | Kind | annual opex at its p10 | at its p90 | Swing |
 |---|---|---:|---:|---:|
-| staff fte | input | $262,247 | $387,863 | $125,616 |
+| engineers, full-time equivalent | input | $262,247 | $387,863 | $125,616 |
 | licence per core | input | $281,614 | $385,294 | $103,680 |
 | fully loaded salary | input | $276,768 | $367,486 | $90,718 |
 | host price | input | $303,191 | $335,038 | $31,847 |

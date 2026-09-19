@@ -562,6 +562,38 @@ FIGURES: dict[str, Table | Diagram] = {
     "a-tco-for-finance-provenance": Table(
         render=tables.provenance_table, result="web_service-reference"
     ),
+    # -- ch22 Comparing two TCOs ------------------------------------------------------------------
+    # Every table here was chosen for this page. The two quote results exist and have viewers,
+    # but a reader is not shown the twenty-one-row outputs table twice: the comparison result
+    # holds the rows the argument needs, and the quotes are linked beside it.
+    "comparing-two-tcos-quotes": Table(
+        render=tables.comparison_quotes,
+        result="comparison",
+        also=("web_service-incumbent", "web_service-challenger"),
+    ),
+    "comparing-two-tcos-lines": Table(render=tables.comparison_lines, result="comparison"),
+    "comparing-two-tcos-difference": Diagram(
+        draw=diagrams.paired_difference,
+        result="comparison",
+        alt="The difference between the two five-year totals, future by future, with the tie "
+        "marked and the share of futures either side of it",
+    ),
+    "comparing-two-tcos-paired": Table(render=tables.comparison_paired, result="comparison"),
+    "comparing-two-tcos-ceilings": Table(
+        render=tables.comparison_ceilings,
+        result="comparison",
+        also=("web_service-incumbent", "web_service-challenger"),
+    ),
+    "comparing-two-tcos-break-even": Table(
+        render=tables.comparison_break_even, result="comparison"
+    ),
+    "comparing-two-tcos-tornado": Diagram(
+        draw=diagrams.tornado_chart,
+        result="comparison",
+        args=("difference",),
+        alt="Which shared input moves the difference between the two totals, and how many "
+        "do not move it at all",
+    ),
     # -- appendices ------------------------------------------------------------------------------------
     "appendix-a-dsl-reference-kinds": Table(
         render=tables.node_kinds_table, result="observability-reference"

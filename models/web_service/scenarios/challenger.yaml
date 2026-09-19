@@ -1,0 +1,24 @@
+scenario: challenger
+title: The challenger's quote, held exactly
+because: >-
+  A second quote for the same workload: denser hosts at a higher price each, drawing more power
+  each, licensed per host rather than per core, with a higher support rate, and a one-off cost
+  of moving that the incumbent does not pay. Every line is pinned, because a quote is a number.
+  The host count is what the model's own sizing rule recommends at the point estimate for this
+  host, so both designs are sized to the same margins by the same rule; the licence per core is
+  a declared zero because this quote has no such line; and the move is the team's estimate, not
+  the vendor's. Same seed and the same pinned inputs as the incumbent, so that the two totals
+  can be subtracted future by future (ch22).
+samples: 100000
+seed: 20260916
+overrides:
+  cores_per_host: 64
+  ram_per_host: 256
+  disk_per_host: 8
+  host_price: 26000
+  host_power: 700
+  licence_per_core: 0
+  licence_per_host: 2600
+  support_rate: 0.13
+  hosts: 14
+  migration_cost: 250000

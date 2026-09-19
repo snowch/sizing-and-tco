@@ -2,7 +2,7 @@
 
 | If this were known exactly | Kind | The interval would be | Most it could remove |
 |---|---|---:|---:|
-| staff fte | input | $576,897 | 18% |
+| engineers, full-time equivalent | input | $576,897 | 18% |
 | licence per core | input | $601,676 | 15% |
 | fully loaded salary | input | $628,255 | 11% |
 | host price | input | $629,576 | 11% |

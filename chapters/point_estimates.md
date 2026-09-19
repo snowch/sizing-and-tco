@@ -142,7 +142,7 @@ page does not tell you.
 written down. A quantity nobody thought of appears in no point estimate, no interval and no
 ceiling, and no amount of sampling will put it there. This book's observability model has a hole
 of exactly that shape, argued in [Appendix F](#appendix-f-observability-model).
-[ch22](#what-the-model-got-wrong) is a post-mortem on a model that was confidently wrong for this
+[ch23](#what-the-model-got-wrong) is a post-mortem on a model that was confidently wrong for this
 reason.
 
 **Whether the spread anybody declared is the right spread.** The interval above faithfully reports
