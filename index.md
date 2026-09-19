@@ -74,7 +74,13 @@ file is where they can be. A file also diffs and reviews like code.
 The toolkit checks the units of every formula. A rate times a duration is an amount, so
 `requests per second × seconds = requests`. A formula that multiplies a rate by a count of periods
 instead is refused. A spreadsheet accepts that calculation without complaining. The toolkit
-refuses it.
+refuses it. Here is the check, drawn: in the top row the seconds cancel; in the bottom row nothing
+does.
+
+```{image} chapters/_figures/what-a-workload-is-units.svg
+:alt: A rate times a duration is an amount; a rate times a plain number is still a rate
+:width: 100%
+```
 
 [ch02](#what-a-workload-is) writes the first node, at four lines a number. The **build**, the set
 of checks that turns these files into this book, refuses a node that leaves out its unit or its

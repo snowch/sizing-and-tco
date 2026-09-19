@@ -735,3 +735,88 @@ def distribution_shapes(_result: str | None = None) -> str:
             f"{_esc(caption)}</text>"
         )
     return _svg(width, height, "".join(body), "The four distributions this book uses")
+
+
+# -- the unit check, drawn -----------------------------------------------------------------------
+
+
+def unit_cancellation(_result: str | None = None) -> str:
+    """Why a rate times a duration is an amount, and a rate times a plain number is not.
+
+    Two rows of the same arithmetic. In the first the seconds cancel, which is what makes the
+    answer an amount; in the second nothing cancels, so the answer is still a rate, and that is
+    the formula the unit check refuses. Nothing here is measured: the picture is the rule that
+    ``sizing/units.py`` applies to every formula, drawn once so a reader can see the cancelling.
+    """
+    width, height = 560.0, 186.0
+    ink, muted = "#263238", "#90a4ae"
+    fill, stroke = KIND_FILL["derived"], KIND_STROKE["derived"]
+    size = 13.0
+
+    def text(x: float, y: float, label: str, colour: str = ink, anchor: str = "middle") -> str:
+        return (
+            f'<text x="{x:.0f}" y="{y:.0f}" font-size="{size:.0f}" fill="{colour}" '
+            f'text-anchor="{anchor}">{_esc(label)}</text>'
+        )
+
+    def strike(x: float, y: float, label: str) -> str:
+        half = len(label) * size * 0.52 / 2 + 3
+        return (
+            f'<line x1="{x - half:.0f}" y1="{y + 4:.0f}" x2="{x + half:.0f}" y2="{y - 11:.0f}" '
+            f'stroke="{ink}" stroke-width="1.4"/>'
+        )
+
+    def fraction(x: float, y: float, top: str, bottom: str, cancel_bottom: bool) -> str:
+        bar = max(len(top), len(bottom)) * size * 0.52 / 2 + 6
+        colour = muted if cancel_bottom else ink
+        parts = [
+            text(x, y - 6, top),
+            f'<line x1="{x - bar:.0f}" y1="{y:.0f}" x2="{x + bar:.0f}" y2="{y:.0f}" '
+            f'stroke="{ink}" stroke-width="1.2"/>',
+            text(x, y + 16, bottom, colour),
+        ]
+        if cancel_bottom:
+            parts.append(strike(x, y + 16, bottom))
+        return "".join(parts)
+
+    def box(x: float, y: float, label: str, cancelled: bool = False) -> str:
+        w = len(label) * size * 0.52 + 24
+        colour = muted if cancelled else ink
+        parts = [
+            f'<rect x="{x - w / 2:.0f}" y="{y - 16:.0f}" width="{w:.0f}" height="26" rx="4" '
+            f'fill="{fill}" stroke="{stroke}"/>',
+            text(x, y + 2, label, colour),
+        ]
+        if cancelled:
+            parts.append(strike(x, y + 2, label))
+        return "".join(parts)
+
+    def row(y: float, factor: str, cancel: bool, answer_top: str, answer_bottom: str | None) -> str:
+        parts = [
+            fraction(96, y, "requests", "second", cancel),
+            text(168, y + 5, "×"),
+            box(238, y, factor, cancel),
+            text(312, y + 5, "="),
+        ]
+        if answer_bottom is None:
+            parts.append(box(392, y, answer_top))
+        else:
+            parts.append(fraction(392, y, answer_top, answer_bottom, False))
+        return "".join(parts)
+
+    body = [
+        f'<text x="{MARGIN}" y="20" font-size="11.5" fill="{ink}">The unit check, drawn: '
+        "what a rate becomes when it is multiplied</text>",
+        row(62, "seconds", True, "requests", None),
+        f'<text x="{MARGIN}" y="98" font-size="11.5" fill="{muted}">The seconds cancel. '
+        "A rate times a duration is an amount.</text>",
+        row(136, "periods", False, "requests", "second"),
+        f'<text x="{MARGIN}" y="172" font-size="11.5" fill="{muted}">A plain number cancels '
+        "nothing. The answer is still a rate, and the check refuses it.</text>",
+    ]
+    return _svg(
+        width,
+        height,
+        "".join(body),
+        "A rate times a duration is an amount; a rate times a plain number is still a rate",
+    )
