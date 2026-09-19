@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "f9c144a7eb6e201f",
+  "code_fingerprint": "e08fbd954e7a4c8d",
   "code_sources": [
     "bench/measure.py",
     "bench/run_corpus.py"
@@ -8,8 +8,8 @@
     "byte_aligned": "a bit-packed production format achieves materially less per sample; this figure belongs to this encoder",
     "what_moves_it_most": "how fast the values move. A flat gauge costs about a byte; a noisy one costs most of a float"
   },
-  "generated_at": "2026-09-19T09:37:52+00:00",
-  "git_revision": "1ce214f",
+  "generated_at": "2026-09-19T12:34:09+00:00",
+  "git_revision": "c264eea",
   "kind": "measurement",
   "name": "metrics-sample-bytes",
   "produced_by": {

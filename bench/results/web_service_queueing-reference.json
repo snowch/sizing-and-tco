@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "c8f41d6ba3088226",
+  "code_fingerprint": "c099f79f1137f891",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/05-queueing/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T11:32:03+00:00",
-  "git_revision": "74b82b3",
+  "generated_at": "2026-09-19T12:34:31+00:00",
+  "git_revision": "c264eea",
   "kind": "model",
   "name": "web_service_queueing-reference",
   "produced_by": {
@@ -65,7 +65,7 @@
       "utilisation": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-19T11:32:03+00:00",
+    "generated_at": "2026-09-19T12:34:31+00:00",
     "model": "web_service_queueing",
     "nodes": {
       "annual_growth": {

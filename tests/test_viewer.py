@@ -147,9 +147,9 @@ def test_a_resample_with_nothing_held_reproduces_the_stamp(result_name):
 def test_holding_an_input_takes_it_out_of_the_draw():
     from sizing.playground.driver import resample
 
-    model, scenario = _texts("storage_cluster-reference")
-    # annual_growth is named in a declared correlation; drive_price is one side of a pair.
-    for name, value in (("annual_growth", 1.6), ("drive_price", 10.0)):
+    model, scenario = _texts("web_service-reference")
+    # annual_growth feeds every chain; host_price is one side of a declared correlation.
+    for name, value in (("annual_growth", 1.6), ("host_price", 9000.0)):
         fresh = json.loads(resample(model, scenario, {name: value}))
         held = fresh["nodes"][name]
         assert held["point"] == value

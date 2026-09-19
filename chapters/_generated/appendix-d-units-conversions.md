@@ -8,8 +8,6 @@
 | `observability` | metrics stored | day * megabyte / second | TB | x0.0864 |
 | `observability` | traces ingest | byte / second | MB/s | x1e-06 |
 | `observability` | traces stored | day * megabyte / second | TB | x0.0864 |
-| `storage_cluster` | cost per usable TB per month | USD / terabyte / year | USD / TB / month | x0.0833333 |
-| `storage_cluster` | facility power | watt | kW | x0.001 |
 | `web_service` | cost per million requests | USD / request | USD/megarequest | x1e+06 |
 | `web_service` | cost per stored TB per month | USD / terabyte / year | USD / TB / month | x0.0833333 |
 | `web_service` | facility power | watt | kW | x0.001 |

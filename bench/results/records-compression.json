@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "f9c144a7eb6e201f",
+  "code_fingerprint": "e08fbd954e7a4c8d",
   "code_sources": [
     "bench/measure.py",
     "bench/run_corpus.py"
@@ -10,8 +10,8 @@
     "to_use_it": "re-run bench.measure.application_records against a sample of your own records, or replace the generator with one that reads them",
     "what_this_is_about": "this corpus and this codec, and nothing else"
   },
-  "generated_at": "2026-09-19T09:37:48+00:00",
-  "git_revision": "1ce214f",
+  "generated_at": "2026-09-19T12:34:06+00:00",
+  "git_revision": "c264eea",
   "kind": "measurement",
   "name": "records-compression",
   "produced_by": {
