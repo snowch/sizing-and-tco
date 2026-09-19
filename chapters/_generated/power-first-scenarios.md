@@ -2,15 +2,31 @@
 
 | Output | Reference scenario | Sized from the power budget inwards |
 |---|---:|---:|
-| nodes the model recommends | 121<br>*46 to 379* | 121<br>*46 to 379* |
-| nodes purchased | 121 | 75 |
-| five-year total cost of ownership | $4,150,036<br>*$3,207,411 to $5,732,007* | $2,745,514<br>*$2,132,131 to $3,770,266* |
-| cost per usable TB per month | $6.53<br>*$2.37 to $15.87* | $4.32<br>*$1.57 to $10.50* |
-| capex | $2,025,596<br>*$1,475,272 to $2,859,544* | $1,255,535<br>*$914,425 to $1,772,445* |
-| annual opex | $424,888<br>*$318,062 to $611,522* | $297,996<br>*$221,849 to $428,378* |
-| fill level at horizon | 0.746<br>*0.238 to 2.35* | 1.20<br>*0.383 to 3.79* |
-| read utilisation at peak | 0.546<br>*0.267 to 1.02* | 0.881<br>*0.430 to 1.65* |
-| *fill level at horizon* — over its limit | 34% | 61% |
-| *read utilisation at peak* — over its limit | 6% | 39% |
+| hosts the model recommends | 54<br>*20 to 230* | 54<br>*20 to 230* |
+| hosts in the fleet | 54 | 36 |
+| five-year total cost of ownership | $2,002,083<br>*$1,508,230 to $2,923,724* | $1,617,743<br>*$1,189,939 to $2,388,434* |
+| cost per million requests | $1.82<br>*$0.55 to $5.98* | $1.47<br>*$0.44 to $4.84* |
+| cost per stored TB per month | $839.64<br>*$305.33 to $2,108* | $678.46<br>*$244.15 to $1,707* |
+| capex | $421,214<br>*$272,130 to $658,773* | $280,810<br>*$181,420 to $439,182* |
+| annual opex | $316,174<br>*$227,660 to $484,257* | $267,387<br>*$186,962 to $413,526* |
+| utilisation at the busy hour | 0.644<br>*0.156 to 2.48* | 0.966<br>*0.234 to 3.73* |
+| utilisation with one host down | 0.656<br>*0.159 to 2.53* | 0.993<br>*0.241 to 3.83* |
+| working set against memory | 0.746<br>*0.194 to 2.67* | 1.12<br>*0.290 to 4.01* |
+| disk fill at horizon | 0.670<br>*0.213 to 2.12* | 1.00<br>*0.320 to 3.18* |
+| fraction of the fleet doing nothing useful | 0.321<br>*0.213 to 0.457* | 0.224<br>*0.139 to 0.337* |
+| utilisation, counting coordination | 0.948<br>*0.233 to 3.81* | 1.25<br>*0.305 to 4.91* |
+| utilisation | 0.644<br>*0.156 to 2.48* | 0.966<br>*0.234 to 3.73* |
+| residence time | 0.0367<br>*0.0128 to 0.857* | 0.383<br>*0.0145 to 0.877* |
+| time spent queueing | 0.0236<br>*0.0021 to 0.839* | 0.370<br>*0.0035 to 0.859* |
+| requests in the system | 1,562<br>*160 to 107,336* | 16,296<br>*176 to 107,336* |
+| requests in flight, if none waited | 556<br>*135 to 2,147* | 556<br>*135 to 2,147* |
+| how much the queueing view understated it | 1.47<br>*1.27 to 1.84* | 1.29<br>*1.16 to 1.51* |
+| fraction of the peak already built | 0.328<br>*0.186 to 0.584* | 0.219<br>*0.124 to 0.389* |
+| *working set against memory* — over its limit | 35% | 55% |
+| *utilisation, counting coordination* — over its limit | 48% | 61% |
+| *disk fill at horizon* — over its limit | 29% | 51% |
+| *utilisation with one host down* — over its limit | 30% | 49% |
+| *utilisation at the busy hour* — over its limit | 30% | 48% |
+| *fraction of the fleet doing nothing useful* — over its limit | 0% | 0% |
 
-*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) and [`storage_cluster-power_first`](/models/storage_cluster-power_first.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) and [`web_service-power_first`](/models/web_service-power_first.html) · every input on a slider*

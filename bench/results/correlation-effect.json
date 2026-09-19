@@ -1,18 +1,18 @@
 {
-  "code_fingerprint": "4029f7adcc8ed0f3",
+  "code_fingerprint": "49168dd935e7b3d6",
   "code_sources": [
     "bench/run_uncertainty.py"
   ],
   "conditions": {
     "what_widening_means": "assuming independence is not neutral. It is a claim, and where it is wrong it makes the interval narrower than the evidence supports \u2014 which is the direction that gets a plan approved"
   },
-  "generated_at": "2026-09-19T09:48:05+00:00",
-  "git_revision": "342807a",
+  "generated_at": "2026-09-19T11:02:07+00:00",
+  "git_revision": "4ee81f5",
   "kind": "measurement",
   "name": "correlation-effect",
   "produced_by": {
     "method": "sampled with and without each model's declared correlations",
-    "model": "storage_cluster and observability",
+    "model": "web_service and observability",
     "scenario": "reference",
     "seed": 20260916,
     "stack": "sizing.mc \u2014 Iman-Conover rank correlation"
@@ -28,18 +28,18 @@
   "summary": {
     "rows": [
       {
-        "change": 0.08448143718683743,
-        "declared": 1262298.0384286565,
-        "independent": 1163964.6333671494,
-        "model": "storage_cluster",
+        "change": 0.019749334972917865,
+        "declared": 707747.0574413185,
+        "independent": 694040.224561769,
+        "model": "web_service",
         "output": "tco"
       },
       {
-        "change": 0.03722161657066514,
-        "declared": 166.5,
-        "independent": 160.52499999999418,
-        "model": "storage_cluster",
-        "output": "nodes_recommended"
+        "change": 0.02941176470588225,
+        "declared": 105.0,
+        "independent": 102.0,
+        "model": "web_service",
+        "output": "hosts_recommended"
       },
       {
         "change": 0.171909110848685,

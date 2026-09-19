@@ -2,8 +2,6 @@
 
 | Ceiling | At the plan | Headroom | Allowed | Limit | Verdict | Over allowed | Over limit |
 |---|---:|---:|---:|---:|---|---:|---:|
-| utilisation, counting coordination | 0.89 | 30% | 0.70 | 1.00 | into the margin | 71% | 43% |
-| utilisation | 0.59 | 30% | 0.70 | 1.00 | ok | 38% | 16% |
-| fraction of the tier doing nothing useful | 0.37 | 50% | 0.50 | 1.00 | ok | 7% | 0% |
+| utilisation at the busy hour | 0.64 | 30% | 0.70 | 1.00 | ok | 46% | 30% |
 
-*Source — [`service_tier-reference`](/models/service_tier-reference.html) · every input on a slider*
+*Source — [`web_service_queueing-reference`](/models/web_service_queueing-reference.html) · every input on a slider*

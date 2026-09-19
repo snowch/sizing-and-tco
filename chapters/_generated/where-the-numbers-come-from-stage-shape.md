@@ -3,7 +3,7 @@
 | | |
 |---|---:|
 | `input` nodes | 7 |
-| `derived` nodes | 3 |
+| `derived` nodes | 4 |
 | **What the build calls it** | **cost model** |
 
-*Source — [`storage_cluster_provenance-reference`](/models/storage_cluster_provenance-reference.html) · every input on a slider*
+*Source — [`web_service_provenance-reference`](/models/web_service_provenance-reference.html) · every input on a slider*

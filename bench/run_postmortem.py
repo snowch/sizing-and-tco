@@ -3,9 +3,9 @@
     python3 -m bench.run_postmortem            # run it and write the result
     python3 -m bench.run_postmortem --check    # re-run and fail if a published figure moved
 
-ch12 bought a cluster and ch13 reported that it runs out of space in about a third of the futures
-the model thinks are plausible. This runner asks the question somebody asks three years later,
-when one of those futures has happened:
+ch12 bought a fleet and ch13 reported how often it goes over the queueing knee at the busy hour,
+across the futures the model thinks are plausible. This runner asks the question somebody asks
+three years later, when one of those futures has happened:
 
     **what went wrong, and could the model have told us?**
 
@@ -16,7 +16,7 @@ attributing the miss — and it can be done without a single new measurement.
 ## Conditioning, rather than hindsight
 
 The sampled model already contains the futures where the design failed. They are the draws where
-the capacity ceiling came out over its limit. So the post-mortem is a filter: take those draws,
+the queueing ceiling came out over its limit. So the post-mortem is a filter: take those draws,
 look at what each input had been doing in them, and compare that against what it does across all
 the futures.
 
@@ -52,13 +52,14 @@ from sizing.evaluate import evaluate, sampled_inputs
 
 SOURCES = ["bench/run_postmortem.py"]
 
-STORAGE = "models/storage_cluster/model.yaml"
-STORAGE_REFERENCE = "models/storage_cluster/scenarios/reference.yaml"
+WEB_SERVICE = "models/web_service/model.yaml"
+REFERENCE = "models/web_service/scenarios/reference.yaml"
 OBSERVABILITY = "models/observability/model.yaml"
 OBSERVABILITY_REFERENCE = "models/observability/scenarios/reference.yaml"
 
-#: The failure a post-mortem is about: the design was asked to hold more than it could.
-FAILED = "fill_level"
+#: The failure a post-mortem is about: the fleet was asked to serve more than it could at the
+#: busy hour, and the queue did what queues do.
+FAILED = "queueing_headroom"
 
 
 def attribute(model_path: str, scenario_path: str, ceiling: str) -> dict:
@@ -125,7 +126,7 @@ def attribute(model_path: str, scenario_path: str, ceiling: str) -> dict:
 
 def postmortem(write: bool = True) -> dict:
     """The attribution on a model that is complete, and on one that is known to be missing a term."""
-    complete = attribute(STORAGE, STORAGE_REFERENCE, FAILED)
+    complete = attribute(WEB_SERVICE, REFERENCE, FAILED)
     # The same method on a model with a hole in it. `known_ingest` excludes traces entirely,
     # because spans per request has never been measured — so every figure this attribution
     # produces is about the two chains that are present, and it will never mention the third.
@@ -139,9 +140,9 @@ def postmortem(write: bool = True) -> dict:
         produced_by={
             "method": "the sampled futures filtered to the ones where a ceiling was breached, "
             "and each input's median in them compared against its median overall",
-            "model": "storage_cluster and observability",
+            "model": "web_service and observability",
             "scenario": "reference",
-            "seed": load_scenario(STORAGE_REFERENCE).seed,
+            "seed": load_scenario(REFERENCE).seed,
             "stack": "sizing.evaluate",
         },
         summary={
@@ -171,9 +172,10 @@ def postmortem(write: bool = True) -> dict:
             "medians_not_means": "these inputs are skewed, and a shift in means would mostly be "
             "the tail moving rather than the typical case",
             "read_the_base_rate": "`something_extreme_share` must be read against "
-            "`something_extreme_everywhere`. A model with eight uncertain inputs has one of them "
-            "beyond its own p90 in most of its futures, failure or not, and a post-mortem that "
-            "does not say so has discovered the number of inputs",
+            "`something_extreme_everywhere`. Even with three uncertain inputs feeding a ceiling, "
+            "one of them is beyond its own p90 in a fair share of all futures, failure or not, "
+            "and the share rises with every input added. A post-mortem that does not say so has "
+            "discovered the number of inputs",
         },
         code_sources=SOURCES,
         write=write,

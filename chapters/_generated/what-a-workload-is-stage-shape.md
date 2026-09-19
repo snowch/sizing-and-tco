@@ -3,7 +3,7 @@
 | | |
 |---|---:|
 | `input` nodes | 5 |
-| `derived` nodes | 2 |
+| `derived` nodes | 3 |
 | **What the build calls it** | **cost model** |
 
-*Source — [`storage_cluster_demand-reference`](/models/storage_cluster_demand-reference.html) · every input on a slider*
+*Source — [`web_service_demand-reference`](/models/web_service_demand-reference.html) · every input on a slider*

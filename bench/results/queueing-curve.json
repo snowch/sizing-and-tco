@@ -1,19 +1,19 @@
 {
-  "code_fingerprint": "86061949e1c505e9",
+  "code_fingerprint": "9895cbb83056b11c",
   "code_sources": [
     "bench/run_curves.py"
   ],
   "conditions": {
-    "one_slice": "the arrival rate moves and nothing else does. A tier whose service demand also rises with load - which is most of them - is on a steeper curve than this one",
+    "one_slice": "the request rate moves and nothing else does. A service whose demand per request also rises with load - which is most of them - is on a steeper curve than this one",
     "the_cap": "the model clamps utilisation before it divides by zero; past that point the formula has stopped describing a queue"
   },
-  "generated_at": "2026-09-19T09:48:06+00:00",
-  "git_revision": "342807a",
+  "generated_at": "2026-09-19T11:03:21+00:00",
+  "git_revision": "4ee81f5",
   "kind": "measurement",
   "name": "queueing-curve",
   "produced_by": {
-    "method": "arrival_rate swept to hit each utilisation, everything else held still",
-    "model": "service_tier",
+    "method": "the busy-hour request rate swept to hit each utilisation, everything else held still",
+    "model": "web_service",
     "scenario": "reference",
     "seed": 20260916,
     "stack": "sizing.evaluate"
@@ -29,116 +29,116 @@
   "summary": {
     "curve": [
       {
-        "arrival_rate": 938.8707328414534,
-        "concurrency": 7.111111111111112,
-        "inflation": 1.111111111111111,
-        "residence_time": 0.0075741109636995796,
+        "arrival_rate": 6609.649883794898,
+        "concurrency": 96.00000000000001,
+        "inflation": 1.1111111111111112,
+        "residence_time": 0.014524218633027212,
         "utilisation": 0.1,
-        "waiting_time": 0.0007574110963699575
+        "waiting_time": 0.0014524218633027216
       },
       {
-        "arrival_rate": 1877.741465682907,
-        "concurrency": 16.0,
-        "inflation": 1.25,
-        "residence_time": 0.008520874834162027,
+        "arrival_rate": 13219.299767589797,
+        "concurrency": 216.0,
+        "inflation": 1.2499999999999998,
+        "residence_time": 0.01633974596215561,
         "utilisation": 0.2,
-        "waiting_time": 0.001704174966832405
+        "waiting_time": 0.0032679491924311205
       },
       {
-        "arrival_rate": 2816.61219852436,
-        "concurrency": 27.428571428571427,
+        "arrival_rate": 19828.949651384697,
+        "concurrency": 370.28571428571433,
         "inflation": 1.4285714285714286,
-        "residence_time": 0.009738142667613746,
-        "utilisation": 0.3,
-        "waiting_time": 0.0029214428002841235
+        "residence_time": 0.0186739953853207,
+        "utilisation": 0.30000000000000004,
+        "waiting_time": 0.00560219861559621
       },
       {
-        "arrival_rate": 3755.482931365814,
-        "concurrency": 42.66666666666667,
-        "inflation": 1.6666666666666667,
-        "residence_time": 0.01136116644554937,
-        "utilisation": 0.4,
-        "waiting_time": 0.004544466578219749
-      },
-      {
-        "arrival_rate": 4694.353664207267,
-        "concurrency": 64.0,
-        "inflation": 2.0,
-        "residence_time": 0.013633399734659244,
-        "utilisation": 0.5,
-        "waiting_time": 0.006816699867329622
-      },
-      {
-        "arrival_rate": 5633.22439704872,
-        "concurrency": 95.99999999999999,
-        "inflation": 2.5,
-        "residence_time": 0.017041749668324054,
-        "utilisation": 0.6,
-        "waiting_time": 0.010225049800994432
-      },
-      {
-        "arrival_rate": 6572.095129890173,
-        "concurrency": 149.33333333333331,
-        "inflation": 3.333333333333333,
-        "residence_time": 0.022722332891098738,
-        "utilisation": 0.7,
-        "waiting_time": 0.015905633023769114
-      },
-      {
-        "arrival_rate": 7041.5304963109,
-        "concurrency": 192.0,
-        "inflation": 4.0,
-        "residence_time": 0.027266799469318488,
-        "utilisation": 0.75,
-        "waiting_time": 0.020450099601988868
-      },
-      {
-        "arrival_rate": 7510.965862731628,
-        "concurrency": 256.00000000000006,
-        "inflation": 5.000000000000001,
-        "residence_time": 0.034083499336648115,
-        "utilisation": 0.8,
-        "waiting_time": 0.027266799469318495
-      },
-      {
-        "arrival_rate": 7980.401229152353,
-        "concurrency": 362.66666666666663,
-        "inflation": 6.666666666666666,
-        "residence_time": 0.045444665782197476,
-        "utilisation": 0.85,
-        "waiting_time": 0.038627965914867855
-      },
-      {
-        "arrival_rate": 8449.83659557308,
+        "arrival_rate": 26438.599535179594,
         "concurrency": 576.0000000000001,
-        "inflation": 10.000000000000002,
-        "residence_time": 0.06816699867329623,
+        "inflation": 1.6666666666666667,
+        "residence_time": 0.02178632794954082,
+        "utilisation": 0.4,
+        "waiting_time": 0.008714531179816328
+      },
+      {
+        "arrival_rate": 33048.24941897449,
+        "concurrency": 864.0,
+        "inflation": 2.0,
+        "residence_time": 0.02614359353944898,
+        "utilisation": 0.5,
+        "waiting_time": 0.01307179676972449
+      },
+      {
+        "arrival_rate": 39657.899302769394,
+        "concurrency": 1296.0000000000007,
+        "inflation": 2.500000000000001,
+        "residence_time": 0.03267949192431124,
+        "utilisation": 0.6000000000000001,
+        "waiting_time": 0.019607695154586748
+      },
+      {
+        "arrival_rate": 46267.54918656428,
+        "concurrency": 2015.9999999999998,
+        "inflation": 3.333333333333333,
+        "residence_time": 0.04357265589908163,
+        "utilisation": 0.7,
+        "waiting_time": 0.03050085912935714
+      },
+      {
+        "arrival_rate": 49572.374128461735,
+        "concurrency": 2592.0,
+        "inflation": 4.0,
+        "residence_time": 0.05228718707889796,
+        "utilisation": 0.75,
+        "waiting_time": 0.039215390309173474
+      },
+      {
+        "arrival_rate": 52877.19907035919,
+        "concurrency": 3456.0000000000014,
+        "inflation": 5.000000000000002,
+        "residence_time": 0.06535898384862247,
+        "utilisation": 0.8,
+        "waiting_time": 0.052287187078897984
+      },
+      {
+        "arrival_rate": 56182.02401225663,
+        "concurrency": 4895.999999999999,
+        "inflation": 6.666666666666666,
+        "residence_time": 0.08714531179816326,
+        "utilisation": 0.85,
+        "waiting_time": 0.07407351502843877
+      },
+      {
+        "arrival_rate": 59486.848954154084,
+        "concurrency": 7776.000000000003,
+        "inflation": 10.000000000000004,
+        "residence_time": 0.13071796769724495,
         "utilisation": 0.9,
-        "waiting_time": 0.06135029880596661
+        "waiting_time": 0.11764617092752046
       },
       {
-        "arrival_rate": 8731.497815425517,
-        "concurrency": 850.285714285715,
-        "inflation": 14.285714285714295,
-        "residence_time": 0.09738142667613753,
-        "utilisation": 0.93,
-        "waiting_time": 0.09056472680880791
+        "arrival_rate": 61469.74391929256,
+        "concurrency": 11478.85714285717,
+        "inflation": 14.285714285714318,
+        "residence_time": 0.18673995385320744,
+        "utilisation": 0.9300000000000002,
+        "waiting_time": 0.17366815708348293
       },
       {
-        "arrival_rate": 8919.271961993807,
-        "concurrency": 1216.0000000000018,
-        "inflation": 20.00000000000003,
-        "residence_time": 0.13633399734659263,
-        "utilisation": 0.9500000000000001,
-        "waiting_time": 0.129517297479263
+        "arrival_rate": 62791.67389605152,
+        "concurrency": 16415.99999999998,
+        "inflation": 19.99999999999998,
+        "residence_time": 0.26143593539448956,
+        "utilisation": 0.95,
+        "waiting_time": 0.24836413862476506
       },
       {
-        "arrival_rate": 9107.046108562097,
-        "concurrency": 2069.3333333333317,
-        "inflation": 33.33333333333331,
-        "residence_time": 0.2272233289109872,
-        "utilisation": 0.97,
-        "waiting_time": 0.22040662904365757
+        "arrival_rate": 64113.603872810505,
+        "concurrency": 27935.99999999987,
+        "inflation": 33.33333333333318,
+        "residence_time": 0.43572655899081436,
+        "utilisation": 0.9699999999999999,
+        "waiting_time": 0.4226547622210899
       }
     ],
     "utilisations": [

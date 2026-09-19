@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "86061949e1c505e9",
+  "code_fingerprint": "9895cbb83056b11c",
   "code_sources": [
     "bench/run_curves.py"
   ],
@@ -7,13 +7,13 @@
     "coefficients_are_assumptions": "contention and crosstalk are fitted in practice, and in this model they are assumptions. The shape is the claim, not the position",
     "swept_and_predicted": "the peak found by sweeping and the peak the two coefficients predict are computed independently and must agree; if they ever stop agreeing, one of them is wrong"
   },
-  "generated_at": "2026-09-19T09:48:06+00:00",
-  "git_revision": "342807a",
+  "generated_at": "2026-09-19T11:03:21+00:00",
+  "git_revision": "4ee81f5",
   "kind": "measurement",
   "name": "scaling-curve",
   "produced_by": {
-    "method": "the node count swept from one to four hundred",
-    "model": "service_tier",
+    "method": "the host count swept from two to four hundred",
+    "model": "web_service",
     "scenario": "reference",
     "seed": 20260916,
     "stack": "sizing.evaluate"
@@ -29,116 +29,109 @@
   "summary": {
     "curve": [
       {
-        "achievable_throughput": 152.91796067500633,
-        "linear_throughput": 152.91796067500633,
-        "nodes": 1.0,
-        "scaling_efficiency": 1.0,
-        "throughput_per_node": 152.91796067500633
+        "achievable_throughput": 2430.974362528893,
+        "hosts": 2.0,
+        "linear_throughput": 2448.018475479592,
+        "scaling_efficiency": 0.9930375881058823,
+        "throughput_per_host": 1215.4871812644465
       },
       {
-        "achievable_throughput": 303.7065656935569,
-        "linear_throughput": 305.83592135001265,
-        "nodes": 2.0,
-        "scaling_efficiency": 0.9930375881058824,
-        "throughput_per_node": 151.85328284677846
-      },
-      {
-        "achievable_throughput": 598.9418517797684,
-        "linear_throughput": 611.6718427000253,
-        "nodes": 4.0,
+        "achievable_throughput": 4794.141618233334,
+        "hosts": 4.0,
+        "linear_throughput": 4896.036950959184,
         "scaling_efficiency": 0.9791882018566287,
-        "throughput_per_node": 149.7354629449421
+        "throughput_per_host": 1198.5354045583335
       },
       {
-        "achievable_throughput": 1164.3997142029757,
-        "linear_throughput": 1223.3436854000506,
-        "nodes": 8.0,
-        "scaling_efficiency": 0.9518173250080583,
-        "throughput_per_node": 145.54996427537196
+        "achievable_throughput": 9320.26558760516,
+        "hosts": 8.0,
+        "linear_throughput": 9792.073901918367,
+        "scaling_efficiency": 0.9518173250080582,
+        "throughput_per_host": 1165.033198450645
       },
       {
-        "achievable_throughput": 2198.5101036346878,
-        "linear_throughput": 2446.6873708001012,
-        "nodes": 16.0,
-        "scaling_efficiency": 0.8985660080125987,
-        "throughput_per_node": 137.40688147716799
+        "achievable_throughput": 17597.649512422275,
+        "hosts": 16.0,
+        "linear_throughput": 19584.147803836735,
+        "scaling_efficiency": 0.8985660080125986,
+        "throughput_per_host": 1099.8530945263922
       },
       {
-        "achievable_throughput": 3909.9502447949667,
-        "linear_throughput": 4893.3747416002025,
-        "nodes": 32.0,
-        "scaling_efficiency": 0.7990293920380105,
-        "throughput_per_node": 122.18594514984271
+        "achievable_throughput": 31296.61942656441,
+        "hosts": 32.0,
+        "linear_throughput": 39168.29560767347,
+        "scaling_efficiency": 0.7990293920380106,
+        "throughput_per_host": 978.0193570801379
       },
       {
-        "achievable_throughput": 6173.737128031247,
-        "linear_throughput": 9786.749483200405,
-        "nodes": 64.0,
+        "achievable_throughput": 49416.76728312863,
+        "hosts": 64.0,
+        "linear_throughput": 78336.59121534694,
         "scaling_efficiency": 0.6308261122478787,
-        "throughput_per_node": 96.46464262548824
+        "throughput_per_host": 772.1369887988849
       },
       {
-        "achievable_throughput": 7361.499864757709,
-        "linear_throughput": 14680.124224800607,
-        "nodes": 96.0,
+        "achievable_throughput": 58924.03873495039,
+        "hosts": 96.0,
+        "linear_throughput": 117504.88682302041,
         "scaling_efficiency": 0.5014603249965138,
-        "throughput_per_node": 76.6822902578928
+        "throughput_per_host": 613.7920701557332
       },
       {
-        "achievable_throughput": 7897.708940875136,
-        "linear_throughput": 19573.49896640081,
-        "nodes": 128.0,
-        "scaling_efficiency": 0.40348988979599765,
-        "throughput_per_node": 61.700851100587
+        "achievable_throughput": 63216.0451129489,
+        "hosts": 128.0,
+        "linear_throughput": 156673.18243069388,
+        "scaling_efficiency": 0.4034898897959976,
+        "throughput_per_host": 493.8753524449133
       },
       {
-        "achievable_throughput": 8054.072636364757,
-        "linear_throughput": 24466.87370800101,
-        "nodes": 160.0,
+        "achievable_throughput": 64467.635226246246,
+        "hosts": 160.0,
+        "linear_throughput": 195841.47803836735,
         "scaling_efficiency": 0.3291827444930556,
-        "throughput_per_node": 50.33795397727973
+        "throughput_per_host": 402.92272016403905
       },
       {
-        "achievable_throughput": 7958.3506712751105,
-        "linear_throughput": 30583.592135001265,
-        "nodes": 200.0,
-        "scaling_efficiency": 0.26021634856185544,
-        "throughput_per_node": 39.79175335637555
+        "achievable_throughput": 63701.44289012595,
+        "hosts": 200.0,
+        "linear_throughput": 244801.8475479592,
+        "scaling_efficiency": 0.2602163485618555,
+        "throughput_per_host": 318.50721445062976
       },
       {
-        "achievable_throughput": 7575.375093642448,
-        "linear_throughput": 39146.99793280162,
-        "nodes": 256.0,
-        "scaling_efficiency": 0.1935110096218891,
-        "throughput_per_node": 29.59130895954081
+        "achievable_throughput": 60635.97142567599,
+        "hosts": 256.0,
+        "linear_throughput": 313346.36486138776,
+        "scaling_efficiency": 0.19351100962188914,
+        "throughput_per_host": 236.85926338154684
       },
       {
-        "achievable_throughput": 7026.875865182785,
-        "linear_throughput": 48933.74741600202,
-        "nodes": 320.0,
+        "achievable_throughput": 56245.59033790681,
+        "hosts": 320.0,
+        "linear_throughput": 391682.9560767347,
         "scaling_efficiency": 0.1435997902520112,
-        "throughput_per_node": 21.958987078696204
+        "throughput_per_host": 175.7674698059588
       },
       {
-        "achievable_throughput": 6350.257000840889,
-        "linear_throughput": 61167.18427000253,
-        "nodes": 400.0,
+        "achievable_throughput": 50829.694541705205,
+        "hosts": 400.0,
+        "linear_throughput": 489603.6950959184,
         "scaling_efficiency": 0.10381803701817885,
-        "throughput_per_node": 15.875642502102224
+        "throughput_per_host": 127.07423635426301
       }
     ],
-    "peak_at_nodes": 160.0,
-    "peak_throughput": 8054.072636364757,
+    "peak_at_hosts": 160.0,
+    "peak_throughput": 64467.635226246246,
     "predicted_peak": 164.40112916277405
   },
   "target": "model",
   "units": {
     "curve": "request/second",
-    "curve[0].nodes": "node",
+    "curve[0].hosts": "host",
     "curve[0].scaling_efficiency": "dimensionless",
-    "curve[0].throughput_per_node": "request/second",
-    "peak_at_nodes": "node",
+    "curve[0].throughput_per_host": "request/second",
+    "peak_at_hosts": "host",
     "peak_throughput": "request/second",
-    "predicted_peak": "node"
+    "predicted_peak": "host"
   }
 }

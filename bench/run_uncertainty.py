@@ -57,8 +57,8 @@ REPLICATES = 32
 #: The law is measured from this sample count upwards. See :func:`convergence`.
 LAW_FROM = 1_000
 
-STORAGE = "models/storage_cluster/model.yaml"
-REFERENCE = "models/storage_cluster/scenarios/reference.yaml"
+WEB_SERVICE = "models/web_service/model.yaml"
+REFERENCE = "models/web_service/scenarios/reference.yaml"
 
 
 def _sample_output(model: Model, scenario: Scenario, output: str, samples: int, seed: int):
@@ -75,7 +75,7 @@ def convergence(write: bool = True) -> dict:
     seed, so the spread between them is exactly the sampling noise a reader would meet by running
     the model twice and getting two different answers.
     """
-    model, scenario = load_model(STORAGE), load_scenario(REFERENCE)
+    model, scenario = load_model(WEB_SERVICE), load_scenario(REFERENCE)
     points = []
     for count in COUNTS:
         estimates = []
@@ -119,11 +119,11 @@ def convergence(write: bool = True) -> dict:
     decades = math.log10(usable[-1]["samples"] / usable[0]["samples"])
     overall = (usable[0]["p95_spread"] / usable[-1]["p95_spread"]) ** (1.0 / decades)
     return build_result(
-        "convergence-storage-tco",
+        "convergence-tco",
         target="model",
         kind="measurement",
         produced_by={
-            "model": "storage_cluster",
+            "model": "web_service",
             "scenario": "reference",
             "seed": load_scenario(REFERENCE).seed,
             "method": f"resampled {REPLICATES} times at each sample count, each replicate's seed "
@@ -174,7 +174,7 @@ def correlation_effect(write: bool = True) -> dict:
 
     rows = []
     for path, outputs in (
-        (STORAGE, ("tco", "nodes_recommended")),
+        (WEB_SERVICE, ("tco", "hosts_recommended")),
         ("models/observability/model.yaml", ("known_ingest", "query_utilisation")),
     ):
         model = load_model(path)
@@ -202,7 +202,7 @@ def correlation_effect(write: bool = True) -> dict:
         target="model",
         kind="measurement",
         produced_by={
-            "model": "storage_cluster and observability",
+            "model": "web_service and observability",
             "scenario": "reference",
             "seed": load_scenario(REFERENCE).seed,
             "method": "sampled with and without each model's declared correlations",
@@ -220,7 +220,7 @@ def correlation_effect(write: bool = True) -> dict:
     )
 
 
-RUNNERS = {"convergence-storage-tco": convergence, "correlation-effect": correlation_effect}
+RUNNERS = {"convergence-tco": convergence, "correlation-effect": correlation_effect}
 
 
 def main() -> int:

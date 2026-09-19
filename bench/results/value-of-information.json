@@ -1,20 +1,20 @@
 {
-  "code_fingerprint": "4551bae8fc42e801",
+  "code_fingerprint": "b5931325aaad0b3d",
   "code_sources": [
     "bench/run_information.py"
   ],
   "conditions": {
     "removals_do_not_add": "the sum of the individual removals is not one. Uncertainty in a chain of multiplications is not a quantity that divides between the inputs, and a figure read that way is read wrongly (ch19)",
     "this_is_an_upper_bound": "each figure is what knowing the input *exactly* would remove. A real measurement leaves a standard error behind and removes less, by an amount nobody can know before doing the work",
-    "what_it_cannot_say": "whether the input can be measured at all. A growth rate has the largest bound in this table and belongs to no target \u2014 the honest response to it is to decide it rather than to commission a measurement (ch04)"
+    "what_it_cannot_say": "whether the input can be measured at all. The web service's total rests on how many people it takes and what a licence costs, which are decided and negotiated rather than measured; its host count and the observability model's store both rest on a growth rate, which belongs to no target. The honest response to those is to decide them rather than to commission a measurement (ch04)"
   },
-  "generated_at": "2026-09-19T09:53:21+00:00",
-  "git_revision": "342807a",
+  "generated_at": "2026-09-19T11:06:27+00:00",
+  "git_revision": "4ee81f5",
   "kind": "measurement",
   "name": "value-of-information",
   "produced_by": {
     "method": "each uncertain input pinned at its median in turn, and the model resampled",
-    "model": "observability and storage_cluster",
+    "model": "observability and web_service",
     "scenario": "reference",
     "seed": 20260916,
     "stack": "sizing.evaluate"
@@ -30,94 +30,164 @@
   "summary": {
     "rows": [
       {
-        "half_width": 1262298.0384286565,
-        "if_known": 662573.215518595,
-        "input": "chassis_price",
-        "kind": "input",
-        "label": "chassis price",
-        "model": "storage_cluster",
-        "output": "tco",
-        "removed": 0.47510556512993996
-      },
-      {
-        "half_width": 1262298.0384286565,
-        "if_known": 1130169.324309812,
-        "input": "drive_price",
-        "kind": "input",
-        "label": "drive price",
-        "model": "storage_cluster",
-        "output": "tco",
-        "removed": 0.10467315174102787
-      },
-      {
-        "half_width": 1262298.0384286565,
-        "if_known": 1222513.1385216701,
+        "half_width": 707747.0574413185,
+        "if_known": 701571.0585213344,
         "input": "electricity_price",
         "kind": "input",
         "label": "electricity price",
-        "model": "storage_cluster",
+        "model": "web_service",
         "output": "tco",
-        "removed": 0.03151783389960083
+        "removed": 0.008726279897668388
       },
       {
-        "half_width": 1262298.0384286565,
-        "if_known": 1248821.5104032126,
+        "half_width": 707747.0574413185,
+        "if_known": 628255.1474141384,
         "input": "fully_loaded_salary",
         "kind": "input",
         "label": "fully loaded salary",
-        "model": "storage_cluster",
+        "model": "web_service",
         "output": "tco",
-        "removed": 0.01067618550862981
+        "removed": 0.11231683578390717
       },
       {
-        "half_width": 1262298.0384286565,
-        "if_known": 1256436.7138924743,
-        "input": "network_price_per_node",
+        "half_width": 707747.0574413185,
+        "if_known": 706330.1760601028,
+        "input": "host_power",
         "kind": "input",
-        "label": "network price per node",
-        "model": "storage_cluster",
+        "label": "host power",
+        "model": "web_service",
         "output": "tco",
-        "removed": 0.004643376094823459
+        "removed": 0.0020019601160026212
       },
       {
-        "half_width": 1262298.0384286565,
-        "if_known": 1257025.7336467146,
-        "input": "node_power",
+        "half_width": 707747.0574413185,
+        "if_known": 629575.8028167789,
+        "input": "host_price",
         "kind": "input",
-        "label": "node power",
-        "model": "storage_cluster",
+        "label": "host price",
+        "model": "web_service",
         "output": "tco",
-        "removed": 0.004176751148647129
+        "removed": 0.11045083664091537
       },
       {
-        "half_width": 1262298.0384286565,
-        "if_known": 1261042.8932744248,
+        "half_width": 707747.0574413185,
+        "if_known": 601676.2639037613,
+        "input": "licence_per_core",
+        "kind": "input",
+        "label": "licence per core",
+        "model": "web_service",
+        "output": "tco",
+        "removed": 0.1498710484520127
+      },
+      {
+        "half_width": 707747.0574413185,
+        "if_known": 695045.9035019975,
+        "input": "network_price_per_host",
+        "kind": "input",
+        "label": "network price per host",
+        "model": "web_service",
+        "output": "tco",
+        "removed": 0.01794589437819616
+      },
+      {
+        "half_width": 707747.0574413185,
+        "if_known": 707319.9929903694,
         "input": "pue",
         "kind": "input",
         "label": "PUE",
-        "model": "storage_cluster",
+        "model": "web_service",
         "output": "tco",
-        "removed": 0.000994333442674189
+        "removed": 0.0006034139548287687
       },
       {
-        "half_width": 1262298.0384286565,
-        "if_known": 1229504.6810653622,
+        "half_width": 707747.0574413185,
+        "if_known": 576897.2196540008,
         "input": "staff_fte",
         "kind": "input",
         "label": "staff fte",
-        "model": "storage_cluster",
+        "model": "web_service",
         "output": "tco",
-        "removed": 0.02597909238939833
+        "removed": 0.18488220673127542
       },
       {
-        "half_width": 1262298.0384286565,
-        "if_known": 1193656.8821306739,
+        "half_width": 707747.0574413185,
+        "if_known": 701473.7045262605,
         "input": "support_rate",
         "kind": "input",
         "label": "support rate",
-        "model": "storage_cluster",
+        "model": "web_service",
         "output": "tco",
-        "removed": 0.054377931525132595
+        "removed": 0.00886383468373253
+      },
+      {
+        "half_width": 105.0,
+        "if_known": 29.5,
+        "input": "annual_growth",
+        "kind": "input",
+        "label": "annual growth factor",
+        "model": "web_service",
+        "output": "hosts_recommended",
+        "removed": 0.719047619047619
+      },
+      {
+        "half_width": 105.0,
+        "if_known": 94.5,
+        "input": "hot_fraction",
+        "kind": "input",
+        "label": "share of records touched in a busy hour",
+        "model": "web_service",
+        "output": "hosts_recommended",
+        "removed": 0.09999999999999998
+      },
+      {
+        "half_width": 105.0,
+        "if_known": 104.5,
+        "input": "index_overhead",
+        "kind": "input",
+        "label": "index overhead",
+        "model": "web_service",
+        "output": "hosts_recommended",
+        "removed": 0.004761904761904745
+      },
+      {
+        "half_width": 105.0,
+        "if_known": 104.52499999999418,
+        "input": "os_reserve",
+        "kind": "input",
+        "label": "os reserve",
+        "model": "web_service",
+        "output": "hosts_recommended",
+        "removed": 0.004523809523864997
+      },
+      {
+        "half_width": 105.0,
+        "if_known": 94.5,
+        "input": "peak_request_rate_t0",
+        "kind": "input",
+        "label": "peak request rate, day one",
+        "model": "web_service",
+        "output": "hosts_recommended",
+        "removed": 0.09999999999999998
+      },
+      {
+        "half_width": 105.0,
+        "if_known": 105.5,
+        "input": "record_compression",
+        "kind": "measured",
+        "label": "record compression ratio",
+        "model": "web_service",
+        "output": "hosts_recommended",
+        "removed": -0.004761904761904745
+      },
+      {
+        "half_width": 105.0,
+        "if_known": 98.5,
+        "input": "service_demand",
+        "kind": "input",
+        "label": "CPU time per request",
+        "model": "web_service",
+        "output": "hosts_recommended",
+        "removed": 0.06190476190476191
       },
       {
         "half_width": 613.2306438445196,
@@ -203,12 +273,21 @@
     "totals": [
       {
         "all_known": 0.0,
-        "best_single": 0.47510556512993996,
-        "half_width": 1262298.0384286565,
+        "best_single": 0.18488220673127542,
+        "half_width": 707747.0574413185,
         "inputs": 9,
-        "model": "storage_cluster",
+        "model": "web_service",
         "output": "tco",
-        "sum_of_removals": 0.7121442208798742
+        "sum_of_removals": 0.5956623106385391
+      },
+      {
+        "all_known": 0.0,
+        "best_single": 0.719047619047619,
+        "half_width": 105.0,
+        "inputs": 7,
+        "model": "web_service",
+        "output": "hosts_recommended",
+        "sum_of_removals": 0.9854761904762459
       },
       {
         "all_known": 0.0,

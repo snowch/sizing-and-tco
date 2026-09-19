@@ -2,8 +2,8 @@
 
 | Model | Output | Interval as declared | Assuming independence | Difference |
 |---|---|---:|---:|---:|
-| `storage_cluster` | tco | 1.262e+06 | 1.164e+06 | +8.4% |
-| `storage_cluster` | nodes_recommended | 166.5 | 160.5 | +3.7% |
+| `web_service` | tco | 7.077e+05 | 6.94e+05 | +2.0% |
+| `web_service` | hosts_recommended | 105 | 102 | +2.9% |
 | `observability` | known_ingest | 84.82 | 72.38 | +17.2% |
 | `observability` | query_utilisation | 1.658 | 1.648 | +0.6% |
 

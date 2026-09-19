@@ -80,102 +80,100 @@ RIG = "take it on the reference machine (`make measure-rig`) and commit the resu
 
 FIGURES: dict[str, Table | Diagram] = {
     # -- ch01 What one number hides -----------------------------------------------------------
-    # Two rows, not the model's eight. The page asks "how big" and "how much" and shows that
-    # each answer is a range; the other six are a chapter's subject arriving up to nineteen
-    # chapters early. Two of them are the model's ceilings, and a ceiling shown without its
-    # limit, its verdict or the probability of breaching it is the least readable row in the
-    # book — which is why ch13 gives them a table of their own with all three.
+    # Two rows, not the model's twenty. The page asks "how big" and "how much" and shows that
+    # each answer is a range; the rest are a chapter's subject arriving up to nineteen chapters
+    # early. Six of them are the model's ceilings, and a ceiling shown without its limit, its
+    # verdict or the probability of breaching it is the least readable row in the book — which
+    # is why ch13 gives them a table of their own with all three.
     "what-one-number-hides-outputs": Table(
         render=tables.outputs_table,
-        result="storage_cluster-reference",
-        args=("nodes_recommended", "tco"),
+        result="web_service-reference",
+        args=("hosts_recommended", "tco"),
     ),
     "what-one-number-hides-tco-distribution": Diagram(
         draw=diagrams.distribution,
-        result="storage_cluster-reference",
+        result="web_service-reference",
         args=("tco",),
         alt="The five-year total cost as a distribution, with the point estimate marked on it",
     ),
     # -- ch13 Monte Carlo -------------------------------------------------------------------------
-    "monte-carlo-outputs": Table(render=tables.outputs_table, result="storage_cluster-reference"),
-    "monte-carlo-nodes-distribution": Diagram(
+    "monte-carlo-outputs": Table(render=tables.outputs_table, result="web_service-reference"),
+    "monte-carlo-hosts-distribution": Diagram(
         draw=diagrams.distribution,
-        result="storage_cluster-reference",
-        args=("nodes_recommended",),
-        alt="The recommended node count as a distribution",
+        result="web_service-reference",
+        args=("hosts_recommended",),
+        alt="The recommended host count as a distribution",
     ),
     "monte-carlo-tco-distribution": Diagram(
         draw=diagrams.distribution,
-        result="storage_cluster-reference",
+        result="web_service-reference",
         args=("tco",),
         alt="The five-year total as a distribution, with the point estimate marked on it",
     ),
-    "monte-carlo-ceilings": Table(render=tables.ceilings_table, result="storage_cluster-reference"),
+    "monte-carlo-ceilings": Table(render=tables.ceilings_table, result="web_service-reference"),
     "monte-carlo-ceilings-resized": Table(
-        render=tables.ceilings_table, result="storage_cluster-sized_for_growth"
+        render=tables.ceilings_table, result="web_service-sized_for_growth"
     ),
-    "monte-carlo-provenance": Table(
-        render=tables.provenance_table, result="storage_cluster-reference"
-    ),
+    "monte-carlo-provenance": Table(render=tables.provenance_table, result="web_service-reference"),
     "monte-carlo-graph": Diagram(
         draw=diagrams.dependency_graph,
-        result="storage_cluster-reference",
+        result="web_service-reference",
         args=("tco",),
         alt="The sub-graph that feeds the five-year total",
     ),
     # -- ch14 Correlation and convergence ---------------------------------------------------------
     "correlation-and-convergence-table": Table(
-        render=tables.convergence_table, result="convergence-storage-tco"
+        render=tables.convergence_table, result="convergence-tco"
     ),
     "correlation-and-convergence-curve": Diagram(
         draw=diagrams.convergence,
-        result="convergence-storage-tco",
+        result="convergence-tco",
         alt="Run-to-run spread against sample count, with the one-over-root-n law beside it",
     ),
     "correlation-and-convergence-effect": Table(
         render=tables.correlation_table, result="correlation-effect"
     ),
     "correlation-and-convergence-declared": Table(
-        render=tables.declared_correlations, result="observability-reference"
+        render=tables.declared_correlations, result="web_service-reference"
     ),
-    # -- appendix E: the storage model ---------------------------------------------------
-    "appendix-e-storage-model-graph": Diagram(
+    # -- appendix E: the web service model --------------------------------------------------
+    "appendix-e-web-service-model-graph": Diagram(
         draw=diagrams.dependency_graph,
-        result="storage_cluster-reference",
-        alt="The storage cluster model as a dependency graph, coloured by node kind",
+        result="web_service-reference",
+        alt="The web service model as a dependency graph, coloured by node kind",
     ),
-    "appendix-e-storage-model-outputs": Table(
-        render=tables.outputs_table, result="storage_cluster-reference"
+    "appendix-e-web-service-model-outputs": Table(
+        render=tables.outputs_table, result="web_service-reference"
     ),
-    "appendix-e-storage-model-ceilings": Table(
-        render=tables.ceilings_table, result="storage_cluster-reference"
+    "appendix-e-web-service-model-ceilings": Table(
+        render=tables.ceilings_table, result="web_service-reference"
     ),
-    "appendix-e-storage-model-measured": Table(
-        render=tables.measured_table, result="storage_cluster-reference"
+    "appendix-e-web-service-model-measured": Table(
+        render=tables.measured_table, result="web_service-reference"
     ),
-    "appendix-e-storage-model-provenance": Table(
-        render=tables.provenance_table, result="storage_cluster-reference"
+    "appendix-e-web-service-model-provenance": Table(
+        render=tables.provenance_table, result="web_service-reference"
     ),
-    "appendix-e-storage-model-tornado": Table(
-        render=tables.tornado_table, result="storage_cluster-reference", args=("tco",)
+    "appendix-e-web-service-model-tornado": Table(
+        render=tables.tornado_table, result="web_service-reference", args=("tco",)
     ),
-    "appendix-e-storage-model-tornado-chart": Diagram(
+    "appendix-e-web-service-model-tornado-chart": Diagram(
         draw=diagrams.tornado_chart,
-        result="storage_cluster-reference",
+        result="web_service-reference",
         args=("tco",),
         alt="Which input moves the five-year total most",
     ),
-    "appendix-e-storage-model-distribution": Diagram(
+    "appendix-e-web-service-model-distribution": Diagram(
         draw=diagrams.distribution,
-        result="storage_cluster-reference",
-        args=("cost_per_usable_tb_month",),
-        alt="Cost per usable TB per month, as a distribution",
+        result="web_service-reference",
+        args=("cost_per_million_requests",),
+        alt="Cost per million requests, as a distribution",
     ),
-    "appendix-e-storage-model-scenarios": Table(
+    "appendix-e-web-service-model-scenarios": Table(
         render=tables.scenario_comparison,
-        result="storage_cluster-reference",
-        args=("storage_cluster-sized_for_growth",),
-        also=("storage_cluster-sized_for_growth",),
+        result="web_service-reference",
+        args=("web_service-sized_for_growth",),
+        also=("web_service-sized_for_growth",),
     ),
     # -- appendix F: the observability model ----------------------------------------------
     "appendix-f-observability-model-graph": Diagram(
@@ -225,34 +223,34 @@ FIGURES: dict[str, Table | Diagram] = {
         computed_from="`bench/results/`, one row per stamped result",
     ),
     "appendix-h-running-the-toolkit-models": Table(
-        render=tables.node_kinds_table, result="storage_cluster-reference"
+        render=tables.node_kinds_table, result="web_service-reference"
     ),
     # -- ch02 What a workload is ------------------------------------------------------------------
     "what-a-workload-is-stage": Table(
-        render=tables.stage_outputs, result="storage_cluster_demand-reference"
+        render=tables.stage_outputs, result="web_service_demand-reference"
     ),
     "what-a-workload-is-stage-shape": Table(
-        render=tables.stage_shape, result="storage_cluster_demand-reference"
+        render=tables.stage_shape, result="web_service_demand-reference"
     ),
-    "what-a-workload-is-storage": Table(
-        render=tables.workload_table, result="storage_cluster_demand-reference"
+    "what-a-workload-is-service": Table(
+        render=tables.workload_table, result="web_service_demand-reference"
     ),
     "what-a-workload-is-observability": Table(
         render=tables.workload_table, result="observability-reference"
     ),
-    "what-a-workload-is-service": Table(
-        render=tables.workload_table, result="service_tier-reference"
-    ),
     # -- ch03 Where the numbers come from ---------------------------------------------------------
     "where-the-numbers-come-from-stage": Table(
-        render=tables.stage_outputs, result="storage_cluster_provenance-reference"
+        render=tables.stage_outputs, result="web_service_provenance-reference"
     ),
     "where-the-numbers-come-from-stage-shape": Table(
-        render=tables.stage_shape, result="storage_cluster_provenance-reference"
+        render=tables.stage_shape, result="web_service_provenance-reference"
     ),
     "where-the-numbers-come-from-constants": Table(
         render=tables.constants_index,
         computed_from="`bench/results/`, one row per stamped result",
+    ),
+    "where-the-numbers-come-from-service-provenance": Table(
+        render=tables.provenance_table, result="web_service_provenance-reference"
     ),
     "where-the-numbers-come-from-provenance": Table(
         render=tables.provenance_table, result="observability-reference"
@@ -270,33 +268,35 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     # -- ch04 Peak, mean and growth ---------------------------------------------------------------
     "peak-mean-and-growth-tornado": Table(
-        render=tables.tornado_table, result="storage_cluster-reference", args=("nodes_recommended",)
+        render=tables.tornado_table, result="web_service-reference", args=("hosts_recommended",)
     ),
     "peak-mean-and-growth-chart": Diagram(
         draw=diagrams.tornado_chart,
-        result="storage_cluster-reference",
-        args=("nodes_recommended",),
-        alt="Which input moves the recommended node count most",
+        result="web_service-reference",
+        args=("hosts_recommended",),
+        alt="Which input moves the recommended host count most",
     ),
-    "peak-mean-and-growth-capacity": Diagram(
+    "peak-mean-and-growth-demand": Diagram(
         draw=diagrams.distribution,
-        result="storage_cluster-reference",
-        args=("usable_capacity",),
-        alt="Usable capacity at the horizon, as a distribution",
+        result="web_service_uncertainty-reference",
+        args=("peak_request_rate",),
+        alt="The busy-hour request rate at the horizon, as a distribution",
     ),
     # -- ch05 Little's law ------------------------------------------------------------------------
-    "littles-law-outputs": Table(render=tables.outputs_table, result="service_tier-reference"),
-    "littles-law-concurrency": Diagram(
+    "littles-law-outputs": Table(
+        render=tables.outputs_table, result="web_service_littles_law-reference"
+    ),
+    "littles-law-in-flight": Diagram(
         draw=diagrams.distribution,
-        result="service_tier-reference",
-        args=("concurrency",),
-        alt="Requests in the system, as a distribution",
+        result="web_service_littles_law-reference",
+        args=("in_flight_unqueued",),
+        alt="Requests in flight at the busy hour, as a distribution",
     ),
     "littles-law-graph": Diagram(
         draw=diagrams.dependency_graph,
-        result="service_tier-reference",
-        args=("concurrency",),
-        alt="The sub-graph that produces the number of requests in the system",
+        result="web_service_littles_law-reference",
+        args=("in_flight_unqueued",),
+        alt="The sub-graph that produces the number of requests in flight",
     ),
     # -- ch06 Queueing and the knee ---------------------------------------------------------------
     "queueing-and-the-knee-curve": Diagram(
@@ -306,22 +306,22 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     "queueing-and-the-knee-table": Table(render=tables.queueing_table, result="queueing-curve"),
     "queueing-and-the-knee-ceilings": Table(
-        render=tables.ceilings_table, result="service_tier-reference"
+        render=tables.ceilings_table, result="web_service_queueing-reference"
     ),
     # -- ch07 When adding servers stops helping ---------------------------------------------------
     "when-adding-servers-stops-helping-curve": Diagram(
         draw=diagrams.scaling_curve,
         result="scaling-curve",
-        alt="Throughput against node count, against the straight line a budget assumes",
+        alt="Throughput against host count, against the straight line a budget assumes",
     ),
     "when-adding-servers-stops-helping-table": Table(
         render=tables.scaling_table, result="scaling-curve"
     ),
     "when-adding-servers-stops-helping-scenarios": Table(
         render=tables.scenario_comparison,
-        result="service_tier-reference",
-        args=("service_tier-twice_the_nodes",),
-        also=("service_tier-twice_the_nodes",),
+        result="web_service-reference",
+        args=("web_service-twice_the_hosts",),
+        also=("web_service-twice_the_hosts",),
     ),
     # -- ch08 Regime changes ----------------------------------------------------------------------
     "regime-changes-cardinality": Diagram(
@@ -344,115 +344,124 @@ FIGURES: dict[str, Table | Diagram] = {
     # -- ch09 Capacity ----------------------------------------------------------------------------
     "capacity-graph": Diagram(
         draw=diagrams.dependency_graph,
-        result="storage_cluster-reference",
-        args=("nodes_for_capacity",),
-        alt="The chain from what you need to store to how many machines you must buy",
+        result="web_service_capacity-reference",
+        args=("hosts_for_storage",),
+        alt="The chain from what you need to store to how many hosts you must buy",
     ),
-    "capacity-outputs": Table(render=tables.outputs_table, result="storage_cluster-reference"),
-    "capacity-measured": Table(render=tables.measured_table, result="storage_cluster-reference"),
+    "capacity-outputs": Table(render=tables.outputs_table, result="web_service_capacity-reference"),
+    "capacity-measured": Table(
+        render=tables.measured_table, result="web_service_capacity-reference"
+    ),
     # -- ch10 Bandwidth and the binding constraint ------------------------------------------------
     "bandwidth-and-the-binding-constraint-table": Table(
         render=tables.binding_table, result="binding-constraint"
     ),
-    "bandwidth-and-the-binding-constraint-capacity": Diagram(
+    "bandwidth-and-the-binding-constraint-requests": Diagram(
         draw=diagrams.distribution,
-        result="storage_cluster-reference",
-        args=("nodes_for_capacity",),
-        alt="The node count the capacity chain asks for",
+        result="web_service_binding-reference",
+        args=("hosts_for_requests",),
+        alt="The host count the request chain asks for",
     ),
-    "bandwidth-and-the-binding-constraint-throughput": Diagram(
+    "bandwidth-and-the-binding-constraint-memory": Diagram(
         draw=diagrams.distribution,
-        result="storage_cluster-reference",
-        args=("nodes_for_throughput",),
-        alt="The node count the bandwidth chain asks for",
+        result="web_service_binding-reference",
+        args=("hosts_for_memory",),
+        alt="The host count the working set asks for",
+    ),
+    "bandwidth-and-the-binding-constraint-storage": Diagram(
+        draw=diagrams.distribution,
+        result="web_service_binding-reference",
+        args=("hosts_for_storage",),
+        alt="The host count the data on disk asks for",
     ),
     # -- ch11 Headroom and failure domains --------------------------------------------------------
-    "headroom-and-failure-domains-storage": Table(
-        render=tables.ceilings_table, result="storage_cluster-reference"
+    "headroom-and-failure-domains-service": Table(
+        render=tables.ceilings_table, result="web_service_headroom-reference"
     ),
     "headroom-and-failure-domains-observability": Table(
         render=tables.ceilings_table, result="observability-reference"
     ),
-    "headroom-and-failure-domains-service": Table(
-        render=tables.ceilings_table, result="service_tier-reference"
-    ),
     # -- ch12 The sizing model --------------------------------------------------------------------
     "the-sizing-model-outputs": Table(
-        render=tables.outputs_table, result="storage_cluster-reference"
+        render=tables.outputs_table, result="web_service_sizing-reference"
     ),
     "the-sizing-model-graph": Diagram(
         draw=diagrams.dependency_graph,
-        result="storage_cluster-reference",
-        args=("nodes_recommended",),
-        alt="Everything that feeds the recommended node count",
+        result="web_service_sizing-reference",
+        args=("hosts_recommended",),
+        alt="Everything that feeds the recommended host count",
     ),
     "the-sizing-model-ceilings": Table(
-        render=tables.ceilings_table, result="storage_cluster-reference"
+        render=tables.ceilings_table, result="web_service_sizing-reference"
     ),
     "the-sizing-model-resized": Table(
-        render=tables.ceilings_table, result="storage_cluster-sized_for_growth"
+        render=tables.ceilings_table, result="web_service-sized_for_growth"
     ),
-    "the-sizing-model-nodes": Diagram(
+    "the-sizing-model-hosts": Diagram(
         draw=diagrams.distribution,
-        result="storage_cluster-reference",
-        args=("nodes_recommended",),
-        alt="The recommended node count, as a distribution",
+        result="web_service_sizing-reference",
+        args=("hosts_recommended",),
+        alt="The recommended host count, as a distribution",
     ),
     # -- ch15 Capex, opex and where the total stops -----------------------------------------------
     "capex-opex-and-lifecycle-split": Table(
-        render=tables.cost_split_table, result="storage_cluster-reference"
+        render=tables.cost_split_table, result="web_service-reference"
     ),
     "capex-opex-and-lifecycle-outputs": Table(
-        render=tables.outputs_table, result="storage_cluster-reference"
+        render=tables.outputs_table, result="web_service-reference"
     ),
     "capex-opex-and-lifecycle-tornado": Table(
-        render=tables.tornado_table, result="storage_cluster-reference", args=("annual_opex",)
+        render=tables.tornado_table, result="web_service-reference", args=("annual_opex",)
     ),
     # -- ch16 Power first -------------------------------------------------------------------------
     "power-first-scenarios": Table(
         render=tables.scenario_comparison,
-        result="storage_cluster-reference",
-        args=("storage_cluster-power_first",),
-        also=("storage_cluster-power_first",),
+        result="web_service-reference",
+        args=("web_service-power_first",),
+        also=("web_service-power_first",),
     ),
-    "power-first-ceilings": Table(
-        render=tables.ceilings_table, result="storage_cluster-power_first"
-    ),
+    "power-first-ceilings": Table(render=tables.ceilings_table, result="web_service-power_first"),
     "power-first-tornado": Table(
-        render=tables.tornado_table, result="storage_cluster-reference", args=("annual_energy",)
+        render=tables.tornado_table, result="web_service-reference", args=("annual_energy",)
     ),
     # -- ch17 Unit economics ----------------------------------------------------------------------
     "unit-economics-distribution": Diagram(
         draw=diagrams.distribution,
-        result="storage_cluster-reference",
-        args=("cost_per_usable_tb_month",),
-        alt="Cost per usable TB per month, as a distribution",
+        result="web_service-reference",
+        args=("cost_per_million_requests",),
+        alt="Cost per million requests, as a distribution",
     ),
     "unit-economics-tornado": Table(
         render=tables.tornado_table,
-        result="storage_cluster-reference",
-        args=("cost_per_usable_tb_month",),
+        result="web_service-reference",
+        args=("cost_per_million_requests",),
     ),
     "unit-economics-graph": Diagram(
         draw=diagrams.dependency_graph,
-        result="storage_cluster-reference",
-        args=("cost_per_usable_tb_month",),
+        result="web_service-reference",
+        args=("cost_per_million_requests",),
         alt="Everything that feeds the unit cost, including its denominator",
     ),
+    "unit-economics-per-stored": Diagram(
+        draw=diagrams.distribution,
+        result="web_service-reference",
+        args=("cost_per_stored_tb_month",),
+        alt="The same total over a different denominator: cost per stored TB per month",
+    ),
     # -- ch18 The five-year model -----------------------------------------------------------------
-    "the-five-year-model-storage": Table(
-        render=tables.outputs_table, result="storage_cluster-reference"
+    "the-five-year-model-service": Table(
+        render=tables.outputs_table, result="web_service-reference"
     ),
     "the-five-year-model-observability": Table(
         render=tables.outputs_table, result="observability-reference"
     ),
     "the-five-year-model-split": Table(
-        render=tables.cost_split_table, result="storage_cluster-reference"
+        render=tables.cost_split_table, result="web_service-reference"
     ),
     # -- ch19 Which input to go and measure -------------------------------------------------------
-    "which-input-is-the-answer-storage": Diagram(
+    "which-input-is-the-answer-tco": Diagram(
         draw=diagrams.tornado_chart,
-        result="storage_cluster-reference",
+        result="web_service-reference",
         args=("tco",),
         alt="Which input moves the five-year total most",
     ),
@@ -462,16 +471,21 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("known_stored",),
         alt="Which input moves the retention store most",
     ),
-    "which-input-is-the-answer-service": Table(
-        render=tables.tornado_table, result="service_tier-reference", args=("residence_time",)
+    "which-input-is-the-answer-residence": Table(
+        render=tables.tornado_table, result="web_service-reference", args=("residence_time",)
     ),
     "which-input-is-the-answer-correlation": Table(
         render=tables.correlation_table, result="correlation-effect"
     ),
-    "which-input-is-the-answer-worth-storage": Table(
+    "which-input-is-the-answer-worth-service": Table(
         render=tables.value_of_information_table,
         result="value-of-information",
-        args=("storage_cluster", "tco"),
+        args=("web_service", "tco"),
+    ),
+    "which-input-is-the-answer-worth-hosts": Table(
+        render=tables.value_of_information_table,
+        result="value-of-information",
+        args=("web_service", "hosts_recommended"),
     ),
     "which-input-is-the-answer-worth-observability": Table(
         render=tables.value_of_information_table,
@@ -486,7 +500,7 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.postmortem_table, result="postmortem", args=("incomplete",)
     ),
     "what-the-model-got-wrong-ceilings": Table(
-        render=tables.ceilings_table, result="storage_cluster-reference"
+        render=tables.ceilings_table, result="web_service-reference"
     ),
     "what-the-model-got-wrong-unmeasured": Table(
         render=tables.not_yet_measured, result="observability-reference"
@@ -507,21 +521,21 @@ FIGURES: dict[str, Table | Diagram] = {
     # -- ch21 A TCO for a finance audience --------------------------------------------------------
     "a-tco-for-finance-scenarios": Table(
         render=tables.scenario_comparison,
-        result="storage_cluster-reference",
-        args=("storage_cluster-sized_for_growth",),
-        also=("storage_cluster-sized_for_growth",),
+        result="web_service-reference",
+        args=("web_service-sized_for_growth",),
+        also=("web_service-sized_for_growth",),
     ),
     "a-tco-for-finance-distribution": Diagram(
         draw=diagrams.distribution,
-        result="storage_cluster-reference",
+        result="web_service-reference",
         args=("tco",),
         alt="The five-year total as a distribution, with the point estimate on it",
     ),
     "a-tco-for-finance-ceilings": Table(
-        render=tables.ceilings_table, result="storage_cluster-reference"
+        render=tables.ceilings_table, result="web_service-reference"
     ),
     "a-tco-for-finance-provenance": Table(
-        render=tables.provenance_table, result="storage_cluster-reference"
+        render=tables.provenance_table, result="web_service-reference"
     ),
     # -- appendices ------------------------------------------------------------------------------------
     "appendix-a-dsl-reference-kinds": Table(
@@ -529,15 +543,15 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     "appendix-a-dsl-reference-graph": Diagram(
         draw=diagrams.dependency_graph,
-        result="service_tier-reference",
+        result="web_service_demand-reference",
         alt="The smallest model in the book, as a graph",
     ),
     "appendix-b-monte-carlo-module-convergence": Table(
-        render=tables.convergence_table, result="convergence-storage-tco"
+        render=tables.convergence_table, result="convergence-tco"
     ),
     "appendix-c-distributions-shapes": Diagram(
         draw=diagrams.distribution_shapes,
-        result="storage_cluster-reference",
+        result="web_service-reference",
         alt="The four distributions, drawn from the percentile functions the sampler uses",
     ),
     "appendix-c-distributions-correlation": Table(

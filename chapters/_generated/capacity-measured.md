@@ -2,6 +2,6 @@
 
 | Constant | Value | Standard error | Unit | Measured against |
 |---|---:|---:|---|---|
-| object compression ratio | 2.55 | ± 0.0748 |  | python lzma (XZ preset 1) |
+| record compression ratio | 3.58 | ± 0.0009 |  | python zlib (DEFLATE level 6) |
 
-*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*
+*Source — [`web_service_capacity-reference`](/models/web_service_capacity-reference.html) · every input on a slider*

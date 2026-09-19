@@ -154,7 +154,7 @@ def _where(name: str) -> str:
 def source(name: str | None, *also: str, computed_from: str | None = None) -> str:
     """One line under every figure: where it came from, as a link.
 
-    The name carries the two things worth knowing without following it: `storage_cluster-reference`
+    The name carries the two things worth knowing without following it: `web_service-reference`
     is the model and the scenario. Where the link goes is :func:`_where`'s decision, and it turns
     on whether there is anything a reader can do at the other end.
 
@@ -696,36 +696,45 @@ def scaling_table(name: str) -> str:
     """What each batch of machines bought, and where the curve turns over."""
     summary = load_result(name)["summary"]
     out = [
-        "| Nodes | Throughput | If scaling were free | Efficiency | Per node |",
+        "| Hosts | Throughput | If scaling were free | Efficiency | Per host |",
         "|---:|---:|---:|---:|---:|",
     ]
     for row in summary["curve"]:
-        marker = " **peak**" if row["nodes"] == summary["peak_at_nodes"] else ""
+        marker = " **peak**" if row["hosts"] == summary["peak_at_hosts"] else ""
         out.append(
-            f"| {row['nodes']:,.0f}{marker} | {row['achievable_throughput']:,.0f} "
+            f"| {row['hosts']:,.0f}{marker} | {row['achievable_throughput']:,.0f} "
             f"| {row['linear_throughput']:,.0f} | {row['scaling_efficiency']:.0%} "
-            f"| {row['throughput_per_node']:,.1f} |"
+            f"| {row['throughput_per_host']:,.1f} |"
         )
     out.append(
-        f"| | | | *swept peak* | *{summary['peak_at_nodes']:,.0f} nodes, against "
+        f"| | | | *swept peak* | *{summary['peak_at_hosts']:,.0f} hosts, against "
         f"{summary['predicted_peak']:,.1f} predicted from the two coefficients* |"
     )
     return "\n".join(out)
 
 
 def binding_table(name: str) -> str:
-    """Which of two chains decides the answer, and how often."""
-    summary = load_result(name)["summary"]
+    """Which of three chains decides the answer, and how often.
+
+    The last row is the one to read against the three above it. Each chain's median is a
+    perfectly good number; the answer is the largest of the three in every draw, and the largest
+    of three uncertain numbers sits well above where any one of them usually does.
+    """
+    s = load_result(name)["summary"]
     return "\n".join(
         [
             "| | |",
             "|---|---:|",
-            f"| Capacity decides the node count | {summary['capacity_binds']:.0%} of samples |",
-            f"| Bandwidth decides it | {summary['throughput_binds']:.0%} of samples |",
-            f"| Median gap between the two chains | {summary['median_gap']:,.0f} nodes |",
-            f"| Gap at the 95th percentile | {summary['p95_gap']:,.0f} nodes |",
-            f"| Median of the capacity chain alone | {summary['median_capacity_nodes']:,.0f} nodes |",
-            f"| Median of the bandwidth chain alone | {summary['median_throughput_nodes']:,.0f} nodes |",
+            f"| The request rate decides the host count | {s['requests_binds']:.0%} of samples |",
+            f"| The working set decides it | {s['memory_binds']:.0%} of samples |",
+            f"| The data on disk decides it | {s['storage_binds']:.0%} of samples |",
+            f"| Two chains ask for the same count | {s['tied']:.0%} of samples |",
+            f"| Median gap between the winner and the runner-up | {s['median_gap']:,.0f} hosts |",
+            f"| Gap at the 95th percentile | {s['p95_gap']:,.0f} hosts |",
+            f"| Median of the request chain alone | {s['median_requests_hosts']:,.0f} hosts |",
+            f"| Median of the memory chain alone | {s['median_memory_hosts']:,.0f} hosts |",
+            f"| Median of the disk chain alone | {s['median_storage_hosts']:,.0f} hosts |",
+            f"| Median of the largest of the three | {s['median_largest']:,.0f} hosts |",
         ]
     )
 
@@ -784,20 +793,22 @@ def cost_split_table(name: str) -> str:
     horizon = value("horizon")
     capex, opex = value("capex"), value("lifecycle_opex")
     total = value("tco")
+
+    def line(label: str, key: str, years: float = 1.0) -> str:
+        amount = value(key) * years
+        return f"| {label} | {fmt(amount, 'USD')} | {amount / total:.0%} |"
+
     rows = [
         "| | Amount | Share of the total |",
         "|---|---:|---:|",
         f"| Capital, paid once | {fmt(capex, 'USD')} | {capex / total:.0%} |",
-        f"| Drives | {fmt(value('drive_capex'), 'USD')} | {value('drive_capex') / total:.0%} |",
-        f"| Chassis | {fmt(value('chassis_capex'), 'USD')} | {value('chassis_capex') / total:.0%} |",
-        f"| Network | {fmt(value('network_capex'), 'USD')} | {value('network_capex') / total:.0%} |",
+        line("Hosts", "host_capex"),
+        line("Network", "network_capex"),
         f"| Running, over {horizon:.0f} years | {fmt(opex, 'USD')} | {opex / total:.0%} |",
-        f"| Energy | {fmt(value('annual_energy_cost') * horizon, 'USD')} "
-        f"| {value('annual_energy_cost') * horizon / total:.0%} |",
-        f"| Support | {fmt(value('annual_support') * horizon, 'USD')} "
-        f"| {value('annual_support') * horizon / total:.0%} |",
-        f"| People | {fmt(value('annual_staff_cost') * horizon, 'USD')} "
-        f"| {value('annual_staff_cost') * horizon / total:.0%} |",
+        line("Energy", "annual_energy_cost", horizon),
+        line("Licences", "annual_licences", horizon),
+        line("Support", "annual_support", horizon),
+        line("People", "annual_staff_cost", horizon),
         f"| **Total** | **{fmt(total, 'USD')}** | |",
     ]
     return "\n".join(rows)

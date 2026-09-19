@@ -2,7 +2,11 @@
 
 | Ceiling | At the plan | Headroom | Allowed | Limit | Verdict | Over allowed | Over limit |
 |---|---:|---:|---:|---:|---|---:|---:|
-| fill level at horizon | 1.20 | 25% | 0.75 | 1.00 | **over** | 75% | 61% |
-| read utilisation at peak | 0.88 | 30% | 0.70 | 1.00 | into the margin | 70% | 39% |
+| working set against memory | 1.12 | 25% | 0.75 | 1.00 | **over** | 68% | 55% |
+| utilisation, counting coordination | 1.25 | 30% | 0.70 | 1.00 | **over** | 75% | 61% |
+| disk fill at horizon | 1.00 | 25% | 0.75 | 1.00 | **over** | 66% | 51% |
+| utilisation with one host down | 0.99 | 30% | 0.70 | 1.00 | into the margin | 66% | 49% |
+| utilisation at the busy hour | 0.97 | 30% | 0.70 | 1.00 | into the margin | 64% | 48% |
+| fraction of the fleet doing nothing useful | 0.22 | 50% | 0.50 | 1.00 | ok | 0% | 0% |
 
-*Source — [`storage_cluster-power_first`](/models/storage_cluster-power_first.html) · every input on a slider*
+*Source — [`web_service-power_first`](/models/web_service-power_first.html) · every input on a slider*

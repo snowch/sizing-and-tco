@@ -2,11 +2,15 @@
 
 | | |
 |---|---:|
-| Capacity decides the node count | 86% of samples |
-| Bandwidth decides it | 14% of samples |
-| Median gap between the two chains | 54 nodes |
-| Gap at the 95th percentile | 283 nodes |
-| Median of the capacity chain alone | 121 nodes |
-| Median of the bandwidth chain alone | 67 nodes |
+| The request rate decides the host count | 36% of samples |
+| The working set decides it | 42% of samples |
+| The data on disk decides it | 19% of samples |
+| Two chains ask for the same count | 3% of samples |
+| Median gap between the winner and the runner-up | 14 hosts |
+| Gap at the 95th percentile | 81 hosts |
+| Median of the request chain alone | 50 hosts |
+| Median of the memory chain alone | 53 hosts |
+| Median of the disk chain alone | 49 hosts |
+| Median of the largest of the three | 68 hosts |
 
 *Source — [`binding-constraint`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/binding-constraint.json) · sizing.evaluate*

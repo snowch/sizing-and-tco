@@ -2,13 +2,31 @@
 
 | Output | Point estimate | 90% interval | Unit |
 |---|---:|---:|---|
-| nodes the model recommends | 121 | 46 to 379 | node |
-| nodes purchased | 121 | *fixed* | node |
-| five-year total cost of ownership | $4,150,036 | $3,207,411 to $5,732,007 | USD |
-| cost per usable TB per month | $6.53 | $2.37 to $15.87 | USD / TB / month |
-| capex | $2,025,596 | $1,475,272 to $2,859,544 | USD |
-| annual opex | $424,888 | $318,062 to $611,522 | USD / year |
-| fill level at horizon | 0.746 | 0.238 to 2.35 |  |
-| read utilisation at peak | 0.546 | 0.267 to 1.02 |  |
+| mean request rate at horizon | 11,307 | 2,871 to 42,263 | request/second |
+| utilisation | 0.644 | 0.156 to 2.50 |  |
+| requests in flight, if none waited | 556 | 135 to 2,156 | request |
+| residence time | 0.0367 | 0.0128 to 0.856 | second |
+| time spent queueing | 0.0236 | 0.0021 to 0.839 | second |
+| requests in the system | 1,562 | 160 to 107,812 | request |
+| utilisation at the busy hour | 0.644 | 0.156 to 2.50 |  |
+| throughput the fleet can actually reach | 44,876 | 30,259 to 62,705 | request/second |
+| scaling efficiency | 0.679 | 0.544 to 0.787 |  |
+| how much the queueing view understated it | 1.47 | 1.27 to 1.84 |  |
+| where adding hosts stops helping | 164 | 93 to 291 | host |
+| fraction of the peak already built | 0.328 | 0.186 to 0.584 |  |
+| fraction of the fleet doing nothing useful | 0.321 | 0.213 to 0.456 |  |
+| utilisation, counting coordination | 0.948 | 0.232 to 3.81 |  |
+| working set at horizon | 2.46 | 0.632 to 8.81 | TB |
+| memory the service can use, whole fleet | 3.30 | 3.12 to 3.43 | TB |
+| working set against memory | 0.746 | 0.192 to 2.69 |  |
+| raw disk needed at horizon | 72.4 | 22.9 to 229 | TB |
+| hosts for storage | 49 | 16 to 153 | host |
+| disk fill at horizon | 0.670 | 0.212 to 2.12 |  |
+| hosts for requests | 50 | 13 to 193 | host |
+| hosts for memory | 54 | 14 to 194 | host |
+| hosts the model recommends | 54 | 20 to 231 | host |
+| hosts in the fleet | 54 | *fixed* | host |
+| utilisation with one host down | 0.656 | 0.159 to 2.54 |  |
+| utilisation with one host down, against its limit | 0.656 | 0.159 to 2.54 |  |
 
-*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*
+*Source — [`web_service_sizing-reference`](/models/web_service_sizing-reference.html) · every input on a slider*

@@ -2,7 +2,7 @@
 
 | Output | Point estimate | 90% interval | Unit |
 |---|---:|---:|---|
-| nodes the model recommends | 121 | 46 to 379 | node |
-| five-year total cost of ownership | $4,150,036 | $3,207,411 to $5,732,007 | USD |
+| hosts the model recommends | 54 | 20 to 230 | host |
+| five-year total cost of ownership | $2,002,083 | $1,508,230 to $2,923,724 | USD |
 
-*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*

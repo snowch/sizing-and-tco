@@ -2,4 +2,4 @@
 
 *No uncertain input feeds `annual_energy`.*
 
-*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*

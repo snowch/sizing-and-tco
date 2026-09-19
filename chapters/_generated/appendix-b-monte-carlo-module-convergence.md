@@ -2,10 +2,10 @@
 
 | Samples | 90% interval half-width | Spread of p95 between runs | Ratio to the row above |
 |---:|---:|---:|---:|
-| 100 | $1,187,218 | $139,903 | — |
-| 1,000 | $1,254,998 | $61,532 | 2.27× |
-| 10,000 | $1,260,038 | $22,690 | 2.71× |
-| 100,000 | $1,260,624 | $5,650 | 4.02× |
-| | *settles* | *falls* | **3.30× per decade** from 1,000 samples up, against √10 = 3.16 |
+| 100 | $675,024 | $96,864 | — |
+| 1,000 | $707,485 | $29,419 | 3.29× |
+| 10,000 | $707,758 | $14,422 | 2.04× |
+| 100,000 | $708,422 | $4,231 | 3.41× |
+| | *settles* | *falls* | **2.64× per decade** from 1,000 samples up, against √10 = 3.16 |
 
-*Source — [`convergence-storage-tco`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/convergence-storage-tco.json) · sizing.mc*
+*Source — [`convergence-tco`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/convergence-tco.json) · sizing.mc*

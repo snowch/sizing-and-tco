@@ -2,8 +2,8 @@
 
 | Output | What the model says | Unit |
 |---|---:|---|
-| usable capacity at horizon | 14,852 | TB |
-| peak read throughput | 85.0 | GB/s |
-| node raw capacity | 240 | TB/node |
+| peak request rate at horizon | 29,703 | request/second |
+| records held at horizon | 55.7 | TB |
+| memory the service can use, per host | 0.0611 | TB/host |
 
-*Source — [`storage_cluster_provenance-reference`](/models/storage_cluster_provenance-reference.html) · every input on a slider*
+*Source — [`web_service_provenance-reference`](/models/web_service_provenance-reference.html) · every input on a slider*
