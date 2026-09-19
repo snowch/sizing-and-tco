@@ -60,11 +60,11 @@ get the same picture back. There is nothing in it to find.
 
 What people point at when they say "the knee" is the place where the slope first exceeded what
 they were willing to put up with. That is a statement about the person, not about the queue.
-Problem 6.2 measures how much that person matters: invert the formula, ask where requests take
-twice as long, then ask where they take ten times as long, and watch the answer travel across most
-of the useful range of a system.
+Problem 6.2 measures how much that person matters. Invert the formula, ask where requests take
+twice as long, then ask where they take ten times as long, and watch the answer travel across
+most of the useful range of a system.
 
-Two engineers with different tolerances will size the same system very differently and both will
+Two engineers with different tolerances will size the same system very differently, and both will
 say they sized it to the knee.
 
 So this book does not have a knee rule. It has a **declared margin, with a reason attached**:
@@ -72,19 +72,23 @@ So this book does not have a knee rule. It has a **declared margin, with a reaso
 ```{include} _generated/queueing-and-the-knee-ceilings.md
 ```
 
-This is the first ceilings table in the book and every later chapter prints one, so read the
-columns once. *At the plan* is where the design sits at the point estimate. *Limit* is where the
-quantity stops meaning anything — a full disk, a saturated device. *Headroom* is the margin
-somebody declared, and *allowed* is the limit less that margin. The verdict judges the point
-estimate alone: `ok` under the allowed line, **over** past the limit, *into the margin* between
-the two, where the design is spending the reserve that was declared to protect it. The last two
-columns ignore the point estimate: across everything the model thinks could happen, they give the
-share of futures past the allowed line and the share past the limit. A design can read `ok` and
-still be over the limit in a good share of its futures, and the table above is one.
-[ch12](#the-sizing-model) is where that becomes a decision.
+This is the first ceilings table in the book, and every later chapter prints one, so read the
+columns once.
 
-A margin is a decision, it belongs to somebody, and a ceiling's `because` field is where they
-say what they were protecting. The build refuses a ceiling that leaves it empty.
+- *At the plan* is where the design sits at the point estimate.
+- *Limit* is where the quantity stops meaning anything: a full disk, a saturated device.
+- *Headroom* is the margin somebody declared, and *allowed* is the limit less that margin.
+- The *verdict* judges the point estimate alone: `ok` under the allowed line, **over** past the
+  limit, and *into the margin* between the two, where the design is spending the reserve that was
+  declared to protect it.
+- The last two columns ignore the point estimate. Across everything the model thinks could
+  happen, they give the share of futures past the allowed line and the share past the limit.
+
+A design can read `ok` and still be over the limit in a good share of its futures, and the table
+above is one. [ch12](#the-sizing-model) is where that becomes a decision.
+
+A margin is a decision, and it belongs to somebody. A ceiling's `because` field is where they say
+what they were protecting. The toolkit refuses a ceiling that leaves it empty.
 [ch11](#headroom-and-failure-domains) is where that decision gets made deliberately instead of
 inherited.
 
@@ -102,10 +106,11 @@ its margin and its reason.
 The margin in that table is wide, and a percentage on its own says nothing about what it is
 protecting against.
 
-A capacity ceiling — a full disk, which [ch09](#capacity) adds to this model — is a cliff you fall
-off: you find out immediately. A queueing ceiling is not. You slide down it, paying in latency, on every single request, for as
-long as nobody looks. There is no page, no alert, no failure — just a system that is worse than it
-was in a way that shows up in somebody else's dashboards.
+A capacity ceiling is a cliff you fall off. A full disk, which [ch09](#capacity) adds to this
+model, is one: you find out immediately. A queueing ceiling is not a cliff. You slide down it,
+paying in latency on every single request, for as long as nobody looks. There is no page, no
+alert, no failure. There is just a system that is worse than it was, in a way that shows up in
+somebody else's dashboards.
 
 The way back is worse, too. Coming back from a full disk means deleting something. Coming back
 from a queue means shedding load or adding machines, and
@@ -113,16 +118,16 @@ from a queue means shedding load or adding machines, and
 
 ### What this model assumes, and what it costs
 
-The formula above is the simplest useful queueing result and it assumes a great deal:
+The formula above is the simplest useful queueing result, and it assumes a great deal:
 
 - **one queue, one class of work.** Real systems have several, and a request usually visits more
   than one of them.
 - **requests that do not care about each other.** No batching, no locking, no cache that one
   request warms for the next.
 - **a service time that does not change with load.** This one is the big lie. On a real system,
-  a busier machine is a slower machine per request — caches miss more, locks are held longer,
-  collection runs while somebody is waiting. The model declares a correlation between arrival rate
-  and service demand, which admits the effect without correcting for it.
+  a busier machine is a slower machine per request: caches miss more, locks are held longer,
+  collection runs while somebody is waiting. The model declares that arrival rate and service
+  demand move together, which admits the effect without correcting for it.
 
 Every one of those makes the real curve **steeper** than the drawn one. The picture above is the
 optimistic case.
@@ -130,8 +135,8 @@ optimistic case.
 ### The cap, and why it is declared
 
 At a utilisation of one the formula divides by zero. Infinity is not a prediction, so the model
-clamps — and says so, in a node with a name and a stated reason. Beside it is the margin the
-ceiling above audits against, declared once so that the sizing and the audit cannot drift apart:
+clamps, and says so in a node with a name and a stated reason. Beside it is the margin the ceiling
+above audits against. It is declared once, so that the sizing and the audit cannot drift apart:
 
 ```{literalinclude} ../models/web_service/stages/05-queueing/model.yaml
 :language: yaml
@@ -140,7 +145,7 @@ ceiling above audits against, declared once so that the sizing and the audit can
 ```
 
 Past that point the formula has stopped describing a queue and started describing an arithmetic
-accident. The clamp does not hide that: the ceiling watches the real utilisation rather than the
+accident. The clamp does not hide that. The ceiling watches the real utilisation rather than the
 capped one, so a sample out there is still reported **over**. The model does not know what happens
 past the cap, and says so rather than extrapolating.
 
@@ -158,16 +163,16 @@ between them, and the only honest way to get its curve is to measure it. That ne
 machine, and it is a `rig` measurement nobody has taken.
 
 **Anything about the tail.** This chapter computes mean residence time. The 99th percentile is
-worse, and the gap between the two widens as utilisation rises — by a factor this curve cannot
+worse, and the gap between the two widens as utilisation rises, by a factor this curve cannot
 report.
 
 **When the load will cross the line.** The model says what happens at a given utilisation, not
 when yours will get there. That is [ch04](#peak-mean-and-growth)'s question, and its answer rests
 on a growth rate nobody can measure.
 
-**Whether the service time is constant.** It is not, the model says it is, and the declared
-correlation admits that without correcting for it. The real curve is steeper, and this chapter
-cannot say by how much.
+**Whether the service time is constant.** It is not, the model says it is, and the declared link
+between arrival rate and service demand admits that without correcting for it. The real curve is
+steeper, and this chapter cannot say by how much.
 
 ## Problems
 
@@ -176,8 +181,8 @@ why.
 
 **6.1 — The formula.**
 Write the division. Work out what you are dividing by before you look it up, then decide what to
-return at a utilisation of one — an infinity is defensible and so is raising, but a large finite
-number is not, because somebody will put it in a slide.
+return at a utilisation of one. An infinity is defensible, and so is raising an error. A large
+finite number is not, because somebody will put it in a slide.
 
 ```bash
 python3 -m pytest tests/queueing_and_the_knee/test_problem_1_residence.py
@@ -196,22 +201,22 @@ python3 -m pytest tests/queueing_and_the_knee/test_problem_2_knee.py
 access to it.
 
 Your monitoring already has this. Plot response time against utilisation for one device or one
-tier — a scatter of the last few weeks, not an average — and find where the curve stops being
-flat.
+tier, as a scatter of the last few weeks rather than an average, and find where the curve stops
+being flat.
 
 Then answer the question the chart cannot: what utilisation is your system actually run at, and
-who chose it? In most places the answer is that nobody chose it; it is wherever the last capacity
+who chose it? In most places the answer is that nobody chose it. It is wherever the last capacity
 argument left off.
 
 A good answer is a picture with a knee visible in it and a number beside it. If the scatter is a
-flat line, either you are nowhere near the knee — which is worth knowing and probably worth
-money — or your utilisation metric is averaged over a window long enough to hide every peak,
-which is the commoner of the two.
+flat line, there are two possibilities. Either you are nowhere near the knee, which is worth
+knowing and probably worth money, or your utilisation metric is averaged over a window long
+enough to hide every peak. The second is the commoner.
 
 ## Where to go next
 
-[ch07](#when-adding-servers-stops-helping) takes the obvious response to everything above — add
-machines — and works out what it actually buys.
+[ch07](#when-adding-servers-stops-helping) takes the obvious response to everything above, adding
+machines, and works out what it actually buys.
 
 [ch11](#headroom-and-failure-domains) chooses the margin this chapter refused to choose, and shows
 what happens when two of them end up multiplied together.
