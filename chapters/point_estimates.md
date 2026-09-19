@@ -57,13 +57,14 @@ then what the repeated answers did.
 ```{include} _generated/point-estimates-outputs.md
 ```
 
-Read the first row. The point estimate is a real number, correctly computed. Beside it is the
-range that nine of those answers in ten fell into. It spans an order of magnitude. Nothing in the
-first calculation was wrong. It had no way to say that it was a bet.
+Read the first row. The point estimate is a real number, correctly computed. Beside it are the
+smallest and the largest of the answers the same arithmetic gave, and they are not close.
+Nothing in the first calculation was wrong. It had no way to say that it was a bet.
 
-Why nine in ten, rather than the smallest and the largest answer, is [ch13](#monte-carlo)'s
-question. For now it is a convention. This book uses the same one everywhere, so that any two
-figures can be compared.
+The smallest and the largest are a poor summary of the spread, because a handful of extreme
+answers set them. The chart below shows where the answers actually piled up. Every later table
+in this book reports a narrower band than this column, and [ch13](#monte-carlo) says which band
+and why.
 
 ```{image} _figures/point-estimates-tco-spread.svg
 :alt: The five-year total cost as a spread of answers, with the single number marked on it
@@ -71,13 +72,14 @@ figures can be compared.
 ```
 
 Each bar counts how many of those answers landed on a given five-year total. It is the table's
-second row, drawn. The red line is where the single-number answer falls.
+second row, drawn. Most of the answers sit in the middle, a thin tail runs far to the right, and
+the red line is where the single-number answer falls.
 
 Doing that arithmetic over and over needs a program to pick each input's value, and
 [ch13](#monte-carlo) builds one. You do not need one to feel the force of it. Problem 1.1 does the same job on paper: every input at
 the bottom of its range together, then every input at the top together. It asks you to set what
-comes out beside the range in the table. Those are two honest ways of admitting the same doubt,
-and they do not agree with each other.
+comes out beside the smallest and largest answer in the table. Those are two honest ways of
+admitting the same doubt, and they do not agree with each other.
 
 ### The error a range cannot show
 
@@ -165,8 +167,9 @@ Three, in `tests/point_estimates/`. The first two have tests; run them with
 **1.1 — The width of a product.** Read each uncertain input's declared spread off the web service
 model. Work out what those spreads become when the inputs are multiplied together. The answer is
 neither the widest input nor the average of them. Do it the way you could on paper: every input at
-its low together, then every input at its high together. Then set your answer beside the range
-in the table above. The gap between the two is what [ch13](#monte-carlo) exists to close.
+its low together, then every input at its high together. Then set your answer beside the
+smallest and largest answer in the table above. The gap between the two is what
+[ch13](#monte-carlo) exists to close.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_1_compounding.py

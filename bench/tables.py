@@ -212,7 +212,9 @@ def row_labels(payload: dict) -> dict[str, str]:
     }
 
 
-def outputs_table(name: str, *only: str, spread: str = "90% interval") -> str:
+def outputs_table(
+    name: str, *only: str, spread: str = "90% interval", ends: tuple[str, str] = ("p5", "p95")
+) -> str:
     """What the model says, at a point and across its uncertainty.
 
     Two columns that a spreadsheet would give one. The point estimate is what a plan is usually
@@ -244,7 +246,7 @@ def outputs_table(name: str, *only: str, spread: str = "90% interval") -> str:
         else:
             point = fmt(node.get("point"), node["unit"])
             interval = (
-                f"{fmt(summary['p5'], node['unit'])} to {fmt(summary['p95'], node['unit'])}"
+                f"{fmt(summary[ends[0]], node['unit'])} to {fmt(summary[ends[1]], node['unit'])}"
                 if summary
                 else "*fixed*"
             )
@@ -253,12 +255,13 @@ def outputs_table(name: str, *only: str, spread: str = "90% interval") -> str:
 
 
 def outputs_in_plain_words(name: str, *only: str) -> str:
-    """The outputs table for the one chapter that comes before the word *interval* (ch01).
+    """The outputs table for the one chapter that comes before any statistical word (ch01).
 
-    Same rows, same figures. The column that ch13 will call a 90% interval is headed by what it
-    is: the range nine of the repeated answers in ten fell into.
+    Same rows. The second column is the smallest and the largest of the repeated answers,
+    because those are the two numbers that need no convention to read. Every later table
+    reports a narrower band than this, and ch13 is where the book says why and names it.
     """
-    return outputs_table(name, *only, spread="Nine answers in ten fell within")
+    return outputs_table(name, *only, spread="Smallest and largest answer", ends=("min", "max"))
 
 
 def stage_outputs(name: str) -> str:
