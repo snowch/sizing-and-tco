@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "8f6875a2c7eb1835",
+  "code_fingerprint": "f04be4e79eb10251",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/stages/03-uncertainty/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-18T16:25:43+00:00",
-  "git_revision": "f107d32",
+  "generated_at": "2026-09-19T09:08:06+00:00",
+  "git_revision": "48710fa",
   "kind": "model",
   "name": "storage_cluster_uncertainty-reference",
   "produced_by": {
@@ -28,10 +28,10 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
     "kind": "other",
     "numpy": "2.4.6",
-    "os": "Linux-6.18.44-fc-v33-x86_64-with-glibc2.39",
+    "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
     "python": "3.11.15"
   },
   "summary": {
@@ -51,7 +51,7 @@
       "node_raw_capacity": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-18T16:25:43+00:00",
+    "generated_at": "2026-09-19T09:08:06+00:00",
     "model": "storage_cluster_uncertainty",
     "nodes": {
       "annual_growth": {

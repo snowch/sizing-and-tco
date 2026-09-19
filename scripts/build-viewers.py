@@ -26,6 +26,8 @@ sys.path.insert(0, str(ROOT))
 
 from bench.stamp import RESULTS_DIR, load_result, shown  # noqa: E402
 from bench.tables import REPOSITORY  # noqa: E402
+from sizing.dsl import load_model  # noqa: E402
+from sizing.playground.toolkit import BOOT, PYODIDE, results_for, sources  # noqa: E402
 
 VIEWER = ROOT / "sizing" / "viewer"
 DEFAULT_OUT = ROOT / "_build" / "viewers"
@@ -49,14 +51,19 @@ PAGE = """<!doctype html>
     <h2>Inputs</h2>
     <p class="note">Every slider comes from a range the model file declares. Moving one recomputes
     the whole graph immediately.</p>
-    <div id="sliders"></div>
-    <button id="reset">Back to the scenario</button>
+    <!-- The control and its outcome sit above the sliders: on a model with twenty inputs the
+         reader presses a button at the top and reads the answer where they pressed it. -->
+    <div id="banner" class="banner" style="display:none"></div>
     <div id="stale" class="stale" style="display:none">
       These are point values for the settings you have chosen. The distributions and the
-      probabilities below still belong to the scenario — this page does not resample, because the
-      intervals came from a seeded sampler that the build stamped and checked. Write a scenario
-      file and re-run <code>make models</code> to sample these settings.
+      probabilities below still belong to the scenario.
+      <button id="resample" class="primary">Resample with these fixed</button>
+      <span class="note">Runs the book's own sampler in this tab — the same code and seed that
+      stamped the intervals — with the inputs you have moved held at their values. The first
+      press fetches a Python runtime, about ten megabytes, once; nothing is sent anywhere.</span>
     </div>
+    <button id="reset">Back to the scenario</button>
+    <div id="sliders"></div>
     <h2>Outputs</h2>
     <div id="outputs"></div>
   </section>
@@ -76,7 +83,9 @@ PAGE = """<!doctype html>
   </section>
 </main>
 <script>window.__MODEL__ = {payload};</script>
+<script>window.__TOOLKIT__ = {toolkit};</script>
 <script type="module">
+{boot}
 {evaluate_js}
 {app_js}
 </script>
@@ -96,8 +105,24 @@ def build(result_name: str, out_dir: Path) -> Path:
     evaluate_js = evaluate_js.replace("export function", "function")
     app_js = app_js.replace('import { evaluatePoint, ceilingState } from "./evaluate.js";', "")
 
+    # What a resample needs: the file the stamp was made from, its scenario, and the stamped
+    # results its measured constants read. All read at build time, when verify-numbers has
+    # already established that the file and the stamp agree.
+    produced = load_result(result_name)["produced_by"]
+    model_path = ROOT / produced["model_file"]
+    scenario_path = model_path.parent / "scenarios" / f"{produced['scenario']}.yaml"
+    toolkit = {
+        "pyodide": PYODIDE,
+        "modules": sources(),
+        "results": results_for(load_model(model_path)),
+        "model": model_path.read_text(),
+        "scenario": scenario_path.read_text(),
+    }
+
     page = PAGE.format(
         title=html.escape(payload["title"]),
+        toolkit=json.dumps(toolkit),
+        boot=BOOT,
         scenario=html.escape(payload["scenario"]["name"]),
         scenario_title=html.escape(payload["scenario"]["title"]),
         classification=payload["classification"],

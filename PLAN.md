@@ -15,7 +15,7 @@ on it.
 
 ## 2. The distinction everything rests on
 
-Taught in ch01, demonstrated by the two reference models, and enforced by
+Taught in [ch01](#what-one-number-hides), demonstrated by the reference models, and enforced by
 `scripts/verify-models.py`.
 
 It used to be stated in the front matter, which is where the book this repository was
@@ -48,13 +48,13 @@ produce a number; Part IV establishes what it is worth; Part V prices it.
 ## 3. Why Monte Carlo is where it is
 
 Part IV sits between sizing and cost, and not at the front, because the method is not useful until
-the reader has a number they cannot defend and can feel that they cannot defend it. ch11 produces
-that number. ch12 opens on it.
+the reader has a number they cannot defend and can feel that they cannot defend it.
+[ch12](#the-sizing-model) produces that number. [ch13](#monte-carlo) opens on it.
 
-It is two chapters rather than one because the natural seam is real: ch12 ends having assumed that
-every input moves on its own, and ch13 opens on exactly that. Each gets its own *What this cannot
-tell you* — ch12's is about the shapes you chose, ch13's is about structural error — and neither
-section would have survived being merged.
+It is two chapters rather than one because the natural seam is real: [ch13](#monte-carlo) ends
+having assumed that every input moves on its own, and [ch14](#correlation-and-convergence) opens
+on exactly that. Each gets its own *What this cannot tell you* — [ch13](#monte-carlo)'s is about the shapes
+you chose, [ch14](#correlation-and-convergence)'s is about structural error — and neither section would have survived being merged.
 
 ## 4. Settled decisions
 
@@ -74,11 +74,16 @@ the evaluator works in plain `float64`. Units are a gate, not a tax.
 have identical dimensions and differ by twelve. A check that compared only dimensionality would
 have published the storage model's unit cost twelve times too large and passed.
 
-**The browser gets the evaluator, never a second Monte Carlo.** Sliders recompute point values
-instantly, because a point is arithmetic. They do not resample: the intervals came from a seeded,
-stamped sampler, and a second sampler in JavaScript would be a second answer nobody had verified.
-The two evaluators are pinned to each other by `tests/test_viewer.py`, which runs the JavaScript
-over values Python computed for every node of every model.
+**The browser gets the evaluator, and on request the first sampler — never a second one.**
+Sliders recompute point values instantly, because a point is arithmetic, and the two evaluators
+are pinned to each other by `tests/test_viewer.py`, which runs the JavaScript over values Python
+computed for every node of every model. Nothing written in JavaScript recomputes an interval: a
+second sampler would be a second answer nobody had verified. When a reader wants the interval for
+inputs they have moved, the page runs `sizing.mc` itself, under Pyodide, with the same seed — and
+first shows them that with nothing moved it gives back the stamped result to a part in a billion.
+A moved slider is a scenario override: the input is held rather than drawn, and what comes back
+is the doubt left in everything else, which is [ch19](#which-input-is-the-answer)'s question
+asked by hand.
 
 **Four targets, and only two of them are measurements this repository can take.** `corpus` and
 `rig`. An `estate` observation is taken by a person with access to a running system and reviewed
@@ -86,6 +91,37 @@ by a human being; that is much weaker than the other two and the pages that use 
 fourth, `model`, is not a measurement of anything outside the repository at all — it is what a
 model file said when the build ran it, and keeping it separate is what stops the other three
 going soft.
+
+**The running example is a web service and its data, on a fleet of Linux hosts.** It was a
+scale-out storage cluster, and that is being replaced for two reasons that editing cannot fix.
+Not everyone in the book's audience has sized a storage cluster; everyone in it has sized a
+service and the machines it runs on. And the cluster sits too close to systems the author works
+on for a reader who knows that to take *vendor-neutral by construction* on trust — neutrality has
+to be true of the example, not only of the words.
+
+The host is the unit and the fleet is what gets costed. Requests arrive and data accumulates; the
+host's spec sheet is the first number somebody else supplied; growth gets its shape. Part II stops
+being a side model: Little's law, the knee, what more cores buy and a working set outgrowing memory
+are stages of the same file, so the reader watches the graph grow through the ceilings rather
+than switching models to meet them — and the model becomes a sizing model when the first ceiling
+arrives, in Part II, not when the measured constant does. Capacity is disk, with the stored
+records' compression as the measured constant. Three chains ask for a host count and one binds.
+A host dies and the survivors absorb its load, which is a better headroom rule than rebuild. N
+hosts over five years with power and a per-core licence carry Part V, and the same fleet has two
+honest unit costs, per request and per stored terabyte. It subsumes the request-serving tier;
+the observability platform keeps its job as the model with a hole in it.
+
+One constant in it is a rate. CPU time per request belongs to the `rig` target and no rig is
+declared, so until one is, it is held as a labelled claim whose source says what a rig would
+replace it with — the honesty the service tier's throughput already has. The day a machine is
+declared in `rig/machine.yml`, that node becomes measured, and the running example is the first
+model in the book measured end to end. The storage cluster could never have been: nobody has one
+to hand, and everybody has a host.
+
+The switch lands in three moves and `main` is never half-swapped: the new model is built beside
+the old until every stage loads, classifies and stamps; every chapter, figure, experiment and
+test moves in one change; the old models are retired in another. NEXT_STEPS.md carries the
+order.
 
 **No vendor is named, anywhere.** A measured constant names the *implementation* it belongs to —
 which for the metrics encoder is this repository's own — because that is what makes it a
@@ -133,11 +169,12 @@ Named here so that nobody has to guess whether it was forgotten.
 
 - **Tax, depreciation schedules and discount rates.** They are jurisdiction- and
   company-specific, they change the answer a great deal, and a book that guessed at them would be
-  giving financial advice. ch14 says what to hand to somebody who does know.
+  giving financial advice. [ch21](#a-tco-for-finance) says what to hand to somebody who does know.
 - **Procurement reality.** Lead times, minimum orders, the discount you get for asking. Real, and
   not a modelling problem.
 - **Risk appetite.** The book produces a probability that a ceiling is breached. What probability
-  is acceptable is a decision, and ch20 is about presenting it rather than making it.
+  is acceptable is a decision, and [ch21](#a-tco-for-finance) is about presenting it rather than
+  making it.
 - **Fitting distributions to data.** Nothing in this repository reads a dataset and tells you what
   shape it is. Choosing a shape is an editorial act with provenance attached, and a function that
   guessed it would produce a model whose central assumption nobody ever wrote down.

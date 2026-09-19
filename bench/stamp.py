@@ -59,10 +59,10 @@ from typing import Any
 
 import yaml
 
+from sizing.results import RESULTS_DIR, load_result, result_exists  # noqa: E402,F401
 from sizing.units import UnitError, has_time
 
 ROOT = Path(__file__).resolve().parent.parent
-RESULTS_DIR = ROOT / "bench" / "results"
 RIG_DECLARATION = ROOT / "rig" / "machine.yml"
 
 #: The four targets, and what declaring one means.
@@ -347,19 +347,9 @@ def build_result(
     return payload
 
 
-def load_result(name: str) -> dict:
-    """Read a stamped result, or say clearly which runner would produce it."""
-    path = RESULTS_DIR / f"{name}.json"
-    if not path.exists():
-        raise FileNotFoundError(
-            f"bench/results/{name}.json does not exist. Find what writes it with "
-            f"`grep -rl {name} bench/ models/`."
-        )
-    return json.loads(path.read_text())
-
-
-def result_exists(name: str) -> bool:
-    return (RESULTS_DIR / f"{name}.json").exists()
+# `load_result` and `result_exists` live in the toolkit now (sizing/results.py) so that a model
+# with a measured constant can load wherever the toolkit runs, including a browser that has no
+# `bench`. They are imported above and remain part of this module's interface.
 
 
 # -- the rules ------------------------------------------------------------------------------

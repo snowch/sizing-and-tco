@@ -54,3 +54,16 @@ code { font: 12px/1.4 ui-monospace, "SF Mono", Menlo, monospace; background: var
 .hist { width: 100%; height: 74px; display: block; margin: 4px 0; }
 .legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 11px; color: var(--muted); margin-bottom: 8px; }
 .legend i { display: inline-block; width: 11px; height: 9px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+
+/* -- resampling ------------------------------------------------------------------ */
+button.primary { background: #1a73e8; color: #fff; border-color: #1a73e8; margin: 8px 0 4px; display: block; }
+button.primary:hover { background: #1660c4; }
+button.primary[disabled] { opacity: .6; cursor: progress; }
+.stale .note { display: block; margin-top: 4px; }
+.banner { margin: 10px 0; padding: 8px 10px; border-radius: 4px; font-size: 12px; line-height: 1.45;
+          background: #eef6ee; border: 1px solid #b7d8b7; }
+.banner.bad { background: #fdecea; border-color: #f5b5ae; }
+.banner.pending { background: var(--panel); border-color: var(--line); }
+.slider .state { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.slider .state.fixed { color: #1a73e8; }
+#reset { margin: 6px 0 10px; }

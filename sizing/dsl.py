@@ -46,6 +46,7 @@ from typing import Any, ClassVar
 import yaml
 
 from sizing import expr
+from sizing.results import load_result, result_exists
 from sizing.units import UnitError
 from sizing.units import parse as parse_unit
 
@@ -371,8 +372,6 @@ def _node_from(name: str, spec: dict, where: str) -> Node:
 
     if kind == "measured":
         result = str(_require(spec, "result", f"{where}: node {name!r}"))
-        from bench.stamp import load_result, result_exists
-
         return Measured(
             **common,
             result=result,

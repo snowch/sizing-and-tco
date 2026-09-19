@@ -10,7 +10,12 @@
  */
 import { evaluatePoint, ceilingState } from "./evaluate.js";
 
-const PAYLOAD = window.__MODEL__;
+// What the build stamped, kept as it came; PAYLOAD is what the page shows, and after a
+// resample it is a fresh payload from the same sampler with some inputs held.
+const STAMPED = window.__MODEL__;
+let PAYLOAD = STAMPED;
+//: The toolkit the page carries for a resample, or undefined on a page built without one.
+const TOOLKIT = window.__TOOLKIT__;
 const BOX = { w: 154, h: 32, col: 188, row: 46, margin: 16 };
 
 // A box is a box. What does not fit says so, rather than stopping mid-word and leaving the
@@ -20,8 +25,11 @@ const LABEL_CHARS = 28;
 const fit = (text) => (text.length > LABEL_CHARS ? text.slice(0, LABEL_CHARS - 1) + "\u2026" : text);
 
 let overrides = {};
+//: Inputs held at a value by the last resample: name -> value. Shown against their sliders.
+let fixed = {};
 let focus = null;
 let selected = null;
+let pyodide = null, booting = null, agreement = null;
 
 const $ = (id) => document.getElementById(id);
 
@@ -121,7 +129,8 @@ function buildControls() {
       return `<div class="slider"><label for="s-${name}"><span>${node.label}</span>` +
         `<span id="v-${name}"></span></label>` +
         `<input type="range" id="s-${name}" data-node="${name}" min="${node.slider.min}" ` +
-        `max="${node.slider.max}" step="${step}" value="${node.point}"></div>`;
+        `max="${node.slider.max}" step="${step}" value="${node.point}">` +
+        `<div class="state" id="st-${name}"></div></div>`;
     })
     .join("");
   for (const input of $("sliders").querySelectorAll("input")) {
@@ -210,14 +219,119 @@ function render() {
     if (!(name in overrides)) input.value = PAYLOAD.nodes[name].point;
     $(`v-${name}`).textContent = fmt(parseFloat(input.value), PAYLOAD.nodes[name].unit);
   }
+  for (const input of $("sliders").querySelectorAll("input")) {
+    const name = input.dataset.node;
+    const state = $(`st-${name}`);
+    if (name in overrides) {
+      state.textContent = "held here \u2014 resample to see what that leaves";
+      state.className = "state fixed";
+    } else if (name in fixed) {
+      state.textContent = `fixed at ${fmt(fixed[name], PAYLOAD.nodes[name].unit)}`;
+      state.className = "state fixed";
+    } else {
+      state.textContent = shape(PAYLOAD.nodes[name]);
+      state.className = "state";
+    }
+  }
   $("stale").style.display = isStale() ? "block" : "none";
-  $("reset").style.display = isStale() ? "inline-block" : "none";
+  $("resample").style.display = TOOLKIT ? "block" : "none";
+  $("reset").style.display = isStale() || Object.keys(fixed).length ? "inline-block" : "none";
   $("focus-note").textContent = focus ? `Showing only what feeds ${PAYLOAD.nodes[focus].label}. Click it again to show everything.` : "";
   drawGraph(values, blocked);
   outputsTable(values, blocked);
   detail(values, blocked);
 }
 
-$("reset").addEventListener("click", () => { overrides = {}; render(); });
+$("reset").addEventListener("click", () => {
+  overrides = {}; fixed = {}; PAYLOAD = STAMPED;
+  $("banner").style.display = "none";
+  render();
+});
+
+/* -- resampling -------------------------------------------------------------------- */
+
+// A declared shape, said the way the model file says it.
+function shape(node) {
+  const d = node.distribution;
+  if (!d) return "a single value";
+  const u = node.unit;
+  if (d.lognormal) return `lognormal, p10 ${fmt(d.lognormal.p10, u)} to p90 ${fmt(d.lognormal.p90, u)}`;
+  if (d.triangular) return `triangular, ${fmt(d.triangular.minimum, u)} / ${fmt(d.triangular.likely, u)} / ${fmt(d.triangular.maximum, u)}`;
+  if (d.uniform) return `uniform, ${fmt(d.uniform.minimum, u)} to ${fmt(d.uniform.maximum, u)}`;
+  return Object.keys(d)[0];
+}
+
+function banner(text, cls) {
+  const b = $("banner");
+  b.textContent = text;
+  b.className = "banner" + (cls ? " " + cls : "");
+  b.style.display = "block";
+}
+
+async function resampleWith(held) {
+  pyodide.globals.set("_model", TOOLKIT.model);
+  pyodide.globals.set("_scenario", TOOLKIT.scenario);
+  pyodide.globals.set("_held", JSON.stringify(held));
+  const text = await pyodide.runPythonAsync(
+    "import json\nresample(_model, _scenario, json.loads(_held))");
+  return JSON.parse(text);
+}
+
+// Before the page shows a resampled interval it shows that this sampler, in this browser, gives
+// back the stamped one: every node's point and its p5, median and p95, at the scenario.
+function agree(fresh) {
+  let checked = 0;
+  const off = [];
+  const close = (a, b) => Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(b));
+  for (const [name, node] of Object.entries(STAMPED.nodes)) {
+    const got = fresh.nodes[name] || {};
+    if (node.point !== undefined) { checked += 1; if (!close(got.point, node.point)) off.push(name); }
+    if (node.summary) {
+      for (const k of ["p5", "p50", "p95"]) {
+        checked += 1;
+        if (!got.summary || !close(got.summary[k], node.summary[k])) { off.push(`${name}.${k}`); break; }
+      }
+    }
+  }
+  return off.length
+    ? `This browser does not agree with the build at the scenario (${off.slice(0, 4).join(", ")}${off.length > 4 ? "\u2026" : ""}). Trust the stamped result, not this page.`
+    : `At the scenario this browser reproduces the stamped result on all ${checked} checked figures.`;
+}
+
+async function resample() {
+  const held = { ...fixed, ...overrides };
+  const button = $("resample");
+  button.disabled = true;
+  try {
+    booting = booting || bootToolkit({
+      pyodideUrl: TOOLKIT.pyodide, modules: TOOLKIT.modules, results: TOOLKIT.results,
+      status: (text) => banner(text, "pending"),
+    });
+    pyodide = await booting;
+    if (agreement === null) {
+      banner("Checking this browser against the build\u2026", "pending");
+      agreement = agree(await resampleWith({}));
+    }
+    banner(`Sampling with ${Object.keys(held).length} input(s) held\u2026`, "pending");
+    const fresh = await resampleWith(held);
+    PAYLOAD = fresh;
+    fixed = held;
+    overrides = {};
+    const s = fresh.scenario;
+    const heldText = Object.entries(held)
+      .map(([n, v]) => `${STAMPED.nodes[n].label} at ${fmt(v, STAMPED.nodes[n].unit)}`).join(", ");
+    banner(`Resampled: ${s.samples.toLocaleString()} samples, seed ${s.seed}` +
+      (heldText ? `, with ${heldText} held. ` : ". ") +
+      "The intervals and the histograms below are for these settings. " + agreement,
+      agreement.startsWith("At the scenario") ? "" : "bad");
+  } catch (error) {
+    banner("The sampler did not run here: " + error + " \u2014 the stamped intervals stand.", "bad");
+  } finally {
+    button.disabled = false;
+    render();
+  }
+}
+
+if (TOOLKIT) $("resample").addEventListener("click", resample);
 buildControls();
 render();
