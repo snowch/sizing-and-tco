@@ -5,8 +5,8 @@ description: Write a chapter of Sizing and TCO, end to end
 Write chapter $ARGUMENTS of *Sizing and TCO* (give the slug, not the number — identity is the
 slug).
 
-Before writing anything, read `CLAUDE.md`, `PLAN.md`, `AUTHORING_GUIDE.md` and the previous
-chapter. Then:
+Before writing anything, read `CLAUDE.md`, `PLAN.md`, `AUTHORING_GUIDE.md`, `STYLE.md` and the
+previous chapter. Then:
 
 1. **Write the problems and their tests first**, under `tests/<slug>/`, and make sure each one
    fails for the right reason. A problem whose test passes before it is solved is not a problem.
