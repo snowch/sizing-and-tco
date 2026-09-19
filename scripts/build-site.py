@@ -41,6 +41,8 @@ sys.path.insert(0, str(ROOT))
 from bench.outline import APPENDICES, CHAPTERS, PART_PAGES  # noqa: E402
 from bench.stages import stages  # noqa: E402
 from bench.stamp import shown  # noqa: E402
+from sizing.dsl import load_model  # noqa: E402
+from sizing.playground.toolkit import BOOT, PYODIDE, results_for, sources  # noqa: E402
 
 
 def _pdf():
@@ -241,6 +243,7 @@ def sections_of(source: str, page: dict, title: str, href: str) -> list[dict]:
 RUNNER = r"""
 <script type="application/json" id="model-whole">{whole}</script>
 <script type="application/json" id="model-modules">{modules}</script>
+<script type="application/json" id="model-results">{results}</script>
 <div id="runner" class="runner">
   <div class="bar">
     <button id="run" class="primary" type="button">Run the model</button>
@@ -249,8 +252,10 @@ RUNNER = r"""
   <div id="results" aria-live="polite"></div>
 </div>
 <script type="module">
+{boot}
 const WHOLE = JSON.parse(document.getElementById("model-whole").textContent);
 const MODULES = JSON.parse(document.getElementById("model-modules").textContent);
+const RESULTS = JSON.parse(document.getElementById("model-results").textContent);
 const $ = (id) => document.getElementById(id);
 let pyodide = null, booting = null;
 
@@ -266,17 +271,10 @@ function assemble() {{
 }}
 
 async function boot() {{
-  $("status").textContent = "Starting Python\u2026 about ten megabytes, once.";
-  const {{ loadPyodide }} = await import("{pyodide}pyodide.mjs");
-  pyodide = await loadPyodide({{ indexURL: "{pyodide}" }});
-  await pyodide.loadPackage(["numpy", "micropip"]);
-  await pyodide.pyimport("micropip").install(["Pint", "PyYAML"]);
-  pyodide.FS.mkdirTree("/sizing/playground");
-  for (const [name, source] of Object.entries(MODULES)) {{
-    pyodide.FS.writeFile("/sizing/" + name, source);
-  }}
-  await pyodide.runPythonAsync(
-    "import sys\nsys.path.insert(0, '/')\nfrom sizing.playground.driver import check");
+  pyodide = await bootToolkit({{
+    pyodideUrl: "{pyodide}", modules: MODULES, results: RESULTS,
+    status: (text) => {{ $("status").textContent = text; }},
+  }});
 }}
 
 function show(result) {{
@@ -346,17 +344,10 @@ for (const button of document.querySelectorAll(".run-here")) {{
 """
 
 #: Pinned, because an unpinned runtime changes what a reader sees without changing a line here.
-PYODIDE = "https://cdn.jsdelivr.net/pyodide/v0.28.3/full/"
+# The runtime URL, the module list and the boot script come from one place:
+# sizing/playground/toolkit.py. Three pages run the toolkit, and one copy is how they agree.
 
 #: Every module the toolkit needs to load, typecheck and evaluate a model.
-MODULES = ("__init__", "units", "expr", "dsl", "normal", "mc", "evaluate", "graph")
-
-
-def toolkit() -> dict[str, str]:
-    out = {f"{name}.py": (ROOT / "sizing" / f"{name}.py").read_text() for name in MODULES}
-    out["playground/__init__.py"] = ""
-    out["playground/driver.py"] = (ROOT / "sizing" / "playground" / "driver.py").read_text()
-    return out
 
 
 #: Whole-book search, over `search.json`. Not an inverted index: the book's prose is 300 KB, so
@@ -873,7 +864,9 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
     if blocks:
         runner = RUNNER.format(
             whole=json.dumps(stage.path.read_text()),
-            modules=json.dumps(toolkit()),
+            boot=BOOT,
+            modules=json.dumps(sources()),
+            results=json.dumps(results_for(load_model(stage.path))),
             pyodide=PYODIDE,
         )
         body = body.replace(PDF.RUNNER_SLOT, runner, 1)

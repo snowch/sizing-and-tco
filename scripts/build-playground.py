@@ -37,16 +37,11 @@ sys.path.insert(0, str(ROOT))
 
 from bench.stages import label_of, stages  # noqa: E402
 from bench.stamp import shown  # noqa: E402
+from sizing.dsl import load_model  # noqa: E402
 from sizing.playground.driver import check  # noqa: E402
+from sizing.playground.toolkit import BOOT, PYODIDE, results_for, sources  # noqa: E402
 
 DEFAULT_OUT = ROOT / "_build" / "playground"
-
-#: Pinned, because an unpinned runtime changes what a reader sees without changing a line here.
-PYODIDE = "https://cdn.jsdelivr.net/pyodide/v0.28.3/full/"
-
-#: Every module the two calls reach. Inlined rather than fetched, so the page has one network
-#: dependency (the runtime) instead of two.
-MODULES = ("__init__", "units", "expr", "dsl", "normal", "mc", "evaluate", "graph")
 
 
 def fixtures(path: Path) -> list[dict]:
@@ -141,8 +136,10 @@ milliseconds. Nothing is sent anywhere &mdash; it all runs in this tab.</div>
 </footer>
 
 <script type="module">
+{boot}
 const FIXTURES = {fixtures};
 const MODULES = {modules};
+const RESULTS = {results};
 const START = {model_json};
 
 const $ = (id) => document.getElementById(id);
@@ -157,13 +154,11 @@ let booting = null;
 
 async function boot() {{
   const began = performance.now();
-  show($("agreement"), "Starting Python\u2026", "pending");
   try {{
-    const {{ loadPyodide }} = await import("{pyodide}pyodide.mjs");
-    pyodide = await loadPyodide({{ indexURL: "{pyodide}" }});
-    await pyodide.loadPackage(["numpy", "micropip"]);
-    const micropip = pyodide.pyimport("micropip");
-    await micropip.install(["Pint", "PyYAML"]);
+    pyodide = await bootToolkit({{
+      pyodideUrl: "{pyodide}", modules: MODULES, results: RESULTS,
+      status: (text) => show($("agreement"), text, "pending"),
+    }});
   }} catch (error) {{
     show($("agreement"),
       "Python did not start, so this page cannot check anything: " + error +
@@ -171,18 +166,6 @@ async function boot() {{
       "bad");
     return;
   }}
-
-  pyodide.FS.mkdirTree("/sizing/playground");
-  for (const [name, source] of Object.entries(MODULES)) {{
-    pyodide.FS.writeFile("/sizing/" + name, source);
-  }}
-  await pyodide.runPythonAsync(`
-import sys
-
-import yaml
-sys.path.insert(0, "/")
-from sizing.playground.driver import check
-`);
 
   const ready = Math.round(performance.now() - began);
   $("timing").textContent = "Python ready in " + (ready / 1000).toFixed(1) + "s";
@@ -334,16 +317,15 @@ footer { margin-top: 24px; border-top: 1px solid var(--edge); padding-top: 12px;
 
 def build(stage) -> str:
     """One page for one stage of the storage model."""
-    modules = {f"{name}.py": (ROOT / "sizing" / f"{name}.py").read_text() for name in MODULES}
-    modules["playground/__init__.py"] = ""
-    modules["playground/driver.py"] = (ROOT / "sizing" / "playground" / "driver.py").read_text()
     model = stage.path.read_text()
     return PAGE.format(
         css=CSS,
         title=html.escape(f"{label_of(stage.chapter)} \u00b7 {stage.title}"),
         model=html.escape(model),
         model_json=json.dumps(model),
-        modules=json.dumps(modules),
+        boot=BOOT,
+        modules=json.dumps(sources()),
+        results=json.dumps(results_for(load_model(stage.path))),
         fixtures=json.dumps(fixtures(stage.path)),
         pyodide=PYODIDE,
         stage=html.escape(shown(stage.path)),

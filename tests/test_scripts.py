@@ -307,3 +307,37 @@ def test_every_stage_viewer_is_embedded_by_its_chapter():
             f"chapters/{stage.chapter}.md does not embed its stage's viewer. Add a "
             f"```{wanted}``` panel where the chapter shows what the stage adds."
         )
+
+
+def test_the_pages_that_run_the_toolkit_share_one_runtime_and_one_boot():
+    """Three pages start Python in a browser. One copy of how, or they drift.
+
+    The inline runner, the playground and the viewer each carried their own runtime URL, module
+    list and boot sequence until the third one was about to be written. Now
+    ``sizing/playground/toolkit.py`` holds the URL and the list, ``boot.js`` the sequence, and
+    every builder inlines them. A builder that spells the CDN out again is a fourth copy.
+    """
+    builders = ("scripts/build-site.py", "scripts/build-playground.py", "scripts/build-viewers.py")
+    for builder in builders:
+        text = (ROOT / builder).read_text()
+        assert "cdn.jsdelivr.net/pyodide" not in text, f"{builder} pins its own runtime URL"
+        assert "{boot}" in text, f"{builder} does not inline boot.js"
+        assert "from sizing.playground.toolkit import" in text, f"{builder} does not import toolkit"
+    # The call itself: in the two page templates, and in the viewer's own app.
+    for caller in ("scripts/build-site.py", "scripts/build-playground.py", "sizing/viewer/app.js"):
+        assert "bootToolkit(" in (ROOT / caller).read_text(), f"{caller} does not call bootToolkit"
+
+
+def test_the_toolkit_does_not_import_the_harness():
+    """``sizing`` runs in a browser that has no ``bench``; nothing under it may import bench.
+
+    A lazy ``from bench.stamp import load_result`` inside ``sizing.dsl`` meant any model with a
+    measured constant could not load in the playground -- every stage from ch09 on -- and the
+    page said so only to a reader who pressed Run, which for three of them nobody had.
+    """
+    offenders = [
+        str(path.relative_to(ROOT))
+        for path in (ROOT / "sizing").rglob("*.py")
+        if re.search(r"^\s*(from|import) bench\b", path.read_text(), re.M)
+    ]
+    assert not offenders, f"the toolkit imports the harness in {offenders}"

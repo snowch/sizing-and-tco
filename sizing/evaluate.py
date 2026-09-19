@@ -383,10 +383,15 @@ def evaluate(model: Model, scenario: Scenario) -> Evaluation:
             )
     if columns:
         matrix = np.column_stack(columns)
-        if model.correlations:
-            matrix = mc.correlate(
-                matrix, mc.correlation_matrix(uncertain, list(model.correlations)), generator
-            )
+        # A correlation between two inputs only means something while both are drawn. Pin one
+        # -- a scenario override, or a slider a reader has fixed -- and it has no variation left
+        # to share, so the pair is dropped rather than refused. Without this, fixing the growth
+        # rate raised an error from the correlation it is declared in, and nothing in the book
+        # had ever pinned a correlated input to find out.
+        drawn_names = set(uncertain)
+        live = [c for c in model.correlations if c["a"] in drawn_names and c["b"] in drawn_names]
+        if live:
+            matrix = mc.correlate(matrix, mc.correlation_matrix(uncertain, live), generator)
         drawn = {name: matrix[:, i] for i, name in enumerate(uncertain)}
     else:
         drawn = {}
