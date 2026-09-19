@@ -30,7 +30,7 @@ trap sits in a different place in each.
 For the cost per stored terabyte the quantity is itself per period, and the period is the trap:
 per terabyte-month and per terabyte-year differ by a factor of twelve and look equally
 authoritative on a slide. Problem 17.1 is that arithmetic. In a model, the build catches it — the
-two have identical dimensions and different units, and `sizing/units.py` converts. The same factor
+two have identical dimensions and different units, and the build converts. The same factor
 of twelve is in [Appendix D](#appendix-d-units), where this repository nearly published it. In a
 slide, nothing catches it.
 

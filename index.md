@@ -40,7 +40,8 @@ it came from, so a vendor's claim and a measurement sit in one column looking th
 sure anybody was of it, so the spread is gone by the first multiplication. Everything this book
 does rests on those three things being written down beside the number, and a file is where they
 can be. It also diffs and reviews like code. [ch02](#what-a-workload-is) writes the first one, at
-four lines a quantity, and the build refuses a node that leaves its unit or its source out.
+four lines a quantity, and the build — the checks that turn these files into this book — refuses a
+node that leaves its unit or its source out.
 
 It starts in [ch02 · What a workload is](#what-a-workload-is) as what arrives and what
 accumulates, and already refuses a formula whose units do not work out — the error a spreadsheet
@@ -52,8 +53,8 @@ can hold, where it stops coping, what it costs to run.
 about the service in this book is computed from that file at whatever stage the chapter has
 reached, so an early table cannot show you something that chapter has not built yet.
 
-**Nothing is asserted here that the repository could check instead.** That rule shows up in three
-ways, and it is the reason to believe any of the numbers you are about to be shown.
+**Every number here can be checked, and the page says how.** That promise is kept three ways, and
+it is the reason to believe any of the numbers you are about to be shown.
 
 *Every number says where it came from.* No figure is typed into the prose; every one is computed.
 The italic line under each table links to the file it came from — `web_service-reference`
@@ -67,9 +68,8 @@ uncertainty has and why that shape rather than another. Every measured constant 
 measurement behind it. [ch03](#where-the-numbers-come-from) says what those distinctions are
 worth; [Appendix A](#appendix-a-dsl-reference) is the file format that holds them.
 
-*Every chapter ends by saying what it cannot tell you.* A section with that name is required, and
-the tests fail a chapter that leaves it out. In a book about estimates it is usually the most
-useful part of the chapter.
+*Every chapter ends by saying what it cannot tell you.* Every one has a section with that name,
+and in a book about estimates it is usually the most useful part of the chapter.
 
 One consequence of those rules shows up on the pages. When a constant has not been measured, the
 quantity that needs it has no value, and neither does anything computed from it. Those figures
@@ -105,12 +105,12 @@ a good answer contains and what would falsify it. Every chapter ends with one of
 To read it and run its models, nothing. [ch02](#what-a-workload-is) and
 [ch03](#where-the-numbers-come-from) carry the model file running in the page: press **Run**,
 change a number, and try to multiply a rate by a count of periods to see the build refuse it.
-That is this repository's own loader and unit checker, fetched as a Python runtime and run in
-your browser, so what the page does and what `make check` does cannot come apart. The finished
-models in [Appendix E](#appendix-e-web-service-model) and
+That is the book's own loader and unit checker, fetched as a Python runtime and run in your
+browser, so what the page does and what the book was computed from cannot come apart. The
+finished models in [Appendix E](#appendix-e-web-service-model) and
 [Appendix F](#appendix-f-observability-model) have a slider against every input; those are
-evaluated by a small JavaScript version, which `tests/test_viewer.py` runs against Python's
-answers for every node of every model before it ships.
+evaluated by a small JavaScript version, checked against Python's answers for every node of every
+model before it ships.
 
 The book is a website and is meant to be read as one: the models are the point, and they are
 things you drag. The prose reads on any screen; the models want a tablet held sideways or
@@ -129,7 +129,7 @@ python3 -m pip install -r requirements.txt -r requirements-dev.txt
 npm install -g "mystmd@$(node -p "require('./package.json').devDependencies.mystmd")"
 
 make models     # evaluate every model and stamp what it said
-make check      # exactly what CI runs
+make check      # every check the book runs on itself
 make book       # build the site and serve it
 ```
 
@@ -137,7 +137,7 @@ Nothing in this book needs a datacentre, a cloud account, or a licence.
 
 :::{note} Where this book is
 This site is the whole of it — there is no PDF, because the models are things you drag and paper
-cannot hold one. The line below says which commit built the pages you are reading.
+cannot hold one.
 
 ```{include} chapters/_generated/build.md
 ```

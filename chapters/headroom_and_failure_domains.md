@@ -113,8 +113,8 @@ when the reason goes away. A margin that is just a number gets carried into the 
 the one after that, by people who were not in the room. Ten years later an organisation has a
 thirty-per-cent rule that everybody follows and nobody can source.
 
-`scripts/verify-models.py` refuses a ceiling without one, which is the only enforcement available
-and is better than none.
+The build refuses a ceiling without one, which is the only enforcement available and is better
+than none.
 
 ### The output a margin actually produces
 
