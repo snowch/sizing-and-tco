@@ -23,12 +23,13 @@ bought either: a year when hosts are scarce is usually a year when optics are, b
 through the same supply chain and are quoted in the same quarter.
 
 Drawing them independently is not a neutral choice. It is the claim that one can save you from
-the other — that a bad host quarter will, on average, be offset by a good network quarter. If
-that is false, the model is reporting a narrower interval than the evidence supports.
+the other: that a bad host quarter will, on average, be offset by a good network quarter. If that
+is false, the model is reporting a narrower interval than the evidence supports.
 
 Narrower is the direction that gets a plan approved.
 
-So a model file can declare which inputs move together, how strongly, and why:
+Two inputs that tend to move together are **correlated**, and how strongly they do is their
+**correlation**. A model file can declare it, along with why:
 
 ```{include} _generated/correlation-and-convergence-declared.md
 ```
@@ -39,14 +40,14 @@ somebody will copy into the next model without knowing what it was for.
 ### Correlating ranks, not values
 
 The obvious way is to correlate the *values*: nudge each host price up a little when the network
-price is up. Do that and you have changed the host price distribution — the thing you carefully
+price is up. Do that and you have changed the host price distribution: the thing you carefully
 chose in [ch13](#monte-carlo), with its own percentiles and its own shape. You set out to encode
 one belief and quietly overwrote another.
 
 The method this book uses only ever **reorders**. Every value that was going to be in a column is
 still in it, in the same quantity. All that changes is which draws line up with which. So each
-input keeps exactly the distribution the modeller chose, and the correlation is expressed in the
-pairing rather than in the numbers.
+input keeps exactly the distribution the modeller chose. The correlation is expressed in the
+pairing, not in the numbers.
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -54,12 +55,12 @@ pairing rather than in the numbers.
 :end-before: # -- reading the answer
 ```
 
-One subtlety in there is easy to skip and then be quietly wrong about. The method works by
+One subtlety in there is easy to skip, and then to be quietly wrong about. The method works by
 correlating normal scores, and the rank correlation that comes out is weaker than the one that
-went in, by a known amount. Apply no correction and every declared correlation lands slightly
-weaker than it was written. Small, consistent, and exactly the kind of error that survives review
-forever, because nobody expects the number they typed to come back as a different number. So the
-relation is inverted before use:
+went in, by a known amount. Apply no correction, and every declared correlation lands slightly
+weaker than it was written. That error is small and consistent, and it is exactly the kind that
+survives review forever, because nobody expects the number they typed to come back as a different
+number. So the relation is inverted before use:
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -68,7 +69,7 @@ relation is inverted before use:
 ```
 
 Problem 14.2 checks both halves of the claim: that the correlation comes out where it was asked
-for, and that the marginal distributions did not move.
+for, and that each input's own distribution did not move.
 
 ### What the correlations bought
 
@@ -88,9 +89,9 @@ are weak ones, and one of them does not reach the five-year total at all. Seeing
 that barely matters beside one that does is the fastest way to stop treating the subject as
 magic.
 
-The general shape: **correlation between inputs that push the same way widens the interval**. It
-is not a correction, it is not a refinement, and it does not make the model more precise. It
-removes an assumption that was making the model look better than it was.
+The general rule: **correlation between inputs that push the same way widens the interval**. It
+is not a correction. It is not a refinement. It does not make the model more precise. It removes
+an assumption that was making the model look better than it was.
 
 ### How many samples is enough
 
@@ -100,9 +101,10 @@ rising sample counts and watch the interval narrow.
 That experiment does not work.
 
 **The interval does not narrow.** A 90% interval is a property of the distribution the model
-describes — of how uncertain the model's inputs actually are. More samples do not make that
-smaller. They converge on it. Run the web service model with ten thousand draws and with a million,
-and the interval is the same width; it was never a function of how hard you looked.
+describes, which is to say of how uncertain the model's inputs actually are. More samples do not
+make that smaller. They **converge** on it: the answer settles towards the interval the inputs
+imply. Run the web service model with ten thousand draws and with a million, and the interval is
+the same width. It was never a function of how hard you looked.
 
 What more samples buy is knowing **where** that interval is. Two runs of the same model with
 different random seeds give slightly different answers, and the gap between them shrinks as you
@@ -113,15 +115,15 @@ recorded is the spread between those runs:
 ```
 
 Two columns, two behaviours. The first settles. The second falls, by about the square root of ten
-per decade across the range — the law measured rather than asserted, and measured with noise,
-which is the next paragraph.
+per decade across the range. That is the law measured rather than asserted, and measured with
+noise, which is the next paragraph.
 
 Look at the individual ratios before you believe the summary, because they wander. Each spread in
-that column is itself *estimated*, from a limited number of independent runs, and an estimate of a
+that column is itself *estimated*, from a limited number of independent runs. An estimate of a
 spread is noisy in exactly the way everything else in this chapter is noisy. Measuring how
 uncertain something is turns out to be an uncertain measurement, and a figure demonstrating that
 law had better not be the one place in the book that forgets it. The overall rate across the
-range is far steadier than any single step, which is why it is the number on the last row.
+range is far steadier than any single step. That is why it is the number on the last row.
 
 The smallest row is excluded from the law and kept in the table. At that count a 95th percentile
 is one of the largest handful of draws there were, bounded by the sample itself, and nowhere near
@@ -143,8 +145,8 @@ The law also gives a definition of "enough" that is a calculation rather than a 
 
 If you are going to write the five-year total to the nearest hundred thousand, you need the
 run-to-run spread below that, and the table says which sample count gets you there. If you are
-going to write it to the nearest million — which, given everything else in this book, is the more
-defensible choice — you needed far fewer samples than you took.
+going to write it to the nearest million, which is the more defensible choice given everything
+else in this book, you needed far fewer samples than you took.
 
 `sizing.mc` has the arithmetic both ways round:
 
@@ -176,14 +178,14 @@ is a guess with the same standing as any other assumption in the model. The `bec
 beside it in the model file is the only thing standing behind it.
 
 **Anything about correlations that are not monotonic.** Rank correlation describes two quantities
-that tend to move in the same direction. Two that move together up to a point and then diverge —
-which is what a ceiling does to everything downstream of it — are not described by a single
-coefficient at all, and this book does not pretend otherwise.
+that tend to move in the same direction. Two that move together up to a point and then diverge,
+which is what a ceiling does to everything downstream of it, are not described by a single
+coefficient at all. This book does not pretend otherwise.
 
-**That more samples are ever the answer to a wide interval.** They are not. More samples
-tell you where the interval is, not how wide it is. A wide interval means the inputs are
-uncertain, and the only things that narrow it are measuring something or deciding something
-— [ch19 · Which input to go and measure](#which-input-is-the-answer).
+**That more samples are ever the answer to a wide interval.** They are not. More samples tell you
+where the interval is, not how wide it is. A wide interval means the inputs are uncertain. The
+only things that narrow it are measuring something or deciding something:
+[ch19 · Which input to go and measure](#which-input-is-the-answer).
 
 ## Problems
 
@@ -227,16 +229,16 @@ what else in this repository would have to be wrong for that mistake to survive 
 quantities move together.
 
 Nothing in this book discovers a correlation; they are all declared. Go through your own inputs in
-pairs and find the ones that are not independent — the growth rate and the peak ratio, the price
+pairs and find the ones that are not independent: the growth rate and the peak ratio, the price
 and the quantity, the compression ratio and the kind of data.
 
-For each pair, say which direction and roughly how strongly, and then say what it does to your
-answer: correlated inputs moving the same way widen the result, and treating them as independent
-is the commonest way a model quietly reports less doubt than it has.
+For each pair, say which direction and roughly how strongly. Then say what it does to your answer.
+Correlated inputs moving the same way widen the result, and treating them as independent is the
+commonest way a model quietly reports less doubt than it has.
 
 A good answer names at least one pair and says whether ignoring it makes your interval too narrow
 or too wide. If you find no pairs at all in a chain of six quantities about one system, look
-again — independence is a strong claim and it is rarely true.
+again. Independence is a strong claim, and it is rarely true.
 
 ## Where to go next
 
