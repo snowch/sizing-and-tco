@@ -18,12 +18,12 @@ which is the opposite of what most people expect.
 
 ### Inputs that move together
 
-The storage model draws a drive price and a chassis price independently. Ask anybody who has
-bought either: a year when drives are scarce is usually a year when servers are, because they
-come through the same supply chain and are quoted in the same quarter.
+The web service model prices a host and the network port it plugs into. Ask anybody who has
+bought either: a year when hosts are scarce is usually a year when optics are, because they come
+through the same supply chain and are quoted in the same quarter.
 
 Drawing them independently is not a neutral choice. It is the claim that one can save you from
-the other — that a bad drive quarter will, on average, be offset by a good chassis quarter. If
+the other — that a bad host quarter will, on average, be offset by a good network quarter. If
 that is false, the model is reporting a narrower interval than the evidence supports.
 
 Narrower is the direction that gets a plan approved.
@@ -38,8 +38,8 @@ somebody will copy into the next model without knowing what it was for.
 
 ### Correlating ranks, not values
 
-The obvious way is to correlate the *values*: nudge each drive price up a little when the chassis
-price is up. Do that and you have changed the drive price distribution — the thing you carefully
+The obvious way is to correlate the *values*: nudge each host price up a little when the network
+price is up. Do that and you have changed the host price distribution — the thing you carefully
 chose in [ch13](#monte-carlo), with its own percentiles and its own shape. You set out to encode
 one belief and quietly overwrote another.
 
@@ -83,9 +83,10 @@ observability model's ingest chain it made it *substantially* narrower. That cha
 inputs feeding off the same growth, and pretending they are strangers lets them cancel each other
 out.
 
-One row barely moves, and it is in the table deliberately. A correlation between two inputs that
-do not both feed the output changes almost nothing. Seeing one that does not matter beside one
-that does is the fastest way to stop treating the subject as magic.
+The web service's rows are modest, and they are in the table deliberately: its two declared pairs
+are weak ones, and one of them does not reach the five-year total at all. Seeing a correlation
+that barely matters beside one that does is the fastest way to stop treating the subject as
+magic.
 
 The general shape: **correlation between inputs that push the same way widens the interval**. It
 is not a correction, it is not a refinement, and it does not make the model more precise. It
@@ -100,7 +101,7 @@ That experiment does not work.
 
 **The interval does not narrow.** A 90% interval is a property of the distribution the model
 describes — of how uncertain the model's inputs actually are. More samples do not make that
-smaller. They converge on it. Run the storage model with ten thousand draws and with a million,
+smaller. They converge on it. Run the web service model with ten thousand draws and with a million,
 and the interval is the same width; it was never a function of how hard you looked.
 
 What more samples buy is knowing **where** that interval is. Two runs of the same model with
@@ -111,8 +112,9 @@ recorded is the spread between those runs:
 ```{include} _generated/correlation-and-convergence-table.md
 ```
 
-Two columns, two behaviours. The first settles. The second falls by close to the square root of
-ten per decade, which is the law measured rather than asserted.
+Two columns, two behaviours. The first settles. The second falls, by about the square root of ten
+per decade across the range — the law measured rather than asserted, and measured with noise,
+which is the next paragraph.
 
 Look at the individual ratios before you believe the summary, because they wander. Each spread in
 that column is itself *estimated*, from a limited number of independent runs, and an estimate of a
@@ -189,7 +191,7 @@ Five. The first three are graded, in `tests/correlation_and_convergence/`. The l
 and say why.
 
 **14.1 — Show the square-root law.**
-Run one output of the storage model at several sample counts, with several independent seeds at
+Run one output of the web service model at several sample counts, with several independent seeds at
 each, and assert that the run-to-run spread falls as one over the square root of the count. The
 tolerance is itself a sampling question, and the test makes you confront that.
 

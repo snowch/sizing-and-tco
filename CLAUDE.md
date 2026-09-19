@@ -141,8 +141,9 @@ This book covers ground other books cover. It must be **entirely original work**
 - **When something cannot be measured here** — no reference machine, no instrumented application —
   the page says so in the text, shows the reasoning it used instead, and states what it would take
   to measure. It does not substitute a number from somewhere else.
-- Prefer showing a result that surprises the reader to asserting a rule. The storage model's
-  one-in-three chance of running out of space is worth more than a paragraph about prudence.
+- Prefer showing a result that surprises the reader to asserting a rule. The fleet the point
+  estimates bought, over the knee at the busy hour in a substantial share of the model's own
+  futures, is worth more than a paragraph about prudence.
 - A model's *structure* is the thing Monte Carlo cannot check. Every chapter with a model in it
   must say in *What this cannot tell you* what its structure omits.
 

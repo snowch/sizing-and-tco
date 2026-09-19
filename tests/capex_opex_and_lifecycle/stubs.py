@@ -25,7 +25,7 @@ def lifecycle_total(capex: float, annual_opex: float, years: float, refresh_year
     total spend.
 
     The first purchase happens at the start. Decide what happens when a refresh falls exactly on
-    the end of the horizon - whether you have bought a cluster you will not use - and defend
+    the end of the horizon - whether you have bought a fleet you will not use - and defend
     whichever you choose in a comment. The test accepts either, and checks only that you are
     consistent about it, because this is a modelling choice rather than a fact.
 

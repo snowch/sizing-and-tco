@@ -38,7 +38,7 @@ def fit(measurements: list[tuple[float, float]]) -> tuple[float, float, float]:
     """Problem 7.2 - the two coefficients, from measurements somebody could actually take.
 
     ``measurements`` is a list of ``(hosts, throughput)`` pairs. You will usually have three: one
-    machine, the cluster you have, and the cluster you had before you grew it. That is not much
+    machine, the fleet you have, and the fleet you had before you grew it. That is not much
     data and it is what exists.
 
     Return ``(one_host, contention, crosstalk)``.

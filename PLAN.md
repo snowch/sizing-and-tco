@@ -8,7 +8,7 @@ outline is right about *what* and this file is right about *why*.
 
 **How big, how much, and how wrong could I be?**
 
-The third clause is the book. Working out that a cluster needs some number of nodes is arithmetic.
+The third clause is the book. Working out that a service needs some number of hosts is arithmetic.
 Knowing what that number is worth — which input it rests on, how far it moves when that input
 moves, and what it would take to find out — is the skill that decides whether anybody should act
 on it.
@@ -72,7 +72,7 @@ the evaluator works in plain `float64`. Units are a gate, not a tax.
 
 **Dimensional analysis is not enough; conversion is required.** `USD/TB/year` and `USD/TB/month`
 have identical dimensions and differ by twelve. A check that compared only dimensionality would
-have published the storage model's unit cost twelve times too large and passed.
+have published the running example's unit cost twelve times too large and passed.
 
 **The browser gets the evaluator, and on request the first sampler — never a second one.**
 Sliders recompute point values instantly, because a point is arithmetic, and the two evaluators
@@ -92,12 +92,12 @@ fourth, `model`, is not a measurement of anything outside the repository at all 
 model file said when the build ran it, and keeping it separate is what stops the other three
 going soft.
 
-**The running example is a web service and its data, on a fleet of Linux hosts.** It was a
-scale-out storage cluster, and that is being replaced for two reasons that editing cannot fix.
-Not everyone in the book's audience has sized a storage cluster; everyone in it has sized a
-service and the machines it runs on. And the cluster sits too close to systems the author works
-on for a reader who knows that to take *vendor-neutral by construction* on trust — neutrality has
-to be true of the example, not only of the words.
+**The running example is a web service and its data, on a fleet of Linux hosts.** It replaced a
+scale-out storage cluster, for two reasons that editing could not fix. Not everyone in the book's
+audience has sized a storage cluster; everyone in it has sized a service and the machines it runs
+on. And the cluster sat too close to systems the author works on for a reader who knows that to
+take *vendor-neutral by construction* on trust — neutrality has to be true of the example, not
+only of the words.
 
 The host is the unit and the fleet is what gets costed. Requests arrive and data accumulates; the
 host's spec sheet is the first number somebody else supplied; growth gets its shape. Part II stops
@@ -118,10 +118,10 @@ declared in `rig/machine.yml`, that node becomes measured, and the running examp
 model in the book measured end to end. The storage cluster could never have been: nobody has one
 to hand, and everybody has a host.
 
-The switch lands in three moves and `main` is never half-swapped: the new model is built beside
-the old until every stage loads, classifies and stamps; every chapter, figure, experiment and
-test moves in one change; the old models are retired in another. NEXT_STEPS.md carries the
-order.
+The switch landed in three moves, so that `main` was never half-swapped: the new model was built
+beside the old until every stage loaded, classified and stamped; every chapter, figure,
+experiment and test moved in one change; the old models go in a third, which NEXT_STEPS.md
+carries.
 
 **No vendor is named, anywhere.** A measured constant names the *implementation* it belongs to —
 which for the metrics encoder is this repository's own — because that is what makes it a

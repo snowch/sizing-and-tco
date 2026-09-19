@@ -2,7 +2,7 @@
 
 | | Input | Provenance | Source |
 |---|---|---|---|
-| ○ | annual growth | assumption | ch04 — telemetry grows faster than the traffic it describes, because teams add instrumentation as well as load. Lognormal like any growth rate — it compounds and cannot go negative — and wider than the storage model's for the same reason its median is higher |
+| ○ | annual growth | assumption | ch04 — telemetry grows faster than the traffic it describes, because teams add instrumentation as well as load. Lognormal like any growth rate — it compounds and cannot go negative — and wider than the web service's for the same reason its median is higher |
 | ○ | metric names per host | assumption | distinct metric names exposed per host, before labels |
 | ○ | collector cores | assumption | the sizing decision for the ingest tier |
 | ◐ | collector throughput quoted | vendor claim | throughput per core as documented by the collector. Unverified here, and marked as a claim in every figure it appears in |
@@ -23,7 +23,7 @@
 | ○ | request rate | assumption | ch03 — the busy hour across the estate, not the daily mean. Triangular: a minimum, a likely and a maximum is the whole of what a dashboard gives you, and the maximum is the busiest hour anybody has looked at rather than the busiest one there will be |
 | ○ | scrape interval | assumption | a control knob (ch12): doubling it halves the metrics chain and loses resolution that cannot be recovered afterwards |
 | ○ | series per query, before labels | assumption | how many distinct metric-name-and-host combinations one dashboard panel or alert rule covers, before any label expansion. Triangular, and wide: dashboards differ from each other more than anything else in this model does |
-| ○ | storage price | assumption | all-in cost of a usable TB-month on this tier, taken from the storage model's own unit economics (ch17). Lognormal because it is a price — and carried across by hand rather than by sampling, which is the seam ch18 is about |
+| ○ | storage price | assumption | all-in cost of a usable TB-month on this tier. Lognormal because it is a price — and carried across by hand from whichever storage tier's unit economics somebody had to hand, rather than by sampling, which is the seam ch18 is about |
 | ○ | store nodes | assumption | the sizing decision for the retention tier |
 | ○ | trace sampling rate | assumption | a control knob (ch12), and the one with the widest range: head sampling at 1% and at 100% are two different platforms |
 | ○ | traces retention | assumption | a control knob (ch12) |

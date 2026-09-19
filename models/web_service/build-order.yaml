@@ -349,6 +349,7 @@ stages:
       - cost_per_stored_tb_month
       - capex
       - annual_opex
+      - annual_energy
       - queueing_headroom
       - failure_headroom
       - cache_fill

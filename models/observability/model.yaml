@@ -3,7 +3,7 @@ title: An observability platform — metrics, logs and traces
 currency: USD
 
 description: >-
-  The book's sizing exemplar, and the counterweight to the storage cluster. Three multiplicative
+  The book's second model, and the counterweight to the web service. Three multiplicative
   chains hang off the same few roots, so they are correlated whether or not anybody says so; label
   cardinality is a product of uncertain counts and therefore dominates everything downstream of
   it; the control knobs are sampling and retention rather than money; and there are three separate
@@ -48,7 +48,7 @@ nodes:
       kind: assumption
       source: "ch04 — telemetry grows faster than the traffic it describes, because teams add
         instrumentation as well as load. Lognormal like any growth rate — it compounds and
-        cannot go negative — and wider than the storage model's for the same reason its
+        cannot go negative — and wider than the web service's for the same reason its
         median is higher"
 
   horizon:
@@ -62,7 +62,7 @@ nodes:
     kind: input
     unit: year
     value: 1
-    note: "as in the storage model: an exponent has to be a pure number"
+    note: "as in the web service model: an exponent has to be a pure number"
     provenance: {kind: fact, source: "definition"}
 
   horizon_periods:
@@ -478,9 +478,9 @@ nodes:
     distribution: {lognormal: {p10: 9.0, p90: 24.0}}
     provenance:
       kind: assumption
-      source: "all-in cost of a usable TB-month on this tier, taken from the storage model's
-        own unit economics (ch17). Lognormal because it is a price — and carried across by
-        hand rather than by sampling, which is the seam ch18 is about"
+      source: "all-in cost of a usable TB-month on this tier. Lognormal because it is a price —
+        and carried across by hand from whichever storage tier's unit economics somebody had to
+        hand, rather than by sampling, which is the seam ch18 is about"
 
   known_storage_cost:
     kind: derived

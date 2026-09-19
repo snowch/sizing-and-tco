@@ -306,7 +306,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "monte_carlo",
         "Monte Carlo",
         PARTS[3],
-        "The sizing model has produced a node count. How sure are we?",
+        "The sizing model has produced a host count. How sure are we?",
         consumes=("web_service-reference", "web_service-sized_for_growth"),
         needs=("the_sizing_model",),
     ),

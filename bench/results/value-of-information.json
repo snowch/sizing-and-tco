@@ -8,8 +8,8 @@
     "this_is_an_upper_bound": "each figure is what knowing the input *exactly* would remove. A real measurement leaves a standard error behind and removes less, by an amount nobody can know before doing the work",
     "what_it_cannot_say": "whether the input can be measured at all. The web service's total rests on how many people it takes and what a licence costs, which are decided and negotiated rather than measured; its host count and the observability model's store both rest on a growth rate, which belongs to no target. The honest response to those is to decide them rather than to commission a measurement (ch04)"
   },
-  "generated_at": "2026-09-19T11:06:27+00:00",
-  "git_revision": "4ee81f5",
+  "generated_at": "2026-09-19T12:10:27+00:00",
+  "git_revision": "c7b0215",
   "kind": "measurement",
   "name": "value-of-information",
   "produced_by": {

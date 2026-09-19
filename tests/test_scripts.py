@@ -279,7 +279,7 @@ def test_every_stage_viewer_is_embedded_by_its_chapter():
     from bench.stages import stages
 
     for stage in stages():
-        name = "storage_cluster" if stage.is_the_finished_model else stage.name
+        name = stage.model if stage.is_the_finished_model else stage.name
         chapter = (ROOT / "chapters" / f"{stage.chapter}.md").read_text()
         wanted = f"{{iframe}} /models/{name}-reference.html"
         assert wanted in chapter, (

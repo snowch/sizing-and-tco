@@ -48,7 +48,7 @@ DEFAULT_OUT = ROOT / "_build" / "static"
 
 
 def stage_for(source: str):
-    """The stage of the storage model a chapter leaves the reader with, if it has one."""
+    """The stage of the running example a chapter leaves the reader with, if it has one."""
     slug = Path(source).stem
     for stage in stages():
         if stage.chapter == slug and not stage.is_the_finished_model:

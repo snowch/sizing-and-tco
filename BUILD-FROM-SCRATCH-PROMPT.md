@@ -195,11 +195,11 @@ This covers ground other books cover. It must be entirely original work.
 - A **Monte Carlo module** small enough to read end to end: inverse transform sampling, four
   distributions, Iman–Conover rank correlation, nothing else. A reader who cannot see the sampler
   cannot check the interval, and an interval nobody can check is decoration.
-- **Three models**, all vendor-neutral, structure as the point and numbers replaceable: a
-  scale-out storage cluster (sized and costed end to end, the book's cost exemplar), an
-  observability platform (the sizing exemplar, deliberately with a hole in it where a measurement
-  should be), and a request-serving tier (the only one that is *not* a chain of multiplications,
-  and therefore what the ceilings part is built on).
+- **Two models**, both vendor-neutral, structure as the point and numbers replaceable: a web
+  service and its data on a fleet of Linux hosts (sized and costed end to end, and the one whose
+  behaviour under load is *not* a chain of multiplications, so the ceilings part is built on it
+  too), and an observability platform (deliberately with a hole in it where a measurement should
+  be).
 - A build that regenerates every figure, re-derives every corpus constant, and fails on drift.
   One command a contributor runs locally that is exactly what CI runs, so the two cannot diverge.
 - **Result fingerprints** covering the code that produced them, so editing the sampler invalidates

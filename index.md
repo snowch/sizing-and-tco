@@ -39,16 +39,16 @@ accumulates, and already refuses a formula whose units do not work out — the e
 accepts without comment, and the one that sizes a retention store from a rate.
 Later chapters add to it as they earn the right to: where each number came from, what the hardware
 can hold, where it stops coping, what it costs to run.
-[ch12 · The sizing model](#the-sizing-model) is where it produces a node count, and
-[ch18 · The five-year model](#the-five-year-model) is where it produces a cost. Every storage
-figure in this book is computed from that file at whatever stage the chapter has reached, so an
-early table cannot show you something that chapter has not built yet.
+[ch12 · The sizing model](#the-sizing-model) is where it produces a host count, and
+[ch18 · The five-year model](#the-five-year-model) is where it produces a cost. Every figure
+about the service in this book is computed from that file at whatever stage the chapter has
+reached, so an early table cannot show you something that chapter has not built yet.
 
 **Nothing is asserted here that the repository could check instead.** That rule shows up in three
 ways, and it is the reason to believe any of the numbers you are about to be shown.
 
 *Every number says where it came from.* No figure is typed into the prose; every one is computed.
-The italic line under each table links to the file it came from — `storage_cluster-reference`
+The italic line under each table links to the file it came from — `web_service-reference`
 names which model was run and under which assumptions, and the file holds every input it used —
 so you can check a number instead of trusting it.
 
@@ -81,12 +81,11 @@ properly, each arriving because a model has just raised a question that needs it
 statistical term has a plain-English equivalent, this book uses the plain one first and names the
 term second.
 
-No vendor is named anywhere in this book, and no product is recommended. Three models carry it,
-all written so that the structure is the point and the numbers are yours to replace: a scale-out
-storage cluster, which is sized and costed end to end; an observability platform, which is the one
-with a hole in it where a measurement should be; and a request-serving tier, whose behaviour under
-load is not a chain of multiplications at all, which is why the chapters on ceilings are built on
-it.
+No vendor is named anywhere in this book, and no product is recommended. Two models carry it,
+both written so that the structure is the point and the numbers are yours to replace: a web
+service and its data on a fleet of Linux hosts, which is sized and costed end to end, and whose
+behaviour under load is not a chain of multiplications at all; and an observability platform,
+which is the one with a hole in it where a measurement should be.
 
 Every chapter ends with problems, and most of them are tests you run: they fail until you have
 solved them, and the answer is nowhere in the repository. Some have no test at all, because they

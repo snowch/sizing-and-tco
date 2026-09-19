@@ -45,10 +45,10 @@ interval, and [ch19](#which-input-is-the-answer) is which of them to go after.
 Those two are what the interval is made of. Both are quantities the model can carry, and the whole
 apparatus of Parts IV and VI is about them.
 
-**The world takes a different path.** Retention policy changes. Growth stops. Somebody turns the
-sampling rate down. This one is *not* in the interval, and it is why this book has scenarios at
+**The world takes a different path.** A launch doubles the busy hour. Growth stops. Somebody
+halves how long records are kept. This one is *not* in the interval, and it is why this book has scenarios at
 all — a scenario is a second run rather than a wider distribution, because the alternative is not
-a value the current model could have produced. A cluster bought for the growth case is a different
+a value the current model could have produced. A fleet bought for the growth case is a different
 model of the world, not an unlucky draw from this one
 ([ch12](#the-sizing-model), [ch16](#power-first)).
 
@@ -106,12 +106,13 @@ Nothing automatic. Four that are not:
 
 **Compare against an invoice.** The strongest test available. A model of something that already
 exists can be checked against what it actually cost, and that number is a fact the model did not
-have. ch13's problem 3 is exactly this, and it is the only exercise in the book where the oracle
+have. ch14's problem 3 is exactly this, and it is the only exercise in the book where the oracle
 is outside the model.
 
 **Ask what is not in the graph.** Read the node list as a list of *categories* and ask what
-category is absent. The storage model has no line for rack space, cross-connects, backup, or the
-migration that fills the cluster. Each of those is obvious once named and invisible until.
+category is absent. The web service model has no line for rack space, cross-connects, backup,
+the database's own licence, or the migration that fills the fleet. Each of those is obvious once
+named and invisible until.
 
 **Distrust an answer that is too neat.** A total that is too round, a unit cost that is
 suspiciously close to a supplier's headline price, a utilisation that is exactly what somebody

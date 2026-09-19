@@ -24,26 +24,32 @@ anyway.
 :width: 100%
 ```
 
-A total, divided by a quantity, divided by a period. Problem 17.1 is the arithmetic, and the trap
-in it is the period: per terabyte-month and per terabyte-year differ by a factor of twelve and
-look equally authoritative on a slide.
+A total, divided by a quantity. This fleet produces two unit costs from the same money, and the
+trap sits in a different place in each.
 
-In a model, the build catches that — the two have identical dimensions and different units, and
-`sizing/units.py` converts. The same factor of twelve is in [Appendix D](#appendix-d-units),
-where this repository nearly published it.
+For the cost per stored terabyte the quantity is itself per period, and the period is the trap:
+per terabyte-month and per terabyte-year differ by a factor of twelve and look equally
+authoritative on a slide. Problem 17.1 is that arithmetic. In a model, the build catches it — the
+two have identical dimensions and different units, and `sizing/units.py` converts. The same factor
+of twelve is in [Appendix D](#appendix-d-units), where this repository nearly published it. In a
+slide, nothing catches it.
 
-In a slide, nothing catches it.
+For the cost per million requests the period is already inside the denominator — a rate, times
+how long it ran — and the trap moves: whether the rate was the busy hour or the mean, which
+differ by the ratio [ch04](#peak-mean-and-growth) put in the model. A cost per request quoted
+against the busy hour is several times the same cost quoted against the mean, and both are the
+same fleet.
 
 ### The denominator is the part nobody checks
 
-Take one model, one set of samples, one five-year total. Ask for a cost per usable terabyte per
+Take one model, one set of samples, one five-year total. Ask for a cost per stored terabyte per
 month. There are at least four defensible denominators, and problem 17.2 is computing all of
 them:
 
-- the capacity at the horizon — what you will be able to store at the end;
-- the capacity on day one — what you can store now;
+- what is held at the horizon — what you will be paying for at the end;
+- what is held on day one — what you are paying for now;
 - the average of the two — a straight line under a curve that is not straight;
-- the per-sample ratio — each total divided by its own capacity, then summarised.
+- the per-sample ratio — each total divided by what its own future holds, then summarised.
 
 They are not close together. The spread between them is larger than most of the things people
 argue about when comparing unit costs, and every one of them is a number somebody could defend in
@@ -57,10 +63,10 @@ numerator and denominator.
 The model's own figure uses the straight-line average, and says so in the node's note rather than
 in a footnote:
 
-```{literalinclude} ../models/storage_cluster/model.yaml
+```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
-:start-at: average_usable_capacity:
-:end-before: cost_per_usable_tb_month:
+:start-at: average_request_rate:
+:end-before: cost_per_million_requests:
 ```
 
 It is stated as a convention with a known bias, because that is the most anybody can honestly do.
@@ -68,25 +74,39 @@ It is stated as a convention with a known bias, because that is the most anybody
 ### Why the unit cost has a wide interval
 
 ```{image} _figures/unit-economics-distribution.svg
-:alt: Cost per usable TB per month, as a distribution
+:alt: Cost per million requests, as a distribution
 :width: 100%
 ```
 
 That is the most counter-intuitive figure in the book, and it is worth sitting with.
 
-A unit cost falls when growth arrives. You bought a cluster for a future; if the future turns up,
-you use the cluster you bought and the cost per terabyte is low. If it does not, you have paid for
-capacity nobody filled, and the same cluster is expensive per terabyte.
+A unit cost falls when growth arrives. You bought a fleet for a future; if the future turns up,
+the fleet serves the requests it was bought for and the cost per million of them is low. If it
+does not, you have paid for hosts nobody kept busy, and the same fleet is expensive per request.
 
 So the wide interval on this figure is not measurement error. It is the model saying that **the
-unit cost of a cluster depends on something that has not happened yet** — and that most of the
+unit cost of a fleet depends on something that has not happened yet** — and that most of the
 uncertainty is in the denominator rather than in the numerator.
 
 ```{include} _generated/unit-economics-tornado.md
 ```
 
-That is why the growth rate is at the top of this tornado too, and why a unit cost quoted without
-a date is quoting a guess about the future.
+That is why the growth rate is at the top of this tornado too, with the busy hour and the
+peak-to-mean ratio under it and every price below those, and why a unit cost quoted without a
+date is quoting a guess about the future.
+
+The same total over the other denominator this fleet carries — the records it holds — is a
+different unit cost with a different shape:
+
+```{image} _figures/unit-economics-per-stored.svg
+:alt: The same total over a different denominator, cost per stored TB per month
+:width: 100%
+```
+
+Same money, same futures. One figure is what the fleet costs per unit of the work it does, the
+other per unit of what it keeps, and a service that is mostly compute will look expensive by the
+second measure and cheap by the first. Neither is the cost of anything. Each is the answer to a
+question, and the question has to travel with it.
 
 ### What makes a unit cost comparable
 
@@ -94,10 +114,10 @@ Three things, and a unit cost missing any of them cannot be compared with anythi
 
 **The period.** Per month or per year, stated. See above.
 
-**The denominator's definition.** Usable or raw, at what point in the life, before or after
-replication, before or after compression. Two organisations comparing "cost per terabyte" are
-usually comparing different terabytes, and the ratio between raw and usable in
-[ch09](#capacity) is larger than the difference either is arguing about.
+**The denominator's definition.** Requests or terabytes; the busy hour or the mean; at what point
+in the life; before or after replication. Two organisations comparing "cost per request" are
+usually comparing different requests, and the peak-to-mean ratio in
+[ch04](#peak-mean-and-growth) is larger than the difference either is arguing about.
 
 **What is in the numerator.** People or not. Network or not. The building or not. A supplier's
 figure includes their margin and excludes your staff; an internal figure usually does the reverse.
@@ -129,8 +149,8 @@ position is that stating it is the whole of the discipline.
 smaller rather than making it visible. [ch20 · The missing node](#the-missing-node).
 
 **Anything about marginal cost.** Every figure here is an average: total over quantity. What the
-*next* terabyte costs is a different number, usually much lower until a threshold and then equal
-to a whole machine, and no average can express that ([ch08](#regime-changes)).
+*next* million requests cost is a different number, nothing until a threshold and then a whole
+host, and no average can express that ([ch08](#regime-changes)).
 
 ## Problems
 

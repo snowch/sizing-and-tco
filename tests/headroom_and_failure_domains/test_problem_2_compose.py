@@ -55,7 +55,7 @@ def test_three_reasonable_requests_take_most_of_the_system():
     """The point of the problem, and the reason a sizing meeting ends where it does."""
     left = 1.0 - compose([0.25, 0.30, 0.20])
     assert left < 0.45, (
-        f"three separately reasonable margins leave {left:.0%} of the cluster doing the work it "
+        f"three separately reasonable margins leave {left:.0%} of the fleet doing the work it "
         "was bought for. Each request was defensible; nobody in the room multiplied them."
     )
 

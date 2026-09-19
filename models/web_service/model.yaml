@@ -866,6 +866,7 @@ outputs:
   - cost_per_stored_tb_month
   - capex
   - annual_opex
+  - annual_energy
   # The ceilings, and what each one is about.
   - queueing_headroom
   - failure_headroom

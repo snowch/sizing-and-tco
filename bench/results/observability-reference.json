@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "eb9f3149b770a0b0",
+  "code_fingerprint": "8cc5557ebbe530da",
   "code_sources": [
     "bench/run_models.py",
     "models/observability/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T11:31:45+00:00",
-  "git_revision": "74b82b3",
+  "generated_at": "2026-09-19T12:09:18+00:00",
+  "git_revision": "c7b0215",
   "kind": "model",
   "name": "observability-reference",
   "produced_by": {
@@ -60,7 +60,7 @@
       }
     ],
     "currency": "USD",
-    "description": "The book's sizing exemplar, and the counterweight to the storage cluster. Three multiplicative chains hang off the same few roots, so they are correlated whether or not anybody says so; label cardinality is a product of uncertain counts and therefore dominates everything downstream of it; the control knobs are sampling and retention rather than money; and there are three separate outputs with three separate ceilings, which no single number can summarise.\nIt also has a hole in it. Spans per request is a property of somebody's instrumented application, not of any corpus or any machine, so this repository cannot measure it \u2014 and the whole traces chain is therefore shown as unmeasured rather than filled in with a plausible number. That is not a gap waiting to be tidied up. It is what an honest sizing model looks like before the measurement is taken, and it is on a published page for exactly that reason.",
+    "description": "The book's second model, and the counterweight to the web service. Three multiplicative chains hang off the same few roots, so they are correlated whether or not anybody says so; label cardinality is a product of uncertain counts and therefore dominates everything downstream of it; the control knobs are sampling and retention rather than money; and there are three separate outputs with three separate ceilings, which no single number can summarise.\nIt also has a hole in it. Spans per request is a property of somebody's instrumented application, not of any corpus or any machine, so this repository cannot measure it \u2014 and the whole traces chain is therefore shown as unmeasured rather than filled in with a plausible number. That is not a gap waiting to be tidied up. It is what an honest sizing model looks like before the measurement is taken, and it is on a published page for exactly that reason.",
     "factors": {
       "active_series": 1.0,
       "growth_factor": 1.0,
@@ -98,7 +98,7 @@
       "traces_ingest": 1e-06,
       "traces_stored": 0.0864
     },
-    "generated_at": "2026-09-19T11:31:44+00:00",
+    "generated_at": "2026-09-19T12:09:17+00:00",
     "model": "observability",
     "nodes": {
       "active_series": {
@@ -446,7 +446,7 @@
         "point": 1.398213145410956,
         "provenance": {
           "kind": "assumption",
-          "source": "ch04 \u2014 telemetry grows faster than the traffic it describes, because teams add instrumentation as well as load. Lognormal like any growth rate \u2014 it compounds and cannot go negative \u2014 and wider than the storage model's for the same reason its median is higher"
+          "source": "ch04 \u2014 telemetry grows faster than the traffic it describes, because teams add instrumentation as well as load. Lognormal like any growth rate \u2014 it compounds and cannot go negative \u2014 and wider than the web service's for the same reason its median is higher"
         },
         "row": 0,
         "summary": {
@@ -3511,7 +3511,7 @@
         "kind": "input",
         "label": "one year",
         "layer": 0,
-        "note": "as in the storage model: an exponent has to be a pure number",
+        "note": "as in the web service model: an exponent has to be a pure number",
         "point": 1.0,
         "provenance": {
           "kind": "fact",
@@ -5127,7 +5127,7 @@
         "point": 14.69693845669907,
         "provenance": {
           "kind": "assumption",
-          "source": "all-in cost of a usable TB-month on this tier, taken from the storage model's own unit economics (ch17). Lognormal because it is a price \u2014 and carried across by hand rather than by sampling, which is the seam ch18 is about"
+          "source": "all-in cost of a usable TB-month on this tier. Lognormal because it is a price \u2014 and carried across by hand from whichever storage tier's unit economics somebody had to hand, rather than by sampling, which is the seam ch18 is about"
         },
         "row": 0,
         "summary": {

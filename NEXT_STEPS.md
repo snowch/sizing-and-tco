@@ -18,32 +18,29 @@ it comes out rather than being ticked.
 Every chapter and every appendix is written. What is left, first, is the largest change the book
 has had since the scaffold, and then the work a first draft leaves:
 
-- **The spine.** PLAN.md §4 records the decision: the running example becomes a web service and
-  its data on a fleet of Linux hosts, and the storage cluster goes. In order, each green on
-  `main` before the next: generalise `bench/stages.py` to any model with a `build-order.yaml`;
-  build `models/web_service` beside the old models — stages, scenarios (`reference`,
-  `sized_for_growth`, `power_first`), a corpus generator for record compression and a stamped
-  `records-compression`; move every chapter, figure, experiment and test across in one change;
-  retire `storage_cluster` and `service_tier`. Stages by chapter: demand (ch02), provenance
-  (ch03), uncertainty (ch04), littles_law (ch05), queueing (ch06), scaling (ch07), regime (ch08),
-  capacity (ch09), binding (ch10), headroom (ch11), cost (ch18). Two things the prose has to
-  follow: the model becomes a sizing model at ch06, when the first ceiling arrives, not at ch09;
-  and ch01's second problem — find where it changes kind — moves with it.
+- **Retire the old spine.** PLAN.md §4 records the decision and the first two of its three moves
+  have landed: every chapter, figure, experiment and test now runs on `models/web_service`. What
+  is left is the third: remove `models/storage_cluster` and `models/service_tier`, their stamped
+  results, viewers and playgrounds, the `mixed_objects` corpus and its `storage-object-compression`
+  constant if nothing still reads it, their pins in `tests/test_models.py`, and every mention that
+  survives in the toolkit's docstrings — `sizing/evaluate.py` and `bench/run_corpus.py` still name
+  the storage model, and the first of those is in `KIND_SOURCES["model"]`, so that edit re-stamps
+  every model result.
 - **A rig, or not.** `service_demand`, CPU time per request, is a `rig` measurement and none can
   be taken here. It is held as a labelled claim. Declaring a machine in `rig/machine.yml` and
   writing the runner turns the running example into the book's first end-to-end measured model.
 
-- **The two chapters that are waiting on measurements.** ch19 and ch21 both describe the
-  observability model's traces chain around a hole. They read correctly today and they will
-  read better when the chain lights up; neither needs a rewrite, which was the point of building
-  the blocked-state machinery.
+- **The chapters that are waiting on a measurement.** ch20 and ch22 both describe the
+  observability model's traces chain around a hole, and so does Appendix F. They read correctly
+  today and they will read better when the chain lights up; none needs a rewrite, which was the
+  point of building the blocked-state machinery.
 - **Cross-references.** Every chapter links forwards and backwards by hand. `tests/test_book.py`
   checks the anchors resolve, not that the links are the right ones.
 
 ## The toolkit
 
 - **Sensitivity beyond one-at-a-time, properly.** `bench/run_information.py` bounds what each
-  input is worth on its own, which is most of what ch18 needed. A variance-based decomposition
+  input is worth on its own, which is most of what ch19 needed. A variance-based decomposition
   over the samples already drawn would answer the interaction question the tornado cannot, and is
   still not much code.
 - **A second ceiling kind.** Every ceiling here is "a value against a limit". A queueing ceiling

@@ -9,6 +9,7 @@
 | cost per stored TB per month | $839.64<br>*$305.33 to $2,108* | $678.46<br>*$244.15 to $1,707* |
 | capex | $421,214<br>*$272,130 to $658,773* | $280,810<br>*$181,420 to $439,182* |
 | annual opex | $316,174<br>*$227,660 to $484,257* | $267,387<br>*$186,962 to $413,526* |
+| annual energy | 206,269<br>*159,636 to 269,269* | 137,513<br>*106,424 to 179,513* |
 | utilisation at the busy hour | 0.644<br>*0.156 to 2.48* | 0.966<br>*0.234 to 3.73* |
 | utilisation with one host down | 0.656<br>*0.159 to 2.53* | 0.993<br>*0.241 to 3.83* |
 | working set against memory | 0.746<br>*0.194 to 2.67* | 1.12<br>*0.290 to 4.01* |

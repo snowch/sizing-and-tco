@@ -165,9 +165,9 @@ constant — and check it means one thing per page.
 
 ### A definite reference to something the reader has not met
 
-> This part starts the storage cluster
+> This part starts the web service
 
-*The* storage cluster. The reader has met no cluster, and you cannot start one anyway. The
+*The* web service. The reader has met no service, and you cannot start one anyway. The
 definite article is the tell: it promises the reader already has this, and a reader who does not
 assumes they missed something.
 

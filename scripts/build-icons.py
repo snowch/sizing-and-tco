@@ -7,7 +7,7 @@
 
 What a reader saves to a home screen should say what the book is about, and the book is about
 one number against the spread it does not mention. So the icon is an interval with the single
-answer marked on it, off-centre, where this book's storage model actually puts it.
+answer marked on it, off-centre, where this book's running example actually puts it.
 
 A histogram was tried first and does not survive being 48 pixels wide: the bars stop reading as
 one distribution and the marker reads as a gap between two of them. An interval is four
@@ -51,7 +51,7 @@ BARS = KIND_FILL["input"]
 MARKER = "#e8756c"
 
 #: Which stamped figure the icon is a picture of, and which node in it.
-MARKED_FROM = ("storage_cluster-reference", "tco")
+MARKED_FROM = ("web_service-reference", "tco")
 
 
 def marked_at() -> float:

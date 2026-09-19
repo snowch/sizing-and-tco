@@ -83,7 +83,7 @@ interval and start presenting two designs with a price.
 ```
 
 Two columns. The left one buys what the model recommends at the point estimate. The right one
-buys the same cluster sized for the growth we might get rather than the growth we expect, which
+buys the same fleet sized for the growth we might get rather than the growth we expect, which
 is the decision of [ch11](#headroom-and-failure-domains) taken deliberately instead of by default.
 
 Read across the rows and the conversation changes shape. The question is no longer "is this
@@ -103,13 +103,13 @@ have a consequence in them.
 ```{include} _generated/a-tco-for-finance-ceilings.md
 ```
 
-*Over limit* is how often, across the sampled futures, the cluster is asked to do something it
-cannot. The capacity row is a plain English sentence: this is how often we buy the cluster and it
-does not hold the data we said it would.
+*Over limit* is how often, across the sampled futures, the fleet is asked to do something it
+cannot. The busy-hour row is a plain English sentence: this is how often we buy the fleet and it
+cannot serve the busy hour we said it would.
 
 That sentence is worth more than any amount of argument about the growth rate. Nobody in the room
-has an opinion about a lognormal. Everybody in the room has an opinion about running out of disk
-in year four.
+has an opinion about a lognormal. Everybody in the room has an opinion about the service being
+slow on its busiest day.
 
 The second scenario reduces that number, and the table says by how much and what it costs. Put
 the two together and you have the only sentence in the document that is genuinely a
@@ -168,14 +168,15 @@ the years have not already been added together.
 ## What this cannot tell you
 
 **What running out is worth.** Every figure in the decision table is a cost of *building*. There
-is no term anywhere in this model for what happens when the capacity ceiling is breached: the
-emergency purchase at list price, the migration, the quarter spent on it, the conversation with
-whoever was promised the capacity. The right-hand column's extra capital buys a reduction in that
+is no term anywhere in this model for what happens when the queueing ceiling is breached: the
+busy hour spent turning users away, the emergency purchase at list price, the quarter spent on
+it, the conversation with whoever was promised the service. The right-hand column's extra capital
+buys a reduction in that
 risk, and the model prices the capital precisely and the risk not at all. Anybody who says the
 extra machines are not worth it is making a claim about a number this book has not measured.
 
-**Your organisation's appetite for it.** How much should a one-in-three chance of running out
-cost to avoid? That is not an engineering quantity and there is no defensible way to derive it
+**Your organisation's appetite for it.** How much should a real chance of the busiest hour going
+over the knee cost to avoid? That is not an engineering quantity and there is no defensible way to derive it
 from the model. It belongs to the people who carry the consequence, which is one more reason to
 put the ceiling row in front of them rather than resolving it yourself.
 
@@ -188,7 +189,7 @@ apply theirs; it does not pretend the undiscounted total is the answer.
 **Whether the structure is complete.** [ch20](#the-missing-node) is the standing limitation and
 it does not stop applying because the audience has changed. The decision table is a comparison
 between two designs inside one model, and both columns inherit whatever that model is missing.
-The comparison is more robust than either total — a missing cost line that scales with node count
+The comparison is more robust than either total — a missing cost line that scales with host count
 hurts both columns — but "more robust" is not "unaffected".
 
 **Whether it worked.** There is no measurement in this repository of whether a document shaped
@@ -242,7 +243,7 @@ What remains after it is reference material:
 [Appendix B](#appendix-b-monte-carlo-module) for the sampler read end to end,
 [Appendix C](#appendix-c-distributions) for choosing a shape,
 [Appendix E](#appendix-e-web-service-model) and [Appendix F](#appendix-f-observability-model) for the
-storage and observability models in full, and
+web service and observability models in full, and
 [Appendix G](#appendix-g-glossary) for the vocabulary, including the terms this book refuses.
 
 If you read one thing again, make it [ch20](#the-missing-node). Everything in this chapter is

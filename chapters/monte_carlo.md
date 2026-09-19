@@ -8,10 +8,10 @@ short_title: "ch13 Monte Carlo"
 
 ## The question
 
-The sizing model has produced a node count. How sure are we?
+The sizing model has produced a host count. How sure are we?
 
-[ch12](#the-sizing-model) took a stated workload, multiplied along two chains, took the larger of
-the two answers, and produced a number. Every step was arithmetic you could check by hand. The
+[ch12](#the-sizing-model) took a stated workload, multiplied along three chains, took the largest
+of the three answers, and produced a number. Every step was arithmetic you could check by hand. The
 number is correct. Whether it is *right* is a different question: every input to that chain was
 itself uncertain, and the chain has no way to say so.
 
@@ -31,12 +31,13 @@ The first column is what the chain produced: one value per output, from one valu
 second column is the same model, with each input allowed to be as uncertain as the person who
 wrote it down actually is.
 
-Look at the node count. The point estimate is a real number, correctly computed, and it is
-somewhere in the middle of a range that spans most of an order of magnitude. Nothing went wrong.
+Look at the host count. The point estimate is a real number, correctly computed, and it sits
+inside a range that spans an order of magnitude — nearer the low end of it than the middle.
+Nothing went wrong.
 The calculation had no way to mention that its inputs were guesses, so it did not mention it.
 
-```{image} _figures/monte-carlo-nodes-distribution.svg
-:alt: The recommended node count as a distribution, with the point estimate marked
+```{image} _figures/monte-carlo-hosts-distribution.svg
+:alt: The recommended host count as a distribution, with the point estimate marked
 :width: 100%
 ```
 
@@ -201,17 +202,19 @@ table.
 ```{include} _generated/monte-carlo-ceilings.md
 ```
 
-At the point estimate, every ceiling is fine. That is not surprising — [ch12](#the-sizing-model)
-sized the cluster from the point estimates, so of course it satisfies them. The last two columns
+At the point estimate, every ceiling but one is fine. That is not surprising —
+[ch12](#the-sizing-model) sized the fleet from the point estimates, so of course it satisfies the
+ceilings it was sized against, and the one it was not sized against is the one that is not fine.
+The last two columns
 are the same model asked a different question: across everything this model thinks could happen,
 how often is this limit breached?
 
-That is a sizing answer. Not "you need this many nodes" but "at this many nodes, this is how often
+That is a sizing answer. Not "you need this many hosts" but "at this many hosts, this is how often
 the thing you were trying to avoid happens anyway". Somebody can take responsibility for the
 second. Nobody can take responsibility for the first, because it does not say anything.
 
 And once the question is in that form, it has a price. Here is the same model with a bigger
-cluster bought:
+fleet bought:
 
 ```{include} _generated/monte-carlo-ceilings-resized.md
 ```
@@ -246,8 +249,9 @@ it in a file with your name on it for that reason.
 
 **How the inputs were drawn together.** The sampler above draws each input on its own. The
 intervals above were not produced that way. This model declares two pairs that move together —
-drives and chassis, quoted by the same supply chain; growth and read load, the same year seen
-twice — and the evaluator applies the pairing after the draw. So every figure on this page
+a host's price and the network's, quoted by the same supply chain; the busy hour and what a
+request costs, because a busier service is a slower one per request — and the evaluator applies
+the pairing after the draw. So every figure on this page
 already carries it, and this chapter has not said so until now. Drawing those pairs independently
 would make every interval here *narrower*, which is the direction that gets a plan approved.
 [ch14](#correlation-and-convergence) names the pairs, and measures what they were worth.
@@ -276,7 +280,7 @@ python3 -m pytest tests/monte_carlo/test_problem_1_ppf.py
 ```
 
 **13.2 — Sample a model by hand.**
-Take the storage model, sample two of its inputs yourself without using `sizing.evaluate`, and
+Take the web service model, sample two of its inputs yourself without using `sizing.evaluate`, and
 reproduce the interval the build publishes for one output to within sampling error. The point is
 to discover how small the machinery actually is.
 
