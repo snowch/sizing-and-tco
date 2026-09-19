@@ -483,6 +483,36 @@ SEARCH = r"""<script>
 </script>"""
 
 
+#: The chapter list, and whether the reader wants it. On a phone it is closed by default and the
+#: button opens it over the page. Where there is room it is open by default, the same button
+#: closes it, and the browser remembers that choice — per browser, not per page, and before the
+#: page paints, so a reader who closed it does not watch it close again on every chapter.
+MENU = r"""<script>
+try {
+  if (localStorage.getItem("nav") === "closed") document.documentElement.classList.add("nav-closed");
+} catch (e) {}
+document.addEventListener("DOMContentLoaded", () => {
+  const root = document.documentElement, nav = document.getElementById("nav"),
+        menu = document.getElementById("menu"), wide = matchMedia("(min-width: 58rem)");
+  const shown = () =>
+    wide.matches ? !root.classList.contains("nav-closed") : nav.classList.contains("open");
+  const reflect = () => menu.setAttribute("aria-expanded", String(shown()));
+  menu.addEventListener("click", () => {
+    if (wide.matches) {
+      const closed = root.classList.toggle("nav-closed");
+      try {
+        if (closed) localStorage.setItem("nav", "closed"); else localStorage.removeItem("nav");
+      } catch (e) {}
+    } else {
+      nav.classList.toggle("open");
+    }
+    reflect();
+  });
+  wide.addEventListener("change", reflect);
+  reflect();
+});
+</script>"""
+
 PAGE = """<!doctype html>
 <html lang="en">
 <head>
@@ -492,13 +522,15 @@ PAGE = """<!doctype html>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 {headlinks}
 <style>{css}</style>
+{menu}
 </head>
 <body>
 <a class="skip" href="#main">Skip to the chapter</a>
 <header class="top">
   <a class="brand" href="index.html">Sizing and TCO</a>
   <button id="find-open" class="find" type="button" hidden>Search <kbd>/</kbd></button>
-  <button id="menu" type="button" aria-label="Contents" aria-controls="nav">☰</button>
+  <button id="menu" type="button" aria-label="Chapters" aria-controls="nav"
+          title="Show or hide the chapter list">☰</button>
 </header>
 <div class="shell">
   <nav id="nav" class="nav" aria-label="Chapters">{nav}</nav>
@@ -513,10 +545,6 @@ PAGE = """<!doctype html>
          autocorrect="off" spellcheck="false">
   <div id="find-results"></div>
 </dialog>
-<script>
-document.getElementById("menu").addEventListener("click", () =>
-  document.getElementById("nav").classList.toggle("open"));
-</script>
 {search}
 </body>
 </html>
@@ -576,6 +604,7 @@ a.xref:hover { text-decoration: underline; }
          text-decoration: none; color: var(--ink); }
 #menu { font: 16px/1 var(--chrome); background: none; color: var(--muted);
         border: 1px solid var(--edge); border-radius: 5px; cursor: pointer; padding: .4rem .6rem; }
+#menu:hover { border-color: var(--accent); color: var(--accent); }
 
 /* Search. The control is hidden in the markup and shown by the script, because without the
    script it does nothing at all. */
@@ -611,24 +640,31 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
 /* Frame */
 .shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 82rem;
          margin-inline: auto; }
+/* Hidden until there is room, and declared before the rules that show them so that those win
+   by order rather than by !important. Below the first breakpoint the chapter list opens over
+   the page from the ☰ button. */
+.nav, .toc { display: none; font: 14px/1.45 var(--chrome); padding: 1.4rem 1rem 3rem; }
+.nav.open { display: block; }
 /* Two steps, not one. A column of 41rem needs 58rem beside the navigation and 72rem beside both
    sidebars, and a single breakpoint at the larger of those left a 1024px tablet with no
    navigation and a third of its width empty. */
 @media (min-width: 58rem) {
   .shell { grid-template-columns: 17rem minmax(0, 1fr); }
-  #menu { display: none; }
-  .nav { display: block !important; position: sticky; top: var(--top);
+  .nav { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
+  /* The same button closes it here. The column it held goes back to the chapter, which sits
+     centred in what is left; the prose keeps its measure. */
+  html.nav-closed .shell { grid-template-columns: minmax(0, 1fr); }
+  html.nav-closed .nav { display: none; }
 }
 @media (min-width: 72rem) {
   .shell { grid-template-columns: 17rem minmax(0, 1fr) 14rem; }
-  .toc { display: block !important; position: sticky; top: var(--top);
+  html.nav-closed .shell { grid-template-columns: minmax(0, 1fr) 14rem; }
+  .toc { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
 }
-.nav, .toc { display: none; font: 14px/1.45 var(--chrome); padding: 1.4rem 1rem 3rem; }
-.nav.open { display: block; }
 .nav { border-right: 1px solid var(--edge); }
 .toc { border-left: 1px solid var(--edge); }
 .nav .part, .toc .part { font-size: 11.5px; font-weight: 600; letter-spacing: .08em;
@@ -867,6 +903,7 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         toc=toc,
         body=body,
         search=SEARCH,
+        menu=MENU,
         headlinks=headlinks,
         turn=turn,
     )

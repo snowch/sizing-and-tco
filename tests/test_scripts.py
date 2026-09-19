@@ -94,7 +94,7 @@ def test_every_script_is_executable_and_parses():
 
 
 #: The constants in scripts/build-site.py that hold JavaScript rather than Python.
-JS_TEMPLATES = ("RUNNER", "SEARCH")
+JS_TEMPLATES = ("MENU", "RUNNER", "SEARCH")
 
 
 @pytest.mark.parametrize("name", JS_TEMPLATES)
