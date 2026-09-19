@@ -284,7 +284,7 @@ python3 -m pytest tests/monte_carlo/test_problem_1_ppf.py
 
 **13.2 — Sample a model by hand.**
 Take the web service model, sample two of its inputs yourself without using `sizing.evaluate`, and
-reproduce the interval the build publishes for one output to within sampling error. The point is
+reproduce the interval this book publishes for one output to within sampling error. The point is
 to discover how small the machinery actually is.
 
 ```bash

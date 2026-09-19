@@ -18,11 +18,11 @@ at all about statistics. Four words of vocabulary arrive in it, each because a m
 raised a question that needs it.
 
 **[ch14 · Correlation and convergence](#correlation-and-convergence)** picks up the two things the
-first chapter assumed without establishing: that the inputs move independently, and that a hundred
-thousand samples was enough. Draw inputs independently when they in fact move together, and the
-model reports a narrower interval than the evidence supports. More samples do not narrow an
-interval at all; they settle where it sits.
+first chapter assumed without establishing: that the inputs move independently, and that a
+hundred thousand samples was enough. Draw inputs independently when they in fact move together,
+and the model reports a narrower interval than the evidence supports. More samples do not narrow
+an interval at all. They settle where it sits.
 
-Read both knowing what neither can do, which is [ch20](#the-missing-node)'s subject: sampling
-quantifies the uncertainty a model can see, beautifully, and says nothing whatever about the
+Read both knowing what neither can do, which is [ch20](#the-missing-node)'s subject. Sampling
+quantifies the uncertainty a model can see, beautifully. It says nothing whatever about the
 uncertainty it cannot.
