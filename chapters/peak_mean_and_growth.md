@@ -11,31 +11,31 @@ short_title: "ch04 Peak, mean and growth"
 Which number in a demand curve sizes you, and what is a five-year growth rate actually a claim
 about?
 
-[ch02](#what-a-workload-is) established that a workload is a set of quantities. Each of those
-quantities is a *distribution over time* that somebody has collapsed into one number. This chapter
-is about which collapse is the right one.
+[ch02](#what-a-workload-is) established that a workload is a set of quantities. Each of them
+varies over time, and somebody has collapsed each one into a single number. This chapter is about
+which collapse is the right one.
 
 ## The material
 
 ### The mean is the one number nobody experiences
 
 Demand has a shape. It is low overnight, high in the afternoon, and different again on a Tuesday
-in November. Sizing for the average means sizing for a level that occurs twice a day on the way
+in November. Sizing for the average means sizing for a level that occurs twice a day, on the way
 past.
 
-The number that sizes you is the busy hour — or the busy minute, or the busy Tuesday, depending on
-how long your system takes to fall over and how long anybody is willing to wait for it to recover.
-Which of those you should use depends on your traffic and your tolerance, and somebody has to
-decide it.
+The number that sizes you is the busy hour. Or the busy minute, or the busy Tuesday, depending on
+how long your system takes to fall over and how long anybody will wait for it to recover. Which
+of those you should use depends on your traffic and your tolerance, and somebody has to decide
+it.
 
-The arithmetic is trivial — the busiest hour's share of the day, times the day's total — and
-problem 4.1 is that arithmetic. The peak-to-mean ratio behind it is not trivial. It is a measured
+The arithmetic is trivial: the busiest hour's share of the day, times the day's total. Problem
+4.1 is that arithmetic. The peak-to-mean ratio behind it is not trivial. It is a measured
 quantity, it varies by workload, and quoting somebody else's is how a system gets sized for a
 shape it does not have.
 
-This chapter puts that ratio into the model, as an input with a shape rather than a figure —
-nobody has measured it on this service, and the file says so — and derives the mean rate from
-the busy hour with it:
+This chapter puts that ratio into the model as an input with a shape rather than a figure,
+because nobody has measured it on this service, and the file says so. It then derives the mean
+rate from the busy hour:
 
 ```{literalinclude} ../models/web_service/stages/03-uncertainty/model.yaml
 :language: yaml
@@ -44,7 +44,7 @@ the busy hour with it:
 ```
 
 The busy hour sizes the fleet. The mean is what the fleet spends most of its life serving, and it
-is the denominator of every cost per request in [ch17](#unit-economics), which is why the model
+is the denominator of every cost per request in [ch17](#unit-economics). That is why the model
 carries both.
 
 ### Growth is a bet, and the bet compounds
@@ -53,10 +53,10 @@ Growth does most of the damage in this book.
 
 The chart below is the first of many like it, so here is how it is made. Take one input. Hold
 every other input still, swing that one from the low end of its range to the high end, and record
-how far the answer moves. That distance is its **swing**. Do it for every input, sort the bars
-longest-first, and they make a funnel — which is where the name **tornado** comes from. The two
-columns in the table are the ends of each swing: low enough that only about one future in ten
-comes in under, high enough that only about one in ten comes in over.
+how far the answer moves. That distance is its **swing**. Do it for every input and sort the bars
+longest first. They make a funnel, which is where the name **tornado** comes from. The two columns
+in the table are the ends of each swing: low enough that only about one future in ten comes in
+under, and high enough that only about one in ten comes in over.
 
 ```{image} _figures/peak-mean-and-growth-chart.svg
 :alt: Which input moves the recommended host count most, when swung across its middle 80%
@@ -66,13 +66,13 @@ comes in under, high enough that only about one in ten comes in over.
 ```{include} _generated/peak-mean-and-growth-tornado.md
 ```
 
-The growth rate is at the top, by a distance, and it is at the top of every tornado in this book
-whose answer depends on the future. Not every answer does — the cost of a fleet somebody has
-already bought is a question about prices, and [ch15](#capex-opex-and-lifecycle) is where that
-difference is drawn — but wherever the future is in the chain, growth is at the top of it. That is
-not a quirk of these numbers. It is structural: a growth rate is the one input that is *raised to
-a power*, and everything else is multiplied. Over a five-year horizon, the exponent turns an
-uncertainty in the rate into a much larger uncertainty in the demand.
+The growth rate is at the top, by a distance. It is at the top of every tornado in this book whose
+answer depends on the future. Not every answer does: the cost of a fleet somebody has already
+bought is a question about prices, and [ch15](#capex-opex-and-lifecycle) is where that difference
+is drawn. But wherever the future is in the chain, growth is at the top of it. That is not a quirk
+of these numbers. It is structural. A growth rate is the one input that is *raised to a power*;
+everything else is multiplied. Over a five-year horizon, the exponent turns an uncertainty in the
+rate into a much larger uncertainty in the demand.
 
 ```{image} _figures/peak-mean-and-growth-demand.svg
 :alt: The busy-hour request rate at the horizon, as a distribution
@@ -83,10 +83,10 @@ That is what a five-year demand forecast actually looks like when its growth ass
 honestly: the busy hour the fleet will have to serve, as a band. The point estimate is somewhere
 in the middle of it.
 
-The graph has gained two nodes since [ch03](#where-the-numbers-come-from) — the peak-to-mean
-ratio and the mean it implies — and three inputs have gained a shape. Click *annual growth
-factor* and the band that produced the figure above is written there. Drag its slider and the
-point moves while the band stays, which is the difference this chapter is about.
+The graph has gained two nodes since [ch03](#where-the-numbers-come-from): the peak-to-mean ratio,
+and the mean it implies. Three inputs have gained a shape. Click *annual growth factor* and the
+band that produced the figure above is written there. Drag its slider and the point moves while
+the band stays. That is the difference this chapter is about.
 
 ```{iframe} /models/web_service_uncertainty-reference.html
 :width: 100%
@@ -97,20 +97,20 @@ The same graph, with the growth rate as a band rather than a figure. Clicking it
 
 There is a specific and expensive error here, and it is worth working through once by hand.
 
-You have a range of plausible growth rates. You want the capacity in five years. Two things you
-could compute:
+You have a range of plausible growth rates. You want the capacity in five years. There are two
+things you could compute:
 
-- take the **average growth rate**, and compound it;
+- take the **average growth rate**, and compound it; or
 - compound **every** growth rate, and average the results.
 
-They are not the same number, and the second is always larger — for any spread at all, because
-compounding is convex. The gap widens with the spread of the growth rates and with the horizon, so
-it is largest exactly when somebody reaches for a five-year plan.
+They are not the same number. The second is always larger, for any spread at all, because
+compounding curves upwards. The gap widens with the spread of the growth rates and with the
+horizon, so it is largest exactly when somebody reaches for a five-year plan.
 
 Problem 4.2 is that comparison. Write down which way you think it goes before you run it.
 
 The practical consequence: a capacity plan built by compounding a single "expected" growth rate
-understates the expected capacity. Not the p95 capacity — the *expected* one. The plan is
+understates the expected capacity. Not a pessimistic case: the *expected* one. The plan is
 optimistic before any of its other assumptions have been questioned.
 
 ### What a growth rate is a claim about
@@ -119,16 +119,16 @@ Nothing in [ch03](#where-the-numbers-come-from) helps here.
 
 A compression ratio can be measured. A price can be quoted. A growth rate is a claim about the
 future, and no amount of provenance discipline turns one into a measurement. The best available
-version is "the last three years, extrapolated, with a distribution wide enough to admit that the
-next three might not resemble them" — and the width of that distribution is a judgement nobody can
-check.
+version is: the last three years, extrapolated, with a band wide enough to admit that the next
+three might not resemble them. The width of that band is a judgement nobody can check.
 
-So this book gives growth a lognormal: growth compounds, and the multiplier it compounds cannot
-be zero or less. Its percentiles are stated as a sentence somebody could disagree with:
-*surprised below this, surprised above that*. That is the most honest form available, and it is not a measurement — the
-model does not pretend otherwise.
+So this book gives growth a lognormal shape: growth compounds, and the multiplier it compounds
+cannot be zero or less. The ends of the band are stated as a sentence somebody could disagree
+with: *surprised below this, surprised above that*. That is the most honest form available. It is
+not a measurement, and the model does not pretend otherwise.
 
-Here is that stage of the web service model, with two percentiles where a number used to be:
+Here is that stage of the web service model, with the two ends of a band where a number used to
+be:
 
 ```{iframe} /playground/peak-mean-and-growth/
 :width: 100%
@@ -140,31 +140,31 @@ percentile and watch which way the middle goes.
 ### Three ways a demand curve is described badly
 
 **A single peak.** "We do forty thousand requests a second at peak" is a rate with no duration
-attached. Forty thousand for ten seconds and forty thousand for four hours size differently,
-because one of them is absorbed by a queue and the other is a queue.
+attached. Forty thousand for ten seconds and forty thousand for four hours size differently. One
+of them is absorbed by a queue; the other is a queue.
 
 **A percentile of the wrong thing.** The 95th percentile of per-minute rates across a year is not
-the busy hour. It is the level one minute in twenty is above, and whether those minutes are
-scattered evenly through the year or bunched into a few afternoons decides whether sizing to it is
-right or badly wrong.
+the busy hour. It is the level one minute in twenty is above. Whether those minutes are scattered
+evenly through the year or bunched into a few afternoons decides whether sizing to it is right or
+badly wrong.
 
 **A growth rate with no horizon.** A growth rate is not an input until somebody says for how
-long. Over one year it is a rounding error against the other uncertainties; over five it is the
+long. Over one year it is a rounding error against the other uncertainties. Over five it is the
 model.
 
 ## What this cannot tell you
 
-**What your peak-to-mean ratio is.** Nothing in this repository can measure it — it is a property
+**What your peak-to-mean ratio is.** Nothing in this repository can measure it. It is a property
 of your traffic, and it belongs to the `estate` target ([ch03](#where-the-numbers-come-from)).
 Everything above tells you what to do with one once you have it.
 
 **Whether growth will continue.** The model extrapolates. Extrapolation is the assumption that the
-mechanism producing the last three years is still running, and the one thing a capacity model
-cannot see is the quarter it stops — a product retired, a customer lost, a competitor won.
+mechanism producing the last three years is still running. The one thing a capacity model cannot
+see is the quarter it stops: a product retired, a customer lost, a competitor won.
 
-**Whether the distribution's width is honest.** A growth rate stated as *surprised below here,
-surprised above there* is a claim about somebody's surprise, and nobody goes back afterwards to
-count how often they were actually surprised. Nothing here calibrates that.
+**Whether the band's width is honest.** A growth rate stated as *surprised below here, surprised
+above there* is a claim about somebody's surprise, and nobody goes back afterwards to count how
+often they were actually surprised. Nothing here calibrates that.
 
 **Anything about a shape that changes.** Every figure above assumes demand grows without changing
 its daily profile. A workload that grows by adding a different kind of user grows in a different
@@ -192,18 +192,18 @@ python3 -m pytest tests/peak_mean_and_growth/test_problem_2_growth_gap.py
 ```
 
 **4.3 — What is your growth rate a claim about?** No test. This chapter has already said that
-nobody can check the width of a growth distribution, and writing a test for it would contradict
-that on the same page.
+nobody can check the width of a growth band, and writing a test for it would contradict that on
+the same page.
 
 Find the growth rate somebody is currently using to plan the system you work on. Then answer
-three questions about it. What is it extrapolating — users, requests, retained data, or revenue
+three questions about it. What is it extrapolating: users, requests, retained data, or revenue
 that somebody has converted into one of those? Over what period was it measured, and is that
 period long enough to contain the thing that would break it? And what would have to happen for it
-to be wrong by half in either direction?
+to be wrong by half, in either direction?
 
-Now write the two percentiles as a sentence: *I would be surprised if it came in under this, and
+Now write the two ends as a sentence: *I would be surprised if it came in under this, and
 surprised if it came in over that.* Say it out loud to whoever owns the plan. The sentence is the
-deliverable, not the number — a range you are willing to be quoted on is worth more than a point
+deliverable, not the number. A range you are willing to be quoted on is worth more than a point
 estimate nobody will defend.
 
 A good answer names the mechanism, not just the trend, and its band is wide enough to be
@@ -215,5 +215,5 @@ rather than the next three.
 [ch05](#littles-law) begins Part II, and changes the subject from how much demand there is to what
 happens to a system when it arrives.
 
-[ch13](#monte-carlo) is where the distribution in this chapter's second figure comes from, and
+[ch13](#monte-carlo) is where the band in this chapter's second figure comes from.
 [ch19](#which-input-is-the-answer) is what to do about growth sitting at the top of the tornado.
