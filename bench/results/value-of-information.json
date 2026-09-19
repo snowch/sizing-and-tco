@@ -8,8 +8,8 @@
     "this_is_an_upper_bound": "each figure is what knowing the input *exactly* would remove. A real measurement leaves a standard error behind and removes less, by an amount nobody can know before doing the work",
     "what_it_cannot_say": "whether the input can be measured at all. The web service's total rests on how many people it takes and what a licence costs, which are decided and negotiated rather than measured; its host count and the observability model's store both rest on a growth rate, which belongs to no target. The honest response to those is to decide them rather than to commission a measurement (ch04)"
   },
-  "generated_at": "2026-09-19T12:28:06+00:00",
-  "git_revision": "9140da7",
+  "generated_at": "2026-09-19T18:37:04+00:00",
+  "git_revision": "00611da",
   "kind": "measurement",
   "name": "value-of-information",
   "produced_by": {
@@ -104,7 +104,7 @@
         "if_known": 576897.2196540008,
         "input": "staff_fte",
         "kind": "input",
-        "label": "staff fte",
+        "label": "engineers, full-time equivalent",
         "model": "web_service",
         "output": "tco",
         "removed": 0.18488220673127542
