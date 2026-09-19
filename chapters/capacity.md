@@ -23,12 +23,12 @@ can use. Four terms separate the two, and nobody writes them down together.
 ```
 
 Four terms stand between an application's storage requirement and a purchase order. Two multiply
-what you must buy, one divides it, and one is a surcharge.
+what you must buy. One divides it. One is a surcharge.
 
 Here is that chain with the rest of the model around it. One node is a colour nothing earlier in
-the book has had: the measured constant is orange. The ceiling it ends in is the third in the
-model, and the constant is the other thing that makes a sizing model — the one that would have
-made this one even if no ceiling had.
+the book has had: the measured constant is orange. The ceiling the chain ends in is the third in
+the model. The constant is the other thing that makes a sizing model, and it would have made this
+one a sizing model even if no ceiling had.
 
 ```{iframe} /models/web_service_capacity-reference.html
 :width: 100%
@@ -37,9 +37,9 @@ The disk chain in the graph. Drag *replication factor* and watch how many hosts 
 
 **Replication.** Whole copies. Three copies cost three times the space, survive two losses, and
 are the simplest thing that works. Erasure coding buys the same durability for less space by
-spreading it over more pieces, and problem 9.2 is that comparison. Erasure coding is not cleverer,
-only amortised: it pays for the space it saves with reads that touch more machines — a bandwidth
-problem, and therefore [ch10](#bandwidth-and-the-binding-constraint)'s.
+spreading the data over more pieces, and problem 9.2 is that comparison. Erasure coding is not
+cleverer, only amortised. It pays for the space it saves with reads that touch more machines,
+which is a bandwidth problem, and therefore [ch10](#bandwidth-and-the-binding-constraint)'s.
 
 **Compression.** The only term that helps you, and the only one that is a measured constant rather
 than a decision:
@@ -47,18 +47,19 @@ than a decision:
 ```{include} _generated/capacity-measured.md
 ```
 
-Read the last column. That ratio belongs to one codec and one body of data — not to compression,
-and not to your data. Take the method rather than the number: point the runner at a sample of your
-own records and get the ratio that belongs in your model ([ch03](#where-the-numbers-come-from)).
+Read the last column. That ratio belongs to one codec and one body of data. It does not belong to
+compression in general, and it does not belong to your data. Take the method rather than the
+number: point the runner at a sample of your own records and get the ratio that belongs in your
+model ([ch03](#where-the-numbers-come-from)).
 
 **Overhead.** Indexes, the write-ahead log, the filesystem's own bookkeeping: the space the store
 keeps beside the records so that it can find them and survive a crash. Applied to everything, and
 larger than people expect once the indexes are counted.
 
 **The fill limit.** People forget this one because it is not a property of the data at all. You
-cannot run a disk full, and [ch11](#headroom-and-failure-domains) is about why the
-margin is a rule rather than a number. It is in the chain here because the space you hold back is
-space you still have to buy.
+cannot run a disk full, and [ch11](#headroom-and-failure-domains) is about why the margin is a
+rule rather than a number. It is in the chain here because the space you hold back is space you
+still have to buy.
 
 ### Every term but one makes you buy more
 
@@ -67,32 +68,36 @@ assumed. Replication and the margin are decisions, and a decision is certain. Th
 assumption with a shape, because nobody has counted the indexes. And a measurement over somebody's
 corpus carries a standard error, which none of the others do.
 
-A sizing that treats all four as constants is optimistic in the one place that helps, and that
-place is the one whose uncertainty was actually measured.
+A sizing that treats all four as constants is optimistic in the one place that helps. That place
+is the one whose uncertainty was actually measured.
 
 ### Two kinds of terabyte, and the ten per cent
 
 A drive's datasheet says a trillion bytes. A filesystem counts in powers of two. The difference is
-about a tenth, both are called a terabyte in conversation, and a tenth is a large fraction of what
+about a tenth. Both are called a terabyte in conversation, and a tenth is a large fraction of what
 compression was going to buy you.
 
-So every node in this book declares a unit, and the build converts rather than assuming. Problem 9.3 is that conversion, and this is the chapter where getting it wrong costs money.
+So every node in this book declares a unit, and the toolkit converts rather than assuming. Problem
+9.3 is that conversion, and this is the chapter where getting it wrong costs money.
 
 ### What comes out
 
 ```{include} _generated/capacity-outputs.md
 ```
 
-Three rows, and each needs a word. *Raw data* is what the disks must hold once every copy, every
-index and the compression are counted. *Hosts for storage* is how many hosts' disks that takes,
-and it is this chain's answer — one of three the model will have by
-[ch10](#bandwidth-and-the-binding-constraint). *Disk fill at horizon* is how full the disks of
-the fleet somebody actually bought are at the end of the period, as a fraction of what they can
-hold. One is full. An interval reaching past one says that in some futures the records do not
-fit, because the arithmetic carries on past the point the disks stop.
+Three rows, and each needs a word.
 
-The interval on the host count spans an order of magnitude, and almost all of that is the growth
-rate from [ch04](#peak-mean-and-growth) rather than anything in this chapter's chain. The disk
+- *Raw data* is what the disks must hold once every copy, every index and the compression are
+  counted.
+- *Hosts for storage* is how many hosts' disks that takes. It is this chain's answer, one of three
+  the model will have by [ch10](#bandwidth-and-the-binding-constraint).
+- *Disk fill at horizon* is how full the disks of the fleet somebody actually bought are at the end
+  of the period, as a fraction of what they can hold. One is full. An interval reaching past one
+  says that in some futures the records do not fit, because the arithmetic carries on past the
+  point where the disks stop.
+
+The interval on the host count spans an order of magnitude. Almost all of that width is the
+growth rate from [ch04](#peak-mean-and-growth), not anything in this chapter's chain. The disk
 arithmetic is the well-understood part of the problem. What it is applied to is not.
 
 The measured constant is in the file the same way a ceiling is, and the toolkit reads its stamp
@@ -109,8 +114,8 @@ its number belongs to, which is more than a spreadsheet cell can say.
 **What your data compresses to.** The constant above was measured over a synthetic mixture this
 repository generates, and the mixture's proportions are an assumption stated in the stamped
 result. For this figure, that assumption is a larger source of error than the codec, the shard
-spread, or anything the standard error reports. The number has an uncertainty and the uncertainty
-is about the wrong thing.
+spread, or anything the standard error reports. The number has an uncertainty, and the
+uncertainty is about the wrong thing.
 
 **Anything about record size.** The chain above is a chain of bytes. A store holding a great many
 small records spends a substantial and sometimes dominant share of its disk on per-record
@@ -119,10 +124,10 @@ service with a small-record problem needs a term this one does not have.
 
 **What happens when a host's disks are lost.** Every figure is a healthy fleet. Losing a host means
 its copies have to be re-made on the survivors, using disk and bandwidth that were doing something
-else, and the chain has no term for the window in which that is happening
+else. The chain has no term for the window in which that is happening
 ([ch11](#headroom-and-failure-domains)).
 
-**Whether disk is the chain that binds.** It is the chain this chapter followed and not the one
+**Whether disk is the chain that binds.** It is the chain this chapter followed. It is not the one
 that most often decides, and the model assumes neither.
 [ch10](#bandwidth-and-the-binding-constraint) is the other two chains, and how often each of the
 three decides the answer.
@@ -133,7 +138,7 @@ Five, in `tests/capacity/`. The first four have tests. The last does not, and sa
 
 **9.1 — The chain.**
 Four terms, one of which divides. Getting the division upside down gives an answer wrong by the
-square of the compression ratio while still looking entirely plausible — check yours against a
+square of the compression ratio while still looking entirely plausible. Check yours against a
 case you can do in your head first.
 
 ```bash
@@ -150,19 +155,19 @@ python3 -m pytest tests/capacity/test_problem_2_erasure.py
 ```
 
 **9.3 — The other kind of terabyte.**
-Re-declare every node held in terabytes in binary units and change nothing else. The outputs must come out
-smaller by exactly the right ratio, and the model must still typecheck. If you find yourself
-editing a value to compensate, stop.
+Re-declare every node held in terabytes in binary units and change nothing else. The outputs must
+come out smaller by exactly the right ratio, and the model must still typecheck. If you find
+yourself editing a value to compensate, stop.
 
 ```bash
 python3 -m pytest tests/capacity/test_problem_3_binary_units.py
 ```
 
 **9.4 — Turn it back into a cost model.**
-Remove what makes the web service model a sizing model — the measured constant this chapter adds
-and every ceiling before and after it — keep it working, and then write one sentence saying what
-the result can no longer tell anybody. If you cannot name it, you removed something that was doing
-no work — and the model should not have had it.
+Remove what makes the web service model a sizing model: the measured constant this chapter adds,
+and every ceiling before and after it. Keep it working. Then write one sentence saying what the
+result can no longer tell anybody. If you cannot name it, you removed something that was doing no
+work, and the model should not have had it.
 
 ```bash
 python3 -m pytest tests/capacity/test_problem_4_classification.py
@@ -181,7 +186,7 @@ codec's, or nobody remembers.
 
 A good answer has a ratio, a sample size, the codec and its setting, and a sentence about the
 number it replaces. If your measured ratio matches the planning figure exactly, find out who
-measured it first — you may have just re-derived a guess.
+measured it first. You may have just re-derived a guess.
 
 ## Where to go next
 
