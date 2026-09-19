@@ -48,6 +48,8 @@ def _verify_models():
 
 MODELS = staged_models()
 STAGES = all_stages()
+#: The stages written to disk. The last stage is the model itself and is not.
+WRITTEN = [s for s in STAGES if not s.is_the_finished_model]
 
 
 def real(model: str) -> dict:
@@ -193,6 +195,32 @@ def test_a_stage_changes_nothing_else_about_a_node(stage):
             f"{stage.name} shows {name!r} differently from models/{stage.model}/model.yaml. A "
             "stage selects nodes; it does not rewrite them."
         )
+
+
+@pytest.mark.parametrize("stage", WRITTEN, ids=lambda s: f"{s.model}:{s.stage}")
+def test_a_stage_file_loads_back_as_the_document_it_was_built_from(stage):
+    """Folding prose and inlining lists changes how the file reads, never what it says."""
+    assert yaml.safe_load(stage.path.read_text()) == build(stage), (
+        f"{stage.name}: the written file does not load back as the document bench/stages.py "
+        "built. The writer has changed a value, not just its layout."
+    )
+
+
+@pytest.mark.parametrize("stage", WRITTEN, ids=lambda s: f"{s.model}:{s.stage}")
+def test_a_stage_file_fits_a_tablet_without_wrapping(stage):
+    """No prose line is wider than the editable block a chapter shows on a tablet.
+
+    A line that wraps there continues at the left margin, where a YAML continuation cannot be
+    told from a key at the wrong level; ch02's first model file read as nonsense on a tablet
+    for exactly that reason. A formula is exempt: it is one line however long, and scrolls.
+    """
+    expressions = {"formula", "of", "limit", "headroom"}
+    wide = [
+        (number, line)
+        for number, line in enumerate(stage.path.read_text().splitlines(), 1)
+        if len(line) > 80 and line.strip().split(":")[0] not in expressions
+    ]
+    assert not wide, f"{stage.name}: lines wider than a tablet's editable block: {wide[:3]}"
 
 
 @pytest.mark.parametrize("model", MODELS)

@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "cda591dd514d33db",
+  "code_fingerprint": "5a36793248ad5b11",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/04-littles_law/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T18:26:59+00:00",
-  "git_revision": "229ed18",
+  "generated_at": "2026-09-19T21:36:27+00:00",
+  "git_revision": "b93e4bf",
   "kind": "model",
   "name": "web_service_littles_law-reference",
   "produced_by": {
@@ -58,7 +58,7 @@
       "stored_data": 1.0,
       "utilisation": 1.0
     },
-    "generated_at": "2026-09-19T18:26:59+00:00",
+    "generated_at": "2026-09-19T21:36:27+00:00",
     "model": "web_service_littles_law",
     "nodes": {
       "annual_growth": {
