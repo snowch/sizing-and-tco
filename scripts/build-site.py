@@ -723,6 +723,7 @@ figure img { background: #fff; border-radius: 4px; }
 .admonition.tip { border-left-color: var(--go); }
 .admonition.important { border-left-color: var(--stop); }
 iframe { width: 100%; border: 1px solid var(--rule); border-radius: 6px; height: 680px; }
+iframe.viewer { height: 780px; }
 @media (max-width: 720px) { iframe { height: 80vh; min-height: 540px; } }
 
 /* A quoted piece of the model the reader may edit where the chapter shows it. Nothing but the
@@ -841,12 +842,22 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
     stage = stage_for(source)
     blocks = editable_excerpts(page, stage) if stage else []
     if blocks:
-        # The chapter's `{iframe}` is the same toolkit in a box, so with the model editable in
-        # place it comes out: two Run buttons is worse than one. The run control takes its slot
-        # rather than the end of the page, because the prose around the panel already introduces
-        # it — press this, change a number, watch the total move. Failing a panel, the control
-        # goes after the last piece of the file, which is where the reader has all of it.
-        panels = [n for n in walk(page.get("mdast", page)) if n.get("type") == "iframe"]
+        # The chapter's playground `{iframe}` is the same toolkit in a box, so with the model
+        # editable in place it comes out: two Run buttons is worse than one. The run control
+        # takes its slot rather than the end of the page, because the prose around the panel
+        # already introduces it — press this, change a number, watch the total move. Failing a
+        # panel, the control goes after the last piece of the file, which is where the reader
+        # has all of it.
+        #
+        # Only the playground's panel, though. A chapter also embeds its stage's viewer — the
+        # graph with a slider on every input — and that is not the toolkit in a box, it is the
+        # other half of the lesson. Suppressing every iframe took the viewer out of ch02 and ch03
+        # silently, which is how the first version of this shipped.
+        panels = [
+            n
+            for n in walk(page.get("mdast", page))
+            if n.get("type") == "iframe" and str(n.get("src", "")).startswith("/playground/")
+        ]
         for node in panels:
             node["_suppressed"] = True
         (panels[0] if panels else blocks[-1])["_runner_here"] = True

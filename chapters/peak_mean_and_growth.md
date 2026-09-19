@@ -65,6 +65,16 @@ turns an uncertainty in the rate into a much larger uncertainty in the capacity.
 That is what a five-year capacity plan actually looks like when its growth assumption is stated
 honestly. The point estimate is somewhere in the middle of it.
 
+The graph has not gained a node since [ch03](#where-the-numbers-come-from); one node has gained a
+shape. Click *annual growth factor* and the band that produced the figure above is written there.
+Drag its slider and the point moves while the band stays, which is the difference this chapter is
+about.
+
+```{iframe} /models/storage_cluster_uncertainty-reference.html
+:width: 100%
+The same graph, with the growth rate as a band rather than a figure. Clicking it shows the band.
+```
+
 ### Compounding an average is not averaging the compounds
 
 There is a specific and expensive error here, and it is worth working through once by hand.

@@ -59,6 +59,14 @@ quantity in the model that is about hardware rather than about data:
 ```{include} _generated/where-the-numbers-come-from-stage-shape.md
 ```
 
+Three nodes on from [ch02](#what-a-workload-is)'s graph, and the new one at the end is the first
+in the model that is about hardware. Click *drive capacity* to see whose claim it is.
+
+```{iframe} /models/storage_cluster_provenance-reference.html
+:width: 100%
+The graph as ch03 leaves it. The vendor's claim is a node like any other, and says so when clicked.
+```
+
 ```{iframe} /playground/where-the-numbers-come-from/
 :width: 100%
 The same file, with the vendor's claim in it. Change the `provenance` of a node and run it again.

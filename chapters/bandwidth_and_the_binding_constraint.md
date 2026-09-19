@@ -71,6 +71,14 @@ The median gap between the chains is large. These are not two estimates of the s
 differ slightly; they are two different questions with two different answers. The gap at the 95th
 percentile is larger still.
 
+Both chains are in the graph now, meeting at the node that takes the larger. Drag *node read
+throughput* down and watch which chain is in charge change hands.
+
+```{iframe} /models/storage_cluster_bandwidth-reference.html
+:width: 100%
+Two chains and the node that picks between them. Click *nodes the model recommends* to see both feeding it.
+```
+
 ### The shortfall, conditional on the constraint binding
 
 A constraint that binds rarely looks harmless, and it looks harmless because of how people

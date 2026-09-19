@@ -39,7 +39,22 @@ its numerator and is none of the three.
 The commonest error in sizing is turning a flow into a stock by multiplying it by a number instead
 of by an amount of time. It typechecks in a spreadsheet. It does not typecheck here, and problem 2.2 is exactly that.
 
+### The whole of it, before any of it is written down
+
+Here is the demand side of the model this book builds, as a graph. Seven quantities: four you
+were given, one the world settles, two computed. Drag *annual growth factor* and watch *usable
+capacity at horizon* move; that is a flow, a stock and one multiplication, and it is the whole of
+this chapter.
+
+```{iframe} /models/storage_cluster_demand-reference.html
+:width: 100%
+The demand side, with a slider on every input. Click a node to see what fed it.
+```
+
 ### Turning the workload into a file
+
+That graph was drawn from a file, and the file is what you will actually write.
+
 
 The workload you have been given is the one this book carries all the way through: some amount
 of data held today, growing at some rate, over the life of whatever gets bought. You could put
