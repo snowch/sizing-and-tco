@@ -90,16 +90,17 @@ FIGURES: dict[str, Table | Diagram] = {
     # early. Six of them are the model's ceilings, and a ceiling shown without its limit, its
     # verdict or the probability of breaching it is the least readable row in the book — which
     # is why ch13 gives them a table of their own with all three.
+    # Both in plain words: ch01 comes before the book names an interval, a sample or a median.
     "point-estimates-outputs": Table(
-        render=tables.outputs_table,
+        render=tables.outputs_in_plain_words,
         result="web_service-reference",
         args=("hosts_recommended", "tco"),
     ),
-    "point-estimates-tco-distribution": Diagram(
-        draw=diagrams.distribution,
+    "point-estimates-tco-spread": Diagram(
+        draw=diagrams.spread_of_answers,
         result="web_service-reference",
         args=("tco",),
-        alt="The five-year total cost as a distribution, with the point estimate marked on it",
+        alt="The five-year total cost as a spread of answers, with the single number marked on it",
     ),
     # -- ch13 Monte Carlo -------------------------------------------------------------------------
     "monte-carlo-outputs": Table(render=tables.outputs_table, result="web_service-reference"),
