@@ -5,56 +5,45 @@
     python3 scripts/build-site.py --only ch02        # one page, to look at
     python3 scripts/build-site.py --out DIR
 
-A proof, not a replacement. The question it answers is whether this repository can own the page
-its readers look at, and the answer turns on two facts that were already true before this file
-existed:
+This is the published site, not a preview of one: the deploy runs this file against the same
+parse ``make check`` does. It rests on two facts:
 
-**The renderer is not new.** ``scripts/build-pdf.py`` walks MyST's AST and emits HTML, and it
-handles every node type this book contains — twenty-six branches against twenty-seven types in
-the parse, the two extras being structural wrappers. It raises on anything it does not know, so
-content cannot silently disappear. This module imports that renderer rather than growing a
-second one.
+**The renderer is ``bench/render.py``.** It walks MyST's AST and emits HTML, and it raises on a
+node type it does not know, so content cannot silently disappear. This module wraps what it
+returns in the site's chrome — navigation, contents, search, the run control — and writes the
+pages.
 
 **The half of MyST that matters runs offline.** ``myst build --strict`` without ``--html``
 produces the AST and resolves all of the book's cross-references; only the *theme* needs the
 template registry. So keeping MyST as a parser costs nothing and keeps the check that catches a
 broken reference, while rendering here makes the published page buildable and inspectable on a
-laptop — which the themed build is not.
+laptop — which the themed build was not.
 
-What that buys, beyond weight: the page stops being somebody else's React application. Nothing
-hydrates, so a script in the page can read and write it, which is what the interactive work has
-been fighting.
+What that buys, beyond weight: the page is not somebody else's React application. Nothing
+hydrates, so a script in the page can read and write it, which is what every interactive part of
+the book depends on.
 """
 
 from __future__ import annotations
 
 import argparse
 import html
-import importlib.util
 import json
 import sys
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from bench import render as renderer  # noqa: E402
 from bench.outline import APPENDICES, CHAPTERS, PART_PAGES  # noqa: E402
 from bench.stages import stages  # noqa: E402
 from bench.stamp import shown  # noqa: E402
 from sizing.dsl import load_model  # noqa: E402
 from sizing.playground.toolkit import BOOT, PYODIDE, results_for, sources  # noqa: E402
 
-
-def _pdf():
-    """The existing renderer, imported rather than copied. Its name has a dash in it."""
-    spec = importlib.util.spec_from_file_location("build_pdf", ROOT / "scripts/build-pdf.py")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-PDF = _pdf()
-PDF.MEDIUM = "web"  # same renderer, different medium
 DEFAULT_OUT = ROOT / "_build" / "static"
 
 
@@ -168,7 +157,7 @@ def contents_of(page: dict) -> list[dict]:
         if node.get("type") == "heading" and node.get("depth") in (2, 3):
             text = "".join(t.get("value", "") for t in walk(node) if t.get("type") == "text")
             if text:
-                out.append({"depth": node["depth"], "text": text, "id": PDF.heading_id(node)})
+                out.append({"depth": node["depth"], "text": text, "id": renderer.heading_id(node)})
     return out
 
 
@@ -222,7 +211,7 @@ def sections_of(source: str, page: dict, title: str, href: str) -> list[dict]:
             if skip_first:
                 skip_first = False
                 continue
-            anchor = PDF.heading_id(node)
+            anchor = renderer.heading_id(node)
             out.append({"p": title, "h": text, "u": f"{href}#{anchor}", "t": []})
         elif kind in SEARCHABLE:
             value = str(node.get("value", "")).strip()
@@ -855,7 +844,7 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
     toc = toc_html(page)  # taken before the promotion below, which renumbers what it reads
     if source in TITLED_PAGES:
         promote_headings(page)
-    body = PDF.render(page.get("mdast", page))
+    body = renderer.render(page.get("mdast", page))
     if source not in TITLED_PAGES:
         # The introduction and the part pages carry their name in the front matter and nowhere
         # in the text, so the page opens on a blockquote with nothing above it saying where
@@ -869,7 +858,7 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
             results=json.dumps(results_for(load_model(stage.path))),
             pyodide=PYODIDE,
         )
-        body = body.replace(PDF.RUNNER_SLOT, runner, 1)
+        body = body.replace(renderer.RUNNER_SLOT, runner, 1)
     headlinks, turn = turning(before, after)
     return PAGE.format(
         title=html.escape(title_for(source, page)),
@@ -890,8 +879,8 @@ Neighbour = tuple[str, str] | None
 def turning(before: Neighbour, after: Neighbour) -> tuple[str, str]:
     """The foot of a page: the two links that carry on reading.
 
-    The order is `page_order()`, which is the order this build writes the pages in and the order
-    the PDF binds them in, so the book cannot disagree with itself about what comes next. `rel`
+    The order is `page_order()`, which is `myst.yml`'s table of contents and the order this build
+    writes the pages in, so the book cannot disagree with itself about what comes next. `rel`
     in the head as well as links in the page: a browser and a crawler both read the first, and
     only a person reads the second.
     """
@@ -909,13 +898,25 @@ def turning(before: Neighbour, after: Neighbour) -> tuple[str, str]:
     return "\n".join(head), (f'<nav class="turn">{"".join(foot)}</nav>' if foot else "")
 
 
+def _site() -> str:
+    """Where the published book lives, derived rather than typed.
+
+    The host comes from ``myst.yml``'s ``github``, so it cannot disagree with the repository and
+    would follow it if the repository moved. Only the sitemap needs it: every link in a page is
+    relative, or root-relative and given the base path by ``build-icons.py``.
+    """
+    config = yaml.safe_load((ROOT / "myst.yml").read_text())
+    owner, repo = config["project"]["github"].rstrip("/").split("/")[-2:]
+    return f"https://{owner}.github.io/{repo}"
+
+
 def crawlables(out: Path, pages: list[str]) -> None:
     """A sitemap and a robots.txt, which the theme used to publish and a reader never sees.
 
     They are the difference between a book a search engine can find and one it cannot, and the
-    site URL is derived from the repository rather than typed, the same way the PDF derives it.
+    site URL is derived from the repository rather than typed.
     """
-    site = PDF._site()
+    site = _site()
     urls = "".join(f"  <url><loc>{site}/{href}</loc></url>\n" for href in pages)
     (out / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -931,11 +932,11 @@ def main() -> int:
     parser.add_argument("--only", help="one page, by chapter label or slug")
     args = parser.parse_args()
 
-    index = PDF.parsed_pages()
+    index = renderer.parsed_pages()
     if not index:
         raise SystemExit("no parsed content — run `myst build` first")
 
-    wanted = PDF.page_order()
+    wanted = renderer.page_order()
     if args.only:
         wanted = [
             s
@@ -948,7 +949,7 @@ def main() -> int:
 
     # What each page is called here, so a cross-reference resolves to this build rather than to
     # the themed site it was parsed for.
-    PDF.PAGES = {Path(href_for(s)).stem: href_for(s) for s in wanted}
+    renderer.PAGES = {Path(href_for(s)).stem: href_for(s) for s in wanted}
 
     args.out.mkdir(parents=True, exist_ok=True)
     favicon = ROOT / "public" / "favicon.svg"

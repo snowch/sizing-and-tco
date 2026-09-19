@@ -4,9 +4,10 @@ Paste everything below the line into Claude Code, in an empty directory.
 
 ---
 
-Build me a self-study book and toolkit called **Sizing and TCO**, published as a website and a
-PDF. Work in this directory. Take your time and get the architecture right before writing prose —
-the architecture is most of what makes this book different from the ones that already exist.
+Build me a self-study book and toolkit called **Sizing and TCO**, published as a website that a
+browser keeps for reading offline. Work in this directory. Take your time and get the architecture
+right before writing prose — the architecture is most of what makes this book different from the
+ones that already exist.
 
 ## What the book is
 

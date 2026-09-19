@@ -31,7 +31,6 @@ REQUIRED = (
 OPTIONAL = (
     ("myst", "building the book", "npm install -g mystmd"),
     ("node", "checking the browser evaluator against Python's", "install Node 22"),
-    ("chromium", "printing the PDF", "pip install playwright && playwright install chromium"),
 )
 
 TICK, CROSS = "  ok  ", " miss "
@@ -53,9 +52,7 @@ def main() -> int:
             print(f"[{CROSS}] {module} — {why}")
 
     for command, why, remedy in OPTIONAL:
-        found = shutil.which(command) or any(
-            Path(p).exists() for p in ("/opt/pw-browsers/chromium/chrome-linux/chrome",)
-        )
+        found = shutil.which(command)
         print(f"[{TICK if found else CROSS}] {command} — {why}" + ("" if found else f" ({remedy})"))
 
     print()

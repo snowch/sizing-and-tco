@@ -8,8 +8,8 @@
 # Nothing here needs the network either. The book is parsed by MyST and rendered by this
 # repository, and only the parse was ever MyST's — so what this builds is the site that deploys,
 # rather than a preview of one that could only be built by a runner with a template registry in
-# reach. What it cannot check is what only the deploy assembles: the PDF, the interactive model
-# pages and the playgrounds, and the links into them.
+# reach. What it cannot check is what only a reader's browser can answer: whether Python starts
+# in their tab, and what a page looks like.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -169,8 +169,9 @@ echo "  no currency parsed as LaTeX"
 
 echo "== the book renders =="
 # This is the published site, not a preview of it: the deploy runs this same script against the
-# same parse. It shares build-pdf.py's renderer, which makes it the only check that the renderer
-# handles every node type as a *site* rather than as one bound document.
+# same parse. The renderer raises on a node type it does not handle rather than dropping the
+# content, so rendering every page on every push is what stops a new directive from silently
+# disappearing from the site.
 python3 scripts/build-site.py --out _build/static > /dev/null
 python3 scripts/check-built-links.py _build/static > /dev/null
 echo "  OK"
@@ -179,16 +180,6 @@ echo "== the book installs for offline use =="
 # After every page, viewer and playground is in the tree, because the worker lists them all and
 # a list that names a file the build did not produce fails the install in the reader's browser.
 python3 scripts/build-offline.py --inject _build/static --base /
-
-
-echo "== the PDF renderer sees every page =="
-# The mdast-to-HTML renderer is the one part of the pipeline that is not MyST's, and it raises on
-# a node type it does not handle rather than dropping content. Running it over every page on every
-# push is what stops a new directive from silently disappearing out of the PDF. No Chromium here
-# on purpose: assembling the HTML is what touches every page, and printing it is the cheap part CI
-# does not need to repeat.
-python3 scripts/build-pdf.py --no-myst --html-only --out _build/pdf-check/book.pdf > /dev/null
-echo "  every page rendered"
 
 echo
 echo "All checks passed."

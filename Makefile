@@ -93,11 +93,6 @@ book:  ## Build the site and serve it at localhost:3000 (re-run to pick up an ed
 	@echo
 	@cd _build/html && $(PYTHON) -m http.server 3000
 
-.PHONY: pdf
-pdf:  ## Build the whole book as one PDF
-	$(PYTHON) scripts/build-stamp.py
-	$(PYTHON) scripts/build-pdf.py
-
 .PHONY: chapter
 chapter:  ## Regenerate any missing chapter stubs (never touches written prose)
 	$(PYTHON) scripts/new-chapter.py --all

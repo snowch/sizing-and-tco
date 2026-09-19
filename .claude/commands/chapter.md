@@ -26,7 +26,7 @@ chapter. Then:
 4. **Write the chapter** to serve the problems and the figures, in the five-part shape. Quote
    code and model files with `{literalinclude}` and text anchors; include figures with
    `{include}` and `{image}`. No number is ever typed into prose.
-5. Run `./scripts/ci-check.sh`, then `python3 scripts/build-pdf.py`, then commit.
+5. Run `./scripts/ci-check.sh`, then commit.
 
 Obey CLAUDE.md §4 absolutely: original work, no vendor named, no structural mirroring of any
 existing text.

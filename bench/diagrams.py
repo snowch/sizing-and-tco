@@ -12,7 +12,7 @@ the answer, and where the chain stops being a chain and meets a ceiling.
 
 Colours are carried by kind and by provenance, and they mean the same thing in every figure and
 in the interactive page. They are also readable in greyscale: the marks ``●``, ``◐``, ``○`` say
-the same thing as the fills, because the PDF is printed and the fills are not.
+the same thing as the fills, because a page gets printed and a printer may not have the colours.
 """
 
 from __future__ import annotations

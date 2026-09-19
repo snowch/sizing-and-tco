@@ -84,12 +84,12 @@ jobs:
         run: |
           python3 scripts/build-viewers.py --out _build/html/models
 
-      # Unlinked from any chapter for now. Verified in Chromium against the real CDN before it
-      # was wired up here: Pyodide boots in about five seconds, micropip resolves Pint and
-      # PyYAML from PyPI, and the page's own fixtures agree with the verdicts this build
-      # computed for them. It disables its own button and says so when Python does not start.
       # One page per chapter that builds the model, embedded in that chapter with `{iframe}`.
       # Nothing boots until a reader presses Run, so a chapter page costs no more than before.
+      # Verified in Chromium against the real CDN before it was wired up here: Pyodide boots in
+      # about five seconds, micropip resolves Pint and PyYAML from PyPI, and the page's own
+      # fixtures agree with the verdicts this build computed for them. It disables its own
+      # button and says so when Python does not start.
       - name: Build the model playgrounds
         run: python3 scripts/build-playground.py --out _build/html/playground
 
@@ -109,25 +109,11 @@ jobs:
           BASE_URL: ${{ steps.pages.outputs.base_path == '/' && '' || steps.pages.outputs.base_path }}
         run: python3 scripts/build-offline.py --inject _build/html --base "${BASE_URL:-}/"
 
-      - name: Install Chromium for the PDF build
-        # The PDF is rendered by a browser rather than by LaTeX: no TeX distribution needed, and
-        # the output is what a reader gets by pressing Print on the HTML.
-        run: |
-          python -m pip install playwright
-          playwright install --with-deps chromium
-
-      - name: Build the single-file PDF
-        # --no-myst because the site build above already parsed everything into _build/site.
-        run: python3 scripts/build-pdf.py --no-myst --out _build/html/sizing-and-tco.pdf
-
-      - name: Drop the intermediate HTML
-        # build-pdf.py writes its assembled HTML beside the PDF. It is a build artefact, not a
-        # page, and publishing it would put a second unstyled copy of the whole book on the site.
-        run: rm -f _build/html/sizing-and-tco.html
-
-      # After the PDF and the model pages are in place, so links to them are checked against
-      # files that exist. This runs here rather than in ci-check.sh because it needs the whole
-      # site assembled, and the PDF and the playgrounds are built only here.
+      # After every model page and playground is in place and the icons have given their links
+      # the base path, so links into them are checked against files that exist at the address a
+      # reader will ask for. ci-check.sh runs the same check at the site root; only here is the
+      # site assembled under the base path it is served from, and a root-relative link that
+      # forgot the base path is the fault the local check cannot see.
       - name: Check every file the pages link to was built
         env:
           BASE_URL: ${{ steps.pages.outputs.base_path == '/' && '' || steps.pages.outputs.base_path }}

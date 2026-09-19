@@ -18,17 +18,16 @@ from pathlib import Path
 
 import pytest
 
+from bench import render as renderer
 from bench.stamp import ROOT, shown
 
-#: Scripts that take an output directory and are given a relative one by a workflow, and whether
-#: each one can do its job in a checkout that has not been built yet. ``build-pdf.py`` assembles
-#: what MyST parsed, so in a fresh clone it has nothing to assemble and says so — which is the
-#: state CI is in when it runs the tests, because the book build comes after them.
+#: Scripts that take an output directory and are given a relative one by a workflow. Each one
+#: can do its job in a checkout that has not been built yet, which is the state CI is in when it
+#: runs the tests, because the book build comes after them.
 TAKES_AN_OUT = [
-    ("scripts/build-viewers.py", "--out", True),
-    ("scripts/build-pdf.py", "--out", False),
-    ("scripts/build-icons.py", "--out", True),
-    ("scripts/build-playground.py", "--out", True),
+    ("scripts/build-viewers.py", "--out"),
+    ("scripts/build-icons.py", "--out"),
+    ("scripts/build-playground.py", "--out"),
 ]
 
 
@@ -57,26 +56,16 @@ def test_shown_leaves_a_path_outside_the_repository_alone():
     assert shown("/tmp/elsewhere").startswith("/tmp")
 
 
-@pytest.mark.parametrize(
-    ("script", "flag", "self_sufficient"), TAKES_AN_OUT, ids=lambda v: Path(str(v)).name
-)
-def test_a_relative_out_does_not_blow_up(script, flag, self_sufficient):
+@pytest.mark.parametrize(("script", "flag"), TAKES_AN_OUT, ids=lambda v: Path(str(v)).name)
+def test_a_relative_out_does_not_blow_up(script, flag):
     """Exactly what deploy.yml does: a repository-relative output directory.
 
     Run from the repository root with a relative path, because that is the invocation that
     failed. A script that only works with absolute paths works until somebody writes a workflow.
-
-    A script that refuses because its inputs are not there has not failed this check — it has
-    passed it, out loud. What fails it is a traceback, which is what printing a path used to
-    produce.
     """
     relative = f"_build/test-out/{Path(script).stem}"
-    extra = ["--no-myst", "--html-only"] if "pdf" in script else []
     completed = subprocess.run(
-        [sys.executable, script, *extra, flag, relative + ("/book.pdf" if "pdf" in script else "")],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
+        [sys.executable, script, flag, relative], cwd=ROOT, capture_output=True, text=True
     )
     assert "relative_to" not in completed.stderr, (
         f"{script} cannot print a path it was given:\n{completed.stderr[-600:]}"
@@ -84,12 +73,11 @@ def test_a_relative_out_does_not_blow_up(script, flag, self_sufficient):
     assert "Traceback" not in completed.stderr, (
         f"{script} raised where it should have reported:\n{completed.stderr[-600:]}"
     )
-    if self_sufficient:
-        assert completed.returncode == 0, completed.stderr[-600:]
+    assert completed.returncode == 0, completed.stderr[-600:]
 
 
 def test_verify_setup_reports_rather_than_failing_on_a_missing_optional():
-    """It is a report. A machine without Chromium is not a broken checkout."""
+    """It is a report. A machine without myst is not a broken checkout."""
     completed = subprocess.run(
         [sys.executable, "scripts/verify-setup.py"], cwd=ROOT, capture_output=True, text=True
     )
@@ -124,16 +112,6 @@ def test_a_javascript_template_is_a_raw_string(name):
         f"{name} in scripts/build-site.py carries JavaScript, so it must be a raw string, "
         f"or Python will interpret its backslashes as its own."
     )
-
-
-def renderer():
-    """``scripts/build-pdf.py``, imported. Its name has a dash in it."""
-    from importlib import util
-
-    spec = util.spec_from_file_location("build_pdf", ROOT / "scripts" / "build-pdf.py")
-    module = util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
 
 
 @pytest.mark.parametrize(
@@ -173,7 +151,7 @@ def test_a_reference_keeps_everything_but_its_label(written, anchor, expected):
     afterwards were chapters, whose own heading does not go through here. A part page would have
     shown it immediately.
     """
-    assert renderer()._relabel({"identifier": anchor}, written) == expected
+    assert renderer._relabel({"identifier": anchor}, written) == expected
 
 
 def site():
@@ -202,16 +180,16 @@ def site():
 )
 def test_only_a_top_level_path_resolves_to_a_page(url, expected):
     build = site()
-    build.PDF.PAGES = {
-        Path(build.href_for(s)).stem: build.href_for(s) for s in build.PDF.page_order()
+    build.renderer.PAGES = {
+        Path(build.href_for(s)).stem: build.href_for(s) for s in build.renderer.page_order()
     }
-    assert build.PDF._published(url) == expected
+    assert build.renderer._published(url) == expected
 
 
 def test_the_foot_of_a_page_points_at_its_neighbours_in_the_reading_order():
     """prev and next come from page_order(), and the ends of the book have one link, not two."""
     build = site()
-    order = [s for s in build.PDF.page_order() if s in build.PDF.parsed_pages()]
+    order = [s for s in build.renderer.page_order() if s in build.renderer.parsed_pages()]
     hrefs = [build.href_for(s) for s in order]
     for at, href in enumerate(hrefs):
         before = (hrefs[at - 1], "before") if at else None
@@ -361,7 +339,6 @@ def test_the_offline_worker_lists_exactly_what_the_build_produced(tmp_path):
     (site / "search.json").write_text("[]")
     (site / "favicon.svg").write_text("<svg/>")
     (site / "sitemap.xml").write_text("<urlset/>")  # not a page: not kept
-    (site / "sizing-and-tco.html").write_text("<html/>")  # the PDF's intermediate: not kept
 
     def run():
         return subprocess.run(
@@ -385,8 +362,6 @@ def test_the_offline_worker_lists_exactly_what_the_build_produced(tmp_path):
         "search.json",
     ]
     for page in site.rglob("*.html"):
-        if page.name == "sizing-and-tco.html":
-            continue
         assert page.read_text().count("serviceWorker.register(") == (
             1 if "<head>" in page.read_text() else 0
         )

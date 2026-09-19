@@ -2,8 +2,8 @@
 """Which commit this build of the book came from.
 
 Every figure in this book says where it came from. The book itself did not: a reader looking at a
-page had no way to tell whether it was today's or last quarter's, and a downloaded PDF had no way
-to tell them at all.
+page had no way to tell whether it was today's or last quarter's — and once their browser keeps
+the book offline, last quarter's is a real possibility.
 
 This is deliberately *not* one of the figures in :mod:`bench.figures`. Those are committed, and
 `render-figures.py --check` proves they match the results they were rendered from. A build stamp

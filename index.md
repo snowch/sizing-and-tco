@@ -129,8 +129,8 @@ make book       # build the site and serve it
 Nothing in this book needs a datacentre, a cloud account, or a licence.
 
 :::{note} Where this book is
-**[Download the whole book as a PDF](/sizing-and-tco.pdf)** — every chapter and appendix in one
-file, built from the same source as this site, so the two cannot disagree about what a page says.
+This site is the whole of it — there is no PDF, because the models are things you drag and paper
+cannot hold one. The line below says which commit built the pages you are reading.
 
 ```{include} chapters/_generated/build.md
 ```

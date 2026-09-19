@@ -4,10 +4,9 @@
     python3 scripts/check-built-links.py _build/html "$BASE_URL"
 
 A broken link to a page is caught by ``myst build --strict``, because MyST resolves
-cross-references. A broken link to a *file* is not: a download link to a PDF that the build did
-not produce, or an interactive model page that was never copied into place, resolves perfectly as
-markup and 404s for the reader. That is the failure this catches, and it can only be caught after
-the site has been assembled.
+cross-references. A broken link to a *file* is not: an interactive model page or a playground
+that was never copied into place resolves perfectly as markup and 404s for the reader. That is
+the failure this catches, and it can only be caught after the site has been assembled.
 
 A fragment is the quieter version of the same thing, and it shipped: four "On this page" entries
 pointed at ids nobody wrote, because the contents list and the renderer disagreed about what a
