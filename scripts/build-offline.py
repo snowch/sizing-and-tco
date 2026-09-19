@@ -130,7 +130,6 @@ def precache(tree: Path) -> list[str]:
     for pattern in PRECACHED:
         found |= {p.relative_to(tree).as_posix() for p in tree.glob(pattern) if p.is_file()}
     found |= {name for name in PRECACHED_FILES if (tree / name).is_file()}
-    found.discard("sizing-and-tco.html")  # the PDF's intermediate, while there is one
     return sorted(found)
 
 

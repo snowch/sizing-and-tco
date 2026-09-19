@@ -68,8 +68,10 @@ theme: `myst build --strict` resolves every cross-reference and fails on a broke
 anywhere, so nothing reaches the MyST template registry and the whole site builds offline —
 which is why `make check` builds the site that deploys rather than a preview of one.
 
-The renderer is `scripts/build-pdf.py`, shared with the PDF and told which medium it is by
-`MEDIUM`. It raises on a node type it does not handle rather than dropping it.
+The renderer is `bench/render.py`. It raises on a node type it does not handle rather than
+dropping it. There is no PDF: the models are things a reader drags and paper cannot hold one, so
+`scripts/build-offline.py` writes the service worker that keeps the site readable with no network
+instead.
 
 ```bash
 make check     # ./scripts/ci-check.sh — exactly what CI runs
@@ -199,10 +201,9 @@ whether the reader has to decode it.
   interval is a claim about a method as much as about a model.
 - **A rate or a duration in a `corpus` result.** `provenance_problems` checks it dimensionally,
   via Pint, and rejects it correctly.
-- **A new MyST directive without a branch in `scripts/build-pdf.py`.** The renderer raises on a
-  node type it does not handle, deliberately — the alternative is content silently missing. It
-  renders the site as well as the PDF, so this now stops a deploy rather than quietly thinning a
-  PDF nobody opened.
+- **A new MyST directive without a branch in `bench/render.py`.** The renderer raises on a node
+  type it does not handle, deliberately — the alternative is content silently missing from a
+  page. `make check` renders every page, so it fails there rather than in the deploy.
 
 - **JavaScript in a Python string that is not raw.** `RUNNER` and `SEARCH` in
   `scripts/build-site.py` carry JavaScript. Without `r"""`, Python eats `\n` and the page ships a

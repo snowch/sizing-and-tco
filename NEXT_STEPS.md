@@ -57,7 +57,7 @@ has had since the scaffold, and then the work a first draft leaves:
 - `bench/measure.py`'s corpora are synthetic, deliberately and loudly. The proportions in
   `mixed_objects` and the schemas in `application_records` are the single largest assumption in
   each model's compression constant, and they are an assumption rather than an observation.
-- The PDF renderer handles the node types the book currently uses and raises on anything else.
+- `bench/render.py` handles the node types the book currently uses and raises on anything else.
   That is the intended behaviour, and it means a new directive needs a branch.
 - **Nothing checks what a page looks like.** Every check here reads the source or the parsed
   content, and both can be perfectly valid while the rendered page is wrong. Money written as
