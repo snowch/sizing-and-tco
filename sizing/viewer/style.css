@@ -15,12 +15,25 @@ header h1 { margin: 0 0 2px; font-size: 17px; font-weight: 600; }
 header p { margin: 0; color: var(--muted); font-size: 12.5px; }
 header .kind { display: inline-block; padding: 1px 7px; border-radius: 3px; background: var(--panel); border: 1px solid var(--line); font-size: 11px; margin-left: 6px; }
 main { display: grid; grid-template-columns: 290px 1fr 300px; gap: 0; height: calc(100vh - 62px); }
+/* Three columns on a desktop; two on a tablet held sideways, with the node detail under the
+   graph; one below that, graph first, which is what a chapter embeds and what a phone gets. The
+   graph is the point of the page, so it is never the thing that scrolls out of reach. */
+/* Hidden until the columns stack; the rule that shows it is in the media query below, and has
+   to come after this one. */
+.narrow-note { display: none; }
 @media (max-width: 1100px) {
-  main { grid-template-columns: 1fr; height: auto; }
-  /* Stacked, the graph goes first and the node detail right under it: that is what the page is
-     for, and a chapter embeds it at this width. The sliders follow; the outputs are with them. */
+  main { grid-template-columns: 290px 1fr; grid-template-rows: auto auto; height: auto; }
+  #controls { grid-column: 1; grid-row: 1 / span 2; }
+  #canvas { grid-column: 2; grid-row: 1; }
+  #detail { grid-column: 2; grid-row: 2; border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (max-width: 860px) {
+  main { grid-template-columns: 1fr; grid-template-rows: none; }
+  #controls, #canvas, #detail { grid-column: 1; grid-row: auto; }
   #canvas { order: -2; }
   #detail { order: -1; }
+  #controls { border-right: 0; border-top: 1px solid var(--line); }
+  .narrow-note { display: block; }
 }
 section { overflow-y: auto; padding: 14px 16px; }
 #controls { border-right: 1px solid var(--line); background: var(--panel); }

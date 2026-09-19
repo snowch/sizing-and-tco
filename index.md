@@ -105,6 +105,12 @@ models in [Appendix E](#appendix-e-storage-model) and
 evaluated by a small JavaScript version, which `tests/test_viewer.py` runs against Python's
 answers for every node of every model before it ships.
 
+The book is a website and is meant to be read as one: the models are the point, and they are
+things you drag. The prose reads on any screen; the models want a tablet held sideways or
+anything larger, and say so when they have less. Once you have opened it, the whole book works
+with no network — your browser keeps it — and if you press **Resample** or **Run** once while
+online, the Python runtime those fetch is kept too.
+
 To do the problems, a checkout. They are tests, and a test needs an interpreter. Python, Node for
 the book build, and about twenty minutes:
 

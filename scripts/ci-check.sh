@@ -175,6 +175,12 @@ python3 scripts/build-site.py --out _build/static > /dev/null
 python3 scripts/check-built-links.py _build/static > /dev/null
 echo "  OK"
 
+echo "== the book installs for offline use =="
+# After every page, viewer and playground is in the tree, because the worker lists them all and
+# a list that names a file the build did not produce fails the install in the reader's browser.
+python3 scripts/build-offline.py --inject _build/static --base /
+
+
 echo "== the PDF renderer sees every page =="
 # The mdast-to-HTML renderer is the one part of the pipeline that is not MyST's, and it raises on
 # a node type it does not handle rather than dropping content. Running it over every page on every

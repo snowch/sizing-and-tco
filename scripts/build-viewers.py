@@ -68,6 +68,7 @@ PAGE = """<!doctype html>
     <div id="outputs"></div>
   </section>
   <section id="canvas">
+    <p class="note narrow-note" id="narrow-note"></p>
     <div class="legend">
       <span><i style="background:var(--input);border:1px solid var(--input-edge)"></i>input</span>
       <span><i style="background:var(--derived);border:1px solid var(--derived-edge)"></i>derived</span>
