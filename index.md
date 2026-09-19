@@ -71,10 +71,10 @@ A spreadsheet cell holds a value and nothing about it.
 Everything this book does depends on those three things being written down beside the number. A
 file is where they can be. A file also diffs and reviews like code.
 
-The model checks its own units. A rate times a duration is an amount, so
+The toolkit checks the units of every formula. A rate times a duration is an amount, so
 `requests per second × seconds = requests`. A formula that multiplies a rate by a count of periods
-instead is refused. A spreadsheet accepts that calculation without complaining. This model
-rejects it.
+instead is refused. A spreadsheet accepts that calculation without complaining. The toolkit
+refuses it.
 
 [ch02](#what-a-workload-is) writes the first node, at four lines a number. The **build**, the set
 of checks that turns these files into this book, refuses a node that leaves out its unit or its
