@@ -116,29 +116,20 @@ The book is a website and is meant to be read as one: the models are the point, 
 things you drag. The prose reads on any screen; the models want a tablet held sideways or
 anything larger, and say so when they have less. Once you have opened it, the whole book works
 with no network — your browser keeps it — and if you press **Resample** or **Run** once while
-online, the Python runtime those fetch is kept too.
+online, the Python runtime those fetch is kept too. There is no PDF: the models are things you
+drag, and paper cannot hold one.
 
-To do the problems, a checkout. They are tests, and a test needs an interpreter. Python, Node for
-the book build, and about twenty minutes:
+To do the problems, a checkout. They are tests, and a test needs an interpreter. Python, and a few
+minutes:
 
 ```bash
 git clone https://github.com/snowch/sizing-and-tco.git
 cd sizing-and-tco
-
 python3 -m pip install -r requirements.txt -r requirements-dev.txt
-npm install -g "mystmd@$(node -p "require('./package.json').devDependencies.mystmd")"
-
-make models     # evaluate every model and stamp what it said
-make check      # every check the book runs on itself
-make book       # build the site and serve it
+python3 -m pytest tests/point_estimates/    # ch01's problems, which fail until they are solved
 ```
+
+[Appendix H](#appendix-h-running-the-toolkit) has the rest: re-taking a measurement, re-running a
+model, rebuilding the book, and checking any figure in it against the repository.
 
 Nothing in this book needs a datacentre, a cloud account, or a licence.
-
-:::{note} Where this book is
-This site is the whole of it — there is no PDF, because the models are things you drag and paper
-cannot hold one.
-
-```{include} chapters/_generated/build.md
-```
-:::
