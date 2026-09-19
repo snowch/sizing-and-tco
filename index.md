@@ -35,7 +35,8 @@ referring to the others by name. Nothing more exotic than that: the file is the 
 read the whole of one in a sitting.
 
 It starts in [ch02 · What a workload is](#what-a-workload-is) as what arrives and what
-accumulates — a file that runs, and that cannot yet tell you anything you did not type into it.
+accumulates, and already refuses a formula whose units do not work out — the error a spreadsheet
+accepts without comment, and the one that sizes a retention store from a rate.
 Later chapters add to it as they earn the right to: where each number came from, what the hardware
 can hold, where it stops coping, what it costs to run.
 [ch12 · The sizing model](#the-sizing-model) is where it produces a node count, and
@@ -94,7 +95,18 @@ a good answer contains and what would falsify it. Every chapter ends with one of
 
 ## What you will need
 
-Python, Node for the book build, and about twenty minutes:
+To read it and run its models, nothing. [ch02](#what-a-workload-is) and
+[ch03](#where-the-numbers-come-from) carry the model file running in the page: press **Run**,
+change a number, and try to multiply a rate by a count of periods to see the build refuse it.
+That is this repository's own loader and unit checker, fetched as a Python runtime and run in
+your browser, so what the page does and what `make check` does cannot come apart. The finished
+models in [Appendix E](#appendix-e-storage-model) and
+[Appendix F](#appendix-f-observability-model) have a slider against every input; those are
+evaluated by a small JavaScript version, which `tests/test_viewer.py` runs against Python's
+answers for every node of every model before it ships.
+
+To do the problems, a checkout. They are tests, and a test needs an interpreter. Python, Node for
+the book build, and about twenty minutes:
 
 ```bash
 git clone https://github.com/snowch/sizing-and-tco.git

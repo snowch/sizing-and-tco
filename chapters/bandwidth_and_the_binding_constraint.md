@@ -36,6 +36,14 @@ sustain to a different number of machines. They share the workload and nothing e
 
 Two distributions, two different shapes, and a great deal of overlap. Neither one is the answer.
 
+Both chains are in one file, and it is short enough to read in a sitting:
+
+```{iframe} /playground/bandwidth-and-the-binding-constraint/
+:width: 100%
+The second chain, added. Two nodes now ask for a machine count and a third picks between them.
+Change what one machine can serve and watch which chain is in charge.
+```
+
 ### Buy the larger, not the average, the usual winner or the sum
 
 The count that satisfies both is the larger of the two, and problem 10.1 is that one function

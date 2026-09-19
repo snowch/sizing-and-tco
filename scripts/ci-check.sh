@@ -95,7 +95,11 @@ echo "== the playground assembles =="
 # What CI can check is that the page builds and that the fixtures it holds itself to still have
 # the verdicts this build computes. Whether Python starts is a question about a reader's browser,
 # and the page answers that one itself, in front of them.
-python3 scripts/build-playground.py --out _build/playground > /dev/null
+#
+# Into the site's own tree, where deploy.yml puts it, so the link check below covers the
+# `/playground/...` URLs the chapters embed. It used to build into a directory of its own, which
+# meant nothing checked that any of those URLs resolved.
+python3 scripts/build-playground.py --out _build/static/playground > /dev/null
 echo "  OK"
 
 echo "== which commit this build is =="

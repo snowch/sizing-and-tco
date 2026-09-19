@@ -243,7 +243,8 @@ function report(result) {{
     const note = document.createElement("p");
     note.textContent = "The build classifies this as a " + result.classification +
       " model. It works that out from the file: a measured constant or a declared ceiling makes " +
-      "it a sizing model, and this one has neither yet.";
+      "it a sizing model, and this one has " +
+      (result.classification === "sizing" ? "at least one of them." : "neither yet.");
     d.appendChild(note);
   }} else {{
     show(v, {{

@@ -68,10 +68,11 @@ everywhere so that two figures can be compared.
 Each bar counts how many of those answers landed on a given five-year total — the table's second
 row, drawn — and the red line is where the single-number answer falls.
 
-The method that produced the interval is [ch13](#monte-carlo)'s, not this chapter's. It is no use
-to you until you have built a model, got a number out of it, and felt that you could not defend
-the number. Problem 1.1 deliberately does the crude version instead, and the crude version is
-wrong in a way worth seeing early.
+Doing that arithmetic thousands of times needs a sampler, and [ch13](#monte-carlo) builds one.
+You do not need one to get the force of it. Problem 1.1 does the same job on paper — every input
+at the bottom of its range together, then every input at the top together — and asks you to set
+what comes out beside the interval in the table. Two honest ways of admitting the same doubt, and
+they do not agree with each other.
 
 ### The error an interval cannot show
 
@@ -138,8 +139,8 @@ reason.
 **Whether the spread anybody declared is the right spread.** The interval above is a faithful
 report of the distributions in the model file. If the growth rate's range was somebody's mood on
 a Tuesday, the interval inherits that and says nothing about it. [ch03](#where-the-numbers-come-from)
-is about telling a measurement from a claim from a guess, and it is the chapter that makes this
-one worth anything.
+is about telling a measurement from a claim from a guess, which is what decides whether an
+interval is a finding or a decoration.
 
 **How much the interval should worry you.** A wide interval on a number nobody will act on for a
 year is not a problem. A narrow one on a purchase order signed on Friday might be. Nothing in the
@@ -154,10 +155,10 @@ Three, in `tests/what_one_number_hides/`. The first two have tests; run them wit
 
 **1.1 — The width of a product.** Read each uncertain input's declared spread off the storage
 model, and work out what those spreads become when the quantities are multiplied together. The
-answer is neither the widest input nor the average of them. It is also, deliberately, the crude
-version of the calculation — assuming every input is at its low together and then at its high
-together — and comparing it with the interval in the table above will tell you something about
-how much [ch13](#monte-carlo) is actually buying.
+answer is neither the widest input nor the average of them. Do it the way you could do it on
+paper — every input at its low together, then every input at its high together — and then set
+your answer beside the interval in the table above. The gap between the two is what
+[ch13](#monte-carlo) exists to close.
 
 ```bash
 python3 -m pytest tests/what_one_number_hides/test_problem_1_compounding.py
@@ -186,14 +187,14 @@ multiplications you have been using is quietly lying to you.
 
 A good answer is short, names its sources, and is uncomfortable in at least one place. If nothing
 in it is uncomfortable, you have probably written down the quantities you can measure easily
-rather than the ones that decide the answer. You will be able to check the second half of it
-properly by [ch12](#the-sizing-model), and the first half by [ch19](#which-input-is-the-answer).
+rather than the ones that decide the answer. Keep it. Every chapter in this book ends with a
+problem about a system you run, and this is the first of them — they work best on the same one.
 
 ## Where to go next
 
 [ch02](#what-a-workload-is) starts the model this chapter has been quoting from. It writes the
-first nodes of it, and by the end of that chapter you have a file that runs and cannot yet tell
-you anything you did not type into it — which is the honest place to begin.
+first nodes of it, and by the end you have a file that computes a capacity at the horizon and
+refuses to get there by multiplying a rate by a plain number.
 
 [ch03](#where-the-numbers-come-from) is the question this chapter kept deferring: given that you
 have written a quantity down, what are you actually claiming about it?
