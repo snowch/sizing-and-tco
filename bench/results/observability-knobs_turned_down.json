@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "50f708e632538438",
+  "code_fingerprint": "2980037f5b1737e0",
   "code_sources": [
     "bench/run_models.py",
     "models/observability/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T09:08:01+00:00",
-  "git_revision": "48710fa",
+  "generated_at": "2026-09-19T09:30:06+00:00",
+  "git_revision": "d798a44",
   "kind": "model",
   "name": "observability-knobs_turned_down",
   "produced_by": {
@@ -98,7 +98,7 @@
       "traces_ingest": 1e-06,
       "traces_stored": 0.0864
     },
-    "generated_at": "2026-09-19T09:08:00+00:00",
+    "generated_at": "2026-09-19T09:30:05+00:00",
     "model": "observability",
     "nodes": {
       "active_series": {

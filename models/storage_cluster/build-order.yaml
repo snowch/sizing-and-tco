@@ -14,6 +14,9 @@
 # value somebody would have chosen, and a provenance that says the distribution is coming — the
 # only edit a stage may make to a node, because any other would let it show something the
 # finished model does not say.
+# How a stage refers to the model in its one-line description.
+describe: storage model
+
 certain_until:
   annual_growth:
     stage: uncertainty

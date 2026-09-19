@@ -24,7 +24,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from bench.stages import stages as storage_stages
+from bench.stages import all_stages
 from bench.stamp import RERUN_TOLERANCE, build_result, load_result, result_exists
 from sizing import export
 from sizing.dsl import ROOT, discover, load_model, scenarios_for
@@ -118,13 +118,15 @@ def main() -> int:
 def everything():
     """Every model the book publishes a figure from, the staged ones included.
 
-    ``discover()`` globs ``models/*/model.yaml`` and so cannot see the staged storage models,
-    which are built under ``models/_out``. They are models all the same: the book quotes what
-    each one computes in the chapter that finishes building it, and a figure with no stamped
-    result behind it is the thing invariant 1 exists to refuse.
+    ``discover()`` globs ``models/*/model.yaml`` and so cannot see a model's stages, which are
+    built under its ``stages/``. They are models all the same: the book quotes what each one
+    computes in the chapter that finishes building it, and a figure with no stamped result
+    behind it is the thing invariant 1 exists to refuse. Every staged model's stages are here,
+    not only the running example's, so a model being built beside the old one is stamped and
+    checked before the chapters ever point at it.
     """
     yield from discover()
-    for stage in storage_stages():
+    for stage in all_stages():
         # The last stage is the finished model, which discover() has already yielded.
         if not stage.is_the_finished_model and stage.path.exists():
             yield load_model(stage.path)

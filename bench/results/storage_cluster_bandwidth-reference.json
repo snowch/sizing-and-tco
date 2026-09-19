@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "53075f9506a94f08",
+  "code_fingerprint": "af22f7c4ddc33310",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/stages/05-bandwidth/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T09:08:06+00:00",
-  "git_revision": "48710fa",
+  "generated_at": "2026-09-19T09:30:12+00:00",
+  "git_revision": "d798a44",
   "kind": "model",
   "name": "storage_cluster_bandwidth-reference",
   "produced_by": {
@@ -64,7 +64,7 @@
       "read_utilisation.limit": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-19T09:08:06+00:00",
+    "generated_at": "2026-09-19T09:30:12+00:00",
     "model": "storage_cluster_bandwidth",
     "nodes": {
       "annual_growth": {

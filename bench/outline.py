@@ -28,6 +28,12 @@ CHAPTER_SHAPE = (
     "Where to go next",
 )
 
+#: The model the chapters build a few nodes at a time, embed the viewers of, and quote. A model
+#: is staged by carrying a ``build-order.yaml``; more than one may be staged at once, and every
+#: staged model is built, stamped and checked, but the chapters are about this one. Changing it
+#: is the switch of running example, and it goes with the chapters in the same change.
+RUNNING_EXAMPLE = "storage_cluster"
+
 #: What a chapter means when it says where its figures came from.
 SOURCE_MEANING = {
     "corpus": "a deterministic measurement over a declared corpus with a named codec",

@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "e8a18f26733fd6c6",
+  "code_fingerprint": "77118d586f44cd89",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T09:08:03+00:00",
-  "git_revision": "48710fa",
+  "generated_at": "2026-09-19T09:30:08+00:00",
+  "git_revision": "d798a44",
   "kind": "model",
   "name": "storage_cluster-power_first",
   "produced_by": {
@@ -85,7 +85,7 @@
       "tco": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-19T09:08:03+00:00",
+    "generated_at": "2026-09-19T09:30:08+00:00",
     "model": "storage_cluster",
     "nodes": {
       "annual_energy": {
