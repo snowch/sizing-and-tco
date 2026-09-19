@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "2556c5c66bb4d72a",
+  "code_fingerprint": "420ec0aa50d3a9c2",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/stages/02-provenance/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T09:08:05+00:00",
-  "git_revision": "48710fa",
+  "generated_at": "2026-09-19T09:30:11+00:00",
+  "git_revision": "d798a44",
   "kind": "model",
   "name": "storage_cluster_provenance-reference",
   "produced_by": {
@@ -44,7 +44,7 @@
       "node_raw_capacity": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-19T09:08:05+00:00",
+    "generated_at": "2026-09-19T09:30:11+00:00",
     "model": "storage_cluster_provenance",
     "nodes": {
       "annual_growth": {

@@ -1,19 +1,26 @@
-"""The storage model as the book builds it, one chapter at a time.
+"""A model as the book builds it, one chapter at a time.
 
 The book does not hand a reader a finished model and explain it backwards. It starts with what
 arrives and what accumulates, and adds nodes as the chapters earn them. Those intermediate models
 are real: they load, they typecheck, they classify, and `make check` runs the same rules over them
 that it runs over the finished file.
 
-They are **derived** from ``models/storage_cluster/model.yaml`` rather than kept beside it. A
-second copy of a model is a copy that drifts, and a book describing a model the repository no
-longer has is the failure this whole repository exists to prevent. ``build-order.yaml`` says which
-chapter introduces which node, and everything else is computed.
+They are **derived** from the model rather than kept beside it. A second copy of a model is a copy
+that drifts, and a book describing a model the repository no longer has is the failure this whole
+repository exists to prevent. A model is staged by carrying a ``build-order.yaml`` next to its
+``model.yaml``; the manifest says which chapter introduces which node, and everything else is
+computed.
 
-Two nodes are not simply added. The growth rate and the peak read throughput are single numbers
-until ch04 gives them shapes, so an earlier stage declares them under ``certain_until`` — a value,
-and a provenance that says the distribution is coming. That is the only kind of edit a stage may
-make to a node, because any other would let a staged model say something the real one does not.
+Any model may be staged, and more than one may be at once -- which is how the running example is
+replaced without `main` ever describing half of one model and half of another. The chapters
+embed and quote the stages of one model, named in ``bench.outline.RUNNING_EXAMPLE``; ``stages()``
+returns those. Every staged model is built, stamped and held to the same rules, whichever one the
+chapters are currently about.
+
+Two nodes are not simply added. An input that is a single number until a later chapter gives it
+a shape is declared under ``certain_until`` -- a value, and a provenance that says the
+distribution is coming. That is the only kind of edit a stage may make to a node, because any
+other would let a staged model say something the real one does not.
 """
 
 from __future__ import annotations
@@ -25,21 +32,53 @@ from pathlib import Path
 
 import yaml
 
+from bench.outline import RUNNING_EXAMPLE, label_of
 from sizing.dsl import MODELS_DIR
 
-MODEL_PATH = MODELS_DIR / "storage_cluster" / "model.yaml"
-STAGES_PATH = MODELS_DIR / "storage_cluster" / "build-order.yaml"
+__all__ = [
+    "Stage",
+    "all_stages",
+    "build",
+    "label_of",
+    "manifest_path",
+    "model_path",
+    "nodes_by",
+    "out_dir",
+    "staged_models",
+    "stages",
+    "write_all",
+]
 
-#: Where the built stages land. Committed, like the generated figures in chapters/_generated:
-#: a reader following the book can open the file the chapter is quoting, and `--check` fails
-#: the build if what is committed is not what the manifest and the model now produce.
-OUT_DIR = MODELS_DIR / "storage_cluster" / "stages"
+#: The manifest a model carries to say it is built across chapters.
+MANIFEST = "build-order.yaml"
+
+
+def model_path(model: str) -> Path:
+    return MODELS_DIR / model / "model.yaml"
+
+
+def manifest_path(model: str) -> Path:
+    return MODELS_DIR / model / MANIFEST
+
+
+def out_dir(model: str) -> Path:
+    """Where a model's built stages land. Committed, like the generated figures in
+    chapters/_generated: a reader following the book can open the file the chapter is quoting,
+    and ``--check`` fails the build if what is committed is not what the manifest and the model
+    now produce."""
+    return MODELS_DIR / model / "stages"
+
+
+def staged_models() -> tuple[str, ...]:
+    """Every model that carries a manifest, by directory name, in a stable order."""
+    return tuple(sorted(path.parent.name for path in MODELS_DIR.glob(f"*/{MANIFEST}")))
 
 
 @dataclass(frozen=True)
 class Stage:
-    """One chapter's worth of model."""
+    """One chapter's worth of one model."""
 
+    model: str
     index: int
     stage: str
     chapter: str
@@ -51,45 +90,48 @@ class Stage:
 
     @property
     def name(self) -> str:
-        return f"storage_cluster_{self.stage}"
+        return f"{self.model}_{self.stage}"
 
     @property
     def is_the_finished_model(self) -> bool:
         """True for the stage that has every node in it.
 
-        That stage is not an earlier version of anything — it is the model. Writing it out would
-        put a second copy of `models/storage_cluster/model.yaml` in the repository, and stamping
-        it would put a second copy of `storage_cluster-reference.json` beside the first. Both are
-        regenerated on every `make models`, and a duplicate that regenerates is a duplicate that
-        eventually disagrees.
+        That stage is not an earlier version of anything -- it is the model. Writing it out would
+        put a second copy of the model file in the repository, and stamping it would put a second
+        copy of its reference result beside the first. Both are regenerated on every
+        `make models`, and a duplicate that regenerates is a duplicate that eventually disagrees.
         """
-        return set(nodes_by(self.index)) == set(_raw_model()["nodes"])
+        return set(nodes_by(self.model, self.index)) == set(_raw_model(self.model)["nodes"])
 
     @property
     def path(self) -> Path:
-        """Where this stage's model file is — which for the last one is the model itself."""
+        """Where this stage's model file is -- which for the last one is the model itself."""
         if self.is_the_finished_model:
-            return MODEL_PATH
-        return OUT_DIR / f"{self.index:02d}-{self.stage}" / "model.yaml"
+            return model_path(self.model)
+        return out_dir(self.model) / f"{self.index:02d}-{self.stage}" / "model.yaml"
 
 
-def _raw_model() -> dict:
-    return yaml.safe_load(MODEL_PATH.read_text())
+def _raw_model(model: str) -> dict:
+    return yaml.safe_load(model_path(model).read_text())
 
 
-def stages() -> tuple[Stage, ...]:
-    """The manifest, in reading order.
+def _manifest(model: str) -> dict:
+    return yaml.safe_load(manifest_path(model).read_text())
+
+
+def stages(model: str = RUNNING_EXAMPLE) -> tuple[Stage, ...]:
+    """One model's manifest, in reading order. By default, the model the chapters are about.
 
     ``certain_until`` is declared once for the whole book and resolved here, so that a node whose
     shape arrives in ch04 cannot be held back in one stage and not the next.
     """
-    spec = yaml.safe_load(STAGES_PATH.read_text())
+    spec = _manifest(model)
     held = spec.get("certain_until") or {}
     order = [one["stage"] for one in spec["stages"]]
     for name, pending in held.items():
         if pending["stage"] not in order:
             raise ValueError(
-                f"certain_until[{name!r}] names stage {pending['stage']!r}, which is "
+                f"{model}: certain_until[{name!r}] names stage {pending['stage']!r}, which is "
                 f"not one of {order}"
             )
 
@@ -97,6 +139,7 @@ def stages() -> tuple[Stage, ...]:
     for i, one in enumerate(spec["stages"]):
         built.append(
             Stage(
+                model=model,
                 index=i + 1,
                 stage=one["stage"],
                 chapter=one["chapter"],
@@ -114,16 +157,22 @@ def stages() -> tuple[Stage, ...]:
     return tuple(built)
 
 
-def nodes_by(index: int) -> tuple[str, ...]:
+def all_stages() -> tuple[Stage, ...]:
+    """Every stage of every staged model. What gets built, stamped and checked."""
+    return tuple(stage for model in staged_models() for stage in stages(model))
+
+
+def nodes_by(model: str, index: int) -> tuple[str, ...]:
     """Every node the book has introduced by the end of stage ``index``, in the model's order."""
-    introduced = {n for s in stages() if s.index <= index for n in s.introduces}
-    return tuple(n for n in _raw_model()["nodes"] if n in introduced)
+    introduced = {n for s in stages(model) if s.index <= index for n in s.introduces}
+    return tuple(n for n in _raw_model(model)["nodes"] if n in introduced)
 
 
 def build(stage: Stage) -> dict:
     """The stage as a model document, ready to be written out and loaded like any other."""
-    raw = _raw_model()
-    keep = nodes_by(stage.index)
+    raw = _raw_model(stage.model)
+    keep = nodes_by(stage.model, stage.index)
+    short = _manifest(stage.model).get("describe") or stage.model.replace("_", " ")
 
     nodes = {}
     for name in keep:
@@ -140,7 +189,7 @@ def build(stage: Stage) -> dict:
         "model": stage.name,
         "title": f"{raw['title']} — {stage.title}",
         "currency": raw["currency"],
-        "description": f"The storage model as it stands at the end of {label_of(stage.chapter)}.",
+        "description": f"The {short} as it stands at the end of {label_of(stage.chapter)}.",
         "nodes": nodes,
         "outputs": list(stage.outputs),
         # A correlation is a statement about two quantities that vary. An input the stage has
@@ -157,7 +206,7 @@ def build(stage: Stage) -> dict:
 
 #: Every stage runs under the same conditions as the finished model, so that a figure drawn from
 #: a stage and a figure drawn from the whole thing are comparable. The scenario overrides nothing,
-#: exactly as `models/storage_cluster/scenarios/reference.yaml` does.
+#: exactly as a model's own `scenarios/reference.yaml` does.
 REFERENCE_SCENARIO = {
     "scenario": "reference",
     "title": "Reference scenario",
@@ -180,7 +229,7 @@ def generated_header(stage: Stage, nodes: int) -> str:
     what the viewer needs is one line.
     """
     return (
-        f"# Generated by bench/stages.py from models/storage_cluster/model.yaml.\n"
+        f"# Generated by bench/stages.py from models/{stage.model}/model.yaml.\n"
         f"# The finished model with everything the book has not introduced by the end of "
         f"{label_of(stage.chapter)} removed,\n"
         f"# so that a reader can see it at {nodes} nodes. Not a model anybody would ship.\n"
@@ -188,36 +237,34 @@ def generated_header(stage: Stage, nodes: int) -> str:
     )
 
 
-def label_of(slug: str) -> str:
-    """A chapter's number as a reader sees it, from the outline rather than typed."""
-    from bench.outline import CHAPTERS
-
-    return next(c.label for c in CHAPTERS if c.slug == slug)
-
-
-#: Scenario files carry no node count, so they keep the short form.
-GENERATED = (
-    "# Generated by bench/stages.py from models/storage_cluster/model.yaml.\n"
-    "# Do not edit: say which chapter introduces the node in build-order.yaml instead.\n"
-)
+def generated_short(model: str) -> str:
+    """Scenario files carry no node count, so they keep the short form."""
+    return (
+        f"# Generated by bench/stages.py from models/{model}/model.yaml.\n"
+        "# Do not edit: say which chapter introduces the node in build-order.yaml instead.\n"
+    )
 
 
-def write_all() -> tuple[Path, ...]:
-    """Write every stage and its scenario, and return where the models landed."""
+def _document(stage: Stage) -> str:
+    document = build(stage)
+    return generated_header(stage, len(document["nodes"])) + yaml.safe_dump(
+        document, sort_keys=False, width=98, allow_unicode=True
+    )
+
+
+def write_all(model: str | None = None) -> tuple[Path, ...]:
+    """Write every stage and its scenario -- of one model, or of all of them -- and say where."""
     written = []
-    for stage in stages():
+    for stage in stages(model) if model else all_stages():
         if stage.is_the_finished_model:
             continue
         stage.path.parent.mkdir(parents=True, exist_ok=True)
-        document = build(stage)
-        stage.path.write_text(
-            generated_header(stage, len(document["nodes"]))
-            + yaml.safe_dump(document, sort_keys=False, width=98, allow_unicode=True)
-        )
+        stage.path.write_text(_document(stage))
         scenarios = stage.path.parent / "scenarios"
         scenarios.mkdir(exist_ok=True)
         (scenarios / "reference.yaml").write_text(
-            GENERATED + yaml.safe_dump(REFERENCE_SCENARIO, sort_keys=False, width=98)
+            generated_short(stage.model)
+            + yaml.safe_dump(REFERENCE_SCENARIO, sort_keys=False, width=98)
         )
         written.append(stage.path)
     return tuple(written)
@@ -236,14 +283,10 @@ def main() -> int:
         return 0
 
     stale = []
-    for stage in stages():
+    for stage in all_stages():
         if stage.is_the_finished_model:
             continue
-        document = build(stage)
-        want = generated_header(stage, len(document["nodes"])) + yaml.safe_dump(
-            document, sort_keys=False, width=98, allow_unicode=True
-        )
-        if not stage.path.exists() or stage.path.read_text() != want:
+        if not stage.path.exists() or stage.path.read_text() != _document(stage):
             stale.append(str(stage.path.relative_to(MODELS_DIR.parent)))
     if stale:
         print("stages: STALE — the committed stage models are not what the manifest now builds:")
@@ -251,7 +294,8 @@ def main() -> int:
             print(f"  {one}")
         print("Run `python3 -m bench.stages` and commit what changes.")
         return 1
-    print(f"stages: OK ({len(stages())} stage(s))")
+    models = ", ".join(staged_models())
+    print(f"stages: OK ({len(all_stages())} stage(s) across {models})")
     return 0
 
 
