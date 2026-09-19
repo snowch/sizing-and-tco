@@ -221,6 +221,11 @@ and none after — which is the only way a reader ever arrives — and stop at:
 - every figure, asking who chose its rows
 - every paragraph, asking whether the page has already said this
 
+Then read it once more against `STYLE.md`, sentence by sentence. Its final test is the one that
+matters: could a competent engineer understand this paragraph on the first reading? If not,
+split the sentence or the paragraph. The introduction was rewritten that way, and it is the
+example to hold a page against.
+
 ## Figures
 
 Two kinds, both declared in `bench/figures.py` and both rendered by `scripts/render-figures.py`:
@@ -273,6 +278,7 @@ A problem is a stub the reader edits and a test that passes only when they are r
 - [ ] Model merged, passing `make verify`
 - [ ] Every figure declared in `bench/figures.py` and rendered from a stamped result
 - [ ] *What this cannot tell you* written, naming what the structure omits
+- [ ] Edited against `STYLE.md`: short sentences, one idea per paragraph, the point stated first
 - [ ] Cross-references and citations resolve; `./scripts/ci-check.sh` clean
 - [ ] `[DRAFT]` removed
 

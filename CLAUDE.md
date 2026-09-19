@@ -8,7 +8,8 @@ Project instructions for AI assistants working on this book. These are binding. 
 ownership, organised around one question: **how big, how much, and how wrong could I be?**
 
 Read **PLAN.md** first: outline, settled decisions, conventions. Read **AUTHORING_GUIDE.md**
-before writing or editing a page. **NEXT_STEPS.md** is the working list of what is left.
+before writing or editing a page, and edit every page against **STYLE.md**, the plain-English
+checklist. **NEXT_STEPS.md** is the working list of what is left.
 
 ## Where these rules came from
 
@@ -152,6 +153,10 @@ This book covers ground other books cover. It must be **entirely original work**
 Direct, precise, British English, active voice, short sentences. First-person plural sparingly. No
 marketing tone, no filler, no "in this chapter we will". Figures are drawn by code and must show a
 mechanism.
+
+**STYLE.md is the checklist** that gets a page to this voice: one idea per paragraph, the point
+first, a concrete example, ordinary words, the reader as *you*. Edit every page against it. Where
+its rule to define a term at once meets the vocabulary ration below, the ration wins.
 
 **Length follows the material.** There is no page target. A chapter is as long as what it has to
 convey and no longer. The five headings in `bench.outline.CHAPTER_SHAPE` are the book's shape and

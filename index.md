@@ -10,117 +10,165 @@ short_title: Introduction
 
 ## What this book is about
 
-Somebody asks how big the system needs to be. How many machines, how much storage, how much it
-will cost to run for the next three years — and they are going to spend real money on whatever you
+Somebody asks how big the system needs to be. How many machines, how much storage, and how much
+it will cost to run for the next three years. They are going to spend real money on whatever you
 tell them.
 
 **How big, how much, and how wrong could I be?**
 
-Three questions, and the first two are arithmetic. **Sizing** is how much hardware a stated
-workload needs, and where it stops coping. **Total cost of ownership** is what that hardware costs
-over the years you keep it, which is not the same as what it costs to buy. The arithmetic for both
-is within anybody's reach.
+The first two questions are arithmetic.
 
-This book teaches the third: how to find which input your answer rests on, how far the answer
-moves when that input moves, and what it would cost to find out. Almost nobody is taught this, and
-it is what decides whether anybody should act on your number. [ch01](#point-estimates) is
-where that starts, and it starts by showing you what a single number leaves out.
+**Sizing** means working out how much hardware a stated workload needs, and where that hardware
+stops coping.
 
-## How it goes about it
+**Total cost of ownership** (TCO) means what that hardware costs over the years you keep it. That
+is not the same as what it costs to buy.
 
-**You build one model, and it lasts the whole book.** A model here is the quantities that went
-into a number and the arithmetic joining them, written down in a file. Each quantity gets a name,
-a unit, and a note saying where its value came from. Each computed quantity gets a formula
-referring to the others by name. Nothing more exotic than that: the file is the model, and you can
-read the whole of one in a sitting.
+Anybody can do the arithmetic for both.
 
-Why a file, and not the spreadsheet you already have: a cell holds a value and nothing about it.
-Not its unit, so the wrong two cells multiplied give a number that looks like any other. Not where
-it came from, so a vendor's claim and a measurement sit in one column looking the same. Not how
-sure anybody was of it, so the spread is gone by the first multiplication. Everything this book
-does rests on those three things being written down beside the number, and a file is where they
-can be. It also diffs and reviews like code. [ch02](#what-a-workload-is) writes the first one, at
-four lines a quantity, and the build — the checks that turn these files into this book — refuses a
-node that leaves its unit or its source out.
+## The question this book answers
 
-It starts in [ch02 · What a workload is](#what-a-workload-is) as what arrives and what
-accumulates, and already refuses a formula whose units do not work out — the error a spreadsheet
-accepts without comment, and the one that sizes a retention store from a rate.
-Later chapters add to it as they earn the right to: where each number came from, what the hardware
-can hold, where it stops coping, what it costs to run.
-[ch12 · The sizing model](#the-sizing-model) is where it produces a host count, and
-[ch18 · The five-year model](#the-five-year-model) is where it produces a cost. Every figure
-about the service in this book is computed from that file at whatever stage the chapter has
-reached, so an early table cannot show you something that chapter has not built yet.
+The third question is the hard one, and it is the one this book teaches. To answer it you need
+to know:
 
-**Every number here can be checked, and the page says how.** That promise is kept three ways, and
-it is the reason to believe any of the numbers you are about to be shown.
+- which input your answer rests on;
+- how far the answer moves when that input moves; and
+- what it would cost to find out.
 
-*Every number says where it came from.* No figure is typed into the prose; every one is computed.
-The italic line under each table links to the file it came from — `web_service-reference`
-names which model was run and under which assumptions, and the file holds every input it used —
-so you can check a number instead of trusting it.
+Almost nobody is taught this. It is what decides whether anybody should act on your number.
 
-*Every model is a file, not a spreadsheet.* Every quantity in it declares a unit, so the build can
-refuse a model that multiplies the wrong two things. Every input declares whether it is a fact, a
-vendor's claim or somebody's assumption, and an uncertain one has to say what shape its
-uncertainty has and why that shape rather than another. Every measured constant names the
-measurement behind it. [ch03](#where-the-numbers-come-from) says what those distinctions are
-worth; [Appendix A](#appendix-a-dsl-reference) is the file format that holds them.
+[ch01](#point-estimates) starts there. It shows you what a single number leaves out.
 
-*Every chapter ends by saying what it cannot tell you.* Every one has a section with that name,
-and in a book about estimates it is usually the most useful part of the chapter.
+## How the model works
 
-One consequence of those rules shows up on the pages. When a constant has not been measured, the
-quantity that needs it has no value, and neither does anything computed from it. Those figures
-render as *not yet measured* and the affected chain is named — never a placeholder, and never a
-number borrowed from a different stack. [Appendix F](#appendix-f-observability-model) publishes
-one of those gaps, which is a deliberate choice and is argued there.
+You build one model, and it lasts the whole book.
 
-## Who it is for, and what you need to know
+A model here is a file. It holds the numbers that went into an answer and the arithmetic that
+joins them. Each number has a name, a unit, and a note saying where its value came from. Each
+computed number has a formula that refers to the others by name. That is all there is to it. You
+can read a whole model in one sitting.
 
-A self-study text and a toolkit, for an engineer who has been asked how big something needs to be,
-or what it will cost, and who wants to give an answer they would still defend a year later.
+The model starts in [ch02 · What a workload is](#what-a-workload-is), with what arrives and what
+accumulates. Later chapters add to it one piece at a time: where each number came from, what the
+hardware can hold, where it stops coping, and what it costs to run.
+[ch12 · The sizing model](#the-sizing-model) is where it produces a host count.
+[ch18 · The five-year model](#the-five-year-model) is where it produces a cost.
 
-You should be comfortable with code and with arithmetic. You are assumed to know **nothing** about
-statistics. [ch13](#monte-carlo) and [ch14](#correlation-and-convergence) are where the six words
-you need — distribution, sample, percentile, interval, correlation, convergence — get defined
-properly, each arriving because a model has just raised a question that needs it. Where a
-statistical term has a plain-English equivalent, this book uses the plain one first and names the
-term second.
+Every figure about the service in this book is computed from that file, at whatever stage the
+chapter has reached. An early table cannot show you something the chapter has not built yet.
 
-No vendor is named anywhere in this book, and no product is recommended. Two models carry it,
-both written so that the structure is the point and the numbers are yours to replace: a web
-service and its data on a fleet of Linux hosts, which is sized and costed end to end, and whose
-behaviour under load is not a chain of multiplications at all; and an observability platform,
-which is the one with a hole in it where a measurement should be.
+## Why a file, and not a spreadsheet
 
-Every chapter ends with problems, and most of them are tests you run: they fail until you have
-solved them, and the answer is nowhere in the repository. Some have no test at all, because they
-are about a system you actually run and there is no oracle for judgement — those say instead what
-a good answer contains and what would falsify it. Every chapter ends with one of those.
+A spreadsheet cell holds a value and nothing about it.
 
-## What you will need
+- It does not tell you the unit. Multiply the wrong two cells and the result looks like any other
+  number.
+- It does not tell you where the number came from. A vendor's claim and a measurement sit in the
+  same column, looking the same.
+- It does not tell you how certain the number is. The spread is gone after the first
+  multiplication.
 
-To read it and run its models, nothing. [ch02](#what-a-workload-is) and
-[ch03](#where-the-numbers-come-from) carry the model file running in the page: press **Run**,
-change a number, and try to multiply a rate by a count of periods to see the build refuse it.
-That is the book's own loader and unit checker, fetched as a Python runtime and run in your
-browser, so what the page does and what the book was computed from cannot come apart. The
-finished models in [Appendix E](#appendix-e-web-service-model) and
-[Appendix F](#appendix-f-observability-model) have a slider against every input; those are
-evaluated by a small JavaScript version, checked against Python's answers for every node of every
-model before it ships.
+Everything this book does depends on those three things being written down beside the number. A
+file is where they can be. A file also diffs and reviews like code.
 
-The book is a website and is meant to be read as one: the models are the point, and they are
-things you drag. The prose reads on any screen; the models want a tablet held sideways or
-anything larger, and say so when they have less. Once you have opened it, the whole book works
-with no network — your browser keeps it — and if you press **Resample** or **Run** once while
-online, the Python runtime those fetch is kept too. There is no PDF: the models are things you
-drag, and paper cannot hold one.
+The model checks its own units. A rate times a duration is an amount, so
+`requests per second × seconds = requests`. A formula that multiplies a rate by a count of periods
+instead is refused. A spreadsheet accepts that calculation without complaining. This model
+rejects it.
 
-To do the problems, a checkout. They are tests, and a test needs an interpreter. Python, and a few
-minutes:
+[ch02](#what-a-workload-is) writes the first node, at four lines a number. The **build**, the set
+of checks that turns these files into this book, refuses a node that leaves out its unit or its
+source.
+
+## Every number can be checked
+
+Every number in this book can be checked, and the page tells you how. That promise is kept in
+three ways.
+
+**Every number says where it came from.** No figure is typed into the prose. Every one is
+computed. The italic line under each table links to the file it came from. For example,
+`web_service-reference` names which model was run and under which assumptions, and that file
+holds every input it used. You can check a number instead of trusting it.
+
+**Every model is a file, not a spreadsheet.** Every number in it declares a unit, so the build can
+refuse a model that multiplies the wrong two things. Every input says whether it is a fact, a
+vendor's claim, or somebody's assumption. An uncertain input has to say what shape its
+uncertainty has, and why that shape rather than another. Every measured constant names the
+measurement behind it. [ch03](#where-the-numbers-come-from) explains what those distinctions are
+worth. [Appendix A](#appendix-a-dsl-reference) describes the file format that holds them.
+
+**Every chapter ends by saying what it cannot tell you.** Every chapter has a section with that
+name. In a book about estimates, it is usually the most useful part of the chapter.
+
+## Unknown numbers stay unknown
+
+If a required number has not been measured, the model does not invent one.
+
+When a constant has not been measured, the number that needs it has no value. Neither does
+anything computed from it. Those figures show as *not yet measured*, and the page names the chain
+of numbers that is affected. There is never a placeholder, and never a number taken from a
+different system.
+
+[Appendix F](#appendix-f-observability-model) publishes one of those gaps on purpose, and
+explains why.
+
+## Who this book is for
+
+This is a self-study text and a toolkit. It is for an engineer who has been asked how big
+something needs to be, or what it will cost, and who wants to give an answer they would still
+defend a year later.
+
+You should be comfortable with code and with arithmetic. You are assumed to know **nothing**
+about statistics. The book needs six statistical words:
+
+- distribution;
+- sample;
+- percentile;
+- interval;
+- correlation; and
+- convergence.
+
+[ch13](#monte-carlo) and [ch14](#correlation-and-convergence) define them properly. Each one
+arrives only when a model has just raised a question that needs it. Where a statistical term has
+a plain-English equivalent, the book uses the plain one first and names the term second.
+
+No vendor is named anywhere in this book, and no product is recommended. Two models carry the
+book. Both are written so that the structure is the point and the numbers are yours to replace:
+
+- a web service and its data, on a fleet of Linux hosts. It is sized and costed end to end, and
+  how it behaves under load is not a chain of multiplications at all; and
+- an observability platform, which has a hole in it where a measurement should be.
+
+Every chapter ends with problems. Most of them are tests you run: they fail until you have solved
+them, and the answer is nowhere in the repository. Some have no test, because they are about a
+system you actually run and nothing can mark your judgement. Those say what a good answer
+contains and what would prove it wrong. Every chapter ends with one of those.
+
+## What you need
+
+To read the book and run its models: nothing.
+
+[ch02](#what-a-workload-is) and [ch03](#where-the-numbers-come-from) carry the model file running
+in the page. Press **Run**, change a number, and try to multiply a rate by a count of periods.
+The build refuses it. That is the book's own loader and unit checker, fetched as a Python runtime
+and run in your browser. What the page does and what the book was computed from cannot come
+apart.
+
+The finished models in [Appendix E](#appendix-e-web-service-model) and
+[Appendix F](#appendix-f-observability-model) have a slider on every input. A small JavaScript
+version evaluates those. It is checked against Python's answers for every node of every model
+before it ships.
+
+The book is a website, and it is meant to be read as one. The models are the point, and they are
+things you drag. The prose reads on any screen. The models want a tablet held sideways, or
+anything larger, and say so when they have less. There is no PDF, because paper cannot hold a
+model you drag.
+
+Once you have opened the book, it works with no network. Your browser keeps it. If you press
+**Resample** or **Run** once while online, the Python runtime those fetch is kept too.
+
+To do the problems, you need a checkout. The problems are tests, and a test needs an interpreter.
+You need Python and a few minutes:
 
 ```bash
 git clone https://github.com/snowch/sizing-and-tco.git
@@ -130,6 +178,11 @@ python3 -m pytest tests/point_estimates/    # ch01's problems, which fail until 
 ```
 
 [Appendix H](#appendix-h-running-the-toolkit) has the rest: re-taking a measurement, re-running a
-model, rebuilding the book, and checking any figure in it against the repository.
+model, rebuilding the book, and checking any figure against the repository.
 
 Nothing in this book needs a datacentre, a cloud account, or a licence.
+
+## Where to start
+
+[ch01](#point-estimates) shows what a single number leaves out. Read it first. Everything after
+it is an answer to that.
