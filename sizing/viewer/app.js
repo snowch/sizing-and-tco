@@ -27,7 +27,9 @@ const fit = (text) => (text.length > LABEL_CHARS ? text.slice(0, LABEL_CHARS - 1
 let overrides = {};
 //: Inputs held at a value by the last resample: name -> value. Shown against their sliders.
 let fixed = {};
+//: The node the graph is cut down to, and which way: what feeds it, or what it feeds.
 let focus = null;
+let direction = "up";
 let selected = null;
 let pyodide = null, booting = null, agreement = null;
 
@@ -46,6 +48,7 @@ const isStale = () => Object.keys(overrides).length > 0;
 
 /* -- the graph ------------------------------------------------------------------- */
 
+// Everything upstream of a node, itself included: the nodes whose values reach it.
 function ancestors(name) {
   const seen = new Set([name]);
   const stack = [name];
@@ -57,37 +60,98 @@ function ancestors(name) {
   return seen;
 }
 
-function centre(name) {
-  const n = PAYLOAD.nodes[name];
-  return [BOX.margin + n.layer * BOX.col + BOX.w / 2, BOX.margin + n.row * BOX.row + BOX.h / 2];
+// name -> the nodes whose formulas use it. Built per call because PAYLOAD can be replaced.
+function childrenOf() {
+  const kids = {};
+  for (const name of Object.keys(PAYLOAD.nodes)) kids[name] = [];
+  for (const [name, node] of Object.entries(PAYLOAD.nodes)) {
+    for (const parent of node.depends_on) kids[parent].push(name);
+  }
+  return kids;
+}
+
+// Everything downstream of a node, itself included: how far its value reaches.
+function descendants(name) {
+  const kids = childrenOf();
+  const seen = new Set([name]);
+  const stack = [name];
+  while (stack.length) {
+    for (const child of kids[stack.pop()]) {
+      if (!seen.has(child)) { seen.add(child); stack.push(child); }
+    }
+  }
+  return seen;
+}
+
+const related = (name) => (direction === "down" ? descendants(name) : ancestors(name));
+
+// Where each shown node sits. With nothing in focus, where the build placed it. With a focus,
+// the same columns with the empty ones closed up and the rows packed, so that a dozen nodes
+// take a dozen boxes' worth of canvas rather than the whole graph's. Columns keep their order,
+// so every line still runs left to right, from what feeds to what is fed.
+function layout(shown, compact) {
+  const names = [...shown];
+  const place = {};
+  if (!compact) {
+    for (const name of names) place[name] = { col: PAYLOAD.nodes[name].layer, row: PAYLOAD.nodes[name].row };
+    return place;
+  }
+  const layers = [...new Set(names.map((n) => PAYLOAD.nodes[n].layer))].sort((a, b) => a - b);
+  const column = new Map(layers.map((layer, i) => [layer, i]));
+  const filled = {};
+  names.sort((a, b) => PAYLOAD.nodes[a].row - PAYLOAD.nodes[b].row || a.localeCompare(b));
+  for (const name of names) {
+    const col = column.get(PAYLOAD.nodes[name].layer);
+    filled[col] = (filled[col] ?? -1) + 1;
+    place[name] = { col, row: filled[col] };
+  }
+  return place;
+}
+
+function centre(place) {
+  return [BOX.margin + place.col * BOX.col + BOX.w / 2, BOX.margin + place.row * BOX.row + BOX.h / 2];
+}
+
+// Light a node's own lines and neighbours while the pointer is on it, so a path can be followed
+// one hop at a time without cutting the graph down.
+function hot(name, on) {
+  const graph = $("graph");
+  for (const edge of graph.querySelectorAll(`.edge[data-from="${name}"], .edge[data-to="${name}"]`)) {
+    edge.classList.toggle("hot", on);
+  }
+  const kids = childrenOf();
+  for (const other of [...PAYLOAD.nodes[name].depends_on, ...kids[name]]) {
+    const box = graph.querySelector(`.node[data-node="${other}"]`);
+    if (box) box.classList.toggle("hot", on);
+  }
 }
 
 function drawGraph(values, blocked) {
   const names = Object.keys(PAYLOAD.nodes);
-  const lit = focus ? ancestors(focus) : new Set(names);
-  const cols = Math.max(...names.map((n) => PAYLOAD.nodes[n].layer)) + 1;
-  const rows = Math.max(...names.map((n) => PAYLOAD.nodes[n].row)) + 1;
+  const shown = focus ? related(focus) : new Set(names);
+  const place = layout(shown, Boolean(focus));
+  const cols = Math.max(...Object.values(place).map((p) => p.col)) + 1;
+  const rows = Math.max(...Object.values(place).map((p) => p.row)) + 1;
   const w = BOX.margin * 2 + cols * BOX.col;
   const h = BOX.margin * 2 + rows * BOX.row;
 
   const edges = [];
   const boxes = [];
-  for (const name of names) {
+  for (const name of shown) {
     const node = PAYLOAD.nodes[name];
     for (const parent of node.depends_on) {
-      const [x1, y1] = centre(parent);
-      const [x2, y2] = centre(name);
+      if (!shown.has(parent)) continue;
+      const [x1, y1] = centre(place[parent]);
+      const [x2, y2] = centre(place[name]);
       const a = x1 + BOX.w / 2, b = x2 - BOX.w / 2, mid = (a + b) / 2;
-      const on = lit.has(name) && lit.has(parent);
-      edges.push(`<path class="edge${on ? "" : " dim"}" d="M${a},${y1} C${mid},${y1} ${mid},${y2} ${b},${y2}"/>`);
+      edges.push(`<path class="edge" data-from="${parent}" data-to="${name}" d="M${a},${y1} C${mid},${y1} ${mid},${y2} ${b},${y2}"/>`);
     }
   }
-  for (const name of names) {
+  for (const name of shown) {
     const node = PAYLOAD.nodes[name];
-    const x = BOX.margin + node.layer * BOX.col;
-    const y = BOX.margin + node.row * BOX.row;
+    const x = BOX.margin + place[name].col * BOX.col;
+    const y = BOX.margin + place[name].row * BOX.row;
     const unmeasured = node.kind === "measured" && !node.measured;
-    const dim = !lit.has(name) ? " dim" : "";
     const ceiling = node.kind === "ceiling" ? ceilingState(PAYLOAD, name, values) : null;
     let fill = `var(--${node.kind})`, edge = `var(--${node.kind}-edge)`;
     if (unmeasured || blocked.has(name)) fill = "#ffffff";
@@ -95,7 +159,7 @@ function drawGraph(values, blocked) {
     const dash = unmeasured || blocked.has(name) ? ' stroke-dasharray="3 3"' : "";
     const value = blocked.has(name) ? "—" : fmt(values[name], node.unit);
     boxes.push(
-      `<g class="node${dim}" data-node="${name}"><title>${name}</title>` +
+      `<g class="node" data-node="${name}"><title>${name}</title>` +
       `<rect x="${x}" y="${y}" width="${BOX.w}" height="${BOX.h}" rx="3" fill="${fill}" stroke="${edge}" stroke-width="${selected === name ? 2.2 : 1.2}"${dash}/>` +
       `<text x="${x + 6}" y="${y + 13}">${fit(node.label)}</text>` +
       `<text x="${x + BOX.w - 6}" y="${y + 26}" text-anchor="end" fill="var(--muted)" font-size="9">${value}</text>` +
@@ -113,7 +177,35 @@ function drawGraph(values, blocked) {
       focus = focus === name ? null : name;
       render();
     });
+    g.addEventListener("mouseenter", () => hot(g.dataset.node, true));
+    g.addEventListener("mouseleave", () => hot(g.dataset.node, false));
   }
+}
+
+// The line under the graph: what is shown, and the two ways out of it.
+function focusNote() {
+  const note = $("focus-note");
+  if (!focus) {
+    note.innerHTML = "Click a node to show only what feeds it. Rest the pointer on one to light its own lines.";
+    return;
+  }
+  const count = related(focus).size - 1;
+  const label = `<strong>${PAYLOAD.nodes[focus].label}</strong>`;
+  const nodes = `${count} node${count === 1 ? "" : "s"}`;
+  note.innerHTML =
+    (direction === "down" ? `Showing the ${nodes} that ${label} feeds. ` : `Showing the ${nodes} that feed ${label}. `) +
+    `<button class="link" id="flip">${direction === "down" ? "Show what feeds it" : "Show what it feeds"}</button>` +
+    ` \u00b7 <button class="link" id="everything">Show everything</button>`;
+  $("flip").addEventListener("click", () => { direction = direction === "down" ? "up" : "down"; render(); });
+  $("everything").addEventListener("click", () => { focus = null; render(); });
+}
+
+// Go to a node from anywhere it is named: select it and cut the graph down to what feeds it.
+function goTo(name) {
+  selected = name;
+  focus = name;
+  direction = "up";
+  render();
 }
 
 /* -- sliders --------------------------------------------------------------------- */
@@ -146,14 +238,23 @@ function buildControls() {
 function outputsTable(values, blocked) {
   const rows = PAYLOAD.outputs.map((name) => {
     const node = PAYLOAD.nodes[name];
-    if (blocked.has(name)) return `<tr><td>${node.label}</td><td class="n">not measured</td></tr>`;
+    const open = `<tr data-node="${name}"${focus === name ? ' class="focused"' : ""} title="Show what feeds ${name}">`;
+    if (blocked.has(name)) return `${open}<td>${node.label}</td><td class="n">not measured</td></tr>`;
     const ceiling = node.kind === "ceiling" ? ceilingState(PAYLOAD, name, values) : null;
     const cell = ceiling
       ? `<span class="badge ${ceiling.verdict === "ok" ? "ok" : ceiling.verdict === "over" ? "over" : "headroom"}">${fmt(values[name], "")}</span>`
       : fmt(values[name], node.unit);
-    return `<tr><td>${node.label}</td><td class="n">${cell}</td></tr>`;
+    return `${open}<td>${node.label}</td><td class="n">${cell}</td></tr>`;
   });
   $("outputs").innerHTML = `<table>${rows.join("")}</table>`;
+  for (const row of $("outputs").querySelectorAll("tr")) {
+    row.addEventListener("click", () => goTo(row.dataset.node));
+  }
+}
+
+// A node's neighbours, each a link that goes there.
+function neighbours(names) {
+  return names.map((n) => `<button class="link" data-goto="${n}">${PAYLOAD.nodes[n].label}</button>`).join(", ");
 }
 
 function histogram(node) {
@@ -187,6 +288,9 @@ function detail(values, blocked) {
       (node.point !== undefined ? `<tr><td>At the scenario</td><td class="n">${fmt(node.point, node.unit)}</td></tr>` : "") + `</table>`);
   }
   if (node.formula) parts.push(`<h2>Formula</h2><p><code>${node.formula}</code></p>`);
+  const fed = childrenOf()[name];
+  if (node.depends_on.length) parts.push(`<h2>Fed by</h2><p class="note">${neighbours(node.depends_on)}</p>`);
+  if (fed.length) parts.push(`<h2>Feeds</h2><p class="note">${neighbours(fed)}</p>`);
   if (node.provenance && node.provenance.kind) {
     parts.push(`<h2>Provenance</h2><p class="note"><strong>${node.provenance.kind.replace("_", " ")}</strong> — ${node.provenance.source}</p>`);
   }
@@ -210,6 +314,9 @@ function detail(values, blocked) {
   }
   if (node.note) parts.push(`<h2>Note</h2><p class="note">${node.note}</p>`);
   $("detail-body").innerHTML = parts.join("");
+  for (const link of $("detail-body").querySelectorAll("[data-goto]")) {
+    link.addEventListener("click", () => goTo(link.dataset.goto));
+  }
 }
 
 function render() {
@@ -236,8 +343,8 @@ function render() {
   $("stale").style.display = isStale() ? "block" : "none";
   $("resample").style.display = TOOLKIT ? "block" : "none";
   $("reset").style.display = isStale() || Object.keys(fixed).length ? "inline-block" : "none";
-  $("focus-note").textContent = focus ? `Showing only what feeds ${PAYLOAD.nodes[focus].label}. Click it again to show everything.` : "";
   drawGraph(values, blocked);
+  focusNote();
   outputsTable(values, blocked);
   detail(values, blocked);
 }
