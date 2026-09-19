@@ -289,7 +289,7 @@ def stage_outputs(name: str) -> str:
 
 
 def stage_shape(name: str) -> str:
-    """How big the model is at this point in the book, and what the build makes of it.
+    """How big the model is at this point in the book, and what the toolkit makes of it.
 
     The last row is the one the book is built on, and it is not an assertion: `sizing/dsl.py`
     decides it from the file, and `bench/run_models.py` stamps what it decided.
@@ -302,7 +302,7 @@ def stage_shape(name: str) -> str:
     for kind in ("input", "derived", "measured", "ceiling"):
         if kinds.get(kind):
             rows.append(f"| `{kind}` nodes | {kinds[kind]} |")
-    rows.append(f"| **What the build calls it** | **{classification} model** |")
+    rows.append(f"| **What the toolkit calls it** | **{classification} model** |")
     return "\n".join(rows)
 
 

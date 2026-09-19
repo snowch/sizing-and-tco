@@ -91,8 +91,8 @@ computed. The italic line under each table links to the file it came from. For e
 `web_service-reference` names which model was run and under which assumptions, and that file
 holds every input it used. You can check a number instead of trusting it.
 
-**Every model is a file, not a spreadsheet.** Every number in it declares a unit, so the build can
-refuse a model that multiplies the wrong two things. Every input says whether it is a fact, a
+**Every model is a file, not a spreadsheet.** Every number in it declares a unit, so the toolkit
+can refuse a model that multiplies the wrong two things. Every input says whether it is a fact, a
 vendor's claim, or somebody's assumption. An uncertain input has to say what shape its
 uncertainty has, and why that shape rather than another. Every measured constant names the
 measurement behind it. [ch03](#where-the-numbers-come-from) explains what those distinctions are

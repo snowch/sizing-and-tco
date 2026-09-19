@@ -4,6 +4,6 @@
 |---|---:|
 | `input` nodes | 7 |
 | `derived` nodes | 4 |
-| **What the build calls it** | **cost model** |
+| **What the toolkit calls it** | **cost model** |
 
 *Source — [`web_service_provenance-reference`](/models/web_service_provenance-reference.html) · every input on a slider*
