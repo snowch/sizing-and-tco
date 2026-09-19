@@ -273,9 +273,10 @@ def distribution(result: str, node_name: str, plain: bool = False) -> str:
     """One node's sampled distribution, with the interval and the point estimate on it.
 
     ``plain`` labels the same drawing without a statistical word on it, for the chapter that
-    comes before the words: how many times the arithmetic was run, where nine answers in ten
-    fell, and where the single number sits. Nothing else changes, so a reader who meets the
-    figure again in ch13 is looking at the same picture with its names on.
+    comes before the words: the arithmetic done over and over, where nine answers in ten fell,
+    and where the single number sits. Not even the count of runs, which is a sample size by
+    another name. Nothing else changes, so a reader who meets the figure again in ch13 is
+    looking at the same picture with its names on.
 
     The point estimate is drawn as a line through the histogram deliberately. Seeing where the
     single number a plan was built on actually sits in the distribution it came from is the whole
@@ -309,9 +310,10 @@ def distribution(result: str, node_name: str, plain: bool = False) -> str:
         return plot_left + travelled / span * (plot_right - plot_left)
 
     if plain:
-        heading = f"the arithmetic run {payload['scenario']['samples']:,} times over"
+        heading = "the arithmetic done over and over"
         detail = (
-            f"nine answers in ten fell between {_esc(fmt(summary['p5'], node['unit']))} and "
+            f"every answer kept · nine in ten fell between "
+            f"{_esc(fmt(summary['p5'], node['unit']))} and "
             f"{_esc(fmt(summary['p95'], node['unit']))}"
         )
     else:

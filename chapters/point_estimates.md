@@ -73,8 +73,8 @@ figures can be compared.
 Each bar counts how many of those answers landed on a given five-year total. It is the table's
 second row, drawn. The red line is where the single-number answer falls.
 
-Doing that arithmetic thousands of times needs a sampler, and [ch13](#monte-carlo) builds one. You
-do not need one to feel the force of it. Problem 1.1 does the same job on paper: every input at
+Doing that arithmetic over and over needs a program to pick each input's value, and
+[ch13](#monte-carlo) builds one. You do not need one to feel the force of it. Problem 1.1 does the same job on paper: every input at
 the bottom of its range together, then every input at the top together. It asks you to set what
 comes out beside the range in the table. Those are two honest ways of admitting the same doubt,
 and they do not agree with each other.
