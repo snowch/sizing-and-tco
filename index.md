@@ -54,8 +54,8 @@ hardware can hold, where it stops coping, and what it costs to run.
 [ch12 · The sizing model](#the-sizing-model) is where it produces a host count.
 [ch18 · The five-year model](#the-five-year-model) is where it produces a cost.
 
-Every figure about the service in this book is computed from that file, at whatever stage the
-chapter has reached. An early table cannot show you something the chapter has not built yet.
+Every figure about the service in this book is computed from that file as it stands at that
+point in the book.
 
 ## Why a file, and not a spreadsheet
 
