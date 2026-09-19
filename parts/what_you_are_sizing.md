@@ -13,7 +13,7 @@ three. Those three begin the model the book carries all the way through — a we
 data on a fleet of hosts, sized in Part III and costed in Part V — and all of them are about
 demand: what arrives, what accumulates, and how sure anybody is of either.
 
-**[ch01 · What one number hides](#what-one-number-hides)** is the argument the rest of the book
+**[ch01 · Point estimates](#point-estimates)** is the argument the rest of the book
 answers. A point estimate is not wrong; it is silent, about the spread it threw away at the first
 multiplication and about the kind of error no amount of sampling can see. It also draws the line
 this book is built on, between a model whose structure nobody doubts and one that rests on a

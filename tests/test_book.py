@@ -453,7 +453,7 @@ def test_a_chapter_states_the_distinction_the_book_is_built_on():
     problems, nothing the reader could run, and no *What this cannot tell you* — front matter
     cannot have those. It is a chapter now, and a chapter is where an argument goes.
     """
-    body = (ROOT / "chapters" / "what_one_number_hides.md").read_text().lower()
+    body = (ROOT / "chapters" / "point_estimates.md").read_text().lower()
     for required in ("deterministic structure", "measured constants", "ceiling"):
         assert required in body, (
             f"ch01 must explain the cost-model / sizing-model distinction; {required!r} is missing"

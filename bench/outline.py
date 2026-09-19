@@ -182,8 +182,8 @@ PARTS = tuple(part.title for part in PART_PAGES)
 CHAPTERS: tuple[Chapter, ...] = (
     Chapter(
         1,
-        "what_one_number_hides",
-        "What one number hides",
+        "point_estimates",
+        "Point estimates",
         PARTS[0],
         "What is a single number worth, and what can it not tell you even when the arithmetic "
         "is right?",

@@ -189,6 +189,11 @@ interval. That phrase means something precise to a statistician and something va
 else. What is meant here is the plain reading: *the model put nine tenths of its belief in this
 range*.
 
+Why two percentiles rather than the smallest and the largest answer in the bag: the ends are
+properties of how many answers you collected, not of the model. Collect ten times as many and the
+largest gets larger, every time, because the unlucky combinations had more chances to turn up. The
+middle settles, and [ch14](#correlation-and-convergence) measures how quickly.
+
 Note where the red line sits relative to the middle of the distribution. For a chain of
 multiplications with skewed inputs, the answer you get from the average inputs is not the average
 answer, and it is not the middle one either. There is a theorem behind that; you do not need it.

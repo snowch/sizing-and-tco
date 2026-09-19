@@ -14,7 +14,7 @@ from __future__ import annotations
 import pytest
 
 from sizing.dsl import load_model
-from tests.what_one_number_hides.stubs import kind_of, what_decides_it
+from tests.point_estimates.stubs import kind_of, what_decides_it
 
 #: The web service model as ch02 to ch07 leave it, in order. Derived files, checked by
 #: ``python3 -m bench.stages --check``, so they cannot drift from the finished model.
