@@ -39,6 +39,15 @@ its numerator and is none of the three.
 The commonest error in sizing is turning a flow into a stock by multiplying it by a number instead
 of by an amount of time. It typechecks in a spreadsheet. It does not typecheck here, and problem 2.2 is exactly that.
 
+Here is the check, drawn. In the top row the seconds cancel, and a rate becomes an amount. In the
+bottom row nothing cancels, so the answer is still a rate, and that is the formula the toolkit
+refuses.
+
+```{image} _figures/what-a-workload-is-units.svg
+:alt: A rate times a duration is an amount; a rate times a plain number is still a rate
+:width: 100%
+```
+
 ### The whole of it, before any of it is written down
 
 Here is the demand side of the model this book builds, as a graph. Eight quantities: four you

@@ -59,17 +59,22 @@ class Table:
 
 @dataclass(frozen=True)
 class Diagram:
-    """An SVG drawn by :mod:`bench.diagrams`, deterministically."""
+    """An SVG drawn by :mod:`bench.diagrams`, deterministically.
+
+    ``result`` is ``None`` for a drawing of a rule rather than of a run -- the unit check, say --
+    and ``computed_from`` then names what it was drawn from, for the same reason a table has it.
+    """
 
     draw: Callable[..., str]
     alt: str
-    result: str
+    result: str | None = None
+    computed_from: str | None = None
     args: tuple = ()
     pending: str | None = None
 
     @property
     def sources(self) -> tuple[str, ...]:
-        return (self.result,) if self.pending is None else ()
+        return (self.result,) if self.pending is None and self.result else ()
 
     def render(self) -> str:
         return self.draw(self.result, *self.args)
@@ -226,6 +231,11 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.node_kinds_table, result="web_service-reference"
     ),
     # -- ch02 What a workload is ------------------------------------------------------------------
+    "what-a-workload-is-units": Diagram(
+        draw=diagrams.unit_cancellation,
+        computed_from="`sizing/units.py`, the rule every formula is checked against",
+        alt="A rate times a duration is an amount; a rate times a plain number is still a rate",
+    ),
     "what-a-workload-is-stage": Table(
         render=tables.stage_outputs, result="web_service_demand-reference"
     ),
