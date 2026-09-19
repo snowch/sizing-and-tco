@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "2ca870e3a402c8c8",
+  "code_fingerprint": "1ace27b92e8e9f90",
   "code_sources": [
     "bench/run_models.py",
     "models/storage_cluster/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T09:30:09+00:00",
-  "git_revision": "d798a44",
+  "generated_at": "2026-09-19T09:47:20+00:00",
+  "git_revision": "342807a",
   "kind": "model",
   "name": "storage_cluster-reference",
   "produced_by": {
@@ -85,7 +85,7 @@
       "tco": 1.0,
       "usable_capacity": 1.0
     },
-    "generated_at": "2026-09-19T09:30:09+00:00",
+    "generated_at": "2026-09-19T09:47:20+00:00",
     "model": "storage_cluster",
     "nodes": {
       "annual_energy": {
@@ -5196,8 +5196,8 @@
         "layer": 1,
         "measured": {
           "corpus": "bench.measure.mixed_objects \u2014 synthetic mixture of text, columnar, already-compressed and sparse objects, seeds 0-7",
-          "fingerprint": "fc1a2e5247a78a60",
-          "generated_at": "2026-09-18T16:34:51+00:00",
+          "fingerprint": "f9c144a7eb6e201f",
+          "generated_at": "2026-09-19T09:37:45+00:00",
           "sd": 0.07478653995392605,
           "stack": "python lzma (XZ preset 1)",
           "value": 2.548664901267576

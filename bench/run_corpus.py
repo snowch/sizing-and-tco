@@ -208,9 +208,62 @@ def trace_span_bytes() -> dict:
     )
 
 
+def record_compression() -> dict:
+    """How much smaller a web service's records get on disk.
+
+    The web service model's one measured constant. It sits in the capacity chain between what
+    the service holds and what its disks must hold, and it is the term in that chain that is a
+    property of some data and some software rather than a decision -- which is why it is a
+    measured node and the replication factor beside it is not.
+    """
+    shards = measure.over_shards(measure.application_records)
+    codec, description = measure.CODECS["deflate-6"]
+    ratios = [len(shard.payload) / len(codec(shard.payload)) for shard in shards]
+    stats = measure.with_error(ratios)
+    return build_result(
+        "records-compression",
+        target="corpus",
+        produced_by={
+            "corpus": "bench.measure.application_records — JSON user profiles, orders and "
+            "events in a 20/50/30 mixture, 128-bit identifiers, seeds 0-7",
+            "codec": description,
+            "stack": "python zlib (DEFLATE level 6)",
+            "mixture": "20% user profiles, 50% orders with 1-6 lines, 30% events",
+        },
+        summary={
+            **stats,
+            "bytes_in": sum(len(shard.payload) for shard in shards),
+            "records": sum(shard.items for shard in shards),
+        },
+        units={
+            "value": "dimensionless",
+            "sd": "dimensionless",
+            "shard_spread": "dimensionless",
+            "low": "dimensionless",
+            "high": "dimensionless",
+            "shards": "dimensionless",
+            "bytes_in": "byte",
+            "records": "dimensionless",
+        },
+        conditions={
+            "what_this_is_about": "this corpus and this codec, and nothing else",
+            "to_use_it": "re-run bench.measure.application_records against a sample of your own "
+            "records, or replace the generator with one that reads them",
+            "the_mixture_is_an_assumption": "the proportions and the schemas were chosen, not "
+            "observed; they are the first thing to change and the largest source of error here",
+            "measured_as_one_stream": "a database compresses page by page and sees less "
+            "cross-record redundancy than a stream does, so this ratio is a ceiling on what a "
+            "store achieves rather than an estimate of it",
+        },
+        code_sources=SOURCES,
+        write=True,
+    )
+
+
 #: Every corpus measurement, by the result name a model refers to.
 RUNNERS = {
     "storage-object-compression": object_compression,
+    "records-compression": record_compression,
     "logs-line-bytes": log_line_bytes,
     "metrics-sample-bytes": metric_sample_bytes,
     "traces-span-bytes": trace_span_bytes,

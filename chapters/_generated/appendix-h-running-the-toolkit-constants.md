@@ -4,6 +4,7 @@
 |---|---|---:|---:|---|
 | `logs-line-bytes` | `corpus` | 32.4 bytes / line | ± 0.0044 | python zlib (DEFLATE level 6) |
 | `metrics-sample-bytes` | `corpus` | 9.37 bytes / sample | ± 0.0009 | this repository's encoder, not any product's |
+| `records-compression` | `corpus` | 3.58  | ± 0.0009 | python zlib (DEFLATE level 6) |
 | `storage-object-compression` | `corpus` | 2.55  | ± 0.0748 | python lzma (XZ preset 1) |
 | `traces-span-bytes` | `corpus` | 73.6 bytes / span | ± 0.0173 | python zlib (DEFLATE level 6) |
 | `collector-throughput-per-core` | — | *not yet measured* | — | — |

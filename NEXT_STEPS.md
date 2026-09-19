@@ -55,8 +55,8 @@ has had since the scaffold, and then the work a first draft leaves:
 - The dependency graph's layout is a barycentre heuristic. It is legible on both models and it
   will not stay legible forever.
 - `bench/measure.py`'s corpora are synthetic, deliberately and loudly. The proportions in
-  `mixed_objects` are the single largest assumption in the storage model's compression constant,
-  and they are an assumption rather than an observation.
+  `mixed_objects` and the schemas in `application_records` are the single largest assumption in
+  each model's compression constant, and they are an assumption rather than an observation.
 - The PDF renderer handles the node types the book currently uses and raises on anything else.
   That is the intended behaviour, and it means a new directive needs a branch.
 - **Nothing checks what a page looks like.** Every check here reads the source or the parsed

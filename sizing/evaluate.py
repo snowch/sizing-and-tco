@@ -27,6 +27,7 @@ a half-measured model is a useful document rather than a blank page.
 
 from __future__ import annotations
 
+import functools
 import math
 from dataclasses import dataclass, field, replace
 from typing import Any
@@ -99,9 +100,13 @@ SCALAR_FUNCTIONS = {
     "exp": math.exp,
 }
 
+# `np.maximum` and `np.minimum` take two arrays; a third positional argument is their `out=`.
+# Handed `max(a, b, c)`, they wrote the answer into c's samples in place -- every sample of the
+# third chain silently became the maximum -- and no model had used a three-way max until the web
+# service's three host chains met. Reduce over the arguments instead, however many there are.
 ARRAY_FUNCTIONS = {
-    "min": np.minimum,
-    "max": np.maximum,
+    "min": lambda *args: functools.reduce(np.minimum, args),
+    "max": lambda *args: functools.reduce(np.maximum, args),
     "ceil": np.ceil,
     "floor": np.floor,
     "sqrt": np.sqrt,

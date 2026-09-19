@@ -1,0 +1,822 @@
+{
+  "code_fingerprint": "bbbe1cd74789bd9e",
+  "code_sources": [
+    "bench/run_models.py",
+    "models/web_service/stages/02-provenance/model.yaml",
+    "models/web_service/stages/02-provenance/scenarios/reference.yaml",
+    "sizing/export.py",
+    "sizing/expr.py",
+    "sizing/graph.py"
+  ],
+  "conditions": {
+    "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
+    "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
+  },
+  "generated_at": "2026-09-19T09:47:31+00:00",
+  "git_revision": "342807a",
+  "kind": "model",
+  "name": "web_service_provenance-reference",
+  "produced_by": {
+    "classification": "cost",
+    "model": "web_service_provenance",
+    "model_file": "models/web_service/stages/02-provenance/model.yaml",
+    "sampler": "sizing.mc \u2014 inverse transform, Iman-Conover rank correlation",
+    "samples": 100000,
+    "scenario": "reference",
+    "seed": 20260916,
+    "unmeasured": []
+  },
+  "recorded_on": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "kind": "other",
+    "numpy": "2.4.6",
+    "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  },
+  "summary": {
+    "classification": "cost",
+    "correlations": [],
+    "currency": "USD",
+    "description": "The web service model as it stands at the end of ch03.",
+    "factors": {
+      "horizon_periods": 1.0,
+      "peak_request_rate": 1.0,
+      "ram_for_service": 0.001073741824,
+      "stored_data": 1.0
+    },
+    "generated_at": "2026-09-19T09:47:31+00:00",
+    "model": "web_service_provenance",
+    "nodes": {
+      "annual_growth": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "annual growth factor",
+        "layer": 1,
+        "note": null,
+        "point": 1.3,
+        "provenance": {
+          "kind": "assumption",
+          "source": "ch02 - one growth rate, chosen rather than measured. ch04 replaces it with a distribution, because a single number cannot say how sure anybody is of it."
+        },
+        "row": 1,
+        "slider": {
+          "max": 2.0,
+          "min": 1.0
+        },
+        "unit": "dimensionless"
+      },
+      "horizon": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "horizon",
+        "layer": 0,
+        "note": null,
+        "point": 5.0,
+        "provenance": {
+          "kind": "assumption",
+          "source": "the refresh cycle this fleet is bought against"
+        },
+        "row": 0,
+        "slider": {
+          "max": 8.0,
+          "min": 3.0
+        },
+        "unit": "year"
+      },
+      "horizon_periods": {
+        "ast": {
+          "args": [
+            {
+              "name": "horizon",
+              "op": "ref"
+            },
+            {
+              "name": "one_year",
+              "op": "ref"
+            }
+          ],
+          "op": "/"
+        },
+        "depends_on": [
+          "horizon",
+          "one_year"
+        ],
+        "formula": "horizon / one_year",
+        "kind": "derived",
+        "label": "horizon periods",
+        "layer": 1,
+        "note": null,
+        "point": 5.0,
+        "row": 2,
+        "unit": "dimensionless"
+      },
+      "one_year": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "one year",
+        "layer": 0,
+        "note": "Here because a duration cannot be an exponent. In (1+r)^n the n is a pure number, so the horizon has to be divided by something with the same units before it can be used as one. Appendix D has the rest of the conversions that bite.",
+        "point": 1.0,
+        "provenance": {
+          "kind": "fact",
+          "source": "definition"
+        },
+        "row": 1,
+        "unit": "year"
+      },
+      "os_reserve": {
+        "depends_on": [],
+        "distribution": {
+          "triangular": {
+            "likely": 0.1,
+            "maximum": 0.18,
+            "minimum": 0.06
+          }
+        },
+        "histogram": {
+          "counts": [
+            86,
+            233,
+            368,
+            521,
+            646,
+            837,
+            925,
+            1105,
+            1304,
+            1371,
+            1594,
+            1744,
+            1846,
+            1946,
+            2066,
+            2210,
+            2365,
+            2546,
+            2688,
+            2766,
+            2965,
+            3136,
+            3092,
+            2882,
+            2841,
+            2861,
+            2850,
+            2740,
+            2556,
+            2455,
+            2439,
+            2387,
+            2338,
+            2264,
+            2125,
+            2049,
+            2004,
+            1919,
+            1887,
+            1862,
+            1659,
+            1602,
+            1593,
+            1527,
+            1516,
+            1300,
+            1306,
+            1295,
+            1131,
+            1107,
+            947,
+            873,
+            858,
+            753,
+            674,
+            615,
+            551,
+            478,
+            406,
+            340,
+            275,
+            203,
+            129,
+            43
+          ],
+          "edges": [
+            0.06007924065931669,
+            0.061948714834172136,
+            0.06381818900902758,
+            0.06568766318388304,
+            0.06755713735873849,
+            0.06942661153359393,
+            0.07129608570844938,
+            0.07316555988330482,
+            0.07503503405816028,
+            0.07690450823301573,
+            0.07877398240787117,
+            0.08064345658272662,
+            0.08251293075758206,
+            0.08438240493243751,
+            0.08625187910729296,
+            0.08812135328214842,
+            0.08999082745700386,
+            0.0918603016318593,
+            0.09372977580671477,
+            0.09559924998157021,
+            0.09746872415642566,
+            0.0993381983312811,
+            0.10120767250613655,
+            0.103077146680992,
+            0.10494662085584744,
+            0.10681609503070288,
+            0.10868556920555834,
+            0.11055504338041379,
+            0.11242451755526923,
+            0.1142939917301247,
+            0.11616346590498014,
+            0.11803294007983559,
+            0.11990241425469103,
+            0.12177188842954648,
+            0.12364136260440192,
+            0.1255108367792574,
+            0.12738031095411284,
+            0.1292497851289683,
+            0.13111925930382373,
+            0.13298873347867918,
+            0.13485820765353462,
+            0.13672768182839007,
+            0.13859715600324551,
+            0.14046663017810096,
+            0.1423361043529564,
+            0.14420557852781185,
+            0.1460750527026673,
+            0.14794452687752274,
+            0.1498140010523782,
+            0.15168347522723363,
+            0.15355294940208908,
+            0.15542242357694455,
+            0.1572918977518,
+            0.15916137192665544,
+            0.1610308461015109,
+            0.16290032027636633,
+            0.16476979445122178,
+            0.16663926862607725,
+            0.1685087428009327,
+            0.17037821697578814,
+            0.1722476911506436,
+            0.17411716532549903,
+            0.17598663950035448,
+            0.17785611367520993,
+            0.17972558785006537
+          ],
+          "spacing": "linear"
+        },
+        "kind": "input",
+        "label": "os reserve",
+        "layer": 0,
+        "note": null,
+        "point": 0.11071796769724492,
+        "provenance": {
+          "kind": "assumption",
+          "source": "the share of memory the kernel, the agents and the page cache floor keep before the service sees any. Triangular: a floor, a usual figure, and a host with too many agents on it"
+        },
+        "row": 2,
+        "slider": {
+          "max": 0.4,
+          "min": 0.0
+        },
+        "summary": {
+          "max": 0.17972558785006537,
+          "mean": 0.11331024372143438,
+          "min": 0.06007924065931669,
+          "p25": 0.09464081398860533,
+          "p5": 0.07547636759199562,
+          "p50": 0.11068006457551105,
+          "p75": 0.13106320193213808,
+          "p95": 0.15790529058535163,
+          "sd": 0.024952153710695802
+        },
+        "unit": "dimensionless"
+      },
+      "peak_request_rate": {
+        "ast": {
+          "args": [
+            {
+              "name": "peak_request_rate_t0",
+              "op": "ref"
+            },
+            {
+              "args": [
+                {
+                  "name": "annual_growth",
+                  "op": "ref"
+                },
+                {
+                  "name": "horizon_periods",
+                  "op": "ref"
+                }
+              ],
+              "op": "**"
+            }
+          ],
+          "op": "*"
+        },
+        "depends_on": [
+          "annual_growth",
+          "horizon_periods",
+          "peak_request_rate_t0"
+        ],
+        "formula": "peak_request_rate_t0 * annual_growth ** horizon_periods",
+        "kind": "derived",
+        "label": "peak request rate at horizon",
+        "layer": 2,
+        "note": null,
+        "point": 29703.440000000002,
+        "row": 0,
+        "unit": "request/second"
+      },
+      "peak_request_rate_t0": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "peak request rate, day one",
+        "layer": 1,
+        "note": null,
+        "point": 8000.0,
+        "provenance": {
+          "kind": "assumption",
+          "source": "ch02 - the busy hour, as one number. ch04 replaces it with a distribution, because an engineer who gives you this figure is giving you a range and rounding it."
+        },
+        "row": 0,
+        "slider": {
+          "max": 40000.0,
+          "min": 500.0
+        },
+        "unit": "request/second"
+      },
+      "ram_for_service": {
+        "ast": {
+          "args": [
+            {
+              "name": "ram_per_host",
+              "op": "ref"
+            },
+            {
+              "args": [
+                {
+                  "op": "const",
+                  "value": 1.0
+                },
+                {
+                  "name": "os_reserve",
+                  "op": "ref"
+                }
+              ],
+              "op": "-"
+            }
+          ],
+          "op": "*"
+        },
+        "depends_on": [
+          "os_reserve",
+          "ram_per_host"
+        ],
+        "formula": "ram_per_host * (1 - os_reserve)",
+        "histogram": {
+          "counts": [
+            43,
+            129,
+            203,
+            275,
+            340,
+            406,
+            478,
+            551,
+            615,
+            674,
+            753,
+            858,
+            873,
+            947,
+            1107,
+            1131,
+            1295,
+            1306,
+            1300,
+            1516,
+            1527,
+            1593,
+            1602,
+            1659,
+            1862,
+            1887,
+            1919,
+            2004,
+            2049,
+            2125,
+            2264,
+            2338,
+            2387,
+            2439,
+            2455,
+            2556,
+            2740,
+            2850,
+            2861,
+            2841,
+            2882,
+            3092,
+            3136,
+            2965,
+            2766,
+            2688,
+            2546,
+            2365,
+            2210,
+            2066,
+            1946,
+            1846,
+            1744,
+            1594,
+            1371,
+            1304,
+            1105,
+            925,
+            837,
+            646,
+            521,
+            368,
+            233,
+            86
+          ],
+          "edges": [
+            0.056368828382873506,
+            0.056497297669941035,
+            0.05662576695700857,
+            0.0567542362440761,
+            0.056882705531143635,
+            0.05701117481821116,
+            0.0571396441052787,
+            0.05726811339234623,
+            0.05739658267941376,
+            0.05752505196648129,
+            0.05765352125354883,
+            0.057781990540616356,
+            0.05791045982768389,
+            0.05803892911475142,
+            0.058167398401818955,
+            0.058295867688886484,
+            0.05842433697595402,
+            0.05855280626302155,
+            0.058681275550089076,
+            0.05880974483715661,
+            0.05893821412422414,
+            0.059066683411291676,
+            0.059195152698359205,
+            0.05932362198542674,
+            0.05945209127249427,
+            0.059580560559561804,
+            0.05970902984662933,
+            0.05983749913369687,
+            0.0599659684207644,
+            0.06009443770783193,
+            0.06022290699489946,
+            0.06035137628196699,
+            0.060479845569034525,
+            0.06060831485610206,
+            0.06073678414316959,
+            0.06086525343023712,
+            0.06099372271730465,
+            0.06112219200437218,
+            0.06125066129143972,
+            0.061379130578507246,
+            0.06150759986557478,
+            0.06163606915264231,
+            0.061764538439709846,
+            0.061893007726777374,
+            0.06202147701384491,
+            0.06214994630091244,
+            0.062278415587979974,
+            0.0624068848750475,
+            0.06253535416211503,
+            0.06266382344918256,
+            0.0627922927362501,
+            0.06292076202331763,
+            0.06304923131038516,
+            0.06317770059745269,
+            0.06330616988452023,
+            0.06343463917158776,
+            0.06356310845865529,
+            0.06369157774572282,
+            0.06382004703279036,
+            0.06394851631985789,
+            0.06407698560692542,
+            0.06420545489399294,
+            0.06433392418106049,
+            0.06446239346812802,
+            0.06459086275519554
+          ],
+          "spacing": "linear"
+        },
+        "kind": "derived",
+        "label": "memory the service can use, per host",
+        "layer": 1,
+        "note": "Gibibytes in, decimal terabytes out \u2014 the build converts (appendix D). Declared in the unit the working set is counted in, so that the chain which divides one by the other rounds a count of hosts and not a count of hosts times nine hundred and thirty-one.",
+        "point": 0.061110995930571975,
+        "row": 4,
+        "summary": {
+          "max": 0.06459086275519554,
+          "mean": 0.0609328560786344,
+          "min": 0.056368828382873506,
+          "p25": 0.059712882079878765,
+          "p5": 0.0578683077931286,
+          "p50": 0.06111360061326419,
+          "p75": 0.06221580952083393,
+          "p95": 0.06353278024914406,
+          "sd": 0.001714698946435256
+        },
+        "unit": "TB/host"
+      },
+      "ram_per_host": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "ram per host",
+        "layer": 0,
+        "note": null,
+        "point": 64.0,
+        "provenance": {
+          "kind": "vendor_claim",
+          "source": "spec sheet: the modules fitted. The sheet says 64 GB and means GiB \u2014 appendix D \u2014 and the operating system will report less than either, which is os_reserve's job"
+        },
+        "row": 3,
+        "slider": {
+          "max": 1024.0,
+          "min": 8.0
+        },
+        "unit": "GiB/host"
+      },
+      "stored_data": {
+        "ast": {
+          "args": [
+            {
+              "name": "stored_data_t0",
+              "op": "ref"
+            },
+            {
+              "args": [
+                {
+                  "name": "annual_growth",
+                  "op": "ref"
+                },
+                {
+                  "name": "horizon_periods",
+                  "op": "ref"
+                }
+              ],
+              "op": "**"
+            }
+          ],
+          "op": "*"
+        },
+        "depends_on": [
+          "annual_growth",
+          "horizon_periods",
+          "stored_data_t0"
+        ],
+        "formula": "stored_data_t0 * annual_growth ** horizon_periods",
+        "kind": "derived",
+        "label": "records held at horizon",
+        "layer": 2,
+        "note": null,
+        "point": 55.69395000000001,
+        "row": 1,
+        "unit": "TB"
+      },
+      "stored_data_t0": {
+        "depends_on": [],
+        "distribution": null,
+        "kind": "input",
+        "label": "records held, day one",
+        "layer": 1,
+        "note": null,
+        "point": 15.0,
+        "provenance": {
+          "kind": "assumption",
+          "source": "stated workload (ch02) \u2014 what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression"
+        },
+        "row": 3,
+        "slider": {
+          "max": 200.0,
+          "min": 1.0
+        },
+        "unit": "TB"
+      }
+    },
+    "order": [
+      "annual_growth",
+      "horizon",
+      "one_year",
+      "horizon_periods",
+      "os_reserve",
+      "peak_request_rate_t0",
+      "peak_request_rate",
+      "ram_per_host",
+      "ram_for_service",
+      "stored_data_t0",
+      "stored_data"
+    ],
+    "outputs": [
+      "peak_request_rate",
+      "stored_data",
+      "ram_for_service"
+    ],
+    "scenario": {
+      "because": "The same conditions the finished model is quoted under, so that a number from a stage and a number from the whole model differ only by what the stage does not contain yet.",
+      "name": "reference",
+      "overrides": {},
+      "samples": 100000,
+      "seed": 20260916,
+      "title": "Reference scenario"
+    },
+    "scenarios": [
+      "reference"
+    ],
+    "title": "A web service and its data, on a fleet of Linux hosts \u2014 The first number somebody else supplied",
+    "tornado": {
+      "peak_request_rate": [
+        {
+          "base": 29703.440000000002,
+          "high": 29703.440000000002,
+          "high_input": 0.14901613323034066,
+          "kind": "input",
+          "label": "os reserve",
+          "low": 29703.440000000002,
+          "low_input": 0.08190890230020664,
+          "node": "os_reserve",
+          "span": 0.0
+        }
+      ],
+      "ram_for_service": [
+        {
+          "base": 0.061110995930571975,
+          "high": 0.05847916603518893,
+          "high_input": 0.14901613323034066,
+          "kind": "input",
+          "label": "os reserve",
+          "low": 0.06309073982990965,
+          "low_input": 0.08190890230020664,
+          "node": "os_reserve",
+          "span": 0.0046115737947207205
+        }
+      ],
+      "stored_data": [
+        {
+          "base": 55.69395000000001,
+          "high": 55.69395000000001,
+          "high_input": 0.14901613323034066,
+          "kind": "input",
+          "label": "os reserve",
+          "low": 55.69395000000001,
+          "low_input": 0.08190890230020664,
+          "node": "os_reserve",
+          "span": 0.0
+        }
+      ]
+    },
+    "unmeasured": [],
+    "viewer_expectations": [
+      {
+        "overrides": {
+          "annual_growth": 1.0,
+          "horizon": 3.0,
+          "os_reserve": 0.0,
+          "peak_request_rate_t0": 500.0,
+          "ram_per_host": 8.0,
+          "stored_data_t0": 1.0
+        },
+        "values": {
+          "annual_growth": 1.0,
+          "horizon": 3.0,
+          "horizon_periods": 3.0,
+          "one_year": 1.0,
+          "os_reserve": 0.0,
+          "peak_request_rate": 500.0,
+          "peak_request_rate_t0": 500.0,
+          "ram_for_service": 0.008589934592,
+          "ram_per_host": 8.0,
+          "stored_data": 1.0,
+          "stored_data_t0": 1.0
+        }
+      },
+      {
+        "overrides": {
+          "annual_growth": 1.25,
+          "horizon": 4.25,
+          "os_reserve": 0.1,
+          "peak_request_rate_t0": 10375.0,
+          "ram_per_host": 262.0,
+          "stored_data_t0": 50.75
+        },
+        "values": {
+          "annual_growth": 1.25,
+          "horizon": 4.25,
+          "horizon_periods": 4.25,
+          "one_year": 1.0,
+          "os_reserve": 0.1,
+          "peak_request_rate": 26782.78041551722,
+          "peak_request_rate_t0": 10375.0,
+          "ram_for_service": 0.2531883220992,
+          "ram_per_host": 262.0,
+          "stored_data": 131.00974516506014,
+          "stored_data_t0": 50.75
+        }
+      },
+      {
+        "overrides": {
+          "annual_growth": 1.5,
+          "horizon": 5.5,
+          "os_reserve": 0.2,
+          "peak_request_rate_t0": 20250.0,
+          "ram_per_host": 516.0,
+          "stored_data_t0": 100.5
+        },
+        "values": {
+          "annual_growth": 1.5,
+          "horizon": 5.5,
+          "horizon_periods": 5.5,
+          "one_year": 1.0,
+          "os_reserve": 0.2,
+          "peak_request_rate": 188333.22893438005,
+          "peak_request_rate_t0": 20250.0,
+          "ram_for_service": 0.4432406249472,
+          "ram_per_host": 516.0,
+          "stored_data": 934.6908398965528,
+          "stored_data_t0": 100.5
+        }
+      },
+      {
+        "overrides": {
+          "annual_growth": 1.9,
+          "horizon": 7.5,
+          "os_reserve": 0.36000000000000004,
+          "peak_request_rate_t0": 36050.0,
+          "ram_per_host": 922.4,
+          "stored_data_t0": 180.1
+        },
+        "values": {
+          "annual_growth": 1.9,
+          "horizon": 7.5,
+          "horizon_periods": 7.5,
+          "one_year": 1.0,
+          "os_reserve": 0.36000000000000004,
+          "peak_request_rate": 4441782.372071244,
+          "peak_request_rate_t0": 36050.0,
+          "ram_for_service": 0.6338684534128639,
+          "ram_per_host": 922.4,
+          "stored_data": 22190.430102913484,
+          "stored_data_t0": 180.1
+        }
+      },
+      {
+        "overrides": {
+          "annual_growth": 2.0,
+          "horizon": 8.0,
+          "os_reserve": 0.4,
+          "peak_request_rate_t0": 40000.0,
+          "ram_per_host": 1024.0,
+          "stored_data_t0": 200.0
+        },
+        "values": {
+          "annual_growth": 2.0,
+          "horizon": 8.0,
+          "horizon_periods": 8.0,
+          "one_year": 1.0,
+          "os_reserve": 0.4,
+          "peak_request_rate": 10240000.0,
+          "peak_request_rate_t0": 40000.0,
+          "ram_for_service": 0.6597069766656,
+          "ram_per_host": 1024.0,
+          "stored_data": 51200.0,
+          "stored_data_t0": 200.0
+        }
+      }
+    ]
+  },
+  "target": "model",
+  "units": {
+    "annual_growth": "dimensionless",
+    "horizon": "year",
+    "horizon_periods": "dimensionless",
+    "one_year": "year",
+    "os_reserve": "dimensionless",
+    "peak_request_rate": "request/second",
+    "peak_request_rate_t0": "request/second",
+    "ram_for_service": "TB/host",
+    "ram_per_host": "GiB/host",
+    "stored_data": "TB",
+    "stored_data_t0": "TB"
+  }
+}

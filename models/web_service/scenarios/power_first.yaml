@@ -1,0 +1,13 @@
+scenario: power_first
+title: Sized from the power budget inwards
+because: >-
+  A rack has a power budget before it has a capital budget, and where that is the binding
+  constraint the sizing runs the other way: watts available, divided by watts per host, gives a
+  host count, and everything else follows from it. Here the fleet is held to what a
+  sixteen-kilowatt allocation supports at the reference PUE, which is fewer hosts than any of
+  the three chains asked for - and ch16 is about reading the ceilings that result rather than
+  arguing with the electricity supply.
+samples: 100000
+seed: 20260916
+overrides:
+  hosts: 36

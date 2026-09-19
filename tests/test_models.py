@@ -35,6 +35,28 @@ PINS = {
         "fill_level": (0.7462631549076367, 0.23751424273852662, 2.3483313911156083),
         "read_utilisation": (0.5458080607924731, 0.26650505006771763, 1.0242176962099736),
     },
+    "web_service-reference": {
+        "hosts_recommended": (54.0, 20.0, 230.0),
+        "hosts": (54.0, None, None),
+        "tco": (2002083.1707651545, 1508229.8444723955, 2923723.9593550325),
+        "cost_per_million_requests": (1.8207372530067034, 0.5523457592287855, 5.982886615297304),
+        "cost_per_stored_tb_month": (839.6414698789445, 305.33281615953297, 2107.817738138934),
+        "capex": (421214.32422070147, 272129.78204760165, 658773.216029522),
+        "annual_opex": (316173.76930889057, 227660.27329566484, 484257.1276373279),
+        "queueing_headroom": (0.643907479030284, 0.15608313209178654, 2.4846275656339345),
+        "failure_headroom": (0.6560566767478365, 0.15902809684823532, 2.531507331023254),
+        "cache_fill": (0.7457807356330546, 0.19351967005914503, 2.6720696883949917),
+        "disk_fill": (0.6699972825041127, 0.21319715097561925, 2.1199789434396727),
+        "scaling_loss": (0.3210474303939056, 0.21251187466674934, 0.4565840519300162),
+        "coordination_headroom": (0.9483835953428347, 0.23256931780969597, 3.8088382686495614),
+        "utilisation": (0.643907479030284, 0.15608313209178654, 2.4846275656339345),
+        "residence_time": (0.03670898993926409, 0.012809150925497385, 0.856577120132588),
+        "waiting_time": (0.0236371931695396, 0.0020883616834668677, 0.8394455777299362),
+        "concurrency": (1562.3357108628495, 159.79752424384506, 107335.91083538589),
+        "in_flight_unqueued": (556.3360618821654, 134.85582612730357, 2146.7182167077194),
+        "optimism": (1.4728569339978588, 1.2698604179930921, 1.8402109904135502),
+        "headroom_to_peak": (0.32846489726073863, 0.18552259764577544, 0.5839492207928927),
+    },
     "service_tier-reference": {
         "utilisation": (0.5878614710768895, 0.23168842385794025, 1.3186737705994391),
         "utilisation_including_coordination": (
@@ -273,3 +295,46 @@ def test_knowing_one_input_never_widens_the_interval():
         assert mc.half_width(evaluate(thinner, scenario).samples["tco"]) <= baseline * 1.01, (
             f"knowing {name!r} exactly widened the interval, which is not a thing that can happen"
         )
+
+
+def test_a_three_way_max_leaves_its_third_argument_alone(tmp_path):
+    """`np.maximum(a, b, c)` writes into c. The evaluator must not.
+
+    Found by the web service model, whose recommended host count is the largest of three chains:
+    the storage chain reported binding in every sample, because its samples had been overwritten
+    with the maximum. No model had put three arguments into `max` before.
+    """
+    import numpy as np
+
+    from sizing.dsl import load_model, load_scenario
+
+    (tmp_path / "scenarios").mkdir()
+    (tmp_path / "model.yaml").write_text(
+        """
+model: three_way
+title: three uncertain inputs and the largest of them
+currency: USD
+nodes:
+  a: {kind: input, unit: host, distribution: {uniform: {minimum: 1, maximum: 10}},
+      provenance: {kind: assumption, source: "uniform, for the test"}}
+  b: {kind: input, unit: host, distribution: {uniform: {minimum: 1, maximum: 10}},
+      provenance: {kind: assumption, source: "uniform, for the test"}}
+  c: {kind: input, unit: host, distribution: {uniform: {minimum: 1, maximum: 10}},
+      provenance: {kind: assumption, source: "uniform, for the test"}}
+  largest: {kind: derived, unit: host, formula: "max(a, b, c)"}
+  smallest: {kind: derived, unit: host, formula: "min(a, b, c)"}
+outputs: [largest, smallest]
+"""
+    )
+    (tmp_path / "scenarios" / "reference.yaml").write_text(
+        "scenario: reference\ntitle: r\nsamples: 2000\nseed: 7\noverrides: {}\n"
+    )
+    model = load_model(tmp_path / "model.yaml")
+    scenario = load_scenario(tmp_path / "scenarios" / "reference.yaml")
+    once = evaluate(model, scenario).samples
+    again = evaluate(model, scenario).samples
+    for name in ("a", "b", "c"):
+        assert np.array_equal(once[name], again[name]), f"{name}'s samples were written to"
+    assert np.array_equal(once["largest"], np.maximum.reduce([once["a"], once["b"], once["c"]]))
+    assert np.array_equal(once["smallest"], np.minimum.reduce([once["a"], once["b"], once["c"]]))
+    assert not np.array_equal(once["c"], once["largest"]), "c is not the maximum in every sample"

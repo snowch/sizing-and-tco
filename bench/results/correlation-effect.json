@@ -1,13 +1,13 @@
 {
-  "code_fingerprint": "cc004a3fad2435cc",
+  "code_fingerprint": "4029f7adcc8ed0f3",
   "code_sources": [
     "bench/run_uncertainty.py"
   ],
   "conditions": {
     "what_widening_means": "assuming independence is not neutral. It is a claim, and where it is wrong it makes the interval narrower than the evidence supports \u2014 which is the direction that gets a plan approved"
   },
-  "generated_at": "2026-09-19T09:30:36+00:00",
-  "git_revision": "d798a44",
+  "generated_at": "2026-09-19T09:48:05+00:00",
+  "git_revision": "342807a",
   "kind": "measurement",
   "name": "correlation-effect",
   "produced_by": {

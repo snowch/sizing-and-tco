@@ -1,0 +1,12 @@
+scenario: sized_for_growth
+title: Sized for the growth we might get, not the growth we expect
+because: >-
+  The reference scenario buys what the point estimates recommend, and the model then puts a
+  good share of its futures over the knee and past the working set's margin. This scenario buys
+  the fleet the p90 growth case needs instead, and is here so the two can be read side by side:
+  what the extra capital buys is a number, the fall in every P(over) is a number, and the
+  decision between them is a judgement somebody has to make and defend (ch21).
+samples: 100000
+seed: 20260916
+overrides:
+  hosts: 131

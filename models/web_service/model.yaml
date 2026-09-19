@@ -1,0 +1,902 @@
+model: web_service
+title: A web service and its data, on a fleet of Linux hosts
+currency: USD
+
+description: >-
+  The book's running example: a service that takes requests and keeps records, run on some
+  number of ordinary hosts, sized from a stated workload and costed over five years. Requests
+  arrive and data accumulates; a host has cores, memory and disk, and each of those is a chain
+  that ends in a count of hosts. One of the three binds.
+
+  It is a sizing model. Its ceilings are the queueing knee, the point where more hosts stop
+  helping, the working set outgrowing memory, disk filling, and a host dying at the busy hour;
+  its one measured constant is how well the stored records compress. Its one rate constant —
+  CPU time per request — belongs on a rig nobody has declared, and is held as a labelled claim
+  until one is.
+
+  Vendor-neutral by construction. Nothing below names a product; every figure is a workload
+  assumption, a price you would get quoted, a spec sheet, or the measured constant.
+
+nodes:
+
+  # -- the workload: what arrives, and what accumulates -----------------------------------------
+
+  peak_request_rate_t0:
+    kind: input
+    unit: request/second
+    label: peak request rate, day one
+    distribution: {triangular: {minimum: 3000.0, likely: 8000.0, maximum: 20000.0}}
+    provenance:
+      kind: assumption
+      source: "ch04 — the busy hour, not the daily mean. Triangular because this is an engineer's
+        min/likely/max and pretending to more shape than that would be invention."
+    range: [500, 40000]
+
+  stored_data_t0:
+    kind: input
+    unit: TB
+    value: 15
+    label: records held, day one
+    provenance:
+      kind: assumption
+      source: "stated workload (ch02) — what the service holds today: its database and the
+        objects users have uploaded, before replication, indexes or compression"
+    range: [1, 200]
+
+  annual_growth:
+    kind: input
+    unit: dimensionless
+    label: annual growth factor
+    distribution: {lognormal: {p10: 1.12, p90: 1.60}}
+    provenance:
+      kind: assumption
+      source: "ch04 — lognormal because growth compounds and cannot be negative. The p10/p90
+        say: surprised below 12% a year, surprised above 60%. One factor for requests and for
+        records, because users drive both."
+    range: [1.0, 2.0]
+
+  horizon:
+    kind: input
+    unit: year
+    value: 5
+    provenance:
+      kind: assumption
+      source: "the refresh cycle this fleet is bought against"
+    range: [3, 8]
+
+  one_year:
+    kind: input
+    unit: year
+    value: 1
+    label: one year
+    note: >-
+      Here because a duration cannot be an exponent. In (1+r)^n the n is a pure number, so the
+      horizon has to be divided by something with the same units before it can be used as one.
+      Appendix D has the rest of the conversions that bite.
+    provenance: {kind: fact, source: "definition"}
+
+  horizon_periods:
+    kind: derived
+    unit: dimensionless
+    formula: horizon / one_year
+
+  peak_request_rate:
+    kind: derived
+    unit: request/second
+    label: peak request rate at horizon
+    formula: peak_request_rate_t0 * annual_growth ** horizon_periods
+
+  stored_data:
+    kind: derived
+    unit: TB
+    label: records held at horizon
+    formula: stored_data_t0 * annual_growth ** horizon_periods
+
+  # -- the host: the first numbers somebody else supplied --------------------------------------
+
+  cores_per_host:
+    kind: input
+    unit: core/host
+    value: 16
+    provenance:
+      kind: vendor_claim
+      source: "spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts
+        threads doubles this number without doubling the work a host does (ch07)"
+    range: [4, 128]
+
+  ram_per_host:
+    kind: input
+    unit: GiB/host
+    value: 64
+    provenance:
+      kind: vendor_claim
+      source: "spec sheet: the modules fitted. The sheet says 64 GB and means GiB — appendix D —
+        and the operating system will report less than either, which is os_reserve's job"
+    range: [8, 1024]
+
+  os_reserve:
+    kind: input
+    unit: dimensionless
+    distribution: {triangular: {minimum: 0.06, likely: 0.10, maximum: 0.18}}
+    provenance:
+      kind: assumption
+      source: "the share of memory the kernel, the agents and the page cache floor keep before
+        the service sees any. Triangular: a floor, a usual figure, and a host with too many
+        agents on it"
+    range: [0.0, 0.4]
+
+  ram_for_service:
+    kind: derived
+    unit: TB/host
+    label: memory the service can use, per host
+    note: >-
+      Gibibytes in, decimal terabytes out — the build converts (appendix D). Declared in the
+      unit the working set is counted in, so that the chain which divides one by the other
+      rounds a count of hosts and not a count of hosts times nine hundred and thirty-one.
+    formula: ram_per_host * (1 - os_reserve)
+
+  # -- peak and mean --------------------------------------------------------------------------
+
+  peak_to_mean:
+    kind: input
+    unit: dimensionless
+    label: peak-to-mean ratio
+    distribution: {triangular: {minimum: 2.0, likely: 3.5, maximum: 6.0}}
+    provenance:
+      kind: assumption
+      source: "ch04 — the busy hour against the daily mean. Triangular, and it is a property of
+        your traffic that belongs to the estate target: nothing here can measure it"
+    range: [1.0, 10.0]
+
+  mean_request_rate:
+    kind: derived
+    unit: request/second
+    label: mean request rate at horizon
+    formula: peak_request_rate / peak_to_mean
+
+  # -- Little's law: how busy the fleet is -----------------------------------------------------
+
+  service_demand:
+    kind: input
+    unit: second * core / request
+    label: CPU time per request
+    note: >-
+      Core-seconds of work one request costs, which is not how long a request takes. A request
+      that occupies one core for twelve milliseconds has a service demand of twelve milliseconds
+      whether it returns in twelve milliseconds or in twelve seconds — the difference is
+      queueing, and Part II is about that difference.
+
+      This is the model's one rate constant and it belongs on a rig (ch03). No rig is declared,
+      so it is held here as an assumption whose source says what would replace it, rather than
+      as a measured node with nothing behind it.
+    distribution: {triangular: {minimum: 0.008, likely: 0.012, maximum: 0.020}}
+    provenance:
+      kind: assumption
+      source: "held as an assumption because no reference machine is declared in rig/machine.yml;
+        `make measure-rig` on a declared machine replaces this node with a measured one.
+        Triangular *because* it has not been measured: once it is, the shape becomes a normal
+        around the measurement, which is a change of claim and not only of numbers (ch13)"
+    range: [0.002, 0.05]
+
+  hosts:
+    kind: input
+    unit: host
+    value: 54
+    label: hosts in the fleet
+    note: >-
+      **The most important node in this model, and the one a spreadsheet hides.** Sizing does not
+      produce a fleet; it produces a recommendation, and then a person decides. It arrives here,
+      in Part II, because a queue needs something to stand in front of — but it is decided in
+      ch12, and everything downstream of it, every dollar, every watt, every ceiling, is a
+      consequence of the number chosen here and not of the number the model would recommend in
+      hindsight.
+
+      Deriving it instead would make the ceilings below tautologies: a fleet sized to sit under
+      the knee sits under it in every sample, and the model would cheerfully report a zero per
+      cent chance of queueing. Making it an input is what lets the ceilings ask the only question
+      worth asking — *given what we actually bought, how often does the world break it?*
+    provenance:
+      kind: assumption
+      source: "the sizing decision, taken the way it is usually taken: hosts_recommended
+        evaluated at every input's point estimate. Change this number and watch the ceilings
+        move — that is the exercise of ch12"
+    range: [4, 200]
+
+  one_host:
+    kind: input
+    unit: host
+    value: 1
+    note: "as elsewhere: a conversion has to be a host before the division means anything"
+    provenance: {kind: fact, source: "definition"}
+
+  one_core:
+    kind: input
+    unit: core
+    value: 1
+    provenance: {kind: fact, source: "definition"}
+
+  one_request:
+    kind: input
+    unit: request
+    value: 1
+    provenance: {kind: fact, source: "definition"}
+
+  cores:
+    kind: derived
+    unit: core
+    label: cores in the fleet
+    formula: hosts * cores_per_host
+
+  busy_cores:
+    kind: derived
+    unit: core
+    label: cores busy at the busy hour
+    note: >-
+      Arrival rate times service demand. It is a count of cores doing work, it has nothing to do
+      with how many you own, and it is the numerator of every utilisation figure below.
+    formula: peak_request_rate * service_demand
+
+  utilisation:
+    kind: derived
+    unit: dimensionless
+    formula: busy_cores / cores
+
+  service_seconds:
+    kind: derived
+    unit: second
+    label: service time
+    note: "service demand with the core divided out: how long one request would take alone"
+    formula: service_demand * one_request / one_core
+
+  in_flight_unqueued:
+    kind: derived
+    unit: request
+    label: requests in flight, if none waited
+    note: >-
+      Little's law with the residence time equal to the service time: the fewest requests that
+      can be in the system at this arrival rate. ch06 replaces the service time with what a
+      request actually waits, and this number goes up.
+    formula: peak_request_rate * service_seconds
+
+  # -- the knee ---------------------------------------------------------------------------------
+
+  utilisation_cap:
+    kind: input
+    unit: dimensionless
+    label: utilisation the model will admit to
+    note: >-
+      A modelling choice, stated rather than hidden. The waiting-time formula below divides by
+      what is left of the fleet, so at a utilisation of one it divides by zero and returns
+      infinity. Infinity is not a prediction. Past this point the formula has stopped describing a
+      queue and started describing an arithmetic accident, so the model clamps and the ceiling
+      reports that it is over.
+    value: 0.98
+    provenance: {kind: assumption, source: "where this model stops being about queues (ch06)"}
+
+  queueing_margin:
+    kind: input
+    unit: dimensionless
+    value: 0.3
+    label: queueing margin
+    provenance:
+      kind: assumption
+      source: "ch06 — how far under the knee the fleet is sized to run at the busy hour. Declared
+        once, here, and used by the sizing chain and by the ceiling that checks it, so the two
+        cannot drift apart"
+    range: [0.0, 0.6]
+
+  effective_utilisation:
+    kind: derived
+    unit: dimensionless
+    formula: min(utilisation, utilisation_cap)
+
+  residence_time:
+    kind: derived
+    unit: second
+    label: residence time
+    note: >-
+      Service time divided by the fraction of the fleet that is idle. That single division is
+      ch06's whole subject: it is nearly flat while there is slack and nearly vertical when there
+      is not, and nothing about the arithmetic warns you which side you are on.
+    formula: service_seconds / (1 - effective_utilisation)
+
+  waiting_time:
+    kind: derived
+    unit: second
+    label: time spent queueing
+    formula: residence_time - service_seconds
+
+  concurrency:
+    kind: derived
+    unit: request
+    label: requests in the system
+    note: >-
+      Little's law, and the only relationship in Part II that is always true: the number of
+      requests in a system is the rate they arrive at times how long each one stays. No
+      distribution assumed, no queue discipline assumed, nothing assumed except that the system
+      is in a steady state. ch05 is about what that buys and what it does not.
+    formula: peak_request_rate * residence_time
+
+  queueing_headroom:
+    kind: ceiling
+    unit: dimensionless
+    label: utilisation at the busy hour
+    of: utilisation
+    limit: 1
+    headroom: queueing_margin
+    because: >-
+      Not a capacity limit: a fleet at ninety per cent has not run out of anything, it has a
+      queue in front of it. The margin is large because the cost of crossing it is paid in
+      latency by every request, not in a failure somebody gets paged for (ch06).
+
+  # -- what more hosts buy ----------------------------------------------------------------------
+
+  host_count:
+    kind: derived
+    unit: dimensionless
+    formula: hosts / one_host
+
+  single_host_throughput:
+    kind: derived
+    unit: request/second/host
+    label: throughput of one host alone
+    note: >-
+      Every core of a host busy on requests and nothing else: the cores divided by the CPU time
+      each request costs. The straight line of ch07 is this times the host count, and it is the
+      line nobody has ever measured.
+    formula: cores_per_host / service_demand
+
+  contention:
+    kind: input
+    unit: dimensionless
+    label: contention
+    note: >-
+      The fraction of the work that cannot be done in parallel: a lock, a single writer, a shared
+      queue. It costs a fixed share of every host you add, so it flattens the scaling curve and
+      never bends it downwards.
+    distribution: {triangular: {minimum: 0.002, likely: 0.005, maximum: 0.015}}
+    provenance:
+      kind: assumption
+      source: "ch07 — fitted from two measurements, where two exist. Triangular because a fit
+        gives a central value and a range rather than a shape, and its maximum is the claim to
+        distrust: a serial fraction can always be worse than the one you measured"
+
+  crosstalk:
+    kind: input
+    unit: dimensionless
+    label: crosstalk
+    note: >-
+      The cost of hosts having to agree with each other, which grows with the number of pairs
+      rather than the number of hosts. This is the term that makes the curve turn over: past some
+      count, the next host costs more in agreement than it brings in work.
+    distribution: {lognormal: {p10: 1.5e-5, p90: 9.0e-5}}
+    provenance:
+      kind: assumption
+      source: "ch07 — fitted, and the harder of the two to fit. Lognormal because it spans an
+        order of magnitude and cannot be negative, and because a shape should not assert a hard
+        upper bound on a quantity this weakly fitted"
+
+  linear_throughput:
+    kind: derived
+    unit: request/second
+    label: throughput if scaling were free
+    formula: hosts * single_host_throughput
+
+  achievable_throughput:
+    kind: derived
+    unit: request/second
+    label: throughput the fleet can actually reach
+    note: >-
+      The universal scalability law. One host's throughput times the count, divided by what
+      contention and crosstalk take back. With crosstalk at zero it is Amdahl's ceiling; with both
+      at zero it is the straight line above.
+    formula: linear_throughput / (1 + contention * (host_count - 1) + crosstalk * host_count * (host_count - 1))
+
+  scaling_efficiency:
+    kind: derived
+    unit: dimensionless
+    formula: achievable_throughput / linear_throughput
+
+  scaling_loss:
+    kind: ceiling
+    unit: dimensionless
+    label: fraction of the fleet doing nothing useful
+    of: 1 - scaling_efficiency
+    limit: 1
+    headroom: 0.5
+    because: >-
+      At half, one host in two is paying for the other's coordination. There is no failure and
+      nothing gets paged; the fleet simply costs twice what its work is worth, and it will go on
+      doing so until somebody looks. A budget is the only thing this ceiling protects, which is
+      why the margin is the loosest in the book and why it is still worth declaring (ch07).
+
+  peak_hosts:
+    kind: derived
+    unit: host
+    label: where adding hosts stops helping
+    note: >-
+      Where the scalability curve turns over, from the two coefficients alone: the square root of
+      one-minus-contention over crosstalk. Past it, throughput falls. It is a property of the
+      software, not of the budget, and no amount of money moves it.
+    formula: one_host * sqrt((1 - contention) / crosstalk)
+
+  headroom_to_peak:
+    kind: derived
+    unit: dimensionless
+    label: fraction of the peak already built
+    formula: host_count / (peak_hosts / one_host)
+
+  utilisation_including_coordination:
+    kind: derived
+    unit: dimensionless
+    label: utilisation, counting coordination
+    note: >-
+      The same fleet's utilisation, worked out from what it can actually deliver rather than from
+      what one host could deliver alone. It is higher than the row above, always, and the gap is
+      the work the hosts are doing on each other's behalf.
+    formula: peak_request_rate / achievable_throughput
+
+  optimism:
+    kind: derived
+    unit: dimensionless
+    label: how much the queueing view understated it
+    formula: utilisation_including_coordination / utilisation
+
+  coordination_headroom:
+    kind: ceiling
+    unit: dimensionless
+    label: utilisation, counting coordination
+    of: utilisation_including_coordination
+    limit: 1
+    headroom: queueing_margin
+    because: >-
+      The same queueing margin as above, applied to the capacity the fleet actually has rather
+      than to the capacity its parts would have had alone. Where the two ceilings disagree, this
+      is the one that is about the system you own (ch07).
+
+  # -- the working set: a regime change --------------------------------------------------------
+
+  hot_fraction:
+    kind: input
+    unit: dimensionless
+    label: share of records touched in a busy hour
+    distribution: {triangular: {minimum: 0.01, likely: 0.03, maximum: 0.08}}
+    provenance:
+      kind: assumption
+      source: "ch08 — the working set as a share of everything held. Triangular; nobody measures
+        this and everybody has an opinion, and the maximum is a service whose users all look at
+        the same week's data"
+    range: [0.005, 0.3]
+
+  working_set:
+    kind: derived
+    unit: TB
+    label: working set at horizon
+    formula: stored_data * hot_fraction
+
+  cache_margin:
+    kind: input
+    unit: dimensionless
+    value: 0.25
+    label: cache margin
+    provenance:
+      kind: assumption
+      source: "ch08 — how much of the fleet's memory is kept free of the working set, for its
+        own daily swing and for the process heaps. Declared once and used by the chain and by
+        the ceiling"
+    range: [0.0, 0.6]
+
+  fleet_ram:
+    kind: derived
+    unit: TB
+    label: memory the service can use, whole fleet
+    formula: hosts * ram_for_service
+
+  cache_fill:
+    kind: ceiling
+    unit: dimensionless
+    label: working set against memory
+    of: working_set / fleet_ram
+    limit: 1
+    headroom: cache_margin
+    because: >-
+      Past the limit, reads that were served from memory go to disk, and the service time per
+      request is no longer the number this model was built on: it is a different number, from a
+      different regime, and nothing in a chain of multiplications predicts the step (ch08). The
+      margin is the working set's own daily swing.
+
+  # -- capacity: from what you hold to what you must buy ---------------------------------------
+
+  record_compression:
+    kind: measured
+    unit: dimensionless
+    label: record compression ratio
+    result: records-compression
+
+  replication_factor:
+    kind: input
+    unit: dimensionless
+    value: 3
+    provenance:
+      kind: assumption
+      source: "three copies of every record, so that a host can die and take its disks with it.
+        A different durability scheme substitutes its own factor here and the rest of the model
+        is unchanged, which is the point of it being a node"
+    range: [1, 4]
+
+  index_overhead:
+    kind: input
+    unit: dimensionless
+    distribution: {triangular: {minimum: 1.15, likely: 1.30, maximum: 1.60}}
+    provenance:
+      kind: assumption
+      source: "indexes, the write-ahead log and journals as a multiplier on stored bytes.
+        Triangular, and the bounds are for a service with a few indexes per table — a
+        search-heavy one is off the top of this range"
+
+  raw_per_stored:
+    kind: derived
+    unit: dimensionless
+    label: raw bytes per stored byte
+    formula: replication_factor * index_overhead / record_compression
+
+  raw_data:
+    kind: derived
+    unit: TB
+    label: raw disk needed at horizon
+    formula: stored_data * raw_per_stored
+
+  disk_per_host:
+    kind: input
+    unit: TB/host
+    value: 2
+    provenance:
+      kind: vendor_claim
+      source: "spec sheet: one local drive. Decimal TB, not TiB — appendix D, and it is a 10%
+        difference"
+    range: [1, 60]
+
+  disk_margin:
+    kind: input
+    unit: dimensionless
+    value: 0.25
+    label: disk margin
+    provenance:
+      kind: assumption
+      source: "ch11 — room to re-replicate a dead host's records onto the survivors, plus what a
+        filesystem needs to keep allocating well. Declared once and used by the chain and by the
+        ceiling"
+    range: [0.0, 0.45]
+
+  hosts_for_storage:
+    kind: derived
+    unit: host
+    formula: ceil(raw_data / (disk_per_host * (1 - disk_margin)))
+
+  installed_disk:
+    kind: derived
+    unit: TB
+    formula: hosts * disk_per_host
+
+  disk_fill:
+    kind: ceiling
+    unit: dimensionless
+    label: disk fill at horizon
+    of: raw_data / installed_disk
+    limit: 1
+    headroom: disk_margin
+    because: >-
+      A fleet whose disks are full cannot take a dead host's records, and a filesystem at 97% is
+      a different filesystem. The margin is the same node the sizing used, so the two cannot
+      drift apart (ch11). Over the limit means out of space; inside the margin means the
+      re-replication reserve has been spent on data.
+
+  # -- three chains, and the one that binds ----------------------------------------------------
+
+  hosts_for_requests:
+    kind: derived
+    unit: host
+    formula: ceil(busy_cores / (cores_per_host * (1 - queueing_margin)))
+
+  hosts_for_memory:
+    kind: derived
+    unit: host
+    formula: ceil(working_set / (ram_for_service * (1 - cache_margin)))
+
+  hosts_recommended:
+    kind: derived
+    unit: host
+    label: hosts the model recommends
+    note: >-
+      Where a reader meets a binding constraint. Three chains produce three host counts and you
+      buy the largest, which means that across this model's uncertainty the answer is sometimes
+      set by CPU, sometimes by memory and sometimes by disk — and an average of the three is a
+      fleet that satisfies none of them.
+    formula: max(hosts_for_requests, hosts_for_memory, hosts_for_storage)
+
+  # -- a host dies at the busy hour ------------------------------------------------------------
+
+  hosts_after_failure:
+    kind: derived
+    unit: host
+    label: hosts left when one dies
+    formula: hosts - one_host
+
+  utilisation_after_failure:
+    kind: derived
+    unit: dimensionless
+    label: utilisation with one host down
+    formula: busy_cores / (hosts_after_failure * cores_per_host)
+
+  failure_headroom:
+    kind: ceiling
+    unit: dimensionless
+    label: utilisation with one host down
+    of: utilisation_after_failure
+    limit: 1
+    headroom: queueing_margin
+    because: >-
+      One host down at the busy hour: its share of the requests lands on the survivors, and the
+      question is whether they are still under the knee. N+1 is this ceiling with the margin at
+      zero. The margin here is the queueing margin, because a fleet that has lost a host is
+      still a queue (ch11).
+
+  # -- capital ----------------------------------------------------------------------------------
+
+  host_price:
+    kind: input
+    unit: USD/host
+    distribution: {lognormal: {p10: 4500, p90: 9500}}
+    provenance:
+      kind: vendor_claim
+      source: "chassis, CPU, memory, drives and boot media, as configured. Lognormal like any
+        price, and wide because a host is a configuration rather than a commodity"
+
+  host_capex:
+    kind: derived
+    unit: USD
+    formula: hosts * host_price
+
+  network_price_per_host:
+    kind: input
+    unit: USD/host
+    distribution: {triangular: {minimum: 600, likely: 1100, maximum: 2200}}
+    provenance:
+      kind: assumption
+      source: "switch ports, optics and cabling, amortised per host. Triangular rather than
+        lognormal, although it is a price: it is a bill of materials divided by a host count
+        somebody chose, so the bounds are the plausible designs rather than a market"
+
+  network_capex:
+    kind: derived
+    unit: USD
+    formula: hosts * network_price_per_host
+
+  capex:
+    kind: derived
+    unit: USD
+    formula: host_capex + network_capex
+
+  # -- running it -------------------------------------------------------------------------------
+
+  host_power:
+    kind: input
+    unit: W/host
+    distribution: {triangular: {minimum: 220, likely: 300, maximum: 420}}
+    provenance:
+      kind: vendor_claim
+      source: "typical draw under load, per host as configured. Triangular, and one of the few
+        inputs here whose bounds are physical rather than editorial: a host cannot draw less
+        than it idles at, or more than its supply will give it"
+
+  pue:
+    kind: input
+    unit: dimensionless
+    label: PUE
+    distribution: {triangular: {minimum: 1.15, likely: 1.35, maximum: 1.75}}
+    provenance:
+      kind: assumption
+      source: "ch16 — facility overhead. A multiplier on IT load, and the single number a
+        colocation contract is most likely to disagree with you about. Triangular: the minimum
+        is a good building, the maximum is a poor one, and below one is impossible"
+    range: [1.0, 2.2]
+
+  facility_power:
+    kind: derived
+    unit: kW
+    note: "watts in, kilowatts out — the build converts, nobody divides by a thousand by hand"
+    formula: hosts * host_power * pue
+
+  hours_per_year:
+    kind: input
+    unit: hour/year
+    value: 8766
+    provenance:
+      kind: fact
+      source: "by definition, 365.25 x 24. The quarter-day is worth about a fifth of a per cent
+        over five years — less than this model's other errors, and free to get right"
+
+  annual_energy:
+    kind: derived
+    unit: kWh/year
+    formula: facility_power * hours_per_year
+
+  electricity_price:
+    kind: input
+    unit: USD/kWh
+    distribution: {lognormal: {p10: 0.085, p90: 0.21}}
+    provenance:
+      kind: assumption
+      source: "all-in delivered rate including transmission. Lognormal: it cannot go negative and
+        its history is multiplicative"
+    range: [0.04, 0.45]
+
+  annual_energy_cost:
+    kind: derived
+    unit: USD/year
+    formula: annual_energy * electricity_price
+
+  licence_per_core:
+    kind: input
+    unit: USD/core/year
+    distribution: {lognormal: {p10: 40, p90: 160}}
+    provenance:
+      kind: vendor_claim
+      source: "the platform software's per-core licence, as quoted. Lognormal: a price, and a
+        wide one, because it is the line item most often negotiated. It is what makes the core
+        count a cost as well as a capacity (ch17)"
+
+  annual_licences:
+    kind: derived
+    unit: USD/year
+    formula: cores * licence_per_core
+
+  support_rate:
+    kind: input
+    unit: 1/year
+    distribution: {triangular: {minimum: 0.07, likely: 0.11, maximum: 0.18}}
+    provenance:
+      kind: vendor_claim
+      source: "annual support as a fraction of capital cost. Triangular because it is
+        negotiated inside a band the market sets rather than drawn from one: the spread is
+        what different buyers get, not what varies from year to year"
+
+  annual_support:
+    kind: derived
+    unit: USD/year
+    formula: capex * support_rate
+
+  staff_fte:
+    kind: input
+    unit: dimensionless
+    distribution: {triangular: {minimum: 0.5, likely: 1.0, maximum: 2.0}}
+    provenance:
+      kind: assumption
+      source: "engineers this fleet occupies, full-time equivalent. Triangular, and the shape
+        cannot express what actually happens: people are not divisible, so the real
+        distribution is lumpy in the way ch08 calls a regime change"
+
+  fully_loaded_salary:
+    kind: input
+    unit: USD/year
+    distribution: {lognormal: {p10: 115000, p90: 195000}}
+    provenance:
+      kind: assumption
+      source: "salary, employer costs, tooling and overhead. Lognormal because pay is
+        right-skewed and cannot go negative; the p90 is a senior engineer in an expensive city"
+
+  annual_staff_cost:
+    kind: derived
+    unit: USD/year
+    formula: staff_fte * fully_loaded_salary
+
+  annual_opex:
+    kind: derived
+    unit: USD/year
+    formula: annual_energy_cost + annual_licences + annual_support + annual_staff_cost
+
+  lifecycle_opex:
+    kind: derived
+    unit: USD
+    formula: annual_opex * horizon
+
+  tco:
+    kind: derived
+    unit: USD
+    label: five-year total cost of ownership
+    formula: capex + lifecycle_opex
+
+  # -- unit economics: two denominators for one fleet ------------------------------------------
+
+  seconds_per_year:
+    kind: input
+    unit: second/year
+    value: 31557600
+    provenance:
+      kind: fact
+      source: "by definition, 365.25 x 86,400"
+
+  average_request_rate:
+    kind: derived
+    unit: request/second
+    label: mean request rate over the horizon
+    note: >-
+      The mean of the day-one and horizon means: a straight line drawn under a curve that is not
+      straight, which understates the area. Stated rather than hidden, because a unit cost is
+      only as defensible as its denominator (ch17).
+    formula: (peak_request_rate_t0 / peak_to_mean + mean_request_rate) / 2
+
+  requests_over_horizon:
+    kind: derived
+    unit: request
+    formula: average_request_rate * seconds_per_year * horizon
+
+  cost_per_million_requests:
+    kind: derived
+    unit: USD/megarequest
+    label: cost per million requests
+    note: >-
+      The formula divides dollars by requests and the node is declared per million of them, so
+      the build supplies the factor. Two honest unit costs come out of this fleet, and they tell
+      different stories about the same money (ch17).
+    formula: tco / requests_over_horizon
+
+  average_stored:
+    kind: derived
+    unit: TB
+    note: "the mean of the day-one and horizon holdings, with the same understatement as above"
+    formula: (stored_data_t0 + stored_data) / 2
+
+  cost_per_stored_tb_month:
+    kind: derived
+    unit: USD/TB/month
+    label: cost per stored TB per month
+    note: >-
+      Divides by a horizon in years and is declared in months. Identical dimensions, a factor of
+      twelve apart; a check that compared only dimensions would publish a figure twelve times too
+      large and pass. sizing/units.py converts.
+    formula: tco / average_stored / horizon
+
+outputs:
+  # The sizing and the price, first: what a reader of ch12 and ch18 wants.
+  - hosts_recommended
+  - hosts
+  - tco
+  - cost_per_million_requests
+  - cost_per_stored_tb_month
+  - capex
+  - annual_opex
+  # The ceilings, and what each one is about.
+  - queueing_headroom
+  - failure_headroom
+  - cache_fill
+  - disk_fill
+  - scaling_loss
+  - coordination_headroom
+  # Part II's own figures. Terminal in the finished model, and outputs because a quantity the
+  # book quotes has to be one -- a node that feeds nothing and is reported nowhere is a leftover.
+  - utilisation
+  - residence_time
+  - waiting_time
+  - concurrency
+  - in_flight_unqueued
+  - optimism
+  - headroom_to_peak
+
+correlations:
+  - a: peak_request_rate_t0
+    b: service_demand
+    rho: 0.4
+    because: >-
+      The unhappy one. A busier service is usually a slower one per request — caches miss more,
+      locks are held longer, the garbage collector runs while somebody is waiting. Treating the
+      two as independent understates the tail of every figure in this model, and it understates
+      it exactly when the fleet is busiest.
+
+  - a: host_price
+    b: network_price_per_host
+    rho: 0.5
+    because: >-
+      Both are quoted by the same supply chain in the same quarter. A year when hosts are scarce
+      is usually a year when optics are, and treating them as independent narrows the interval
+      on capital cost by pretending one can save you from the other.

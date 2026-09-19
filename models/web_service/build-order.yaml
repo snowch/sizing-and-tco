@@ -1,0 +1,386 @@
+# How the web service model is built, one chapter at a time.
+#
+# The book introduces this model a few nodes at a time, and each chapter shows the file as it
+# stands at the end of it. Those files are *derived from model.yaml* rather than kept beside it:
+# a second copy would drift, and the book would go on describing a model the repository no
+# longer has. `bench/stages.py` builds them, `tests/test_stages.py` checks that every node is
+# introduced by some chapter, that a stage never takes anything away, and that the
+# classification flips exactly where the book says it does.
+#
+# `introduces` is the whole of it. Every node in model.yaml appears in exactly one stage, and a
+# stage whose nodes refer to something no earlier stage introduced will not load.
+#
+# The model becomes a sizing model in ch06, when the first ceiling arrives, and not in ch09 when
+# the measured constant does. Part II is about ceilings, and this is what that means for the file.
+
+# How a stage refers to the model in its one-line description.
+describe: web service model
+
+# Two inputs are plain numbers until ch04 gives them shapes. A stage before that declares the
+# value somebody would have chosen, and a provenance that says the distribution is coming — the
+# only edit a stage may make to a node, because any other would let it show something the
+# finished model does not say.
+certain_until:
+  annual_growth:
+    stage: uncertainty
+    value: 1.3
+    source: >-
+      ch02 - one growth rate, chosen rather than measured. ch04 replaces it with a distribution,
+      because a single number cannot say how sure anybody is of it.
+  peak_request_rate_t0:
+    stage: uncertainty
+    value: 8000
+    source: >-
+      ch02 - the busy hour, as one number. ch04 replaces it with a distribution, because an
+      engineer who gives you this figure is giving you a range and rounding it.
+
+stages:
+  - stage: demand
+    chapter: what_a_workload_is
+    title: What arrives, and what accumulates
+    classification: cost
+    outputs:
+      - peak_request_rate
+      - stored_data
+    introduces:
+      - peak_request_rate_t0
+      - stored_data_t0
+      - annual_growth
+      - horizon
+      - one_year
+      - horizon_periods
+      - peak_request_rate
+      - stored_data
+
+  - stage: provenance
+    chapter: where_the_numbers_come_from
+    title: The first number somebody else supplied
+    classification: cost
+    outputs:
+      - peak_request_rate
+      - stored_data
+      - ram_for_service
+    introduces:
+      - ram_per_host
+      - os_reserve
+      - ram_for_service
+
+  - stage: uncertainty
+    chapter: peak_mean_and_growth
+    title: The growth rate stops being a number
+    classification: cost
+    outputs:
+      - peak_request_rate
+      - stored_data
+      - ram_for_service
+      - mean_request_rate
+    introduces:
+      - peak_to_mean
+      - mean_request_rate
+
+  - stage: littles_law
+    chapter: littles_law
+    title: How busy the fleet is
+    classification: cost
+    outputs:
+      - stored_data
+      - ram_for_service
+      - mean_request_rate
+      - utilisation
+      - busy_cores
+      - in_flight_unqueued
+    introduces:
+      - service_demand
+      - hosts
+      - cores_per_host
+      - one_core
+      - one_request
+      - cores
+      - busy_cores
+      - utilisation
+      - service_seconds
+      - in_flight_unqueued
+
+  - stage: queueing
+    chapter: queueing_and_the_knee
+    title: The knee, and the first ceiling
+    classification: sizing
+    outputs:
+      - stored_data
+      - ram_for_service
+      - mean_request_rate
+      - utilisation
+      - in_flight_unqueued
+      - residence_time
+      - waiting_time
+      - concurrency
+      - queueing_headroom
+    introduces:
+      - utilisation_cap
+      - queueing_margin
+      - effective_utilisation
+      - residence_time
+      - waiting_time
+      - concurrency
+      - queueing_headroom
+
+  - stage: scaling
+    chapter: when_adding_servers_stops_helping
+    title: What more hosts buy
+    classification: sizing
+    outputs:
+      - stored_data
+      - ram_for_service
+      - mean_request_rate
+      - utilisation
+      - in_flight_unqueued
+      - residence_time
+      - waiting_time
+      - concurrency
+      - queueing_headroom
+      - achievable_throughput
+      - scaling_efficiency
+      - optimism
+      - peak_hosts
+      - headroom_to_peak
+      - scaling_loss
+      - coordination_headroom
+    introduces:
+      - one_host
+      - host_count
+      - single_host_throughput
+      - contention
+      - crosstalk
+      - linear_throughput
+      - achievable_throughput
+      - scaling_efficiency
+      - scaling_loss
+      - peak_hosts
+      - headroom_to_peak
+      - utilisation_including_coordination
+      - optimism
+      - coordination_headroom
+
+  - stage: regime
+    chapter: regime_changes
+    title: The working set outgrows memory
+    classification: sizing
+    outputs:
+      - mean_request_rate
+      - utilisation
+      - in_flight_unqueued
+      - residence_time
+      - waiting_time
+      - concurrency
+      - queueing_headroom
+      - achievable_throughput
+      - scaling_efficiency
+      - optimism
+      - peak_hosts
+      - headroom_to_peak
+      - scaling_loss
+      - coordination_headroom
+      - working_set
+      - fleet_ram
+      - cache_fill
+    introduces:
+      - hot_fraction
+      - working_set
+      - cache_margin
+      - fleet_ram
+      - cache_fill
+
+  - stage: capacity
+    chapter: capacity
+    title: A measured constant, and the disk chain
+    classification: sizing
+    outputs:
+      - mean_request_rate
+      - utilisation
+      - in_flight_unqueued
+      - residence_time
+      - waiting_time
+      - concurrency
+      - queueing_headroom
+      - achievable_throughput
+      - scaling_efficiency
+      - optimism
+      - peak_hosts
+      - headroom_to_peak
+      - scaling_loss
+      - coordination_headroom
+      - working_set
+      - fleet_ram
+      - cache_fill
+      - raw_data
+      - hosts_for_storage
+      - disk_fill
+    introduces:
+      - record_compression
+      - replication_factor
+      - index_overhead
+      - raw_per_stored
+      - raw_data
+      - disk_per_host
+      - disk_margin
+      - hosts_for_storage
+      - installed_disk
+      - disk_fill
+
+  - stage: binding
+    chapter: bandwidth_and_the_binding_constraint
+    title: Three chains, and the one that binds
+    classification: sizing
+    outputs:
+      - mean_request_rate
+      - utilisation
+      - in_flight_unqueued
+      - residence_time
+      - waiting_time
+      - concurrency
+      - queueing_headroom
+      - achievable_throughput
+      - scaling_efficiency
+      - optimism
+      - peak_hosts
+      - headroom_to_peak
+      - scaling_loss
+      - coordination_headroom
+      - working_set
+      - fleet_ram
+      - cache_fill
+      - raw_data
+      - hosts_for_storage
+      - disk_fill
+      - hosts_for_requests
+      - hosts_for_memory
+      - hosts_recommended
+      - hosts
+    introduces:
+      - hosts_for_requests
+      - hosts_for_memory
+      - hosts_recommended
+
+  - stage: headroom
+    chapter: headroom_and_failure_domains
+    title: A host dies at the busy hour
+    classification: sizing
+    outputs:
+      - mean_request_rate
+      - utilisation
+      - in_flight_unqueued
+      - residence_time
+      - waiting_time
+      - concurrency
+      - queueing_headroom
+      - achievable_throughput
+      - scaling_efficiency
+      - optimism
+      - peak_hosts
+      - headroom_to_peak
+      - scaling_loss
+      - coordination_headroom
+      - working_set
+      - fleet_ram
+      - cache_fill
+      - raw_data
+      - hosts_for_storage
+      - disk_fill
+      - hosts_for_requests
+      - hosts_for_memory
+      - hosts_recommended
+      - hosts
+      - utilisation_after_failure
+      - failure_headroom
+    introduces:
+      - hosts_after_failure
+      - utilisation_after_failure
+      - failure_headroom
+
+  - stage: sizing
+    chapter: the_sizing_model
+    title: The whole sizing, before a price
+    classification: sizing
+    outputs:
+      - mean_request_rate
+      - utilisation
+      - in_flight_unqueued
+      - residence_time
+      - waiting_time
+      - concurrency
+      - queueing_headroom
+      - achievable_throughput
+      - scaling_efficiency
+      - optimism
+      - peak_hosts
+      - headroom_to_peak
+      - scaling_loss
+      - coordination_headroom
+      - working_set
+      - fleet_ram
+      - cache_fill
+      - raw_data
+      - hosts_for_storage
+      - disk_fill
+      - hosts_for_requests
+      - hosts_for_memory
+      - hosts_recommended
+      - hosts
+      - utilisation_after_failure
+      - failure_headroom
+    introduces: []
+
+  - stage: cost
+    chapter: the_five_year_model
+    title: What the fleet costs
+    classification: sizing
+    outputs:
+      - hosts_recommended
+      - hosts
+      - tco
+      - cost_per_million_requests
+      - cost_per_stored_tb_month
+      - capex
+      - annual_opex
+      - queueing_headroom
+      - failure_headroom
+      - cache_fill
+      - disk_fill
+      - scaling_loss
+      - coordination_headroom
+      - utilisation
+      - residence_time
+      - waiting_time
+      - concurrency
+      - in_flight_unqueued
+      - optimism
+      - headroom_to_peak
+    introduces:
+      - host_price
+      - host_capex
+      - network_price_per_host
+      - network_capex
+      - capex
+      - host_power
+      - pue
+      - facility_power
+      - hours_per_year
+      - annual_energy
+      - electricity_price
+      - annual_energy_cost
+      - licence_per_core
+      - annual_licences
+      - support_rate
+      - annual_support
+      - staff_fte
+      - fully_loaded_salary
+      - annual_staff_cost
+      - annual_opex
+      - lifecycle_opex
+      - tco
+      - seconds_per_year
+      - average_request_rate
+      - requests_over_horizon
+      - cost_per_million_requests
+      - average_stored
+      - cost_per_stored_tb_month
