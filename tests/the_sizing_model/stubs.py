@@ -6,14 +6,14 @@ Both are about the moment a sizing model stops producing a number and starts pro
 from __future__ import annotations
 
 
-def nodes_for_risk(target_p_over: float) -> int:
+def hosts_for_risk(target_p_over: float) -> int:
     """Problem 12.1 - size to a risk, not to a point estimate.
 
-    Return the smallest number of nodes to purchase for which the storage model's capacity
-    ceiling is breached in at most ``target_p_over`` of its samples.
+    Return the smallest number of hosts for which the web service's queueing ceiling is breached
+    in at most ``target_p_over`` of its samples.
 
-    Use the model. Load ``models/storage_cluster/model.yaml``, override ``nodes_purchased``, and
-    read ``fill_level``'s ``p_over_limit`` out of the evaluation. Search - the relationship is
+    Use the model. Load ``models/web_service/model.yaml``, override ``hosts``, and read
+    ``queueing_headroom``'s ``p_over_limit`` out of the evaluation. Search - the relationship is
     monotonic, so a bisection is a few lines and is much faster than stepping, which matters
     because each evaluation samples the whole graph.
 
@@ -30,10 +30,10 @@ def nodes_for_risk(target_p_over: float) -> int:
 def cost_of_certainty(from_risk: float, to_risk: float) -> float:
     """Problem 12.2 - what a percentage point of risk costs.
 
-    Return the additional five-year total cost of moving from a design that breaches the capacity
-    ceiling in ``from_risk`` of samples to one that breaches it in ``to_risk``.
+    Return the additional five-year total cost of moving from a design that goes over the
+    queueing ceiling in ``from_risk`` of samples to one that goes over it in ``to_risk``.
 
-    Use your answer to 12.1 to find each node count, then read the median five-year total at each.
+    Use your answer to 12.1 to find each host count, then read the median five-year total at each.
 
     Then look at the shape of the answer as ``to_risk`` falls. The cost of removing risk is not
     linear in the risk removed - it climbs, steeply, and the last few percentage points cost more

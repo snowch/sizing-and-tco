@@ -8,29 +8,29 @@ import pytest
 
 from sizing.dsl import load_model, load_scenario
 from sizing.evaluate import evaluate
-from tests.the_sizing_model.stubs import cost_of_certainty, nodes_for_risk
+from tests.the_sizing_model.stubs import cost_of_certainty, hosts_for_risk
 
 
 @pytest.fixture(scope="module")
 def model():
-    return load_model("models/storage_cluster/model.yaml")
+    return load_model("models/web_service/model.yaml")
 
 
 @pytest.fixture(scope="module")
 def scenario():
-    return load_scenario("models/storage_cluster/scenarios/reference.yaml")
+    return load_scenario("models/web_service/scenarios/reference.yaml")
 
 
-def median_tco(model, scenario, nodes: int) -> float:
-    forced = replace(scenario, overrides={**scenario.overrides, "nodes_purchased": float(nodes)})
+def median_tco(model, scenario, hosts: int) -> float:
+    forced = replace(scenario, overrides={**scenario.overrides, "hosts": float(hosts)})
     return evaluate(model, forced).summaries["tco"]["p50"]
 
 
 @pytest.mark.problem
 def test_it_matches_the_two_designs_it_compares(model, scenario):
     mine = cost_of_certainty(0.30, 0.10)
-    expected = median_tco(model, scenario, nodes_for_risk(0.10)) - median_tco(
-        model, scenario, nodes_for_risk(0.30)
+    expected = median_tco(model, scenario, hosts_for_risk(0.10)) - median_tco(
+        model, scenario, hosts_for_risk(0.30)
     )
     assert mine == pytest.approx(expected, rel=0.02)
 
@@ -61,7 +61,7 @@ def test_the_last_points_cost_more_than_the_first():
 
 def test_the_reference_design_is_somewhere_in_the_interesting_range(model, scenario):
     """Scaffolding: the problem has room to move in both directions."""
-    reference = evaluate(model, scenario).ceilings["fill_level"]["p_over_limit"]
+    reference = evaluate(model, scenario).ceilings["queueing_headroom"]["p_over_limit"]
     assert 0.1 < reference < 0.6, (
         f"the reference design breaches in {reference:.0%} of samples; if that were near zero or "
         "near one there would be nothing to trade off"

@@ -241,7 +241,7 @@ What remains after it is reference material:
 [Appendix A](#appendix-a-dsl-reference) for the DSL,
 [Appendix B](#appendix-b-monte-carlo-module) for the sampler read end to end,
 [Appendix C](#appendix-c-distributions) for choosing a shape,
-[Appendix E](#appendix-e-storage-model) and [Appendix F](#appendix-f-observability-model) for the
+[Appendix E](#appendix-e-web-service-model) and [Appendix F](#appendix-f-observability-model) for the
 storage and observability models in full, and
 [Appendix G](#appendix-g-glossary) for the vocabulary, including the terms this book refuses.
 

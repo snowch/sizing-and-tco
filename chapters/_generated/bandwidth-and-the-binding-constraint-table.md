@@ -6,6 +6,9 @@
 | The working set decides it | 42% of samples |
 | The data on disk decides it | 19% of samples |
 | Two chains ask for the same count | 3% of samples |
+| Sized on the request chain alone, too small | 62% of samples |
+| Sized on the memory chain alone, too small | 56% of samples |
+| Sized on the disk chain alone, too small | 79% of samples |
 | Median gap between the winner and the runner-up | 14 hosts |
 | Gap at the 95th percentile | 81 hosts |
 | Median of the request chain alone | 50 hosts |

@@ -14,28 +14,28 @@ from tests.when_adding_servers_stops_helping.stubs import throughput
 @pytest.fixture(scope="module")
 def reference():
     values = point(
-        load_model("models/service_tier/model.yaml"),
-        load_scenario("models/service_tier/scenarios/reference.yaml"),
+        load_model("models/web_service/model.yaml"),
+        load_scenario("models/web_service/scenarios/reference.yaml"),
     )
-    return values["single_node_throughput"], values["contention"], values["crosstalk"]
+    return values["single_host_throughput"], values["contention"], values["crosstalk"]
 
 
 @pytest.mark.problem
 def test_it_reproduces_the_published_sweep(reference):
-    one_node, contention, crosstalk = reference
+    one_host, contention, crosstalk = reference
     for row in load_result("scaling-curve")["summary"]["curve"]:
-        mine = float(np.asarray(throughput(row["nodes"], one_node, contention, crosstalk)))
+        mine = float(np.asarray(throughput(row["hosts"], one_host, contention, crosstalk)))
         assert mine == pytest.approx(row["achievable_throughput"], rel=1e-9), (
-            f"at {row['nodes']:.0f} nodes the book's sweep says "
+            f"at {row['hosts']:.0f} hosts the book's sweep says "
             f"{row['achievable_throughput']:,.0f} and your formula says {mine:,.0f}"
         )
 
 
 @pytest.mark.problem
 def test_one_machine_is_just_one_machine(reference):
-    one_node, contention, crosstalk = reference
-    assert float(np.asarray(throughput(1, one_node, contention, crosstalk))) == pytest.approx(
-        one_node, rel=1e-12
+    one_host, contention, crosstalk = reference
+    assert float(np.asarray(throughput(1, one_host, contention, crosstalk))) == pytest.approx(
+        one_host, rel=1e-12
     ), "with one machine there is nobody to contend with and nobody to coordinate with"
 
 
@@ -69,5 +69,5 @@ def test_crosstalk_makes_it_turn_over():
 def test_the_published_sweep_really_does_turn_over():
     """Scaffolding: the figure the problem is graded against has the shape the chapter claims."""
     summary = load_result("scaling-curve")["summary"]
-    counts = [row["nodes"] for row in summary["curve"]]
-    assert summary["peak_at_nodes"] not in (counts[0], counts[-1])
+    counts = [row["hosts"] for row in summary["curve"]]
+    assert summary["peak_at_hosts"] not in (counts[0], counts[-1])

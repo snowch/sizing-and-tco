@@ -175,5 +175,5 @@ you have not found them yet, which is the more likely reading and the more expen
 front of the book for the reason this chapter has just demonstrated: the method is no use to you
 until you have a number you cannot defend, and can feel that you cannot defend it.
 
-[Appendix E](#appendix-e-storage-model) is this model in full, through every output the toolkit
+[Appendix E](#appendix-e-web-service-model) is this model in full, through every output the toolkit
 produces.

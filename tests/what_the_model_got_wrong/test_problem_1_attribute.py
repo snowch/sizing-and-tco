@@ -1,7 +1,7 @@
 """Problem 22.1 - attributing a failure to the inputs that were doing something unusual.
 
 Graded twice over. Against a synthetic case whose answer is arithmetic, so the test knows what
-the right answer is without anybody storing one; and against the book's own storage model, where
+the right answer is without anybody storing one; and against the book's own web service model, where
 the ranking has to match the attribution the build publishes.
 """
 
@@ -15,8 +15,8 @@ from sizing.dsl import load_model, load_scenario
 from sizing.evaluate import evaluate, sampled_inputs
 from tests.what_the_model_got_wrong.stubs import attribute
 
-STORAGE = "models/storage_cluster/model.yaml"
-REFERENCE = "models/storage_cluster/scenarios/reference.yaml"
+WEB_SERVICE = "models/web_service/model.yaml"
+REFERENCE = "models/web_service/scenarios/reference.yaml"
 
 
 def synthetic(n: int = 20_000) -> tuple[dict[str, np.ndarray], np.ndarray, float]:
@@ -32,14 +32,14 @@ def synthetic(n: int = 20_000) -> tuple[dict[str, np.ndarray], np.ndarray, float
     return {"guilty": guilty, "bystander": bystander}, guilty > 0.8, 0.8
 
 
-def storage_draws() -> tuple[dict[str, np.ndarray], np.ndarray]:
-    model, scenario = load_model(STORAGE), load_scenario(REFERENCE)
+def service_draws() -> tuple[dict[str, np.ndarray], np.ndarray]:
+    model, scenario = load_model(WEB_SERVICE), load_scenario(REFERENCE)
     result = evaluate(model, scenario)
-    failed = np.asarray(result.samples["fill_level"], dtype=float) > 1.0
+    failed = np.asarray(result.samples["queueing_headroom"], dtype=float) > 1.0
     draws = {
         name: np.asarray(result.samples[name], dtype=float)
         for name in sampled_inputs(model)
-        if name in result.samples and name in model.ancestors("fill_level")
+        if name in result.samples and name in model.ancestors("queueing_headroom")
     }
     return draws, failed
 
@@ -72,7 +72,7 @@ def test_an_input_that_never_moves_has_no_shift():
 
 @pytest.mark.problem
 def test_it_agrees_with_the_attribution_the_build_publishes():
-    draws, failed = storage_draws()
+    draws, failed = service_draws()
     ranked = attribute(draws, failed)
     published = load_result("postmortem")["summary"]["complete"]["rows"]
     assert [name for name, _ in ranked] == [row["input"] for row in published], (
@@ -92,9 +92,9 @@ def test_the_synthetic_case_has_a_cause_and_a_bystander():
     assert guilty == pytest.approx(expected, abs=0.02) and abs(bystander) < 0.05
 
 
-def test_the_storage_model_still_fails_often_enough_to_attribute():
-    _, failed = storage_draws()
+def test_the_web_service_still_fails_often_enough_to_attribute():
+    _, failed = service_draws()
     assert 0.2 < failed.mean() < 0.5, (
-        "the chapter is about a design that fails in a third of its futures. If this has moved, "
-        "the chapter's argument has moved with it."
+        "the chapter is about a design that fails in a good share of its futures. If this has "
+        "moved, the chapter's argument has moved with it."
     )

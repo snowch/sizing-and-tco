@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "9895cbb83056b11c",
+  "code_fingerprint": "eb1b8382abc92cb0",
   "code_sources": [
     "bench/run_curves.py"
   ],
@@ -7,8 +7,8 @@
     "coefficients_are_assumptions": "contention and crosstalk are fitted in practice, and in this model they are assumptions. The shape is the claim, not the position",
     "swept_and_predicted": "the peak found by sweeping and the peak the two coefficients predict are computed independently and must agree; if they ever stop agreeing, one of them is wrong"
   },
-  "generated_at": "2026-09-19T11:03:21+00:00",
-  "git_revision": "4ee81f5",
+  "generated_at": "2026-09-19T11:22:09+00:00",
+  "git_revision": "edc9f85",
   "kind": "measurement",
   "name": "scaling-curve",
   "produced_by": {

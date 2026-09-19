@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "9895cbb83056b11c",
+  "code_fingerprint": "eb1b8382abc92cb0",
   "code_sources": [
     "bench/run_curves.py"
   ],
@@ -7,8 +7,8 @@
     "the_largest_of_three": "the recommended count is the largest of three uncertain numbers, and the largest of three sits above where any one of them usually does. Sizing on the chain that wins most often is still sizing on one chain, and the other two are larger whenever it loses",
     "three_chains_only": "this model has three. A real service has more - a database's connection limit, a cache's eviction rate, the network between them - and each one is another chance for the answer to be set by something nobody was watching"
   },
-  "generated_at": "2026-09-19T11:03:22+00:00",
-  "git_revision": "4ee81f5",
+  "generated_at": "2026-09-19T11:22:10+00:00",
+  "git_revision": "edc9f85",
   "kind": "measurement",
   "name": "binding-constraint",
   "produced_by": {
@@ -35,6 +35,9 @@
     "memory_binds": 0.42149,
     "p95_gap": 81.0,
     "requests_binds": 0.36335,
+    "short_if_memory": 0.55902,
+    "short_if_requests": 0.62028,
+    "short_if_storage": 0.79242,
     "storage_binds": 0.18766,
     "tied": 0.02750000000000008
   },
@@ -48,6 +51,9 @@
     "memory_binds": "dimensionless",
     "p95_gap": "host",
     "requests_binds": "dimensionless",
+    "short_if_memory": "dimensionless",
+    "short_if_requests": "dimensionless",
+    "short_if_storage": "dimensionless",
     "storage_binds": "dimensionless",
     "tied": "dimensionless"
   }

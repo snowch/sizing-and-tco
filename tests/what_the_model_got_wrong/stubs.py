@@ -40,7 +40,7 @@ def was_anything_extreme(
     own ``percentile`` — that is, the share of failures for which there is no culprit to point at,
     because everything involved was merely somewhat above average.
 
-    Predict the answer before you run it, for the storage model, and write your prediction in a
+    Predict the answer before you run it, for the web service, and write your prediction in a
     comment. Most people predict something small.
 
     The number this returns is the one that makes a post-mortem honest. A failure in which nothing

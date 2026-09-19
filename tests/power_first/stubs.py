@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 
-def nodes_that_fit(budget_kw: float, watts_per_node: float, pue: float) -> int:
+def hosts_that_fit(budget_kw: float, watts_per_host: float, pue: float) -> int:
     """Problem 16.1 - sizing runs the other way when power is the constraint.
 
-    ``budget_kw`` is the power allocation, at the wall. ``watts_per_node`` is what one machine
+    ``budget_kw`` is the power allocation, at the wall. ``watts_per_host`` is what one machine
     draws. ``pue`` is the facility multiplier - what the building spends on cooling and losses for
     every watt the machines use.
 

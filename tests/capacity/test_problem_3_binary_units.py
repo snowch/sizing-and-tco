@@ -14,12 +14,12 @@ TIB_PER_TB = 1_000_000_000_000 / 2**40
 
 @pytest.fixture(scope="module")
 def base():
-    return load_model("models/storage_cluster/model.yaml")
+    return load_model("models/web_service/model.yaml")
 
 
 @pytest.fixture(scope="module")
 def scenario():
-    return load_scenario("models/storage_cluster/scenarios/reference.yaml")
+    return load_scenario("models/web_service/scenarios/reference.yaml")
 
 
 @pytest.mark.problem

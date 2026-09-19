@@ -100,7 +100,7 @@ To read it and run its models, nothing. [ch02](#what-a-workload-is) and
 change a number, and try to multiply a rate by a count of periods to see the build refuse it.
 That is this repository's own loader and unit checker, fetched as a Python runtime and run in
 your browser, so what the page does and what `make check` does cannot come apart. The finished
-models in [Appendix E](#appendix-e-storage-model) and
+models in [Appendix E](#appendix-e-web-service-model) and
 [Appendix F](#appendix-f-observability-model) have a slider against every input; those are
 evaluated by a small JavaScript version, which `tests/test_viewer.py` runs against Python's
 answers for every node of every model before it ships.

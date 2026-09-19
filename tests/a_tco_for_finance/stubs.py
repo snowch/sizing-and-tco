@@ -9,14 +9,14 @@ from __future__ import annotations
 def decision_table() -> list[dict]:
     """Problem 21.1 - two designs, priced, with their risk.
 
-    Return a list of rows, one per scenario of the storage model that represents a purchasable
-    design. Each row is a dictionary with exactly these keys:
+    Return a list of rows, one per scenario of the web service model that represents a
+    purchasable design. Each row is a dictionary with exactly these keys:
 
     ``"scenario"``     the scenario's name
-    ``"nodes"``        machines purchased
+    ``"hosts"``        hosts purchased
     ``"tco_p50"``      the median five-year total
     ``"tco_p95"``      the 95th percentile of it
-    ``"p_out_of_space"``  how often the capacity ceiling is breached
+    ``"p_over_the_knee"``  how often the queueing ceiling is breached
 
     Build it from the stamped model results rather than by re-running anything, so that the table
     somebody is shown is the table the build produced.

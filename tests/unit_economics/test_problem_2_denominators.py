@@ -18,14 +18,14 @@ KEYS = ("at_horizon", "at_start", "average_linear", "per_sample")
 @pytest.fixture(scope="module")
 def evaluated():
     return evaluate(
-        load_model("models/storage_cluster/model.yaml"),
-        load_scenario("models/storage_cluster/scenarios/reference.yaml"),
+        load_model("models/web_service/model.yaml"),
+        load_scenario("models/web_service/scenarios/reference.yaml"),
     )
 
 
 @pytest.fixture(scope="module")
 def samples(evaluated):
-    return evaluated.samples["usable_capacity"], evaluated.samples["tco"]
+    return evaluated.samples["stored_data"], evaluated.samples["tco"]
 
 
 @pytest.mark.problem
@@ -64,21 +64,18 @@ def test_they_are_not_close_together(samples):
     assert max(values) / min(values) > 1.5, (
         f"four defensible denominators giving {min(values):.2f} to {max(values):.2f} is the "
         "finding. If yours are all within a few per cent, check that at_start is using the "
-        "day-one capacity and not the horizon one."
+        "day-one figure and not the horizon one."
     )
 
 
 @pytest.mark.problem
 def test_starting_capacity_gives_the_most_expensive_answer(samples):
-    """A cluster bought for growth looks dreadful per terabyte on the day it is installed."""
+    """A fleet bought for growth looks dreadful per terabyte on the day it is installed."""
     answer = denominators(*samples)
     assert answer["at_start"] == max(answer.values())
 
 
 def test_the_two_capacities_really_do_differ(evaluated):
     """Scaffolding: the problem is about something."""
-    ratio = (
-        float(np.median(evaluated.samples["usable_capacity"]))
-        / evaluated.point["usable_capacity_t0"]
-    )
-    assert ratio > 1.5, f"capacity only grows by {ratio:.2f}x over the horizon"
+    ratio = float(np.median(evaluated.samples["stored_data"])) / evaluated.point["stored_data_t0"]
+    assert ratio > 1.5, f"what is held only grows by {ratio:.2f}x over the horizon"

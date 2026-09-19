@@ -191,6 +191,11 @@ def binding_constraint(write: bool = True) -> dict:
         name: float(np.mean(drawn > np.delete(stacked, index, axis=0).max(axis=0)))
         for index, (name, drawn) in enumerate(chains.items())
     }
+    # And the other way round: size on one chain alone, and how often is the fleet too small.
+    short = {
+        name: float(np.mean(np.delete(stacked, index, axis=0).max(axis=0) > drawn))
+        for index, (name, drawn) in enumerate(chains.items())
+    }
     ordered = np.sort(stacked, axis=0)
     gap = ordered[-1] - ordered[-2]
     return build_result(
@@ -208,6 +213,9 @@ def binding_constraint(write: bool = True) -> dict:
             "memory_binds": decides["memory"],
             "storage_binds": decides["storage"],
             "tied": 1.0 - sum(decides.values()),
+            "short_if_requests": short["requests"],
+            "short_if_memory": short["memory"],
+            "short_if_storage": short["storage"],
             "median_gap": float(np.median(gap)),
             "p95_gap": float(np.percentile(gap, 95)),
             # How wrong you would be to size on any one chain and forget the others - and how
@@ -223,6 +231,9 @@ def binding_constraint(write: bool = True) -> dict:
             "memory_binds": "dimensionless",
             "storage_binds": "dimensionless",
             "tied": "dimensionless",
+            "short_if_requests": "dimensionless",
+            "short_if_memory": "dimensionless",
+            "short_if_storage": "dimensionless",
             "median_gap": "host",
             "p95_gap": "host",
             "median_requests_hosts": "host",

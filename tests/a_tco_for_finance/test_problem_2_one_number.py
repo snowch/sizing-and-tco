@@ -20,7 +20,7 @@ def answer():
 
 @pytest.fixture(scope="module")
 def summary():
-    return load_result("storage_cluster-reference")["summary"]["nodes"]["tco"]["summary"]
+    return load_result("web_service-reference")["summary"]["nodes"]["tco"]["summary"]
 
 
 @pytest.mark.problem
@@ -73,6 +73,13 @@ def test_the_sentence_names_something(answer):
         "measured",
         "capacity",
         "risk",
+        "hosts",
+        "licence",
+        "licences",
+        "people",
+        "salary",
+        "knee",
+        "queue",
     }
     assert named & set(words), (
         f"the sentence has to name a specific thing - which percentile, which omission, which "

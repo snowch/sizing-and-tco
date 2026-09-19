@@ -9,14 +9,15 @@ from __future__ import annotations
 import numpy as np
 
 
-def price_from_storage_model() -> np.ndarray:
+def price_from_web_service() -> np.ndarray:
     """Problem 18.1 - carry a distribution across a model boundary.
 
-    The observability model buys storage at a price per usable terabyte per month. The storage
-    model computes exactly that quantity. Today the observability model declares it as an
-    assumption with its own invented distribution, which is a way of not joining them.
+    The observability model buys storage at a price per terabyte per month. The web service
+    model computes exactly that quantity for the records on its own fleet. Today the
+    observability model declares the price as an assumption with its own invented distribution,
+    which is a way of not joining them.
 
-    Return the storage model's ``cost_per_usable_tb_month`` as a **sample array** from its
+    Return the web service model's ``cost_per_stored_tb_month`` as a **sample array** from its
     reference scenario, so that the observability model could be driven by it.
 
     The whole array, not a summary. A point estimate handed across a seam is the failure mode this
@@ -30,7 +31,7 @@ def joined_interval(use_distribution: bool) -> tuple[float, float]:
 
     Evaluate the observability model's ``known_storage_cost`` twice.
 
-    With ``use_distribution`` true, drive ``storage_price`` from the storage model's actual
+    With ``use_distribution`` true, drive ``storage_price`` from the web service model's actual
     sampled unit cost - the array from 18.1.
 
     With it false, drive ``storage_price`` from a single number: the median of that same array.

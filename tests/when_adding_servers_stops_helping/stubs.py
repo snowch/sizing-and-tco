@@ -10,13 +10,13 @@ import numpy as np
 
 
 def throughput(
-    nodes: np.ndarray | float, one_node: float, contention: float, crosstalk: float
+    hosts: np.ndarray | float, one_host: float, contention: float, crosstalk: float
 ) -> np.ndarray:
     """Problem 7.1 - the scalability law, written out.
 
-    ``one_node`` is what a single machine achieves alone. ``contention`` is the fraction of the
+    ``one_host`` is what a single machine achieves alone. ``contention`` is the fraction of the
     work that cannot be done in parallel. ``crosstalk`` is the cost of machines having to agree
-    with each other. Return the throughput of ``nodes`` machines.
+    with each other. Return the throughput of ``hosts`` machines.
 
     Two terms in the denominator and they behave differently, which is the whole of the chapter:
 
@@ -37,14 +37,14 @@ def throughput(
 def fit(measurements: list[tuple[float, float]]) -> tuple[float, float, float]:
     """Problem 7.2 - the two coefficients, from measurements somebody could actually take.
 
-    ``measurements`` is a list of ``(nodes, throughput)`` pairs. You will usually have three: one
+    ``measurements`` is a list of ``(hosts, throughput)`` pairs. You will usually have three: one
     machine, the cluster you have, and the cluster you had before you grew it. That is not much
     data and it is what exists.
 
-    Return ``(one_node, contention, crosstalk)``.
+    Return ``(one_host, contention, crosstalk)``.
 
     Three unknowns, so three measurements determine them exactly - solve, do not optimise. With
-    the one-machine measurement in hand, ``one_node`` falls straight out, and the remaining two
+    the one-machine measurement in hand, ``one_host`` falls straight out, and the remaining two
     come from two linear equations once you rearrange the law to put the denominator on the other
     side. Write the rearrangement down before you code it; it is the part worth understanding.
 
@@ -54,12 +54,12 @@ def fit(measurements: list[tuple[float, float]]) -> tuple[float, float, float]:
     raise NotImplementedError("problem 7.2")
 
 
-def peak_nodes(contention: float, crosstalk: float) -> float:
+def peak_hosts(contention: float, crosstalk: float) -> float:
     """Problem 7.3 - where adding machines stops helping.
 
-    Return the node count at which throughput is greatest, from the two coefficients alone.
+    Return the host count at which throughput is greatest, from the two coefficients alone.
 
-    Differentiate your answer to 7.1 with respect to the node count and set it to zero. It comes
+    Differentiate your answer to 7.1 with respect to the host count and set it to zero. It comes
     out as a square root and it is worth the five minutes: it says the peak is a property of the
     *software* - of how much it serialises and how much it coordinates - and that no budget moves
     it.

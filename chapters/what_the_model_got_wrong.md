@@ -194,7 +194,7 @@ attribution name three innocent inputs without hesitating.
 [ch03](#where-the-numbers-come-from) is the target a real post-mortem belongs to, and the rules
 that make somebody's observation of their own system worth anything to anybody else.
 
-[Appendix E](#appendix-e-storage-model) is the model this chapter convicted, in full.
+[Appendix E](#appendix-e-web-service-model) is the model this chapter convicted, in full.
 
 And the question the book opened with, which it is worth answering out loud now that there are
 twenty-two chapters behind it. **How big** it answered, in Part III, with a chain of multiplications

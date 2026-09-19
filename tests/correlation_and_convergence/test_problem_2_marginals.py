@@ -13,7 +13,7 @@ from sizing.dsl import load_model, load_scenario
 from sizing.evaluate import evaluate
 from tests.correlation_and_convergence.stubs import correlated_model
 
-A, B, OUTPUT = "drive_price", "chassis_price", "capex"
+A, B, OUTPUT = "host_price", "network_price_per_host", "capex"
 RHO = 0.85
 
 
@@ -23,12 +23,12 @@ def model():
 
     # Start from a model with no correlations at all, so the problem is about the one the reader
     # adds rather than about the ones the book already declared.
-    return replace(load_model("models/storage_cluster/model.yaml"), correlations=())
+    return replace(load_model("models/web_service/model.yaml"), correlations=())
 
 
 @pytest.fixture(scope="module")
 def scenario():
-    return load_scenario("models/storage_cluster/scenarios/reference.yaml")
+    return load_scenario("models/web_service/scenarios/reference.yaml")
 
 
 @pytest.mark.problem

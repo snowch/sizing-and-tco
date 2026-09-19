@@ -8,8 +8,8 @@ from sizing.dsl import load_model, load_scenario
 from sizing.evaluate import evaluate, point
 from tests.capacity.stubs import raw_for
 
-MODEL = "models/storage_cluster/model.yaml"
-SCENARIO = "models/storage_cluster/scenarios/reference.yaml"
+MODEL = "models/web_service/model.yaml"
+SCENARIO = "models/web_service/scenarios/reference.yaml"
 
 
 @pytest.fixture(scope="module")
@@ -20,13 +20,13 @@ def values():
 @pytest.mark.problem
 def test_it_agrees_with_the_model(values):
     mine = raw_for(
-        values["usable_capacity"],
+        values["stored_data"],
         values["replication_factor"],
-        values["object_compression"],
-        values["metadata_overhead"],
+        values["record_compression"],
+        values["index_overhead"],
     )
-    assert mine == pytest.approx(values["raw_capacity"], rel=1e-9), (
-        f"the model makes {values['raw_capacity']:,.0f} TB of it and you make {mine:,.0f}. If you "
+    assert mine == pytest.approx(values["raw_data"], rel=1e-9), (
+        f"the model makes {values['raw_data']:,.0f} TB of it and you make {mine:,.0f}. If you "
         "are out by roughly the square of the compression ratio, the division is upside down."
     )
 
@@ -52,20 +52,20 @@ def test_it_holds_across_the_whole_sampled_range():
     import numpy as np
 
     mine = raw_for(
-        evaluation.samples["usable_capacity"],
+        evaluation.samples["stored_data"],
         evaluation.point["replication_factor"],
-        evaluation.samples["object_compression"],
-        evaluation.samples["metadata_overhead"],
+        evaluation.samples["record_compression"],
+        evaluation.samples["index_overhead"],
     )
-    assert np.allclose(mine, evaluation.samples["raw_capacity"], rtol=1e-9)
+    assert np.allclose(mine, evaluation.samples["raw_data"], rtol=1e-9)
 
 
 def test_the_model_still_has_the_four_terms(values):
     """Scaffolding: the chain the problem is about has not been restructured."""
     for name in (
-        "usable_capacity",
+        "stored_data",
         "replication_factor",
-        "object_compression",
-        "metadata_overhead",
+        "record_compression",
+        "index_overhead",
     ):
         assert name in values

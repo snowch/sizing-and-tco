@@ -6,13 +6,13 @@ import pytest
 
 from bench.stamp import load_result
 
-REQUIRED = {"scenario", "nodes", "tco_p50", "tco_p95", "p_out_of_space"}
-#: The storage-model scenarios that represent something somebody could buy.
+REQUIRED = {"scenario", "hosts", "tco_p50", "tco_p95", "p_over_the_knee"}
+#: The web service scenarios that represent something somebody could buy.
 DESIGNS = ("reference", "sized_for_growth", "power_first")
 
 
 def stamped(scenario: str) -> dict:
-    return load_result(f"storage_cluster-{scenario}")["summary"]
+    return load_result(f"web_service-{scenario}")["summary"]
 
 
 @pytest.fixture(scope="module")
@@ -43,21 +43,21 @@ def test_the_columns_are_exactly_what_the_decision_needs(table):
 def test_every_figure_came_from_the_build(table, scenario):
     row = next(r for r in table if r["scenario"] == scenario)
     payload = stamped(scenario)
-    assert row["nodes"] == pytest.approx(payload["nodes"]["nodes_purchased"]["point"])
+    assert row["hosts"] == pytest.approx(payload["nodes"]["hosts"]["point"])
     assert row["tco_p50"] == pytest.approx(payload["nodes"]["tco"]["summary"]["p50"], rel=1e-9)
     assert row["tco_p95"] == pytest.approx(payload["nodes"]["tco"]["summary"]["p95"], rel=1e-9)
-    assert row["p_out_of_space"] == pytest.approx(
-        payload["nodes"]["fill_level"]["ceiling"]["p_over_limit"], rel=1e-9
+    assert row["p_over_the_knee"] == pytest.approx(
+        payload["nodes"]["queueing_headroom"]["ceiling"]["p_over_limit"], rel=1e-9
     )
 
 
 @pytest.mark.problem
 def test_more_machines_costs_more_and_risks_less(table):
     """A table where those two did not trade off would not be a decision."""
-    ordered = sorted(table, key=lambda row: row["nodes"])
+    ordered = sorted(table, key=lambda row: row["hosts"])
     assert [r["tco_p50"] for r in ordered] == sorted(r["tco_p50"] for r in ordered)
-    assert [r["p_out_of_space"] for r in ordered] == sorted(
-        (r["p_out_of_space"] for r in ordered), reverse=True
+    assert [r["p_over_the_knee"] for r in ordered] == sorted(
+        (r["p_over_the_knee"] for r in ordered), reverse=True
     )
 
 
@@ -66,5 +66,5 @@ def test_the_three_designs_are_meaningfully_different():
 
     If the options ever converged, the chapter would be about a formality rather than a choice.
     """
-    risks = [stamped(s)["nodes"]["fill_level"]["ceiling"]["p_over_limit"] for s in DESIGNS]
+    risks = [stamped(s)["nodes"]["queueing_headroom"]["ceiling"]["p_over_limit"] for s in DESIGNS]
     assert max(risks) - min(risks) > 0.2, risks

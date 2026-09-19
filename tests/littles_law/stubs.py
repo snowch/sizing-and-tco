@@ -14,7 +14,7 @@ def concurrency(arrival_rate: float, residence_time: float) -> float:
     seconds, from arriving to leaving - queueing included. Return how many are in the system at
     any moment.
 
-    One multiplication. The test checks it against the service tier model's own node, which is
+    One multiplication. The test checks it against the web service model's own node, which is
     computed by a different route through the graph, so agreeing is evidence rather than
     tautology.
 
