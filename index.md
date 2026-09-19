@@ -34,6 +34,14 @@ a unit, and a note saying where its value came from. Each computed quantity gets
 referring to the others by name. Nothing more exotic than that: the file is the model, and you can
 read the whole of one in a sitting.
 
+Why a file, and not the spreadsheet you already have: a cell holds a value and nothing about it.
+Not its unit, so the wrong two cells multiplied give a number that looks like any other. Not where
+it came from, so a vendor's claim and a measurement sit in one column looking the same. Not how
+sure anybody was of it, so the spread is gone by the first multiplication. Everything this book
+does rests on those three things being written down beside the number, and a file is where they
+can be. It also diffs and reviews like code. [ch02](#what-a-workload-is) writes the first one, at
+four lines a quantity, and the build refuses a node that leaves its unit or its source out.
+
 It starts in [ch02 · What a workload is](#what-a-workload-is) as what arrives and what
 accumulates, and already refuses a formula whose units do not work out — the error a spreadsheet
 accepts without comment, and the one that sizes a retention store from a rate.
