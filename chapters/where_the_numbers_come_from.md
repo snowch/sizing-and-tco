@@ -116,14 +116,14 @@ The method is what transfers. The number does not.
 
 | Target | What it is | Who can check it |
 |---|---|---|
-| `corpus` | a codec or an encoder over a declared body of data | anybody, and CI does, on every push |
+| `corpus` | a codec or an encoder over a declared body of data | anybody, and the build does, on every change |
 | `model` | a model file evaluated and sampled | anybody with the repository |
 | `rig` | a throughput or a latency, on the declared reference machine | whoever has that machine |
 | `estate` | an observation of a system somebody runs | **nobody** |
 
 The first two are cheap and the book is full of them. The third is refused on any machine that is
-not the declared one, because a throughput measured on a shared CI runner is indistinguishable
-from a real one once it is a number in a table.
+not the declared one, because a throughput measured on a shared build machine is
+indistinguishable from a real one once it is a number in a table.
 
 The fourth cannot be checked by anybody at all.
 
@@ -166,9 +166,9 @@ copy-paste, and every organisation has a capacity plan built on one.
 ```{include} _generated/where-the-numbers-come-from-rig.md
 ```
 
-The machine this was written on refuses to produce that figure. So does CI. Not by convention —
-`bench.stamp.require_rig` compares the running processor and core count against a declared
-reference machine and raises otherwise.
+The machine this was written on refuses to produce that figure. So does the build. Not by
+convention: the toolkit compares the running processor and core count against the declared
+reference machine and refuses otherwise.
 
 An environment variable would have been easier and would have let anybody stamp a laptop timing as
 a reference measurement by typing four characters. A target you can set by accident is not worth

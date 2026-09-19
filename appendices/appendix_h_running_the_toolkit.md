@@ -17,7 +17,18 @@ short_title: "Appendix H · Running the toolkit"
 
 Nothing in this book needs to be run to be read. This page is for the point where you want to
 check a figure rather than trust it, or run a problem, or point the toolkit at your own numbers.
-The install is in [the introduction](#preface), under *What you will need*.
+
+## Installing it
+
+The problems need Python and nothing else. Building the book needs Node as well, for the parser
+that resolves its cross-references:
+
+```bash
+git clone https://github.com/snowch/sizing-and-tco.git
+cd sizing-and-tco
+python3 -m pip install -r requirements.txt -r requirements-dev.txt
+npm install -g "mystmd@$(node -p "require('./package.json').devDependencies.mystmd")"
+```
 
 ## What the commands do
 
@@ -53,6 +64,12 @@ python3 -m bench.run_corpus --check
 The first prints the corpus, the codec and the implementation the figure belongs to. The second
 re-derives it from scratch on your machine and fails if it has moved. That is the whole contract:
 a number, what produced it, and a command that fails when the two have parted company.
+
+The pages you are reading were built from this commit, which is where to point a checkout when a
+figure and the repository disagree:
+
+```{include} ../chapters/_generated/build.md
+```
 
 Your laptop cannot take a timing on the reference machine, and the toolkit will not pretend it
 can: `verify-setup.py` says so, and every figure that would need such a timing renders as a box

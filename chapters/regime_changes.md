@@ -129,8 +129,8 @@ A sizing model has thresholds in it, and past a threshold the structure itself c
 inputs of a model that has stopped applying and you measure, very precisely, the uncertainty in a
 number that has stopped describing anything.
 
-So a model with a `ceiling` in it is classified as a sizing model, and `scripts/verify-models.py`
-refuses one that declares a limit with no margin. The distinction is not taxonomy. It separates a
+So a model with a `ceiling` in it is classified as a sizing model, and the build refuses one that
+declares a limit with no margin. The distinction is not taxonomy. It separates a
 model whose uncertainty you can quantify from a model whose *applicability* you have to bound.
 
 ## What this cannot tell you

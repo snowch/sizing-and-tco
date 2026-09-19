@@ -427,9 +427,14 @@ def test_every_directive_is_closed(path):
 
 @pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
 def test_a_written_page_includes_generated_fragments_rather_than_numbers(path):
-    """A finished page shows figures, and figures come from the build."""
+    """A finished page shows figures, and figures come from the build.
+
+    The introduction is not held to this. It states no numbers -- its first figure is ch01's --
+    and the one fragment it used to include was the commit line, which is in Appendix H now,
+    beside the instructions for checking a figure against the repository.
+    """
     body = path.read_text()
-    if path.name == "index.md" or path.parent.name in ("chapters", "appendices"):
+    if path.parent.name in ("chapters", "appendices"):
         assert "_generated/" in body or "_figures/" in body, (
             f"{path.name} is written but includes no generated figure. Every number in this book "
             "comes from a stamped result."

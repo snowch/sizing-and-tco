@@ -184,7 +184,7 @@ The build has already decided what kind of model this is, too:
 ```{include} _generated/what-a-workload-is-stage-shape.md
 ```
 
-The last row is not a label anybody typed. `sizing/dsl.py` works it out from what is in the file:
+The last row is not a label anybody typed. The loader works it out from what is in the file:
 nothing here has a measured constant or a declared limit in it, so what you have is a **cost
 model** — a structure nobody doubts, with uncertain numbers in it. It does not stay one. What
 changes it is something added to the file rather than a chapter announcing it, which is why
