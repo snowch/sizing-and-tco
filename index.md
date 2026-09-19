@@ -72,16 +72,10 @@ Everything this book does depends on those three things being written down besid
 file is where they can be. A file also diffs and reviews like code.
 
 The toolkit checks the units of every formula. A rate times a duration is an amount, so
-`requests per second × seconds = requests`. Multiply the rate by a plain number instead, such as
-the number of years rather than the years themselves, and the answer is still a rate. A
-spreadsheet accepts that calculation without complaining. The toolkit refuses it, because the
-node says it holds requests and the formula does not produce them. Here is the check, drawn: in
-the top row the seconds cancel; in the bottom row nothing does.
-
-```{image} chapters/_figures/what-a-workload-is-units.svg
-:alt: A rate times a duration is an amount; a rate times a plain number is still a rate
-:width: 100%
-```
+`requests per second × seconds = requests`. A rate times a plain number is still a rate, and a
+formula that calls it an amount is refused, where a spreadsheet would accept it without
+complaint. [ch02](#what-a-workload-is) teaches the rule, and [Appendix D](#appendix-d-units)
+works through a page of such combinations, with the toolkit computing every result.
 
 [ch02](#what-a-workload-is) writes the first nodes of the model. Each number in the file carries
 a unit and a line saying where it came from, and the **build**, the set of checks that turns

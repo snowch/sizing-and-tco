@@ -24,6 +24,34 @@ short_title: "Appendix D · Units"
 Multiplying two quantities that should never have met is the reason this book has a build step
 at all.
 
+## How units combine and cancel
+
+One rule does all of the work. A unit in the denominator of one quantity cancels the same unit
+in the numerator of another, and nothing else cancels. Requests per second times seconds is
+requests, because the seconds cancel. Requests per second times a plain number is still requests
+per second, because a plain number has nothing to cancel with.
+
+The table applies that rule to the combinations a sizing model is made of. Every result in it
+was worked out by the registry the build uses, not typed, so the page cannot show a combination
+the toolkit would disagree with.
+
+```{include} ../chapters/_generated/appendix-d-units-algebra.md
+```
+
+Two rows are the ones to carry. A rate times a duration is an amount. A rate times a plain number
+is still a rate, and a formula that treats it as an amount is the mistake the introduction shows
+the toolkit refusing.
+
+A node declares the unit it means to produce. The build works out what its formula produces and
+does one of three things with the two:
+
+```{include} ../chapters/_generated/appendix-d-units-verdicts.md
+```
+
+Accepted, converted or refused. The first two rows are the introduction's example and its
+mistake. The converted rows are what the rest of this appendix is about: the same kind of
+quantity in a different size, which is the error that looks right.
+
 ## Counting units are units
 
 ```{literalinclude} ../sizing/units.py
