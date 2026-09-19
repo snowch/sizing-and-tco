@@ -126,7 +126,7 @@ something needs to be, or what it will cost, and who wants to give an answer the
 defend a year later.
 
 You should be comfortable with code and with arithmetic. You are assumed to know **nothing**
-about statistics. The book needs six statistical words:
+about statistics. The book uses six statistical words:
 
 - distribution;
 - sample;
@@ -135,9 +135,13 @@ about statistics. The book needs six statistical words:
 - correlation; and
 - convergence.
 
-[ch13](#monte-carlo) and [ch14](#correlation-and-convergence) define them properly. Each one
-arrives only when a model has just raised a question that needs it. Where a statistical term has
-a plain-English equivalent, the book uses the plain one first and names the term second.
+Each is used in plain English first and named second, in the chapter where a model first needs
+it. [ch01](#point-estimates) already needs one. A model run many times over gives a spread of
+answers, ch01 shows that spread, and the band that holds nine answers in ten is an **interval**.
+That is all ch01 uses. Part IV, in [ch13](#monte-carlo) and
+[ch14](#correlation-and-convergence), builds the method that produces the spread and defines all
+six properly. Until then you take the spread on trust, which is a fair trade: the method is not
+useful until you have a number you cannot defend.
 
 No vendor is named anywhere in this book, and no product is recommended. Two models carry the
 book. Both are written so that the structure is the point and the numbers are yours to replace:
