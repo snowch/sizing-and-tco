@@ -12,8 +12,8 @@ How far does a system scale, and how would you find out from the two measurement
 have?
 
 [ch06](#queueing-and-the-knee) ended with a fleet too close to its margin and an obvious remedy:
-buy more machines. This chapter is about how much less that buys than the arithmetic promises,
-and about the count past which each new machine takes capacity away.
+buy more machines. This chapter is about how much less that buys than the arithmetic promises. It
+is also about the count past which each new machine takes capacity away.
 
 ## The material
 
@@ -21,15 +21,15 @@ and about the count past which each new machine takes capacity away.
 
 Machines do not simply add up, and there are two separate reasons.
 
-**Contention.** Some fraction of the work cannot be done in parallel — a lock, a single writer, a
+**Contention.** Some fraction of the work cannot be done in parallel: a lock, a single writer, a
 shared queue, a coordinator. That fraction takes a fixed share of every machine you add, so the
-cost grows with the *count* and the curve flattens. This is the famous one: Amdahl's argument, and
-the ceiling it implies.
+cost grows with the *count* of machines, and the curve flattens. This is the famous one: Amdahl's
+argument, and the ceiling it implies.
 
 **Crosstalk.** Machines have to agree with each other. Every new one has to be told about all the
-others, so the cost grows with the number of *pairs* rather than the number of machines.
+others, so the cost grows with the number of *pairs*, not the number of machines.
 
-Crosstalk does something contention never does. Contention flattens the curve; crosstalk **turns
+Crosstalk does something contention never does. Contention flattens the curve. Crosstalk **turns
 it over**. Past some count, the next machine costs more in agreement than it brings in work, and
 the total goes down.
 
@@ -49,19 +49,19 @@ Both terms together are the universal scalability law @gunther2007usl:
 ```
 
 The dashed line is what a budget assumes. The solid one is what the machines do. They separate
-almost immediately, and the dashed line leaves the top of the figure while the real curve is still
-climbing slowly — and then stops climbing.
+almost immediately. The dashed line leaves the top of the figure while the real curve is still
+climbing slowly, and then the real curve stops climbing.
 
 ```{include} _generated/when-adding-servers-stops-helping-table.md
 ```
 
 Read the last column: what each machine is worth. It falls the whole way down. By the peak, a
-machine contributes a fraction of what the first one did, and every one after that contributes
+machine contributes a fraction of what the first one did. Every machine after that contributes
 less than nothing.
 
-The last row checks the peak twice. One comes from sweeping the model, the other from its two
-coefficients; the calculations are independent, and they agree. That agreement is why the closed
-form in problem 7.3 is worth having.
+The last row checks the peak twice. One figure comes from sweeping the model, the other from its
+two coefficients. The calculations are independent, and they agree. That agreement is why the
+closed form in problem 7.3 is worth having.
 
 ### What doubling actually buys
 
@@ -71,14 +71,14 @@ form in problem 7.3 is worth having.
 Twice the hosts. Read down.
 
 Utilisation halves, exactly as arithmetic says it should. Time spent queueing falls to about a
-quarter, because [ch06](#queueing-and-the-knee)'s division is not linear and the non-linearity
-runs in your favour in this direction. The share of futures over the knee falls by more still.
+quarter, because [ch06](#queueing-and-the-knee)'s division is not linear, and in this direction
+the non-linearity runs in your favour. The share of futures over the knee falls by more still.
 
 Throughput goes up by about a third, for a doubling of the fleet. Efficiency falls by about a
-third at the same time, which is the same fact counted from the other end.
+third at the same time. That is the same fact, counted from the other end.
 
-So: doubling a fleet is an excellent way to fix latency and a poor way to buy capacity. Those are
-different purchases, they are usually conflated, and the model tells them apart.
+So doubling a fleet is an excellent way to fix latency and a poor way to buy capacity. Those are
+different purchases. They are usually conflated, and the model tells them apart.
 
 Both are in the graph, and so is the peak. Drag *crosstalk* and watch the peak move while the
 fleet you have stays where it is.
@@ -104,7 +104,7 @@ The model carries both numbers, side by side, on purpose:
 :end-before: optimism:
 ```
 
-At the reference point the two differ by half again. The queueing view is not wrong; it is
+At the reference point the two differ by half again. The queueing view is not wrong. It is
 optimistic, by a factor nobody notices until they measure the fleet at two sizes and find the
 second one disappointing.
 
@@ -118,28 +118,28 @@ number, and no host count in the file moves it.
 
 ### Fitting the coefficients from what you have
 
-Three unknowns, so three measurements determine them exactly. You will usually have: one machine
-on a bench, the fleet you are running, and the fleet you were running before you grew it.
-That is not much data and it is what exists.
+Three unknowns, so three measurements determine them exactly. You will usually have three: one
+machine on a bench, the fleet you are running, and the fleet you were running before you grew it.
+That is not much data, and it is what exists.
 
 Problem 7.2 is the algebra, and it is worth doing by hand once. Rearranging the law into a
-straight line shows why three points are the minimum and why they must be at *different* counts:
-two measurements at the same size determine nothing at all.
+straight line shows why three points are the minimum, and why they must be at *different* counts.
+Two measurements at the same size determine nothing at all.
 
 Then notice what you have done. You have extended a two-parameter curve out to hundreds of
 machines from three points clustered at the low end, and you are about to spend money on the
-extrapolation. The coefficients in this book's model are assumptions and say so in their
+extrapolation. The coefficients in this book's model are assumptions, and they say so in their
 provenance. **The shape is the claim. The position of the peak is a guess.**
 
 ## What this cannot tell you
 
-**Where your peak is.** The coefficients here are assumptions, the peak follows from them, and the
-model's own interval on the peak spans more than a factor of three. Fitting them from three
-measurements gives numbers with the same problem and a false air of precision. What transfers is
-that a peak exists and is a property of the software.
+**Where your peak is.** The coefficients here are assumptions, and the peak follows from them.
+The model's own interval on the peak spans more than a factor of three. Fitting the coefficients
+from three measurements gives numbers with the same problem and a false air of precision. What
+transfers is that a peak exists, and that it is a property of the software.
 
 **Whether the coefficients are stable.** They are fitted from a system doing one kind of work at
-one size. A different workload mix has a different serial fraction; a version that adds a
+one size. A different workload mix has a different serial fraction. A version that adds a
 coordination round has different crosstalk. A curve fitted last year describes last year's
 software.
 
@@ -148,12 +148,12 @@ which lock to remove, and removing the lock changes the coefficients in a way on
 measurement can establish.
 
 **Anything about failure.** Every figure above is a healthy fleet. Machines coordinating while one
-of them is unreachable behave differently and worse, and this model has no term for it —
+of them is unreachable behave differently and worse, and this model has no term for it.
 [ch11](#headroom-and-failure-domains) is where that gets a margin rather than a model.
 
 **Whether the fleet is even the constraint.** The whole chapter assumes throughput is what you are
-buying. If the system is bounded by something else — a database, a licence, a single-threaded
-step — the curve above is a description of a queue in front of the real problem.
+buying. If the system is bounded by something else, a database, a licence or a single-threaded
+step, the curve above describes a queue in front of the real problem.
 
 ## Problems
 
@@ -193,7 +193,7 @@ contention for something shared, or the cost of machines agreeing with each othe
 neither, you have found a third mechanism, which is more interesting than the chapter.
 
 A good answer names the tier, the change in machine count, the change in throughput, and which
-mechanism it was. If nobody can remember a case, that is an answer too — it means you have never
+mechanism it was. If nobody can remember a case, that is an answer too. It means you have never
 been near the peak, and the coefficients in this chapter are not about you.
 
 ## Where to go next
