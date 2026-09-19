@@ -146,9 +146,11 @@ book. Both are written so that the structure is the point and the numbers are yo
 - an observability platform, which has a hole in it where a measurement should be.
 
 Every chapter ends with problems. Most of them are tests you run: they fail until you have solved
-them, and the answer is nowhere in the repository. Some have no test, because they are about a
-system you actually run and nothing can mark your judgement. Those say what a good answer
-contains and what would prove it wrong. Every chapter ends with one of those.
+them, and the answer is nowhere in the repository.
+
+The last problem in every chapter is different. It asks about a system you run, and no test can
+check your answer, because only you have the system. Instead, the problem tells you what a good
+answer looks like, and what would show that yours is wrong.
 
 ## What you need
 
