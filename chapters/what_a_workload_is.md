@@ -168,7 +168,9 @@ make models
 
 That parses each file, refuses any formula whose units do not work out, evaluates the graph in
 dependency order, and writes what it found to `bench/results/` — which is where every figure in
-this book comes from, including the next one. For the eight nodes above:
+this book comes from, including the next one. Every table about the service is computed from this
+file as the chapter you are in has left it, so you can reproduce any of them from what you have
+already read. For the eight nodes above:
 
 ```{include} _generated/what-a-workload-is-stage.md
 ```
