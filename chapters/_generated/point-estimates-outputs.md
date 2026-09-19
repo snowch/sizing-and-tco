@@ -5,4 +5,4 @@
 | hosts the model recommends | 54 | 3 to 1,481 | host |
 | five-year total cost of ownership | $2,002,083 | $837,022 to $5,966,168 | USD |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the finished model, which ch02 starts building from nothing*

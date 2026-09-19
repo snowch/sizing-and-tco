@@ -153,7 +153,9 @@ def _where(name: str) -> str:
     return f"{REPOSITORY}/bench/results/{name}.json"
 
 
-def source(name: str | None, *also: str, computed_from: str | None = None) -> str:
+def source(
+    name: str | None, *also: str, computed_from: str | None = None, note: str | None = None
+) -> str:
     """One line under every figure: where it came from, as a link.
 
     The name carries the two things worth knowing without following it: `web_service-reference`
@@ -173,8 +175,10 @@ def source(name: str | None, *also: str, computed_from: str | None = None) -> st
 
     if load_result(name).get("kind") == "model":
         # Said plainly, because on a model result *Source* now names something a reader can do
-        # rather than something they can download.
-        parts.append("every input on a slider")
+        # rather than something they can download. A figure may say something else instead:
+        # ch01's table is computed from the finished model, and a reader on page one who follows
+        # the link should be told that is what they are about to see.
+        parts.append(note or "every input on a slider")
     else:
         # What a measurement is of, for the results where that is the point.
         parts += _what_it_measured(name)
