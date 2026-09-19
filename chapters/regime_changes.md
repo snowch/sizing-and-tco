@@ -47,11 +47,12 @@ data it was fitted to was clean.
 left of the system, so it goes from flat to vertical with no warning in between. A multiplicative
 model of latency says load times some constant, and that constant does not exist.
 
-**Rebuild under failure.** A cluster that loses a node has to put that node's data somewhere,
-using bandwidth it was using for something else, for as long as the rebuild takes. During that
-window the system is a different system: less capacity, less bandwidth, and less tolerance for a
-second failure. No term in a capacity chain represents it — which is why
-[ch11](#headroom-and-failure-domains) handles it with a reserved margin rather than a formula.
+**A host lost at the busy hour.** A fleet that loses a host does not lose one host's worth of
+capacity and carry on. That host's share of the requests lands on the survivors, every one of
+them moves up [ch06](#queueing-and-the-knee)'s curve at once, and a fleet that was comfortably
+under the knee can be over it with nothing else having changed. The survivors' utilisation is one
+line of arithmetic; what happens to them past the knee is not arithmetic at all — which is why
+[ch11](#headroom-and-failure-domains) gives it a margin rather than a formula.
 
 **Cardinality explosion.** A label multiplies every series that carries it. Add one with a
 thousand values and the series count is multiplied, not incremented. A chain of multiplications
@@ -74,6 +75,31 @@ count appears in:
 orders of magnitude, and the transition between them is a step rather than a slope. A model with
 an average access cost in it describes neither side, and describes the mixture only at the one
 ratio it was calibrated for.
+
+This is the one this chapter adds to the running example: the share of the records a busy hour
+touches, the memory the fleet has for them, and a ceiling on the ratio whose reason says what is
+on the other side of it.
+
+```{literalinclude} ../models/web_service/stages/07-regime/model.yaml
+:language: yaml
+:start-at: hot_fraction:
+:end-before: outputs:
+```
+
+The service time [ch05](#littles-law) built on is a memory-served time. Past this ceiling it is a
+different number from a different regime, and every chain that used the old one is quietly wrong.
+
+```{iframe} /models/web_service_regime-reference.html
+:width: 100%
+The graph as ch08 leaves it. Drag *share of records touched in a busy hour* and watch the working
+set cross the memory the fleet has.
+```
+
+```{iframe} /playground/regime-changes/
+:width: 100%
+The same file, running. The ceiling's reason is the only place in it that says what happens on the
+other side.
+```
 
 ### What the four have in common
 
@@ -110,9 +136,9 @@ model whose uncertainty you can quantify from a model whose *applicability* you 
 ## What this cannot tell you
 
 **Where your thresholds are.** Every ceiling in this book was declared by somebody. The queueing
-one comes from a formula with strong assumptions; the capacity ones come from judgement about
-rebuild and allocator behaviour. None was measured, and measuring one means running a system into
-the regime you are trying to avoid.
+one comes from a formula with strong assumptions; the memory and disk ones come from judgement
+about how full either can be before it stops behaving like the model. None was measured, and
+measuring one means running a system into the regime you are trying to avoid.
 
 **How many thresholds you have.** Four are named above because four were thought of. A real system
 has more — a connection limit, a file-descriptor ceiling, a licence tier, a garbage collector that

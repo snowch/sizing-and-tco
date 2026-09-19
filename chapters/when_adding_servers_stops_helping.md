@@ -11,7 +11,7 @@ short_title: "ch07 When adding servers stops helping"
 How far does a system scale, and how would you find out from the two measurements you actually
 have?
 
-[ch06](#queueing-and-the-knee) ended with a tier too close to its margin and an obvious remedy:
+[ch06](#queueing-and-the-knee) ended with a fleet too close to its margin and an obvious remedy:
 buy more machines. This chapter is about how much less that buys than the arithmetic promises,
 and about the count past which each new machine takes capacity away.
 
@@ -35,7 +35,7 @@ the total goes down.
 
 Both terms together are the universal scalability law @gunther2007usl:
 
-```{literalinclude} ../models/service_tier/model.yaml
+```{literalinclude} ../models/web_service/stages/06-scaling/model.yaml
 :language: yaml
 :start-at: achievable_throughput:
 :end-before: scaling_efficiency:
@@ -44,7 +44,7 @@ Both terms together are the universal scalability law @gunther2007usl:
 ### The curve, against the straight line
 
 ```{image} _figures/when-adding-servers-stops-helping-curve.svg
-:alt: Throughput against node count, against the straight line a budget assumes
+:alt: Throughput against host count, against the straight line a budget assumes
 :width: 100%
 ```
 
@@ -68,43 +68,58 @@ form in problem 7.3 is worth having.
 ```{include} _generated/when-adding-servers-stops-helping-scenarios.md
 ```
 
-Twice the machines. Read down.
+Twice the hosts. Read down.
 
-Utilisation halves, exactly as arithmetic says it should. Waiting time falls by a great deal more
-than half, because [ch06](#queueing-and-the-knee)'s division is not linear and the non-linearity
-runs in your favour in this direction.
+Utilisation halves, exactly as arithmetic says it should. Time spent queueing falls to about a
+quarter, because [ch06](#queueing-and-the-knee)'s division is not linear and the non-linearity
+runs in your favour in this direction. The share of futures over the knee falls by more still.
 
-Throughput goes up by not much more than a quarter, for a doubling of the fleet. Efficiency falls
-by more than a third at the same time, which is the same fact counted from the other end.
+Throughput goes up by about a third, for a doubling of the fleet. Efficiency falls by about a
+third at the same time, which is the same fact counted from the other end.
 
-So: doubling a tier is an excellent way to fix latency and a poor way to buy capacity. Those are
+So: doubling a fleet is an excellent way to fix latency and a poor way to buy capacity. Those are
 different purchases, they are usually conflated, and the model tells them apart.
+
+Both are in the graph, and so is the peak. Drag *crosstalk* and watch the peak move while the
+fleet you have stays where it is.
+
+```{iframe} /models/web_service_scaling-reference.html
+:width: 100%
+The graph as ch07 leaves it. Two ceilings arrived with it: one on what the fleet spends on itself,
+one on the utilisation the queueing view understated.
+```
 
 ### The utilisation you were quoted was optimistic
 
 [ch06](#queueing-and-the-knee) had no scaling term, so its utilisation was the work arriving
 divided by what the machines could do *if each of them worked alone*. They do not work alone. Some
 of their capacity is spent on each other, and the honest utilisation is the arriving work divided
-by what the tier can actually deliver.
+by what the fleet can actually deliver.
 
 The model carries both numbers, side by side, on purpose:
 
-```{literalinclude} ../models/service_tier/model.yaml
+```{literalinclude} ../models/web_service/stages/06-scaling/model.yaml
 :language: yaml
 :start-at: utilisation_including_coordination:
 :end-before: optimism:
 ```
 
 At the reference point the two differ by half again. The queueing view is not wrong; it is
-optimistic, by a factor nobody notices until they measure the tier at two sizes and find the
+optimistic, by a factor nobody notices until they measure the fleet at two sizes and find the
 second one disappointing.
 
-Measuring the tier at more than one size is also how the coefficients get fitted.
+Measuring the fleet at more than one size is also how the coefficients get fitted.
+
+```{iframe} /playground/when-adding-servers-stops-helping/
+:width: 100%
+The same file, running. Double the contention and watch where the peak goes: it is the software's
+number, and no host count in the file moves it.
+```
 
 ### Fitting the coefficients from what you have
 
 Three unknowns, so three measurements determine them exactly. You will usually have: one machine
-on a bench, the cluster you are running, and the cluster you were running before you grew it.
+on a bench, the fleet you are running, and the fleet you were running before you grew it.
 That is not much data and it is what exists.
 
 Problem 7.2 is the algebra, and it is worth doing by hand once. Rearranging the law into a
@@ -119,7 +134,7 @@ provenance. **The shape is the claim. The position of the peak is a guess.**
 ## What this cannot tell you
 
 **Where your peak is.** The coefficients here are assumptions, the peak follows from them, and the
-model's own tornado shows the peak's interval spans a factor of several. Fitting them from three
+model's own interval on the peak spans more than a factor of three. Fitting them from three
 measurements gives numbers with the same problem and a false air of precision. What transfers is
 that a peak exists and is a property of the software.
 
@@ -132,11 +147,11 @@ software.
 which lock to remove, and removing the lock changes the coefficients in a way only another
 measurement can establish.
 
-**Anything about failure.** Every figure above is a healthy tier. Machines coordinating while one
+**Anything about failure.** Every figure above is a healthy fleet. Machines coordinating while one
 of them is unreachable behave differently and worse, and this model has no term for it —
 [ch11](#headroom-and-failure-domains) is where that gets a margin rather than a model.
 
-**Whether the tier is even the constraint.** The whole chapter assumes throughput is what you are
+**Whether the fleet is even the constraint.** The whole chapter assumes throughput is what you are
 buying. If the system is bounded by something else — a database, a licence, a single-threaded
 step — the curve above is a description of a queue in front of the real problem.
 

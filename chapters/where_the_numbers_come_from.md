@@ -35,23 +35,25 @@ one, because nothing can dislodge it.
 ### The first number somebody else supplied
 
 Every quantity in [ch02](#what-a-workload-is)'s file came from you or from the application: how
-much is held, how fast it grows, how long the cluster has to last. The next one does not. How much
-a drive holds is decided by whoever sells it, and this is the form that takes:
+many requests arrive, how much is held, how fast both grow, how long the fleet has to last. The
+next one does not. How much memory a host carries is decided by whoever sells it, and this is the
+form that takes:
 
-```{literalinclude} ../models/storage_cluster/stages/02-provenance/model.yaml
+```{literalinclude} ../models/web_service/stages/02-provenance/model.yaml
 :language: yaml
-:start-at: drive_capacity:
-:end-before: drives_per_node:
+:start-at: ram_per_host:
+:end-before: os_reserve:
 ```
 
-Two sentences of source, and the second one earns its place. *Decimal TB, not TiB* is the gap
-between what a datasheet counts and what a filesystem counts, and it runs in the direction that
-makes the cluster smaller than the spreadsheet promised ([Appendix D](#appendix-d-units)). Writing
-that down is the whole of the discipline: the claim is recorded as a claim, and what is doubtful
-about it is recorded beside it.
+Two clauses of source, and the second one earns its place. *The sheet says gigabytes and means
+gibibytes* is the gap between what a spec sheet writes and what it counts, and it is only the
+first of two gaps between the number on the sheet and the memory a service gets
+([Appendix D](#appendix-d-units)). Writing that down is the whole of the discipline: the claim is
+recorded as a claim, and what is doubtful about it is recorded beside it.
 
-It takes one more decision — how many of those drives go in a chassis — to reach the first
-quantity in the model that is about hardware rather than about data:
+It takes one more quantity — the share of that memory the operating system keeps for itself,
+an assumption in the plainest sense of the word — to reach the first node in the model that is
+about hardware rather than about data:
 
 ```{include} _generated/where-the-numbers-come-from-stage.md
 ```
@@ -60,9 +62,9 @@ quantity in the model that is about hardware rather than about data:
 ```
 
 Three nodes on from [ch02](#what-a-workload-is)'s graph, and the new one at the end is the first
-in the model that is about hardware. Click *drive capacity* to see whose claim it is.
+in the model that is about hardware. Click *ram per host* to see whose claim it is.
 
-```{iframe} /models/storage_cluster_provenance-reference.html
+```{iframe} /models/web_service_provenance-reference.html
 :width: 100%
 The graph as ch03 leaves it. The vendor's claim is a node like any other, and says so when clicked.
 ```
@@ -74,12 +76,18 @@ The same file, with the vendor's claim in it. Change the `provenance` of a node 
 
 Still a cost model. A vendor's claim is a claim about a number, and this book's distinction is not
 about who said a number — it is about whether the arithmetic around it stops applying somewhere.
-[ch09](#capacity) is where that changes.
+[ch06](#queueing-and-the-knee) is where that changes.
 
 ### Three claims, counted
 
-Here is the census of the observability model, which has the most inputs of the three and all
-three kinds of claim among them:
+Here is the census of the running example as this chapter leaves it — short, and one row of it is
+the claim above:
+
+```{include} _generated/where-the-numbers-come-from-service-provenance.md
+```
+
+And here is the same census of the book's second model, the observability platform, which has all
+three kinds of claim among its inputs:
 
 ```{include} _generated/where-the-numbers-come-from-provenance.md
 ```
@@ -185,8 +193,9 @@ rather than during one.
 
 **Whether a corpus resembles your data.** Every constant above was measured over a body of data
 this repository generates, and the generator's proportions are an assumption stated in the
-stamped result. For the storage compression ratio, that mixture is the single largest source of
-error in the figure — larger than the codec, larger than the shard-to-shard spread it reports.
+stamped result. For the record compression ratio, the mix of record kinds in that corpus is the
+single largest source of error in the figure — larger than the codec, larger than the
+shard-to-shard spread it reports.
 The number has a standard error and the standard error is about the wrong thing.
 
 **Whether a `vendor_claim` is true.** Nothing here checks one. They are marked so that a reader
@@ -233,8 +242,8 @@ it came from. The thing you would actually send.
 
 The useful part is the reclassification. Count how many started as facts and ended as vendor
 claims once you looked for the source, and how many ended as assumptions because the source was a
-conversation. In this book's own storage model that exercise moved more numbers than anybody
-expected, which is why the labels are mandatory rather than encouraged.
+conversation. In this book's own models, more of the inputs are assumptions than anybody would
+guess before counting, which is why the labels are mandatory rather than encouraged.
 
 A good answer has a source line for every `fact` that you could paste into an email, and at least
 one line that changed category while you were writing it. If nothing changed category, you have

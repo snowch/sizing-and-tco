@@ -4,6 +4,6 @@
 |---|---:|---|
 | peak request rate at horizon | 29,703 | request/second |
 | records held at horizon | 55.7 | TB |
-| memory the service can use, per host | 0.0611 | TB/host |
+| memory the service can use, per host | 0.0618 | TB/host |
 
 *Source — [`web_service_provenance-reference`](/models/web_service_provenance-reference.html) · every input on a slider*

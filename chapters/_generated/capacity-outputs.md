@@ -2,23 +2,6 @@
 
 | Output | Point estimate | 90% interval | Unit |
 |---|---:|---:|---|
-| mean request rate at horizon | 11,307 | 2,871 to 42,263 | request/second |
-| utilisation | 0.644 | 0.156 to 2.50 |  |
-| requests in flight, if none waited | 556 | 135 to 2,156 | request |
-| residence time | 0.0367 | 0.0128 to 0.856 | second |
-| time spent queueing | 0.0236 | 0.0021 to 0.839 | second |
-| requests in the system | 1,562 | 160 to 107,812 | request |
-| utilisation at the busy hour | 0.644 | 0.156 to 2.50 |  |
-| throughput the fleet can actually reach | 44,876 | 30,259 to 62,705 | request/second |
-| scaling efficiency | 0.679 | 0.544 to 0.787 |  |
-| how much the queueing view understated it | 1.47 | 1.27 to 1.84 |  |
-| where adding hosts stops helping | 164 | 93 to 291 | host |
-| fraction of the peak already built | 0.328 | 0.186 to 0.584 |  |
-| fraction of the fleet doing nothing useful | 0.321 | 0.213 to 0.456 |  |
-| utilisation, counting coordination | 0.948 | 0.232 to 3.81 |  |
-| working set at horizon | 2.46 | 0.632 to 8.81 | TB |
-| memory the service can use, whole fleet | 3.30 | 3.12 to 3.43 | TB |
-| working set against memory | 0.746 | 0.192 to 2.69 |  |
 | raw disk needed at horizon | 72.4 | 22.9 to 229 | TB |
 | hosts for storage | 49 | 16 to 153 | host |
 | disk fill at horizon | 0.670 | 0.212 to 2.12 |  |

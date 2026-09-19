@@ -348,7 +348,13 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("hosts_for_storage",),
         alt="The chain from what you need to store to how many hosts you must buy",
     ),
-    "capacity-outputs": Table(render=tables.outputs_table, result="web_service_capacity-reference"),
+    # Three rows, not the stage's twenty: the chain this chapter follows, what it asks for, and
+    # the ceiling it ends in. Everything else in the stage is an earlier chapter's subject.
+    "capacity-outputs": Table(
+        render=tables.outputs_table,
+        result="web_service_capacity-reference",
+        args=("raw_data", "hosts_for_storage", "disk_fill"),
+    ),
     "capacity-measured": Table(
         render=tables.measured_table, result="web_service_capacity-reference"
     ),
@@ -382,8 +388,17 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.ceilings_table, result="observability-reference"
     ),
     # -- ch12 The sizing model --------------------------------------------------------------------
+    # The answer, the decision, and the three chains the answer was the largest of.
     "the-sizing-model-outputs": Table(
-        render=tables.outputs_table, result="web_service_sizing-reference"
+        render=tables.outputs_table,
+        result="web_service_sizing-reference",
+        args=(
+            "hosts_recommended",
+            "hosts",
+            "hosts_for_requests",
+            "hosts_for_memory",
+            "hosts_for_storage",
+        ),
     ),
     "the-sizing-model-graph": Diagram(
         draw=diagrams.dependency_graph,

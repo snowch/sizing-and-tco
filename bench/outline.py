@@ -275,9 +275,9 @@ CHAPTERS: tuple[Chapter, ...] = (
     Chapter(
         10,
         "bandwidth_and_the_binding_constraint",
-        "Bandwidth, and the binding constraint",
+        "Three chains, and the binding constraint",
         PARTS[2],
-        "When two independent chains each demand a different size, which one are you actually "
+        "When three independent chains each demand a different size, which one are you actually "
         "buying?",
         owes="How often each of the three chains binds across the web service's uncertainty.",
         consumes=("web_service_binding-reference", "binding-constraint"),
