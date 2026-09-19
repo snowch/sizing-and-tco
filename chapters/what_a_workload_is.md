@@ -126,8 +126,8 @@ than stated:
 
 That is the whole of the demand side. Here it is, with the toolkit that reads it: this
 repository's, not a copy. Press **Run**, then change a number and watch the total move. Change
-`stored_data`'s formula to multiply the request rate by a count of periods, and the toolkit
-refuses, for the reason at the top of this chapter.
+`stored_data`'s formula to multiply the request rate by a plain number, and the toolkit
+refuses: the node holds terabytes, and a rate times a plain number is still a rate.
 
 ```{iframe} /playground/what-a-workload-is/
 :width: 100%
