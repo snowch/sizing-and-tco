@@ -23,7 +23,7 @@ is within anybody's reach.
 
 This book teaches the third: how to find which input your answer rests on, how far the answer
 moves when that input moves, and what it would cost to find out. Almost nobody is taught this, and
-it is what decides whether anybody should act on your number. [ch01](#what-one-number-hides) is
+it is what decides whether anybody should act on your number. [ch01](#point-estimates) is
 where that starts, and it starts by showing you what a single number leaves out.
 
 ## How it goes about it

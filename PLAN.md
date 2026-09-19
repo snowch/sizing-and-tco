@@ -15,7 +15,7 @@ on it.
 
 ## 2. The distinction everything rests on
 
-Taught in [ch01](#what-one-number-hides), demonstrated by the reference models, and enforced by
+Taught in [ch01](#point-estimates), demonstrated by the reference models, and enforced by
 `scripts/verify-models.py`.
 
 It used to be stated in the front matter, which is where the book this repository was

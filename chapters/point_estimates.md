@@ -1,10 +1,10 @@
 ---
-title: "What one number hides"
-short_title: "ch01 What one number hides"
+title: "Point estimates"
+short_title: "ch01 Point estimates"
 ---
 
-(what-one-number-hides)=
-# ch01 · What one number hides
+(point-estimates)=
+# ch01 · Point estimates
 
 ## The question
 
@@ -46,21 +46,18 @@ different value for every input, from the spread that input honestly has — and
 answer that comes out. Here is that for this book's web service: the single number first, and
 then what the repeated answers did.
 
-```{include} _generated/what-one-number-hides-outputs.md
+```{include} _generated/point-estimates-outputs.md
 ```
 
 Read the first row. Its point estimate is a real number, correctly computed — and beside it the
 **90% interval**, the range nine of those answers in ten fell into, spans an order of magnitude.
 Nothing in the first calculation was wrong. It simply had no way to mention that it was a bet.
 
-Why nine in ten, rather than the smallest and largest answers? Because the smallest and largest
-are not properties of the problem. They are properties of how many answers you collected: collect
-ten times as many and the largest gets larger, every time, because you gave the unlucky
-combinations more chances to turn up. The ends drift. The middle settles, and settles quickly
-enough to be worth quoting. Ninety per cent is then a convention, and this book uses the same one
-everywhere so that two figures can be compared.
+Why nine in ten rather than the smallest and the largest answer is [ch13](#monte-carlo)'s
+question. For now it is a convention, and this book uses the same one everywhere so that two
+figures can be compared.
 
-```{image} _figures/what-one-number-hides-tco-distribution.svg
+```{image} _figures/point-estimates-tco-distribution.svg
 :alt: The five-year total cost as a distribution, with the point estimate marked on it
 :width: 100%
 ```
@@ -153,8 +150,8 @@ supports, rather than hiding the doubt inside a single figure.
 
 ## Problems
 
-Three, in `tests/what_one_number_hides/`. The first two have tests; run them with
-`python3 -m pytest tests/what_one_number_hides/`. The third does not, and says why.
+Three, in `tests/point_estimates/`. The first two have tests; run them with
+`python3 -m pytest tests/point_estimates/`. The third does not, and says why.
 
 **1.1 — The width of a product.** Read each uncertain input's declared spread off the web service
 model, and work out what those spreads become when the quantities are multiplied together. The
@@ -164,7 +161,7 @@ your answer beside the interval in the table above. The gap between the two is w
 [ch13](#monte-carlo) exists to close.
 
 ```bash
-python3 -m pytest tests/what_one_number_hides/test_problem_1_compounding.py
+python3 -m pytest tests/point_estimates/test_problem_1_compounding.py
 ```
 
 **1.2 — Find where it changes kind.** The web service model appears at six stages of being built.
@@ -173,7 +170,7 @@ one sentence and to yourself, why the chapter that adds those nodes could not ha
 earlier.
 
 ```bash
-python3 -m pytest tests/what_one_number_hides/test_problem_2_which_kind.py
+python3 -m pytest tests/point_estimates/test_problem_2_which_kind.py
 ```
 
 **1.3 — Your own system.** No test, because there is no oracle for this and pretending otherwise

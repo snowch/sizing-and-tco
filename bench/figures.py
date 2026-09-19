@@ -79,18 +79,18 @@ class Diagram:
 RIG = "take it on the reference machine (`make measure-rig`) and commit the result"
 
 FIGURES: dict[str, Table | Diagram] = {
-    # -- ch01 What one number hides -----------------------------------------------------------
+    # -- ch01 Point estimates -----------------------------------------------------------------
     # Two rows, not the model's twenty. The page asks "how big" and "how much" and shows that
     # each answer is a range; the rest are a chapter's subject arriving up to nineteen chapters
     # early. Six of them are the model's ceilings, and a ceiling shown without its limit, its
     # verdict or the probability of breaching it is the least readable row in the book — which
     # is why ch13 gives them a table of their own with all three.
-    "what-one-number-hides-outputs": Table(
+    "point-estimates-outputs": Table(
         render=tables.outputs_table,
         result="web_service-reference",
         args=("hosts_recommended", "tco"),
     ),
-    "what-one-number-hides-tco-distribution": Diagram(
+    "point-estimates-tco-distribution": Diagram(
         draw=diagrams.distribution,
         result="web_service-reference",
         args=("tco",),

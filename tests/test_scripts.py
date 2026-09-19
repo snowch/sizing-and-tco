@@ -118,19 +118,19 @@ def test_a_javascript_template_is_a_raw_string(name):
     ("written", "anchor", "expected"),
     [
         # The short form, which is most of the book.
-        ("ch01", "what-one-number-hides", "ch01"),
+        ("ch01", "point-estimates", "ch01"),
         # The long form. The separator and the title belong to the author; only the label moves.
         (
-            "ch01 · What one number hides",
-            "what-one-number-hides",
-            "ch01 · What one number hides",
+            "ch01 · Point estimates",
+            "point-estimates",
+            "ch01 · Point estimates",
         ),
         # A label left behind by a chapter that moved, in both forms.
-        ("ch99", "what-one-number-hides", "ch01"),
+        ("ch99", "point-estimates", "ch01"),
         (
-            "ch99 · What one number hides",
-            "what-one-number-hides",
-            "ch01 · What one number hides",
+            "ch99 · Point estimates",
+            "point-estimates",
+            "ch01 · Point estimates",
         ),
         (
             "Appendix A · The DSL, in full",
@@ -138,7 +138,7 @@ def test_a_javascript_template_is_a_raw_string(name):
             "Appendix A · The DSL, in full",
         ),
         # Text that is not a label at all is the author's, and is left alone.
-        ("the introduction", "what-one-number-hides", None),
+        ("the introduction", "point-estimates", None),
     ],
 )
 def test_a_reference_keeps_everything_but_its_label(written, anchor, expected):
@@ -146,7 +146,7 @@ def test_a_reference_keeps_everything_but_its_label(written, anchor, expected):
 
     The first version of this matched the label *and* the middle dot, so the text after the
     match began at the title: every long-form reference in the book rendered as
-    ``ch01What one number hides``. It survived because the check was a renumbering round-trip
+    ``ch01Point estimates``. It survived because the check was a renumbering round-trip
     over the *source*, which a different code path fixes, and because the pages looked at
     afterwards were chapters, whose own heading does not go through here. A part page would have
     shown it immediately.
