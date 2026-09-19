@@ -160,19 +160,10 @@ what that difference is worth.
 
 ### What it says, and what the toolkit calls it
 
-Nothing so far has run. The file is a description. What reads it is
-[`sizing`](#appendix-a-dsl-reference), the toolkit, and one command points it at every model in
-the repository:
-
-```bash
-make models
-```
-
-That parses each file, refuses any formula whose units do not work out, evaluates the graph in
-dependency order, and writes what it found to `bench/results/`. That directory is where every
-figure in this book comes from, including the next one. Every table about the service is computed
-from this file as the chapter you are in has left it, so you can reproduce any of them from what
-you have already read. For the eight nodes above:
+You have run it already. Press **Run** and [`sizing`](#appendix-a-dsl-reference), the toolkit,
+reads the file, checks that every formula produces the unit its node declares, and works each
+node out from the ones it depends on. That is all running a model is, and the numbers it has
+just shown you are the next table:
 
 ```{include} _generated/what-a-workload-is-stage.md
 ```

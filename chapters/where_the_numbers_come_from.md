@@ -116,18 +116,18 @@ The method is what transfers. The number does not.
 
 | Target | What it is | Who can check it |
 |---|---|---|
-| `corpus` | a codec or an encoder over a declared body of data | anybody, and the build does, on every change |
+| `corpus` | a codec or an encoder over a declared body of data | anybody with the repository |
 | `model` | a model file evaluated and sampled | anybody with the repository |
 | `rig` | a throughput or a latency, on the declared reference machine | whoever has that machine |
 | `estate` | an observation of a system somebody runs | **nobody** |
 
 The first two are cheap, and the book is full of them. The third is refused on any machine that
-is not the declared one, because a throughput measured on a shared build machine is
+is not the declared one, because a throughput measured on whatever machine was free is
 indistinguishable from a real one once it is a number in a table.
 
 The fourth cannot be checked by anybody at all.
 
-### The target the build cannot check
+### The target nobody can check
 
 An observation of a running system cannot be reproduced by anybody, including you, next Tuesday.
 There is no corpus to re-run and no machine to re-run it on. The system has moved on.
@@ -166,9 +166,9 @@ copy-paste, and every organisation has a capacity plan built on one.
 ```{include} _generated/where-the-numbers-come-from-rig.md
 ```
 
-The machine this was written on refuses to produce that figure. So does the build. Not by
-convention: the toolkit compares the running processor and core count against the declared
-reference machine and refuses otherwise.
+The machine this was written on refuses to produce that figure, and not by convention: the
+toolkit compares the running processor and core count against the declared reference machine
+and refuses otherwise.
 
 An environment variable would have been easier. It would also have let anybody stamp a laptop
 timing as a reference measurement by typing four characters. A target you can set by accident is

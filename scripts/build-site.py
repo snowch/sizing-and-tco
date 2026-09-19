@@ -766,7 +766,7 @@ iframe.viewer { height: 780px; }
 .editable-block.changed .editable-bar { background: var(--wash); }
 .editable-block.changed .editable-bar .hint { color: var(--accent); font-weight: 600; }
 pre.editable { margin: 0; border: 0; border-radius: 0; background: var(--bg);
-               caret-color: var(--accent); white-space: pre-wrap; overflow-wrap: break-word; }
+               caret-color: var(--accent); white-space: pre; overflow-x: auto; }
 pre.editable:focus { outline: none; }
 
 /* Buttons */

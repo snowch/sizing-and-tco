@@ -151,8 +151,8 @@ past the cap, and says so rather than extrapolating.
 
 ```{iframe} /playground/queueing-and-the-knee/
 :width: 100%
-The same file, running. Change the margin and run it again; the ceiling's reason is the one field
-the build refuses to let you leave empty.
+The same file, running. Raise the request rate until utilisation passes the cap and run it again:
+the residence time stops rising, while the ceiling goes on reporting the real utilisation.
 ```
 
 ## What this cannot tell you
