@@ -886,7 +886,7 @@ UNIT_ALGEBRA: tuple[tuple[str, tuple[str, ...], str, str, str], ...] = (
         ("request/second", "dimensionless"),
         "*",
         "request/second",
-        "nothing cancels: a plain number leaves a rate a rate",
+        "nothing cancels: a plain number leaves a rate as it was",
     ),
     (
         "disk per host, times the hosts",

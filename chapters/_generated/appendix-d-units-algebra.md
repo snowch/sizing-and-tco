@@ -3,7 +3,7 @@
 | Calculation | The units | Result | What happened |
 |---|---|---|---|
 | a request rate, for a duration | `request/second` × `second` | `request` | the seconds cancel: a rate times a duration is an amount |
-| a request rate, times a plain number | `request/second` × `dimensionless` | `request/second` | nothing cancels: a plain number leaves a rate a rate |
+| a request rate, times a plain number | `request/second` × `dimensionless` | `request/second` | nothing cancels: a plain number leaves a rate as it was |
 | disk per host, times the hosts | `TB/host` × `host` | `TB` | the hosts cancel: an amount per host times a count of hosts is an amount |
 | raw data, divided by disk per host | `TB` ÷ `TB/host` | `host` | the terabytes cancel and the hosts come up: the last step of a sizing chain |
 | CPU time per request, times the request rate | `second*core/request` × `request/second` | `core` | the requests and the seconds both cancel, leaving cores busy (ch05) |
