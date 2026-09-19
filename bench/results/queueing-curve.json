@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "5dae44783a592596",
+  "code_fingerprint": "86061949e1c505e9",
   "code_sources": [
     "bench/run_curves.py"
   ],
@@ -7,8 +7,8 @@
     "one_slice": "the arrival rate moves and nothing else does. A tier whose service demand also rises with load - which is most of them - is on a steeper curve than this one",
     "the_cap": "the model clamps utilisation before it divides by zero; past that point the formula has stopped describing a queue"
   },
-  "generated_at": "2026-09-19T09:30:37+00:00",
-  "git_revision": "d798a44",
+  "generated_at": "2026-09-19T09:48:06+00:00",
+  "git_revision": "342807a",
   "kind": "measurement",
   "name": "queueing-curve",
   "produced_by": {

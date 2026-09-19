@@ -122,6 +122,75 @@ def log_lines(seed: int, count: int = 20_000) -> Shard:
     return Shard(seed=seed, payload=("\n".join(out) + "\n").encode(), items=count)
 
 
+def application_records(seed: int, count: int = 20_000) -> Shard:
+    """The records a web service keeps, of the shape a service actually keeps them.
+
+    Three kinds of document, in the proportions a transactional service accumulates them: a
+    profile per user, several orders per user, and a stream of small events. What makes records
+    compress is the same thing that makes logs compress -- the field names repeat, the enums
+    repeat, the identifiers do not -- and a corpus of random bytes would measure a codec on
+    noise. So: fixed schemas, a small vocabulary for the enumerated fields, identifiers with
+    the cardinality those actually have, and amounts and timestamps that vary.
+
+    Measured as one stream. A database compresses page by page, so cross-record redundancy is
+    worth less to it than to this measurement; the stamped result says so in its conditions.
+    """
+    rng = random.Random(seed)
+    countries = ["GB", "DE", "FR", "US", "IN", "BR", "JP", "AU", "NL", "SE"]
+    plans = ["free", "starter", "team", "business", "enterprise"]
+    skus = [f"sku-{n:05d}" for n in rng.sample(range(100_000), 400)]
+    statuses = ["placed", "paid", "packed", "shipped", "delivered", "returned", "cancelled"]
+    events = ["page_view", "search", "add_to_basket", "checkout", "login", "logout", "error"]
+    out = []
+    timestamp = 1_780_000_000.0
+    for _ in range(count):
+        timestamp += rng.expovariate(2.0)
+        kind = rng.choices(["user", "order", "event"], [20, 50, 30])[0]
+        if kind == "user":
+            out.append(
+                '{{"type":"user","id":"{id:032x}","handle":"u{n}","country":"{country}",'
+                '"plan":"{plan}","created":{created:.0f},"verified":{verified},'
+                '"logins":{logins}}}'.format(
+                    id=rng.getrandbits(128),
+                    n=rng.randrange(10_000_000),
+                    country=rng.choice(countries),
+                    plan=rng.choices(plans, [50, 25, 15, 8, 2])[0],
+                    created=timestamp - rng.uniform(0, 3.0e7),
+                    verified=rng.choice(["true", "false"]),
+                    logins=int(rng.lognormvariate(3.0, 1.2)),
+                )
+            )
+        elif kind == "order":
+            lines = [
+                f'{{"sku":"{rng.choice(skus)}","qty":{rng.choices([1, 2, 3, 5], [70, 18, 8, 4])[0]},"unit":{rng.lognormvariate(3.2, 0.9):.2f}}}'
+                for _ in range(rng.choices([1, 2, 3, 4, 6], [45, 25, 15, 10, 5])[0])
+            ]
+            out.append(
+                '{{"type":"order","id":"{id:032x}","user":"{user:032x}","ts":{ts:.3f},'
+                '"status":"{status}","currency":"USD","lines":[{lines}],"total":{total:.2f}}}'.format(
+                    id=rng.getrandbits(128),
+                    user=rng.getrandbits(128),
+                    ts=timestamp,
+                    status=rng.choices(statuses, [5, 20, 10, 25, 30, 4, 6])[0],
+                    lines=",".join(lines),
+                    total=rng.lognormvariate(4.1, 0.8),
+                )
+            )
+        else:
+            out.append(
+                '{{"type":"event","name":"{name}","user":"{user:032x}","ts":{ts:.3f},'
+                '"session":"{session:016x}","path":"/{path}","ms":{ms:.1f}}}'.format(
+                    name=rng.choices(events, [50, 15, 10, 5, 8, 6, 6])[0],
+                    user=rng.getrandbits(128),
+                    ts=timestamp,
+                    session=rng.getrandbits(64),
+                    path=rng.choice(["", "search", "basket", "account", "orders", "help"]),
+                    ms=rng.lognormvariate(4.0, 0.7),
+                )
+            )
+    return Shard(seed=seed, payload=("\n".join(out) + "\n").encode(), items=count)
+
+
 def mixed_objects(seed: int, count: int = 250) -> Shard:
     """A general-purpose object store's contents, as a mixture rather than as one thing.
 

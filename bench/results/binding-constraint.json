@@ -1,13 +1,13 @@
 {
-  "code_fingerprint": "5dae44783a592596",
+  "code_fingerprint": "86061949e1c505e9",
   "code_sources": [
     "bench/run_curves.py"
   ],
   "conditions": {
     "two_chains_only": "this model has two. A real estate has more - rebuild bandwidth, metadata operations, a control plane - and each one is another chance for the answer to be set by something nobody was watching"
   },
-  "generated_at": "2026-09-19T09:30:38+00:00",
-  "git_revision": "d798a44",
+  "generated_at": "2026-09-19T09:48:07+00:00",
+  "git_revision": "342807a",
   "kind": "measurement",
   "name": "binding-constraint",
   "produced_by": {
