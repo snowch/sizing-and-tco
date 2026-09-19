@@ -162,9 +162,8 @@ what that difference is worth.
 
 You have run it already. Press **Run** and [`sizing`](#appendix-a-dsl-reference), the toolkit,
 reads the file, checks that every formula produces the unit its node declares, and works each
-node out from the ones it depends on. That is all running a model is. Every table about the
-service in this book is that same evaluation of that same file, as the chapter you are in has
-left it, so the numbers the toolkit has just shown you are the next table:
+node out from the ones it depends on. That is all running a model is, and the numbers it has
+just shown you are the next table:
 
 ```{include} _generated/what-a-workload-is-stage.md
 ```
