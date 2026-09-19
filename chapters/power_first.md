@@ -10,19 +10,19 @@ short_title: "ch16 Power first"
 
 What changes when watts are the binding constraint rather than money?
 
-Everything so far has sized a system from demand and then priced what it sized. Here the sizing
-runs the other way: a rack has a power allocation, the allocation is not negotiable, and the
-number of machines follows from it.
+Everything so far has sized a system from demand, then priced what it sized. Here the sizing runs
+the other way. A rack has a power allocation. The allocation is not negotiable. The number of
+machines follows from it.
 
 ## The material
 
 ### Sizing backwards
 
-When power binds, the chain inverts. You start with an allocation at the wall, divide out what the
-building spends on itself, divide by what a machine draws, and round **down**.
+When power binds, the chain inverts. You start with an allocation at the wall. You divide out
+what the building spends on itself. You divide by what a machine draws. Then you round **down**.
 
 That rounding is the only one in this book that goes that way. Every other constraint is a demand
-to be satisfied, so it rounds up; this one is a supply that cannot be exceeded. Problem 16.1 is
+to be satisfied, so it rounds up. This one is a supply that cannot be exceeded. Problem 16.1 is
 that inversion. People get the facility multiplier backwards: an inefficient building buys you
 *fewer* machines, not more.
 
@@ -35,7 +35,7 @@ The left column is the fleet [ch12](#the-sizing-model) recommended. The right is
 the allocation.
 
 It is smaller. Everything downstream is smaller with it: less capital, less running cost, a lower
-total. Read those rows and the power-constrained design looks like a saving.
+total. Read those rows alone and the power-constrained design looks like a saving.
 
 Then read the ceilings:
 
@@ -43,37 +43,41 @@ Then read the ceilings:
 ```
 
 None of them is comfortable, and they are uncomfortable in different ways. Three are over their
-hard limit at the point estimate — the working set no longer fits in the fleet's memory, the
-disks are full, and the fleet spends more of itself on coordination than its margin allows — not
-at some unlucky percentile, at the expected case — and the model puts each of them over in a
-large share of the futures it thinks are plausible. The two queueing ceilings are still under
-their limit, but they have spent the whole margin that was keeping them there. That is the verdict
-column saying *into the margin* rather than *ok*.
+hard limit at the point estimate:
+
+- the working set no longer fits in the fleet's memory;
+- the disks are full;
+- the fleet spends more of itself on coordination than its margin allows.
+
+That is not an unlucky percentile. It is the expected case, and the model puts each of the three
+over in a large share of the futures it thinks plausible. The two queueing ceilings are still
+under their limit. But they have spent the whole margin that was keeping them there. That is what
+the verdict column means by *into the margin* rather than *ok*.
 
 So the honest output of this chapter is not a fleet. **It is the statement that this workload
 does not fit in this power envelope**, with the numbers to say so.
 
-That is a useful answer, and a spreadsheet does not produce it: sized from a power budget, a
+That is a useful answer, and a spreadsheet does not produce it. Sized from a power budget, a
 spreadsheet gives a host count and stops. The host count is real. The fleet it describes cannot
 do the job it would be bought for.
 
 ### Four ways out of a power budget that does not fit
 
-Once the model says the workload does not fit, there are four things to do and the model prices
-three of them.
+Once the model says the workload does not fit, there are four things you can do. The model
+prices three of them.
 
-**Get more power.** The expensive one, and often the slowest — a power allocation is a building's
-property and sometimes a substation's.
+**Get more power.** The expensive one, and often the slowest. A power allocation is a building's
+property, and sometimes a substation's.
 
 **Use less per machine.** Fewer, denser machines change watts per machine and capacity per
-machine together, and the model will say whether the trade is favourable.
+machine together. The model will say whether the trade is favourable.
 
 **Improve the building.** [ch15](#capex-opex-and-lifecycle)'s facility multiplier is a division.
-Problem 16.2 is worth doing for the framing alone: a multiplier quoted as a small surcharge is a
+Problem 16.2 is worth doing for the framing alone. A multiplier quoted as a small surcharge is a
 substantial *share* of the bill. Halving the overhead is equivalent to finding machines that draw
-materially less, and is often cheaper.
+materially less, and it is often cheaper.
 
-**Want less.** Shed the least valuable requests at the busy hour, keep fewer records, accept a
+**Want less.** Shed the least valuable requests at the busy hour. Keep fewer records. Accept a
 longer tail. Nobody proposes this in a sizing meeting, and it is frequently the right answer.
 
 ### Why power is not a price like the others
@@ -84,44 +88,43 @@ to a discount. Energy is physics with a price attached.
 ```{include} _generated/power-first-tornado.md
 ```
 
-The things that move the energy bill are a count of machines, a draw per machine, a building
-multiplier and a tariff. Three of the four are properties of hardware and buildings rather than of
-contracts, and the one that is a price is set by a market nobody in the room influences.
+Four things move the energy bill: a count of machines, a draw per machine, a building multiplier
+and a tariff. Three of the four are properties of hardware and buildings, not of contracts. The
+one that is a price is set by a market nobody in the room influences.
 
-Energy is also the only cost line that is simultaneously a **constraint**. Nobody is told they
-may not spend more on hosts; they are regularly told the rack has no more power.
+Energy is also the only cost line that is a **constraint** at the same time. Nobody is told they
+may not spend more on hosts. People are regularly told the rack has no more power.
 
 ### A note on carbon
 
-The model does not carry a carbon figure, and the omission is deliberate rather than an oversight.
+The model does not carry a carbon figure. The omission is deliberate.
 
-Converting energy to emissions needs a grid intensity that varies by region, by hour, and by
-whatever contractual instruments an organisation has bought — and those instruments are an
-accounting decision rather than a physical one. This book produces the kilowatt-hours, which is
-the part it can defend. Multiplying them is somebody else's judgement, and the multiplier is where
-all the disagreement is.
+Converting energy to emissions needs a grid intensity. That varies by region, by hour, and by
+whatever contractual instruments an organisation has bought. Those instruments are an accounting
+decision, not a physical one. This book produces the kilowatt-hours, which is the part it can
+defend. Multiplying them is somebody else's judgement, and the multiplier is where all the
+disagreement is.
 
-Energy price and carbon price move together ([ch14](#correlation-and-convergence)), so a model
-that added a carbon line and drew it independently would understate the range of the total.
+Energy price and carbon price move together ([ch14](#correlation-and-convergence)). A model that
+added a carbon line and drew it independently would understate the range of the total.
 
 ## What this cannot tell you
 
 **What your allocation actually is.** Contracted power, breaker capacity, cooling capacity and
-what the facility will let you draw sustainably are four different numbers, and they are not
-usually the same one. This chapter takes one number; getting the right one is a conversation with
-whoever runs the building.
+what the facility will let you draw sustainably are four different numbers. They are not usually
+the same one. This chapter takes one number. Getting the right one is a conversation with whoever
+runs the building.
 
 **What a machine really draws.** The model uses a typical figure under load, marked as a vendor's
-claim. Draw varies with workload, with ambient temperature, and with how busy the processors
-are. The
-number that matters for an allocation is a sustained peak rather than a typical figure.
+claim. Draw varies with workload, with ambient temperature, and with how busy the processors are.
+The number that matters for an allocation is a sustained peak, not a typical figure.
 
 **Anything about the shape of the draw.** Power is billed on energy and constrained on peak. A
 fleet that idles overnight and saturates at noon has an energy bill of one shape and a capacity
-problem of another, and this model has only the average.
+problem of another. This model has only the average.
 
 **Whether the building's multiplier is stable.** It varies with outside temperature and with how
-full the facility is, and the figure quoted in a contract is usually an annual average under
+full the facility is. The figure quoted in a contract is usually an annual average under
 favourable assumptions.
 
 **What to do about it.** The model prices three of the four responses above. Which to choose is a
@@ -141,8 +144,8 @@ python3 -m pytest tests/power_first/test_problem_1_budget.py
 
 **16.2 — A ratio quoted, a fraction paid.**
 One line, worth having in your head. A building that sounds a little inefficient is spending a
-substantial share of the bill on itself, and the two framings land very differently in a
-conversation about money.
+substantial share of the bill on itself. The two framings land very differently in a conversation
+about money.
 
 ```bash
 python3 -m pytest tests/power_first/test_problem_2_pue.py
@@ -152,21 +155,21 @@ python3 -m pytest tests/power_first/test_problem_2_pue.py
 this repository.
 
 Find out your real power allocation, and find out who knows it. Contracted supply, breaker
-capacity, cooling capacity and what the machines currently draw are four different numbers, and
-the smallest is the one that sizes you.
+capacity, cooling capacity and what the machines currently draw are four different numbers. The
+smallest is the one that sizes you.
 
 Expect this to be hard. In most organisations the people who plan capacity and the people who
-hold the power contract have never been in the same meeting, and the constraint that binds first
-is owned by neither.
+hold the power contract have never been in the same meeting. The constraint that binds first is
+owned by neither.
 
-A good answer has four numbers, or has fewer and names who would have to be asked for the rest. If
-you already knew all four without asking anybody, you are in an unusual organisation and the rest
-of this chapter is easier for you than for most readers.
+A good answer has four numbers, or has fewer and names who would have to be asked for the rest.
+If you already knew all four without asking anybody, you are in an unusual organisation, and the
+rest of this chapter is easier for you than for most readers.
 
 ## Where to go next
 
 [ch17](#unit-economics) turns a total into a number somebody outside the team can compare against
-something — which is where a power-constrained design either justifies itself or does not.
+something. That is where a power-constrained design either justifies itself or does not.
 
 [ch14](#correlation-and-convergence) is why an energy price and a carbon price should not be drawn
 independently.
