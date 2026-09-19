@@ -27,55 +27,6 @@ from bench.stamp import RERUN_TOLERANCE, build_result, load_result, result_exist
 SOURCES = ["bench/measure.py", "bench/run_corpus.py"]
 
 
-def object_compression() -> dict:
-    """How much smaller a general-purpose object store's contents get.
-
-    The storage cluster's one measured constant, and the model is built so that it is the only
-    one — that book-keeping is deliberate. ch17's argument is that a cost model's structure is
-    accounting identities with uncertain prices hung off it, and a model stuffed with empirical
-    constants would be quietly making the opposite case.
-    """
-    shards = measure.over_shards(measure.mixed_objects)
-    codec, description = measure.CODECS["xz-1"]
-    ratios = [len(shard.payload) / len(codec(shard.payload)) for shard in shards]
-    stats = measure.with_error(ratios)
-    return build_result(
-        "storage-object-compression",
-        target="corpus",
-        produced_by={
-            "corpus": "bench.measure.mixed_objects — synthetic mixture of text, columnar, "
-            "already-compressed and sparse objects, seeds 0-7",
-            "codec": description,
-            "stack": "python lzma (XZ preset 1)",
-            "mixture": "38% text, 24% fixed-width records, 18% incompressible, 20% sparse",
-        },
-        summary={
-            **stats,
-            "bytes_in": sum(len(shard.payload) for shard in shards),
-            "objects": sum(shard.items for shard in shards),
-        },
-        units={
-            "value": "dimensionless",
-            "sd": "dimensionless",
-            "shard_spread": "dimensionless",
-            "low": "dimensionless",
-            "high": "dimensionless",
-            "shards": "dimensionless",
-            "bytes_in": "byte",
-            "objects": "dimensionless",
-        },
-        conditions={
-            "what_this_is_about": "this corpus and this codec, and nothing else",
-            "to_use_it": "re-run bench.measure.mixed_objects against a sample of your own "
-            "estate, or replace the generator with one that reads it",
-            "the_mixture_is_an_assumption": "the proportions were chosen, not observed; they are "
-            "the first thing to change and the largest source of error here",
-        },
-        code_sources=SOURCES,
-        write=True,
-    )
-
-
 def log_line_bytes() -> dict:
     """What one structured log line costs on disk after compression.
 
@@ -262,7 +213,6 @@ def record_compression() -> dict:
 
 #: Every corpus measurement, by the result name a model refers to.
 RUNNERS = {
-    "storage-object-compression": object_compression,
     "records-compression": record_compression,
     "logs-line-bytes": log_line_bytes,
     "metrics-sample-bytes": metric_sample_bytes,

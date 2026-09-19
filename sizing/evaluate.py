@@ -193,8 +193,8 @@ def check_units(model: Model) -> tuple[list[str], dict[str, float]]:
     time is miserable.
 
     **The factors are the half of this that is easy to get wrong.** Checking dimensions alone is
-    not enough, and the case that proves it is in the storage model: ``USD/TB/year`` and
-    ``USD/TB/month`` have exactly the same dimensions, so a check that compared only
+    not enough, and the case that proves it is the running example's unit cost: ``USD/TB/year``
+    and ``USD/TB/month`` have exactly the same dimensions, so a check that compared only
     dimensionality would wave through a unit-economics figure twelve times too large. Each
     formula is therefore evaluated dimensionally, the result *converted* into the unit the node
     declared, and the conversion factor recorded for the evaluator to apply.

@@ -191,42 +191,6 @@ def application_records(seed: int, count: int = 20_000) -> Shard:
     return Shard(seed=seed, payload=("\n".join(out) + "\n").encode(), items=count)
 
 
-def mixed_objects(seed: int, count: int = 250) -> Shard:
-    """A general-purpose object store's contents, as a mixture rather than as one thing.
-
-    The mixture is the measurement. A cluster holding nothing but text compresses beautifully and
-    one holding nothing but video does not compress at all, and neither number is useful for
-    sizing a cluster that holds some of each. The proportions below are an **assumption**, stated
-    here and in the stamped result, and they are the first thing to change when using this against
-    a real estate.
-    """
-    rng = random.Random(seed)
-    parts: list[bytes] = []
-    for _ in range(count):
-        roll = rng.random()
-        size = int(rng.lognormvariate(9.2, 1.0))
-        if roll < 0.38:  # text-ish: documents, JSON, source, config
-            words = ["alpha", "beta", "gamma", "delta", "epsilon", "record", "value", "field"]
-            body = " ".join(rng.choice(words) for _ in range(size // 6))
-            parts.append(body.encode())
-        elif roll < 0.62:  # columnar-ish: repeated fixed-width records
-            parts.append(
-                b"".join(
-                    struct.pack("<qd", rng.randint(0, 5000), rng.gauss(50, 3))
-                    for _ in range(size // 16)
-                )
-            )
-        elif roll < 0.80:  # already compressed: media, archives
-            parts.append(rng.randbytes(size))
-        else:  # sparse: partly-written blocks
-            body = bytearray(size)
-            for _ in range(size // 64):
-                body[rng.randrange(size)] = rng.randrange(256)
-            parts.append(bytes(body))
-    payload = b"".join(parts)
-    return Shard(seed=seed, payload=payload, items=count)
-
-
 def metric_samples(seed: int, series: int = 300, points: int = 400) -> Shard:
     """Time series of the shape a monitoring agent scrapes: regular, and slow-moving.
 

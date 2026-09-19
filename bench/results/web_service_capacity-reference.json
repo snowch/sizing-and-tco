@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "0a71ddba778871bd",
+  "code_fingerprint": "cb158a2c708f84b1",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/08-capacity/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T11:32:06+00:00",
-  "git_revision": "74b82b3",
+  "generated_at": "2026-09-19T12:26:57+00:00",
+  "git_revision": "9140da7",
   "kind": "model",
   "name": "web_service_capacity-reference",
   "produced_by": {
@@ -92,7 +92,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-19T11:32:06+00:00",
+    "generated_at": "2026-09-19T12:26:56+00:00",
     "model": "web_service_capacity",
     "nodes": {
       "achievable_throughput": {

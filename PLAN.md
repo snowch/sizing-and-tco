@@ -120,8 +120,7 @@ to hand, and everybody has a host.
 
 The switch landed in three moves, so that `main` was never half-swapped: the new model was built
 beside the old until every stage loaded, classified and stamped; every chapter, figure,
-experiment and test moved in one change; the old models go in a third, which NEXT_STEPS.md
-carries.
+experiment and test moved in one change; the old models went in a third.
 
 **No vendor is named, anywhere.** A measured constant names the *implementation* it belongs to —
 which for the metrics encoder is this repository's own — because that is what makes it a

@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "cccbb63ced6b7e22",
+  "code_fingerprint": "bfc9a6c65d084b11",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T11:56:56+00:00",
-  "git_revision": "c7b0215",
+  "generated_at": "2026-09-19T12:26:42+00:00",
+  "git_revision": "9140da7",
   "kind": "model",
   "name": "web_service-power_first",
   "produced_by": {
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-19T11:56:54+00:00",
+    "generated_at": "2026-09-19T12:26:41+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {

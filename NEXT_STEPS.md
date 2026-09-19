@@ -15,17 +15,9 @@ it comes out rather than being ticked.
 
 ## The book
 
-Every chapter and every appendix is written. What is left, first, is the largest change the book
-has had since the scaffold, and then the work a first draft leaves:
+Every chapter and every appendix is written, and the running example is the web service on every
+page. What is left is the work a first draft leaves:
 
-- **Retire the old spine.** PLAN.md §4 records the decision and the first two of its three moves
-  have landed: every chapter, figure, experiment and test now runs on `models/web_service`. What
-  is left is the third: remove `models/storage_cluster` and `models/service_tier`, their stamped
-  results, viewers and playgrounds, the `mixed_objects` corpus and its `storage-object-compression`
-  constant if nothing still reads it, their pins in `tests/test_models.py`, and every mention that
-  survives in the toolkit's docstrings — `sizing/evaluate.py` and `bench/run_corpus.py` still name
-  the storage model, and the first of those is in `KIND_SOURCES["model"]`, so that edit re-stamps
-  every model result.
 - **A rig, or not.** `service_demand`, CPU time per request, is a `rig` measurement and none can
   be taken here. It is held as a labelled claim. Declaring a machine in `rig/machine.yml` and
   writing the runner turns the running example into the book's first end-to-end measured model.
@@ -51,9 +43,9 @@ has had since the scaffold, and then the work a first draft leaves:
 
 - The dependency graph's layout is a barycentre heuristic. It is legible on both models and it
   will not stay legible forever.
-- `bench/measure.py`'s corpora are synthetic, deliberately and loudly. The proportions in
-  `mixed_objects` and the schemas in `application_records` are the single largest assumption in
-  each model's compression constant, and they are an assumption rather than an observation.
+- `bench/measure.py`'s corpora are synthetic, deliberately and loudly. The schemas in
+  `application_records` are the single largest assumption in the web service's compression
+  constant, and they are an assumption rather than an observation.
 - `bench/render.py` handles the node types the book currently uses and raises on anything else.
   That is the intended behaviour, and it means a new directive needs a branch.
 - **Nothing checks what a page looks like.** Every check here reads the source or the parsed
