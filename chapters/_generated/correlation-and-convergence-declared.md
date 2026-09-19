@@ -6,4 +6,4 @@
 | request_rate | lines_per_request | +0.30 | Weak and positive: busier services tend to be the chattier ones. Small enough to be worth including as an example of a correlation that barely matters, which is a useful thing for a reader to see beside one that does. |
 | request_rate | queries_per_second | +0.40 | A busier platform is one more people are watching. Moderate rather than strong: most query load comes from alert rules and dashboards on timers, which do not care how busy anything is — right up until an incident, when they all fire at once and nobody is looking at the model. |
 
-*Source — [`observability-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-reference.json) · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***

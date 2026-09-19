@@ -11,4 +11,4 @@
 | drive price | input | $412,473 | $441,588 | $29,115 |
 | PUE | input | $415,153 | $437,829 | $22,677 |
 
-*Source — [`storage_cluster-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-reference.json)*
+*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*

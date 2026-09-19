@@ -7,4 +7,4 @@
 | ingest utilisation, quoted | 0.51 | 40% | 0.60 | 1.00 | ok | 44% | 21% |
 | retention store fill | 0.58 | 30% | 0.70 | 1.00 | ok | 45% | 30% |
 
-*Source — [`observability-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-reference.json) · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***

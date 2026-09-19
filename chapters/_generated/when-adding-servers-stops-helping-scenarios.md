@@ -20,4 +20,4 @@
 | *utilisation* — over its limit | 16% | 0% |
 | *fraction of the tier doing nothing useful* — over its limit | 0% | 0% |
 
-*Source — [`service_tier-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/service_tier-reference.json) and [`service_tier-twice_the_nodes`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/service_tier-twice_the_nodes.json)*
+*Source — [`service_tier-reference`](/models/service_tier-reference.html) and [`service_tier-twice_the_nodes`](/models/service_tier-twice_the_nodes.html) · every input on a slider*

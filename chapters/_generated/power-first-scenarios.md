@@ -13,4 +13,4 @@
 | *fill level at horizon* — over its limit | 34% | 61% |
 | *read utilisation at peak* — over its limit | 6% | 39% |
 
-*Source — [`storage_cluster-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-reference.json) and [`storage_cluster-power_first`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-power_first.json)*
+*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) and [`storage_cluster-power_first`](/models/storage_cluster-power_first.html) · every input on a slider*

@@ -8,4 +8,4 @@
 | `ceiling` | 2 | a limit, a declared headroom, and a reason |
 | | | **classified as a sizing model** — it has measured constants or ceilings in it, so sampling the inputs is not sufficient on its own |
 
-*Source — [`storage_cluster-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-reference.json)*
+*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*

@@ -14,4 +14,4 @@
 | one request | 1.00 | request | ● |
 | utilisation the model will admit to | 0.980 |  | ○ |
 
-*Source — [`service_tier-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/service_tier-reference.json)*
+*Source — [`service_tier-reference`](/models/service_tier-reference.html) · every input on a slider*

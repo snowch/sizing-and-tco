@@ -6,4 +6,4 @@
 | utilisation | 0.59 | 30% | 0.70 | 1.00 | ok | 38% | 16% |
 | fraction of the tier doing nothing useful | 0.37 | 50% | 0.50 | 1.00 | ok | 7% | 0% |
 
-*Source — [`service_tier-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/service_tier-reference.json)*
+*Source — [`service_tier-reference`](/models/service_tier-reference.html) · every input on a slider*

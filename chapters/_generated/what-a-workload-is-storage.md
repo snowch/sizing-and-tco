@@ -11,4 +11,4 @@
 | peak read throughput | 85.0 | GB/s | ○ |
 | usable capacity, day one | 4,000 | TB | ○ |
 
-*Source — [`storage_cluster_demand-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster_demand-reference.json)*
+*Source — [`storage_cluster_demand-reference`](/models/storage_cluster_demand-reference.html) · every input on a slider*

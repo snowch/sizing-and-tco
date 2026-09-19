@@ -8,4 +8,4 @@
 | `ceiling` | 4 | a limit, a declared headroom, and a reason |
 | | | **classified as a sizing model** — it has measured constants or ceilings in it, so sampling the inputs is not sufficient on its own |
 
-*Source — [`observability-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-reference.json) · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***

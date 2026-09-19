@@ -9,4 +9,4 @@
 8 node(s) downstream of those cannot be computed and are shown as — rather than filled in. Nothing is estimated in their place: this book publishes measurements or it publishes nothing.
 :::
 
-*Source — [`observability-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-reference.json) · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***

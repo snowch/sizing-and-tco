@@ -11,4 +11,4 @@
 | network price per node | input | $4,063,270 | $4,268,206 | $204,935 |
 | node power | input | $4,083,695 | $4,239,699 | $156,003 |
 
-*Source — [`storage_cluster-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-reference.json)*
+*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*

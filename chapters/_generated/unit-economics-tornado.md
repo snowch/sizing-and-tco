@@ -11,4 +11,4 @@
 | fully loaded salary | input | $6.36 | $6.74 | $0.38 |
 | network price per node | input | $6.39 | $6.71 | $0.32 |
 
-*Source — [`storage_cluster-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-reference.json)*
+*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*

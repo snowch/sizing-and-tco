@@ -31,4 +31,4 @@
 | traces retention | 14.0 | day | ○ |
 | usable tb per node | 40.0 | TB/node | ○ |
 
-*Source — [`observability-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-reference.json) · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***

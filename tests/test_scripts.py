@@ -257,3 +257,32 @@ def test_every_playground_the_build_ships_is_reachable_from_its_chapter():
         f"the build ships {sorted(built)} and the chapters embed {sorted(embedded)}. A playground "
         "is built for a chapter, so the chapter embeds it -- or it should not be built."
     )
+
+
+def viewers():
+    """``scripts/build-viewers.py``, imported so the tests can ask what it builds."""
+    from importlib import util
+
+    spec = util.spec_from_file_location("build_viewers", ROOT / "scripts" / "build-viewers.py")
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_a_table_links_a_viewer_exactly_when_one_is_built():
+    """Two selections on the same predicate, in two files, that must not drift apart.
+
+    ``bench.tables`` sends a reader to ``/models/<name>.html`` for a result of kind ``model``,
+    and ``build-viewers.py`` builds a page for a result of kind ``model``. Written separately,
+    so a change to either one could leave every table in a chapter pointing at a page nobody
+    builds -- and an external-looking link is not something the built-link check can follow.
+    """
+    from bench.stamp import RESULTS_DIR
+    from bench.tables import _where
+
+    built = set(viewers().model_results())
+    sent = {path.stem for path in RESULTS_DIR.glob("*.json") if _where(path.stem).startswith("/")}
+    assert built == sent, (
+        f"viewers are built for {sorted(built)} and tables link {sorted(sent)}. A table points a "
+        "reader at a viewer exactly when there is one to point at."
+    )

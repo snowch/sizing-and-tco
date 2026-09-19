@@ -26,4 +26,4 @@
 | ○ | usable capacity, day one | assumption | stated workload (ch02) — what the application says it needs to store today |
 | | **22 inputs** | | **2 fact, 6 vendor claim, 14 assumption** |
 
-*Source — [`storage_cluster-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-reference.json)*
+*Source — [`storage_cluster-reference`](/models/storage_cluster-reference.html) · every input on a slider*
