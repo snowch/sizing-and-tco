@@ -5,4 +5,4 @@
 | fill level at horizon | 1.20 | 25% | 0.75 | 1.00 | **over** | 75% | 61% |
 | read utilisation at peak | 0.88 | 30% | 0.70 | 1.00 | into the margin | 70% | 39% |
 
-*Source — [`storage_cluster-power_first`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-power_first.json)*
+*Source — [`storage_cluster-power_first`](/models/storage_cluster-power_first.html) · every input on a slider*

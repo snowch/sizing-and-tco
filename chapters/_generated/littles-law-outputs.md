@@ -17,4 +17,4 @@
 | fraction of the tier doing nothing useful | 0.369 | 0.251 to 0.513 |  |
 | utilisation, counting coordination, against its limit | 0.894 | 0.413 to 1.84 |  |
 
-*Source — [`service_tier-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/service_tier-reference.json)*
+*Source — [`service_tier-reference`](/models/service_tier-reference.html) · every input on a slider*

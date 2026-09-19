@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from bench.stamp import RESULTS_DIR, load_result, shown  # noqa: E402
+from bench.tables import REPOSITORY  # noqa: E402
 
 VIEWER = ROOT / "sizing" / "viewer"
 DEFAULT_OUT = ROOT / "_build" / "viewers"
@@ -40,7 +41,8 @@ PAGE = """<!doctype html>
 <body>
 <header>
   <h1>{title} <span class="kind">{classification} model</span></h1>
-  <p>{scenario_title} · {samples} samples · seed {seed} · generated {generated}</p>
+  <p>{scenario_title} · {samples} samples · seed {seed} · generated {generated} ·
+  <a href="{stamp}">the stamped result</a></p>
 </header>
 <main>
   <section id="controls">
@@ -102,6 +104,10 @@ def build(result_name: str, out_dir: Path) -> Path:
         samples=f"{payload['scenario']['samples']:,}",
         seed=payload["scenario"]["seed"],
         generated=payload["generated_at"][:10],
+        # The chapters send a reader here rather than to the JSON, because a page with sliders is
+        # checkable and two hundred kilobytes of JSON is not. The file is still the evidence, so
+        # it is one click from here for anybody who wants it.
+        stamp=f"{REPOSITORY}/bench/results/{result_name}.json",
         css=(VIEWER / "style.css").read_text(),
         payload=json.dumps(payload, separators=(",", ":")),
         evaluate_js=evaluate_js,

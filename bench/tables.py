@@ -1,16 +1,26 @@
 """Stamped results as markdown fragments. No chapter contains a number; they contain these.
 
-Every table here carries a *Source* line, because a figure without one is an anecdote. It is a
-link to the stamped result the figure was rendered from, and that file holds the conditions in
-full: the model, the scenario, the seed, the sample count, the inputs and the fingerprint of the
-code that did the arithmetic.
+Every table here carries a *Source* line, because a figure without one is an anecdote. It went
+through two wrong forms before this one, and both failed the same test: could the reader actually
+use it?
 
-It used to print those fields instead of linking to them, across two lines and eight fields. Three
-of the eight were identical on every result in the book, so on ninety tables half the line was the
-same words again — and the fields a reader would actually use to re-run something are only useful
-to somebody who has cloned the repository and is therefore not reading the page. A link that
-resolves to a real stamped result is better evidence that the chain exists than reciting its
-fields, because the reader can look rather than take it on trust.
+First it printed the conditions — target, model file, scenario, sample count, seed, result path,
+fingerprint, date — across two lines. Three of the eight were identical on every result in the
+book, so on ninety tables half the line was the same words again, and the fields somebody would
+use to re-run something are only useful to somebody who has cloned the repository and is
+therefore not reading the page.
+
+Then it linked the stamped result instead, on the argument that a reader can look rather than
+take it on trust. They cannot: a model run stamps every node, every unit conversion, every
+scenario and the whole tornado, which comes to two hundred kilobytes of JSON. Offering that as
+evidence is offering it in a form nobody can take.
+
+So a model result now links the interactive page built from it, which has the same numbers with a
+slider on every input and the scenario, sample count and seed in its header, and which links the
+stamp in turn. The JSON has not gone anywhere and has not stopped mattering: it is what
+``scripts/verify-numbers.py`` reads on every push, and its fingerprint covers the whole DSL core,
+so editing the sampler fails the build until every result is re-run. That is a check for the
+machine to run, not a document to hand a reader.
 
 Two things stay on the page rather than going behind the link. A constant nobody has measured is a
 fact about the figure, not a filing detail (invariant 3). And what a measured constant was measured
@@ -119,20 +129,34 @@ def _what_it_measured(name: str) -> list[str]:
     return [str(produced[key]) for key in keys if produced.get(key)]
 
 
+def _where(name: str) -> str:
+    """Where a reader should be sent to check a figure.
+
+    Every result of kind ``model`` has an interactive page built from it under the same name --
+    ``scripts/build-viewers.py`` selects on exactly this test -- with a slider on every input and
+    the scenario, sample count and seed in its header. That is something a reader can check.
+
+    The stamped JSON is the machine's copy. ``scripts/verify-numbers.py`` reads it on every push
+    and fails the build when its fingerprint no longer matches the code that produced it, which is
+    the job it exists to do. At two hundred kilobytes of nodes, factors and scenarios it is not
+    something a person reads, and sending one there was offering evidence in a form nobody can
+    take. The viewer links it for anybody who wants the file itself.
+
+    A corpus measurement has no interactive page, because there is nothing to move: it is one
+    number over one declared body of data. Those still point at the stamp, where the corpus and
+    the codec are.
+    """
+    if load_result(name).get("kind") == "model":
+        return f"/models/{name}.html"
+    return f"{REPOSITORY}/bench/results/{name}.json"
+
+
 def source(name: str | None, *also: str, computed_from: str | None = None) -> str:
     """One line under every figure: where it came from, as a link.
 
-    This used to be eight fields across two lines — target, model file, scenario, sample count,
-    seed, result path, code fingerprint and date. Three of those are the same on every result in
-    the book (every model run draws 100,000 samples from seed 20260916, and everything was
-    stamped on one day), so on ninety tables half the line was the same words again. The rest is
-    in the stamped result, and a reader who wants the seed has cloned the repository and is not
-    reading this page.
-
-    So the page points at the file and the file answers the questions. A link that resolves to a
-    real stamped result is better evidence that the chain exists than reciting its fields, because
-    the reader can look rather than take it on trust. The result's name carries the two things
-    worth knowing without clicking: `storage_cluster-reference` is the model and the scenario.
+    The name carries the two things worth knowing without following it: `storage_cluster-reference`
+    is the model and the scenario. Where the link goes is :func:`_where`'s decision, and it turns
+    on whether there is anything a reader can do at the other end.
 
     Two things stay on the page because they are not filing details. A constant nobody has
     measured is a fact about the figure (invariant 3), and what a measured constant was measured
@@ -142,11 +166,15 @@ def source(name: str | None, *also: str, computed_from: str | None = None) -> st
         return f"*Source — {computed_from or 'this repository'}*"
 
     names = (name, *also)
-    links = [f"[`{one}`]({REPOSITORY}/bench/results/{one}.json)" for one in names]
+    links = [f"[`{one}`]({_where(one)})" for one in names]
     parts = [" and ".join(links)]
 
-    # What a measurement is of, for the results where that is the point.
-    if load_result(name).get("kind") != "model":
+    if load_result(name).get("kind") == "model":
+        # Said plainly, because on a model result *Source* now names something a reader can do
+        # rather than something they can download.
+        parts.append("every input on a slider")
+    else:
+        # What a measurement is of, for the results where that is the point.
         parts += _what_it_measured(name)
 
     # And the one thing a reader must not have to click for.

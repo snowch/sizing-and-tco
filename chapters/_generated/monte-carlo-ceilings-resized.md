@@ -5,4 +5,4 @@
 | fill level at horizon | 0.39 | 25% | 0.75 | 1.00 | ok | 17% | 9% |
 | read utilisation at peak | 0.28 | 30% | 0.70 | 1.00 | ok | 0% | 0% |
 
-*Source — [`storage_cluster-sized_for_growth`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster-sized_for_growth.json)*
+*Source — [`storage_cluster-sized_for_growth`](/models/storage_cluster-sized_for_growth.html) · every input on a slider*

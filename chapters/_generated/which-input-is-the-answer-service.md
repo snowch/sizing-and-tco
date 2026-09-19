@@ -8,4 +8,4 @@
 | crosstalk | input | 0.0165 | 0.0165 | 0 |
 | single node throughput | input | 0.0165 | 0.0165 | 0 |
 
-*Source — [`service_tier-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/service_tier-reference.json)*
+*Source — [`service_tier-reference`](/models/service_tier-reference.html) · every input on a slider*

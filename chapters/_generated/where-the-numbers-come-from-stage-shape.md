@@ -6,4 +6,4 @@
 | `derived` nodes | 3 |
 | **What the build calls it** | **cost model** |
 
-*Source — [`storage_cluster_provenance-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/storage_cluster_provenance-reference.json)*
+*Source — [`storage_cluster_provenance-reference`](/models/storage_cluster_provenance-reference.html) · every input on a slider*

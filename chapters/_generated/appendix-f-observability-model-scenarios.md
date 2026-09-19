@@ -19,4 +19,4 @@
 | *ingest utilisation, quoted* — over its limit | 21% | 0% |
 | *retention store fill* — over its limit | 30% | 0% |
 
-*Source — [`observability-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-reference.json) and [`observability-knobs_turned_down`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-knobs_turned_down.json) · **4 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) and [`observability-knobs_turned_down`](/models/observability-knobs_turned_down.html) · every input on a slider · **4 constant(s) not yet measured***

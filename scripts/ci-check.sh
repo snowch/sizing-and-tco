@@ -88,7 +88,9 @@ echo "== the site icon is what the script draws =="
 python3 scripts/build-icons.py --check
 
 echo "== the interactive pages assemble =="
-python3 scripts/build-viewers.py > /dev/null
+# Into the site's own tree, where deploy.yml puts them, because every model table's *Source* line
+# links to one. Built anywhere else and nothing checks that those links resolve.
+python3 scripts/build-viewers.py --out _build/static/models > /dev/null
 echo "  OK"
 
 echo "== the playground assembles =="

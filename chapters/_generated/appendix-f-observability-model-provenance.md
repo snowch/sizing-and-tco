@@ -30,4 +30,4 @@
 | ○ | usable tb per node | assumption | usable capacity per storage node after replication |
 | | **26 inputs** | | **2 fact, 2 vendor claim, 22 assumption** |
 
-*Source — [`observability-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-reference.json) · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***

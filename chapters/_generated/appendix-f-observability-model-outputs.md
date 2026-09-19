@@ -16,4 +16,4 @@
 | query path utilisation | 0.569 | 0.0591 to 3.37 |  |
 | ingest utilisation, measured | *not yet measured* | *not yet measured* |  |
 
-*Source — [`observability-reference`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/observability-reference.json) · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
