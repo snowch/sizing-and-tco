@@ -28,8 +28,10 @@ sys.path.insert(0, str(ROOT))
 from bench.outline import APPENDICES, CHAPTERS  # noqa: E402
 from bench.stamp import shown  # noqa: E402
 
-#: Where prose lives. Generated fragments are excluded: they are rebuilt, not edited.
-PAGES = ("chapters/*.md", "appendices/*.md", "parts/*.md", "index.md")
+#: Where prose lives. Generated fragments are excluded: they are rebuilt, not edited. PLAN.md is
+#: in because it argues about chapters by number, and its numbers had gone stale twice by the
+#: time anybody noticed: a bare "ch12" has nothing to derive from, a link does.
+PAGES = ("chapters/*.md", "appendices/*.md", "parts/*.md", "index.md", "PLAN.md")
 
 #: A markdown link whose text opens with a chapter or appendix label.
 REFERENCE = re.compile(r"\[(ch\d+|Appendix [A-Z])([^\]]*)\]\(#([a-z0-9-]+)\)")

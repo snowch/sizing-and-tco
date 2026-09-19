@@ -17,6 +17,7 @@ engine and a contributor without one should not see a red suite they cannot act 
 from __future__ import annotations
 
 import json
+import math
 import shutil
 import subprocess
 import textwrap
@@ -122,13 +123,25 @@ def test_a_resample_with_nothing_held_reproduces_the_stamp(result_name):
 
     stamped = load_result(result_name)["summary"]
     fresh = json.loads(resample(*_texts(result_name)))
+
+    # To a part in a billion, not to the bit: the same seed gives the same draws on every
+    # machine, but a mean or a percentile over a hundred thousand of them is a reduction, and
+    # two CPUs sum in different orders. CI found a one-ulp difference in a standard deviation
+    # on its first run. The browser's own check uses the same tolerance.
+    def close(a, b):
+        return math.isclose(a, b, rel_tol=1e-9, abs_tol=1e-12)
+
     for name, node in stamped["nodes"].items():
         got = fresh["nodes"][name]
-        assert got.get("point") == node.get("point"), f"{name}: point differs"
-        assert got.get("summary") == node.get("summary"), (
-            f"{name}: the resampled interval is not the stamped one. Same file, same seed, "
-            "same sampler -- if these differ the page cannot claim to be running the build."
-        )
+        if "point" in node:
+            assert close(got["point"], node["point"]), f"{name}: point differs"
+        if "summary" in node:
+            for key, want in node["summary"].items():
+                assert close(got["summary"][key], want), (
+                    f"{name}.{key}: the resampled interval is not the stamped one ({got['summary'][key]} "
+                    f"vs {want}). Same file, same seed, same sampler -- if these differ beyond "
+                    "rounding the page cannot claim to be running the build."
+                )
 
 
 def test_holding_an_input_takes_it_out_of_the_draw():

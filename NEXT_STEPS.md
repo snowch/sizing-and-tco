@@ -15,7 +15,23 @@ it comes out rather than being ticked.
 
 ## The book
 
-Every chapter and every appendix is written. What is left is the work a first draft leaves:
+Every chapter and every appendix is written. What is left, first, is the largest change the book
+has had since the scaffold, and then the work a first draft leaves:
+
+- **The spine.** PLAN.md §4 records the decision: the running example becomes a web service and
+  its data on a fleet of Linux hosts, and the storage cluster goes. In order, each green on
+  `main` before the next: generalise `bench/stages.py` to any model with a `build-order.yaml`;
+  build `models/web_service` beside the old models — stages, scenarios (`reference`,
+  `sized_for_growth`, `power_first`), a corpus generator for record compression and a stamped
+  `records-compression`; move every chapter, figure, experiment and test across in one change;
+  retire `storage_cluster` and `service_tier`. Stages by chapter: demand (ch02), provenance
+  (ch03), uncertainty (ch04), littles_law (ch05), queueing (ch06), scaling (ch07), regime (ch08),
+  capacity (ch09), binding (ch10), headroom (ch11), cost (ch18). Two things the prose has to
+  follow: the model becomes a sizing model at ch06, when the first ceiling arrives, not at ch09;
+  and ch01's second problem — find where it changes kind — moves with it.
+- **A rig, or not.** `service_demand`, CPU time per request, is a `rig` measurement and none can
+  be taken here. It is held as a labelled claim. Declaring a machine in `rig/machine.yml` and
+  writing the runner turns the running example into the book's first end-to-end measured model.
 
 - **The two chapters that are waiting on measurements.** ch19 and ch21 both describe the
   observability model's traces chain around a hole. They read correctly today and they will
@@ -30,9 +46,6 @@ Every chapter and every appendix is written. What is left is the work a first dr
   input is worth on its own, which is most of what ch18 needed. A variance-based decomposition
   over the samples already drawn would answer the interaction question the tornado cannot, and is
   still not much code.
-- **`sync-labels.py`.** Chapter numbers in prose are currently checked by `tests/test_book.py`
-  rather than rewritten. Inserting a chapter now means editing every `chNN` that a page says out
-  loud, and the check will find them, which is not the same as fixing them.
 - **A second ceiling kind.** Every ceiling here is "a value against a limit". A queueing ceiling
   that took a service time and an arrival rate and derived the knee would let ch05 stop describing
   the shape and start drawing it.
