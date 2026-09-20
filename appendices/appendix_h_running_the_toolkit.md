@@ -45,7 +45,7 @@ drift, and it takes well under a minute.
 
 % number-ok: settings this book chose, not figures it measured. Stated once because they never vary, and tests/test_book.py fails if they do.
 Every model run in this book draws 100,000 samples from seed 20260916. Neither appears under the
-tables, because a constant repeated under ninety figures is not information — and a test fails if
+tables, because a constant repeated under ninety figures is not information, and a test fails if
 a run ever uses a different one, so that this sentence cannot quietly stop being true.
 
 `python3 -m pip`, not a standalone tool install. `python3 -m pytest` has to work, and a `pytest`
@@ -53,8 +53,8 @@ installed by pipx or uv has its own environment and cannot import this repositor
 
 ## How to check a number in this book
 
-Every figure on every page came out of a file under `bench/results/`. Pick one — how well the
-web service's records compress, say — and follow it backwards:
+Every figure on every page came out of a file under `bench/results/`. Pick one, say how well the
+web service's records compress, and follow it backwards:
 
 ```bash
 python3 -c "import json; print(json.load(open('bench/results/records-compression.json'))['produced_by'])"
@@ -89,13 +89,13 @@ A model is a file. Here is what each one is made of:
 ```
 
 The last row says whether the build classifies the model as a cost model or a sizing one. It works
-that out from the file — a `measured` node or a `ceiling` makes it a sizing model — and
+that out from the file, since a `measured` node or a `ceiling` makes it a sizing model, and
 [ch09](#capacity) is where the reader's own model crosses that line.
 
 ## What this cannot tell you
 
 **Whether your machine gives the same answers as the one that produced these figures.** The
-corpus constants should agree, because a codec is deterministic — but a different Python, a
+corpus constants should agree, because a codec is deterministic. But a different Python, a
 different compression library, or a processor that takes a different instruction path can move a
 figure in its last digits. `make check` allows a tolerance looser than that noise and tighter than
 anything this book prints, so the noise passes and a real change does not. Where to put that

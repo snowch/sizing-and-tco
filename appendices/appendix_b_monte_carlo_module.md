@@ -16,8 +16,8 @@ short_title: "Appendix B · sizing/mc.py"
 :::
 
 [ch13](#monte-carlo) and [ch14](#correlation-and-convergence) quote pieces of this module where
-they need them. This page is the whole of it, in the order it is written, for a reader who wants
-to see that there is nothing else in it.
+they need them. This page is all of it, in the order it is written, for a reader who wants to
+see that there is nothing else in it.
 
 There is no simulation framework underneath this and no statistics package beside it. numpy for
 arrays, one rational approximation for the inverse normal, and nothing else. The reason is not
@@ -46,9 +46,9 @@ that.
 
 Every stamped result computed from a model records the seed that produced it, and
 `bench/stamp.py` refuses one that does not. An unseeded run is a measurement nobody can repeat,
-and this repository refuses those everywhere else. Where an experiment uses many seeds — the
-convergence table on this page uses one per replicate — the result records the seed they are all
-derived from, and the rule that derives them.
+and this repository refuses those everywhere else. Where an experiment uses many seeds, as the
+convergence table on this page does with one per replicate, the result records the seed they are
+all derived from, and the rule that derives them.
 
 ## The four percentile functions
 
@@ -70,8 +70,8 @@ derived from, and the rule that derives them.
 
 Two branches meeting at the mode. Below it the area under the triangle grows as the square of the
 distance from the minimum, so inverting it is a square root; above it, the same thing from the
-other end. That derivation is the whole of adding a distribution to this book, and problem 13.1
-asks for it again for a shape that is not here.
+other end. That derivation is all there is to adding a distribution to this book, and problem
+13.1 asks for it again for a shape that is not here.
 
 ### Lognormal
 
@@ -83,8 +83,7 @@ asks for it again for a shape that is not here.
 
 Parameterised by two percentiles, not by the mean and standard deviation of the logarithm. Nobody
 has an intuition for the mean of a logarithm. Everybody has one for percentiles: *I would be
-surprised if it were under this, or over that* is a sentence a person can actually say about a
-price.
+surprised if it were under this, or over that* is a sentence a person can say about a price.
 
 ### Normal
 
@@ -153,9 +152,9 @@ before the sort rather than an apology in the documentation after it.
 
 Iman–Conover @imanconover1982, which is short enough to read: build a reference sample with the
 correlation you want, rank it, and shuffle each input column into the same rank order. Every
-column keeps its own distribution exactly — every value that was drawn is still there — and only
-the *pairing* between columns changes. That is why it works on all four shapes without knowing
-anything about them.
+column keeps its own distribution exactly, because every value that was drawn is still there, and
+only the *pairing* between columns changes. That is why it works on all four shapes without
+knowing anything about them.
 
 ## Reading the answer
 

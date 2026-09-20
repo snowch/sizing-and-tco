@@ -21,9 +21,9 @@ costed over five years. No product is named and none is implied: what is on this
 structure, and the numbers in it are placeholders for yours.
 
 This is the model the chapters build a few nodes at a time, and it is a **sizing model by the
-rule and by its shape**. Most of it is accounting identity and physics — requests times CPU time
-per request, watts times hours times price, capital plus running cost over a horizon — which is
-the structure [the introduction](#preface) says sampling the inputs is sufficient for. But it
+rule and by its shape**. Most of it is accounting identity and physics: requests times CPU time
+per request, watts times hours times price, capital plus running cost over a horizon. That is the
+structure [the introduction](#preface) says sampling the inputs is sufficient for. But it
 carries one measured constant and six ceilings, so `scripts/verify-models.py` classifies it a
 sizing model and holds it to the stricter rules. That is the right call: a compression ratio
 belongs to a codec, and a fleet asked for more than it can serve does not slow down
@@ -45,15 +45,15 @@ sampler in your browser with the inputs you have moved held at their values.
 ```
 
 Colour is kind: inputs, derived quantities, the one measured constant, and the ceilings. An
-input's border says what it is claiming — solid for a fact, dashed for a vendor's claim, dotted
+input's border says what it is claiming: solid for a fact, dashed for a vendor's claim, dotted
 for an assumption. Arrows run from cause to effect, and every node sits immediately to the right
 of the last thing it depends on.
 
-Read two things off it directly. The graph is **wide at the left and narrow at the right**: a
-great many quantities collapsing into a handful of answers, which is what makes a single wrong
-input so hard to spot downstream. And **three separate chains reach the host count** — the
-request rate, the working set and the data on disk — which is
-[ch10](#bandwidth-and-the-binding-constraint)'s whole subject.
+Read two things off it directly. The graph is **wide at the left and narrow at the right**: many
+quantities collapsing into a handful of answers, which is what makes a single wrong input so hard
+to spot downstream. And **three separate chains reach the host count**: the request rate, the
+working set and the data on disk. That is [ch10](#bandwidth-and-the-binding-constraint)'s whole
+subject.
 
 ## Every formula
 
@@ -75,7 +75,7 @@ disagree with it.
 ```
 
 The verdict column is about the plan; the last two columns are about the world. A design that is
-under its hard limit and inside the margin it declared has not failed — it has spent the reserve
+under its hard limit and inside the margin it declared has not failed. It has spent the reserve
 it was keeping for the failure it has not had yet ([ch11](#headroom-and-failure-domains)).
 
 ## What moves the answer

@@ -46,7 +46,7 @@ parameter with a documented minimum and maximum and no reason to prefer the midd
 
 **What it asserts.** That every value between the bounds is exactly as likely as every other, and
 that nothing outside them can happen. Equal likelihood is a strong claim that reads as a weak one:
-it looks like saying "I do not know", and it is actually saying "the extremes are as likely as the
+it looks like saying "I do not know", and it is saying "the extremes are as likely as the
 middle".
 
 **How it lies.** By putting mass at the ends where almost nothing real has any. Used as the
@@ -72,7 +72,7 @@ the most it could be, and the one they would bet on. Most sizing inputs are this
 mode. The straight sides are arbitrary and mostly harmless. The hard bounds are not.
 
 **How it lies.** The bounds came from somebody's memory, and the shape says nothing outside them
-can occur — so the model cannot produce the case where the peak hour is twice anything anyone has
+can occur. So the model cannot produce the case where the peak hour is twice anything anyone has
 seen. Every triangular input is a small promise that the world will stay inside the range of what
 has already happened, and the futures that hurt are exactly the ones that do not.
 
@@ -88,7 +88,7 @@ has already happened, and the futures that hurt are exactly the ones that do not
 
 **What it is for.** Prices, growth rates, and anything that compounds. Parameterised here by two
 percentiles rather than by the parameters of the underlying normal, because the percentiles are
-something a person can actually state.
+something a person can state.
 
 **What it asserts.** That the quantity cannot be negative, and that its uncertainty is
 multiplicative — that "half as much" and "twice as much" are equally plausible departures. For a
@@ -116,8 +116,8 @@ as low.
 
 **What it asserts.** Symmetry, and thin tails.
 
-**How it lies.** It goes negative. Not often, and that is the problem — a price with a small
-enough spread will sample a negative value once in a very large number of draws, and the run that
+**How it lies.** It goes negative. Not often, and that is the problem. A price with a small
+enough spread will sample a negative value once in a large number of draws, and the run that
 finds it will be the one somebody is watching. More importantly, symmetry is the wrong claim about
 almost everything else in a sizing model: growth, prices and throughput are all multiplicative,
 and a normal says they are additive.
@@ -140,8 +140,8 @@ Then the questions, in order:
 1. **Does it compound, or does it have a price on it?** Lognormal.
 2. **Is it a measurement with a standard error?** Normal.
 3. **Is it an engineer's least / likely / most?** Triangular.
-4. **Are the bounds genuinely the only claim?** Uniform.
-5. **None of these?** Then the shape is not the problem — the input is. Go and measure it, or
+4. **Are the bounds the only claim?** Uniform.
+5. **None of these?** Then the input is the problem, not the shape. Go and measure it, or
    declare it a control knob and run scenarios instead of sampling it
    ([ch12](#the-sizing-model)).
 
@@ -153,7 +153,7 @@ shape. That sentence is what a reviewer argues with; without it the distribution
 with a nice picture.
 
 `scripts/verify-models.py` refuses an input that is sampled and does not name its shape. The check
-is mechanical — it looks for the word — so it cannot tell a reason from a formality. What it can
+is mechanical: it looks for the word, so it cannot tell a reason from a formality. What it can
 do is make the omission impossible, which is the same bargain as the rule that a `fact` must cite
 something. It was added after an audit of this book's own models found most of them silent.
 
@@ -168,9 +168,10 @@ and pretending otherwise is not a neutral simplification:
 Every row is positive: assuming independence made every interval narrower. Narrower in the
 direction that gets a plan approved, which is the direction to be suspicious of.
 
-Independent inputs partly cancel — one is high while another is low — and that cancellation is
-what makes the interval narrow. Correlated inputs push the same way at the same time, so the
-cancellation does not happen. That mechanism is worth carrying around. A model that declares no
+Independent inputs partly cancel, one high while another is low, and that cancellation is what
+makes the interval narrow. Correlated inputs push the same way at the same time, so the
+cancellation does not happen. Keep that mechanism in mind: it is why leaving each of these
+correlations undeclared made the interval narrower. A model that declares no
 correlations is claiming that all of its inputs are strangers, and in a sizing model fed by one
 growth rate they are usually relatives.
 
@@ -181,13 +182,13 @@ beside one that does is the fastest way to stop treating the subject as magic
 
 ## What is not here, and why
 
-**Fat-tailed shapes.** Nothing here has a tail heavy enough to model a genuine outage, a supplier
+**Fat-tailed shapes.** Nothing here has a tail heavy enough to model a real outage, a supplier
 failing, or a regulation arriving. Those are structural events, and a distribution that tries to
-absorb them produces an interval so wide it cannot distinguish two designs — which is the only
+absorb them produces an interval so wide it cannot distinguish two designs, which is the only
 thing the model was for. They belong in *What this cannot tell you*, not in a parameter
 ([ch20](#the-missing-node)).
 
-**Mixtures.** A mixture — two regimes with a probability of each — would be easy to add, and is
+**Mixtures.** A mixture, two regimes with a probability of each, would be easy to add, and is
 deliberately absent. When a quantity has two regimes, the honest model has a node for which
 regime it is in and a scenario for each: a number that is bimodal is usually two decisions
 wearing one name.
@@ -204,4 +205,4 @@ produces a model whose central assumption nobody ever wrote down.
 
 Three lines and a test. A percentile function, an entry in `SHAPES`, and a case in
 `tests/test_mc.py` asserting that the percentiles it produces are the ones it was asked for.
-Problem 13.1 is exactly this, for a shape that is not on this page.
+Problem 13.1 is that exercise, for a shape that is not on this page.

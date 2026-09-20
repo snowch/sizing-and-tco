@@ -18,9 +18,9 @@ needs [ch13](#monte-carlo) behind it rather than the chapter before.
 
 ### More samples never help
 
-The instinct is to run more samples. That is why [ch14](#correlation-and-convergence) is worth
-restating: a wide interval is not sampling noise. The interval is a property of the model's
-inputs. More draws locate it more precisely. They do not narrow it.
+The instinct is to run more samples. [ch14](#correlation-and-convergence) said why that fails: a
+wide interval is not sampling noise. The interval is a property of the model's inputs. More draws
+locate it more precisely. They do not narrow it.
 
 So there are exactly two things that narrow an interval.
 
@@ -87,7 +87,7 @@ downstream of that choice is a bill of materials, and in a bill of materials the
 wins: how many people run the fleet, what a licence costs per core, what those people are paid,
 and only then what a host costs.
 
-That is the rule worth carrying: **a tornado is about the output you point it at, and pinning a
+The rule to take from it: **a tornado is about the output you point it at, and pinning a
 decision can remove the dominant input from everything downstream of it.** Neither chart is wrong.
 They answer different questions. The cost question has a boring answer because the interesting
 one was settled before it was asked.
@@ -143,7 +143,7 @@ running cost spends longest on, would be a quarter's work for a result nobody co
 chart.
 
 Now the same experiment against the host count, which is the question
-[ch12](#the-sizing-model) actually asked. The answer has the opposite shape:
+[ch12](#the-sizing-model) asked. The answer has the opposite shape:
 
 ```{include} _generated/which-input-is-the-answer-worth-hosts.md
 ```
@@ -167,7 +167,7 @@ Now the bottom rows of the last two tables.
 **The measured constants buy nothing.** The record compression ratio in one table, bytes per
 sample and bytes per log line in the other, were measured over a declared corpus, with a standard
 error, by the most careful machinery in this book. Remove that standard error entirely and
-neither interval moves. Their *values* matter enormously; they scale the answer. Their
+neither interval moves. Their *values* matter, because they scale the answer. Their
 *uncertainty* is not what the answer rests on. Measuring them again, better, would produce a
 nicer provenance and the same interval.
 

@@ -20,14 +20,14 @@ just raised a question that needs it, and never as a definition at the front of 
 list is short by design: a reader who finishes the book should have gained under twenty words,
 not a dialect.
 
-Four of the terms name kinds of error, and they are worth reading as a group. Measurement
-uncertainty and parameter uncertainty are what an interval is made of. Scenario uncertainty
-is why this book runs a model more than once rather than widening its inputs. Structural
-error is none of those three — the model is wrong in shape rather than in its numbers — and
-it is [ch20 · The missing node](#the-missing-node).
+Four of the terms name kinds of error. Read them as a group. Measurement uncertainty and
+parameter uncertainty are what an interval is made of. Scenario uncertainty is why this book runs
+a model more than once rather than widening its inputs. Structural error is none of those three.
+The model is wrong in shape rather than in its numbers, and it is
+[ch20 · The missing node](#the-missing-node).
 
 The last column is not a simplification. It is the sentence to use out loud. Where a term has a
-plain-English equivalent, this book says the plain one first and names the term second — including
+plain-English equivalent, this book says the plain one first and names the term second, including
 to a technical audience, where the effect is not condescension but agreement about what is being
 discussed.
 
@@ -50,8 +50,8 @@ Three of those are measurements: something outside this repository was asked a q
 so its fingerprint covers the whole sampler and every figure derived from it moves when the
 method does. Keeping it apart from the other three is what stops the distinction going soft.
 
-The node kinds — `input`, `derived`, `measured`, `ceiling` — and the provenance kinds — `fact`,
-`vendor_claim`, `assumption` — are in [Appendix A](#appendix-a-dsl-reference), where the fields
+The node kinds (`input`, `derived`, `measured`, `ceiling`) and the provenance kinds (`fact`,
+`vendor_claim`, `assumption`) are in [Appendix A](#appendix-a-dsl-reference), where the fields
 they carry are quoted alongside them.
 
 ## Terms this book does not use
@@ -60,7 +60,7 @@ None of these is an oversight. Each one has something the book says instead:
 
 **Confidence interval.** The intervals in this book are percentile intervals of a sampled output:
 the gap between the fifth and ninety-fifth percentiles of the futures the model produced. The
-statistical term means something else — a statement about a procedure repeated over experiments —
+statistical term means something else, a statement about a procedure repeated over experiments,
 and borrowing it would import a guarantee this method does not offer.
 
 Four things get called an interval in conversation and only one of them appears in these pages.
@@ -68,8 +68,8 @@ A **percentile interval** is what this book reports: two percentiles of the valu
 produced, and a statement about the model rather than about the world. A **confidence interval**
 is a statement about an estimation procedure. A **prediction interval** is a claim about where a
 future observation will fall, which would require this book's models to have a track record they
-do not have. And the **probability a ceiling is breached** — the last column of every ceiling
-table — is none of those three: it is the share of the model's futures that ended on the wrong
+do not have. And the **probability a ceiling is breached**, the last column of every ceiling
+table, is none of those three. It is the share of the model's futures that ended on the wrong
 side of a declared line, which is why it is reported as a share and never as a range.
 
 **Expected value.** The mean. In a sizing model it is usually worse than the median: outputs that
