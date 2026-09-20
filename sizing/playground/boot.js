@@ -5,7 +5,17 @@
 // are carried by the page and written where the toolkit looks for them on disk. Nothing is sent
 // anywhere: after the fetch, everything runs here.
 async function bootToolkit({ pyodideUrl, modules, results, wheels, status }) {
-  status("Starting Python… about ten megabytes, once.");
+  // Whether the runtime is already on this device: kept by the worker after an earlier Run, or
+  // fetched ahead of need by the offline control. The line under the button should not promise
+  // a download that is not going to happen.
+  let kept = false;
+  try {
+    kept = "caches" in window && Boolean(await caches.match(pyodideUrl + "pyodide.asm.wasm"));
+  } catch (error) {
+    kept = false;
+  }
+  status(kept ? "Starting Python from the copy this browser keeps…"
+              : "Starting Python… about ten megabytes, once.");
   const { loadPyodide } = await import(pyodideUrl + "pyodide.mjs");
   const pyodide = await loadPyodide({ indexURL: pyodideUrl });
   // numpy and PyYAML come with the runtime, from its own pinned lock file. Pint and what it
