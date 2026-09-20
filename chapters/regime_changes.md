@@ -134,6 +134,20 @@ So a model with a `ceiling` in it is classified as a sizing model, and the toolk
 that declares a limit with no margin. The distinction is not taxonomy. It separates a model whose
 uncertainty you can quantify from a model whose *applicability* you have to bound.
 
+:::{note} Key takeaways
+- **A chain of multiplications cannot express a regime change.** It computes the crossing quantity
+  perfectly and is wrong about what the number means past a point it cannot represent.
+- **Four thresholds in the running example, each with different physics on either side.** The
+  queueing knee, a host lost at the busy hour, a label multiplying every series it touches, and a
+  working set that stops fitting in memory.
+- **A ceiling does not model the other side. It declares where the change is.** It keeps a margin
+  away from it and reports how much of the model's own uncertainty falls beyond it.
+- **A model fitted where the system was healthy predicts the wrong thing, confidently.** Nothing in
+  the flat part of the curve holds any information about the vertical part.
+- **A ceiling is what makes a model a sizing model.** Sampling the inputs quantifies a cost model's
+  doubt. A sizing model's applicability has to be bounded as well.
+:::
+
 ## What this cannot tell you
 
 **Where your thresholds are.** Every ceiling in this book was declared by somebody. The queueing

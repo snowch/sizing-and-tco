@@ -166,6 +166,22 @@ figures, and present it with complete confidence, while a whole cost line is mis
 model. The sampling converged beautifully on the wrong number. Convergence is a statement about
 the calculation, never about the thing being calculated.
 
+:::{note} Key takeaways
+- **Inputs that move together must be drawn together.** Drawing a host price and a network price
+  independently claims that one can save you from the other, and it makes every interval narrower
+  than the evidence supports.
+- **Correlate the ranks, not the values.** Reordering the draws expresses the pairing without
+  changing the distribution each input was given, and the relation is inverted first so the declared
+  strength comes out as written.
+- **Correlation between inputs that push the same way widens the interval.** It is not a refinement.
+  It removes an assumption that made the model look better than it was.
+- **More samples do not narrow an interval.** The width belongs to the inputs. More draws only
+  settle where the interval is, and the run-to-run wobble falls with the square root of the count.
+- **Enough samples is when the answer stops moving at the precision you will report it to, and a
+  settled answer has settled its arithmetic and nothing else.** A model can converge beautifully on
+  the wrong number.
+:::
+
 ## What this cannot tell you
 
 **Which correlations exist.** Everything above takes the declared pairs as given. Nothing here

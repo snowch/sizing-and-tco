@@ -108,6 +108,20 @@ disagreement is.
 Energy price and carbon price move together ([ch14](#correlation-and-convergence)). A model that
 added a carbon line and drew it independently would understate the range of the total.
 
+:::{note} Key takeaways
+- **When power binds, the chain runs backwards and rounds down.** Start at the wall, divide out what
+  the building spends on itself, divide by what a machine draws, and take the whole number below.
+- **A fleet that fits the allocation can fail to do the job.** Sized to the power budget, the
+  running example is over three hard limits at the point estimate and has spent the margin on the
+  other two.
+- **The honest output is a statement that the workload does not fit, with the numbers to say so.** A
+  spreadsheet sized from a power budget gives a host count and stops.
+- **There are four ways out, and the model prices three of them.** More power, less per machine, a
+  better building, or wanting less. The last is rarely proposed and often right.
+- **Energy is the one cost that is also a constraint.** Nobody is told they may not spend more on
+  hosts. People are regularly told the rack has no more power.
+:::
+
 ## What this cannot tell you
 
 **What your allocation actually is.** Contracted power, breaker capacity, cooling capacity and

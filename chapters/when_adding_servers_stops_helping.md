@@ -131,6 +131,21 @@ machines from three points clustered at the low end, and you are about to spend 
 extrapolation. The coefficients in this book's model are assumptions, and they say so in their
 provenance. **The shape is the claim. The position of the peak is a guess.**
 
+:::{note} Key takeaways
+- **Machines do not add up, for two separate reasons.** Contention takes a fixed share of every
+  machine you add and flattens the curve. Crosstalk grows with the number of pairs and turns the
+  curve over.
+- **Past the peak, the next machine takes capacity away.** Each machine is worth less than the one
+  before it, and after the peak less than nothing.
+- **Doubling the fleet fixes latency and buys little capacity.** Utilisation halves, queueing time
+  falls to about a quarter, and throughput rises by a fraction. Those are different purchases.
+- **The utilisation a queueing view quotes is optimistic.** Some of every machine's capacity is
+  spent on the others, so the honest figure divides by what the fleet can actually deliver.
+- **The shape of the curve is the claim. The position of the peak is a guess.** Three measurements
+  at different sizes fit the coefficients exactly, and extrapolating them to hundreds of machines is
+  the bet you are placing.
+:::
+
 ## What this cannot tell you
 
 **Where your peak is.** The coefficients here are assumptions, and the peak follows from them.

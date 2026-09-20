@@ -138,6 +138,21 @@ Nobody declares the change. It happens because of what gets added to the file, a
 works the rest out. That is why the stage is worth finding rather than being told, and why this
 page does not tell you.
 
+:::{note} Key takeaways
+- **A point estimate is silent, not wrong.** One value per input and the arithmetic done once gives
+  a correct number that says nothing about how far it could be out.
+- **Doubt compounds along a chain.** Multiplying uncertain numbers stretches the answer further than
+  any single input does, so the honest answer to *how big* is a range with a most-likely region in
+  it, not a figure.
+- **A range reports only the doubt somebody wrote down.** An error in the model's shape is invisible
+  to any amount of varying the inputs.
+- **Two kinds of model, held to two rules.** A cost model has a structure nobody doubts and
+  uncertain inputs. A sizing model adds measured constants and ceilings, and has to say how much
+  room it keeps below each limit.
+- **The kind is read from the file, never declared.** A measured constant or a declared limit makes
+  a sizing model, and the toolkit works that out from what is in the model.
+:::
+
 ## What this cannot tell you
 
 **What the model's structure omits.** Everything above is about a model that has already been
