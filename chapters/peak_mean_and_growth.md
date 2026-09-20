@@ -8,8 +8,7 @@ short_title: "ch04 Peak, mean and growth"
 
 ## The question
 
-Which number in a demand curve sizes you, and what is a five-year growth rate actually a claim
-about?
+Which number in a demand curve sizes you, and what is a five-year growth rate a claim about?
 
 [ch02](#what-a-workload-is) established that a workload is a set of quantities. Each of them
 varies over time, and somebody has collapsed each one into a single number. This chapter is about
@@ -20,11 +19,11 @@ which collapse is the right one.
 ### The mean is the one number nobody experiences
 
 Demand has a shape. It is low overnight, high in the afternoon, and different again on a Tuesday
-in November. Sizing for the average means sizing for a level that occurs twice a day, on the way
-past.
+in November. Sizing for the average means sizing for a level that demand passes through twice a
+day.
 
 The number that sizes you is the busy hour. Or the busy minute, or the busy Tuesday, depending on
-how long your system takes to fall over and how long anybody will wait for it to recover. Which
+how long your system takes to fail and how long anybody will wait for it to recover. Which
 of those you should use depends on your traffic and your tolerance, and somebody has to decide
 it.
 
@@ -49,7 +48,7 @@ carries both.
 
 ### Growth is a bet, and the bet compounds
 
-Growth does most of the damage in this book.
+Growth moves the answer more than any other input in this book.
 
 The chart below is the first of many like it, so here is how it is made. Take one input. Hold
 every other input still, swing that one from the low end of its range to the high end, and record
@@ -66,20 +65,20 @@ under, and high enough that only about one in ten comes in over.
 ```{include} _generated/peak-mean-and-growth-tornado.md
 ```
 
-The growth rate is at the top, by a distance. It is at the top of every tornado in this book whose
-answer depends on the future. Not every answer does: the cost of a fleet somebody has already
-bought is a question about prices, and [ch15](#capex-opex-and-lifecycle) is where that difference
-is drawn. But wherever the future is in the chain, growth is at the top of it. That is not a quirk
-of these numbers. It is structural. A growth rate is the one input that is *raised to a power*;
-everything else is multiplied. Over a five-year horizon, the exponent turns an uncertainty in the
-rate into a much larger uncertainty in the demand.
+The growth rate is at the top, and nothing else is close. It is at the top of every tornado in this
+book whose answer depends on the future. Not every answer does: the cost of a fleet somebody has
+already bought is a question about prices, and [ch15](#capex-opex-and-lifecycle) is where that
+difference is drawn. But wherever the future is in the chain, growth is at the top of it. That is
+not a quirk of these numbers. A growth rate is the one input that is *raised to a power*; everything
+else is multiplied. Over a five-year horizon, the exponent turns an uncertainty in the rate into a
+much larger uncertainty in the demand.
 
 ```{image} _figures/peak-mean-and-growth-demand.svg
 :alt: The busy-hour request rate at the horizon, as a distribution
 :width: 100%
 ```
 
-That is what a five-year demand forecast actually looks like when its growth assumption is stated
+That is what a five-year demand forecast looks like when its growth assumption is stated
 honestly: the busy hour the fleet will have to serve, as a band. The point estimate is somewhere
 in the middle of it.
 
@@ -95,7 +94,7 @@ The same graph, with the growth rate as a band rather than a figure. Clicking it
 
 ### Compounding an average is not averaging the compounds
 
-There is a specific and expensive error here, and it is worth working through once by hand.
+There is a specific and expensive error here. Work through it once by hand.
 
 You have a range of plausible growth rates. You want the capacity in five years. There are two
 things you could compute:
@@ -105,7 +104,7 @@ things you could compute:
 
 They are not the same number. The second is always larger, for any spread at all, because
 compounding curves upwards. The gap widens with the spread of the growth rates and with the
-horizon, so it is largest exactly when somebody reaches for a five-year plan.
+horizon, so it is largest when somebody reaches for a five-year plan.
 
 Problem 4.2 is that comparison. Write down which way you think it goes before you run it.
 
@@ -124,8 +123,9 @@ three might not resemble them. The width of that band is a judgement nobody can 
 
 So this book gives growth a lognormal shape: growth compounds, and the multiplier it compounds
 cannot be zero or less. The ends of the band are stated as a sentence somebody could disagree
-with: *surprised below this, surprised above that*. That is the most honest form available. It is
-not a measurement, and the model does not pretend otherwise.
+with: *surprised below this, surprised above that*. That is the most honest form available,
+because a sentence can be argued with and a bare number cannot. It is not a measurement, and the
+model does not pretend otherwise.
 
 Here is that stage of the web service model, with the two ends of a band where a number used to
 be:
@@ -180,7 +180,7 @@ see is the quarter it stops: a product retired, a customer lost, a competitor wo
 
 **Whether the band's width is honest.** A growth rate stated as *surprised below here, surprised
 above there* is a claim about somebody's surprise, and nobody goes back afterwards to count how
-often they were actually surprised. Nothing here calibrates that.
+often they were surprised. Nothing here calibrates that.
 
 **Anything about a shape that changes.** Every figure above assumes demand grows without changing
 its daily profile. A workload that grows by adding a different kind of user grows in a different

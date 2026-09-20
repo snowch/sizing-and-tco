@@ -12,8 +12,8 @@ Which quantities actually size a system, and which only look as though they do?
 
 Somebody has told you what the system has to do. Before any of it can be multiplied into a number
 of machines, it has to be written down in a form that cannot quietly mean two things. The first
-distinction that matters is between a rate and a level. That sounds like pedantry, right up until
-somebody sizes a retention store from a rate.
+distinction that matters is between a rate and a level. That sounds like pedantry until somebody
+sizes a retention store from a rate.
 
 This chapter writes the first nodes of the model the rest of the book uses. By the end of it you
 will have a file that runs.
@@ -37,16 +37,16 @@ this book declares one. A flow has time in its denominator. A stock does not. A 
 in its numerator, and is none of the three.
 
 The commonest error in sizing is turning a flow into a stock by multiplying it by a number instead
-of by an amount of time. A spreadsheet accepts it. The toolkit does not, and problem 2.2 is
-exactly that. [Appendix D](#appendix-d-units) shows how units combine and cancel, on a page of
+of by an amount of time. A spreadsheet accepts it. The toolkit does not, and problem 2.2 is that
+error. [Appendix D](#appendix-d-units) shows how units combine and cancel, on a page of
 examples the toolkit works out itself.
 
-### The whole of it, before any of it is written down
+### The demand side, drawn before it is written
 
 Here is the demand side of the model this book builds, as a graph. Eight quantities: four you
 were given, one a definition, three computed. Drag *annual growth factor* and watch *peak request
 rate at horizon* and *records held at horizon* move together. That is a flow, a stock and one
-exponent, and it is the whole of this chapter.
+exponent, and they are all this chapter adds.
 
 ```{iframe} /models/web_service_demand-reference.html
 :width: 100%
@@ -55,22 +55,22 @@ The demand side, with a slider on every input. Click a node to see what fed it.
 
 ### Turning the workload into a file
 
-That graph was drawn from a file, and the file is what you will actually write.
+That graph was drawn from a file, and the file is what you write.
 
-The workload you have been given is the one this book carries all the way through: a busy hour of
-requests today and some amount of data held today, both growing at some rate, over the life of
-whatever gets bought.
+The workload you have been given is the one this book carries all the way through. It is a busy
+hour of requests today and some amount of data held today, both growing at some rate, over the
+life of whatever gets bought.
 
 You could put that in a spreadsheet, and most people do. A cell holds a value and nothing else. It
 does not hold the fact that the value was measured last March against version 2.4 of something.
 It does not say that the value is a vendor's claim nobody has checked, or that it was agreed in a
 meeting by people who have since left. Those facts live in the head of whoever built the sheet,
 and they leave when that person does. Nor does a cell have a unit. `=B4*C7` is as valid as any
-other product, and multiplying series by requests gives a number that looks exactly like a number
-of bytes.
+other product, and multiplying series by requests gives a number that looks like a number of
+bytes.
 
 So a model here is a YAML file of named quantities, each with a unit and a source. It diffs and
-reviews like code. One file. What follows is three pieces of the same one, in the order you would
+reviews like code, and it is one file. What follows is three pieces of it, in the order you would
 write them. The whole thing is eighty lines by the end of this chapter.
 
 The first two nodes are the rate and the level you were given: what arrives, and what
@@ -85,7 +85,7 @@ accumulates.
 Four lines in each of those are the argument of this book. The rest are convenience. `kind` and
 `unit` let the toolkit tell a level from a rate. `value` is the number a spreadsheet would have
 held on its own. `provenance` is the line a cell has nowhere to put. A number with no source is a
-rumour, so the field is mandatory from the very first node.
+rumour, so the field is mandatory from the first node.
 [ch03](#where-the-numbers-come-from) is about what that costs and what it buys.
 
 `label` and `range` are neither. A label reads better in a table than `stored_data_t0` does. A
@@ -104,8 +104,8 @@ Growing them over the horizon takes one exponent and one thing that is easy to m
 `horizon / one_year` looks like ceremony and is not. Growth compounds, so the horizon has to be an
 exponent, and an exponent has to be a pure number. Five years is a duration. Five is a number.
 Dividing the duration by a declared year is how the first becomes the second. A spreadsheet does
-this silently and correctly, right up to the quarter when somebody types a horizon in months into
-the same cell.
+this silently and correctly, until the quarter when somebody types a horizon in months into the
+same cell.
 
 Then the two quantities at the end, which are the first in this book that are *computed* rather
 than stated:
@@ -116,7 +116,7 @@ than stated:
 :end-before: outputs:
 ```
 
-That is the whole of the demand side. Here it is, with the toolkit that reads it: this
+That completes the demand side. Here it is, with the toolkit that reads it: this
 repository's, not a copy. Press **Run**, then change a number and watch the total move. Change
 `stored_data`'s formula to multiply the request rate by a plain number, and the toolkit
 refuses: the node holds terabytes, and a rate times a plain number is still a rate.
@@ -130,7 +130,7 @@ The file above, running. The first press fetches a Python runtime; after that a 
 
 A model's inputs are two different kinds of thing wearing the same clothes. Some describe what the
 world is doing to you. The rest describe what you have decided to do about it. Separating them is
-the first thing worth doing to any model, including this one:
+the first thing to do to any model, including this one:
 
 ```{include} _generated/what-a-workload-is-service.md
 ```
@@ -146,8 +146,8 @@ Nothing in the file has a shape yet, so everything reads as a choice.
 first time.
 
 That is worth more here than a correct table would have been, because the failure is the useful
-one. **An input you gave a single value to, and cannot actually control, is an assumption you
-have stopped noticing.** A model that files its inputs this way finds them by construction. The
+one. **An input you gave a single value to, and cannot control, is an assumption you have stopped
+noticing.** A model that files its inputs this way finds them by construction. The
 busy hour on day one is sitting in the same list, and that one is not a decision either.
 
 Once the table does separate, the half worth arguing about is *what you decide*, because it is the
@@ -196,7 +196,7 @@ value, so both lists are populated:
 
 Read the decisions. Scrape interval, retention, sampling rate, how many log lines you keep: those
 are the four knobs an observability platform gives you.
-[Appendix F](#appendix-f-observability-model) shows what turning all of them down actually buys.
+[Appendix F](#appendix-f-observability-model) shows what turning all of them down buys.
 
 Then read the demand, and notice what is *not* in the decisions: the number of label values. It
 dominates the whole model and it is not a knob. That is [ch08](#regime-changes)'s subject.
@@ -237,7 +237,7 @@ distinction this table cannot draw, and the next part exists to make it.
   declared year is what turns it into an exponent, and a spreadsheet does that silently until
   somebody types months.
 - **Separate what the world does to you from what you decided.** An input given a single value that
-  you cannot actually control is an assumption you have stopped noticing.
+  you cannot control is an assumption you have stopped noticing.
 :::
 
 ## What this cannot tell you
@@ -319,6 +319,6 @@ least one quantity than you were before you wrote it down.
 ## Where to go next
 
 [ch03](#where-the-numbers-come-from) is the question this chapter kept deferring: once you have
-written a quantity down, what are you actually claiming about it?
+written a quantity down, what are you claiming about it?
 
 [ch04](#peak-mean-and-growth) is the other one: demand moves, so which value of it sizes you?

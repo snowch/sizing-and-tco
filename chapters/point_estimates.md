@@ -15,8 +15,8 @@ hard part. What comes out is one number, and the number says nothing about how m
 stake on it.
 
 A single number leaves out two things, and they are not the same thing. The first is the spread
-the arithmetic threw away, and a later chapter measures it. The second is an error in the model's
-shape, and no amount of measuring will find it.
+the arithmetic threw away, and [ch13](#monte-carlo) measures it. The second is an error in the
+model's shape, and no amount of measuring will find it.
 
 ## The material
 
@@ -62,7 +62,7 @@ smallest and the largest of the answers the same arithmetic gave, and they are n
 Nothing in the first calculation was wrong. It had no way to say that it was a bet.
 
 The smallest and the largest are a poor summary of the spread, because a handful of extreme
-answers set them. The chart below shows where the answers actually piled up. Every later table
+answers set them. The chart below shows where the answers piled up. Every later table
 in this book reports a narrower band than this column, and [ch13](#monte-carlo) says which band
 and why.
 
@@ -76,10 +76,10 @@ second row, drawn. Most of the answers sit in the middle, a thin tail runs far t
 the red line is where the single-number answer falls.
 
 Doing that arithmetic over and over needs a program to pick each input's value, and
-[ch13](#monte-carlo) builds one. You do not need one to feel the force of it. Problem 1.1 does the same job on paper: every input at
-the bottom of its range together, then every input at the top together. It asks you to set what
-comes out beside the smallest and largest answer in the table. Those are two honest ways of
-admitting the same doubt, and they do not agree with each other.
+[ch13](#monte-carlo) builds one. You do not need one to feel the force of it. Problem 1.1 does the
+same job on paper: every input at the bottom of its range together, then every input at the top
+together. It asks you to set what comes out beside the smallest and largest answer in the table.
+Those are two honest ways of admitting the same doubt, and they do not agree with each other.
 
 ### The error a range cannot show
 
@@ -110,8 +110,8 @@ it describes started behaving differently.
 How many records one request leaves behind when a system is traced. How much work one processor
 core gets through in a second. These are measured, not derived. Each belongs to one implementation
 at one version, each has a measurement error, and none is a fact about the world. A chain of
-multiplications built on them inherits all of that. A model that treats them as constants hides
-all of it.
+multiplications built on them inherits their errors, their version, and their standing as
+measurements rather than facts. A model that treats them as constants hides all three.
 
 *Non-linear ceilings.* The queueing knee, where response time climbs steeply while the fleet still
 has capacity to spare. A host failing at the busy hour, so that its share of the requests lands
@@ -134,9 +134,9 @@ this book applies to what you are holding. The web service model starts as a cos
 becomes a sizing model partway through being built, and the node that changes it can be named.
 Problem 1.2 is finding it, on the same model at six stages of construction.
 
-Nobody declares the change. It happens because of what gets added to the file, and the toolkit
-works the rest out. That is why the stage is worth finding rather than being told, and why this
-page does not tell you.
+Nobody declares the change. It happens when you add a measured constant or a ceiling to the file,
+and the toolkit works the rest out. That is why the stage is worth finding rather than being told,
+and why this page does not tell you.
 
 :::{note} Key takeaways
 - **A point estimate is silent, not wrong.** One value per input and the arithmetic done once gives
@@ -158,7 +158,7 @@ page does not tell you.
 **What the model's structure omits.** Everything above is about a model that has already been
 written down. A quantity nobody thought of appears in no point estimate, no range and no
 ceiling, and no amount of sampling will put it there. This book's observability model has a hole
-of exactly that shape, argued in [Appendix F](#appendix-f-observability-model).
+of that shape, argued in [Appendix F](#appendix-f-observability-model).
 [ch23](#what-the-model-got-wrong) is a post-mortem on a model that was confidently wrong for this
 reason.
 
@@ -202,7 +202,7 @@ python3 -m pytest tests/point_estimates/test_problem_2_which_kind.py
 **1.3 — Your own system.** No test. There is no oracle for this, and pretending otherwise would be
 worse than leaving it ungraded.
 
-Take something you actually run. Write down the three to six numbers that decide how big it has
+Take a system you run. Write down the three to six numbers that decide how big it has
 to be. Not everything you know about it: the ones that would change the answer. Beside each, write
 where it came from: something you measured, something a supplier told you, or something you
 decided.
@@ -225,4 +225,4 @@ first nodes. By the end you have a file that computes a busy hour and a data vol
 horizon, and refuses to get there by multiplying a rate by a plain number.
 
 [ch03](#where-the-numbers-come-from) is the question this chapter kept deferring: once you have
-written a number down, what are you actually claiming about it?
+written a number down, what are you claiming about it?
