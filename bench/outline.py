@@ -347,6 +347,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[4],
         "What changes when watts are the binding constraint rather than money?",
         owes="The web service resized from a power budget inwards.",
+        consumes=("web_service-reference", "web_service-power_first", "power-first-sweep"),
         needs=("the_sizing_model", "capex_opex_and_lifecycle"),
     ),
     Chapter(

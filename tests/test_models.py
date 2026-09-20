@@ -314,3 +314,25 @@ outputs: [largest, smallest]
     assert np.array_equal(once["largest"], np.maximum.reduce([once["a"], once["b"], once["c"]]))
     assert np.array_equal(once["smallest"], np.minimum.reduce([once["a"], once["b"], once["c"]]))
     assert not np.array_equal(once["c"], once["largest"]), "c is not the maximum in every sample"
+
+
+def test_the_power_first_scenario_pins_the_fleet_the_allocation_admits():
+    """ch16's scenario and ch16's figure come from one premise, held in the sweep runner.
+
+    The scenario pins the host count in a file and says in prose what allocation it came from;
+    the sweep holds the allocation as a number. This is what keeps the two from drifting apart.
+    """
+    from bench.run_curves import POWER_ALLOCATION_KW
+
+    sweep = load_result("power-first-sweep")["summary"]
+    assert sweep["allocation"] == POWER_ALLOCATION_KW
+    admitted = [
+        row["hosts"] for row in sweep["curve"] if row["facility_power"] <= POWER_ALLOCATION_KW
+    ]
+    assert sweep["fits"] == max(admitted)
+    scenario = load_scenario("models/web_service/scenarios/power_first.yaml")
+    assert scenario.overrides["hosts"] == sweep["fits"], (
+        "the power-first scenario pins a fleet the allocation in bench/run_curves.py does not "
+        "admit; change one of them, and say which in the scenario's because"
+    )
+    assert sweep["demand"] > sweep["fits"], "the chapter's premise: demand asks for more than fits"

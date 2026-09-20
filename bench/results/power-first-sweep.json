@@ -1,0 +1,440 @@
+{
+  "code_fingerprint": "d6d594f5b16b490c",
+  "code_sources": [
+    "bench/run_curves.py"
+  ],
+  "conditions": {
+    "one_slice": "the host count moves and nothing else does; a fleet of denser or leaner machines is a different line on both axes",
+    "the_allocation": "a single figure for what the building supplies. Contracted power, breaker capacity, cooling and what the facility will sustain are four different numbers, and this sweep takes one"
+  },
+  "generated_at": "2026-09-20T15:09:57+00:00",
+  "git_revision": "3c3723e",
+  "kind": "measurement",
+  "name": "power-first-sweep",
+  "produced_by": {
+    "method": "the host count swept one host at a time, everything else held at the reference point",
+    "model": "web_service",
+    "scenario": "reference",
+    "seed": 20260916,
+    "stack": "sizing.evaluate"
+  },
+  "recorded_on": {
+    "arch": "x86_64",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "kind": "other",
+    "numpy": "2.4.6",
+    "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+    "python": "3.11.15"
+  },
+  "summary": {
+    "allocation": 16.0,
+    "curve": [
+      {
+        "facility_power": 0.8715043379188535,
+        "hosts": 2.0,
+        "tco": 891766.7725735703
+      },
+      {
+        "facility_power": 1.3072565068782802,
+        "hosts": 3.0,
+        "tco": 913119.0110003315
+      },
+      {
+        "facility_power": 1.743008675837707,
+        "hosts": 4.0,
+        "tco": 934471.2494270927
+      },
+      {
+        "facility_power": 2.178760844797134,
+        "hosts": 5.0,
+        "tco": 955823.4878538541
+      },
+      {
+        "facility_power": 2.6145130137565604,
+        "hosts": 6.0,
+        "tco": 977175.7262806151
+      },
+      {
+        "facility_power": 3.0502651827159877,
+        "hosts": 7.0,
+        "tco": 998527.9647073764
+      },
+      {
+        "facility_power": 3.486017351675414,
+        "hosts": 8.0,
+        "tco": 1019880.2031341378
+      },
+      {
+        "facility_power": 3.9217695206348404,
+        "hosts": 9.0,
+        "tco": 1041232.4415608988
+      },
+      {
+        "facility_power": 4.357521689594268,
+        "hosts": 10.0,
+        "tco": 1062584.6799876601
+      },
+      {
+        "facility_power": 4.793273858553694,
+        "hosts": 11.0,
+        "tco": 1083936.9184144214
+      },
+      {
+        "facility_power": 5.229026027513121,
+        "hosts": 12.0,
+        "tco": 1105289.1568411824
+      },
+      {
+        "facility_power": 5.664778196472548,
+        "hosts": 13.0,
+        "tco": 1126641.3952679439
+      },
+      {
+        "facility_power": 6.100530365431975,
+        "hosts": 14.0,
+        "tco": 1147993.633694705
+      },
+      {
+        "facility_power": 6.536282534391401,
+        "hosts": 15.0,
+        "tco": 1169345.872121466
+      },
+      {
+        "facility_power": 6.972034703350828,
+        "hosts": 16.0,
+        "tco": 1190698.1105482276
+      },
+      {
+        "facility_power": 7.407786872310254,
+        "hosts": 17.0,
+        "tco": 1212050.3489749888
+      },
+      {
+        "facility_power": 7.843539041269681,
+        "hosts": 18.0,
+        "tco": 1233402.58740175
+      },
+      {
+        "facility_power": 8.27929121022911,
+        "hosts": 19.0,
+        "tco": 1254754.8258285113
+      },
+      {
+        "facility_power": 8.715043379188536,
+        "hosts": 20.0,
+        "tco": 1276107.0642552725
+      },
+      {
+        "facility_power": 9.150795548147963,
+        "hosts": 21.0,
+        "tco": 1297459.3026820335
+      },
+      {
+        "facility_power": 9.586547717107388,
+        "hosts": 22.0,
+        "tco": 1318811.5411087947
+      },
+      {
+        "facility_power": 10.022299886066815,
+        "hosts": 23.0,
+        "tco": 1340163.7795355562
+      },
+      {
+        "facility_power": 10.458052055026242,
+        "hosts": 24.0,
+        "tco": 1361516.0179623174
+      },
+      {
+        "facility_power": 10.893804223985669,
+        "hosts": 25.0,
+        "tco": 1382868.2563890787
+      },
+      {
+        "facility_power": 11.329556392945095,
+        "hosts": 26.0,
+        "tco": 1404220.49481584
+      },
+      {
+        "facility_power": 11.765308561904524,
+        "hosts": 27.0,
+        "tco": 1425572.7332426012
+      },
+      {
+        "facility_power": 12.20106073086395,
+        "hosts": 28.0,
+        "tco": 1446924.9716693624
+      },
+      {
+        "facility_power": 12.636812899823376,
+        "hosts": 29.0,
+        "tco": 1468277.2100961234
+      },
+      {
+        "facility_power": 13.072565068782803,
+        "hosts": 30.0,
+        "tco": 1489629.4485228849
+      },
+      {
+        "facility_power": 13.50831723774223,
+        "hosts": 31.0,
+        "tco": 1510981.686949646
+      },
+      {
+        "facility_power": 13.944069406701656,
+        "hosts": 32.0,
+        "tco": 1532333.925376407
+      },
+      {
+        "facility_power": 14.379821575661083,
+        "hosts": 33.0,
+        "tco": 1553686.1638031686
+      },
+      {
+        "facility_power": 14.815573744620508,
+        "hosts": 34.0,
+        "tco": 1575038.4022299298
+      },
+      {
+        "facility_power": 15.251325913579935,
+        "hosts": 35.0,
+        "tco": 1596390.6406566908
+      },
+      {
+        "facility_power": 15.687078082539362,
+        "hosts": 36.0,
+        "tco": 1617742.8790834523
+      },
+      {
+        "facility_power": 16.12283025149879,
+        "hosts": 37.0,
+        "tco": 1639095.1175102135
+      },
+      {
+        "facility_power": 16.55858242045822,
+        "hosts": 38.0,
+        "tco": 1660447.3559369745
+      },
+      {
+        "facility_power": 16.994334589417644,
+        "hosts": 39.0,
+        "tco": 1681799.594363736
+      },
+      {
+        "facility_power": 17.430086758377072,
+        "hosts": 40.0,
+        "tco": 1703151.8327904972
+      },
+      {
+        "facility_power": 17.865838927336497,
+        "hosts": 41.0,
+        "tco": 1724504.0712172582
+      },
+      {
+        "facility_power": 18.301591096295926,
+        "hosts": 42.0,
+        "tco": 1745856.3096440197
+      },
+      {
+        "facility_power": 18.73734326525535,
+        "hosts": 43.0,
+        "tco": 1767208.5480707807
+      },
+      {
+        "facility_power": 19.173095434214776,
+        "hosts": 44.0,
+        "tco": 1788560.7864975417
+      },
+      {
+        "facility_power": 19.608847603174205,
+        "hosts": 45.0,
+        "tco": 1809913.0249243034
+      },
+      {
+        "facility_power": 20.04459977213363,
+        "hosts": 46.0,
+        "tco": 1831265.2633510644
+      },
+      {
+        "facility_power": 20.48035194109306,
+        "hosts": 47.0,
+        "tco": 1852617.5017778254
+      },
+      {
+        "facility_power": 20.916104110052483,
+        "hosts": 48.0,
+        "tco": 1873969.740204587
+      },
+      {
+        "facility_power": 21.351856279011912,
+        "hosts": 49.0,
+        "tco": 1895321.978631348
+      },
+      {
+        "facility_power": 21.787608447971337,
+        "hosts": 50.0,
+        "tco": 1916674.2170581091
+      },
+      {
+        "facility_power": 22.223360616930766,
+        "hosts": 51.0,
+        "tco": 1938026.4554848708
+      },
+      {
+        "facility_power": 22.65911278589019,
+        "hosts": 52.0,
+        "tco": 1959378.6939116318
+      },
+      {
+        "facility_power": 23.094864954849616,
+        "hosts": 53.0,
+        "tco": 1980730.9323383928
+      },
+      {
+        "facility_power": 23.530617123809048,
+        "hosts": 54.0,
+        "tco": 2002083.1707651545
+      },
+      {
+        "facility_power": 23.966369292768473,
+        "hosts": 55.0,
+        "tco": 2023435.4091919155
+      },
+      {
+        "facility_power": 24.4021214617279,
+        "hosts": 56.0,
+        "tco": 2044787.6476186765
+      },
+      {
+        "facility_power": 24.837873630687326,
+        "hosts": 57.0,
+        "tco": 2066139.886045438
+      },
+      {
+        "facility_power": 25.27362579964675,
+        "hosts": 58.0,
+        "tco": 2087492.1244721995
+      },
+      {
+        "facility_power": 25.70937796860618,
+        "hosts": 59.0,
+        "tco": 2108844.3628989602
+      },
+      {
+        "facility_power": 26.145130137565605,
+        "hosts": 60.0,
+        "tco": 2130196.601325722
+      },
+      {
+        "facility_power": 26.580882306525034,
+        "hosts": 61.0,
+        "tco": 2151548.839752483
+      },
+      {
+        "facility_power": 27.01663447548446,
+        "hosts": 62.0,
+        "tco": 2172901.078179244
+      },
+      {
+        "facility_power": 27.452386644443884,
+        "hosts": 63.0,
+        "tco": 2194253.3166060057
+      },
+      {
+        "facility_power": 27.888138813403312,
+        "hosts": 64.0,
+        "tco": 2215605.555032767
+      },
+      {
+        "facility_power": 28.323890982362737,
+        "hosts": 65.0,
+        "tco": 2236957.7934595277
+      },
+      {
+        "facility_power": 28.759643151322166,
+        "hosts": 66.0,
+        "tco": 2258310.031886289
+      },
+      {
+        "facility_power": 29.19539532028159,
+        "hosts": 67.0,
+        "tco": 2279662.2703130506
+      },
+      {
+        "facility_power": 29.631147489241016,
+        "hosts": 68.0,
+        "tco": 2301014.5087398114
+      },
+      {
+        "facility_power": 30.066899658200445,
+        "hosts": 69.0,
+        "tco": 2322366.747166573
+      },
+      {
+        "facility_power": 30.50265182715987,
+        "hosts": 70.0,
+        "tco": 2343718.985593334
+      },
+      {
+        "facility_power": 30.9384039961193,
+        "hosts": 71.0,
+        "tco": 2365071.224020095
+      },
+      {
+        "facility_power": 31.374156165078723,
+        "hosts": 72.0,
+        "tco": 2386423.4624468563
+      },
+      {
+        "facility_power": 31.80990833403815,
+        "hosts": 73.0,
+        "tco": 2407775.700873618
+      },
+      {
+        "facility_power": 32.24566050299758,
+        "hosts": 74.0,
+        "tco": 2429127.939300379
+      },
+      {
+        "facility_power": 32.68141267195701,
+        "hosts": 75.0,
+        "tco": 2450480.17772714
+      },
+      {
+        "facility_power": 33.11716484091644,
+        "hosts": 76.0,
+        "tco": 2471832.4161539013
+      },
+      {
+        "facility_power": 33.55291700987586,
+        "hosts": 77.0,
+        "tco": 2493184.6545806625
+      },
+      {
+        "facility_power": 33.98866917883529,
+        "hosts": 78.0,
+        "tco": 2514536.8930074237
+      },
+      {
+        "facility_power": 34.42442134779471,
+        "hosts": 79.0,
+        "tco": 2535889.1314341854
+      },
+      {
+        "facility_power": 34.860173516754145,
+        "hosts": 80.0,
+        "tco": 2557241.369860946
+      }
+    ],
+    "demand": 54.0,
+    "fits": 36.0
+  },
+  "target": "model",
+  "units": {
+    "allocation": "kW",
+    "curve": "kW",
+    "curve[0].hosts": "host",
+    "curve[0].tco": "USD",
+    "demand": "host",
+    "fits": "host"
+  }
+}

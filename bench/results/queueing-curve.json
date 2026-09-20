@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "23d59c059f99da01",
+  "code_fingerprint": "d6d594f5b16b490c",
   "code_sources": [
     "bench/run_curves.py"
   ],
@@ -7,8 +7,8 @@
     "one_slice": "the request rate moves and nothing else does. A service whose demand per request also rises with load - which is most of them - is on a steeper curve than this one",
     "the_cap": "the model clamps utilisation before it divides by zero; past that point the formula has stopped describing a queue"
   },
-  "generated_at": "2026-09-19T18:27:50+00:00",
-  "git_revision": "229ed18",
+  "generated_at": "2026-09-20T15:09:57+00:00",
+  "git_revision": "3c3723e",
   "kind": "measurement",
   "name": "queueing-curve",
   "produced_by": {

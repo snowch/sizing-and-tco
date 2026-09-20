@@ -36,7 +36,18 @@ describing the same trade.
 So the observability model could be driven by the web service model. Suppose its retention store
 ran on the same kind of fleet, at what a terabyte costs there. It is not driven that way. It
 declares the price as an assumption with its own invented distribution, so the two models are not
-joined at all.
+joined at all. Here are the two, on one axis:
+
+```{image} _figures/the-five-year-model-seam.svg
+:alt: The web service model's computed cost per stored terabyte-month and the observability model's assumed storage price, on one logarithmic axis
+:width: 100%
+```
+
+Same quantity, same unit, two models that have never met. The top is computed, and it is wide
+because everything upstream of it is. The bottom was written down, from whichever storage tier's
+figure somebody had to hand, and its width is that person's guess. The two do not even overlap,
+which is the first thing a join would have asked about, and nothing did. The tick is what crosses
+a seam in practice: one number.
 
 ### What happens when you do join them
 
