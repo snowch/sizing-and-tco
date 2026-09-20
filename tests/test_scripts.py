@@ -196,6 +196,57 @@ def test_a_chapter_says_what_it_builds_on_from_the_outline():
     assert build_site.builds_on("index.md") == ""
 
 
+def _page_with(*paragraphs: str) -> dict:
+    return {
+        "type": "root",
+        "children": [
+            {"type": "paragraph", "children": [{"type": "text", "value": text}]}
+            for text in paragraphs
+        ]
+        + [
+            {"type": "heading", "depth": 2, "children": [{"type": "text", "value": "An interval"}]},
+            {"type": "paragraph", "children": [{"type": "inlineCode", "value": "interval"}]},
+        ],
+    }
+
+
+def test_a_glossary_term_links_to_its_entry_only_after_its_chapter():
+    """One link per term per page, on pages after the chapter that introduces it, never in code
+    or a heading. The interval arrives in ch13, so ch12 gets no link and ch19 gets one."""
+    from bench.tables import GLOSSARY
+
+    build_site = site()
+    page = _page_with("The interval, and the interval again.", "Two intervals here.")
+    build_site.link_terms("chapters/which_input_is_the_answer.md", page)
+    links = [n for n in build_site.walk(page) if n.get("type") == "link"]
+    assert len(links) == 1
+    assert links[0]["url"] == "/appendix-g-glossary#term-interval"
+    assert links[0]["_term"] == GLOSSARY["interval"][1]
+    assert links[0]["children"][0]["value"] == "interval"
+
+    before = _page_with("The interval, and the interval again.")
+    build_site.link_terms("chapters/the_sizing_model.md", before)
+    assert not [n for n in build_site.walk(before) if n.get("type") == "link"]
+
+    glossary = _page_with("The interval is a term here.")
+    build_site.link_terms(build_site.GLOSSARY_PAGE, glossary)
+    assert not [n for n in build_site.walk(glossary) if n.get("type") == "link"]
+
+
+def test_a_term_link_carries_its_meaning_and_the_glossary_rows_carry_ids():
+    build_site = site()
+    node = {
+        "type": "link",
+        "url": "/appendix-g-glossary#term-interval",
+        "_term": "the gap between two percentiles",
+        "children": [{"type": "text", "value": "interval"}],
+    }
+    rendered = build_site.renderer.render(node)
+    assert 'class="term"' in rendered and 'title="the gap between two percentiles"' in rendered
+    row = build_site.anchor_glossary_rows("<tr><td><strong>measured constant</strong></td></tr>")
+    assert row.startswith('<tr id="term-measured-constant">')
+
+
 def test_the_foot_of_a_page_points_at_its_neighbours_in_the_reading_order():
     """prev and next come from page_order(), and the ends of the book have one link, not two."""
     build = site()

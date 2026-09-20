@@ -1127,6 +1127,90 @@ def _produced_unit(model, node_name: str) -> str:
         return "?"
 
 
+#: Every term the book rations: term -> (the chapter that introduces it, what it means here,
+#: and the plain-English phrase it replaces). The glossary table is rendered from this, and
+#: the site links a term's first mention on any page after that chapter to its entry.
+GLOSSARY: dict[str, tuple[str, str, str]] = {
+    "distribution": (
+        "monte_carlo",
+        "the bag of values an uncertain quantity could take",
+        "a range of plausible values",
+    ),
+    "sample": ("monte_carlo", "one value drawn from that bag", "one guess"),
+    "percentile": (
+        "monte_carlo",
+        "the value a given fraction of the bag is below",
+        "the value nine tenths are under",
+    ),
+    "interval": ("monte_carlo", "the gap between two percentiles", "how wide the answer is"),
+    "correlation": (
+        "correlation_and_convergence",
+        "the tendency of two inputs to move together",
+        "they move together",
+    ),
+    "convergence": (
+        "correlation_and_convergence",
+        "the answer ceasing to move between runs",
+        "it has settled",
+    ),
+    "provenance": (
+        "where_the_numbers_come_from",
+        "how much somebody is claiming when they write a number down",
+        "where it came from",
+    ),
+    "measured constant": (
+        "where_the_numbers_come_from",
+        "an empirical number belonging to one implementation at one version",
+        "a number somebody measured",
+    ),
+    "ceiling": (
+        "regime_changes",
+        "a limit past which a chain of multiplications stops describing anything",
+        "where it breaks",
+    ),
+    "headroom": (
+        "headroom_and_failure_domains",
+        "the margin a design keeps below a ceiling, and the reason for it",
+        "the slack you keep",
+    ),
+    "binding constraint": (
+        "bandwidth_and_the_binding_constraint",
+        "the chain that decides the answer, out of several that could",
+        "whichever runs out first",
+    ),
+    "utilisation": (
+        "queueing_and_the_knee",
+        "the fraction of a system that is busy",
+        "how busy it is",
+    ),
+    "unit economics": (
+        "unit_economics",
+        "a cost divided by a denominator you can defend",
+        "cost per something",
+    ),
+    "structural error": (
+        "the_missing_node",
+        "a model that is wrong in shape rather than in its numbers",
+        "something is missing",
+    ),
+    "measurement uncertainty": (
+        "where_the_numbers_come_from",
+        "the standard error beside a number somebody measured",
+        "how much the measuring wobbled",
+    ),
+    "parameter uncertainty": (
+        "monte_carlo",
+        "not knowing a value in a model whose shape is right",
+        "we do not know the number",
+    ),
+    "scenario uncertainty": (
+        "the_sizing_model",
+        "the world taking a path the model was not run for, which no interval covers",
+        "it might go differently",
+    ),
+}
+
+
 def glossary_table(_name: str = "") -> str:
     """Every term the book rations, and the chapter that introduces it.
 
@@ -1136,90 +1220,49 @@ def glossary_table(_name: str = "") -> str:
     """
     from bench.outline import BY_SLUG
 
-    #: term -> (chapter slug, what it means here, and the plain-English phrase it replaces)
-    terms = {
-        "distribution": (
-            "monte_carlo",
-            "the bag of values an uncertain quantity could take",
-            "a range of plausible values",
-        ),
-        "sample": ("monte_carlo", "one value drawn from that bag", "one guess"),
-        "percentile": (
-            "monte_carlo",
-            "the value a given fraction of the bag is below",
-            "the value nine tenths are under",
-        ),
-        "interval": ("monte_carlo", "the gap between two percentiles", "how wide the answer is"),
-        "correlation": (
-            "correlation_and_convergence",
-            "the tendency of two inputs to move together",
-            "they move together",
-        ),
-        "convergence": (
-            "correlation_and_convergence",
-            "the answer ceasing to move between runs",
-            "it has settled",
-        ),
-        "provenance": (
-            "where_the_numbers_come_from",
-            "how much somebody is claiming when they write a number down",
-            "where it came from",
-        ),
-        "measured constant": (
-            "where_the_numbers_come_from",
-            "an empirical number belonging to one implementation at one version",
-            "a number somebody measured",
-        ),
-        "ceiling": (
-            "regime_changes",
-            "a limit past which a chain of multiplications stops describing anything",
-            "where it breaks",
-        ),
-        "headroom": (
-            "headroom_and_failure_domains",
-            "the margin a design keeps below a ceiling, and the reason for it",
-            "the slack you keep",
-        ),
-        "binding constraint": (
-            "bandwidth_and_the_binding_constraint",
-            "the chain that decides the answer, out of several that could",
-            "whichever runs out first",
-        ),
-        "utilisation": (
-            "queueing_and_the_knee",
-            "the fraction of a system that is busy",
-            "how busy it is",
-        ),
-        "unit economics": (
-            "unit_economics",
-            "a cost divided by a denominator you can defend",
-            "cost per something",
-        ),
-        "structural error": (
-            "the_missing_node",
-            "a model that is wrong in shape rather than in its numbers",
-            "something is missing",
-        ),
-        "measurement uncertainty": (
-            "where_the_numbers_come_from",
-            "the standard error beside a number somebody measured",
-            "how much the measuring wobbled",
-        ),
-        "parameter uncertainty": (
-            "monte_carlo",
-            "not knowing a value in a model whose shape is right",
-            "we do not know the number",
-        ),
-        "scenario uncertainty": (
-            "the_sizing_model",
-            "the world taking a path the model was not run for, which no interval covers",
-            "it might go differently",
-        ),
-    }
     rows = ["| Term | Introduced in | What it means here | Said plainly |", "|---|---|---|---|"]
-    for term, (slug, meaning, plain) in terms.items():
+    for term, (slug, meaning, plain) in GLOSSARY.items():
         chapter = BY_SLUG[slug]
         rows.append(f"| **{term}** | [{chapter.label}](#{chapter.anchor}) | {meaning} | {plain} |")
+    return "\n".join(rows)
+
+
+def formulas_table(_name: str | None, model_name: str) -> str:
+    """Every formula in a model, in the file's order, with the chapter that introduced it.
+
+    A summary of the formulas, made the only way this book adds a table: as a view of the
+    model file rather than a copy of it, so that ``make check`` regenerates it and it cannot
+    say anything the file no longer says. A ceiling is listed with what it watches, its limit
+    and its margin. The last column comes from the model's build order, and a model the book
+    does not build across chapters has no such column.
+    """
+    from bench.outline import BY_SLUG
+    from bench.stages import model_path, staged_models, stages
+    from sizing.dsl import Ceiling, Derived, load_model
+
+    model = load_model(model_path(model_name))
+    introduced: dict[str, str] = {}
+    staged = model_name in staged_models()
+    if staged:
+        for stage in stages(model_name):
+            for node_name in stage.introduces:
+                introduced.setdefault(node_name, stage.chapter)
+    head = "| Quantity | Formula | Unit |" + (" Introduced in |" if staged else "")
+    rows = [head, "|---|---|---|" + ("---|" if staged else "")]
+    for name, node in model.nodes.items():
+        if isinstance(node, Derived):
+            formula = f"`{node.formula_text}`"
+        elif isinstance(node, Ceiling):
+            formula = f"`{node.of_text}` against a limit of `{node.limit_text}`"
+            if node.headroom_text:
+                formula += f", keeping `{node.headroom_text}` below it"
+        else:
+            continue
+        row = f"| {node.display} (`{name}`) | {formula} | {unit_label(node.unit)} |"
+        if staged:
+            chapter = BY_SLUG.get(introduced.get(name, ""))
+            row += f" [{chapter.label}](#{chapter.anchor}) |" if chapter else " |"
+        rows.append(row)
     return "\n".join(rows)
 
 

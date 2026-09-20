@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -38,9 +39,10 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from bench import render as renderer  # noqa: E402
-from bench.outline import APPENDICES, CHAPTERS, PART_PAGES  # noqa: E402
+from bench.outline import APPENDICES, BY_SLUG, CHAPTERS, PART_PAGES  # noqa: E402
 from bench.stages import stages  # noqa: E402
 from bench.stamp import shown  # noqa: E402
+from bench.tables import GLOSSARY  # noqa: E402
 from sizing.dsl import load_model  # noqa: E402
 from sizing.playground.toolkit import BOOT, PYODIDE, results_for, sources  # noqa: E402
 
@@ -115,6 +117,8 @@ def nav() -> list[dict]:
 
 #: The pages whose leading heading is their own title, written out with the chapter number.
 TITLED_PAGES = frozenset(c.path for c in (*CHAPTERS, *APPENDICES))
+#: The glossary: the page term links point at, and the one page they are never added to.
+GLOSSARY_PAGE = next(a.path for a in APPENDICES if a.anchor == "appendix-g-glossary")
 
 
 def promote_headings(page: dict) -> None:
@@ -142,6 +146,101 @@ def href_for(source: str) -> str:
     """Where a source file is published. Flat, and named for the slug a reader sees."""
     stem = Path(source).stem
     return "index.html" if source == "index.md" else f"{stem.replace('_', '-')}.html"
+
+
+#: Node types whose text is never a glossary link: code, headings, and text that is already a
+#: link or a title.
+UNLINKED = frozenset(
+    {"inlineCode", "code", "link", "crossReference", "heading", "admonitionTitle", "image"}
+)
+
+
+def term_id(term: str) -> str:
+    """The anchor a glossary row carries, and a term link points at."""
+    return "term-" + re.sub(r"[^a-z]+", "-", term.lower()).strip("-")
+
+
+def link_terms(source: str, page: dict) -> None:
+    """Link the first mention of each glossary term to its entry, on pages after its chapter.
+
+    The vocabulary ration says a term arrives where a model needs it and never as a definition,
+    so a page gets the link only when it comes after the chapter that introduces the term in
+    the reading order, and the text it links is the page's own. The meaning rides as the link's
+    title. Nothing inside code, a heading, an existing link or a box's title is touched, and the
+    glossary itself is left alone.
+    """
+    order = renderer.page_order()
+    if source not in order or source == GLOSSARY_PAGE:
+        return
+    position = order.index(source)
+    linkable = {
+        term: meaning
+        for term, (slug, meaning, _plain) in GLOSSARY.items()
+        if order.index(BY_SLUG[slug].path) < position
+    }
+    if not linkable:
+        return
+    longest_first = sorted(linkable, key=len, reverse=True)
+    pattern = re.compile(
+        r"\b(" + "|".join(re.escape(term) for term in longest_first) + r")(s?)\b", re.IGNORECASE
+    )
+    _link_in(page.get("mdast", page), pattern, linkable, set())
+
+
+def _link_in(node, pattern: re.Pattern, linkable: dict[str, str], done: set[str]) -> None:
+    if isinstance(node, list):
+        for item in node:
+            _link_in(item, pattern, linkable, done)
+        return
+    if not isinstance(node, dict) or node.get("type") in UNLINKED:
+        return
+    children = node.get("children")
+    if not isinstance(children, list):
+        return
+    out = []
+    for child in children:
+        if isinstance(child, dict) and child.get("type") == "text":
+            out.extend(_split_text(child, pattern, linkable, done))
+        else:
+            _link_in(child, pattern, linkable, done)
+            out.append(child)
+    node["children"] = out
+
+
+def _split_text(text: dict, pattern: re.Pattern, linkable: dict[str, str], done: set[str]) -> list:
+    """The text node as it was, or cut around the first mention of each term still unlinked."""
+    value = str(text.get("value", ""))
+    pieces, last = [], 0
+    for match in pattern.finditer(value):
+        term = match.group(1).lower()
+        if term in done:
+            continue
+        done.add(term)
+        if match.start() > last:
+            pieces.append({"type": "text", "value": value[last : match.start()]})
+        pieces.append(
+            {
+                "type": "link",
+                "url": f"/{Path(GLOSSARY_PAGE).stem.replace('_', '-')}#{term_id(term)}",
+                "_term": linkable[term],
+                "children": [{"type": "text", "value": match.group(0)}],
+            }
+        )
+        last = match.end()
+    if not pieces:
+        return [text]
+    if last < len(value):
+        pieces.append({"type": "text", "value": value[last:]})
+    return pieces
+
+
+def anchor_glossary_rows(body: str) -> str:
+    """Give each row of the rendered glossary table the id its term links point at."""
+    return re.sub(
+        r"<tr><td><strong>([^<]+)</strong>",
+        lambda m: f'<tr id="{term_id(m.group(1))}"><td><strong>{m.group(1)}</strong>',
+        body,
+    )
 
 
 def builds_on(source: str) -> str:
@@ -728,6 +827,8 @@ main :is(h1, h2, h3, h4) { font-family: var(--chrome); letter-spacing: -.012em;
 h1 { font-size: clamp(1.6rem, 5.4vw, 2rem); font-weight: 700; line-height: 1.18;
      margin: 1.6rem 0 1.4rem; }
 .builds-on { margin: -.9rem 0 1.4rem; font: 14px/1.5 var(--chrome); color: var(--muted); }
+a.term { color: inherit; text-decoration: underline dotted var(--muted); text-underline-offset: .18em; }
+a.term:hover { color: var(--accent); text-decoration-color: var(--accent); }
 h2 { font-size: 1.35rem; font-weight: 650; line-height: 1.25; margin: 2.5rem 0 .9rem;
      padding-top: 1.1rem; border-top: 1px solid var(--edge); }
 h3 { font-size: 1.04rem; font-weight: 700; line-height: 1.3; margin: 1.9rem 0 .6rem; }
@@ -916,7 +1017,10 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
     toc = toc_html(page)  # taken before the promotion below, which renumbers what it reads
     if source in TITLED_PAGES:
         promote_headings(page)
+    link_terms(source, page)
     body = renderer.render(page.get("mdast", page))
+    if source == GLOSSARY_PAGE:
+        body = anchor_glossary_rows(body)
     if builds_on(source):
         body = body.replace("</h1>", "</h1>" + builds_on(source), 1)
     if source not in TITLED_PAGES:

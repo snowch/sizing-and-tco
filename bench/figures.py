@@ -152,6 +152,11 @@ FIGURES: dict[str, Table | Diagram] = {
         result="web_service-reference",
         alt="The web service model as a dependency graph, coloured by node kind",
     ),
+    "appendix-e-web-service-model-formulas": Table(
+        render=tables.formulas_table,
+        args=("web_service",),
+        computed_from="`models/web_service/model.yaml` and its build order",
+    ),
     "appendix-e-web-service-model-outputs": Table(
         render=tables.outputs_table, result="web_service-reference"
     ),
@@ -190,6 +195,11 @@ FIGURES: dict[str, Table | Diagram] = {
         draw=diagrams.dependency_graph,
         result="observability-reference",
         alt="The observability model as a dependency graph, with the unmeasured chain marked",
+    ),
+    "appendix-f-observability-model-formulas": Table(
+        render=tables.formulas_table,
+        args=("observability",),
+        computed_from="`models/observability/model.yaml`",
     ),
     "appendix-f-observability-model-outputs": Table(
         render=tables.outputs_table, result="observability-reference"

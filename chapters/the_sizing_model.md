@@ -34,6 +34,8 @@ Every node in that sub-graph has appeared in a chapter:
 
 Follow it left to right and there is nothing surprising in it. Sizing models are not clever. They
 are a dozen multiplications anybody could check, and the difficulty has never been the arithmetic.
+[Appendix E](#appendix-e-web-service-model) lists every one of them, with the chapter that added
+it.
 
 ### What the model recommends
 

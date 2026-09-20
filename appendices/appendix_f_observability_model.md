@@ -69,6 +69,14 @@ The unmeasured constants are drawn hollow, and everything downstream of them is 
 dimmed nodes are the answer to "what would measuring this one thing unlock", and nobody had to
 write that answer down.
 
+## Every formula
+
+The graph above, as text: every derived quantity and every ceiling, with the formula the file
+gives it. The table is rendered from the file, so it cannot disagree with it.
+
+```{include} ../chapters/_generated/appendix-f-observability-model-formulas.md
+```
+
 ## The three chains
 
 ```{include} ../chapters/_generated/appendix-f-observability-model-outputs.md
