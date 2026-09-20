@@ -158,8 +158,12 @@ marketing tone, no filler, no "in this chapter we will". Figures are drawn by co
 mechanism.
 
 **STYLE.md is the checklist** that gets a page to this voice: one idea per paragraph, the point
-first, a concrete example, ordinary words, the reader as *you*. Edit every page against it. Where
-its rule to define a term at once meets the vocabulary ration below, the ration wins.
+first, a concrete example, ordinary words, the reader as *you*. Edit every page against it, and
+run the checklist at its end over the page before you finish. Its rules 17 to 22 name the habits
+two outside reviews of the finished book found on page after page: very short sentences that
+label instead of landing, demonstratives with no noun in reach, intensifiers, decorative idiom,
+*somebody* for any actor, and evaluations with no grounds. Where its rule to define a term at
+once meets the vocabulary ration below, the ration wins.
 
 **Length follows the material.** There is no page target. A chapter is as long as what it has to
 convey and no longer. The five headings in `bench.outline.CHAPTER_SHAPE` are the book's shape and
