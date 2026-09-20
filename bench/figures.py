@@ -452,6 +452,12 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.tornado_table, result="web_service-reference", args=("annual_opex",)
     ),
     # -- ch16 Power first -------------------------------------------------------------------------
+    "power-first-wall": Diagram(
+        draw=diagrams.power_wall,
+        result="power-first-sweep",
+        alt="Facility power and five-year cost against host count: the allocation is a wall on "
+        "the power axis and there is nothing across the cost axis",
+    ),
     "power-first-scenarios": Table(
         render=tables.scenario_comparison,
         result="web_service-reference",
@@ -487,6 +493,14 @@ FIGURES: dict[str, Table | Diagram] = {
         alt="The same total over a different denominator: cost per stored TB per month",
     ),
     # -- ch18 The five-year model -----------------------------------------------------------------
+    "the-five-year-model-seam": Diagram(
+        draw=diagrams.seam,
+        result="observability-reference",
+        args=("web_service-reference",),
+        alt="The web service model's computed cost per stored terabyte-month and the "
+        "observability model's assumed storage price, on one logarithmic axis, with the "
+        "single number that would cross between them",
+    ),
     "the-five-year-model-service": Table(
         render=tables.outputs_table, result="web_service-reference"
     ),

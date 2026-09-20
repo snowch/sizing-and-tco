@@ -41,6 +41,15 @@ UTILISATIONS = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.93, 0
 #: dies - and the model says so by dividing by zero rather than by pretending otherwise.
 HOST_COUNTS = (2, 4, 8, 16, 32, 64, 96, 128, 160, 200, 256, 320, 400)
 
+#: The power-first scenario's premise, held here rather than in its prose: what the building
+#: will supply at the wall. ``tests/test_models.py`` holds that scenario's pinned host count to
+#: the largest whole number of hosts this admits at the reference point, so the figure drawn
+#: from this sweep and the scenario the chapter's tables come from cannot disagree.
+POWER_ALLOCATION_KW = 16.0
+#: One host at a time, because the wall falls between two consecutive counts and the figure has
+#: to show which two. From two, for the reason ``HOST_COUNTS`` starts there.
+POWER_HOSTS = tuple(range(2, 81))
+
 
 def queueing_curve(write: bool = True) -> dict:
     """Residence time against utilisation, swept out of the web service model.
@@ -255,9 +264,70 @@ def binding_constraint(write: bool = True) -> dict:
     )
 
 
+def power_wall(write: bool = True) -> dict:
+    """Facility power and five-year cost against host count, and where the allocation cuts.
+
+    ch16's argument in one sweep: the same fleet on two axes. On one, a wall the building sets
+    and the largest whole number of hosts that stays under it. On the other, a slope with nothing
+    on it to stop anybody. Everything but the host count is held at the reference point.
+    """
+    model = load_model(WEB_SERVICE)
+    scenario = load_scenario(REFERENCE)
+    factors = conversion_factors(model)
+    base = point(model, scenario, factors)
+    rows = []
+    for count in POWER_HOSTS:
+        forced = replace(scenario, overrides={**scenario.overrides, "hosts": float(count)})
+        values = point(model, forced, factors)
+        rows.append(
+            {
+                "hosts": float(count),
+                "facility_power": values["facility_power"],
+                "tco": values["tco"],
+            }
+        )
+    fits = max(row["hosts"] for row in rows if row["facility_power"] <= POWER_ALLOCATION_KW)
+    return build_result(
+        "power-first-sweep",
+        target="model",
+        produced_by={
+            "model": "web_service",
+            "scenario": "reference",
+            "seed": load_scenario(REFERENCE).seed,
+            "method": "the host count swept one host at a time, everything else held at the "
+            "reference point",
+            "stack": "sizing.evaluate",
+        },
+        summary={
+            "curve": rows,
+            "allocation": POWER_ALLOCATION_KW,
+            "fits": fits,
+            "demand": base["hosts_recommended"],
+        },
+        units={
+            "curve": "kW",
+            "curve[0].hosts": "host",
+            "curve[0].tco": "USD",
+            "allocation": "kW",
+            "fits": "host",
+            "demand": "host",
+        },
+        conditions={
+            "one_slice": "the host count moves and nothing else does; a fleet of denser or "
+            "leaner machines is a different line on both axes",
+            "the_allocation": "a single figure for what the building supplies. Contracted power, "
+            "breaker capacity, cooling and what the facility will sustain are four different "
+            "numbers, and this sweep takes one",
+        },
+        code_sources=SOURCES,
+        write=write,
+    )
+
+
 RUNNERS = {
     "queueing-curve": queueing_curve,
     "scaling-curve": scaling_curve,
+    "power-first-sweep": power_wall,
     "binding-constraint": binding_constraint,
 }
 

@@ -26,6 +26,19 @@ to be satisfied, so it rounds up. This one is a supply that cannot be exceeded. 
 that inversion. People get the facility multiplier backwards: an inefficient building buys you
 *fewer* machines, not more.
 
+Here is the same fleet on two axes:
+
+```{image} _figures/power-first-wall.svg
+:alt: Facility power and five-year cost against host count, with the allocation drawn as a wall across the power axis and nothing across the cost axis
+:width: 100%
+```
+
+On the left, watts against hosts, and a wall: what the building will supply, the largest whole
+number of hosts that stays under it, and the next one, which does not. On the right, the same
+hosts against what they cost over the horizon. It is a slope, and there is nothing across it to
+stop anybody. That is the difference between a constraint and a price, and the rest of this
+chapter is about what happens to the fleet the wall leaves you.
+
 ### What a power budget does to a fleet sized for demand
 
 ```{include} _generated/power-first-scenarios.md

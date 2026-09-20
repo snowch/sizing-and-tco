@@ -855,3 +855,207 @@ def paired_difference(result: str) -> str:
             f'fill="#546e7a">{_esc(signed_money(value))}</text>'
         )
     return _svg(width, height, "".join(body), "The difference between two totals, paired")
+
+
+def power_wall(result: str) -> str:
+    """The same fleet on two axes: watts, which have a wall, and money, which has a slope.
+
+    ch16 sizes backwards from an allocation. The left panel is what the building supplies drawn
+    as a line across the fleet's draw, with the largest whole number of hosts under it and the
+    next one over it. The right panel is the same hosts against what they cost over the horizon,
+    and there is deliberately nothing drawn across it: a price can be argued with.
+    """
+    payload = load_result(result)["summary"]
+    rows = payload["curve"]
+    allocation = float(payload["allocation"])
+    fits = int(round(payload["fits"]))
+    demand = int(round(payload["demand"]))
+    by_hosts = {int(round(row["hosts"])): row for row in rows}
+    width, height = 560.0, 250.0
+    plot_top, plot_bottom = 50.0, 200.0
+    hosts_max = max(by_hosts)
+    panels = (
+        ("Watts: a wall", "facility_power", 40.0, 262.0),
+        ("Money: a slope", "tco", 322.0, 544.0),
+    )
+    body = []
+    for title, key, left, right in panels:
+        top_value = max(row[key] for row in rows) * 1.08
+
+        def at_x(hosts: float, left=left, right=right) -> float:
+            return left + hosts / hosts_max * (right - left)
+
+        def at_y(value: float, top_value=top_value) -> float:
+            return plot_bottom - value / top_value * (plot_bottom - plot_top)
+
+        money = key == "tco"
+        body.append(
+            f'<text x="{left:.0f}" y="24" font-size="11.5" fill="#263238">{_esc(title)}</text>'
+        )
+        # Axes and ticks.
+        body.append(
+            f'<line x1="{left}" y1="{plot_bottom}" x2="{right}" y2="{plot_bottom}" '
+            f'stroke="#90a4ae" stroke-width="1"/>'
+            f'<line x1="{left}" y1="{plot_top}" x2="{left}" y2="{plot_bottom}" '
+            f'stroke="#90a4ae" stroke-width="1"/>'
+        )
+        for hosts in range(0, hosts_max + 1, 20):
+            x = at_x(hosts)
+            body.append(
+                f'<line x1="{x:.1f}" y1="{plot_bottom}" x2="{x:.1f}" y2="{plot_bottom + 4}" '
+                f'stroke="#90a4ae"/>'
+                f'<text x="{x:.1f}" y="{plot_bottom + 15}" font-size="8.5" text-anchor="middle" '
+                f'fill="#546e7a">{hosts}</text>'
+            )
+        body.append(
+            f'<text x="{(left + right) / 2:.0f}" y="{plot_bottom + 30}" font-size="9" '
+            f'text-anchor="middle" fill="#546e7a">hosts in the fleet</text>'
+        )
+        step = 1_000_000.0 if money else 5.0
+        tick = step
+        while tick < top_value:
+            y = at_y(tick)
+            label = f"${tick / 1e6:.0f}M" if money else f"{tick:.0f} kW"
+            body.append(
+                f'<line x1="{left - 4}" y1="{y:.1f}" x2="{left}" y2="{y:.1f}" stroke="#90a4ae"/>'
+                f'<text x="{left - 6}" y="{y + 3:.1f}" font-size="8.5" text-anchor="end" '
+                f'fill="#546e7a">{label}</text>'
+            )
+            tick += step
+        # The line the model draws.
+        points = " ".join(f"{at_x(row['hosts']):.1f},{at_y(row[key]):.1f}" for row in rows)
+        body.append(
+            f'<polyline points="{points}" fill="none" stroke="#4a7ba7" stroke-width="1.6"/>'
+        )
+        if not money:
+            y = at_y(allocation)
+            body.append(
+                f'<line x1="{left}" y1="{y:.1f}" x2="{right}" y2="{y:.1f}" stroke="#b3413a" '
+                f'stroke-width="1.4" stroke-dasharray="5 3"/>'
+                f'<text x="{left + 4:.0f}" y="{y - 5:.1f}" font-size="9" '
+                f'fill="#b3413a">allocation {allocation:g} kW</text>'
+            )
+        # The two fleets, and the host that crosses the wall.
+        fit_row, next_row, demand_row = by_hosts[fits], by_hosts.get(fits + 1), by_hosts[demand]
+        marks = [(fit_row, "#2e7d32", True), (demand_row, "#b3413a", True)]
+        if not money and next_row is not None:
+            marks.append((next_row, "#b3413a", False))
+        for row, colour, filled in marks:
+            x, y = at_x(row["hosts"]), at_y(row[key])
+            body.append(
+                f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="{colour if filled else "#ffffff"}" '
+                f'stroke="{colour}" stroke-width="1.4"/>'
+            )
+        fit_label = (
+            f"fits: {fits} hosts, {fmt(fit_row[key], 'USD') if money else f'{fit_row[key]:.1f} kW'}"
+        )
+        demand_label = (
+            f"demand asked for {demand}: "
+            f"{fmt(demand_row[key], 'USD') if money else f'{demand_row[key]:.1f} kW'}"
+        )
+        # Labels sit below the line at its two marked points, where the line has left room.
+        body.append(
+            f'<text x="{at_x(fits) + 6:.1f}" y="{at_y(fit_row[key]) + 16:.1f}" font-size="8.5" '
+            f'fill="#2e7d32">{_esc(fit_label)}</text>'
+        )
+        body.append(
+            f'<text x="{at_x(demand) - 6:.1f}" y="{at_y(demand_row[key]) - 10:.1f}" '
+            f'font-size="8.5" text-anchor="end" fill="#b3413a">{_esc(demand_label)}</text>'
+        )
+        if not money and next_row is not None:
+            body.append(
+                f'<text x="{at_x(fits + 1) + 6:.1f}" y="{at_y(next_row[key]) - 6:.1f}" '
+                f'font-size="8.5" fill="#b3413a">one more crosses it</text>'
+            )
+        if money:
+            body.append(
+                f'<text x="{right:.0f}" y="{plot_top + 4:.0f}" font-size="9" text-anchor="end" '
+                f'fill="#546e7a">no wall: a price can be argued with</text>'
+            )
+    return _svg(
+        width,
+        height,
+        "".join(body),
+        "Facility power and five-year cost against host count, with the allocation as a wall",
+    )
+
+
+def seam(result: str, other: str) -> str:
+    """Two models' beliefs about one price, on one axis, and the number that crosses between them.
+
+    The observability model buys storage at a price it assumes. The web service model computes
+    what a stored terabyte-month costs on its fleet. Same quantity, same unit, each drawn from its
+    own stamped histogram on one logarithmic axis, and nothing in the repository joins them. The
+    tick is the upstream median: the one number that crosses a seam in practice, and everything
+    the upper panel's width says that a number does not.
+    """
+    upstream = load_result(other)["summary"]["nodes"]["cost_per_stored_tb_month"]
+    downstream = load_result(result)["summary"]["nodes"]["storage_price"]
+    unit = upstream["unit"]
+    width, height = 560.0, 262.0
+    plot_left, plot_right = 46.0, width - 24
+    panels = ((upstream, "computed", 58.0, 126.0), (downstream, "assumed", 154.0, 222.0))
+    low = min(node["histogram"]["edges"][0] for node, *_ in panels)
+    high = max(node["histogram"]["edges"][-1] for node, *_ in panels)
+    span = math.log10(high / low)
+
+    def at_x(value: float) -> float:
+        return plot_left + math.log10(max(value, low) / low) / span * (plot_right - plot_left)
+
+    body = [
+        f'<text x="{MARGIN}" y="20" font-size="11.5" fill="#263238">'
+        f"One price, two models, no join</text>",
+        f'<text x="{MARGIN}" y="34" font-size="9.5" fill="#546e7a">{_esc(unit_label(unit))} '
+        f"on a logarithmic axis · each panel from its own stamped result</text>",
+    ]
+    for node, kind, top, bottom in panels:
+        counts, edges, summary = (
+            node["histogram"]["counts"],
+            node["histogram"]["edges"],
+            node["summary"],
+        )
+        tallest = max(counts) or 1
+        for i, count in enumerate(counts):
+            x1, x2 = at_x(edges[i]), at_x(edges[i + 1])
+            bar = count / tallest * (bottom - top)
+            inside = summary["p5"] <= (edges[i] + edges[i + 1]) / 2 <= summary["p95"]
+            body.append(
+                f'<rect x="{x1:.2f}" y="{bottom - bar:.2f}" '
+                f'width="{max(x2 - x1 - 0.3, 0.3):.2f}" height="{bar:.2f}" '
+                f'fill="{"#9fc0dd" if inside else "#dde5ec"}"/>'
+            )
+        body.append(
+            f'<line x1="{plot_left}" y1="{bottom}" x2="{plot_right}" y2="{bottom}" '
+            f'stroke="#cfd8dc" stroke-width="1"/>'
+        )
+        label = (
+            f"{kind}: {node['label']}, 90% interval {fmt(summary['p5'], unit)} to "
+            f"{fmt(summary['p95'], unit)}"
+        )
+        body.append(
+            f'<text x="{plot_left:.0f}" y="{top - 6:.0f}" font-size="9" fill="#37474f">'
+            f"{_esc(label)}</text>"
+        )
+    median = upstream["summary"]["p50"]
+    x = at_x(median)
+    body.append(
+        f'<line x1="{x:.1f}" y1="{panels[0][2] - 2:.0f}" x2="{x:.1f}" y2="{panels[1][3]:.0f}" '
+        f'stroke="#b3413a" stroke-width="1.2"/>'
+        f'<text x="{x - 6:.1f}" y="{panels[1][2] - 18:.0f}" font-size="8.5" text-anchor="end" '
+        f'fill="#b3413a">what crosses a seam: one number, {_esc(fmt(median, unit))}</text>'
+    )
+    axis_y = panels[1][3]
+    for value, anchor in _ticks(low, high, True):
+        tx = at_x(value)
+        body.append(
+            f'<line x1="{tx:.1f}" y1="{axis_y}" x2="{tx:.1f}" y2="{axis_y + 4}" stroke="#90a4ae"/>'
+            f'<text x="{tx:.1f}" y="{axis_y + 16}" font-size="8.5" text-anchor="{anchor}" '
+            f'fill="#546e7a">{_esc(fmt(value, unit))}</text>'
+        )
+    return _svg(
+        width,
+        height,
+        "".join(body),
+        "Two models' distributions for one price on a shared axis, and the single number that "
+        "crosses between them",
+    )
