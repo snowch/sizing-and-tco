@@ -283,7 +283,8 @@ A problem is a stub the reader edits and a test that passes only when they are r
 - [ ] Model merged, passing `make verify`
 - [ ] Every figure declared in `bench/figures.py` and rendered from a stamped result
 - [ ] *What this cannot tell you* written, naming what the structure omits
-- [ ] Edited against `STYLE.md`: short sentences, one idea per paragraph, the point stated first
+- [ ] Edited against `STYLE.md`: short sentences, one idea per paragraph, the point stated first,
+      and its closing checklist run over the page
 - [ ] Cross-references and citations resolve; `./scripts/ci-check.sh` clean
 - [ ] `[DRAFT]` removed
 
