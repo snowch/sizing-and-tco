@@ -61,8 +61,8 @@ one. That is correct, because it is uncertain.
 downstream model treats it as known. This is what happens in practice. It happens in a meeting,
 between two teams, and often between two quarters.
 
-Problem 18.2 measures the second one. The result is worth predicting before you run it: the
-interval on the downstream answer gets **narrower**.
+Problem 18.2 measures the second one. Predict the result before you run it: the interval on the
+downstream answer gets **narrower**.
 
 Not wrong. Narrower. The headline number stays roughly where it was, and the doubt disappears.
 
@@ -92,7 +92,7 @@ Problem 18.2 walks you into the gap. To carry the price across, you have to samp
 model by hand, outside `sizing.evaluate`. A test asserts the gap is still there. Adding a fifth
 node kind fails that test, and the problem gets rewritten.
 
-Whether the format *should* have one is a genuine question. The case for: it would make the join
+Whether the format *should* have one is an open question. The case for: it would make the join
 explicit, checkable and correlatable. The case against: a model reaching into another model's
 samples needs a fingerprint covering both, needs scenarios that agree, and cannot be reasoned
 about on its own. One large model is not obviously better than two honest small ones with a

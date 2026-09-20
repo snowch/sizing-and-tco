@@ -76,7 +76,7 @@ It is stated as a convention with a known bias, because that is the most anybody
 :width: 100%
 ```
 
-That is the most counter-intuitive figure in the book, and it is worth sitting with.
+That is the most counter-intuitive figure in the book.
 
 A unit cost falls when growth arrives. You bought a fleet for a future. If the future turns up,
 the fleet serves the requests it was bought for, and the cost per million of them is low. If it
@@ -127,8 +127,8 @@ cost stated that way is the only kind that survives being quoted by somebody who
 ### What a unit cost is for
 
 Not for deciding. A unit cost is a comparison, and comparisons are how you find the question
-worth asking. A unit cost that is out of line with a supplier's is a reason to go and find out
-why. It is not a reason to buy from the supplier.
+worth asking. A unit cost that is out of line with a supplier's is a reason to find out why. It
+is not a reason to buy from the supplier.
 
 The decision needs the total, the risk, and what the alternatives would cost. That is
 [ch21](#a-tco-for-finance). A unit cost is what gets you invited to that meeting.
@@ -158,7 +158,7 @@ conventions, and will not state them.
 
 **What the right denominator is.** The four in problem 17.2 are all defensible, and the model
 picks one. There is no fact of the matter. There is only a convention, stated or unstated, and
-this book's position is that stating it is the whole of the discipline.
+this book's position is that stating it is the discipline.
 
 **What the structure omits.** A unit cost inherits every missing line from the total it comes
 from ([ch15](#capex-opex-and-lifecycle)). Dividing by a large denominator makes a missing line

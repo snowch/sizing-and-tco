@@ -56,11 +56,11 @@ pairing, not in the numbers.
 ```
 
 One subtlety in there is easy to skip, and then to be quietly wrong about. The method works by
-correlating normal scores, and the rank correlation that comes out is weaker than the one that
-went in, by a known amount. Apply no correction, and every declared correlation lands slightly
-weaker than it was written. That error is small and consistent, and it is exactly the kind that
-survives review forever, because nobody expects the number they typed to come back as a different
-number. So the relation is inverted before use:
+correlating normal scores, and the rank correlation that comes out is weaker than the one that went
+in, by a known amount. Apply no correction, and every declared correlation lands slightly weaker
+than it was written. That error is small and consistent, and it is the kind that survives review
+forever, because nobody expects the number they typed to come back as a different number. So the
+relation is inverted before use:
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -101,7 +101,7 @@ rising sample counts and watch the interval narrow.
 That experiment does not work.
 
 **The interval does not narrow.** A 90% interval is a property of the distribution the model
-describes, which is to say of how uncertain the model's inputs actually are. More samples do not
+describes, which is to say of how uncertain the model's inputs are. More samples do not
 make that smaller. They **converge** on it: the answer settles towards the interval the inputs
 imply. Run the web service model with ten thousand draws and with a million, and the interval is
 the same width. It was never a function of how hard you looked.
@@ -120,7 +120,7 @@ noise, which is the next paragraph.
 
 Look at the individual ratios before you believe the summary, because they wander. Each spread in
 that column is itself *estimated*, from a limited number of independent runs. An estimate of a
-spread is noisy in exactly the way everything else in this chapter is noisy. Measuring how
+spread is noisy in the way everything else in this chapter is noisy. Measuring how
 uncertain something is turns out to be an uncertain measurement, and a figure demonstrating that
 law had better not be the one place in the book that forgets it. The overall rate across the
 range is far steadier than any single step. That is why it is the number on the last row.
