@@ -186,6 +186,16 @@ def test_only_a_top_level_path_resolves_to_a_page(url, expected):
     assert build.renderer._published(url) == expected
 
 
+def test_a_chapter_says_what_it_builds_on_from_the_outline():
+    """The line under a chapter's title is derived from the outline, and links what it names."""
+    build_site = site()
+    line = build_site.builds_on("chapters/queueing_and_the_knee.md")
+    assert line.startswith('<p class="builds-on">Builds on ')
+    assert 'href="littles-law.html"' in line and ">ch05</a>" in line
+    assert build_site.builds_on("chapters/point_estimates.md") == ""
+    assert build_site.builds_on("index.md") == ""
+
+
 def test_the_foot_of_a_page_points_at_its_neighbours_in_the_reading_order():
     """prev and next come from page_order(), and the ends of the book have one link, not two."""
     build = site()

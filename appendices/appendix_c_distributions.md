@@ -126,7 +126,16 @@ and a normal says they are additive.
 
 ## Choosing
 
-In order:
+The four, side by side:
+
+| Shape | What you give it | What it claims | How it lies | Use it for |
+|---|---|---|---|---|
+| Uniform | two bounds | every value between them is as likely as any other, and nothing outside can happen | mass at the ends, where almost nothing real has any | an input whose bounds are the whole claim |
+| Triangular | the least, the most, and the one you would bet on | hard bounds, with likelihood falling in straight lines away from your bet | nothing outside what has already been seen can occur | a human estimate |
+| Lognormal | a low and a high value you would be surprised outside | it cannot be negative, and half as much is as plausible as twice as much | an upper tail longer than it looks, with no bound at all | prices, growth, anything that compounds |
+| Normal | a value and its standard error | symmetry, and thin tails | it goes negative, and symmetry is the wrong claim about anything that compounds | measurement error, and nothing else |
+
+Then the questions, in order:
 
 1. **Does it compound, or does it have a price on it?** Lognormal.
 2. **Is it a measurement with a standard error?** Normal.

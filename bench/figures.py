@@ -397,6 +397,9 @@ FIGURES: dict[str, Table | Diagram] = {
     "headroom-and-failure-domains-observability": Table(
         render=tables.ceilings_table, result="observability-reference"
     ),
+    "headroom-and-failure-domains-margins": Table(
+        render=tables.margins_table, result="web_service_headroom-reference"
+    ),
     # -- ch12 The sizing model --------------------------------------------------------------------
     # The answer, the decision, and the three chains the answer was the largest of.
     "the-sizing-model-outputs": Table(

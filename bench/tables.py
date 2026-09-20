@@ -344,6 +344,34 @@ def ceilings_table(name: str) -> str:
     return "\n".join(rows)
 
 
+def margins_table(name: str) -> str:
+    """Every declared ceiling's margin, and the model's own reason for it.
+
+    ``ceilings_table`` says where the plan sits against each ceiling. This says why the margins
+    differ: the reason is the ``because`` the model file declares beside each one, so the words
+    are the modeller's rather than this book's, and a ceiling declared without a reason shows an
+    empty cell rather than one written here.
+    """
+    payload = load_result(name)["summary"]
+    declared = {
+        node_name: node
+        for node_name, node in payload["nodes"].items()
+        if node.get("kind") == "ceiling"
+    }
+    if not declared:
+        return "*This model declares no ceilings. It is a cost model: see the front matter.*"
+    rows = ["| Ceiling | Margin | Why this margin |", "|---|---:|---|"]
+    for _node_name, node in sorted(declared.items()):
+        ceiling = node.get("ceiling")
+        if not ceiling:
+            rows.append(f"| {node['label']} | *not yet measured* |  |")
+            continue
+        rows.append(
+            f"| {node['label']} | {ceiling['headroom']:.0%} | {ceiling.get('because', '')} |"
+        )
+    return "\n".join(rows)
+
+
 def provenance_table(name: str) -> str:
     """Every input, by how much somebody is claiming when they wrote it down.
 

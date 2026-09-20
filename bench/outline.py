@@ -198,6 +198,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[0],
         "Which quantities actually size a system, and which ones only look as though they do?",
         owes="The workload table for both reference models, derived from their input nodes.",
+        needs=("point_estimates",),
     ),
     Chapter(
         3,
@@ -224,6 +225,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "Which number in a demand curve sizes you, and what is a five-year growth rate actually "
         "a claim about?",
         owes="The growth sensitivity of the web service model, as a swing across the declared range.",
+        needs=("what_a_workload_is", "where_the_numbers_come_from"),
     ),
     Chapter(
         5,
@@ -233,6 +235,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "What can you infer about a system from the one relationship that is always true, and "
         "what can you not?",
         owes="Requests in flight at the busy hour, derived from the rate and the time each one takes.",
+        needs=("peak_mean_and_growth",),
     ),
     Chapter(
         6,
@@ -243,6 +246,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "actually buy?",
         owes="The utilisation-against-waiting-time curve, drawn from the model rather than "
         "asserted.",
+        needs=("littles_law",),
     ),
     Chapter(
         7,
@@ -253,6 +257,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "actually have?",
         owes="The universal scalability law's curve, drawn from the model's two coefficients, and "
         "where the fleet's peak is.",
+        needs=("queueing_and_the_knee",),
     ),
     Chapter(
         8,
@@ -262,6 +267,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "Which ceilings can a chain of multiplications not model at all?",
         owes="The cardinality explosion, as a distribution rather than a warning.",
         consumes=("observability-reference",),
+        needs=("point_estimates", "queueing_and_the_knee"),
     ),
     Chapter(
         9,
@@ -271,6 +277,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "How far is what you buy from what you can use?",
         owes="The chain from what the service must keep to the disks it must buy, node by node.",
         consumes=("web_service_capacity-reference",),
+        needs=("where_the_numbers_come_from", "peak_mean_and_growth"),
     ),
     Chapter(
         10,
@@ -281,6 +288,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "buying?",
         owes="How often each of the three chains binds across the web service's uncertainty.",
         consumes=("web_service_binding-reference", "binding-constraint"),
+        needs=("capacity", "queueing_and_the_knee"),
     ),
     Chapter(
         11,
@@ -290,6 +298,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "Why is headroom a rule rather than a number?",
         owes="Each ceiling's declared margin and the reason for it, from both models.",
         consumes=("web_service_headroom-reference", "observability-reference"),
+        needs=("queueing_and_the_knee", "when_adding_servers_stops_helping"),
     ),
     Chapter(
         12,
@@ -329,6 +338,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "not model?",
         owes="The web service's capital and running cost split, over its declared horizon.",
         consumes=("web_service-reference",),
+        needs=("the_sizing_model",),
     ),
     Chapter(
         16,
@@ -337,6 +347,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[4],
         "What changes when watts are the binding constraint rather than money?",
         owes="The web service resized from a power budget inwards.",
+        needs=("the_sizing_model", "capex_opex_and_lifecycle"),
     ),
     Chapter(
         17,
@@ -346,6 +357,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "What does a cost per unit have to have before it means anything?",
         owes="Cost per million requests from the web service, and what its denominator assumes.",
         consumes=("web_service-reference",),
+        needs=("peak_mean_and_growth", "capex_opex_and_lifecycle"),
     ),
     Chapter(
         18,
@@ -355,6 +367,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "How does a cost model consume a sizing model's output without swallowing its uncertainty?",
         owes="Both models joined at the unit price, end to end.",
         consumes=("web_service-reference", "observability-reference"),
+        needs=("capex_opex_and_lifecycle", "unit_economics"),
     ),
     Chapter(
         19,
@@ -375,7 +388,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "How do you find the error that no amount of sampling can see?",
         owes="The observability model's incomplete ingest total, and what it costs to believe it.",
         consumes=("observability-reference",),
-        needs=("correlation_and_convergence",),
+        needs=("correlation_and_convergence", "which_input_is_the_answer"),
     ),
     Chapter(
         21,

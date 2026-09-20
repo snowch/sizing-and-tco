@@ -144,6 +144,27 @@ def href_for(source: str) -> str:
     return "index.html" if source == "index.md" else f"{stem.replace('_', '-')}.html"
 
 
+def builds_on(source: str) -> str:
+    """One line under a chapter's title naming the chapters it assumes, from the outline.
+
+    The outline records what each chapter needs and a test holds it pointing backwards; until
+    now nothing showed it to a reader. The line is derived here rather than typed into the
+    page, for the reason every chapter number is: typed, it would go stale the first time a
+    chapter moved or a dependency changed.
+    """
+    chapter = next((c for c in CHAPTERS if c.path == source), None)
+    if chapter is None or not chapter.needs:
+        return ""
+    by_slug = {c.slug: c for c in CHAPTERS}
+    links = [
+        f'<a href="{href_for(by_slug[slug].path)}" title="{html.escape(by_slug[slug].title)}">'
+        f"{by_slug[slug].label}</a>"
+        for slug in chapter.needs
+    ]
+    joined = links[0] if len(links) == 1 else ", ".join(links[:-1]) + " and " + links[-1]
+    return f'<p class="builds-on">Builds on {joined}.</p>'
+
+
 def contents_of(page: dict) -> list[dict]:
     """The headings on one page, for the sidebar on the right.
 
@@ -706,6 +727,7 @@ main :is(h1, h2, h3, h4) { font-family: var(--chrome); letter-spacing: -.012em;
                            scroll-margin-top: calc(var(--top) + 1rem); }
 h1 { font-size: clamp(1.6rem, 5.4vw, 2rem); font-weight: 700; line-height: 1.18;
      margin: 1.6rem 0 1.4rem; }
+.builds-on { margin: -.9rem 0 1.4rem; font: 14px/1.5 var(--chrome); color: var(--muted); }
 h2 { font-size: 1.35rem; font-weight: 650; line-height: 1.25; margin: 2.5rem 0 .9rem;
      padding-top: 1.1rem; border-top: 1px solid var(--edge); }
 h3 { font-size: 1.04rem; font-weight: 700; line-height: 1.3; margin: 1.9rem 0 .6rem; }
@@ -895,6 +917,8 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
     if source in TITLED_PAGES:
         promote_headings(page)
     body = renderer.render(page.get("mdast", page))
+    if builds_on(source):
+        body = body.replace("</h1>", "</h1>" + builds_on(source), 1)
     if source not in TITLED_PAGES:
         # The introduction and the part pages carry their name in the front matter and nowhere
         # in the text, so the page opens on a blockquote with nothing above it saying where
