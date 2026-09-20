@@ -104,7 +104,10 @@ make machine   # what this computer is, and whether it may take a rig measuremen
    `tests/<chapter-slug>/` with a test that passes only when solved, marked `problem` so CI
    deselects it, with **unmarked scaffolding tests beside it** that CI does run and that assert
    the problem is answerable. Never write the answer anywhere in the repository. The expected
-   values are derived at test time from an oracle, never stored.
+   values are derived at test time from an oracle, never stored. The chapter page runs the same
+   test under Pyodide from a Check under the problem, over the files
+   `sizing.playground.toolkit.problem_files` lists; `tests/test_problems.py` holds every
+   chapter's tests to running on exactly those.
 
    **A problem about the reader's own system has no oracle, and is still a problem.** This rule
    arrived from a book whose exercises were code, where a passing test or a booting kernel is the

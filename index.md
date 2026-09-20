@@ -174,8 +174,12 @@ Once you have opened the book, it works with no network. Your browser keeps it. 
 offline**, in the header, fetches that runtime ahead of need, about ten megabytes once, and says
 when it is kept.
 
-To do the problems, you need a checkout. The problems are tests, and a test needs an interpreter.
-You need Python and a few minutes:
+The problems run in the page too. Under each one that has a test sits the piece of code it grades,
+yours to edit, and **Check** runs that problem's tests in your browser on the same runtime. Each
+test says whether it passed, and if not, why. Nothing leaves your machine.
+
+To work the problems at a desk instead, with an editor and a shell, you need a checkout. The
+problems are tests, and the same tests run there:
 
 ```bash
 git clone https://github.com/snowch/sizing-and-tco.git
