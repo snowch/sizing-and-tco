@@ -189,6 +189,21 @@ expect. It falls as one over the square root of the count, so halving it costs f
 work. Problem 3.2 is that arithmetic. It is worth doing *before* agreeing to a measurement
 campaign rather than during one.
 
+:::{note} Key takeaways
+- **Every input says how much its author was claiming.** A fact is traceable to something, a
+  vendor's claim was stated by somebody selling it and is never quietly promoted, and an assumption
+  is a decision a reviewer can argue with.
+- **A measured constant belongs to some data and some software at some version.** The method
+  transfers. The number does not.
+- **Four targets, and nobody can check the fourth.** Corpus and model results can be re-derived by
+  anybody with the repository, a rig timing needs the declared machine, and an observation of a
+  running system is somebody's word with a disclosure attached.
+- **A constant nobody has measured has no value, and nor does anything downstream of it.** No
+  placeholder, no estimate, no number borrowed from a different stack.
+- **One measurement says nothing about its own wobble.** A constant is measured over several shards
+  and reported with a standard error, and halving that error costs four times the work.
+:::
+
 ## What this cannot tell you
 
 **Whether a corpus resembles your data.** Every constant above was measured over a body of data

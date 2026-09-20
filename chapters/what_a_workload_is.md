@@ -224,6 +224,22 @@ one kind of machine. Somebody has to measure it, and [ch05](#littles-law) says w
 The demand side describes what is asked of the system. How the system behaves under it is a
 distinction this table cannot draw, and the next part exists to make it.
 
+:::{note} Key takeaways
+- **A flow is a rate, a stock is a level, and the unit tells them apart.** A flow has time
+  underneath it. A stock is how much there is now. Ratios, counts and prices have no time in them at
+  all.
+- **The commonest sizing error turns a flow into a stock by multiplying it by a plain number.** A
+  rate times a number is still a rate. Only a duration makes it an amount, and the toolkit refuses
+  the other.
+- **A model is a file of named quantities, each with a unit and a source.** A spreadsheet cell holds
+  a value and nothing about it. The file holds where the value came from and what it is measured in.
+- **Growth compounds, so the horizon has to become a pure number.** Dividing the duration by a
+  declared year is what turns it into an exponent, and a spreadsheet does that silently until
+  somebody types months.
+- **Separate what the world does to you from what you decided.** An input given a single value that
+  you cannot actually control is an assumption you have stopped noticing.
+:::
+
 ## What this cannot tell you
 
 **Whether the quantities are the right ones.** A workload description is a model of demand, and

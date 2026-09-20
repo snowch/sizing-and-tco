@@ -143,6 +143,23 @@ the headline number is unchanged and only the doubt has grown, which is why it p
 becomes unfalsifiable. An unfalsifiable model is a very expensive way of writing down what
 somebody already believed.
 
+:::{note} Key takeaways
+- **There are two ways to be wrong, and sampling sees only one.** Wrong about a number is what the
+  interval reports. Wrong about the shape produces a converged interval around the wrong answer, and
+  the convergence looks like rigour.
+- **Four things could be wrong, and the interval covers two.** A measurement wobbles, a number is
+  unknown, the world takes a different path, or the model is the wrong shape. The third is a
+  scenario and the fourth is a blind spot, and neither is in the interval.
+- **An interval makes a structurally incomplete model more dangerous, not less.** It looks as if the
+  doubt has already been accounted for.
+- **Nothing automatic finds a missing node.** Compare against an invoice, read the node list as a
+  list of categories and ask what is absent, distrust an answer that is too neat, and get somebody
+  who did not build the model to read it.
+- **Widening the inputs until the observation fits is how a model becomes unfalsifiable.** The
+  median does not move, only the doubt grows, and a model that cannot be wrong has stopped being
+  useful.
+:::
+
 ## What this cannot tell you
 
 **Whether this chapter's own model is complete.** It is not. The observability model has no line

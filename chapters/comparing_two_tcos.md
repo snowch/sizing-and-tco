@@ -240,6 +240,25 @@ when the item is missing.
 The first item is the one to check twice. Two quotes that were sized differently are not two
 prices for the same thing, and no amount of care over the lines below it repairs that.
 
+:::{note} Key takeaways
+- **A comparison is about the lines that differ.** What both designs pay alike drops out of the
+  difference however large it is, so every line goes on both sides, with a declared zero where a
+  quote has no such line.
+- **Subtract futures, not intervals.** The two totals share most of their uncertainty, so the
+  difference taken future by future is far narrower than either total. Subtracting independent
+  draws, or the ends of two intervals, says how the arithmetic was done and nothing about the
+  decision.
+- **A total is the price of a fleet that works.** Two fleets that cope different amounts of the time
+  are not the same purchase at two prices, so the comparison carries the ceilings as well as the
+  money.
+- **Find what would flip it.** The break-evens say how far each line and each shared input can move
+  before the ordering reverses. Usually that is a few per cent on the prices that scale with the
+  host count, and nothing on the inputs the argument in the room is about.
+- **A comparison somebody else built arrives with one column already won.** The checklist says what
+  it has to show, and the item to check twice is whether both designs were sized by the same rule to
+  the same margins.
+:::
+
 ## What this cannot tell you
 
 **What either vendor would actually charge.** Both quotes are held exactly. A quote is a number,

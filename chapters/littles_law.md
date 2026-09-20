@@ -148,6 +148,21 @@ opinion about which of them is causing the others.
 A law that assumes nothing has no mechanism in it, and a chapter about it has less to say than
 the ones that buy one.
 
+:::{note} Key takeaways
+- **Requests in the system equal the arrival rate times the time each one stays.** One
+  multiplication, true of any system in a steady state, assuming nothing about how the system works.
+- **What a request costs is not how long it takes.** Service demand is processor time per request,
+  the first quantity in the model that belongs to the software rather than the workload. The
+  difference between the two is queueing.
+- **Run the law backwards to get the residence time nobody measures.** Divide the requests in flight
+  by the arrival rate, and the answer includes every queue a request sat in before your timer
+  started.
+- **The fleet is an input, not a result.** The model recommends a fleet, a person decides one, and
+  every ceiling from here on asks what happens to the fleet that was actually bought.
+- **The law relates three numbers and has no opinion about which one moved.** Outside a steady
+  state, or about the tail, it says nothing at all.
+:::
+
 ## What this cannot tell you
 
 **Anything about a system that is not in a steady state.** The one condition, and the one people

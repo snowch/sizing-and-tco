@@ -130,6 +130,21 @@ comfortably inside the margin tells you about one future only. [ch13](#monte-car
 other futures come from. [ch12](#the-sizing-model) is what the difference between the two
 readings costs.
 
+:::{note} Key takeaways
+- **Headroom is a rule because the right number differs for every ceiling.** A capacity margin
+  protects against a cliff, a queueing margin against a slope, a scaling margin against a budget,
+  and one percentage cannot serve all three.
+- **The failure reserve is the one margin you can compute, and it is for a loss, not a failure.** A
+  host drained for an upgrade costs the same capacity as one that died. A small fleet pays an
+  enormous share for the reserve and a large fleet almost nothing.
+- **Margins multiply. They do not add.** Each takes its share of what the last one left, so three
+  modest margins can leave well under half the fleet doing the work it was bought for.
+- **A margin without a reason gets copied.** Every ceiling carries a *because*, so that the margin
+  can be argued with, adjusted when the reason changes, and dropped when it goes away.
+- **What a margin produces is a probability, not a verdict.** Across every future the model thinks
+  plausible, how often the design ends up past this limit.
+:::
+
 ## What this cannot tell you
 
 **Whether any of these margins is right.** Every one was declared by somebody, with a reason, and

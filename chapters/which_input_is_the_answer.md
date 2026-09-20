@@ -191,6 +191,22 @@ things you can do with the input at the top:
 Then re-run the model, because the tornado will have a different input at the top. That is what
 progress looks like here. Not a narrower interval on the same chart, but a different chart.
 
+:::{note} Key takeaways
+- **Only two things narrow an interval: measure something or decide something.** More samples locate
+  the interval. They never shrink it.
+- **A tornado ranks inputs by how far the answer moves when each one swings alone.** The ordering
+  answers *what should I measure first*, and that is the only question it answers well.
+- **The widest bar is where the model is not linear.** An exponent, a product of uncertain things, a
+  division by a small remainder. Pinning a decision can remove the dominant input from everything
+  downstream of it.
+- **The bars are a ranking, not a decomposition.** They do not add up to the interval, they cannot
+  show a correlation, and an input whose effect appears only in combination gets a short bar and can
+  still sink you.
+- **What a measurement would be worth is a ceiling you can compute before spending anything.** Pin
+  an input at its median, re-sample, and read how much the interval closes. Often the input worth
+  most is a growth rate, and the only thing to do with a growth rate is decide it.
+:::
+
 ## What this cannot tell you
 
 **How much the interval would narrow if you measured it *in practice*.** The table above is the

@@ -236,6 +236,24 @@ That is not fastidiousness. An unseeded simulation is a measurement nobody can r
 figure nobody can repeat is a figure nobody can check. This book refuses that everywhere else,
 and has no reason to start allowing it here.
 
+:::{note} Key takeaways
+- **Give the model a bag of plausible values instead of one, and the bag of answers is the answer.**
+  Filling the bag is one line: pick a percentile at random and ask the distribution what value sits
+  there.
+- **The shape is a claim about the world, and the first thing a reviewer should argue with.**
+  Lognormal for what compounds, triangular for an expert's guess, uniform when the bounds really are
+  all you know, and normal for measurement error alone.
+- **Sampling the model is the same walk of the same graph, on arrays instead of numbers.** Every
+  node gets a distribution, not only the outputs, so you can walk the chain to where the interval
+  got wide.
+- **Read the middle, not the ends.** The smallest and largest answers are properties of how many you
+  drew. The interval between two percentiles is a property of the model, and the answer at the
+  average inputs is neither the average answer nor the middle one.
+- **The ceilings are what the machinery is for.** Not *you need this many hosts*, but *at this many,
+  this is how often the thing you were avoiding happens anyway*, which is an answer somebody can be
+  accountable for.
+:::
+
 ## What this cannot tell you
 
 **Whether the model has the right shape.** Everything above takes the structure as given and asks

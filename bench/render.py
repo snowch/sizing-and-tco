@@ -229,7 +229,11 @@ def render(node: dict) -> str:
     if kind == "cite":
         return f"[{children()}]" if node.get("children") else ""
     if kind == "admonition":
-        classes = " ".join(["admonition", *node.get("class", "").split()])
+        # The kind is a class too, so the stylesheet can tell a note from a warning. MyST keeps
+        # it in `kind`, and without this every box rendered in the plain grey of no kind at all.
+        classes = " ".join(
+            ["admonition", *str(node.get("kind", "")).split(), *node.get("class", "").split()]
+        )
         return f'<div class="{classes}">{children()}</div>'
     if kind == "admonitionTitle":
         return f'<p class="admonition-title">{children()}</p>'

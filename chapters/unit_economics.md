@@ -133,6 +133,23 @@ why. It is not a reason to buy from the supplier.
 The decision needs the total, the risk, and what the alternatives would cost. That is
 [ch21](#a-tco-for-finance). A unit cost is what gets you invited to that meeting.
 
+:::{note} Key takeaways
+- **A unit cost is a total divided by a quantity, and the trap is in the division.** Per month and
+  per year differ by a factor of twelve. The busy hour and the mean differ by the peak-to-mean
+  ratio. Both look equally authoritative on a slide.
+- **The denominator is the part nobody checks.** At least four defensible ones exist for the same
+  total, they are not close together, and only the per-sample ratio puts the same future above and
+  below the line.
+- **The unit cost of a fleet depends on a future that has not happened yet.** If the growth arrives,
+  the fleet is cheap per request. If it does not, the same fleet is expensive. Most of the interval
+  is in the denominator.
+- **A unit cost is comparable only with its period, its denominator's definition and its numerator's
+  contents stated.** Two organisations comparing cost per request are usually comparing different
+  requests.
+- **A unit cost finds the question worth asking. It does not decide.** The decision needs the total,
+  the risk, and what the alternatives would cost.
+:::
+
 ## What this cannot tell you
 
 **Whether the comparison is like for like.** Everything above makes this model's figure explicit.
