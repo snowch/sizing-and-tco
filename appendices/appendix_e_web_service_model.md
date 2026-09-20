@@ -55,6 +55,15 @@ input so hard to spot downstream. And **three separate chains reach the host cou
 request rate, the working set and the data on disk — which is
 [ch10](#bandwidth-and-the-binding-constraint)'s whole subject.
 
+## Every formula
+
+The graph above, as text: every derived quantity and every ceiling, with the formula the file
+gives it and the chapter that added it. The table is rendered from the file, so it cannot
+disagree with it.
+
+```{include} ../chapters/_generated/appendix-e-web-service-model-formulas.md
+```
+
 ## The outputs
 
 ```{include} ../chapters/_generated/appendix-e-web-service-model-outputs.md

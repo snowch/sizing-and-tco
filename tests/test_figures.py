@@ -171,3 +171,23 @@ def test_every_declared_figure_is_included_somewhere():
         f"declared in bench/figures.py and included by no page: {orphaned}. Either a page should "
         "be using it, or the declaration should go."
     )
+
+
+def test_the_formula_sheet_lists_every_formula_once():
+    """The sheet is a view of the model file: one row per derived node or ceiling, verbatim."""
+    from bench import tables
+    from bench.stages import model_path
+    from sizing.dsl import Ceiling, Derived, load_model
+
+    model = load_model(model_path("web_service"))
+    sheet = tables.formulas_table(None, "web_service")
+    rows = sheet.splitlines()[2:]
+    listed = [n for n, node in model.nodes.items() if isinstance(node, Derived | Ceiling)]
+    assert len(rows) == len(listed)
+    for name, node in model.nodes.items():
+        if isinstance(node, Derived):
+            assert f"| `{node.formula_text}` |" in sheet, name
+        elif isinstance(node, Ceiling):
+            assert f"`{node.of_text}` against a limit of `{node.limit_text}`" in sheet, name
+    assert "Introduced in" in sheet.splitlines()[0]
+    assert "Introduced in" not in tables.formulas_table(None, "observability")

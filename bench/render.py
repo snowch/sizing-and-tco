@@ -203,7 +203,12 @@ def render(node: dict) -> str:
         return f'<iframe class="{kind_class}" src="{html.escape(src)}" loading="lazy"></iframe>'
     if kind == "link":
         url = str(node.get("url", ""))
-        return f'<a href="{html.escape(_published(url) or url)}">{children()}</a>'
+        href = html.escape(_published(url) or url)
+        if node.get("_term"):
+            # A glossary term the site linked: its meaning rides as the title, which a desktop
+            # shows on hover and a tablet reaches by following the link.
+            return f'<a class="term" href="{href}" title="{html.escape(str(node["_term"]))}">{children()}</a>'
+        return f'<a href="{href}">{children()}</a>'
     if kind == "crossReference":
         # The label is re-derived from the outline, and the reference links to the page it names
         # when this build is publishing that page. When it is not — one page built to look at —
