@@ -233,6 +233,17 @@ def test_a_glossary_term_links_to_its_entry_only_after_its_chapter():
     assert not [n for n in build_site.walk(glossary) if n.get("type") == "link"]
 
 
+def test_a_provenance_mark_is_drawn_not_typeset():
+    """Each of the three marks renders as a span the stylesheet draws, with the glyph kept."""
+    from bench import render as renderer
+
+    out = renderer.render({"type": "text", "value": "\u25cf fact, \u25d0 claim, \u25cb guess"})
+    assert '<span class="mark" data-mark="fact">\u25cf</span> fact' in out
+    assert '<span class="mark" data-mark="vendor_claim">\u25d0</span> claim' in out
+    assert '<span class="mark" data-mark="assumption">\u25cb</span> guess' in out
+    assert renderer.render({"type": "inlineCode", "value": "\u25cf"}) == "<code>\u25cf</code>"
+
+
 def test_a_term_link_carries_its_meaning_and_the_glossary_rows_carry_ids():
     build_site = site()
     node = {
