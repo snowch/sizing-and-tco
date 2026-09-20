@@ -10,7 +10,7 @@ and the icons, and adds one line to every page's head that registers it. On the 
 worker fetches the whole list, about ten megabytes; after that every page opens with the network
 off, and a new deploy is picked up the next time a page is opened online.
 
-The Python runtime the playground and the viewer's Resample fetch is not in the list. Thirty
+The Python runtime the playground and the viewer's Resample fetch is not in the list. Ten
 megabytes that most readers never press the button for is not something to make every visitor
 pay; instead the worker keeps whatever the runtime and its wheels were fetched from the first
 time a reader does press it, so that from then on those work offline too. A reader who wants it
