@@ -61,6 +61,21 @@ CONTENT = ROOT / "_build" / "site" / "content"
 PUBLIC = ROOT / "_build" / "site" / "public"
 
 
+#: The three provenance marks, and the class each renders with. The page's font has none of
+#: the geometric shapes, so a browser borrows each glyph from whatever system font has it, and
+#: on a phone the full and empty circles came from one font and the half circle from another,
+#: at another size. The span keeps the glyph for a screen reader and for copy-and-paste, and the
+#: stylesheet draws the shape itself, so the three are the same size everywhere.
+MARKS = {"\u25cf": "fact", "\u25d0": "vendor_claim", "\u25cb": "assumption"}
+
+
+def _marked(text: str) -> str:
+    for glyph, kind in MARKS.items():
+        if glyph in text:
+            text = text.replace(glyph, f'<span class="mark" data-mark="{kind}">{glyph}</span>')
+    return text
+
+
 class UnknownNodeError(Exception):
     """A node type the renderer does not handle. Raised, never skipped."""
 
@@ -132,7 +147,7 @@ def render(node: dict) -> str:
     children = lambda: "".join(render(child) for child in node.get("children", []))  # noqa: E731
 
     if kind == "text":
-        return html.escape(node.get("value", ""))
+        return _marked(html.escape(node.get("value", "")))
     if kind in ("root", "block"):
         return children()
     if kind == "paragraph":

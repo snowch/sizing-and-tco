@@ -838,6 +838,20 @@ a.xref:hover { text-decoration: underline; }
 .find:hover { border-color: var(--accent); color: var(--accent); }
 .find kbd { font: 11px/1 var(--mono); border: 1px solid var(--edge); border-radius: 3px;
             padding: .15rem .3rem; background: var(--bg); color: var(--faint); }
+/* The provenance marks, drawn rather than typeset: a full, a half and an empty circle of one
+   size, whatever fonts the device has. The glyph stays in the span, invisible, for a screen
+   reader and for copy-and-paste; on paper it is shown instead, because a printer may drop
+   backgrounds. */
+.mark { display: inline-block; width: .66em; height: .66em; border-radius: 50%;
+        border: 1.5px solid var(--ink); box-sizing: border-box; position: relative;
+        vertical-align: -.02em; color: transparent; overflow: hidden; }
+.mark::before { content: ""; position: absolute; inset: 0; print-color-adjust: exact; }
+.mark[data-mark="fact"]::before { background: var(--ink); }
+.mark[data-mark="vendor_claim"]::before { background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
+@media print {
+  .mark { width: auto; height: auto; border: 0; color: var(--ink); overflow: visible; }
+  .mark::before { display: none; }
+}
 /* The offline control. Hidden in the markup and shown by its script, like Search. */
 .offline { display: flex; align-items: center; gap: .45rem; font: 13.5px/1 var(--chrome);
            color: var(--muted); background: var(--panel); border: 1px solid var(--edge);
