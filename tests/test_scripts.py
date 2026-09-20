@@ -94,7 +94,7 @@ def test_every_script_is_executable_and_parses():
 
 
 #: The constants in scripts/build-site.py that hold JavaScript rather than Python.
-JS_TEMPLATES = ("MENU", "OFFLINE", "RUNNER", "SEARCH")
+JS_TEMPLATES = ("MENU", "OFFLINE", "PROBLEMS", "RUNNER", "SEARCH")
 
 
 @pytest.mark.parametrize("name", JS_TEMPLATES)
@@ -360,6 +360,44 @@ def test_every_stage_viewer_is_embedded_by_its_chapter():
         )
 
 
+def test_every_tested_problem_is_checkable_on_its_chapter_page():
+    """Under each tested problem, the page shows the piece of the stubs file the test grades,
+    editable, with a Check; the pieces splice back into the whole file unchanged; and the
+    chapter's problem set is written beside the page for the first Check to fetch."""
+    from sizing.playground.toolkit import problem_chapters, problem_pieces
+
+    build_site = site()
+    index = renderer.parsed_pages()
+    if not index:
+        pytest.skip("no parsed content; run `myst build` first")
+    for slug in problem_chapters():
+        source = f"chapters/{slug}.md"
+        page = index[source]
+        html = build_site.render_page(source, page, None, None)
+        blocks = problem_pieces(slug)
+        assert html.count('<div class="problem" data-test="') == len(blocks), (
+            f"{source}: not every test file has a Check under its problem"
+        )
+        for block in blocks:
+            assert f'data-test="{block["test"]}"' in html, f"{source} lacks {block['test']}"
+            for piece in block["pieces"]:
+                assert f'data-start="{piece["start"]}" data-end="{piece["end"]}"' in html
+        assert 'id="problem-spec"' in html and "async function bootToolkit" in html
+        # Every heading carries an id made from its text, so "## Problems" owns `problems`; a
+        # script tag with that id is the heading's text parsed as JSON, and it shipped once.
+        assert html.count('id="problems"') == 1, "the spec's id collides with the heading's"
+        assert f'"set": "problems/{build_site.href_for(source).removesuffix(".html")}.json"' in html
+        # The whole stubs file the page splices into, and the set it fetches, are the repository's.
+        assert (ROOT / "tests" / slug / "stubs.py").read_text() in json.loads(
+            re.search(
+                r'<script type="application/json" id="problem-spec">(.*?)</script>', html
+            ).group(1)
+        )["whole"]
+        payload = json.loads(build_site.problem_set(slug))
+        assert set(payload) == {"modules", "files"}
+        assert f"tests/{slug}/stubs.py" in payload["files"]
+
+
 def test_the_pages_that_run_the_toolkit_share_one_runtime_and_one_boot():
     """Three pages start Python in a browser. One copy of how, or they drift.
 
@@ -374,9 +412,12 @@ def test_the_pages_that_run_the_toolkit_share_one_runtime_and_one_boot():
         assert "cdn.jsdelivr.net/pyodide" not in text, f"{builder} pins its own runtime URL"
         assert "{boot}" in text, f"{builder} does not inline boot.js"
         assert "from sizing.playground.toolkit import" in text, f"{builder} does not import toolkit"
-    # The call itself: in the two page templates, and in the viewer's own app.
+    # The call itself: in the two page templates, and in the viewer's own app. A chapter page
+    # goes through the shared start, because its Run and its Checks are one runtime.
     for caller in ("scripts/build-site.py", "scripts/build-playground.py", "sizing/viewer/app.js"):
-        assert "bootToolkit(" in (ROOT / caller).read_text(), f"{caller} does not call bootToolkit"
+        assert re.search(r"\b(bootToolkit|shareToolkit)\(", (ROOT / caller).read_text()), (
+            f"{caller} does not call bootToolkit"
+        )
 
 
 def test_the_toolkit_does_not_import_the_harness():
@@ -416,6 +457,32 @@ def test_the_toolkit_pins_the_wheels_a_run_installs():
     for url, digest in WHEELS:
         assert url.startswith("https://files.pythonhosted.org/") and url.endswith(".whl"), url
         assert re.fullmatch(r"[0-9a-f]{64}", digest), url
+
+
+def test_the_toolkit_pins_the_runner_a_check_installs():
+    """A Check runs pytest at the version ``requirements-dev.txt`` pins for the native suite.
+
+    The verdict under a problem in the page is meant to be the verdict the same test gives at a
+    desk, and that holds only while both run the same runner. Everything pytest imports is
+    beside it, for the reason Pint's wheels are: a wheel installed by URL brings nothing with it.
+    """
+    from sizing.playground.toolkit import PROBLEM_WHEELS, offline_manifest, problem_wheels, wheels
+
+    pins = dict(
+        line.strip().split("==")
+        for line in (ROOT / "requirements-dev.txt").read_text().splitlines()
+        if "==" in line and not line.startswith("#")
+    )
+    assert any(
+        url.endswith(f"/pytest-{pins['pytest']}-py3-none-any.whl") for url in problem_wheels()
+    ), "the browser's pytest wheel is not the version requirements-dev.txt pins"
+    names = {url.rsplit("/", 1)[-1].split("-")[0].lower() for url in problem_wheels()}
+    assert {"pluggy", "iniconfig", "packaging", "pygments"} <= names
+    for url, digest in PROBLEM_WHEELS:
+        assert url.startswith("https://files.pythonhosted.org/") and url.endswith(".whl"), url
+        assert re.fullmatch(r"[0-9a-f]{64}", digest), url
+    # The offline control keeps what a Check fetches as well as what a Run does.
+    assert offline_manifest()["wheels"] == wheels() + problem_wheels()
 
 
 def test_every_page_that_boots_the_toolkit_hands_it_the_same_wheels():
@@ -488,7 +555,7 @@ def test_the_offline_control_keeps_everything_a_run_fetches(tmp_path):
     import json
     import subprocess
 
-    from sizing.playground.toolkit import PYODIDE, offline_manifest, wheels
+    from sizing.playground.toolkit import PYODIDE, offline_manifest, problem_wheels, wheels
 
     build_site = site()
     script = re.sub(r"^\s*<script>|</script>\s*$", "", build_site.OFFLINE_SCRIPT.strip())
@@ -516,6 +583,7 @@ def test_the_offline_control_keeps_everything_a_run_fetches(tmp_path):
         ),
         *(PYODIDE + f for f in ("numpy-x.whl", "openblas-x.zip", "pyyaml-x.whl")),
         *wheels(),
+        *problem_wheels(),
     }
     assert set(report["puts"]) == expected, sorted(set(report["puts"]) ^ expected)
     assert report["label"] == "Kept offline" and report["state"] == "kept", report

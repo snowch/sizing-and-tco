@@ -270,6 +270,11 @@ A problem is a stub the reader edits and a test that passes only when they are r
   trivially answerable. CI runs those. One of ours failed on the day it was written, because the
   "observed" figure was inside the interval the reader was supposed to be unable to reach.
 - Never write the answer anywhere in the repository. The test is the answer key, and it runs.
+- **The page runs the test too.** Under each tested problem the chapter page shows the stub's
+  function, editable, and Check runs the chapter's own test file under Pyodide over exactly the
+  files `sizing.playground.toolkit.problem_files` lists. So a test imports what it grades from
+  the chapter's `stubs.py` by name, names every model file and result it reads as a quoted path
+  or a literal `load_result("...")`, and `tests/test_problems.py` fails when one is missing.
 
 ## Definition of done
 

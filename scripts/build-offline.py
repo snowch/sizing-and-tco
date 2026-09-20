@@ -5,17 +5,18 @@
 
 The book is a set of static pages with the interactive models inlined into them, so it has
 nothing a server has to do -- but a browser only knows to keep it if something asks. This writes
-``sw.js`` at the site root with a list of every page, model viewer, playground, the search index
-and the icons, and adds one line to every page's head that registers it. On the first visit the
-worker fetches the whole list, about ten megabytes; after that every page opens with the network
-off, and a new deploy is picked up the next time a page is opened online.
+``sw.js`` at the site root with a list of every page, model viewer, playground, problem set, the
+search index and the icons, and adds one line to every page's head that registers it. On the
+first visit the worker fetches the whole list; after that every page opens with the network off,
+and a new deploy is picked up the next time a page is opened online.
 
-The Python runtime the playground and the viewer's Resample fetch is not in the list. Ten
-megabytes that most readers never press the button for is not something to make every visitor
-pay; instead the worker keeps whatever the runtime and its wheels were fetched from the first
-time a reader does press it, so that from then on those work offline too. A reader who wants it
-ahead of need presses the offline control in every page's header, which fetches the same files
-into the same cache and says when they are kept. The front matter says this in two sentences.
+The Python runtime the playground, the viewer's Resample and a problem's Check fetch is not in
+the list. Ten megabytes that most readers never press the button for is not something to make
+every visitor pay; instead the worker keeps whatever the runtime and its wheels were fetched from
+the first time a reader does press it, so that from then on those work offline too. A reader who
+wants it ahead of need presses the offline control in every page's header, which fetches the same
+files into the same cache and says when they are kept. The front matter says this in two
+sentences.
 
 The worker's version is a hash of everything it caches, so a rebuild that changes nothing keeps
 the reader's copy and a rebuild that changes anything replaces it. Mirrors ``build-icons.py``:
@@ -33,11 +34,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from sizing.playground.toolkit import PYODIDE, RUNTIME_CACHE, wheels  # noqa: E402
+from sizing.playground.toolkit import PYODIDE, RUNTIME_CACHE, problem_wheels, wheels  # noqa: E402
 
 #: What the worker keeps from the first visit. Everything a page needs is inside the page --
-#: figures are inlined -- so this is the pages themselves and the things they embed or fetch.
-PRECACHED = ("*.html", "models/*.html", "playground/*/index.html")
+#: figures are inlined -- so this is the pages themselves and the things they embed or fetch:
+#: a chapter's problem set is fetched the first time Check is pressed, and kept from the start
+#: so that a chapter works offline whether or not it was.
+PRECACHED = ("*.html", "models/*.html", "playground/*/index.html", "problems/*.json")
 PRECACHED_FILES = (
     "search.json",
     "favicon.svg",
@@ -173,7 +176,7 @@ def main() -> int:
         print(f"build-offline: {tree} is not a directory")
         return 1
     base = args.base if args.base.endswith("/") else args.base + "/"
-    for url in (PYODIDE, *wheels()):
+    for url in (PYODIDE, *wheels(), *problem_wheels()):
         if url.split("/")[2] not in RUNTIME_HOSTS:
             print(f"build-offline: {url} is not on a host the worker keeps")
             return 1

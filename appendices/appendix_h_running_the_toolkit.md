@@ -20,8 +20,8 @@ check a figure rather than trust it, or run a problem, or point the toolkit at y
 
 ## Installing it
 
-The problems need Python and nothing else. Building the book needs Node as well, for the parser
-that resolves its cross-references:
+The problems run in their chapters and need nothing. At a desk they need Python and nothing
+else. Building the book needs Node as well, for the parser that resolves its cross-references:
 
 ```bash
 git clone https://github.com/snowch/sizing-and-tco.git

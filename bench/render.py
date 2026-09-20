@@ -176,10 +176,32 @@ def render(node: dict) -> str:
             f'<div class="editable-bar"><span class="file">{name}</span>'
             '<span class="hint">yours to edit</span>'
             '<button class="run-here" type="button">Run</button></div>'
-            '<pre class="editable" contenteditable="plaintext-only" spellcheck="false"'
+            '<pre class="editable model" contenteditable="plaintext-only" spellcheck="false"'
             f' data-start="{span["start"]}" data-end="{span["end"]}">'
             f"<code>{html.escape(str(node.get('value', '')))}</code></pre></div>"
             + (RUNNER_SLOT if node.get("_runner_here") else "")
+        )
+    if kind == "code" and node.get("_problem"):
+        # The command under a tested problem, with the piece of the stubs file that problem
+        # grades made editable above it. `data-start`/`data-end` place each piece in the whole
+        # stubs file, as for the model above, and the button under it runs the chapter's own test
+        # over what the reader typed. The command stays: it is the same check, at a desk.
+        problem = node["_problem"]
+        file = html.escape(str(problem["stubs"]))
+        pieces = "".join(
+            '<div class="editable-block">'
+            f'<div class="editable-bar"><span class="file">{file} · {html.escape(piece["name"])}'
+            '</span><span class="hint">yours to edit</span>'
+            '<button class="check-here" type="button">Check</button></div>'
+            '<pre class="editable stub" contenteditable="plaintext-only" spellcheck="false"'
+            f' data-start="{piece["start"]}" data-end="{piece["end"]}">'
+            f"<code>{html.escape(str(piece['text']))}</code></pre></div>"
+            for piece in problem["pieces"]
+        )
+        return (
+            f'<div class="problem" data-test="{html.escape(str(problem["test"]))}">{pieces}'
+            '<div class="verdicts" aria-live="polite"></div></div>'
+            f"<pre><code>{html.escape(node.get('value', ''))}</code></pre>"
         )
     if kind == "code":
         return f"<pre><code>{html.escape(node.get('value', ''))}</code></pre>"

@@ -48,6 +48,10 @@ from sizing.playground.toolkit import (  # noqa: E402
     BOOT,
     PYODIDE,
     offline_manifest,
+    problem_chapters,
+    problem_files,
+    problem_pieces,
+    problem_wheels,
     results_for,
     sources,
     wheels,
@@ -88,6 +92,57 @@ def editable_excerpts(page: dict, stage) -> list[dict]:
         node["_editable"] = {"start": at, "end": at + len(text)}
         found.append(node)
     return found
+
+
+#: The command under a tested problem, as every chapter writes it.
+COMMAND = re.compile(r"python3 -m pytest (tests/[a-z_]+/test_problem_\d+_[a-z_]+\.py)")
+
+
+def problem_excerpts(source: str, page: dict) -> list[dict]:
+    """The command under each tested problem, marked with the piece of the stubs file it grades.
+
+    A chapter's problems are tests, and under each one the chapter writes the command that runs
+    it. The command names the test file; the test file imports what it grades from the stubs
+    file beside it; so the page can put that piece under the problem, editable, with a button
+    that runs the same test here. The command stays on the page, because at a desk it is the
+    same check. The last problem in every chapter has no test, so no command, and gets nothing.
+    """
+    slug = Path(source).stem
+    if slug not in problem_chapters():
+        return []
+    graded = {block["test"]: block for block in problem_pieces(slug)}
+    whole = (ROOT / "tests" / slug / "stubs.py").read_text()
+    found = []
+    for node in walk(page.get("mdast", page)):
+        if node.get("type") != "code":
+            continue
+        match = COMMAND.fullmatch(str(node.get("value", "")).strip())
+        if not match or match.group(1) not in graded:
+            continue
+        block = graded[match.group(1)]
+        node["_problem"] = {
+            "test": block["test"],
+            "stubs": block["stubs"],
+            "pieces": [
+                {**piece, "text": whole[piece["start"] : piece["end"]]} for piece in block["pieces"]
+            ],
+        }
+        found.append(node)
+    return found
+
+
+def problem_set(slug: str) -> str:
+    """What a chapter's Check fetches: the toolkit's modules and every file its tests read.
+
+    A file beside the pages rather than a script inside one, because a test that reads a stamped
+    model result reads half a megabyte of it, and a reader who never presses Check should not
+    carry that in the page. The worker keeps it with the pages, so it is there offline.
+    """
+    return json.dumps(
+        {"modules": sources(), "files": problem_files(slug)},
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
 
 
 def nav() -> list[dict]:
@@ -369,7 +424,6 @@ RUNNER = r"""
   <div id="results" aria-live="polite"></div>
 </div>
 <script type="module">
-{boot}
 const WHOLE = JSON.parse(document.getElementById("model-whole").textContent);
 const MODULES = JSON.parse(document.getElementById("model-modules").textContent);
 const RESULTS = JSON.parse(document.getElementById("model-results").textContent);
@@ -380,7 +434,7 @@ let pyodide = null, booting = null;
 // The document the toolkit is handed: the file on disk, with each edited block spliced back
 // into the range it came from. Later ranges first, so earlier offsets stay valid.
 function assemble() {{
-  const blocks = [...document.querySelectorAll("pre.editable")]
+  const blocks = [...document.querySelectorAll("pre.model")]
     .map((el) => ({{start: +el.dataset.start, end: +el.dataset.end, text: el.innerText}}))
     .sort((a, b) => b.start - a.start);
   let out = WHOLE;
@@ -389,7 +443,7 @@ function assemble() {{
 }}
 
 async function boot() {{
-  pyodide = await bootToolkit({{
+  pyodide = await shareToolkit({{
     pyodideUrl: "{pyodide}", modules: MODULES, results: RESULTS, wheels: WHEELS,
     status: (text) => {{ $("status").textContent = text; }},
   }});
@@ -431,8 +485,9 @@ function show(result) {{
 
 // A block the reader has typed in says so, so that the page shows which of its own numbers
 // are no longer the book's.
-for (const block of document.querySelectorAll(".editable-block")) {{
-  block.querySelector("pre.editable").addEventListener("input", () => {{
+for (const pre of document.querySelectorAll("pre.model")) {{
+  const block = pre.closest(".editable-block");
+  pre.addEventListener("input", () => {{
     block.classList.add("changed");
     block.querySelector(".hint").textContent = "edited";
   }}, {{once: true}});
@@ -466,11 +521,117 @@ for (const button of document.querySelectorAll(".run-here")) {{
 </script>
 """
 
-#: Pinned, because an unpinned runtime changes what a reader sees without changing a line here.
-# The runtime URL, the module list and the boot script come from one place:
-# sizing/playground/toolkit.py. Three pages run the toolkit, and one copy is how they agree.
+#: The runtime URL, the module list and the boot script come from one place,
+#: sizing/playground/toolkit.py, and the boot goes into the page's head once, as a plain script,
+#: so that the run control and the problems' checks, each a module of its own, share it.
+BOOT_SCRIPT = f"<script>\n{BOOT}\n</script>"
 
-#: Every module the toolkit needs to load, typecheck and evaluate a model.
+#: The check under each tested problem. The chapter's tests, the model files they name and the
+#: toolkit's modules come in one fetch on the first Check; pytest and what it imports are exact
+#: wheels, pinned beside Pint's; and the verdict is pytest's own, test by test. Passed into the
+#: page by replacement rather than through `.format`, so its braces are its own.
+PROBLEMS = r"""
+<script type="application/json" id="problem-spec">__SPEC__</script>
+<script type="module">
+// Not "problems": every heading carries an id made from its text, and the chapter's
+// "## Problems" heading already has that one.
+const SPEC = JSON.parse(document.getElementById("problem-spec").textContent);
+let ready = null;
+
+// The stubs file the tests import from: the file as the chapter ships it, with each piece the
+// reader has typed into spliced back into the range it came from. Later ranges first, so earlier
+// offsets stay valid. The same splice the model's Run does.
+function assembleStubs() {
+  const pieces = [...document.querySelectorAll("pre.stub")]
+    .map((el) => ({start: +el.dataset.start, end: +el.dataset.end, text: el.innerText}))
+    .sort((a, b) => b.start - a.start);
+  let out = SPEC.whole;
+  for (const p of pieces) out = out.slice(0, p.start) + p.text.replace(/\n$/, "") + out.slice(p.end);
+  return out;
+}
+
+// The chapter's problem set, then the runtime this tab may already have started for the model,
+// then the test runner. Each once per page, whichever Check is pressed first.
+async function boot(say) {
+  say("Fetching the chapter\u2019s tests\u2026");
+  const response = await fetch(SPEC.set);
+  if (!response.ok) throw new Error(SPEC.set + " " + response.status);
+  const set = await response.json();
+  const pyodide = await shareToolkit({
+    pyodideUrl: SPEC.pyodide, modules: set.modules, results: {}, wheels: SPEC.wheels,
+    files: set.files, status: say,
+  });
+  say("Fetching the test runner\u2026");
+  await pyodide.loadPackage(SPEC.runner);
+  await pyodide.runPythonAsync("from sizing.playground.driver import grade");
+  return pyodide;
+}
+
+function put(parent, tag, className, text) {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text) el.textContent = text;   // a message about the reader's file is text, never markup
+  parent.appendChild(el);
+  return el;
+}
+
+function show(problem, report) {
+  const box = problem.querySelector(".verdicts");
+  box.textContent = "";
+  if (report.problems.length) {
+    put(box, "p", "verdict bad", "The tests could not start.");
+    for (const p of report.problems) put(box, "pre", "trace", p.message);
+  } else {
+    const total = report.tests.length;
+    const solved = total > 0 && report.passed === total;
+    put(box, "p", "verdict " + (solved ? "good" : "bad"),
+        solved ? "Solved. Every test passes." : report.passed + " of " + total + " tests pass.");
+    const list = put(box, "ul", "tests");
+    for (const t of report.tests) {
+      const item = put(list, "li", t.outcome);
+      put(item, "span", "name", t.name);
+      if (t.message) put(item, "pre", "trace", t.message);
+      if (t.output) put(item, "pre", "printed", t.output);
+    }
+  }
+  const all = put(box, "details", "all");
+  put(all, "summary", "", "Everything pytest said");
+  put(all, "pre", "terminal", report.output);
+}
+
+async function check(problem) {
+  const buttons = document.querySelectorAll(".check-here");
+  for (const b of buttons) b.disabled = true;
+  const box = problem.querySelector(".verdicts");
+  const say = (text) => { box.textContent = text; };
+  try {
+    ready = ready || boot(say);
+    const pyodide = await ready;
+    say("Checking\u2026");
+    pyodide.globals.set("_stubs", assembleStubs());
+    pyodide.globals.set("_test", problem.dataset.test);
+    show(problem, JSON.parse(await pyodide.runPythonAsync("grade(_stubs, _test)")));
+  } catch (error) {
+    box.textContent = "Python did not start: " + error;
+  } finally {
+    for (const b of buttons) b.disabled = false;
+  }
+}
+
+for (const problem of document.querySelectorAll(".problem")) {
+  for (const pre of problem.querySelectorAll("pre.stub")) {
+    const block = pre.closest(".editable-block");
+    pre.addEventListener("input", () => {
+      block.classList.add("changed");
+      block.querySelector(".hint").textContent = "edited";
+    }, {once: true});
+  }
+  for (const button of problem.querySelectorAll(".check-here")) {
+    button.addEventListener("click", () => check(problem));
+  }
+}
+</script>
+"""
 
 
 #: Whole-book search, over `search.json`. Not an inverted index: the book's prose is 300 KB, so
@@ -742,6 +903,7 @@ PAGE = """<!doctype html>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 {headlinks}
 <style>{css}</style>
+{boot}
 {menu}
 {offline}
 </head>
@@ -1011,7 +1173,7 @@ iframe.viewer { height: 780px; }
                 background: var(--panel); border-bottom: 1px solid var(--edge);
                 font: 12.5px/1.6 var(--chrome); }
 .editable-bar .file { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
-.editable-bar .hint { color: var(--faint); }
+.editable-bar .hint { color: var(--faint); white-space: nowrap; }
 .editable-block.changed .editable-bar { background: var(--wash); }
 .editable-block.changed .editable-bar .hint { color: var(--accent); font-weight: 600; }
 pre.editable { margin: 0; border: 0; border-radius: 0; background: var(--bg);
@@ -1053,6 +1215,33 @@ button.primary:hover:not(:disabled) { color: var(--on-accent); filter: brightnes
 
 figure > .runner { margin: 0; }
 
+/* A problem's stub, editable under the problem it grades, and the verdict under that: one
+   line per test, pytest's own message beside the ones that fail, and everything it said for a
+   reader who wants all of it. The command the chapter wrote follows, for a desk. */
+.problem { margin: 1.4rem 0 .4rem; }
+.problem .editable-block { margin: 0 0 .6rem; }
+.problem + pre { margin-top: 0; }
+.check-here { margin-left: auto; padding: .25rem .7rem; font-size: 12.5px; }
+.verdicts { font: 13.5px/1.4 var(--chrome); color: var(--muted); margin-bottom: .8rem; }
+.verdicts:empty { display: none; }
+.verdicts .verdict { margin: .2rem 0 .5rem; }
+.tests { list-style: none; margin: 0; padding: 0; border: 1px solid var(--edge);
+         border-radius: 6px; background: var(--bg); }
+.tests li { position: relative; padding: .45rem .8rem .45rem 1.9rem;
+            border-top: 1px solid var(--edge); }
+.tests li:first-child { border-top: 0; }
+.tests li::before { content: ""; position: absolute; left: .75rem; top: .85rem; width: .55rem;
+                    height: .55rem; border-radius: 50%; background: var(--faint); }
+.tests li.passed::before { background: var(--go); }
+.tests li.failed::before, .tests li.error::before { background: var(--stop); }
+.tests .name { font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
+.verdicts pre { margin: .35rem 0 0; padding: .45rem .7rem; border: 0; border-radius: 4px;
+                background: var(--panel); font-size: 12px; line-height: 1.5;
+                white-space: pre-wrap; overflow-wrap: anywhere; }
+.verdicts pre.trace { color: var(--stop); }
+.verdicts details { margin-top: .6rem; }
+.verdicts summary { cursor: pointer; color: var(--faint); font-size: 12.5px; }
+
 /* Carrying on reading. Two targets at the foot of every page, because the contents list is a
    place to look something up and this is the one a reader going front to back actually uses. */
 .turn { display: flex; gap: .9rem; margin: 3.5rem 0 0; padding-top: 1.4rem;
@@ -1072,7 +1261,7 @@ figure > .runner { margin: 0; }
 
 /* On paper the furniture is noise and the controls do nothing. */
 @media print {
-  .top, .nav, .toc, .runner, .editable-bar, .turn, .find, .offline { display: none; }
+  .top, .nav, .toc, .runner, .editable-bar, .verdicts, .turn, .find, .offline { display: none; }
   .shell { display: block; }
   main { max-width: none; padding: 0; }
   .editable-block { border: 1px solid #ccc; }
@@ -1135,6 +1324,7 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         for node in panels:
             node["_suppressed"] = True
         (panels[0] if panels else blocks[-1])["_runner_here"] = True
+    problems = problem_excerpts(source, page)
     toc = toc_html(page)  # taken before the promotion below, which renumbers what it reads
     if source in TITLED_PAGES:
         promote_headings(page)
@@ -1152,13 +1342,21 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
     if blocks:
         runner = RUNNER.format(
             whole=json.dumps(stage.path.read_text()),
-            boot=BOOT,
             modules=json.dumps(sources()),
             results=json.dumps(results_for(load_model(stage.path))),
             wheels=json.dumps(wheels()),
             pyodide=PYODIDE,
         )
         body = body.replace(renderer.RUNNER_SLOT, runner, 1)
+    if problems:
+        spec = {
+            "pyodide": PYODIDE,
+            "wheels": wheels(),
+            "runner": problem_wheels(),
+            "set": f"problems/{Path(href_for(source)).stem}.json",
+            "whole": (ROOT / "tests" / Path(source).stem / "stubs.py").read_text(),
+        }
+        body += PROBLEMS.replace("__SPEC__", json.dumps(spec))
     headlinks, turn = turning(before, after)
     return PAGE.format(
         title=html.escape(title_for(source, page)),
@@ -1169,6 +1367,7 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         search=SEARCH,
         menu=MENU,
         offline=OFFLINE_SCRIPT,
+        boot=BOOT_SCRIPT if blocks or problems else "",
         headlinks=headlinks,
         turn=turn,
     )
@@ -1288,6 +1487,12 @@ def main() -> int:
         )
         written.append(href_for(source))
         print(f"  wrote {shown(target)} ({len(target.read_text()):,} bytes)")
+        if Path(source).stem in problem_chapters():
+            # The chapter's problem set, beside the pages and named like its page.
+            problems = args.out / "problems" / f"{Path(href_for(source)).stem}.json"
+            problems.parent.mkdir(exist_ok=True)
+            problems.write_text(problem_set(Path(source).stem))
+            print(f"  wrote {shown(problems)} ({problems.stat().st_size:,} bytes)")
 
     crawlables(args.out, written)
     print(f"  wrote {shown(args.out / 'sitemap.xml')} and robots.txt")
