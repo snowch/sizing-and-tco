@@ -44,7 +44,14 @@ from bench.stages import stages  # noqa: E402
 from bench.stamp import shown  # noqa: E402
 from bench.tables import GLOSSARY  # noqa: E402
 from sizing.dsl import load_model  # noqa: E402
-from sizing.playground.toolkit import BOOT, PYODIDE, results_for, sources  # noqa: E402
+from sizing.playground.toolkit import (  # noqa: E402
+    BOOT,
+    PYODIDE,
+    offline_manifest,
+    results_for,
+    sources,
+    wheels,
+)
 
 DEFAULT_OUT = ROOT / "_build" / "static"
 
@@ -353,6 +360,7 @@ RUNNER = r"""
 <script type="application/json" id="model-whole">{whole}</script>
 <script type="application/json" id="model-modules">{modules}</script>
 <script type="application/json" id="model-results">{results}</script>
+<script type="application/json" id="model-wheels">{wheels}</script>
 <div id="runner" class="runner">
   <div class="bar">
     <button id="run" class="primary" type="button">Run the model</button>
@@ -365,6 +373,7 @@ RUNNER = r"""
 const WHOLE = JSON.parse(document.getElementById("model-whole").textContent);
 const MODULES = JSON.parse(document.getElementById("model-modules").textContent);
 const RESULTS = JSON.parse(document.getElementById("model-results").textContent);
+const WHEELS = JSON.parse(document.getElementById("model-wheels").textContent);
 const $ = (id) => document.getElementById(id);
 let pyodide = null, booting = null;
 
@@ -381,7 +390,7 @@ function assemble() {{
 
 async function boot() {{
   pyodide = await bootToolkit({{
-    pyodideUrl: "{pyodide}", modules: MODULES, results: RESULTS,
+    pyodideUrl: "{pyodide}", modules: MODULES, results: RESULTS, wheels: WHEELS,
     status: (text) => {{ $("status").textContent = text; }},
   }});
 }}
@@ -638,6 +647,92 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>"""
 
+#: The offline control. A Run fetches the Python runtime the first time it is pressed and the
+#: worker keeps whatever it fetched; this fetches the same files ahead of need, with a byte count
+#: while it does, and says when everything is kept. Every file a Run needs is resolved from the
+#: runtime's own lock file when the control is pressed, so a runtime upgrade cannot leave the
+#: list stale, and the cache it fills is the one the worker serves a Run from.
+OFFLINE = r"""<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const spec = __SPEC__;
+  const button = document.getElementById("offline");
+  if (!button || !("caches" in window) || !("serviceWorker" in navigator)) return;
+  const label = button.querySelector("span");
+  const say = (text, state) => { label.textContent = text; button.dataset.state = state || ""; };
+  const mb = (bytes) => Math.round(bytes / 1048576) + " MB";
+  const CORE = ["pyodide.mjs", "pyodide.asm.js", "pyodide.asm.wasm", "python_stdlib.zip",
+                "pyodide-lock.json"];
+  const lockUrl = spec.pyodide + "pyodide-lock.json";
+
+  // Every file a Run fetches: the runtime's own, the packages resolved from its lock file with
+  // what they depend on, and the wheels the toolkit pins.
+  function resolve(lock) {
+    const wanted = new Set(), queue = [...spec.packages];
+    while (queue.length) {
+      const name = queue.pop();
+      const entry = lock.packages[name];
+      if (wanted.has(name) || !entry) continue;
+      wanted.add(name);
+      queue.push(...(entry.depends || []));
+    }
+    return [
+      ...CORE.map((file) => spec.pyodide + file),
+      ...[...wanted].map((name) => spec.pyodide + lock.packages[name].file_name),
+      ...spec.wheels,
+    ];
+  }
+
+  // Whether everything is kept already, answered from the cache alone: opening a page fetches
+  // nothing for this control.
+  async function kept() {
+    const cache = await caches.open(spec.cache);
+    const lock = await cache.match(lockUrl);
+    if (!lock) return false;
+    const found = await Promise.all(resolve(await lock.json()).map((url) => cache.match(url)));
+    return found.every(Boolean);
+  }
+
+  async function keep() {
+    button.disabled = true;
+    say("Keeping…", "busy");
+    try {
+      if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+      const cache = await caches.open(spec.cache);
+      const lock = await fetch(lockUrl);
+      if (!lock.ok) throw new Error(lockUrl);
+      await cache.put(lockUrl, lock.clone());
+      let bytes = 0;
+      for (const url of resolve(await lock.json())) {
+        if (await cache.match(url)) continue;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(url);
+        await cache.put(url, response.clone());
+        bytes += (await response.arrayBuffer()).byteLength;
+        say("Keeping… " + mb(bytes), "busy");
+      }
+      say("Kept offline", "kept");
+    } catch (error) {
+      say(navigator.onLine ? "Could not keep it; try again" : "No network to keep it from", "failed");
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  async function forget() {
+    if (!confirm("Remove the Python runtime this browser keeps for offline use?")) return;
+    await caches.delete(spec.cache);
+    say("Keep offline", "");
+  }
+
+  button.addEventListener("click", () => (button.dataset.state === "kept" ? forget() : keep()));
+  button.hidden = false;   // it does nothing without this script, so it is not there without it
+  kept().then((yes) => { if (yes) say("Kept offline", "kept"); }).catch(() => {});
+});
+</script>"""
+
+#: The control's script with what it needs to fetch filled in.
+OFFLINE_SCRIPT = OFFLINE.replace("__SPEC__", json.dumps(offline_manifest()))
+
 PAGE = """<!doctype html>
 <html lang="en">
 <head>
@@ -648,12 +743,15 @@ PAGE = """<!doctype html>
 {headlinks}
 <style>{css}</style>
 {menu}
+{offline}
 </head>
 <body>
 <a class="skip" href="#main">Skip to the chapter</a>
 <header class="top">
   <a class="brand" href="index.html">Sizing and TCO</a>
   <button id="find-open" class="find" type="button" hidden>Search <kbd>/</kbd></button>
+  <button id="offline" class="offline" type="button" hidden data-state=""
+          title="Fetch the Python runtime now, so the models run with no network"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 1.5v8.5m0 0L4.8 6.8M8 10l3.2-3.2M2 11.5v2.5h12v-2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Keep offline</span></button>
   <button id="menu" type="button" aria-label="Chapters" aria-controls="nav"
           title="Show or hide the chapter list">☰</button>
 </header>
@@ -740,6 +838,15 @@ a.xref:hover { text-decoration: underline; }
 .find:hover { border-color: var(--accent); color: var(--accent); }
 .find kbd { font: 11px/1 var(--mono); border: 1px solid var(--edge); border-radius: 3px;
             padding: .15rem .3rem; background: var(--bg); color: var(--faint); }
+/* The offline control. Hidden in the markup and shown by its script, like Search. */
+.offline { display: flex; align-items: center; gap: .45rem; font: 13.5px/1 var(--chrome);
+           color: var(--muted); background: var(--panel); border: 1px solid var(--edge);
+           border-radius: 6px; padding: .45rem .7rem; cursor: pointer; }
+.offline:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.offline:disabled { cursor: progress; }
+.offline[data-state="kept"] { color: var(--go); border-color: var(--go); }
+.offline[data-state="failed"] { color: var(--stop); }
+@media (max-width: 40rem) { .offline span { display: none; } .offline { padding: .45rem .5rem; } }
 dialog#find { width: min(46rem, calc(100vw - 2rem)); max-height: min(34rem, calc(100vh - 5rem));
               padding: 0; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden;
               background: var(--bg); color: var(--ink); margin-top: 8vh;
@@ -951,7 +1058,7 @@ figure > .runner { margin: 0; }
 
 /* On paper the furniture is noise and the controls do nothing. */
 @media print {
-  .top, .nav, .toc, .runner, .editable-bar, .turn, .find { display: none; }
+  .top, .nav, .toc, .runner, .editable-bar, .turn, .find, .offline { display: none; }
   .shell { display: block; }
   main { max-width: none; padding: 0; }
   .editable-block { border: 1px solid #ccc; }
@@ -1034,6 +1141,7 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
             boot=BOOT,
             modules=json.dumps(sources()),
             results=json.dumps(results_for(load_model(stage.path))),
+            wheels=json.dumps(wheels()),
             pyodide=PYODIDE,
         )
         body = body.replace(renderer.RUNNER_SLOT, runner, 1)
@@ -1046,6 +1154,7 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         body=body,
         search=SEARCH,
         menu=MENU,
+        offline=OFFLINE_SCRIPT,
         headlinks=headlinks,
         turn=turn,
     )

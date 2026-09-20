@@ -170,7 +170,9 @@ anything larger, and say so when they have less. There is no PDF, because paper 
 model you drag.
 
 Once you have opened the book, it works with no network. Your browser keeps it. If you press
-**Resample** or **Run** once while online, the Python runtime those fetch is kept too.
+**Resample** or **Run** once while online, the Python runtime those fetch is kept too. **Keep
+offline**, in the header, fetches that runtime ahead of need, about thirty megabytes once, and
+says when it is kept.
 
 To do the problems, you need a checkout. The problems are tests, and a test needs an interpreter.
 You need Python and a few minutes:
