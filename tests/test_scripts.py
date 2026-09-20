@@ -382,6 +382,13 @@ def test_every_tested_problem_is_checkable_on_its_chapter_page():
             assert f'data-test="{block["test"]}"' in html, f"{source} lacks {block['test']}"
             for piece in block["pieces"]:
                 assert f'data-start="{piece["start"]}" data-end="{piece["end"]}"' in html
+            # The command the chapter wrote is a note inside the block, not a block of its own:
+            # drawn as one, it read as the next step after Check.
+            note = (
+                f'<p class="desk">The same check at a desk: <code>python3 -m pytest {block["test"]}'
+            )
+            assert f"{note}</code></p></div>" in html, f"{source}: no desk note for {block['test']}"
+        assert "<pre><code>python3 -m pytest" not in html, f"{source} draws a command as a block"
         assert 'id="problem-spec"' in html and "async function bootToolkit" in html
         # Every heading carries an id made from its text, so "## Problems" owns `problems`; a
         # script tag with that id is the heading's text parsed as JSON, and it shipped once.

@@ -185,7 +185,9 @@ def render(node: dict) -> str:
         # The command under a tested problem, with the piece of the stubs file that problem
         # grades made editable above it. `data-start`/`data-end` place each piece in the whole
         # stubs file, as for the model above, and the button under it runs the chapter's own test
-        # over what the reader typed. The command stays: it is the same check, at a desk.
+        # over what the reader typed. The command itself becomes a one-line note under the
+        # verdicts: the same check, at a desk, for a reader with a checkout. Drawn as a block it
+        # read as the next step, which is what the Check was built to replace.
         problem = node["_problem"]
         file = html.escape(str(problem["stubs"]))
         pieces = "".join(
@@ -200,8 +202,9 @@ def render(node: dict) -> str:
         )
         return (
             f'<div class="problem" data-test="{html.escape(str(problem["test"]))}">{pieces}'
-            '<div class="verdicts" aria-live="polite"></div></div>'
-            f"<pre><code>{html.escape(node.get('value', ''))}</code></pre>"
+            '<div class="verdicts" aria-live="polite"></div>'
+            '<p class="desk">The same check at a desk: '
+            f"<code>{html.escape(node.get('value', ''))}</code></p></div>"
         )
     if kind == "code":
         return f"<pre><code>{html.escape(node.get('value', ''))}</code></pre>"
