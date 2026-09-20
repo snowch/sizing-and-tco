@@ -86,8 +86,8 @@ property, and sometimes a substation's.
 machine together. The model will say whether the trade is favourable.
 
 **Improve the building.** [ch15](#capex-opex-and-lifecycle)'s facility multiplier is a division.
-Problem 16.2 is worth doing for the framing alone. A multiplier quoted as a small surcharge is a
-substantial *share* of the bill. Halving the overhead is equivalent to finding machines that draw
+Problem 16.2 is that division, and the framing is the point: a multiplier quoted as a small
+surcharge is a substantial *share* of the bill. Halving the overhead is equivalent to finding machines that draw
 materially less, and it is often cheaper.
 
 **Want less.** Shed the least valuable requests at the busy hour. Keep fewer records. Accept a
@@ -137,12 +137,12 @@ added a carbon line and drew it independently would understate the range of the 
 
 ## What this cannot tell you
 
-**What your allocation actually is.** Contracted power, breaker capacity, cooling capacity and
+**What your allocation is.** Contracted power, breaker capacity, cooling capacity and
 what the facility will let you draw sustainably are four different numbers. They are not usually
 the same one. This chapter takes one number. Getting the right one is a conversation with whoever
 runs the building.
 
-**What a machine really draws.** The model uses a typical figure under load, marked as a vendor's
+**What a machine draws.** The model uses a typical figure under load, marked as a vendor's
 claim. Draw varies with workload, with ambient temperature, and with how busy the processors are.
 The number that matters for an allocation is a sustained peak, not a typical figure.
 

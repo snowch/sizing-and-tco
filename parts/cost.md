@@ -27,6 +27,6 @@ distribution becomes a number in a document and the uncertainty quietly disappea
 
 The chains in this part are the deterministic half of [ch01](#point-estimates)'s distinction:
 accounting identities and physics, with uncertain inputs and nothing in them that changes regime.
-Sampling the inputs really is sufficient for those. Notice how much easier this part is than
+Sampling the inputs is sufficient for those. Notice how much easier this part is than
 Part III. The ceilings are still there, and [ch16](#power-first) breaks one, but this part adds
 none of its own.

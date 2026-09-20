@@ -25,13 +25,13 @@ and [ch19](#which-input-is-the-answer) says which one to go and fix.
 **Wrong about the shape.** A cost line is missing. A chain is not in the model. A ceiling nobody
 declared. Two things multiplied that should have been added.
 
-Sampling handles the first perfectly, and it is completely blind to the second. Worse than blind:
+Sampling handles the first perfectly, and it is blind to the second. Worse than blind:
 it produces a beautifully converged interval around the wrong answer, and the convergence looks
 like rigour.
 
 ### Four things that could be wrong, and the book can count two
 
-The split above is the one that matters. It is worth making again with all four pieces named,
+That split matters more than any other in the book. Here it is again with all four pieces named,
 because the book has been using them for twenty chapters without putting them in one place.
 
 **A measurement wobbles.** A measured constant has a standard error, and it is as likely to be
@@ -52,8 +52,8 @@ alternative is not a value the current model could have produced. A fleet bought
 case is a different model of the world, not an unlucky draw from this one
 ([ch12](#the-sizing-model), [ch16](#power-first)).
 
-**The model is the wrong shape.** This chapter. Not in the interval, not in a scenario, not
-anywhere, because nothing in the file knows the term is missing.
+**The model is the wrong shape.** This is the error this chapter is about. It appears in no
+interval and no scenario, because nothing in the file knows the term is missing.
 
 Naming the four says what a wide interval is and is not. A wide interval is a report about the
 first two. It is silent about the third, which is a modelling decision somebody took. It is
@@ -100,14 +100,14 @@ That is why every chapter in this book has a *What this cannot tell you* section
 the one in a chapter with a model in it must name **what the structure omits**, not only what the
 inputs are uncertain about. That is the only defence available, and it is a weak one.
 
-### What actually works
+### What works
 
 Nothing automatic. Four things that are not:
 
 **Compare against an invoice.** The strongest test available. A model of something that already
-exists can be checked against what it actually cost, and that number is a fact the model did not
-have. ch14's problem 3 is exactly this. It is the only exercise in the book where the oracle is
-outside the model.
+exists can be checked against what it cost, and that number is a fact the model did not have.
+ch14's problem 3 is that check. It is the only exercise in the book where the oracle is outside
+the model.
 
 **Ask what is not in the graph.** Read the node list as a list of *categories*, and ask what
 category is absent. The web service model has no line for rack space, cross-connects, backup,
@@ -140,8 +140,8 @@ longer tell two designs apart, which is the only thing it was for. The median do
 the headline number is unchanged and only the doubt has grown, which is why it passes review.
 
 **A model that cannot be wrong has stopped being able to be useful.** Widening is how a model
-becomes unfalsifiable. An unfalsifiable model is a very expensive way of writing down what
-somebody already believed.
+becomes unfalsifiable. An unfalsifiable model is an expensive way of writing down what somebody
+already believed.
 
 :::{note} Key takeaways
 - **There are two ways to be wrong, and sampling sees only one.** Wrong about a number is what the
@@ -164,7 +164,7 @@ somebody already believed.
 
 **Whether this chapter's own model is complete.** It is not. The observability model has no line
 for the network between tiers, no term for the cost of a query nobody ran, and no notion of the
-people who operate it. Those are the ones that have been noticed. The chapter's argument is that
+people who operate it. Those are the omissions somebody noticed. The chapter's argument is that
 there are others, and that nothing in the repository can find them.
 
 **How likely a missing node is.** There is no distribution over "things nobody thought of". Any

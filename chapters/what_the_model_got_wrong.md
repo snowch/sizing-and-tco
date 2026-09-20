@@ -16,7 +16,7 @@ the only chapter in the book where the model is the defendant.
 :::{important} Nothing here is an observation
 No system was watched and no invoice was read. What follows is the model's *own* futures,
 filtered to the ones in which the design failed. That is what makes it reproducible, and it is
-also exactly what bounds what it can say. A real post-mortem compares a prediction against
+also what bounds what it can say. A real post-mortem compares a prediction against
 something that happened. That is the `estate` target ([ch03](#where-the-numbers-come-from)), and
 it belongs to whoever runs the system.
 :::
@@ -38,9 +38,9 @@ them still. Nobody was misled. Nothing was hidden. The figures were on a page.
 That is the first finding of most post-mortems worth doing: **the failure was forecast, in
 writing, by the people it later surprised.** What went wrong was not the model. A percentage in a
 table is not an event, and a number nobody has to sign for is a number nobody reads out loud.
-That is the whole of [ch21](#a-tco-for-finance), arriving too late to help.
+That is all of [ch21](#a-tco-for-finance), arriving too late to help.
 
-### Where the failures actually were
+### Where the failures were
 
 Now the part the model can do well. The sampled futures already contain the failures. They are
 the draws where the queueing ceiling, utilisation at the busy hour, came out over its limit. So
@@ -109,9 +109,8 @@ Run the identical attribution against its ingest ceiling, and it is happy to hel
 ```
 
 The top three are confident, specific and ranked. Not one of them mentions the chain that is
-missing, because the chain is not in the samples and never was. If traces were what actually
-filled that pipeline, this table is a list of innocent parties in descending order of how guilty
-they look.
+missing, because the chain is not in the samples and never was. If traces were what filled that
+pipeline, this table is a list of innocent parties in descending order of how guilty they look.
 
 **A post-mortem inside a model is a post-mortem of that model.** It can tell you which of the
 things you thought of was responsible. It cannot tell you that you thought of the wrong things,
@@ -170,13 +169,13 @@ shed load, or move the margin. Attribution is a diagnosis. This book has been ca
 not to pretend a diagnosis is a remedy.
 
 **Whether any of this happened.** It did not. These are computed futures. The only honest way to
-run this chapter against reality is to have written the prediction down first and to go and
-observe the system afterwards, and a book can do neither for you.
+run this chapter against reality is to have written the prediction down first and to observe
+the system afterwards, and a book can do neither for you.
 
 ## Problems
 
 Three, in `tests/what_the_model_got_wrong/`. The first two have tests, one for each half of the
-chapter, and the second is worth predicting before you run it. The last does not, and says why.
+chapter. Predict the second before you run it. The last has no test, and says why.
 
 **23.1 — Attribute the failure.**
 Given the draws and which of them failed, rank the inputs by how far each one had to be from its

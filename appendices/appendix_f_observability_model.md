@@ -24,8 +24,8 @@ does not.
 Three multiplicative chains hang off the same few roots, so they move together whether or not
 anybody says so. Label cardinality is a product of uncertain counts and therefore dominates
 everything downstream of it. The control knobs are sampling and retention rather than money. Three
-tiers — ingest, store and query — carry four ceilings between them, and no single number
-summarises them.
+tiers, ingest, store and query, carry four ceilings between them, and no single number summarises
+them.
 
 And it has a hole in it, deliberately left open.
 
@@ -55,7 +55,7 @@ of [ch03 · Where the numbers come from](#where-the-numbers-come-from).
 
 :::{tip} Try it
 The same model, [as an interactive page](/models/observability-reference.html). Turn the four
-knobs and watch which ceilings move — and which one does not. The
+knobs and watch which ceilings move, and which one does not. The
 [knobs-turned-down scenario](/models/observability-knobs_turned_down.html) is the same model with
 all four already moved.
 :::
@@ -86,8 +86,8 @@ Metrics are cheap in bytes and expensive in series. Logs are the reverse. Traces
 somewhere in between, and the model declines to guess.
 
 Look hardest at the active series count. A cardinality node drives it, and that node is the
-product of three uncertain counts — a product of uncertain things is far more uncertain than any
-of them:
+product of three uncertain counts, and a product of uncertain things is far more uncertain than
+any of them:
 
 ```{image} ../chapters/_figures/appendix-f-observability-model-cardinality.svg
 :alt: Label cardinality as a distribution — a product of uncertain counts
@@ -99,7 +99,7 @@ of them:
 ```{include} ../chapters/_generated/appendix-f-observability-model-ceilings.md
 ```
 
-Three tiers, three different mechanisms, three different margins — and that is the argument for
+Three tiers, three different mechanisms, three different margins: that is the argument for
 declaring headroom per ceiling rather than globally. The ingest and query margins are about
 queueing, where response time climbs long before anything is busy
 ([ch06](#queueing-and-the-knee)). The store margin is about rebuild, where losing a node costs
@@ -119,8 +119,8 @@ and [ch20](#the-missing-node) is about what it costs to forget.
 ```{include} ../chapters/_generated/appendix-f-observability-model-tornado.md
 ```
 
-The accidental label — the one nobody planned, added during an incident and never removed — is at
-the top of the tornado. [ch08](#regime-changes) is the chapter about that, and here it is
+The accidental label is at the top of the tornado: the one nobody planned, added during an
+incident and never removed. [ch08](#regime-changes) is the chapter about that, and here it is
 demonstrated rather than warned about.
 
 ## Turning the knobs
@@ -131,7 +131,7 @@ demonstrated rather than warned about.
 The right-hand column doubles the scrape interval, cuts metric retention by most of a year, keeps
 a tenth of the log lines and samples one trace in a hundred. Ingest and storage fall a long way.
 
-**The query ceiling does not move at all.** Not by a little — not at all, because none of the four
+**The query ceiling does not move at all.** Not by a little. Not at all, because none of the four
 knobs touches cardinality, and cardinality is what a query has to walk past. The controls a
 platform gives you operate on the chains that were already affordable, and the input that decides
 the size of the system is not one of them. That is the most useful thing on this page. Fixing

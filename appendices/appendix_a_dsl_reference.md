@@ -43,8 +43,8 @@ typecheck instead of quietly adding them. `description` is prose, and it is wher
 
 The last row is the distinction the book is built on, and the file decides it rather than its
 author's opinion of it. A model containing a `measured` node or a `ceiling` node **is** a sizing
-model: it has an empirical constant that belongs to one stack at one version, or a limit past
-which its arithmetic stops describing anything, and in either case sampling the inputs is not
+model. It has an empirical constant that belongs to one stack at one version, or a limit past
+which its arithmetic stops describing anything. In either case sampling the inputs is not
 sufficient on its own. A model with neither is a cost model.
 
 Here are the kinds, as the loader defines them:
@@ -198,10 +198,9 @@ Scenarios are how you compare two designs without editing either one into the ot
 `scripts/verify-models.py` runs on every model on every push, and fails on any of:
 
 - **A unit that does not follow.** Every formula is evaluated in units as well as in numbers. A
-  declared unit that disagrees with what the formula produces is an error, and a declared unit
-  that agrees dimensionally but differs by a factor — dollars per TB per *year* against per
-  *month* — is recorded as a conversion and applied, not waved through
-  ([Appendix D](#appendix-d-units)).
+  declared unit that disagrees with what the formula produces is an error. One that agrees
+  dimensionally but differs by a factor, dollars per TB per *year* against per *month*, is
+  recorded as a conversion and applied, not waved through ([Appendix D](#appendix-d-units)).
 - **An input with no provenance, or a `fact` that cites nothing.**
 - **An input that is sampled and does not name its shape in its source.** The distribution is a
   claim about what can happen, and it is the claim to argue with first
@@ -215,7 +214,7 @@ Scenarios are how you compare two designs without editing either one into the ot
   by declaring the ceiling, not by leaving one out. The classification comes from the file and
   cannot be asserted by hand.
 - **A node that feeds no output**, which is either a leftover or an output somebody forgot to
-  declare — and a model that declares no outputs at all, since nothing in it can then be checked.
+  declare. Also a model that declares no outputs at all, since nothing in it can then be checked.
 - **A scenario overriding a node that does not exist, or a derived one.** Overriding a derived
   node would be editing the arithmetic while claiming to change an assumption.
 

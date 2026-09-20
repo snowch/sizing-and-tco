@@ -29,7 +29,7 @@ Start with the model as [ch12](#the-sizing-model) left it.
 
 The first column is what the chain produced: one value per output, from one value per input. The
 second column is the same model, with each input allowed to be as uncertain as the person who
-wrote it down actually is.
+wrote it down is.
 
 Look at the host count. The point estimate is a real number, correctly computed. It sits inside a
 range that spans an order of magnitude, nearer the low end than the middle. Nothing went wrong.
@@ -106,15 +106,15 @@ with different algebra.
 Choosing a distribution is a judgement, not a technical question. It is a claim about the world,
 and the first claim a reviewer should argue with.
 
-**Lognormal, for prices and growth and anything that compounds.** Two properties earn it its
-place. It cannot go negative, and neither can a price. And a product of several lognormals is
+**Lognormal, for prices and growth and anything that compounds.** Two properties make it the
+right shape for those. It cannot go negative, and neither can a price. And a product of several lognormals is
 another lognormal. A sizing chain is a product, so the uncertainty arriving at the end of one has
 roughly this shape whether or not anybody chose it.
 
 The parameters here are two percentiles rather than the mean and standard deviation of a
 logarithm. Nobody has an intuition for the standard deviation of a logarithm. Everybody has one
 for *"I would be surprised if it were under eleven or over nineteen"*. That is a sentence a person
-can say about a price, and it is exactly what the model file records.
+can say about a price, and it is what the model file records.
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -128,7 +128,7 @@ to "what is it, roughly?". Name its flaw every time you use it: it asserts that 
 the bounds can happen, and the bounds came out of somebody's memory.
 
 **Uniform, when the bounds really are all you know.** A price capped by a contract. A retention
-window somebody will pick from a range. Honest exactly there, and dishonest as a default. It says
+window somebody will pick from a range. Honest there, and dishonest as a default. It says
 the extremes are as likely as the middle, and almost nothing real is like that.
 
 **Normal, for measurement error.** In this book it means one thing: the standard error beside a
@@ -281,7 +281,7 @@ pairs, and measures what they were worth.
 it. [ch14](#correlation-and-convergence) has the argument, and the way to work it out for a model
 of your own.
 
-**How likely any of this actually is.** The interval is a statement about the model's declared
+**How likely any of this is.** The interval is a statement about the model's declared
 inputs. It is not a forecast, it carries no track record, and its 95th percentile is not a
 promise. It is the best available summary of what you have written down. That is worth a great
 deal more than a single number, and a great deal less than knowledge.
@@ -303,7 +303,7 @@ python3 -m pytest tests/monte_carlo/test_problem_1_ppf.py
 **13.2 — Sample a model by hand.**
 Take the web service model, sample two of its inputs yourself without using `sizing.evaluate`, and
 reproduce the interval this book publishes for one output to within sampling error. The point is
-to discover how small the machinery actually is.
+to discover how small the machinery is.
 
 ```bash
 python3 -m pytest tests/monte_carlo/test_problem_2_by_hand.py
@@ -321,7 +321,7 @@ python3 -m pytest tests/monte_carlo/test_problem_3_point_lies.py
 **13.4 — Defend a distribution.** No test: the invoices are yours, and so is the shape you would
 defend.
 
-Take a price you actually pay, find two years of invoices for it, and decide which of the four
+Take a price you pay, find two years of invoices for it, and decide which of the four
 shapes in this chapter you would use and why. Then check what the last two years would have looked
 like under your choice. If the answer embarrasses you, that is the exercise working.
 

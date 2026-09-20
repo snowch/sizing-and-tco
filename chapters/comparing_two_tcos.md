@@ -182,10 +182,10 @@ at which the two totals tie, with everything else at its point estimate.
 
 Read the challenger's lines first. Every one of them ties within a few per cent of the quote.
 The move can cost a little more than the team estimated, the host price and the licence can each
-rise a little, and the fleet can grow by less than one host before the ordering reverses. That
-last row is the one to carry into the meeting. How many hosts a workload needs on hardware
-nobody has run it on is exactly the kind of number [ch03](#where-the-numbers-come-from) says to
-distrust, and this comparison turns on a fraction of one.
+rise a little, and the fleet can grow by less than one host before the ordering reverses. Carry
+that last row into the meeting. How many hosts a workload needs on hardware nobody has run it on
+is the kind of number [ch03](#where-the-numbers-come-from) says to distrust, and this comparison
+turns on a fraction of one.
 
 The row about people is a different kind of claim. Both quotes hold the engineers equal, because
 a vendor's figure for how many people *you* will need is a claim about your organisation and
@@ -195,7 +195,7 @@ else, since the people line is larger than every line the quotes differ on. A co
 turns on a headcount the vendor supplied has a thumb on the scale, and this model refuses to
 take that number from a quote.
 
-Then the shared inputs. Cheaper electricity favours the incumbent, because the challenger's
+The shared inputs are next. Cheaper electricity favours the incumbent, because the challenger's
 advantage on energy shrinks with the price, and the tie sits inside the middle eighty per cent
 of what the price could be. So does the tie on the network price. The building's overhead would
 have to be better than the model thinks plausible before it flipped anything. And growth cannot
@@ -207,11 +207,11 @@ every other tornado in this book does not move the difference by a dollar.
 :width: 100%
 ```
 
-A few bars and a count. Everything the two designs pay alike has a bar of no length, and that
-includes the growth, the busy hour, the salary and the head count. The comparison is sensitive
-to the two prices that scale with the host count and to almost nothing else. That is what a
-comparison between two quotes for one workload is usually sensitive to, and it is rarely what
-the argument in the room is about.
+The chart is a few bars and a count. Everything the two designs pay alike has a bar of no length,
+and that includes the growth, the busy hour, the salary and the head count. The comparison is
+sensitive to the two prices that scale with the host count and to almost nothing else. That is what
+a comparison between two quotes for one workload is usually sensitive to, and it is rarely what the
+argument in the room is about.
 
 Problem 22.2 finds one of those break-evens by hand.
 
@@ -237,7 +237,7 @@ when the item is missing.
 | Cash by year, undiscounted, so that finance can apply its own rate | [ch15](#capex-opex-and-lifecycle), [ch21](#a-tco-for-finance) | a discount rate chosen to flatter the side that spends later |
 | A file that re-runs, so the reader can change an input and watch | [the introduction](#preface) | a bar chart, with nothing in it to change |
 
-The first item is the one to check twice. Two quotes that were sized differently are not two
+Check the first item twice. Two quotes that were sized differently are not two
 prices for the same thing, and no amount of care over the lines below it repairs that.
 
 :::{note} Key takeaways
@@ -261,12 +261,12 @@ prices for the same thing, and no amount of care over the lines below it repairs
 
 ## What this cannot tell you
 
-**What either vendor would actually charge.** Both quotes are held exactly. A quote is a number,
+**What either vendor would charge.** Both quotes are held exactly. A quote is a number,
 and this chapter takes it as one. What you would pay after negotiation is a different number on
 both sides, and a discount that is the same percentage on both is not the same money, because
 the two capital lines differ.
 
-**What the move really costs.** The migration line is the team's estimate, marked as an
+**What the move will cost.** The migration line is the team's estimate, marked as an
 assumption, and it is the kind of number that is usually low. The break-even says how wrong it
 can be before the ordering flips. Nothing here says how wrong it is.
 
@@ -275,7 +275,7 @@ same software on different hosts. A quote for a different platform would carry a
 service demand, and that number is a rig measurement ([ch03](#where-the-numbers-come-from))
 which no vendor's benchmark replaces. The host-count break-even is the hedge. It says how much
 slower than the spec sheet the challenger's hosts could be before the comparison reverses, and on
-this pair the answer is not very.
+this pair the answer is not much.
 
 **What the structure omits.** Both totals come from one model, so a line neither quote has is a
 line neither total has ([ch20](#the-missing-node)). Rack space, the second environment, the cost
@@ -283,7 +283,7 @@ of running both platforms during the move, the exit cost at the end of the horiz
 at renewal are in neither column. A missing line favours whichever side it would have hurt, and
 the comparison cannot say which side that is.
 
-**Whether the futures are really shared.** They are here by construction, because both designs
+**Whether the futures are shared.** They are here by construction, because both designs
 are scenarios of one model. Two quotes built as two models and joined by figures in documents
 lose that ([ch18](#the-five-year-model)), and the interval on their difference comes back as
 wide as the independent one above.
@@ -325,7 +325,7 @@ that lacked it, size both designs by the same rule, or hold the people line equa
 
 A good answer names the items the comparison failed and says what the difference did once the
 worst of them was fixed. It would be falsified by a comparison that passed every item and whose
-ordering survived every repair, which happens, and is worth knowing about the comparison. If the
+ordering survived every repair. That happens, and then you know the comparison was sound. If the
 ordering flipped on the first repair, you have found what the comparison was for.
 
 ## Where to go next

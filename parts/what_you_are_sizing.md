@@ -29,8 +29,8 @@ invisible once all three are cells in one column. It is also where a *measured c
 being a fact about the world and becomes a fact about some software at some version.
 
 **[ch04 · Peak, mean and growth](#peak-mean-and-growth)** picks the number in a demand curve that
-actually sizes you, and then turns to growth. Growth is the input that does most of the damage in
-this book, and the one no amount of provenance discipline can turn into a measurement.
+sizes you, and then turns to growth. Growth is the input that moves the answer most in this book,
+and the one no amount of provenance discipline can turn into a measurement.
 
 Nothing here is about what a system *does* with the demand. That is Part II, and it is where the
 arithmetic stops being multiplication.

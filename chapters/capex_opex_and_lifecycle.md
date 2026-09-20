@@ -53,9 +53,9 @@ when it stops being a line item and becomes the binding constraint.
 pays for annually, busy or idle. So a decision about hosts becomes a recurring bill nobody
 remembers agreeing to. Here it is the second-largest running line.
 
-**Support** is a percentage of capital, so it is not really a running cost. It is a deferred part
-of the purchase, indexed to the purchase. Negotiate the capital down and the support falls with
-it. That is worth knowing before you negotiate.
+**Support** is a percentage of capital. It is a deferred part of the purchase, indexed to the
+purchase, rather than a running cost. Negotiate the capital down and the support falls with it.
+That is worth knowing before you negotiate.
 
 **People** is the line most models omit, and the hardest to defend either way. The model carries
 a fraction of an engineer at a fully loaded rate. Both numbers are assumptions. The line is in
@@ -170,14 +170,14 @@ comment, and be consistent. The difference is a whole fleet.
 python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_2_refresh.py
 ```
 
-**15.3 — Prices you can actually get.** No test: the prices are the ones you can get, and nobody
+**15.3 — Prices you can get.** No test: the prices are the ones you can get, and nobody
 else can get them.
 
 Every price in this book's model is a vendor's claim or an assumption, and the chapter says so.
 Try to get yours. Find the real figure for each cost line: hardware, power, licences, support and
 the people. Record where each came from.
 
-Count how many you could actually obtain. In most organisations the hardware price is easy. The
+Count how many you could obtain. In most organisations the hardware price is easy. The
 power price is held by a facilities team who have never been asked. The cost of the people is
 either unavailable or politically impossible to write down.
 

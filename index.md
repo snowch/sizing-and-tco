@@ -43,10 +43,10 @@ Almost nobody is taught this. It is what decides whether anybody should act on y
 
 You build one model, and it lasts the whole book.
 
-A model here is a YAML file: plain text you can read and edit. It holds the numbers that went
-into an answer and the arithmetic that joins them. Each number has a name, a unit, and a note saying where its value came from. Each
-computed number has a formula that refers to the others by name. That is all there is to it. You
-can read a whole model in one sitting.
+A model here is a YAML file: plain text you can read and edit. It holds the numbers that went into
+an answer and the arithmetic that joins them. Each number has a name, a unit, and a note saying
+where its value came from. Each computed number has a formula that refers to the others by name.
+That is all there is to it. You can read a whole model in one sitting.
 
 The model starts in [ch02 · What a workload is](#what-a-workload-is), with what arrives and what
 accumulates. Later chapters add to it one piece at a time: where each number came from, what the
@@ -127,13 +127,13 @@ about statistics. The book uses six statistical words:
 - correlation; and
 - convergence.
 
-Each is used in plain English first and named second, in the chapter where a model first needs
-it. [ch01](#point-estimates) shows the first spread of answers this book produces and names none
-of the six. It shows the smallest and the largest of those answers and how the rest piled up
-between them, and that is all it needs. The words arrive one at a time from there on, and Part IV, in [ch13](#monte-carlo) and
-[ch14](#correlation-and-convergence), builds the method that produces the spread and defines all
-six properly. Until then you take the spread on trust, which is a fair trade: the method is not
-useful until you have a number you cannot defend.
+Each is used in plain English first and named second, in the chapter where a model first needs it.
+[ch01](#point-estimates) shows the first spread of answers this book produces and names none of the
+six. It shows the smallest and the largest of those answers and how the rest piled up between them,
+and that is all it needs. The words arrive one at a time from there on, and Part IV, in
+[ch13](#monte-carlo) and [ch14](#correlation-and-convergence), builds the method that produces the
+spread and defines all six properly. Until then you take the spread on trust, which is a fair trade:
+the method is not useful until you have a number you cannot defend.
 
 No vendor is named anywhere in this book, and no product is recommended. Two models carry the
 book. Both are written so that the structure is the point and the numbers are yours to replace:
@@ -153,11 +153,11 @@ answer looks like, and what would show that yours is wrong.
 
 To read the book and run its models: nothing.
 
-[ch02](#what-a-workload-is) and [ch03](#where-the-numbers-come-from) carry the model file running
-in the page. Press **Run**, change a number, and try to multiply a rate by a plain number where
-the file expects an amount. The build refuses it. That is the book's own loader and unit checker, fetched as a Python runtime
-and run in your browser. What the page does and what the book was computed from cannot come
-apart.
+[ch02](#what-a-workload-is) and [ch03](#where-the-numbers-come-from) carry the model file running in
+the page. Press **Run**, change a number, and try to multiply a rate by a plain number where the
+file expects an amount. The build refuses it. That is the book's own loader and unit checker,
+fetched as a Python runtime and run in your browser. What the page does and what the book was
+computed from cannot come apart.
 
 The finished models in [Appendix E](#appendix-e-web-service-model) and
 [Appendix F](#appendix-f-observability-model) have a slider on every input. A small JavaScript

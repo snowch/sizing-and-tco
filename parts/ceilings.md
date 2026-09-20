@@ -19,8 +19,8 @@ assumptions. It also takes the knee out of its own title. The curve has no corne
 people point at is their own tolerance.
 
 **[ch07 · When adding servers stops helping](#when-adding-servers-stops-helping)** is the obvious
-response to a system that is too busy: buy more machines. It works considerably less well than
-the arithmetic suggests, and past some count it works in reverse.
+response to a system that is too busy: buy more machines. It works less well than the arithmetic
+suggests, and past some count it works in reverse.
 
 **[ch08 · Regime changes](#regime-changes)** is the argument the other three have been
 assembling. A threshold with different physics on either side is something no product of

@@ -50,7 +50,7 @@ is expensive and underspending is not. Its failure mode is quiet. You will be he
 money will be allocated, and when the cost lands lower nobody will thank you for the accuracy.
 
 **A round number above the median.** Not as unprincipled as it sounds. Rounding to a precision
-the model can actually support is more honest than quoting a figure to the dollar.
+the model can support is more honest than quoting a figure to the dollar.
 [ch14](#correlation-and-convergence) gives the arithmetic for what precision that is: the
 run-to-run wobble has to be below the digit you are prepared to defend.
 
@@ -65,7 +65,7 @@ opened with, now as something to pick a number off rather than something to be a
 The red line is the point estimate, and it is not the middle. Whichever of the three you choose,
 choose it off that chart and say which one it was.
 
-The number must not arrive without the sentence. The sentence is the whole of the engineering
+The number must not arrive without the sentence. The sentence is all of the engineering
 position, and there is only room for one. So it has to name something specific: a percentile, an
 omission, an assumption the total rests on. "There is some uncertainty" names nothing, and it
 will be heard as "no".
@@ -80,14 +80,15 @@ interval. Start presenting two designs with a price.
 ```{include} _generated/a-tco-for-finance-scenarios.md
 ```
 
-Two columns. The left one buys what the model recommends at the point estimate. The right one
-buys the same fleet sized for the growth we might get rather than the growth we expect. That is
-the decision of [ch11](#headroom-and-failure-domains), taken deliberately instead of by default.
+The table has two columns. The left one buys what the model recommends at the point estimate. The
+right one buys the same fleet sized for the growth we might get rather than the growth we expect.
+That is the decision of [ch11](#headroom-and-failure-domains), taken deliberately instead of by
+default.
 
 Read across the rows and the conversation changes shape. The question is no longer "is this
 estimate right", which nobody in the room can answer. It is "is the difference between these two
-columns worth the difference in the last two rows". That is exactly the sort of question the
-people being asked are good at.
+columns worth the difference in the last two rows". That is the sort of question the people
+being asked are good at.
 
 **An interval is a statement about the world. A decision table is a statement about what you can
 buy.** Only the second can be acted on by someone who cannot change the world but can sign for
@@ -95,8 +96,8 @@ the extra machines.
 
 ### Pricing a risk
 
-The last two rows of that table are the ones to lead with, because they are the only ones with a
-consequence in them.
+Lead with the last two rows of that table, because they are the only ones with a consequence in
+them.
 
 ```{include} _generated/a-tco-for-finance-ceilings.md
 ```
@@ -110,22 +111,23 @@ has an opinion about a lognormal. Everybody in the room has an opinion about the
 slow on its busiest day.
 
 The second scenario reduces that number, and the table says by how much and what it costs. Put
-the two together and you have the only sentence in the document that is genuinely a
-recommendation: *this much additional capital buys this much less chance of that happening*. If
+the two together and you have the only sentence in the document that is a recommendation: *this
+much additional capital buys this much less chance of that happening*. If
 the answer is obviously yes, the meeting is over. If it is obviously no, the meeting is also
 over, and you have the decision in writing rather than in somebody's memory.
 
 ### Where each number came from
 
-Then the appendix nobody asks for until they do.
+Then comes the appendix nobody asks for until they do.
 
 ```{include} _generated/a-tco-for-finance-provenance.md
 ```
 
-Three marks. The one that matters in this room is *vendor claim*: a number supplied by the party
-being paid. It may well be right. It has not been checked here, and it is coloured differently in
-every figure in this book for that reason ([ch03](#where-the-numbers-come-from)). The finance
-audience is entitled to know which of the inputs to a capital request came from the supplier.
+The table carries three marks. The one that matters in this room is *vendor claim*: a number
+supplied by the party being paid. It may well be right. It has not been checked here, and it is
+coloured differently in every figure in this book for that reason
+([ch03](#where-the-numbers-come-from)). The finance audience is entitled to know which of the inputs
+to a capital request came from the supplier.
 
 Handing this over unprompted makes the rest of the document more believable, and little else
 does. A model that volunteers which of its inputs are guesses is not a model trying to win an
@@ -142,9 +144,8 @@ actual spend comes in well under. That looks like success exactly once. The seco
 number is discounted before you have finished saying it, and the discount is applied by somebody
 who does not know which parts of it were conservative.
 
-**Presenting the median as though it were the plan.** The failure mode of the first two is
-optical. This one is real. Half the futures cost more, and nothing has been said about what
-happens in them.
+**Presenting the median as though it were the plan.** The first two fail in how they look. This
+one fails in what happens: half the futures cost more, and nothing has been said about them.
 
 Each of the three is a way of not saying the sentence.
 
@@ -196,7 +197,7 @@ reason to put the ceiling row in front of them rather than resolving it yourself
 **What the money is worth.** The totals here add dollars from different years as though they were
 the same dollar. They are not. Applying a discount rate would change the comparison between a
 design that spends capital up front and one that spends it over time, and the two columns above
-differ in exactly that way. The model hands over the shape of the spend so that somebody can
+differ in that way. The model hands over the shape of the spend so that somebody can
 apply theirs. It does not pretend the undiscounted total is the answer.
 
 **Whether the structure is complete.** [ch20](#the-missing-node) is the standing limitation, and

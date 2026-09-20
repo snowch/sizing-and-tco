@@ -26,7 +26,7 @@ at all.
 
 ## How units combine and cancel
 
-One rule does all of the work. A unit in the denominator of one quantity cancels the same unit
+One rule does all of the work: a unit in the denominator of one quantity cancels the same unit
 in the numerator of another, and nothing else cancels. Requests per second times seconds is
 requests, because the seconds cancel. Requests per second times a plain number is still requests
 per second, because a plain number has nothing to cancel with.
@@ -38,9 +38,9 @@ the toolkit would disagree with.
 ```{include} ../chapters/_generated/appendix-d-units-algebra.md
 ```
 
-Two rows are the ones to carry. A rate times a duration is an amount. A rate times a plain number
-is still a rate, and a formula that treats it as an amount is the mistake the introduction shows
-the toolkit refusing.
+Two rows matter more than the rest. A rate times a duration is an amount. A rate times a plain
+number is still a rate, and a formula that treats it as an amount is the mistake the introduction
+shows the toolkit refusing.
 
 A node declares the unit it means to produce. The build works out what its formula produces and
 does one of three things with the two:
@@ -48,9 +48,9 @@ does one of three things with the two:
 ```{include} ../chapters/_generated/appendix-d-units-verdicts.md
 ```
 
-Accepted, converted or refused. The first two rows are the introduction's example and its
-mistake. The converted rows are what the rest of this appendix is about: the same kind of
-quantity in a different size, which is the error that looks right.
+The three verdicts are accepted, converted and refused. The first two rows are the introduction's
+example and its mistake. The converted rows are what the rest of this appendix is about: the same
+kind of quantity in a different size, which is the error that looks right.
 
 ## Counting units are units
 
@@ -71,8 +71,8 @@ wrong pair produces a plausible answer with no complaint from anything. With it,
 of those two is well formed.
 
 The cost of that is a node. Converting between two counting units *requires one that names the
-conversion* — how many spans a request emits, how many samples a series produces per scrape. That
-node is exactly the measured constant of [ch03](#where-the-numbers-come-from): an empirical number
+conversion*: how many spans a request emits, how many samples a series produces per scrape. That
+node is the measured constant of [ch03](#where-the-numbers-come-from): an empirical number
 belonging to one implementation at one version, with provenance attached. The unit system makes
 you declare what the book says you must declare, which a rule in a style guide cannot do.
 
@@ -89,7 +89,7 @@ terabyte per year and dollars per terabyte per month are dimensionally identical
 compared dimensions alone would pass a unit cost twelve times too large, and it would pass it in
 the figure most likely to be quoted in a meeting.
 
-So the build records the factor and applies it. The declared unit wins — a node says what it means
+So the build records the factor and applies it. The declared unit wins: a node says what it means
 to produce, and the build makes the arithmetic agree or refuses to continue.
 
 ## Five places a unit goes wrong
@@ -100,19 +100,19 @@ disks smaller than the spreadsheet said, and it compounds with the replication f
 service model's disk-per-host input says *decimal* in its provenance for this reason.
 
 **Bits against bytes.** Network is quoted in bits per second and storage in bytes per second, and
-the factor of eight between them sits at exactly the boundary between two teams. A model that
+the factor of eight between them sits at the boundary between two teams. A model that
 multiplies a link rate by a duration and compares the result to a volume has to get this right
 once; a model that does not declare units has to get it right every time anybody edits it.
 
-**Months.** The registry has one, and it is a twelfth of a year — which is no month that has ever
+**Months.** The registry has one, and it is a twelfth of a year, which is no month that has ever
 appeared on a calendar. That is the right convention for a price per terabyte-month, where nobody
 means February, and the wrong one for anything that has to reconcile against a billing period.
-The distinction is invisible until somebody in finance does the reconciling, which is why the
-conversion appears in the table above rather than inside somebody's head.
+The distinction is invisible until finance does the reconciling, which is why the conversion
+appears in the table above rather than in the modeller's head.
 
 **Years.** The same problem, smaller: a year is not exactly three hundred and sixty-five days. The
 web service model's `hours per year` input carries the quarter-day and says in its provenance what
-that is worth over the horizon — less than the model's other errors, and free to get right.
+that is worth over the horizon: less than the model's other errors, and free to get right.
 
 **Exponents are pure numbers.** A duration cannot be an exponent. Compounding growth over a
 horizon needs the horizon divided by one period first, which is why both reference models carry a
