@@ -269,8 +269,13 @@ async function boot() {{
 function show(result) {{
   const r = $("results");
   if (result.stage === "ok") {{
-    r.innerHTML = '<p class="verdict good">It runs. These are your numbers, not the book\u2019s '
-      + '\u2014 the tables above are what this repository stamped.</p>'
+    // Whose numbers these are. Untouched, the file is the chapter's and so are the figures;
+    // once a block has been edited, the chapter's tables no longer describe this file.
+    const verdict = assemble() === WHOLE
+      ? "It runs. This is the file as the chapter left it."
+      : "It runs. These numbers are for the file as you have changed it; the chapter\u2019s "
+        + "tables are for the file as it left it.";
+    r.innerHTML = '<p class="verdict good">' + verdict + '</p>'
       + '<div class="outputs">' + result.outputs.map((name) => {{
           const n = result.nodes.find((x) => x.name === name) || {{}};
           const v = n.value == null ? "\u2014"
