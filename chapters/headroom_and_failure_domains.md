@@ -44,7 +44,11 @@ more than its work is worth. It is the loosest margin in the book, and it is sti
 declaring, because a cost that nobody has bounded is a cost that grows.
 
 A single "keep thirty per cent free" rule applied to all three would be too tight for one, too
-loose for another, and unexplainable for the third.
+loose for another, and unexplainable for the third. The model file gives a reason beside every
+margin it declares. Here they are, in its words:
+
+```{include} _generated/headroom-and-failure-domains-margins.md
+```
 
 ### The one margin you can actually compute
 

@@ -311,6 +311,17 @@ def test_a_prerequisite_comes_earlier(chapter: Chapter):
         )
 
 
+@pytest.mark.parametrize("chapter", CHAPTERS, ids=lambda c: c.slug)
+def test_every_chapter_after_the_first_says_what_it_builds_on(chapter: Chapter):
+    """The line under a chapter's title comes from here, so an empty tuple is an empty line."""
+    if chapter.number == 1:
+        return
+    assert chapter.needs, (
+        f"{chapter.label} declares no earlier chapter it builds on. Name the ones it assumes in "
+        "bench/outline.py; the page derives its 'Builds on' line from them."
+    )
+
+
 # -- what a page claims to be built from must exist --------------------------------------------
 
 
