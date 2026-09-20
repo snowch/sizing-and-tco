@@ -412,6 +412,7 @@ async function resample() {
   try {
     booting = booting || bootToolkit({
       pyodideUrl: TOOLKIT.pyodide, modules: TOOLKIT.modules, results: TOOLKIT.results,
+      wheels: TOOLKIT.wheels,
       status: (text) => banner(text, "pending"),
     });
     pyodide = await booting;

@@ -4,12 +4,14 @@
 // toolkit's own modules and the handful of stamped results a model's measured constants read
 // are carried by the page and written where the toolkit looks for them on disk. Nothing is sent
 // anywhere: after the fetch, everything runs here.
-async function bootToolkit({ pyodideUrl, modules, results, status }) {
+async function bootToolkit({ pyodideUrl, modules, results, wheels, status }) {
   status("Starting Python… about ten megabytes, once.");
   const { loadPyodide } = await import(pyodideUrl + "pyodide.mjs");
   const pyodide = await loadPyodide({ indexURL: pyodideUrl });
-  await pyodide.loadPackage(["numpy", "micropip"]);
-  await pyodide.pyimport("micropip").install(["Pint", "PyYAML"]);
+  // numpy and PyYAML come with the runtime, from its own pinned lock file. Pint and what it
+  // needs are exact wheels from PyPI, pinned in sizing/playground/toolkit.py, so that a Run
+  // installs the same code on every day it is pressed and the offline control knows what to keep.
+  await pyodide.loadPackage(["numpy", "pyyaml", ...(wheels || [])]);
   pyodide.FS.mkdirTree("/sizing/playground");
   pyodide.FS.mkdirTree("/bench/results");
   for (const [name, source] of Object.entries(modules)) {

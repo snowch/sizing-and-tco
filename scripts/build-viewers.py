@@ -27,7 +27,7 @@ sys.path.insert(0, str(ROOT))
 from bench.stamp import RESULTS_DIR, load_result, shown  # noqa: E402
 from bench.tables import REPOSITORY  # noqa: E402
 from sizing.dsl import load_model  # noqa: E402
-from sizing.playground.toolkit import BOOT, PYODIDE, results_for, sources  # noqa: E402
+from sizing.playground.toolkit import BOOT, PYODIDE, results_for, sources, wheels  # noqa: E402
 
 VIEWER = ROOT / "sizing" / "viewer"
 DEFAULT_OUT = ROOT / "_build" / "viewers"
@@ -118,6 +118,7 @@ def build(result_name: str, out_dir: Path) -> Path:
         "results": results_for(load_model(model_path)),
         "model": model_path.read_text(),
         "scenario": scenario_path.read_text(),
+        "wheels": wheels(),
     }
 
     page = PAGE.format(

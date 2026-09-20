@@ -94,7 +94,7 @@ def test_every_script_is_executable_and_parses():
 
 
 #: The constants in scripts/build-site.py that hold JavaScript rather than Python.
-JS_TEMPLATES = ("MENU", "RUNNER", "SEARCH")
+JS_TEMPLATES = ("MENU", "OFFLINE", "RUNNER", "SEARCH")
 
 
 @pytest.mark.parametrize("name", JS_TEMPLATES)
@@ -381,6 +381,133 @@ def test_the_toolkit_does_not_import_the_harness():
         if re.search(r"^\s*(from|import) bench\b", path.read_text(), re.M)
     ]
     assert not offenders, f"the toolkit imports the harness in {offenders}"
+
+
+def test_the_toolkit_pins_the_wheels_a_run_installs():
+    """A Run installs exact files, at the Pint version the native toolkit pins.
+
+    ``requirements.txt`` pins Pint for the reason it gives; the browser used to install whatever
+    PyPI had that day. Now both name one version, and everything Pint needs is listed beside it,
+    because a wheel installed by URL brings no dependencies with it.
+    """
+    from sizing.playground.toolkit import WHEELS, wheels
+
+    pins = dict(
+        line.strip().split("==")
+        for line in (ROOT / "requirements.txt").read_text().splitlines()
+        if "==" in line and not line.startswith("#")
+    )
+    names = {url.rsplit("/", 1)[-1].split("-")[0].lower() for url in wheels()}
+    assert any(url.endswith(f"/pint-{pins['Pint']}-py3-none-any.whl") for url in wheels()), (
+        "the browser's Pint wheel is not the version requirements.txt pins"
+    )
+    assert {"flexcache", "flexparser", "platformdirs", "typing_extensions"} <= names
+    for url, digest in WHEELS:
+        assert url.startswith("https://files.pythonhosted.org/") and url.endswith(".whl"), url
+        assert re.fullmatch(r"[0-9a-f]{64}", digest), url
+
+
+def test_every_page_that_boots_the_toolkit_hands_it_the_same_wheels():
+    """Three pages boot the runtime, and each has to pass the pinned wheels to the one boot."""
+    boot = (ROOT / "sizing" / "playground" / "boot.js").read_text()
+    assert 'loadPackage(["numpy", "pyyaml", ...(wheels || [])])' in boot
+    assert "micropip" not in boot, "an install by name is an install of whatever PyPI has today"
+    assert "wheels: WHEELS" in (ROOT / "scripts" / "build-site.py").read_text()
+    assert 'id="model-wheels"' in (ROOT / "scripts" / "build-site.py").read_text()
+    assert "wheels: WHEELS" in (ROOT / "scripts" / "build-playground.py").read_text()
+    assert "wheels: TOOLKIT.wheels" in (ROOT / "sizing" / "viewer" / "app.js").read_text()
+    assert '"wheels": wheels()' in (ROOT / "scripts" / "build-viewers.py").read_text()
+
+
+HARNESS = r"""
+const script = process.argv[2];
+const spec = JSON.parse(process.argv[3]);
+const puts = [], listeners = {};
+const span = { textContent: "" };
+const button = {
+  hidden: true, disabled: false, dataset: { state: "" },
+  querySelector: () => span,
+  addEventListener: (name, fn) => { listeners[name] = fn; },
+};
+globalThis.window = globalThis;
+globalThis.document = {
+  getElementById: (id) => (id === "offline" ? button : null),
+  addEventListener: (name, fn) => { listeners[name] = fn; },
+};
+// Node has a navigator of its own, read-only, so it has to be replaced rather than assigned.
+Object.defineProperty(globalThis, "navigator", { configurable: true, value: {
+  serviceWorker: {}, onLine: true, storage: { persist: async () => true } } });
+globalThis.confirm = () => true;
+const lock = { packages: {
+  numpy: { file_name: "numpy-x.whl", depends: ["openblas"] },
+  openblas: { file_name: "openblas-x.zip", depends: [] },
+  pyyaml: { file_name: "pyyaml-x.whl", depends: [] },
+  micropip: { file_name: "micropip-x.whl", depends: ["packaging"] },
+} };
+const body = (url) => url.endsWith("pyodide-lock.json") ? JSON.stringify(lock) : "x".repeat(1000);
+const respond = (url) => ({
+  ok: true, clone() { return respond(url); },
+  json: async () => JSON.parse(body(url)),
+  arrayBuffer: async () => new ArrayBuffer(body(url).length),
+});
+const store = new Map();
+globalThis.caches = {
+  open: async () => ({
+    match: async (url) => store.get(url),
+    put: async (url, response) => { puts.push(url); store.set(url, response); },
+  }),
+  delete: async () => store.clear(),
+};
+globalThis.fetch = async (url) => respond(url);
+new Function(script)();
+(async () => {
+  await listeners.DOMContentLoaded();
+  await new Promise((r) => setTimeout(r, 10));
+  const before = { hidden: button.hidden, label: span.textContent };
+  await listeners.click();
+  console.log(JSON.stringify({ before, puts, label: span.textContent, state: button.dataset.state }));
+})();
+"""
+
+
+def test_the_offline_control_keeps_everything_a_run_fetches(tmp_path):
+    """Pressed, it puts the runtime's own files, the lock file's packages with what they depend
+    on, and every pinned wheel into the worker's cache, and then says so. Unpressed, it fetches
+    nothing and is merely shown."""
+    import json
+    import subprocess
+
+    from sizing.playground.toolkit import PYODIDE, offline_manifest, wheels
+
+    build_site = site()
+    script = re.sub(r"^\s*<script>|</script>\s*$", "", build_site.OFFLINE_SCRIPT.strip())
+    harness = tmp_path / "harness.js"
+    harness.write_text(HARNESS)
+    out = subprocess.run(
+        ["node", str(harness), script, json.dumps(offline_manifest())],
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=60,
+    )
+    report = json.loads(out.stdout.strip().splitlines()[-1])
+    assert report["before"] == {"hidden": False, "label": ""}, report
+    expected = {
+        *(
+            PYODIDE + f
+            for f in (
+                "pyodide.mjs",
+                "pyodide.asm.js",
+                "pyodide.asm.wasm",
+                "python_stdlib.zip",
+                "pyodide-lock.json",
+            )
+        ),
+        *(PYODIDE + f for f in ("numpy-x.whl", "openblas-x.zip", "pyyaml-x.whl")),
+        *wheels(),
+    }
+    assert set(report["puts"]) == expected, sorted(set(report["puts"]) ^ expected)
+    assert report["label"] == "Kept offline" and report["state"] == "kept", report
 
 
 def test_the_offline_worker_lists_exactly_what_the_build_produced(tmp_path):

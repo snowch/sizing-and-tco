@@ -39,7 +39,7 @@ from bench.stages import label_of, stages  # noqa: E402
 from bench.stamp import shown  # noqa: E402
 from sizing.dsl import load_model  # noqa: E402
 from sizing.playground.driver import check  # noqa: E402
-from sizing.playground.toolkit import BOOT, PYODIDE, results_for, sources  # noqa: E402
+from sizing.playground.toolkit import BOOT, PYODIDE, results_for, sources, wheels  # noqa: E402
 
 DEFAULT_OUT = ROOT / "_build" / "playground"
 
@@ -140,6 +140,7 @@ milliseconds. Nothing is sent anywhere &mdash; it all runs in this tab.</div>
 const FIXTURES = {fixtures};
 const MODULES = {modules};
 const RESULTS = {results};
+const WHEELS = {wheels};
 const START = {model_json};
 
 const $ = (id) => document.getElementById(id);
@@ -156,7 +157,7 @@ async function boot() {{
   const began = performance.now();
   try {{
     pyodide = await bootToolkit({{
-      pyodideUrl: "{pyodide}", modules: MODULES, results: RESULTS,
+      pyodideUrl: "{pyodide}", modules: MODULES, results: RESULTS, wheels: WHEELS,
       status: (text) => show($("agreement"), text, "pending"),
     }});
   }} catch (error) {{
@@ -326,6 +327,7 @@ def build(stage) -> str:
         boot=BOOT,
         modules=json.dumps(sources()),
         results=json.dumps(results_for(load_model(stage.path))),
+        wheels=json.dumps(wheels()),
         fixtures=json.dumps(fixtures(stage.path)),
         pyodide=PYODIDE,
         stage=html.escape(shown(stage.path)),
