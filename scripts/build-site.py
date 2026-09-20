@@ -104,8 +104,9 @@ def problem_excerpts(source: str, page: dict) -> list[dict]:
     A chapter's problems are tests, and under each one the chapter writes the command that runs
     it. The command names the test file; the test file imports what it grades from the stubs
     file beside it; so the page can put that piece under the problem, editable, with a button
-    that runs the same test here. The command stays on the page, because at a desk it is the
-    same check. The last problem in every chapter has no test, so no command, and gets nothing.
+    that runs the same test here. The command stays on the page as a one-line note under the
+    Check, because at a desk it is the same check. The last problem in every chapter has no
+    test, so no command, and gets nothing.
     """
     slug = Path(source).stem
     if slug not in problem_chapters():
@@ -1169,9 +1170,9 @@ iframe.viewer { height: 780px; }
                   background: var(--bg); overflow: hidden; }
 .editable-block:focus-within { border-color: var(--accent);
                                box-shadow: 0 0 0 3px var(--wash); }
-.editable-bar { display: flex; align-items: center; gap: .6rem; padding: .3rem .4rem .3rem .9rem;
-                background: var(--panel); border-bottom: 1px solid var(--edge);
-                font: 12.5px/1.6 var(--chrome); }
+.editable-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .1rem .6rem;
+                padding: .3rem .4rem .3rem .9rem; background: var(--panel);
+                border-bottom: 1px solid var(--edge); font: 12.5px/1.6 var(--chrome); }
 .editable-bar .file { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
 .editable-bar .hint { color: var(--faint); white-space: nowrap; }
 .editable-block.changed .editable-bar { background: var(--wash); }
@@ -1217,10 +1218,13 @@ figure > .runner { margin: 0; }
 
 /* A problem's stub, editable under the problem it grades, and the verdict under that: one
    line per test, pytest's own message beside the ones that fail, and everything it said for a
-   reader who wants all of it. The command the chapter wrote follows, for a desk. */
-.problem { margin: 1.4rem 0 .4rem; }
+   reader who wants all of it. The command the chapter wrote is a one-line note at the end, in
+   the bar's small type, for a desk. */
+.problem { margin: 1.4rem 0 1.4rem; }
 .problem .editable-block { margin: 0 0 .6rem; }
-.problem + pre { margin-top: 0; }
+.problem .desk { margin: 0; font: 12.5px/1.5 var(--chrome); color: var(--faint); }
+.problem .desk code { font-size: 11.5px; color: var(--muted); background: none; padding: 0;
+                      overflow-wrap: anywhere; }
 .check-here { margin-left: auto; padding: .25rem .7rem; font-size: 12.5px; }
 .verdicts { font: 13.5px/1.4 var(--chrome); color: var(--muted); margin-bottom: .8rem; }
 .verdicts:empty { display: none; }

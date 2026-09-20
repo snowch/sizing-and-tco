@@ -15,7 +15,7 @@ async function bootToolkit({ pyodideUrl, modules, results, wheels, files, status
   } catch (error) {
     kept = false;
   }
-  status(kept ? "Starting Python from the copy this browser keeps…"
+  status(kept ? "Starting Python from this browser's copy…"
               : "Starting Python… about ten megabytes, once.");
   const { loadPyodide } = await import(pyodideUrl + "pyodide.mjs");
   const pyodide = await loadPyodide({ indexURL: pyodideUrl });

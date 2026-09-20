@@ -274,7 +274,9 @@ A problem is a stub the reader edits and a test that passes only when they are r
   function, editable, and Check runs the chapter's own test file under Pyodide over exactly the
   files `sizing.playground.toolkit.problem_files` lists. So a test imports what it grades from
   the chapter's `stubs.py` by name, names every model file and result it reads as a quoted path
-  or a literal `load_result("...")`, and `tests/test_problems.py` fails when one is missing.
+  or a literal `load_result("...")`, and `tests/test_problems.py` fails when one is missing. The
+  `python3 -m pytest tests/...` line under the problem is how the page finds the test. It is
+  drawn as a one-line note under the Check, for a reader at a desk, not as a block.
 
 ## Definition of done
 
