@@ -8,7 +8,7 @@ short_title: "ch10 Three chains, and the binding constraint"
 
 ## The question
 
-When three independent chains each demand a different size, which one are you actually buying?
+When three independent chains each demand a different size, which one are you buying?
 
 [ch09](#capacity) followed one chain from stored bytes to hosts. There are two more: one from the
 requests, one from the working set. The three disagree with each other, and the disagreement is
@@ -66,7 +66,7 @@ for one of them in every sample where they differ.
 
 **The usual winner.** Take the memory chain, because it asks for the most more often than either
 of the others. This is the commonest of the three. It is defensible until somebody asks the model
-what "more often than either" actually comes to.
+what "more often than either" comes to.
 
 **The sum.** It buys a fleet for a workload that does not exist. The three chains describe the
 same hosts doing three things, not three sets of hosts.
@@ -86,7 +86,7 @@ The median gap between the winner and the runner-up is large. These are not thre
 the same thing that differ slightly. They are three different questions with three different
 answers. The gap at the 95th percentile is larger still.
 
-The last row is the one that surprises people. The largest of three uncertain counts sits well
+The last row surprises people. The largest of three uncertain counts sits well
 above where any one of them usually does, so the fleet the model recommends is bigger than every
 chain's typical answer. That is not waste. It is what buying for three requirements at once
 costs, when each of them is uncertain on its own.
@@ -106,7 +106,7 @@ Sizing on the chain that wins most often is the natural thing to do, and it is w
 does without saying so. Two numbers describe what it costs: how often the fleet is too small
 because another chain wanted more, and by how much when it is. Problem 10.2 computes both.
 
-Neither is small here, and the second is the one people do not compute. Averaged over every
+Neither is small here, and people do not compute the second. Averaged over every
 sample, including the ones where the chosen chain was the right one and the shortfall is zero, it
 looks like a rounding error. Counted only over the samples where the fleet is short, it is not. A
 chain overtakes another only when its own inputs have gone somewhere unusual, and by the time
@@ -126,7 +126,7 @@ the chance of any particular one doing so stays small. A model with six chains, 
 fraction of the time, spends most of its life with at least one of them unexpectedly in charge.
 
 The observability model in [Appendix F](#appendix-f-observability-model) has three parallel chains
-and three separate ceilings for exactly this reason. There is no single number that summarises
+and three separate ceilings for this reason. There is no single number that summarises
 them, and a model that produced one would be hiding the thing you needed.
 
 :::{note} Key takeaways
@@ -149,7 +149,7 @@ them, and a model that produced one would be hiding the thing you needed.
 that is not in the model cannot bind inside it, however often it binds outside. That is
 [ch20](#the-missing-node), and nothing here addresses it.
 
-**What a request actually costs.** The request chain rests on a time per request that is an
+**What a request costs.** The request chain rests on a time per request that is an
 assumption, marked as such in every figure, because no reference machine is declared. A measured
 one is a `rig` result nobody has taken, and it is the kind of figure that is quoted from a bench
 with nothing else running.
@@ -205,4 +205,4 @@ one chain, you have found an assumption rather than a fact.
 [ch11](#headroom-and-failure-domains) is the margin that sits under all three chains, and why it
 is three different margins rather than one.
 
-[ch12](#the-sizing-model) puts the whole of Part III together and produces a number.
+[ch12](#the-sizing-model) puts all of Part III together and produces a number.

@@ -39,8 +39,8 @@ nobody looks. This margin is larger, for two reasons. The failure mode is invisi
 recovering from it means adding machines, which [ch07](#when-adding-servers-stops-helping) showed
 works badly.
 
-**A scaling margin protects a budget.** Nothing fails and nothing gets slow. The fleet simply costs
-more than its work is worth. It is the loosest margin in the book, and it is still worth
+**A scaling margin protects a budget.** Nothing fails and nothing gets slow. The fleet costs more
+than its work is worth. It is the loosest margin in the book, and it is still worth
 declaring, because a cost that nobody has bounded is a cost that grows.
 
 A single "keep thirty per cent free" rule applied to all three would be too tight for one, too
@@ -50,7 +50,7 @@ margin it declares. Here they are, in its words:
 ```{include} _generated/headroom-and-failure-domains-margins.md
 ```
 
-### The one margin you can actually compute
+### The one margin you can compute
 
 Most headroom is judgement. One piece of it is arithmetic.
 
@@ -120,7 +120,7 @@ thirty-per-cent rule that everybody follows and nobody can source.
 The toolkit refuses a ceiling without one. That is the only enforcement available, and it is
 better than none.
 
-### The output a margin actually produces
+### The output a margin produces
 
 Not a verdict. A probability.
 

@@ -28,7 +28,7 @@ express a **regime change**: a point at which the system stops obeying one rule 
 another.
 
 Problem 8.1 puts a straight line through a system that has a regime change in it. Fit the line to
-the loads the system has actually run at, which for a healthy system means nothing above half.
+the loads the system has run at, which for a healthy system means nothing above half.
 Then extrapolate to the loads you are planning for. The fit is excellent where it was made. Out
 where it matters, it is not wrong by a percentage. It is wrong by a multiple, and the multiple
 grows.
@@ -109,7 +109,7 @@ multiplicative model computes the crossing quantity perfectly well. The model is
 utilisation, or about how full the disks are, or about how many series there are. It is wrong
 about what those numbers *mean* past a point it cannot represent.
 
-So the model file format has a node kind for exactly this. A `ceiling` does not model the regime
+So the model file format has a node kind for this. A `ceiling` does not model the regime
 change; nothing in a spreadsheet-shaped model can. It declares where the change is, keeps a margin
 away from it, and reports how much of the model's own uncertainty falls on the wrong side:
 
@@ -127,7 +127,7 @@ So for a cost model, sampling the inputs is enough. The structure is not in doub
 numbers are.
 
 A sizing model has thresholds in it, and past a threshold the structure itself changes. Sample the
-inputs of a model that has stopped applying and you measure, very precisely, the uncertainty in a
+inputs of a model that has stopped applying and you measure, precisely, the uncertainty in a
 number that has stopped describing anything.
 
 So a model with a `ceiling` in it is classified as a sizing model, and the toolkit refuses one
@@ -190,7 +190,7 @@ before you run it.
 python3 -m pytest tests/regime_changes/test_problem_2_combinatorial.py
 ```
 
-**8.3 — Every threshold you actually have.** No test: nothing here knows what your system runs into
+**8.3 — Every threshold you have.** No test: nothing here knows what your system runs into
 first.
 
 Four ceilings appear in this book because four were thought of. List yours: every limit your

@@ -69,7 +69,7 @@ assumption with a shape, because nobody has counted the indexes. And a measureme
 corpus carries a standard error, which none of the others do.
 
 A sizing that treats all four as constants is optimistic in the one place that helps. That place
-is the one whose uncertainty was actually measured.
+is the one whose uncertainty was measured.
 
 ### Two kinds of terabyte, and the ten per cent
 
@@ -91,7 +91,7 @@ Three rows, and each needs a word.
   counted.
 - *Hosts for storage* is how many hosts' disks that takes. It is this chain's answer, one of three
   the model will have by [ch10](#bandwidth-and-the-binding-constraint).
-- *Disk fill at horizon* is how full the disks of the fleet somebody actually bought are at the end
+- *Disk fill at horizon* is how full the disks of the fleet somebody bought are at the end
   of the period, as a fraction of what they can hold. One is full. An interval reaching past one
   says that in some futures the records do not fit, because the arithmetic carries on past the
   point where the disks stop.
@@ -131,8 +131,8 @@ result. For this figure, that assumption is a larger source of error than the co
 spread, or anything the standard error reports. The number has an uncertainty, and the
 uncertainty is about the wrong thing.
 
-**Anything about record size.** The chain above is a chain of bytes. A store holding a great many
-small records spends a substantial and sometimes dominant share of its disk on per-record
+**Anything about record size.** The chain above is a chain of bytes. A store holding many small
+records spends a substantial and sometimes dominant share of its disk on per-record
 bookkeeping. The overhead term here is a flat multiplier and cannot express that. A model of a
 service with a small-record problem needs a term this one does not have.
 
@@ -152,7 +152,7 @@ Five, in `tests/capacity/`. The first four have tests. The last does not, and sa
 
 **9.1 — The chain.**
 Four terms, one of which divides. Getting the division upside down gives an answer wrong by the
-square of the compression ratio while still looking entirely plausible. Check yours against a
+square of the compression ratio while still looking plausible. Check yours against a
 case you can do in your head first.
 
 ```bash
@@ -187,12 +187,12 @@ work, and the model should not have had it.
 python3 -m pytest tests/capacity/test_problem_4_classification.py
 ```
 
-**9.5 — What your data actually compresses to.** No test: the corpus is your data, and this
+**9.5 — What your data compresses to.** No test: the corpus is your data, and this
 repository has never seen it.
 
 The constant in this chapter was measured over a synthetic mixture, and the chapter says so.
-Measure your own: take a real sample of what you store, compress it with the codec you actually
-run at the setting you actually run it at, and record the ratio and how much you measured.
+Measure your own: take a real sample of what you store, compress it with the codec you run, at
+the setting you run it at, and record the ratio and how much you measured.
 
 Then compare it with the figure your capacity plan is currently using, and find out where that
 figure came from. In this book's experience it is a vendor's marketing number, a different
@@ -205,6 +205,6 @@ measured it first. You may have just re-derived a guess.
 ## Where to go next
 
 [ch10](#bandwidth-and-the-binding-constraint) is the other two chains, and the question of which
-of the three you are actually buying.
+of the three you are buying.
 
 [Appendix D](#appendix-d-units) is the terabyte problem and the rest of the conversions that bite.
