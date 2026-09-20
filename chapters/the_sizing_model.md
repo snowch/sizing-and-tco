@@ -43,8 +43,8 @@ it.
 ```
 
 The first row is the answer, evaluated at every input's point estimate. It is what a competently
-built spreadsheet would give you. It is also exactly what this book's reference fleet was bought
-against, which is the second row, and the fleet's provenance says so in as many words. The three
+built spreadsheet would give you. It is also what this book's reference fleet was bought against,
+which is the second row, and the fleet's provenance says so in as many words. The three
 rows below are the chains it was the largest of.
 
 ### The number looks at itself
@@ -56,7 +56,7 @@ rows below are the chains it was the largest of.
 
 The red line is where the point estimate falls. Everything else is the same model, the same chains
 and the same margins, with the inputs allowed to be as uncertain as the people who wrote them
-down actually are. Notice where the line sits: below the middle of the bars. The largest of three
+down are. Notice where the line sits: below the middle of the bars. The largest of three
 uncertain counts is usually larger than the largest of their three point estimates. So the
 spreadsheet's answer is not merely uncertain. It is low.
 
@@ -83,7 +83,7 @@ Nothing went wrong to produce that. Every input was defensible and every multipl
 correct. The result is a fleet that stands a real chance of not lasting its horizon under the
 knee. **That is what sizing from point estimates does.**
 
-Here is the whole of Part III in one graph, with a slider on every input. Drag *hosts in the
+Here is all of Part III in one graph, with a slider on every input. Drag *hosts in the
 fleet* and watch every ceiling's verdict at once. That is the decision this chapter is about.
 
 ```{iframe} /models/web_service_sizing-reference.html
@@ -98,7 +98,7 @@ The same file, running. It is the file ch02 started, eleven chapters on.
 
 ### So what is the answer?
 
-There is not one. Part III has been building to exactly that.
+There is not one. Part III has been building to that.
 
 A sizing model does not produce a number. It produces a *relationship between a number and a
 risk*, and somebody has to choose a point on it. Problem 12.1 is that choice made explicitly: pick
@@ -134,8 +134,8 @@ what the model would recommend in hindsight.
 
 Deriving it instead would make the ceilings tautologies. A fleet sized to sit under the knee sits
 under it in every sample, and the model would cheerfully report no chance at all of queueing.
-Keeping it an input lets the ceilings ask the only question worth asking: *given what we actually
-bought, how often does the world break it?*
+Keeping it an input lets the ceilings ask the only question worth asking: *given what we bought,
+how often does the world break it?*
 
 :::{note} Key takeaways
 - **A sizing model is a dozen multiplications anybody could check.** The difficulty has never been
@@ -149,8 +149,8 @@ bought, how often does the world break it?*
   to pick a point on it, and the only form the choice can be handed over in is *what it costs*
   beside *how often it breaks*.
 - **The fleet is an input, because the decision is.** Keeping the host count an input lets the
-  ceilings ask the only question worth asking: given what was actually bought, how often does the
-  world break it?
+  ceilings ask the only question worth asking: given what was bought, how often does the world
+  break it?
 :::
 
 ## What this cannot tell you
@@ -160,7 +160,7 @@ inputs are worth. A missing chain, a database's connection limit, a cache's evic
 network between the hosts, is invisible from inside. Nothing in the output distinguishes a model
 that is complete from one that is not. That is [ch20 · The missing node](#the-missing-node).
 
-**What the ceilings are really at.** All six were declared by somebody with a reason
+**Whether the ceilings are where they were declared.** All six were declared by somebody with a reason
 ([ch11](#headroom-and-failure-domains)). The probabilities in the last two columns are exact
 statements about where the model's samples fall relative to lines that are judgements.
 

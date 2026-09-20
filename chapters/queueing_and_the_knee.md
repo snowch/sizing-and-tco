@@ -8,7 +8,7 @@ short_title: "ch06 Queueing, and the knee"
 
 ## The question
 
-Why does response time climb long before a device is busy, and what does headroom actually buy?
+Why does response time climb long before a device is busy, and what does headroom buy?
 
 [ch05](#littles-law) related three quantities without assuming anything, and could therefore
 explain nothing. This chapter buys a mechanism, and the price is a set of assumptions somebody can
@@ -64,8 +64,8 @@ Problem 6.2 measures how much that person matters. Invert the formula, ask where
 twice as long, then ask where they take ten times as long, and watch the answer travel across
 most of the useful range of a system.
 
-Two engineers with different tolerances will size the same system very differently, and both will
-say they sized it to the knee.
+Two engineers with different tolerances will size the same system differently, and both will say
+they sized it to the knee.
 
 So this book does not have a knee rule. It has a **declared margin, with a reason attached**:
 
@@ -92,7 +92,7 @@ what they were protecting. The toolkit refuses a ceiling that leaves it empty.
 [ch11](#headroom-and-failure-domains) is where that decision gets made deliberately instead of
 inherited.
 
-The whole of it is in the graph now: the division, the clamp and the ceiling. Drag *hosts in the
+All of it is in the graph now: the division, the clamp and the ceiling. Drag *hosts in the
 fleet* down and watch the verdict change before the number under it looks alarming.
 
 ```{iframe} /models/web_service_queueing-reference.html
@@ -108,7 +108,7 @@ protecting against.
 
 A capacity ceiling is a cliff you fall off. A full disk, which [ch09](#capacity) adds to this
 model, is one: you find out immediately. A queueing ceiling is not a cliff. You slide down it,
-paying in latency on every single request, for as long as nobody looks. There is no page, no
+paying in latency on every request, for as long as nobody looks. There is no page, no
 alert, no failure. There is just a system that is worse than it was, in a way that shows up in
 somebody else's dashboards.
 
@@ -219,8 +219,8 @@ Your monitoring already has this. Plot response time against utilisation for one
 tier, as a scatter of the last few weeks rather than an average, and find where the curve stops
 being flat.
 
-Then answer the question the chart cannot: what utilisation is your system actually run at, and
-who chose it? In most places the answer is that nobody chose it. It is wherever the last capacity
+Then answer the question the chart cannot: what utilisation does your system run at, and who
+chose it? In most places the answer is that nobody chose it. It is wherever the last capacity
 argument left off.
 
 A good answer is a picture with a knee visible in it and a number beside it. If the scatter is a
@@ -231,7 +231,7 @@ enough to hide every peak. The second is the commoner.
 ## Where to go next
 
 [ch07](#when-adding-servers-stops-helping) takes the obvious response to everything above, adding
-machines, and works out what it actually buys.
+machines, and works out what it buys.
 
 [ch11](#headroom-and-failure-domains) chooses the margin this chapter refused to choose, and shows
 what happens when two of them end up multiplied together.

@@ -8,8 +8,7 @@ short_title: "ch07 When adding servers stops helping"
 
 ## The question
 
-How far does a system scale, and how would you find out from the two measurements you actually
-have?
+How far does a system scale, and how would you find out from the two measurements you have?
 
 [ch06](#queueing-and-the-knee) ended with a fleet too close to its margin and an obvious remedy:
 buy more machines. This chapter is about how much less that buys than the arithmetic promises. It
@@ -19,7 +18,7 @@ is also about the count past which each new machine takes capacity away.
 
 ### Two costs, and only one of them is famous
 
-Machines do not simply add up, and there are two separate reasons.
+Machines do not add up, and there are two separate reasons.
 
 **Contention.** Some fraction of the work cannot be done in parallel: a lock, a single writer, a
 shared queue, a coordinator. That fraction takes a fixed share of every machine you add, so the
@@ -63,7 +62,7 @@ The last row checks the peak twice. One figure comes from sweeping the model, th
 two coefficients. The calculations are independent, and they agree. That agreement is why the
 closed form in problem 7.3 is worth having.
 
-### What doubling actually buys
+### What doubling buys
 
 ```{include} _generated/when-adding-servers-stops-helping-scenarios.md
 ```
@@ -94,7 +93,7 @@ one on the utilisation the queueing view understated.
 [ch06](#queueing-and-the-knee) had no scaling term, so its utilisation was the work arriving
 divided by what the machines could do *if each of them worked alone*. They do not work alone. Some
 of their capacity is spent on each other, and the honest utilisation is the arriving work divided
-by what the fleet can actually deliver.
+by what the fleet can deliver.
 
 The model carries both numbers, side by side, on purpose:
 
@@ -122,8 +121,8 @@ Three unknowns, so three measurements determine them exactly. You will usually h
 machine on a bench, the fleet you are running, and the fleet you were running before you grew it.
 That is not much data, and it is what exists.
 
-Problem 7.2 is the algebra, and it is worth doing by hand once. Rearranging the law into a
-straight line shows why three points are the minimum, and why they must be at *different* counts.
+Problem 7.2 is the algebra. Do it by hand once. Rearranging the law into a straight line shows
+why three points are the minimum, and why they must be at *different* counts.
 Two measurements at the same size determine nothing at all.
 
 Then notice what you have done. You have extended a two-parameter curve out to hundreds of
@@ -140,7 +139,7 @@ provenance. **The shape is the claim. The position of the peak is a guess.**
 - **Doubling the fleet fixes latency and buys little capacity.** Utilisation halves, queueing time
   falls to about a quarter, and throughput rises by a fraction. Those are different purchases.
 - **The utilisation a queueing view quotes is optimistic.** Some of every machine's capacity is
-  spent on the others, so the honest figure divides by what the fleet can actually deliver.
+  spent on the others, so the honest figure divides by what the fleet can deliver.
 - **The shape of the curve is the claim. The position of the peak is a guess.** Three measurements
   at different sizes fit the coefficients exactly, and extrapolating them to hundreds of machines is
   the bet you are placing.

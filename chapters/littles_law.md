@@ -13,7 +13,8 @@ not?
 
 Part I ended with a rate: how much work arrives at the busy hour. This chapter turns that rate
 into a count of requests in flight. It also turns a count of requests in flight back into the
-time each request really spent in the system. It assumes nothing about how the system works.
+time each request spent in the system, queues included. It assumes nothing about how the system
+works.
 
 ## The material
 
@@ -52,13 +53,13 @@ is the first quantity in this book that belongs to the software rather than to t
 Read the note on the first node twice. Service demand is how much of a processor a request
 *costs*. It is not how long the request takes. The difference is queueing, and the whole of
 Part II is about that difference. Service demand also belongs on a reference machine. Nobody has
-declared one, so the model holds it as an assumption whose source says what would replace it,
-rather than as a measured constant with nothing behind it
+declared one. So the model holds it as an assumption, and its source says what measurement would
+replace it. It does not pose as a measured constant, because no measurement is behind it
 ([ch03](#where-the-numbers-come-from)).
 
 The second node is the one a spreadsheet hides. Its note says why it is an input and not a
 result: the model recommends a fleet, a person decides one, and every ceiling from here on asks
-what happens to the fleet that was actually bought.
+what happens to the fleet that was bought.
 
 Multiply the rate by the cost and you have the processors the busy hour keeps busy. Divide by the
 processors the fleet has and you have how busy it is:
@@ -158,7 +159,7 @@ the ones that buy one.
   by the arrival rate, and the answer includes every queue a request sat in before your timer
   started.
 - **The fleet is an input, not a result.** The model recommends a fleet, a person decides one, and
-  every ceiling from here on asks what happens to the fleet that was actually bought.
+  every ceiling from here on asks what happens to the fleet that was bought.
 - **The law relates three numbers and has no opinion about which one moved.** Outside a steady
   state, or about the tail, it says nothing at all.
 :::
@@ -166,7 +167,7 @@ the ones that buy one.
 ## What this cannot tell you
 
 **Anything about a system that is not in a steady state.** The one condition, and the one people
-forget. During an incident, exactly when somebody reaches for the law, arrivals exceed departures
+forget. During an incident, which is when somebody reaches for the law, arrivals exceed departures
 and the queue is growing. Then "how many are in the system" is not a stable quantity for the law
 to be about. Applied to a five-minute window in the middle of a pile-up, it produces a number that
 describes nothing.
@@ -188,8 +189,8 @@ Three, in `tests/littles_law/`. The first two have tests. The last does not, and
 
 **5.1 — The law.**
 One multiplication, checked against the model's own node: the one [ch06](#queueing-and-the-knee)
-adds, with the waiting in it, so that the check covers the time a request actually stays rather
-than the time it is being served. Checked at the point estimate first, then across every sample.
+adds, with the waiting in it, so that the check covers the time a request stays rather than the
+time it is being served. Checked at the point estimate first, then across every sample.
 
 ```bash
 python3 -m pytest tests/littles_law/test_problem_1_the_law.py
@@ -209,10 +210,10 @@ see it.
 
 Pick a queue you run: a request tier, a job pipeline, anything with work arriving and leaving.
 Measure two of the three quantities over a window: how fast work arrives, how much is in flight,
-how long a unit takes. Infer the third, then go and measure it too.
+how long a unit takes. Infer the third, then measure it too.
 
-The chapter's first limit is the one to watch. The law holds in a steady state, and your window
-almost certainly was not one. If the inferred and measured values disagree, you have not found an
+Watch the chapter's first limit. The law holds in a steady state, and your window almost
+certainly was not one. If the inferred and measured values disagree, you have not found an
 error in arithmetic that has been true since 1961. You have found out that arrivals and
 departures did not balance over your window, which is worth more than the number was.
 
