@@ -45,11 +45,11 @@ form that takes:
 :end-before: os_reserve:
 ```
 
-Two clauses of source, and the second one earns its place. *The sheet says gigabytes and means
-gibibytes* is the gap between what a spec sheet writes and what it counts. It is only the first
-of two gaps between the number on the sheet and the memory a service gets
-([Appendix D](#appendix-d-units)). Writing that down is the whole of the discipline. The claim is
-recorded as a claim, and what is doubtful about it is recorded beside it.
+The source has two clauses. The second, *the sheet says gigabytes and means gibibytes*, names the
+gap between what a spec sheet writes and what it counts. It is only the first of two gaps between
+the number on the sheet and the memory a service gets ([Appendix D](#appendix-d-units)). Writing
+that down is the discipline: the claim is recorded as a claim, and what is doubtful about it is
+recorded beside it.
 
 It takes one more quantity to reach the first node in the model that is about hardware rather
 than data: the share of that memory the operating system keeps for itself, an assumption in the
@@ -166,9 +166,9 @@ copy-paste, and every organisation has a capacity plan built on one.
 ```{include} _generated/where-the-numbers-come-from-rig.md
 ```
 
-The machine this was written on refuses to produce that figure, and not by convention: the
-toolkit compares the running processor and core count against the declared reference machine
-and refuses otherwise.
+The machine this was written on refuses to produce that figure, and not by convention. The
+toolkit compares the running processor and core count against the declared reference machine,
+and refuses on any other.
 
 An environment variable would have been easier. It would also have let anybody stamp a laptop
 timing as a reference measurement by typing four characters. A target you can set by accident is
@@ -186,8 +186,8 @@ measured exactly, and the toolkit says so.
 
 A standard error also tells you what more measuring would buy, which is usually less than people
 expect. It falls as one over the square root of the count, so halving it costs four times the
-work. Problem 3.2 is that arithmetic. It is worth doing *before* agreeing to a measurement
-campaign rather than during one.
+work. Problem 3.2 is that arithmetic. Do it *before* agreeing to a measurement campaign rather
+than during one.
 
 :::{note} Key takeaways
 - **Every input says how much its author was claiming.** A fact is traceable to something, a
@@ -226,7 +226,8 @@ A model can be all assumptions, all sourced, all defensible-sounding, and comple
 
 ## Problems
 
-Three, in `tests/where_the_numbers_come_from/`. The first two have tests. The third does not, and says why.
+Three, in `tests/where_the_numbers_come_from/`. The first two have tests. The third does not, and
+says why.
 
 **3.1 — Take a constant, and stamp it so somebody else could check it.**
 Pick a quantity a codec decides, measure it over a corpus you generate deterministically, and
@@ -252,7 +253,7 @@ them.
 Take the quantities you wrote down for [ch02](#what-a-workload-is)'s problem 2.5 and put one of
 three words against each: `fact`, `vendor_claim`, `assumption`. Then, for every `fact`, write the
 source you would hand somebody who asked: a document, an invoice, a measurement with a date on it.
-Not where you think it came from. The thing you would actually send.
+Not where you think it came from. The thing you would send.
 
 The useful part is the reclassification. Count how many started as facts and ended as vendor
 claims once you looked for the source. Count how many ended as assumptions because the source was
@@ -265,7 +266,7 @@ labelled what you believe rather than what you can show.
 
 ## Where to go next
 
-[ch04](#peak-mean-and-growth) is about the input that does the most damage in this book and is
+[ch04](#peak-mean-and-growth) is about the input that moves the answer most in this book and is
 the hardest to measure: a growth rate is a claim about the future, and no amount of provenance
 discipline turns one into a measurement.
 
