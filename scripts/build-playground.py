@@ -278,7 +278,7 @@ CSS = """
 }
 * { box-sizing: border-box; }
 body { font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-       color: var(--ink); margin: 0; padding: 16px; max-width: 1080px; margin-inline: auto; }
+       color: var(--ink); margin: 0; padding: 16px; max-width: 1600px; margin-inline: auto; }
 header h1 { font-size: 20px; margin: 0 0 4px; }
 header p, footer p { color: var(--muted); margin: 4px 0; }
 #agreement { border: 1px solid var(--edge); border-left-width: 4px; border-radius: 4px;
@@ -286,8 +286,12 @@ header p, footer p { color: var(--muted); margin: 4px 0; }
 #agreement.good { border-left-color: var(--good); }
 #agreement.bad { border-left-color: var(--bad); }
 #agreement.pending { border-left-color: var(--muted); }
+/* The model beside its results, but only once both fit. The generator wraps a node's source at
+   66 characters, so an editor under about 600px breaks the file the reader is being asked to
+   read: at 900px the two columns were 443px each and 183 of the model's 685 lines wrapped. One
+   column to 1300px -- what a tablet and a phone have always had -- then two. */
 main { display: grid; gap: 16px; grid-template-columns: 1fr; }
-@media (min-width: 900px) { main { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1300px) { main { grid-template-columns: 1fr 1fr; } }
 .bar { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
 button { font: inherit; padding: 6px 14px; border: 1px solid var(--edge); border-radius: 4px;
          background: var(--panel); color: var(--ink); cursor: pointer; }
