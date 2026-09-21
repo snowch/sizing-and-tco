@@ -96,7 +96,7 @@ def test_every_script_is_executable_and_parses():
 
 
 #: The constants in scripts/build-site.py that hold JavaScript rather than Python.
-JS_TEMPLATES = ("MENU", "OFFLINE", "PROBLEMS", "RUNNER", "SEARCH")
+JS_TEMPLATES = ("EXPAND", "MENU", "OFFLINE", "PROBLEMS", "RUNNER", "SEARCH")
 
 
 @pytest.mark.parametrize("name", JS_TEMPLATES)
@@ -751,8 +751,8 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
         "main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;"
     ), "a media query adds no specificity, so the rule that lifts the cap has to come after it"
     assert (
-        "#main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: 100%; }"
-        in css
+        "#main > :is(figure:has(> iframe), figure:has(> .runner), table) "
+        "{ max-width: min(100%, 84rem); }" in css
     )
     # Both choices are read before the page paints, so a rail does not close again on every page.
     opening = build_site.MENU.split("document.addEventListener")[0]
@@ -785,3 +785,37 @@ def test_the_chapter_centres_what_keeps_the_measure_and_widens_what_does_not():
         "#main > :is(pre, .editable-block, .problem, figure:has(> pre)) "
         "{ max-width: min(100%, 60rem); }" in css
     ), "code that a reader edits or reads was cut off at the measure on 33 of 42 pages"
+
+
+def test_a_model_can_take_the_window_without_losing_the_reader_s_place():
+    """The chapter holds a model at 84rem; the button over its corner gives it the window.
+
+    A model's graph is drawn at a fixed width -- 1470px for the widest in the book -- so no
+    column can hold it and a wider card only shows more of it. Letting the card follow the
+    window instead put a slab three times the width of the prose in the middle of a chapter.
+    The control keeps the same frame rather than opening the model's own page, which reloads
+    it: every slider the reader has moved stays where they put it, and closing returns them to
+    the paragraph they were reading.
+    """
+    from bench import render as renderer
+
+    build_site = site()
+    drawn = renderer.render(
+        {"type": "iframe", "src": "/models/web_service-reference.html"},
+    )
+    assert drawn.index('class="expand"') < drawn.index("<iframe"), (
+        "the control belongs to the figure, over the panel's corner, not inside the model"
+    )
+    assert 'aria-expanded="false"' in drawn and "hidden>" in drawn, (
+        "it does nothing without the script, so it is not there without it"
+    )
+    css = build_site.CSS
+    assert "figure.container:has(> iframe) { position: relative; }" in css
+    assert "html.model-open { overflow: hidden; }" in css, "the page must not scroll behind it"
+    assert "html.model-open #main > figure.expanded { position: fixed; inset: 0;" in css
+    script = build_site.EXPAND
+    assert "window.scrollTo(0, scrolled)" in script, (
+        "the figure leaves the flow while it is open, so the page under it moves"
+    )
+    assert 'event.key === "Escape"' in script
+    assert "button.hidden = false" in script

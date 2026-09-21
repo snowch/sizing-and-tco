@@ -443,23 +443,22 @@ async function resample() {
 if (TOOLKIT) $("resample").addEventListener("click", resample);
 
 // Shown only when the columns have stacked. Inside a chapter that is the embed's width, and
-// there are two ways to more of it: close the chapter's rails, which keeps the reader in the
-// chapter, or open the model on its own. The first is only worth saying where the rails exist,
-// so the embedding page is asked; on a phone it is the screen, and the sliders still work.
+// Expand, over this panel's corner, gives it the whole window without reloading it, so every
+// slider stays where it was put. Opening it on its own page is the other way, and starts over.
+// On a phone the embed is the screen already, and the sliders still work.
 {
   const note = $("narrow-note");
   if (window.self !== window.top) {
-    let rails = false;
-    try { rails = window.top.matchMedia("(min-width: 72rem)").matches; } catch (e) {}
-    note.textContent = rails
-      ? "Embedded at the chapter\u2019s width. Hide the chapter list and this page\u2019s outline, "
-        + "with the two buttons at the top, to give it the window \u2014 or "
-      : "Embedded at the chapter\u2019s width. ";
+    // The chapter floats its Expand button over this panel's top right corner, so the header
+    // keeps a space clear for it. On a phone the title wrapped under the button without it.
+    document.documentElement.classList.add("embedded");
+    note.textContent = "Embedded at the chapter\u2019s width. Press Expand, at the top right, "
+      + "for the whole window \u2014 or ";
     const open = document.createElement("a");
     open.href = location.href;
     open.target = "_blank";
     open.rel = "noopener";
-    open.textContent = rails ? "open this model on its own" : "Open this model on its own";
+    open.textContent = "open this model on its own";
     note.appendChild(open);
     note.appendChild(document.createTextNode(" for the full layout."));
   } else {
