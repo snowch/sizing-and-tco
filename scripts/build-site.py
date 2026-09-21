@@ -948,9 +948,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const box = document.createElement("div");
     box.className = "wide-block";
     el.replaceWith(box);
-    box.appendChild(el);
+    // The control first, so it sits above the block rather than over the top of it.
     const button = control();
     box.appendChild(button);
+    box.appendChild(el);
     wire(box, button);
   }
   document.addEventListener("keydown", (event) => { if (event.key === "Escape") close(); });
@@ -1367,7 +1368,7 @@ figure img { background: #fff; border-radius: 4px; }
    the model is not reloaded, so the sliders the reader has moved stay where they were put,
    and closing it returns them to the paragraph they were reading. The script puts the same
    button on a table or a block of code, but only where one is actually cut off. */
-:is(figure.container:has(> iframe), .wide-block) { position: relative; }
+figure.container:has(> iframe) { position: relative; }
 .expand { position: absolute; top: .5rem; right: .5rem; z-index: 2; display: flex;
           align-items: center; gap: .35rem; font: 12.5px/1 var(--chrome); color: var(--muted);
           background: var(--bg); border: 1px solid var(--edge); border-radius: 5px;
@@ -1375,9 +1376,15 @@ figure img { background: #fff; border-radius: 4px; }
 .expand:hover { border-color: var(--accent); color: var(--accent); }
 /* A block the script wrapped because its content is wider than the column. The wrapper holds
    the button; the block inside it is untouched, so an editable one is still the same node the
-   reader has been typing into. */
+   reader has been typing into.
+
+   The button sits above the block rather than over its corner. Over the corner is fine on a
+   model, whose own page reserves room for it in its header, but a table has content in that
+   corner: on a 390px phone the control sat on the third column's heading, and once open it sat
+   on the header row. Above it, right-aligned, it covers nothing at any width. */
 .wide-block { margin: 1.4rem 0; }
 .wide-block > :is(pre, table) { margin: 0; }
+.wide-block > .expand { position: static; width: fit-content; margin: 0 0 .4rem auto; }
 .editable-bar .expand { position: static; }
 html.model-open { overflow: hidden; }
 html.model-open #main .expanded { position: fixed; inset: 0; z-index: 40; margin: 0;
@@ -1387,6 +1394,8 @@ html.model-open #main .expanded > :is(iframe, pre, table) { flex: 1 1 auto; heig
           max-height: none; max-width: none; width: auto; border: 0; border-radius: 0;
           overflow: auto; }
 html.model-open #main .expanded > table { width: max-content; }
+html.model-open #main .wide-block.expanded > .expand { align-self: flex-end;
+          margin: .5rem .5rem .4rem auto; }
 html.model-open #main .expanded > figcaption { display: none; }
 html.model-open #main .expanded.editable-block { border-radius: 0; }
 iframe { width: 100%; border: 1px solid var(--rule); border-radius: 6px; height: 680px; }

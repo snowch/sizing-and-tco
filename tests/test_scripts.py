@@ -873,8 +873,8 @@ def test_a_model_can_take_the_window_without_losing_the_reader_s_place():
         "it does nothing without the script, so it is not there without it"
     )
     css = build_site.CSS
-    assert ":is(figure.container:has(> iframe), .wide-block) { position: relative; }" in css, (
-        "the button sits over the corner of the thing it opens, model or wrapped block"
+    assert "figure.container:has(> iframe) { position: relative; }" in css, (
+        "a model's button sits over the corner of the frame, which reserves room for it"
     )
     assert "html.model-open { overflow: hidden; }" in css, "the page must not scroll behind it"
     assert "html.model-open #main .expanded { position: fixed; inset: 0;" in css, (
@@ -895,6 +895,37 @@ def test_a_model_can_take_the_window_without_losing_the_reader_s_place():
     )
     assert 'event.key === "Escape"' in script
     assert "button.hidden = false" in script
+
+
+def test_a_control_never_sits_on_the_thing_it_opens():
+    """Over the corner works on a model and nowhere else, because a table has words there.
+
+    A model's own page reserves 104px in its header for the button above it, so the corner is
+    empty by arrangement. A table reserves nothing: on a 390px phone the control sat on the
+    third column's heading, and once open it sat on the header row, which is the one row the
+    reader needs to make sense of the rest. The wrapper puts it above instead, right-aligned,
+    where it covers nothing at any width.
+    """
+    build_site = site()
+    css = build_site.CSS
+    assert (
+        ".wide-block > .expand { position: static; width: fit-content; margin: 0 0 .4rem auto; }"
+        in css
+    ), "taken out of the flow it overlays the block; left in it, above and right, it does not"
+    assert "html.model-open #main .wide-block.expanded > .expand { align-self: flex-end;" in css, (
+        "open, the wrapper is a flex column, so the button is its first row rather than an "
+        "overlay on the header row"
+    )
+    assert ".wide-block { position: relative" not in css, (
+        "a wrapper that establishes a containing block invites the button back over the content"
+    )
+    # The stylesheet can only put the control on top if the script puts it there first.
+    script = build_site.EXPAND
+    wrapping = script[script.index('box.className = "wide-block"') :]
+    wrapping = wrapping[: wrapping.index("wire(box, button)")]
+    assert wrapping.index("box.appendChild(button)") < wrapping.index("box.appendChild(el)"), (
+        "the button is appended before the block it opens, or it renders underneath it"
+    )
 
 
 def test_a_figure_and_a_model_follow_the_page_into_the_dark():
