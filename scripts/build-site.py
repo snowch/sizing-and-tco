@@ -814,13 +814,17 @@ SEARCH = r"""<script>
 </script>"""
 
 
-#: The chapter list, and whether the reader wants it. On a phone it is closed by default and the
-#: button opens it over the page. Where there is room it is open by default, the same button
-#: closes it, and the browser remembers that choice — per browser, not per page, and before the
-#: page paints, so a reader who closed it does not watch it close again on every chapter.
+#: The two rails, and whether the reader wants them. The chapter list is closed by default on a
+#: phone and the button opens it over the page; where there is room it is open by default and the
+#: same button closes it. This page's outline is on the right, and exists only where there is room
+#: for it, so its button is there and nowhere else. Either choice is remembered — per browser, not
+#: per page, and read before the page paints, so a reader who closed a rail does not watch it
+#: close again on every chapter. A reader working through a wide graph closes both.
 MENU = r"""<script>
 try {
-  if (localStorage.getItem("nav") === "closed") document.documentElement.classList.add("nav-closed");
+  const root = document.documentElement;
+  if (localStorage.getItem("nav") === "closed") root.classList.add("nav-closed");
+  if (localStorage.getItem("toc") === "closed") root.classList.add("toc-closed");
 } catch (e) {}
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.documentElement, nav = document.getElementById("nav"),
@@ -841,6 +845,23 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   wide.addEventListener("change", reflect);
   reflect();
+
+  const outline = document.getElementById("outline"), roomy = matchMedia("(min-width: 72rem)");
+  const reflectOutline = () => {
+    // Below the breakpoint the rail is not laid out at all, so neither is the button: a
+    // control for something the reader cannot see is worse than no control.
+    outline.hidden = !roomy.matches;
+    outline.setAttribute("aria-expanded", String(!root.classList.contains("toc-closed")));
+  };
+  outline.addEventListener("click", () => {
+    const closed = root.classList.toggle("toc-closed");
+    try {
+      if (closed) localStorage.setItem("toc", "closed"); else localStorage.removeItem("toc");
+    } catch (e) {}
+    reflectOutline();
+  });
+  roomy.addEventListener("change", reflectOutline);
+  reflectOutline();
 });
 </script>"""
 
@@ -950,6 +971,8 @@ PAGE = """<!doctype html>
   <button id="find-open" class="find" type="button" hidden>Search <kbd>/</kbd></button>
   <button id="offline" class="offline" type="button" hidden data-state=""
           title="Fetch the Python runtime now, so the models run with no network"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 1.5v8.5m0 0L4.8 6.8M8 10l3.2-3.2M2 11.5v2.5h12v-2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Keep offline</span></button>
+  <button id="outline" type="button" aria-label="On this page" aria-controls="toc" hidden
+          title="Show or hide this page’s outline"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="1.5" y="2.7" width="13" height="10.6" rx="1.3" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.7 2.7v10.6" stroke="currentColor" stroke-width="1.4"/></svg></button>
   <button id="menu" type="button" aria-label="Chapters" aria-controls="nav"
           title="Show or hide the chapter list">☰</button>
 </header>
@@ -959,7 +982,7 @@ PAGE = """<!doctype html>
 {body}
 {turn}
   </main>
-  <aside class="toc">{toc}</aside>
+  <aside id="toc" class="toc" aria-label="On this page">{toc}</aside>
 </div>
 <dialog id="find" aria-label="Search the book">
   <input id="find-q" type="search" placeholder="Search the book…" autocomplete="off"
@@ -1023,9 +1046,14 @@ a.xref:hover { text-decoration: underline; }
        backdrop-filter: saturate(1.6) blur(8px); }
 .brand { font-family: var(--chrome); font-weight: 600; font-size: 15px; letter-spacing: -.01em;
          text-decoration: none; color: var(--ink); }
-#menu { font: 16px/1 var(--chrome); background: none; color: var(--muted);
+/* Three controls in the header are written `hidden` and revealed by the script that makes them
+   work. Saying so in the markup was not enough: `display` on a class beats the browser's own
+   rule for the attribute, so all three showed with scripts off and did nothing when pressed. */
+[hidden] { display: none !important; }
+:is(#menu, #outline) { font: 16px/1 var(--chrome); background: none; color: var(--muted);
         border: 1px solid var(--edge); border-radius: 5px; cursor: pointer; padding: .4rem .6rem; }
-#menu:hover { border-color: var(--accent); color: var(--accent); }
+:is(#menu, #outline):hover { border-color: var(--accent); color: var(--accent); }
+#outline { display: flex; align-items: center; padding: .45rem .55rem; }
 
 /* Search. The control is hidden in the markup and shown by the script, because without the
    script it does nothing at all. */
@@ -1082,7 +1110,7 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
        font-weight: 600; }
 
 /* Frame */
-.shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 82rem;
+.shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 96rem;
          margin-inline: auto; }
 /* Hidden until there is room, and declared before the rules that show them so that those win
    by order rather than by !important. Below the first breakpoint the chapter list opens over
@@ -1097,26 +1125,21 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
   .nav { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
-  /* The same button closes it here, and the column it held goes to the chapter. The line
-     length does not change: prose, headings, code and notes keep the measure and stay centred
-     in the wider column. What spreads into the room is what a reader closes the list to see
-     more of -- an embedded model, which reaches its two-column layout inside a chapter on a
-     tablet once the list is away, the runner, and a table wider than the prose. A browser
-     without :has() leaves the model at the measure, which is what every browser did before. */
   html.nav-closed .shell { grid-template-columns: minmax(0, 1fr); }
   html.nav-closed .nav { display: none; }
-  html.nav-closed main { max-width: none; }
-  html.nav-closed main > * { max-width: var(--measure); margin-inline: auto; }
-  html.nav-closed main > :is(figure:has(> iframe), figure:has(> .runner), table) {
-    max-width: 100%; }
-  html.nav-closed main > figure > figcaption { margin-inline: auto; }
 }
+/* Two rails, and a reader reading a wide graph wants neither. Each has a button of its own, so
+   the chapter takes back 272px, 224px, or both -- and with both away the shell's own cap goes
+   too, because at that point the reader has asked for the window. */
 @media (min-width: 72rem) {
   .shell { grid-template-columns: 17rem minmax(0, 1fr) 14rem; }
   html.nav-closed .shell { grid-template-columns: minmax(0, 1fr) 14rem; }
+  html.toc-closed .shell { grid-template-columns: 17rem minmax(0, 1fr); }
+  html.nav-closed.toc-closed .shell { grid-template-columns: minmax(0, 1fr); max-width: none; }
   .toc { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
+  html.toc-closed .toc { display: none; }
 }
 .nav { border-right: 1px solid var(--edge); }
 .toc { border-left: 1px solid var(--edge); }
@@ -1138,9 +1161,25 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
 
 /* Prose */
 /* Centred, because the slack has to go somewhere and all of it on the right reads as a mistake.
-   Below the first breakpoint that is the whole viewport; above it, the column it sits in. */
+   Below the first breakpoint this cap is the whole of the layout; above it, the rule below
+   hands the cap to each child instead, so a figure can be wider than a paragraph. */
 main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem; max-width: calc(var(--measure) + 5rem);
        min-width: 0; width: 100%; margin-inline: auto; }
+/* Above the first breakpoint the measure belongs to each thing in the chapter rather than to
+   the column holding them, so the line length is the same at every width -- prose, headings,
+   code and notes keep it and stay centred -- while what a reader came for spreads into
+   whatever room there is: an embedded model, the runner, and a table wider than the prose.
+   This used to apply only with the chapter list closed, which left a model 573px wide on a
+   1512px laptop, under the 860px its own layout needs to put the inputs beside the graph,
+   with 452px of the window empty. It sits here, after the cap it undoes, because a media
+   query adds no specificity and the later rule is the one that wins. A browser without :has()
+   leaves the model at the measure, which is what every browser did before. */
+@media (min-width: 58rem) {
+  main { max-width: none; }
+  main > * { max-width: var(--measure); margin-inline: auto; }
+  main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: 100%; }
+  main > figure > figcaption { margin-inline: auto; }
+}
 main :is(h1, h2, h3, h4) { font-family: var(--chrome); letter-spacing: -.012em;
                            scroll-margin-top: calc(var(--top) + 1rem); }
 h1 { font-size: clamp(1.6rem, 5.4vw, 2rem); font-weight: 700; line-height: 1.18;
@@ -1196,6 +1235,14 @@ figure img { background: #fff; border-radius: 4px; }
 .admonition.important { border-left-color: var(--stop); }
 iframe { width: 100%; border: 1px solid var(--rule); border-radius: 6px; height: 680px; }
 iframe.viewer { height: 780px; }
+/* A model lays itself out from its own width: stacked, then the inputs beside the graph at
+   860px, then the detail panel too at 1100px. Each of those is a different height, and one
+   fixed box fits none of them. The figure is the model's container, so the box follows.
+   Measured at 578px and 791px of content; a browser without container queries keeps 780px,
+   which is what every browser had before. */
+figure:has(> iframe.viewer) { container-type: inline-size; }
+@container (min-width: 860px) { iframe.viewer { height: 600px; } }
+@container (min-width: 1101px) { iframe.viewer { height: 812px; } }
 @media (max-width: 720px) { iframe { height: 80vh; min-height: 540px; } }
 
 /* A quoted piece of the model the reader may edit where the chapter shows it. Nothing but the
