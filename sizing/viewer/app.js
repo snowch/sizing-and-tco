@@ -154,14 +154,17 @@ function drawGraph(values, blocked) {
     const unmeasured = node.kind === "measured" && !node.measured;
     const ceiling = node.kind === "ceiling" ? ceilingState(PAYLOAD, name, values) : null;
     let fill = `var(--${node.kind})`, edge = `var(--${node.kind}-edge)`;
-    if (unmeasured || blocked.has(name)) fill = "#ffffff";
+    // Nothing here yet, so the box is the page showing through: white on a white page,
+    // dark on a dark one. A literal white would be a slab in the dark -- and, since the
+    // label follows the palette, white text on it.
+    if (unmeasured || blocked.has(name)) fill = "var(--bg)";
     if (ceiling && ceiling.verdict === "over") fill = "var(--ceiling)";
     const dash = unmeasured || blocked.has(name) ? ' stroke-dasharray="3 3"' : "";
     const value = blocked.has(name) ? "—" : fmt(values[name], node.unit);
     boxes.push(
       `<g class="node" data-node="${name}"><title>${name}</title>` +
       `<rect x="${x}" y="${y}" width="${BOX.w}" height="${BOX.h}" rx="3" fill="${fill}" stroke="${edge}" stroke-width="${selected === name ? 2.2 : 1.2}"${dash}/>` +
-      `<text x="${x + 6}" y="${y + 13}">${fit(node.label)}</text>` +
+      `<text x="${x + 6}" y="${y + 13}" fill="var(--ink)">${fit(node.label)}</text>` +
       `<text x="${x + BOX.w - 6}" y="${y + 26}" text-anchor="end" fill="var(--muted)" font-size="9">${value}</text>` +
       `</g>`
     );
@@ -266,7 +269,7 @@ function histogram(node) {
       const x = (i / counts.length) * 100;
       const w = 100 / counts.length;
       const h = (c / tallest) * 100;
-      return `<rect x="${x}%" y="${100 - h}%" width="${w}%" height="${h}%" fill="#9fc0dd"/>`;
+      return `<rect x="${x}%" y="${100 - h}%" width="${w}%" height="${h}%" fill="var(--hist)"/>`;
     })
     .join("");
   return `<svg class="hist" preserveAspectRatio="none" viewBox="0 0 100 100">${bars}</svg>` +

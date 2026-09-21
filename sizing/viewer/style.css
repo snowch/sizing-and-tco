@@ -6,14 +6,19 @@
   --derived: #eceff1; --derived-edge: #90a4ae;
   --measured: #fde8c8; --measured-edge: #c8791a;
   --ceiling: #f8d3d0; --ceiling-edge: #b3413a;
-  --ok: #2e7d32; --warn: #c8791a; --over: #b3413a;
+  --ok: #2d7a31; --warn: #9b5e14; --over: #b3413a;
   --accent: #1a73e8; --accent-deep: #1660c4; --on-accent: #ffffff;
   --good: #eef6ee; --good-edge: #b7d8b7; --bad: #fdecea; --bad-edge: #f5b5ae;
   --edge-line: #607d8b; --row-hover: #eef3f8; --row-focused: #dbe7f3;
   --ok-wash: #e6f4e7; --warn-wash: #fdf0dc; --over-wash: #fbe3e1;
   --stale-wash: #fdf6ea; --blocked-wash: #fdeeed;
+  --hist: #9fc0dd;
 }
-/* Read in the dark. The chapter around this panel follows the reader's system, and a white
+/* A status colour is also the text of its badge, so each one has to clear 4.5:1 against
+ * its own wash as well as the page: `ok` on `ok-wash`, `warn` on `warn-wash`, `over` on
+ * `over-wash`. The amber was 3.0:1 in daylight and the red 3.9:1 in the dark.
+ *
+ * Read in the dark. The chapter around this panel follows the reader's system, and a white
  * slab in the middle of a dark page reads as a hole in it. Colour by colour, not an invert:
  * amber still means a measured constant and red still means a ceiling. */
 @media (prefers-color-scheme: dark) {
@@ -23,12 +28,13 @@
     --derived: #232d33; --derived-edge: #6c828d;
     --measured: #3a2c15; --measured-edge: #d9922c;
     --ceiling: #3a1f1d; --ceiling-edge: #cf5a52;
-    --ok: #4f9c53; --warn: #d9922c; --over: #cf5a52;
+    --ok: #51a055; --warn: #d9922c; --over: #d46c65;
     --accent: #7fb2dd; --accent-deep: #9cc6eb; --on-accent: #10171b;
     --good: #1c2a1d; --good-edge: #2f5a32; --bad: #2e1a19; --bad-edge: #6b3330;
     --edge-line: #7f939e; --row-hover: #1f2b31; --row-focused: #22384a;
     --ok-wash: #1c2a1d; --warn-wash: #2e2515; --over-wash: #2e1a19;
     --stale-wash: #2a2317; --blocked-wash: #2e1c1b;
+    --hist: #4d7ea8;
   }
 }
 * { box-sizing: border-box; }

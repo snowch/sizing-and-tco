@@ -765,8 +765,8 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     # Four states, one per pair of rails, and the cap comes off only when both are away.
     column = "minmax(0, calc(84rem + 5rem))"
     for selector in (
-        f"html.nav-closed .shell {{ grid-template-columns: {column} 14rem; }}",
-        f"html.toc-closed .shell {{ grid-template-columns: 17rem {column}; }}",
+        f"html.nav-closed .shell {{ grid-template-columns: {column} var(--toc); }}",
+        f"html.toc-closed .shell {{ grid-template-columns: var(--nav) {column}; }}",
         f"grid-template-columns: {column}; max-width: none; }}",
         "html.toc-closed .toc { display: none; }",
     ):
@@ -779,6 +779,32 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     opening = build_site.MENU.split("document.addEventListener")[0]
     assert 'localStorage.getItem("nav") === "closed"' in opening
     assert 'localStorage.getItem("toc") === "closed"' in opening
+
+
+def test_the_rails_take_the_room_only_where_there_is_room():
+    """A chapter list that wraps is hard to scan, and above 96rem the wrapping is free to fix.
+
+    Sixteen of the chapter list's thirty-nine entries wrapped onto a second line at 17rem, and
+    "What this cannot tell you" wrapped in a 14rem outline that needed 228px. The widths are
+    variables so one rule moves both, and that rule waits for 96rem: under it the middle column
+    needs every pixel, because at 1512 the wider rails leave an embedded model 853px and its own
+    layout puts the inputs beside the graph only from 861px. A 2000px window used to spend 80px
+    on margin outside a 120rem shell while the rails wrapped, which is where the room comes from.
+    """
+    css = site().CSS
+    assert "--nav: 17rem; --toc: 14rem;" in css, "the narrow pair is the default"
+    assert "@media (min-width: 96rem) {\n  :root { --nav: 21rem; --toc: 15rem; }\n}" in css, (
+        "one rule widens both rails, and only above the width that makes it free"
+    )
+    assert css.index("--nav: 21rem") > css.index("--nav: 17rem"), (
+        "a media query adds no specificity, so the wider pair has to come second"
+    )
+    assert "max-width: 126rem;" in css, (
+        "the shell's own cap is what hands the rails their extra room rather than a margin"
+    )
+    assert "grid-template-columns: 17rem" not in css and "5rem)) 14rem" not in css, (
+        "every grid rule reads the variables, or widening one rail moves only some of them"
+    )
 
 
 def test_a_models_box_follows_the_layout_the_model_chose():
@@ -893,6 +919,93 @@ def test_a_figure_and_a_model_follow_the_page_into_the_dark():
     )
 
 
+def _palettes(css):
+    """The light and the dark value of every colour a stylesheet names."""
+    out = {}
+    dark_at = css.find("prefers-color-scheme: dark")
+    for block in re.finditer(r":root[^{]*\{(.*?)\n\s*\}", css, re.S):
+        scheme = "dark" if dark_at != -1 and block.start() > dark_at else "light"
+        for name, value in re.findall(r"(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{3,8})", block.group(1)):
+            out.setdefault(scheme, {})[name] = value
+    return out
+
+
+def _contrast(one, other):
+    """WCAG relative contrast between two hex colours."""
+
+    def light(value):
+        value = value.lstrip("#")
+        if len(value) == 3:
+            value = "".join(c * 2 for c in value)
+        channels = [int(value[i : i + 2], 16) / 255 for i in (0, 2, 4)]
+        linear = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in channels]
+        return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+
+    high, low = sorted((light(one), light(other)), reverse=True)
+    return (high + 0.05) / (low + 0.05)
+
+
+#: Which colour is read against which surface. A pair here is a pair a reader actually meets:
+#: the book's three greys on its three backgrounds, and in the model the node's label and its
+#: value on every kind of node, plus each status badge on its own wash.
+BOOK_PAIRS = [
+    (ink, on) for ink in ("--ink", "--muted", "--faint") for on in ("--bg", "--panel", "--code")
+]
+VIEWER_PAIRS = [
+    (ink, on)
+    for ink in ("--ink", "--muted")
+    for on in ("--bg", "--panel", "--input", "--derived", "--measured", "--ceiling")
+]
+VIEWER_PAIRS += [("--ok", "--ok-wash"), ("--warn", "--warn-wash"), ("--over", "--over-wash")]
+
+
+def test_every_colour_a_reader_has_to_read_clears_the_threshold():
+    """Text the book asks somebody to read is at least 4.5:1 against what is behind it.
+
+    None of this is a matter of taste. `--faint` carried every table's headings at 2.4:1 on a
+    code block, which is about half of what the smallest readable text needs, and in the model
+    the amber badge sat on its own amber wash at 3.0:1. Both read as a decision about emphasis
+    until you measure them. The pairs below are the ones a reader meets, so the numbers move
+    only when a designer decides they should.
+    """
+    for label, css, pairs in (
+        ("the book", site().CSS, BOOK_PAIRS),
+        ("the model", (ROOT / "sizing" / "viewer" / "style.css").read_text(), VIEWER_PAIRS),
+    ):
+        palettes = _palettes(css)
+        assert set(palettes) == {"light", "dark"}, f"{label}: both schemes are declared"
+        for scheme, colours in palettes.items():
+            for ink, on in pairs:
+                assert ink in colours and on in colours, f"{label} {scheme}: {ink} on {on}"
+                got = _contrast(colours[ink], colours[on])
+                assert got >= 4.5, (
+                    f"{label}, in the {scheme}: {ink} ({colours[ink]}) on {on} ({colours[on]}) "
+                    f"is {got:.2f}:1, and text this size needs 4.5:1"
+                )
+
+
+def test_the_graph_paints_its_own_labels():
+    """SVG text is black until something says otherwise, and the palette cannot reach it.
+
+    The node's value carried `fill="var(--muted)"` from the start; its label carried nothing, so
+    it fell back to the SVG default. In daylight black on a pale node is right by accident. Once
+    the panel learned to go dark the fills followed the palette and the label did not, which put
+    black on `#232d33` -- 1.4:1, and 62 of the 124 labels in one model were that.
+    """
+    drawing = (ROOT / "sizing" / "viewer" / "app.js").read_text()
+    labels = re.findall(r"<text [^>]*>", drawing)
+    assert labels, "the graph draws its nodes as SVG text"
+    for label in labels:
+        assert "fill=" in label, (
+            f"every label says what colour it is: {label!r} inherits, and SVG inherits black"
+        )
+    outside = re.sub(r"^\s*(//|\*|/\*).*$", "", drawing, flags=re.M)
+    assert not re.findall(r"#[0-9a-fA-F]{3,8}\b", outside), (
+        "a colour written into the drawing code cannot follow the reader's page; every one "
+        "belongs in the palette, where the dark scheme can answer it"
+    )
+
+
 def test_the_three_columns_sit_together():
     """The middle column is the widest thing a chapter holds, and the group is what centres.
 
@@ -901,7 +1014,7 @@ def test_the_three_columns_sit_together():
     adrift rather than as one.
     """
     css = site().CSS
-    assert "grid-template-columns: 17rem minmax(0, calc(84rem + 5rem));" in css
+    assert "grid-template-columns: var(--nav) minmax(0, calc(84rem + 5rem));" in css
     assert "justify-content: center;" in css
     assert "minmax(0, 1fr)" not in css.split("@media (min-width: 58rem)")[1], (
         "above the first breakpoint no column is a fraction of the window any more"
