@@ -924,6 +924,18 @@ document.addEventListener("DOMContentLoaded", () => {
   // Everything else: only where the content is wider than the column it was given. A block
   // with its own bar puts the button in the bar; one without is wrapped so it has somewhere.
   const cut = (el) => el.scrollWidth > el.clientWidth + 1;
+  // A table never overflows: `width: max-content` with `max-width: 100%` makes it shrink to
+  // the column and wrap every cell instead, so `cut` said no to 65 of the book's 96 tables
+  // while a reader saw "USD / TB / month" broken over three lines. Ask each one what it would
+  // be if nothing squeezed it.
+  const squeezed = (el) => {
+    if (el.tagName !== "TABLE") return cut(el);
+    const had = el.style.maxWidth;
+    el.style.maxWidth = "none";
+    const wants = el.scrollWidth;
+    el.style.maxWidth = had;
+    return wants > el.clientWidth + 1;
+  };
   for (const block of document.querySelectorAll("#main .editable-block")) {
     const pre = block.querySelector("pre");
     if (!pre || !cut(pre)) continue;
@@ -932,7 +944,7 @@ document.addEventListener("DOMContentLoaded", () => {
     wire(block, button);
   }
   for (const el of document.querySelectorAll("#main > pre, #main > table, #main table")) {
-    if (!cut(el)) continue;
+    if (!squeezed(el)) continue;
     const box = document.createElement("div");
     box.className = "wide-block";
     el.replaceWith(box);
@@ -1191,7 +1203,7 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
        font-weight: 600; }
 
 /* Frame */
-.shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 96rem;
+.shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 120rem;
          margin-inline: auto; }
 /* Hidden until there is room, and declared before the rules that show them so that those win
    by order rather than by !important. Below the first breakpoint the chapter list opens over
@@ -1202,27 +1214,26 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
    sidebars, and a single breakpoint at the larger of those left a 1024px tablet with no
    navigation and a third of its width empty. */
 @media (min-width: 58rem) {
-  /* The middle column is the chapter's width and no wider, and the group of columns is what
-     centres. A middle column of `1fr` put 230px of nothing between the chapter list and the
-     first word, and the same again before the outline, so three columns read as three things
-     adrift rather than as a page. */
-  .shell { grid-template-columns: 17rem minmax(0, calc(var(--measure) + 5rem));
+  /* The middle column is the widest thing a chapter holds -- a model at 84rem -- and the group
+     of columns is what centres. `1fr` instead would make it whatever the window has left, which
+     is a column sized by the screen rather than by the book. */
+  .shell { grid-template-columns: 17rem minmax(0, calc(84rem + 5rem));
            justify-content: center; }
   .nav { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
-  html.nav-closed .shell { grid-template-columns: minmax(0, calc(var(--measure) + 5rem)); }
+  html.nav-closed .shell { grid-template-columns: minmax(0, calc(84rem + 5rem)); }
   html.nav-closed .nav { display: none; }
 }
 /* Two rails, and a reader reading a wide graph wants neither. Each has a button of its own, so
    the chapter takes back 272px, 224px, or both -- and with both away the shell's own cap goes
    too, because at that point the reader has asked for the window. */
 @media (min-width: 72rem) {
-  .shell { grid-template-columns: 17rem minmax(0, calc(var(--measure) + 5rem)) 14rem; }
-  html.nav-closed .shell { grid-template-columns: minmax(0, calc(var(--measure) + 5rem)) 14rem; }
-  html.toc-closed .shell { grid-template-columns: 17rem minmax(0, calc(var(--measure) + 5rem)); }
+  .shell { grid-template-columns: 17rem minmax(0, calc(84rem + 5rem)) 14rem; }
+  html.nav-closed .shell { grid-template-columns: minmax(0, calc(84rem + 5rem)) 14rem; }
+  html.toc-closed .shell { grid-template-columns: 17rem minmax(0, calc(84rem + 5rem)); }
   html.nav-closed.toc-closed .shell {
-    grid-template-columns: minmax(0, calc(var(--measure) + 5rem)); max-width: none; }
+    grid-template-columns: minmax(0, calc(84rem + 5rem)); max-width: none; }
   .toc { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
@@ -1265,14 +1276,19 @@ main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem; max-width: calc(var(--measur
    the left of its column. The rules also sit here, after the cap they undo, because a media
    query adds no specificity of its own.
 
-   One width, and the same one: a chapter is a column of reading, and a model three times the
-   width of the paragraph above it made the page hard to read whatever it gained the graph.
-   Anything that does not fit in the column says so and takes the window on a button, which is
-   the only place a reader wants it wider. That is every model, and whatever code or table is
-   cut off at this width. */
+   Three widths, each what its content needs, all centred on the same middle. Prose keeps the
+   measure: 576px is about seventy characters, and a longer line is harder to read however much
+   room the window has. Code takes up to 60rem, because the book's own lines stop at 100 columns
+   and its widest block wants 942px -- at the measure, 121 blocks over 33 pages were cut off
+   mid-word and the bar above them wrapped onto two lines. A model, the runner and a table take
+   up to 84rem, which is 2.3 times the prose: wide enough that a model shows its inputs beside
+   its graph, near enough that the page still reads as one column. Nothing goes wider in the
+   flow; what still does not fit says so and takes the window on a button. */
 @media (min-width: 58rem) {
   #main { max-width: none; }
   #main > * { max-width: var(--measure); margin-inline: auto; }
+  #main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: min(100%, 84rem); }
+  #main > :is(pre, .editable-block, .problem, figure:has(> pre)) { max-width: min(100%, 60rem); }
   #main > figure > figcaption { margin-inline: auto; }
 }
 main :is(h1, h2, h3, h4) { font-family: var(--chrome); letter-spacing: -.012em;
@@ -1354,6 +1370,7 @@ html.model-open #main .expanded { position: fixed; inset: 0; z-index: 40; margin
 html.model-open #main .expanded > :is(iframe, pre, table) { flex: 1 1 auto; height: auto;
           max-height: none; max-width: none; width: auto; border: 0; border-radius: 0;
           overflow: auto; }
+html.model-open #main .expanded > table { width: max-content; }
 html.model-open #main .expanded > figcaption { display: none; }
 html.model-open #main .expanded.editable-block { border-radius: 0; }
 iframe { width: 100%; border: 1px solid var(--rule); border-radius: 6px; height: 680px; }

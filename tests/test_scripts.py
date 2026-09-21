@@ -291,6 +291,30 @@ def playground():
     return module
 
 
+def test_the_runner_splits_in_two_only_once_both_halves_hold_the_model():
+    """A second column is worth having only when the first still shows the file as written.
+
+    The runner puts the model beside its results, which it earns only if the model is readable.
+    It split at 900px, so a chapter embedding it at 933px gave the editor 443px and broke 183 of
+    the model's 685 lines -- the generator wraps a node's source at 66 characters and 443px
+    holds about 56. Worse, the page capped itself at 1080px, so every column above that width
+    stayed 516px and a bigger window bought the reader nothing at all, Expand included.
+    """
+    import re
+
+    css = playground().CSS
+    split = int(re.search(r"@media \(min-width: (\d+)px\) \{ main \{ grid-template", css)[1])
+    cap = int(re.search(r"body \{[^}]*?max-width: (\d+)px", css, re.S)[1])
+    assert cap > split, (
+        "a cap at or below the split freezes both columns at half of it, so widening the "
+        "window -- or pressing Expand -- changes nothing"
+    )
+    assert split >= 1300, (
+        "half of the split, less the gap and the padding, is what the editor gets; under about "
+        "600px the file the chapter is asking the reader to read arrives broken"
+    )
+
+
 def test_every_playground_the_build_ships_is_reachable_from_its_chapter():
     """A page nobody links is a page nobody reads, and nobody proofreads either.
 
@@ -739,7 +763,7 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
         "written hidden showed anyway and did nothing when pressed"
     )
     # Four states, one per pair of rails, and the cap comes off only when both are away.
-    column = "minmax(0, calc(var(--measure) + 5rem))"
+    column = "minmax(0, calc(84rem + 5rem))"
     for selector in (
         f"html.nav-closed .shell {{ grid-template-columns: {column} 14rem; }}",
         f"html.toc-closed .shell {{ grid-template-columns: 17rem {column}; }}",
@@ -751,10 +775,6 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     assert css.index("#main > * { max-width: var(--measure); margin-inline: auto; }") > css.index(
         "main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;"
     ), "a media query adds no specificity, so the rule that lifts the cap has to come after it"
-    assert "#main > :is(" not in css, (
-        "a chapter is one column: text and graphics are the same width, and what does not fit "
-        "takes the window on a button rather than stretching the page around it"
-    )
     # Both choices are read before the page paints, so a rail does not close again on every page.
     opening = build_site.MENU.split("document.addEventListener")[0]
     assert 'localStorage.getItem("nav") === "closed"' in opening
@@ -769,20 +789,39 @@ def test_a_models_box_follows_the_layout_the_model_chose():
     assert "@container (min-width: 1101px) { iframe.viewer { height: 812px; } }" in css
 
 
-def test_a_chapter_is_one_column_wide():
-    """One width for everything in it, addressed by the id so the children's margins do not win.
+def test_a_chapter_is_three_widths_on_one_middle():
+    """Prose, code and a model each get what they need, addressed by the id so margins lose.
 
     `p`, every heading, `.admonition`, `.editable-block` and the turn all write `margin: x 0 y`,
     which is the same specificity as `main > *` and comes later in the sheet, so the element
-    rule won and the whole page stacked against the left of its column. Widths per kind of
-    content came next and were worse: a model three times the width of the paragraph above it
-    is hard to read however much it gains the graph.
+    rule won and the whole page stacked against the left of its column. One width for all three
+    was worse still in the other direction: the measure cut 121 code blocks over 33 pages off
+    mid-word and left a model at 576px, far under the 860px its own layout needs to put the
+    inputs beside the graph. Each width is a cap rather than a size, so all three centre on the
+    same middle and the page still reads as one column.
     """
     css = site().CSS
     assert "#main > * { max-width: var(--measure); margin-inline: auto; }" in css, (
         "centring a chapter's children has to out-specify the children's own margin rules"
     )
-    assert "60rem" not in css and "84rem" not in css, "one width, not a width per kind"
+    wide = "#main > :is(figure:has(> iframe), figure:has(> .runner), table)"
+    code = "#main > :is(pre, .editable-block, .problem, figure:has(> pre))"
+    assert f"{wide} {{ max-width: min(100%, 84rem); }}" in css, (
+        "a model shows its inputs beside its graph only from 860px, and the runner and the "
+        "book's widest tables want the same room"
+    )
+    assert f"{code} {{ max-width: min(100%, 60rem); }}" in css, (
+        "the book's own lines stop at 100 columns, which its widest block draws at 942px"
+    )
+    for rule in (wide, code):
+        assert css.index(rule) > css.index("#main > * {"), (
+            "the measure is the default and the wider caps are the exceptions, so they have to "
+            "come after it -- at equal specificity the later rule wins"
+        )
+    assert "min(100%," in css, (
+        "a cap in rem alone overflows the column on a narrow window; each one yields to the "
+        "room there actually is"
+    )
 
 
 def test_a_model_can_take_the_window_without_losing_the_reader_s_place():
@@ -819,6 +858,11 @@ def test_a_model_can_take_the_window_without_losing_the_reader_s_place():
         "code and tables get the control only where they are actually cut off, which the page "
         "can know only by measuring"
     )
+    assert 'if (el.tagName !== "TABLE") return cut(el);' in build_site.EXPAND, (
+        "a table shrinks to its column and wraps every cell rather than overflowing it, so "
+        "`cut` said no to 65 of the book's 96 tables while the reader saw a heading broken "
+        "over three lines; each one has to be asked what it would be unsqueezed"
+    )
     script = build_site.EXPAND
     assert "window.scrollTo(0, scrolled)" in script, (
         "the figure leaves the flow while it is open, so the page under it moves"
@@ -850,14 +894,14 @@ def test_a_figure_and_a_model_follow_the_page_into_the_dark():
 
 
 def test_the_three_columns_sit_together():
-    """The middle column is the chapter's width, and the group of columns is what centres.
+    """The middle column is the widest thing a chapter holds, and the group is what centres.
 
     A middle column of `1fr` left 230px of nothing between the chapter list and the first word
     of the chapter, and the same again before the outline, so the page read as three things
     adrift rather than as one.
     """
     css = site().CSS
-    assert "grid-template-columns: 17rem minmax(0, calc(var(--measure) + 5rem));" in css
+    assert "grid-template-columns: 17rem minmax(0, calc(84rem + 5rem));" in css
     assert "justify-content: center;" in css
     assert "minmax(0, 1fr)" not in css.split("@media (min-width: 58rem)")[1], (
         "above the first breakpoint no column is a fraction of the window any more"
