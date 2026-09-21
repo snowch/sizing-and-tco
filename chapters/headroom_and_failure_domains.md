@@ -175,7 +175,7 @@ The one piece of headroom that is arithmetic rather than judgement. Then notice 
 small fleets, and what it says about planned work.
 
 ```bash
-python3 -m pytest tests/headroom_and_failure_domains/test_problem_1_rebuild.py
+python3 -m pytest tests/headroom_and_failure_domains/test_problem_1_rebuild.py -m problem
 ```
 
 **11.2 — Two margins are not one margin twice.**
@@ -183,7 +183,7 @@ Compose several independent margins. Do not add them; the clue that you cannot i
 does to three large ones. Then look at what three separately reasonable requests leave you.
 
 ```bash
-python3 -m pytest tests/headroom_and_failure_domains/test_problem_2_compose.py
+python3 -m pytest tests/headroom_and_failure_domains/test_problem_2_compose.py -m problem
 ```
 
 **11.3 — Add a ceiling.**
@@ -193,7 +193,7 @@ out of it. The toolkit refuses it three different ways before it accepts it, and
 is a rule this chapter argues for.
 
 ```bash
-python3 -m pytest tests/headroom_and_failure_domains/test_problem_3_ceiling.py
+python3 -m pytest tests/headroom_and_failure_domains/test_problem_3_ceiling.py -m problem
 ```
 
 **11.4 — Your margin, and who chose it.** No test: the answer is a number somebody chose, and the

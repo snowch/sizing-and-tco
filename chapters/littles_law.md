@@ -194,7 +194,7 @@ time it is being served. Checked at the point estimate first, then across every 
 model drew.
 
 ```bash
-python3 -m pytest tests/littles_law/test_problem_1_the_law.py
+python3 -m pytest tests/littles_law/test_problem_1_the_law.py -m problem
 ```
 
 **5.2 — The law backwards.**
@@ -203,7 +203,7 @@ already exposes. Then decide what to return when nothing is arriving. That decis
 judgement, not arithmetic.
 
 ```bash
-python3 -m pytest tests/littles_law/test_problem_2_backwards.py
+python3 -m pytest tests/littles_law/test_problem_2_backwards.py -m problem
 ```
 
 **5.3 — Your own steady state.** No test: the measurement is of your queue, and nothing here can

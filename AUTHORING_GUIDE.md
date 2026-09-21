@@ -275,8 +275,11 @@ A problem is a stub the reader edits and a test that passes only when they are r
   files `sizing.playground.toolkit.problem_files` lists. So a test imports what it grades from
   the chapter's `stubs.py` by name, names every model file and result it reads as a quoted path
   or a literal `load_result("...")`, and `tests/test_problems.py` fails when one is missing. The
-  `python3 -m pytest tests/...` line under the problem is how the page finds the test. It is
-  drawn as a one-line note under the Check, for a reader at a desk, not as a block.
+  `python3 -m pytest tests/... -m problem` line under the problem is how the page finds the
+  test. It is drawn as a one-line note under the Check, for a reader at a desk, not as a block.
+  The marker is part of the form: it runs the reader's tests and deselects the scaffolding
+  beside them, which is what the Check counts, so a desk and the page give the same verdict.
+  Without it a reader is told four of six tests pass before they have typed anything.
 - **The form follows what the chapter taught.** A stub takes plain numbers, arrays, dicts or a
   callable the test builds; the test does the loading and evaluating, so the reader never
   drives the toolkit's Python API, which no chapter teaches. Where the chapter taught the model

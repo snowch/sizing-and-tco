@@ -189,7 +189,7 @@ Bisect rather than step, and turn the number of draws down while searching. A se
 twice is a search nobody runs.
 
 ```bash
-python3 -m pytest tests/the_sizing_model/test_problem_1_risk.py
+python3 -m pytest tests/the_sizing_model/test_problem_1_risk.py -m problem
 ```
 
 **12.2 — What a percentage point of risk costs, in hosts.**
@@ -199,7 +199,7 @@ is the difference between an argument and a preference. Part III has no prices, 
 a count of hosts; [ch21](#a-tco-for-finance) prices the same pair.
 
 ```bash
-python3 -m pytest tests/the_sizing_model/test_problem_2_cost_of_certainty.py
+python3 -m pytest tests/the_sizing_model/test_problem_2_cost_of_certainty.py -m problem
 ```
 
 **12.3 — Your own model, as far as it goes.** No test: it is your chain, and the marks on it are

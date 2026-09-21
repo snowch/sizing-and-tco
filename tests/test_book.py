@@ -32,6 +32,10 @@ PAGES = [
     *sorted((ROOT / "appendices").glob("*.md")),
 ]
 
+#: A command in a page that runs a chapter's problems. It names the chapter's own test
+#: directory, which is what tells it apart from the commands that run the book's own tests.
+PROBLEM_COMMAND = re.compile(r"python3 -m pytest (tests/[a-z_]+/[a-z_0-9.]*)")
+
 #: A page still carrying the generator's marker is a stub, and most rules below are about
 #: finished prose rather than about a table of contents entry that has not been written yet.
 STUB = "[To write"
@@ -390,6 +394,24 @@ def test_a_written_chapter_has_problems_that_are_tests(path):
         f"{path.name}'s problems must live in tests/{slug}/ and the chapter must say so"
     )
     assert (ROOT / "tests" / slug).is_dir(), f"tests/{slug}/ does not exist"
+
+
+@pytest.mark.parametrize("path", PAGES, ids=lambda p: p.name)
+def test_a_command_that_runs_problems_runs_the_reader_s_tests(path):
+    """A problem's test file holds the reader's tests and the book's scaffolding beside them.
+
+    Only the first kind is the reader's to pass. The page counts only those, and ``-m problem``
+    is what makes the same command at a desk agree: without it the reader runs both kinds and is
+    told four of six tests pass before they have typed anything, four of those being the book
+    checking its own problem is answerable. A command that runs the book's own tests rather than
+    a chapter's problems takes no marker, and none of them name a chapter directory.
+    """
+    for number, line in enumerate(path.read_text().splitlines(), start=1):
+        for command in PROBLEM_COMMAND.findall(line):
+            assert "-m problem" in line, (
+                f"{path.name}:{number} runs {command} without `-m problem`, so it runs the "
+                "book's scaffolding too and reports it as though the reader had passed it."
+            )
 
 
 @pytest.mark.parametrize("path", PAGES, ids=lambda p: p.name)

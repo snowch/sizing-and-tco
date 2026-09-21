@@ -187,7 +187,7 @@ problems are tests, and the same tests run there:
 git clone https://github.com/snowch/sizing-and-tco.git
 cd sizing-and-tco
 python3 -m pip install -r requirements.txt -r requirements-dev.txt
-python3 -m pytest tests/point_estimates/    # ch01's problems, which fail until they are solved
+python3 -m pytest tests/point_estimates/ -m problem   # ch01's, which fail until solved
 ```
 
 [Appendix H](#appendix-h-running-the-toolkit) has the rest: re-taking a measurement, re-running a

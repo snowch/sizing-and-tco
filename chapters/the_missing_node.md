@@ -189,7 +189,7 @@ state a rule that weighs how far out they fall against how many you have, and im
 the whole set. One miss is not it.
 
 ```bash
-python3 -m pytest tests/the_missing_node/test_problem_1_refuted.py
+python3 -m pytest tests/the_missing_node/test_problem_1_refuted.py -m problem
 ```
 
 **20.2 — The wrong repair, measured.**
@@ -197,7 +197,7 @@ Widen the model until it agrees with the observation, then measure what the inte
 A model that cannot be wrong has stopped being able to be useful, and this is what that costs.
 
 ```bash
-python3 -m pytest tests/the_missing_node/test_problem_2_widening.py
+python3 -m pytest tests/the_missing_node/test_problem_2_widening.py -m problem
 ```
 
 **20.3 — Find the missing node.**
@@ -209,7 +209,7 @@ quantity the model never mentioned and the line that prices it. There is no answ
 is a figure the model does not contain.
 
 ```bash
-python3 -m pytest tests/the_missing_node/test_problem_3_missing_node.py
+python3 -m pytest tests/the_missing_node/test_problem_3_missing_node.py -m problem
 ```
 
 **20.4 — The node you have not written down.** No test: if a check could find what is missing,

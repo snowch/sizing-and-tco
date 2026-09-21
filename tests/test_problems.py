@@ -171,3 +171,40 @@ def test_the_shipped_files_leave_the_work_to_the_reader():
     shipped = load_model(ROOT / "tests/the_missing_node/fixtures/model.yaml")
     copy = load_model(ROOT / "tests/the_missing_node/fixtures/repaired.yaml")
     assert set(copy.nodes) == set(shipped.nodes), "the copy the reader repairs is already repaired"
+
+
+def test_every_problem_file_holds_a_test_the_reader_has_to_pass():
+    """The page counts the reader's tests, and the marker is what tells them from the book's.
+
+    A file of scaffolding alone would count nothing on the page, so it could never say solved,
+    and the command under the problem would deselect every test in it. Asked of pytest rather
+    than of the source, because pytest's deselection is what both the page and a desk use.
+    """
+    files = sorted(
+        path.relative_to(ROOT).as_posix() for path in ROOT.glob("tests/*/test_problem_*.py")
+    )
+    run = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            *files,
+            "--collect-only",
+            "-q",
+            "-m",
+            "problem",
+            "-p",
+            "no:cacheprovider",
+        ],
+        capture_output=True,
+        text=True,
+        cwd=ROOT,
+        timeout=600,
+    )
+    assert run.returncode == 0, run.stdout[-3000:]
+    collected = {line.split("::", 1)[0] for line in run.stdout.splitlines() if "::" in line}
+    missing = [path for path in files if path not in collected]
+    assert not missing, (
+        "these hold no test marked `problem`, so a reader is given nothing to pass:\n  "
+        + "\n  ".join(missing)
+    )

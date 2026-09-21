@@ -178,7 +178,7 @@ Fit the line and extrapolate it well past everything it was fitted to. The test 
 wrong it is where it matters.
 
 ```bash
-python3 -m pytest tests/regime_changes/test_problem_1_straight_line.py
+python3 -m pytest tests/regime_changes/test_problem_1_straight_line.py -m problem
 ```
 
 **8.2 — A host lost at the busy hour.**
@@ -189,7 +189,7 @@ The test then shrinks the fleet at the same utilisation until the survivors are 
 the division has nothing left to divide by.
 
 ```bash
-python3 -m pytest tests/regime_changes/test_problem_2_host_loss.py
+python3 -m pytest tests/regime_changes/test_problem_2_host_loss.py -m problem
 ```
 
 **8.3 — Every threshold you have.** No test: nothing here knows what your system runs into

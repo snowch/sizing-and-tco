@@ -242,7 +242,7 @@ to ask the model for the host count with any inputs held. The band is not the sl
 every bar answers the same question. Draw one bar per input, longest first.
 
 ```bash
-python3 -m pytest tests/which_input_is_the_answer/test_problem_1_tornado.py
+python3 -m pytest tests/which_input_is_the_answer/test_problem_1_tornado.py -m problem
 ```
 
 **19.2 — What one-at-a-time misses.**
@@ -251,7 +251,7 @@ two bands and the same way of asking the model as before. It names a pair that m
 product and a pair that meets in a sum; predict which will show a gap.
 
 ```bash
-python3 -m pytest tests/which_input_is_the_answer/test_problem_2_interaction.py
+python3 -m pytest tests/which_input_is_the_answer/test_problem_2_interaction.py -m problem
 ```
 
 **19.3 — Which input yours rests on.** No test: the ranges are the ones you would defend, and only

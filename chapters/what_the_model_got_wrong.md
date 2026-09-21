@@ -183,7 +183,7 @@ ordinary self. Use a median, and order by the size of the shift rather than its 
 that is unusually *low* in the failures is just as much of a cause.
 
 ```bash
-python3 -m pytest tests/what_the_model_got_wrong/test_problem_1_attribute.py
+python3 -m pytest tests/what_the_model_got_wrong/test_problem_1_attribute.py -m problem
 ```
 
 **23.2 — How often is there a culprit?**
@@ -192,7 +192,7 @@ your prediction in a comment first. Then do it again with eight inputs that have
 with the failure, and watch the same statistic find a villain anyway.
 
 ```bash
-python3 -m pytest tests/what_the_model_got_wrong/test_problem_2_extreme.py
+python3 -m pytest tests/what_the_model_got_wrong/test_problem_2_extreme.py -m problem
 ```
 
 **23.3 — A post-mortem on one of yours.** No test: it is your history, and nobody else has it.

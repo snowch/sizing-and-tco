@@ -166,7 +166,7 @@ From an allocation to a machine count. Get the multiplier the right way up, and 
 supply rounds rather than the way a demand does.
 
 ```bash
-python3 -m pytest tests/power_first/test_problem_1_budget.py
+python3 -m pytest tests/power_first/test_problem_1_budget.py -m problem
 ```
 
 **16.2 — A ratio quoted, a fraction paid.**
@@ -175,7 +175,7 @@ substantial share of the bill on itself. The two framings land very differently 
 about money.
 
 ```bash
-python3 -m pytest tests/power_first/test_problem_2_pue.py
+python3 -m pytest tests/power_first/test_problem_2_pue.py -m problem
 ```
 
 **16.3 — What you are actually allowed to draw.** No test: the numbers are held by people, not by

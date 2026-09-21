@@ -94,8 +94,11 @@ def editable_excerpts(page: dict, stage) -> list[dict]:
     return found
 
 
-#: The command under a tested problem, as every chapter writes it.
-COMMAND = re.compile(r"python3 -m pytest (tests/[a-z_]+/test_problem_\d+_[a-z_]+\.py)")
+#: The command under a tested problem, as every chapter writes it. ``-m problem`` is part of the
+#: form rather than optional: it runs the reader's tests and deselects the book's own, which is
+#: what the Check on the page counts, so a desk and the page give the same verdict. A command
+#: written without it does not match, and the problem loses its Check, which a test catches.
+COMMAND = re.compile(r"python3 -m pytest (tests/[a-z_]+/test_problem_\d+_[a-z_]+\.py) -m problem")
 
 
 def problem_excerpts(source: str, page: dict) -> list[dict]:
@@ -587,6 +590,28 @@ function put(parent, tag, className, text) {
   return el;
 }
 
+function list(box, tests) {
+  const ul = put(box, "ul", "tests");
+  for (const t of tests) {
+    const item = put(ul, "li", t.outcome);
+    put(item, "span", "name", t.name);
+    if (t.message) put(item, "pre", "trace", t.message);
+    if (t.output) put(item, "pre", "printed", t.output);
+  }
+}
+
+// A test file holds the reader's tests, marked `problem`, and the book's own scaffolding
+// beside them, which asserts that the problem is answerable at all. Only the first kind is
+// the reader's to pass, so only that kind is counted: counting both told a reader who had
+// typed nothing that four of six tests passed. A scaffolding test that fails is a fault in
+// the book, and is shown separately as one. Kept apart from the drawing so a test can run it.
+function score(tests) {
+  const yours = tests.filter((t) => t.problem);
+  const passed = yours.filter((t) => t.outcome === "passed").length;
+  const book = tests.filter((t) => !t.problem && t.outcome !== "passed");
+  return {yours, passed, book, solved: yours.length > 0 && passed === yours.length};
+}
+
 function show(problem, report) {
   const box = problem.querySelector(".verdicts");
   box.textContent = "";
@@ -594,16 +619,14 @@ function show(problem, report) {
     put(box, "p", "verdict bad", "The tests could not start.");
     for (const p of report.problems) put(box, "pre", "trace", p.message);
   } else {
-    const total = report.tests.length;
-    const solved = total > 0 && report.passed === total;
+    const {yours, passed, book, solved} = score(report.tests);
     put(box, "p", "verdict " + (solved ? "good" : "bad"),
-        solved ? "Solved. Every test passes." : report.passed + " of " + total + " tests pass.");
-    const list = put(box, "ul", "tests");
-    for (const t of report.tests) {
-      const item = put(list, "li", t.outcome);
-      put(item, "span", "name", t.name);
-      if (t.message) put(item, "pre", "trace", t.message);
-      if (t.output) put(item, "pre", "printed", t.output);
+        solved ? "Solved. Every test passes." : passed + " of " + yours.length + " tests pass.");
+    list(box, yours);
+    if (book.length) {
+      put(box, "p", "verdict bad",
+          "The book's own checks failed here. That is a fault in the book, not in your answer.");
+      list(box, book);
     }
   }
   const all = put(box, "details", "all");

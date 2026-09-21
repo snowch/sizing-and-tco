@@ -218,7 +218,7 @@ and it runs as many as the chapter's own experiment did, because a dozen is not 
 ratio of two spreads.
 
 ```bash
-python3 -m pytest tests/correlation_and_convergence/test_problem_1_root_n.py
+python3 -m pytest tests/correlation_and_convergence/test_problem_1_root_n.py -m problem
 ```
 
 **14.2 — Correlate two inputs, and change neither.**
@@ -229,7 +229,7 @@ that neither input's own distribution moves. The second is the property that mak
 trustworthy, and it is one line to check.
 
 ```bash
-python3 -m pytest tests/correlation_and_convergence/test_problem_2_marginals.py
+python3 -m pytest tests/correlation_and_convergence/test_problem_2_marginals.py -m problem
 ```
 
 **14.3 — Break the convergence experiment.** No test. The experiment in this chapter uses a

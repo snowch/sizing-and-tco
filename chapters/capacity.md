@@ -157,7 +157,7 @@ gives an answer wrong by the square of the compression ratio while still looking
 yours against a case you can do in your head first.
 
 ```bash
-python3 -m pytest tests/capacity/test_problem_1_raw.py
+python3 -m pytest tests/capacity/test_problem_1_raw.py -m problem
 ```
 
 **9.2 — Erasure coding against copies, at equal safety.**
@@ -166,7 +166,7 @@ two can be compared on space rather than on enthusiasm. Then notice what the sav
 and what else grows with it.
 
 ```bash
-python3 -m pytest tests/capacity/test_problem_2_erasure.py
+python3 -m pytest tests/capacity/test_problem_2_erasure.py -m problem
 ```
 
 **9.3 — The other kind of terabyte.**
@@ -177,7 +177,7 @@ by exactly the ratio. Converting is not compensating, and the difference between
 chapter. If a host count moved, a unit was missed, and finding it is the exercise.
 
 ```bash
-python3 -m pytest tests/capacity/test_problem_3_binary_units.py
+python3 -m pytest tests/capacity/test_problem_3_binary_units.py -m problem
 ```
 
 **9.4 — Turn it back into a cost model.**
@@ -188,7 +188,7 @@ anybody. If you cannot name it, you removed something that was doing no work, an
 should not have had it.
 
 ```bash
-python3 -m pytest tests/capacity/test_problem_4_classification.py
+python3 -m pytest tests/capacity/test_problem_4_classification.py -m problem
 ```
 
 **9.5 — What your data compresses to.** No test: the corpus is your data, and this
