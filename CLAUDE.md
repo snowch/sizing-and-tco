@@ -107,7 +107,9 @@ make machine   # what this computer is, and whether it may take a rig measuremen
    values are derived at test time from an oracle, never stored. The chapter page runs the same
    test under Pyodide from a Check under the problem, over the files
    `sizing.playground.toolkit.problem_files` lists; `tests/test_problems.py` holds every
-   chapter's tests to running on exactly those.
+   chapter's tests to running on exactly those. A stub takes plain numbers or a callable the
+   test builds, never the toolkit's own API; where the chapter taught the model file, the
+   reader edits a file the test names in `EDITABLE`, shown whole in the page.
 
    **A problem about the reader's own system has no oracle, and is still a problem.** This rule
    arrived from a book whose exercises were code, where a passing test or a booting kernel is the

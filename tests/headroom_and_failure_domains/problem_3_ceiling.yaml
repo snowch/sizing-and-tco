@@ -1,0 +1,15 @@
+# Problem 11.3 - a ceiling on connections per host, declared the way the model file declares one.
+#
+# The test splices this node into the web service model under `nodes:`, adds it to the outputs,
+# and holds it to the three things declaring a ceiling commits you to: a unit the expression
+# produces, a margin, and a reason. Three of the fields below are empty. Fill them in; change
+# nothing else. The limit is given, and it carries its unit the way the model file carries
+# one: multiplied by the constant that holds it.
+connections_per_host:
+  kind: ceiling
+  label: connections per host
+  unit:
+  of: concurrency / host_count
+  limit: 256 * one_request
+  headroom:
+  because:

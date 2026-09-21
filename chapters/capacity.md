@@ -181,10 +181,11 @@ python3 -m pytest tests/capacity/test_problem_3_binary_units.py
 ```
 
 **9.4 — Turn it back into a cost model.**
-Remove what makes the web service model a sizing model: the measured constant this chapter adds, and
-every ceiling before and after it. Keep at least one of its outputs working. Then write one sentence
-saying what the result can no longer tell anybody. If you cannot name it, you removed something that
-was doing no work, and the model should not have had it.
+Name what has to go to make the web service model a cost model: the measured constant this
+chapter adds, every ceiling before and after it, and everything downstream of them. At least one
+of its outputs has to survive. Then write one sentence saying what the result can no longer tell
+anybody. If you cannot name it, you removed something that was doing no work, and the model
+should not have had it.
 
 ```bash
 python3 -m pytest tests/capacity/test_problem_4_classification.py

@@ -127,6 +127,7 @@ def problem_excerpts(source: str, page: dict) -> list[dict]:
             "pieces": [
                 {**piece, "text": whole[piece["start"] : piece["end"]]} for piece in block["pieces"]
             ],
+            "files": block["files"],
         }
         found.append(node)
     return found
@@ -551,6 +552,16 @@ function assembleStubs() {
   return out;
 }
 
+// The files a reader edits whole, a model fragment or a fixture, as the grader writes them:
+// path under the tests' root to what the block now holds.
+function assembleFiles() {
+  const out = {};
+  for (const el of document.querySelectorAll("pre.stub-file")) {
+    out[el.dataset.path] = el.innerText.replace(/\n$/, "") + "\n";
+  }
+  return out;
+}
+
 // The chapter's problem set, then the runtime this tab may already have started for the model,
 // then the test runner. Each once per page, whichever Check is pressed first.
 async function boot(say) {
@@ -611,7 +622,8 @@ async function check(problem) {
     say("Checking\u2026");
     pyodide.globals.set("_stubs", assembleStubs());
     pyodide.globals.set("_test", problem.dataset.test);
-    show(problem, JSON.parse(await pyodide.runPythonAsync("grade(_stubs, _test)")));
+    pyodide.globals.set("_files", JSON.stringify(assembleFiles()));
+    show(problem, JSON.parse(await pyodide.runPythonAsync("grade(_stubs, _test, files=_files)")));
   } catch (error) {
     box.textContent = "Python did not start: " + error;
   } finally {
@@ -620,7 +632,7 @@ async function check(problem) {
 }
 
 for (const problem of document.querySelectorAll(".problem")) {
-  for (const pre of problem.querySelectorAll("pre.stub")) {
+  for (const pre of problem.querySelectorAll("pre.stub, pre.stub-file")) {
     const block = pre.closest(".editable-block");
     pre.addEventListener("input", () => {
       block.classList.add("changed");

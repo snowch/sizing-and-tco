@@ -92,11 +92,19 @@ def test_what_a_chapter_ships_is_enough_to_run_every_one_of_its_problems(slug, t
                 )
 
 
-def test_every_problem_test_grades_a_piece_of_the_stubs_file():
-    """A test with no piece would be shown as a Check with nothing to edit above it."""
+def test_every_problem_test_grades_a_piece_of_the_stubs_file_or_a_file():
+    """A test with no piece and no file would be shown as a Check with nothing to edit above it."""
     for slug in problem_chapters():
         for block in problem_pieces(slug):
-            assert block["pieces"], f"{block['test']} imports nothing from {block['stubs']}"
+            assert block["pieces"] or block["files"], (
+                f"{block['test']} imports nothing from {block['stubs']} and names no EDITABLE file"
+            )
+            for entry in block["files"]:
+                path = ROOT / entry["path"]
+                assert path.is_file() and entry["path"].startswith(f"tests/{slug}/"), entry["path"]
+                assert entry["text"] == path.read_text(), (
+                    f"{entry['path']}: the page's copy differs"
+                )
             whole = (ROOT / block["stubs"]).read_text()
             for piece in block["pieces"]:
                 text = whole[piece["start"] : piece["end"]]
@@ -136,3 +144,30 @@ def test_a_chapter_that_stamps_ships_what_the_stamp_hashes():
         if "bench/stamp.py" in shipped:
             missing = set(CORE_SOURCES) - set(shipped)
             assert not missing, f"{slug} ships bench/stamp.py without {sorted(missing)}"
+
+
+def test_the_shipped_files_leave_the_work_to_the_reader():
+    """The files a reader edits whole ship with the work left in them. Checked here rather than in
+    the problem's own test file, which the page runs over the reader's copy."""
+    import yaml
+
+    ((name, ceiling),) = yaml.safe_load(
+        (ROOT / "tests/headroom_and_failure_domains/problem_3_ceiling.yaml").read_text()
+    ).items()
+    assert name == "connections_per_host" and ceiling["kind"] == "ceiling"
+    assert ceiling["of"] and ceiling["limit"]
+    assert all(ceiling.get(field) in (None, "") for field in ("unit", "headroom", "because"))
+
+    entries = yaml.safe_load(
+        (ROOT / "tests/correlation_and_convergence/problem_2_correlation.yaml").read_text()
+    )
+    entry = next(
+        e for e in entries if {e.get("a"), e.get("b")} == {"host_price", "network_price_per_host"}
+    )
+    assert entry.get("rho") in (None, "") and not str(entry.get("because") or "").strip()
+
+    from sizing.dsl import load_model
+
+    shipped = load_model(ROOT / "tests/the_missing_node/fixtures/model.yaml")
+    copy = load_model(ROOT / "tests/the_missing_node/fixtures/repaired.yaml")
+    assert set(copy.nodes) == set(shipped.nodes), "the copy the reader repairs is already repaired"

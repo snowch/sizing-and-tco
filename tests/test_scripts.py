@@ -382,6 +382,12 @@ def test_every_tested_problem_is_checkable_on_its_chapter_page():
             assert f'data-test="{block["test"]}"' in html, f"{source} lacks {block['test']}"
             for piece in block["pieces"]:
                 assert f'data-start="{piece["start"]}" data-end="{piece["end"]}"' in html
+            for entry in block["files"]:
+                # A file the reader edits whole is shown whole, at the path the grader writes.
+                assert (
+                    f'<pre class="editable stub-file" contenteditable="plaintext-only" spellcheck="false" data-path="{entry["path"]}">'
+                    in html
+                ), f"{source}: no editable block for {entry['path']}"
             # The command the chapter wrote is a note inside the block, not a block of its own:
             # drawn as one, it read as the next step after Check.
             note = (

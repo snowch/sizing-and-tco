@@ -15,14 +15,19 @@ def measure_something(shards: int = 8) -> dict:
     compression when there are a thousand of them together. What a base64 encoding costs. How much
     smaller a column of timestamps gets when you store the differences.
 
-    Return a **stamped result payload** - the dictionary ``bench.stamp.build_result`` produces -
-    without writing it to disk. Use ``build_result(..., write=False)``, and name this file in
-    its ``code_sources``: the stamp hashes the code that produced the figure, so a re-run can be
-    told from a retyping.
+    Return the three parts of a measurement that a stamp records, as one dictionary:
 
-    It must satisfy every rule in ``bench.stamp.provenance_problems``:
+        {
+            "summary": {"value": ..., "sd": ..., "shards": shards},
+            "units": {"value": ..., "sd": ..., "shards": ...},
+            "produced_by": {"corpus": ..., "codec": ...},
+        }
 
-    * target ``corpus``, because a codec is deterministic and anybody can check it;
+    The test stamps them as a ``corpus`` result, because a codec is deterministic and anybody
+    can check it, and names this file as the code that produced the figure, so that a re-run can
+    be told from a retyping. Then it holds the result to every rule in
+    ``bench.stamp.provenance_problems``:
+
     * a ``corpus`` and a ``codec`` in ``produced_by``, because a compression figure without the
       body of data it compressed is an anecdote;
     * a unit for every figure in the summary - and not one with time in it, because how fast the
@@ -32,8 +37,8 @@ def measure_something(shards: int = 8) -> dict:
       you did it again.
 
     Generate the corpus in this file, deterministically, from starting numbers you state, so that
-    anybody can generate the same one. A constant measured
-    over data nobody else can obtain is a constant nobody else can check.
+    anybody can generate the same one. A constant measured over data nobody else can obtain is a
+    constant nobody else can check.
     """
     raise NotImplementedError("problem 3.1")
 

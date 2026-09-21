@@ -190,6 +190,18 @@ def render(node: dict) -> str:
         # read as the next step, which is what the Check was built to replace.
         problem = node["_problem"]
         file = html.escape(str(problem["stubs"]))
+        # A file the reader edits whole comes first: the chapter taught the file, and the test
+        # names it in an EDITABLE tuple. `data-path` is where the grader writes it.
+        files = "".join(
+            '<div class="editable-block">'
+            f'<div class="editable-bar"><span class="file">{html.escape(str(f["path"]))}</span>'
+            '<span class="hint">yours to edit</span>'
+            '<button class="check-here" type="button">Check</button></div>'
+            '<pre class="editable stub-file" contenteditable="plaintext-only" spellcheck="false"'
+            f' data-path="{html.escape(str(f["path"]))}">'
+            f"<code>{html.escape(str(f['text']))}</code></pre></div>"
+            for f in problem.get("files", [])
+        )
         pieces = "".join(
             '<div class="editable-block">'
             f'<div class="editable-bar"><span class="file">{file} · {html.escape(piece["name"])}'
@@ -201,7 +213,7 @@ def render(node: dict) -> str:
             for piece in problem["pieces"]
         )
         return (
-            f'<div class="problem" data-test="{html.escape(str(problem["test"]))}">{pieces}'
+            f'<div class="problem" data-test="{html.escape(str(problem["test"]))}">{files}{pieces}'
             '<div class="verdicts" aria-live="polite"></div>'
             '<p class="desk">The same check at a desk: '
             f"<code>{html.escape(node.get('value', ''))}</code></p></div>"

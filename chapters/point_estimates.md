@@ -179,12 +179,12 @@ instead of hiding the doubt inside a single figure.
 Three, in `tests/point_estimates/`. The first two have tests; run them with
 `python3 -m pytest tests/point_estimates/`. The third does not, and says why.
 
-**1.1 — The width of a product.** Read the band the web service model gives each uncertain input,
-as the top of the band over the bottom. Then do the arithmetic the way you could on paper: every
-input at the bottom of its band together, then every input at the top together, and the hosts the
-model recommends worked through both times. The second count over the first is neither the widest
-band nor the average of them. Set it beside the smallest and largest answer in the table above.
-The gap between the two is what [ch13](#monte-carlo) exists to close.
+**1.1 — The width of a product.** Take the band the web service model gives each uncertain input,
+and write it as the top of the band over the bottom. Then do the arithmetic the way you could on
+paper: every input at the bottom of its band together, then every input at the top together, and
+the hosts the model recommends worked through both times. The second count over the first is
+neither the widest band nor the average of them. Set it beside the smallest and largest answer in
+the table above. The gap between the two is what [ch13](#monte-carlo) exists to close.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_1_compounding.py

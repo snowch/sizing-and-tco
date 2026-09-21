@@ -2,17 +2,20 @@
 
 Graded by what only a consistent change of units gives: the converted model typechecks, every
 input still means the same bytes, nothing the model buys has moved, and every node read in
-tebibytes reads smaller by exactly the ratio. Derived from the model at test time; nothing here
-says what any number is.
+tebibytes reads smaller by exactly the ratio. The reader is handed every node's unit and every
+input's number or band; the test puts what comes back into the model, formulas untouched. Derived
+from the model at test time; nothing here says what any number is.
 """
 
 from __future__ import annotations
+
+from dataclasses import replace
 
 import pytest
 from pint.util import to_units_container
 
 from sizing import mc
-from sizing.dsl import Input, load_model, load_scenario
+from sizing.dsl import Input, Model, load_model, load_scenario
 from sizing.evaluate import check_units, point
 from sizing.units import UNITS
 from sizing.units import parse as parse_unit
@@ -33,6 +36,41 @@ def scenario():
     return load_scenario(SCENARIO)
 
 
+def declared(model: Model) -> tuple[dict[str, str], dict[str, float | dict]]:
+    """What the reader is handed: every node's unit, and every input's number or band."""
+    units = {name: node.unit for name, node in model.nodes.items()}
+    values: dict[str, float | dict] = {}
+    for name, node in model.nodes.items():
+        if isinstance(node, Input):
+            if node.value is not None:
+                values[name] = node.value
+            else:
+                values[name] = dict(mc.one_shape(node.distribution)[1])
+    return units, values
+
+
+def rebuilt(model: Model, units: dict[str, str], values: dict[str, float | dict]) -> Model:
+    """The model with these units and numbers put back into it, and nothing else changed."""
+    missing = sorted(set(model.nodes) - set(units))
+    assert not missing, f"no unit came back for {missing[:5]}"
+    nodes = {}
+    for name, node in model.nodes.items():
+        changes: dict = {"unit": units[name]}
+        if isinstance(node, Input):
+            assert name in values, f"no number came back for the input {name}"
+            if node.value is not None:
+                changes["value"] = float(values[name])
+            else:
+                shape, _ = mc.one_shape(node.distribution)
+                changes["distribution"] = {shape: dict(values[name])}
+        nodes[name] = replace(node, **changes)
+    return replace(model, nodes=nodes)
+
+
+def converted(model: Model) -> Model:
+    return rebuilt(model, *in_binary_units(*declared(model)))
+
+
 def terabytes_in(unit: str) -> int:
     """The power a terabyte carries in a unit: one for TB, minus one for USD/TB/month, zero."""
     return int(to_units_container(parse_unit(unit)).get("terabyte", 0))
@@ -48,11 +86,11 @@ def in_old_units(value: float, new_unit: str, old_unit: str) -> float:
 
 @pytest.mark.problem
 def test_every_terabyte_became_a_tebibyte_in_the_same_place(base):
-    converted = in_binary_units(base)
+    after_all = converted(base)
     carrying = {n for n, node in base.nodes.items() if terabytes_in(node.unit)}
     assert carrying, "the model carries no terabytes; problem 9.3 needs rewriting"
     for name, node in base.nodes.items():
-        after = converted.nodes[name]
+        after = after_all.nodes[name]
         assert terabytes_in(after.unit) == 0, f"{name} still carries a terabyte: {after.unit!r}"
         assert tebibytes_in(after.unit) == terabytes_in(node.unit), (
             f"{name}: {node.unit!r} should become the same unit with tebibytes in the terabytes' "
@@ -64,11 +102,11 @@ def test_every_terabyte_became_a_tebibyte_in_the_same_place(base):
 
 @pytest.mark.problem
 def test_every_input_still_means_the_same_bytes(base):
-    converted = in_binary_units(base)
+    after_all = converted(base)
     for name, node in base.nodes.items():
         if not isinstance(node, Input):
             continue
-        after = converted.nodes[name]
+        after = after_all.nodes[name]
         if node.value is not None:
             assert in_old_units(after.value, after.unit, node.unit) == pytest.approx(
                 node.value, rel=1e-9
@@ -81,6 +119,7 @@ def test_every_input_still_means_the_same_bytes(base):
             now_shape, now = mc.one_shape(after.distribution)
             assert now_shape == shape, f"{name}: the shape of the band changed"
             for key, value in was.items():
+                assert key in now, f"{name}: the band came back without its {key}"
                 assert in_old_units(now[key], after.unit, node.unit) == pytest.approx(
                     value, rel=1e-9
                 ), f"{name}: the band's {key} no longer means the same bytes"
@@ -88,25 +127,26 @@ def test_every_input_still_means_the_same_bytes(base):
 
 @pytest.mark.problem
 def test_no_formula_changed(base):
-    converted = in_binary_units(base)
+    """The reader hands back units and numbers, and the test puts only those into the model. This
+    holds the test to that: converting by hand inside a formula is how two copies of a model
+    start to disagree, and no route to one is left open."""
+    after_all = converted(base)
     for name, node in base.nodes.items():
-        assert getattr(converted.nodes[name], "formula_text", "") == getattr(
+        assert getattr(after_all.nodes[name], "formula_text", "") == getattr(
             node, "formula_text", ""
-        ), (
-            f"{name}: the formula changed. The build converts; doing it by hand is how two copies of a model start to disagree."
-        )
+        ), f"{name}: the formula changed. The build converts; doing it by hand is the error."
 
 
 @pytest.mark.problem
 def test_it_still_typechecks(base):
-    problems, _ = check_units(in_binary_units(base))
+    problems, _ = check_units(converted(base))
     assert not problems, "\n".join(problems)
 
 
 @pytest.mark.problem
 def test_nothing_the_model_buys_moved(base, scenario):
     before = point(base, scenario)
-    after = point(in_binary_units(base), scenario)
+    after = point(converted(base), scenario)
     for name, node in base.nodes.items():
         if terabytes_in(node.unit) or isinstance(node, Input):
             continue
@@ -120,7 +160,7 @@ def test_nothing_the_model_buys_moved(base, scenario):
 @pytest.mark.problem
 def test_every_tebibyte_figure_reads_smaller_by_exactly_the_ratio(base, scenario):
     before = point(base, scenario)
-    after = point(in_binary_units(base), scenario)
+    after = point(converted(base), scenario)
     for name, node in base.nodes.items():
         if terabytes_in(node.unit) != 1 or isinstance(node, Input):
             continue
@@ -141,3 +181,13 @@ def test_the_model_carries_terabytes_above_and_below_the_line(base):
     relabelling that only handles ``TB`` cannot pass it."""
     powers = {terabytes_in(node.unit) for node in base.nodes.values()}
     assert {1, -1} <= powers, powers
+
+
+def test_putting_the_declared_units_and_numbers_back_changes_nothing(base, scenario):
+    """Scaffolding: the route the grader takes, handing the reader every unit and number and
+    putting what comes back into the model, is faithful. Handed back unchanged, the model is the
+    model."""
+    units, values = declared(base)
+    assert set(units) == set(base.nodes)
+    assert set(values) == {n for n, node in base.nodes.items() if isinstance(node, Input)}
+    assert point(rebuilt(base, units, values), scenario) == point(base, scenario)

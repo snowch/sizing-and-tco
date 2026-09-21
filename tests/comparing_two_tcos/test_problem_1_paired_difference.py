@@ -1,4 +1,9 @@
-"""Problem 22.1 - graded against the toolkit's own evaluation of both quotes, on the same draws."""
+"""Problem 22.1 - graded against the toolkit's own evaluation of both quotes, on the same draws.
+
+The test evaluates both quotes here and hands the reader the two arrays of five-year totals. What
+it grades against is its own subtraction of the same two arrays, derived at test time and never
+stored.
+"""
 
 from __future__ import annotations
 
@@ -30,10 +35,12 @@ def paired(totals):
 
 
 @pytest.fixture(scope="module")
-def answer():
+def answer(totals):
     from tests.comparing_two_tcos.stubs import paired_difference
 
-    return paired_difference()
+    # Copies, so an answer that subtracts in place cannot change what it is graded against.
+    incumbent, challenger = totals
+    return paired_difference(incumbent.copy(), challenger.copy())
 
 
 def width_of(values: np.ndarray) -> float:
@@ -52,7 +59,7 @@ def test_the_percentiles_are_of_the_paired_difference(answer, paired):
     for key, expected in (("p5", p5), ("p50", p50), ("p95", p95)):
         assert answer[key] == pytest.approx(expected, rel=1e-3, abs=1.0), (
             f"{key}: got {answer[key]:,.0f}, the paired difference has {expected:,.0f}. "
-            "Subtract sample by sample, from two evaluations that share a seed."
+            "Subtract sample by sample, the i-th total from the i-th total."
         )
 
 
@@ -87,12 +94,22 @@ def test_both_quotes_pin_the_same_inputs():
 
 
 def test_the_shared_futures_really_are_shared():
-    """The same draw of a shared input reaches both designs, which is what makes subtraction fair."""
+    """The same draw of a shared input reaches both designs, which makes the subtraction fair."""
     model = load_model(MODEL)
     incumbent = evaluate(model, load_scenario(INCUMBENT)).samples
     challenger = evaluate(model, load_scenario(CHALLENGER)).samples
     for name in ("electricity_price", "pue", "fully_loaded_salary", "annual_growth"):
         assert np.array_equal(incumbent[name], challenger[name]), name
+
+
+def test_the_two_arrays_are_one_future_per_entry(totals):
+    """The reader is handed one total per sampled future on each side, the same count on both."""
+    incumbent, challenger = totals
+    assert incumbent.shape == challenger.shape and incumbent.ndim == 1, (
+        incumbent.shape,
+        challenger.shape,
+    )
+    assert np.all(incumbent > 0) and np.all(challenger > 0)
 
 
 def test_pairing_narrows_the_interval_materially(totals, paired):

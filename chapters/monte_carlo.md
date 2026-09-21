@@ -302,9 +302,10 @@ python3 -m pytest tests/monte_carlo/test_problem_1_ppf.py
 ```
 
 **13.2 — Sample a model by hand.**
-Take the web service model, sample two of its inputs yourself without using `sizing.evaluate`,
-work the cost they feed through by hand, and reproduce the interval this book publishes for it to
-within sampling error. The point is to discover how small the machinery is.
+The test hands you two of the web service model's inputs, each with the distribution the model
+file declares for it. Sample both yourself, without the toolkit's sampler, work the cost they feed
+through by hand, and reproduce the interval this book publishes for it to within sampling error.
+The point is to discover how small the machinery is.
 
 ```bash
 python3 -m pytest tests/monte_carlo/test_problem_2_by_hand.py

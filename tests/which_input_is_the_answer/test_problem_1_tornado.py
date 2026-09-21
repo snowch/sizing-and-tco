@@ -1,14 +1,26 @@
-"""Problem 19.1 - graded against the tornado the build publishes."""
+"""Problem 19.1 - graded against the tornado the build publishes.
+
+The test builds the two things the reader is handed: each input's band, read from the
+distribution the model file declares, and a way to ask the model for the output with some inputs
+held. What it grades against is the build's own chart, read from the stamped result.
+"""
 
 from __future__ import annotations
 
+from dataclasses import replace
+
+import numpy as np
 import pytest
 
 from bench.stamp import load_result
+from sizing import mc
 from sizing.dsl import load_model, load_scenario
+from sizing.evaluate import point
 from tests.which_input_is_the_answer.stubs import tornado
 
 OUTPUT = "hosts_recommended"
+#: The two ends of a band: the middle eighty per cent of what an input could be.
+LOW, HIGH = 0.1, 0.9
 
 
 @pytest.fixture(scope="module")
@@ -22,6 +34,35 @@ def scenario():
 
 
 @pytest.fixture(scope="module")
+def swings(model, scenario):
+    """Each input with a band, mapped to its tenth and its ninetieth percentile.
+
+    Nothing the scenario pins, nothing an unmeasured constant blocks, and no measured constant:
+    a measured constant's uncertainty is a standard error, and the build swings it by a different
+    rule.
+    """
+    out = {}
+    for name, node in model.nodes.items():
+        distribution = getattr(node, "distribution", None)
+        if not distribution or name in scenario.overrides or name in model.blocked():
+            continue
+        shape, parameters = mc.one_shape(distribution)
+        low, high = mc.SHAPES[shape](np.array([LOW, HIGH]), **parameters)
+        out[name] = (float(low), float(high))
+    return out
+
+
+@pytest.fixture(scope="module")
+def output_at(model, scenario):
+    """The model at a point: the named inputs held, everything else at its point value."""
+
+    def at(held: dict[str, float]) -> float:
+        return point(model, replace(scenario, overrides={**scenario.overrides, **held}))[OUTPUT]
+
+    return at
+
+
+@pytest.fixture(scope="module")
 def published(model):
     """The build's bars for the inputs that declare a band. The build also swings a measured
     constant by its standard error, which is a different rule; the problem leaves that out."""
@@ -30,8 +71,8 @@ def published(model):
 
 
 @pytest.mark.problem
-def test_it_finds_the_same_inputs(model, scenario, published):
-    mine = dict(tornado(model, scenario, OUTPUT))
+def test_it_finds_the_same_inputs(swings, output_at, published):
+    mine = dict(tornado(swings, output_at))
     assert set(mine) == {bar["node"] for bar in published}, (
         f"different inputs: yours {sorted(set(mine) - {b['node'] for b in published})}, "
         f"missing {sorted({b['node'] for b in published} - set(mine))}"
@@ -39,22 +80,38 @@ def test_it_finds_the_same_inputs(model, scenario, published):
 
 
 @pytest.mark.problem
-def test_every_span_matches(model, scenario, published):
-    mine = dict(tornado(model, scenario, OUTPUT))
+def test_every_span_matches(swings, output_at, published):
+    mine = dict(tornado(swings, output_at))
     for bar in published:
         assert mine[bar["node"]] == pytest.approx(bar["span"], rel=1e-6), (
             f"{bar['node']}: the book makes it {bar['span']:,.0f} and you make "
-            f"{mine[bar['node']]:,.0f}. Swing from the distribution's own percentiles, not from "
-            "the slider range."
+            f"{mine[bar['node']]:,.0f}. Hold the input at each end of its band in turn, with "
+            "nothing else held, and take the distance between the two outputs."
         )
 
 
 @pytest.mark.problem
-def test_it_is_sorted_longest_first(model, scenario):
-    spans = [span for _, span in tornado(model, scenario, OUTPUT)]
+def test_it_is_sorted_longest_first(swings, output_at):
+    spans = [span for _, span in tornado(swings, output_at)]
     assert spans == sorted(spans, reverse=True), (
         "the ordering is the useful part - it answers 'what should I measure first'"
     )
+
+
+# -- scaffolding: what the reader is handed is what the build swung ------------------------------
+
+
+def test_the_bands_are_the_ones_the_build_swung(swings, published):
+    """The test's bands are the build's: the same inputs, each between the same two values."""
+    assert set(swings) == {bar["node"] for bar in published}
+    for bar in published:
+        low, high = swings[bar["node"]]
+        assert (low, high) == pytest.approx((bar["low_input"], bar["high_input"])), bar["node"]
+
+
+def test_the_model_answers_at_its_point(output_at, published):
+    """With nothing held, the callable returns the point estimate every published bar starts at."""
+    assert output_at({}) == pytest.approx(published[0]["base"])
 
 
 def test_the_published_tornado_has_a_clear_winner(published):

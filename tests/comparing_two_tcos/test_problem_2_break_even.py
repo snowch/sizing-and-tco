@@ -1,13 +1,16 @@
 """Problem 22.2 - graded by putting the answer back into the model and reading the difference.
 
 The chapter's break-even table prints the tie for the fleet the incumbent runs, so the answer is
-graded at that fleet and at two the page does not print. A tie that moves with the fleet was
-computed; one that does not was copied.
+graded at that fleet and at two the page does not print. For each fleet the test builds the
+difference between the two totals as a function of the cost of the move, hands it to the reader,
+and then reads the difference at the answer. A tie that moves with the fleet was computed; one
+that does not was copied.
 """
 
 from __future__ import annotations
 
 from dataclasses import replace
+from functools import partial
 
 import pytest
 
@@ -30,7 +33,7 @@ def difference_at(incumbent_hosts: int, migration: float) -> float:
     """Challenger minus incumbent at the point estimate.
 
     The incumbent runs ``incumbent_hosts`` hosts and the move costs ``migration``. Everything
-    else is as the two scenarios hold it.
+    else is as the two scenarios hold it. The reader is handed this with the fleet filled in.
     """
     model = load_model(MODEL)
     incumbent = load_scenario(INCUMBENT)
@@ -49,7 +52,7 @@ def fleet(request) -> int:
 def answer(fleet):
     from tests.comparing_two_tcos.stubs import break_even_migration
 
-    return break_even_migration(fleet)
+    return break_even_migration(partial(difference_at, fleet))
 
 
 @pytest.mark.problem

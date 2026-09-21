@@ -1,11 +1,13 @@
 """Problem 13.2 — sample two of the model's inputs without the model's machinery, and reproduce
 the interval the book publishes for the cost they feed.
 
-The oracle for the inputs is the model file: expected percentiles are computed from the
-distribution the model declares, at test time, so editing the model changes what this problem
-wants — which is the correct behaviour and the reason the stub tells you not to copy the numbers.
-The oracle for the cost is the stamped result the chapter's own tables come from. The two inputs
-are declared independent of everything else, so the interval is reachable before ch14.
+The oracle for the inputs is the model file. The test reads the distribution each input declares
+out of it, hands that to the stub, and computes the expected percentiles from the same
+declaration at test time, so editing the model changes both what this problem gives you and
+what it wants — which is the correct behaviour and the reason the stub tells you to sample what
+you are handed rather than numbers typed in. The oracle for the cost is the stamped result the
+chapter's own tables come from. The two inputs are declared independent of everything else, so
+the interval is reachable before ch14.
 """
 
 from __future__ import annotations
@@ -29,6 +31,7 @@ TOLERANCE = 0.04
 
 @pytest.fixture(scope="module")
 def declared():
+    """Each input's distribution as the model file writes it: ``{shape: {parameters}}``."""
     model = load_model("models/web_service/model.yaml")
     return {name: model.nodes[name].distribution for name in WANTED}
 
@@ -40,7 +43,7 @@ def published():
 
 @pytest.mark.problem
 def test_all_three_are_returned(declared):
-    drawn = sample_two_inputs(seed=11, samples=SAMPLES)
+    drawn = sample_two_inputs(declared, seed=11, samples=SAMPLES)
     assert set(drawn) == {*WANTED, OUTPUT}, f"expected keys {sorted((*WANTED, OUTPUT))}"
     for name in drawn:
         assert len(np.asarray(drawn[name])) == SAMPLES, f"{name}: wrong number of draws"
@@ -49,21 +52,21 @@ def test_all_three_are_returned(declared):
 @pytest.mark.problem
 @pytest.mark.parametrize("percentile", [10, 50, 90])
 def test_the_percentiles_match_what_the_model_declares(declared, percentile):
-    drawn = sample_two_inputs(seed=11, samples=SAMPLES)
+    drawn = sample_two_inputs(declared, seed=11, samples=SAMPLES)
     for name in WANTED:
         shape, parameters = mc.one_shape(declared[name])
         wanted = float(mc.SHAPES[shape](np.array([percentile / 100]), **parameters)[0])
         got = float(np.percentile(np.asarray(drawn[name], dtype=float), percentile))
         assert abs(got - wanted) < TOLERANCE * wanted, (
             f"{name}: the model declares a p{percentile} of {wanted:.4g} and your samples give "
-            f"{got:.4g}. Read the distribution out of the model file rather than copying numbers."
+            f"{got:.4g}. Sample the distribution you were handed rather than numbers typed in."
         )
 
 
 @pytest.mark.problem
 @pytest.mark.parametrize("end", ["p5", "p95"])
-def test_the_cost_interval_is_the_one_the_book_publishes(published, end):
-    drawn = sample_two_inputs(seed=11, samples=SAMPLES)
+def test_the_cost_interval_is_the_one_the_book_publishes(declared, published, end):
+    drawn = sample_two_inputs(declared, seed=11, samples=SAMPLES)
     got = float(np.percentile(np.asarray(drawn[OUTPUT], dtype=float), float(end[1:])))
     assert abs(got - published[end]) < TOLERANCE * published[end], (
         f"the book publishes a {end} of {published[end]:,.0f} for the annual staff cost and your "
@@ -73,9 +76,9 @@ def test_the_cost_interval_is_the_one_the_book_publishes(published, end):
 
 
 @pytest.mark.problem
-def test_the_cost_is_worked_from_the_draws_returned():
+def test_the_cost_is_worked_from_the_draws_returned(declared):
     """The same bag, through the formula: one draw's cost comes from that draw's two inputs."""
-    drawn = sample_two_inputs(seed=11, samples=SAMPLES)
+    drawn = sample_two_inputs(declared, seed=11, samples=SAMPLES)
     expected = np.asarray(drawn[WANTED[0]]) * np.asarray(drawn[WANTED[1]])
     assert np.allclose(np.asarray(drawn[OUTPUT], dtype=float), expected, rtol=1e-9), (
         "the cost has to come from the draws you return, draw by draw, not from a fresh bag"
@@ -83,12 +86,16 @@ def test_the_cost_is_worked_from_the_draws_returned():
 
 
 def test_the_model_still_declares_two_sampled_prices(declared):
-    """Scaffolding: the problem's subject exists and is uncertain."""
+    """Scaffolding: the problem's subject exists, is uncertain, and has the two shapes the stub
+    tells the reader to expect."""
     for name in WANTED:
         assert declared[name] is not None, (
             f"{name} no longer declares a distribution, so problem 13.2 has nothing to sample. "
             "Either the model changed or the problem needs rewriting."
         )
+    assert {mc.one_shape(declared[name])[0] for name in WANTED} == {"triangular", "lognormal"}, (
+        "the stub says one input is a triangular and the other a lognormal"
+    )
 
 
 def test_the_cost_is_still_the_product_of_the_two_and_nothing_else_moves_them():

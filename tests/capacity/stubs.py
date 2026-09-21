@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from sizing.dsl import Model
-
 
 def raw_for(stored: float, replication: float, compression: float, overhead: float) -> float:
     """Problem 9.1 - the chain from what you must keep to what you must buy.
@@ -45,21 +43,26 @@ def erasure_crossover(data_shards: int, parity_shards: int) -> float:
     raise NotImplementedError("problem 9.2")
 
 
-def in_binary_units(model: Model) -> Model:
+def in_binary_units(
+    units: dict[str, str], values: dict[str, float | dict]
+) -> tuple[dict[str, str], dict[str, float | dict]]:
     """Problem 9.3 - the same model, read in the other kind of terabyte.
 
     A vendor's TB is a trillion bytes. A filesystem's TiB is 2^40 of them, about ten per cent
     more. Both are spelled "terabyte" in conversation and the difference has bought a lot of
     people a smaller cluster than they thought.
 
-    Return a copy of ``model`` in which every unit that carries a terabyte, in a numerator or a
-    denominator, ``TB``, ``TB/host``, ``USD/TB/month`` and the rest, carries a tebibyte in its
-    place. For a computed node that is a relabelling and nothing else: its number is worked out
-    from the inputs and the build converts it. For an input it is more than that. An input's
-    number is a claim about bytes, and the same number under a new unit is a different claim, so
-    convert the number too: a value, or each end of a band, so that it means the same bytes it
-    meant before. A price per terabyte-month becomes a slightly higher price per tebibyte-month.
-    Change no formula.
+    ``units`` maps every node in the web service model to the unit it declares. ``values`` maps
+    every input to its number, or to the band the file writes for it as a dictionary: ``p10``
+    and ``p90``, or ``minimum``, ``likely`` and ``maximum``. Return the two, converted. Every
+    unit that carries a terabyte, in a numerator or a denominator, ``TB``, ``TB/host``,
+    ``USD/TB/month`` and the rest, carries a tebibyte in its place. For a computed node that is a
+    relabelling and nothing else: its number is worked out from the inputs and the build converts
+    it. For an input it is more than that. An input's number is a claim about bytes, and the same
+    number under a new unit is a different claim, so convert the number too: a value, or every
+    number in a band, so that it means the same bytes it meant before. A price per
+    terabyte-month becomes a slightly higher price per tebibyte-month. Leave every other unit and
+    number as it was. The test puts what you return back into the model; no formula changes.
 
     The test then asserts what only a consistent conversion gives: the model still typechecks,
     nothing the model buys has moved, the same hosts and the same money to the last digit, and
@@ -69,23 +72,26 @@ def in_binary_units(model: Model) -> Model:
     raise NotImplementedError("problem 9.3")
 
 
-def make_it_a_cost_model(model: Model) -> Model:
+def what_to_remove(kinds: dict[str, str], feeds: dict[str, set[str]]) -> list[str]:
     """Problem 9.4 - turn a sizing model back into a cost model, honestly.
 
     ``scripts/verify-models.py`` classifies a model by what is in it: a ``measured`` node or a
     ``ceiling`` makes it a sizing model, and a model with neither is a cost model whose inputs
-    can simply be sampled. The web service model crossed that line in ch06, when its first
-    ceiling arrived; this chapter adds the measured constant that would have crossed it anyway.
+    can be sampled. The web service model crossed that line in ch06, when its first ceiling
+    arrived; this chapter adds the measured constant that would have crossed it anyway.
 
-    Return a copy of ``model`` that classifies as a **cost** model, while still evaluating and
-    still producing at least one of the outputs it produced before.
+    ``kinds`` maps every node in the web service model to its kind: ``input``, ``derived``,
+    ``measured`` or ``ceiling``. ``feeds`` maps every node to the names of the nodes its formula
+    reads. Return the names to delete so that what is left classifies as a **cost** model and
+    still evaluates: every measured constant, every ceiling, and everything downstream of them,
+    because a node that reads a deleted node cannot be worked out.
 
-    You may delete nodes, and you will have to delete outputs: the ceilings are outputs, and the
-    measured constant feeds the recommended host count. Keep at least one of the original outputs
-    working. And the point of the exercise is in the third test: having removed them, finish the
-    last line of this docstring with one sentence saying what the resulting model can no longer
-    tell anybody. If you cannot name it, you have removed something that was not doing any work,
-    and the original model should not have had it.
+    The test deletes them, outputs included: the ceilings are outputs, and the measured constant
+    feeds the recommended host count. At least one of the original outputs has to survive. And
+    the point of the exercise is in the third test: having removed them, finish the last line of
+    this docstring with one sentence saying what the resulting model can no longer tell anybody.
+    If you cannot name it, you have removed something that was not doing any work, and the
+    original model should not have had it.
 
     What it can no longer say:
     """

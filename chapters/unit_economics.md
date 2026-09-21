@@ -180,8 +180,9 @@ python3 -m pytest tests/unit_economics/test_problem_1_unit_cost.py
 ```
 
 **17.2 — Four defensible denominators.**
-Compute all four and look at the spread. Then decide which you would put on a slide, and whether
-you would be willing to say which it was.
+The test hands you the five-year totals and what is held at the horizon, sample by sample, with
+day one's holding and the months in the horizon. Compute all four and look at the spread. Then
+decide which you would put on a slide, and whether you would be willing to say which it was.
 
 ```bash
 python3 -m pytest tests/unit_economics/test_problem_2_denominators.py

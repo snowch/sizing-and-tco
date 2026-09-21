@@ -214,14 +214,49 @@ def problem_files(slug: str) -> dict[str, str]:
     return out
 
 
+def editable_files(tree: ast.AST, slug: str) -> list[str]:
+    """The files a test says the reader edits: a module-level ``EDITABLE`` tuple of paths.
+
+    Where a chapter taught the model file, the reader's artefact is a file: a ceiling to declare,
+    a correlation with its reason, a fixture to repair. The test names it, the page shows it
+    whole and editable under the problem, the way it shows a stub function, and the grader
+    writes what the reader typed before pytest runs. Every such file lives under the chapter's
+    test directory, which the page ships anyway. A module-level name bound to a string counts as
+    that string, so a test may write ``FRAGMENT = "tests/.../x.yaml"`` once and
+    ``EDITABLE = (FRAGMENT,)`` beside it.
+    """
+    strings: dict[str, str] = {}
+    for node in tree.body:
+        value = getattr(node, "value", None)
+        if isinstance(value, ast.Constant) and isinstance(value.value, str):
+            for target in getattr(node, "targets", []):
+                if isinstance(target, ast.Name):
+                    strings[target.id] = value.value
+    for node in tree.body:
+        targets = getattr(node, "targets", [])
+        if not any(isinstance(t, ast.Name) and t.id == "EDITABLE" for t in targets):
+            continue
+        paths = []
+        for element in ast.walk(node.value):  # type: ignore[attr-defined]
+            if isinstance(element, ast.Constant) and isinstance(element.value, str):
+                paths.append(element.value)
+            elif isinstance(element, ast.Name) and element.id in strings:
+                paths.append(strings[element.id])
+        for path in paths:
+            if not path.startswith(f"tests/{slug}/"):
+                raise ValueError(f"{slug}: EDITABLE names {path!r}, not under tests/{slug}/")
+        return paths
+    return []
+
+
 def problem_pieces(slug: str) -> list[dict]:
-    """For each of a chapter's test files, the pieces of the stubs file it grades.
+    """For each of a chapter's test files, the pieces of the stubs file it grades, and the files.
 
     A test imports the functions it grades from the chapter's stubs file, and those are the
     pieces of it a reader edits. Each is located by parsing the file, decorators included, so a
     page can show the piece under the problem it belongs to and splice what the reader types back
-    into the whole. A test that imports nothing from the stubs has no piece, and the page shows
-    it none.
+    into the whole. A test may instead, or as well, name files the reader edits whole, in an
+    ``EDITABLE`` tuple. A test that does neither has no piece, and the page shows it none.
     """
     stubs = TESTS / slug / "stubs.py"
     source = stubs.read_text()
@@ -238,9 +273,10 @@ def problem_pieces(slug: str) -> list[dict]:
             spans[node.name] = (starts[first - 1], end)
     out = []
     for test in sorted((TESTS / slug).glob("test_problem_*.py")):
+        tree = ast.parse(test.read_text())
         names = [
             alias.name
-            for node in ast.walk(ast.parse(test.read_text()))
+            for node in ast.walk(tree)
             if isinstance(node, ast.ImportFrom) and node.module == f"tests.{slug}.stubs"
             for alias in node.names
         ]
@@ -257,6 +293,10 @@ def problem_pieces(slug: str) -> list[dict]:
                 "test": test.relative_to(ROOT).as_posix(),
                 "stubs": stubs.relative_to(ROOT).as_posix(),
                 "pieces": pieces,
+                "files": [
+                    {"path": path, "text": (ROOT / path).read_text()}
+                    for path in editable_files(tree, slug)
+                ],
             }
         )
     return out

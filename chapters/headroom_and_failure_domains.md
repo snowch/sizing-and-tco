@@ -187,9 +187,10 @@ python3 -m pytest tests/headroom_and_failure_domains/test_problem_2_compose.py
 ```
 
 **11.3 — Add a ceiling.**
-Add one to the web service model, with a margin and a reason, and get a verdict and a breach
-probability out of it. The toolkit will refuse it three different ways before it accepts it, and
-each refusal is a rule this chapter argues for.
+The page shows a fragment of the model file: a ceiling on connections per host with its unit,
+its margin and its reason left empty. Fill them in, and get a verdict and a breach probability
+out of it. The toolkit refuses it three different ways before it accepts it, and each refusal
+is a rule this chapter argues for.
 
 ```bash
 python3 -m pytest tests/headroom_and_failure_domains/test_problem_3_ceiling.py

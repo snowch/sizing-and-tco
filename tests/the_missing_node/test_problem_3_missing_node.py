@@ -13,9 +13,11 @@ import pytest
 from sizing import mc, units
 from sizing.dsl import Derived, Input, load_model, load_scenario
 from sizing.evaluate import evaluate
-from tests.the_missing_node.stubs import repair_the_model
 
 FIXTURE = "tests/the_missing_node/fixtures/model.yaml"
+REPAIRED = "tests/the_missing_node/fixtures/repaired.yaml"
+#: The file the page shows under the problem, editable, and writes back before grading.
+EDITABLE = (REPAIRED,)
 SCENARIO = "tests/the_missing_node/fixtures/scenarios/reference.yaml"
 OUTPUT = "monthly_cost"
 
@@ -58,7 +60,7 @@ def test_no_existing_input_was_changed(original):
     the same error with a wider error bar on it, and moving a distribution sideways is the same
     error again with the invoice copied into an input.
     """
-    repaired = repair_the_model(original)
+    repaired = load_model(REPAIRED)
     for name, node in original.nodes.items():
         if not isinstance(node, Input):
             continue
@@ -82,7 +84,7 @@ def test_the_repair_adds_a_quantity_and_prices_it(original):
     model under another name. So at least one added input has to be the thing the missing line
     is billed on, and a new derived node has to turn it into money and feed the total.
     """
-    repaired = repair_the_model(original)
+    repaired = load_model(REPAIRED)
     added = {name: repaired.nodes[name] for name in set(repaired.nodes) - set(original.nodes)}
     assert added, (
         "the repair has to add something. A model that disagrees with an invoice is not fixed by "
@@ -132,7 +134,7 @@ def test_nothing_old_moved_except_what_the_new_line_feeds(original, scenario):
     so its percentiles land where they did, give or take sampling noise. If one moved, a formula
     the model already had was changed to carry the gap, which is the plug in a different place.
     """
-    repaired = repair_the_model(original)
+    repaired = load_model(REPAIRED)
     added = set(repaired.nodes) - set(original.nodes)
     before = evaluate(original, scenario).samples
     after = evaluate(repaired, scenario).samples
@@ -151,7 +153,7 @@ def test_nothing_old_moved_except_what_the_new_line_feeds(original, scenario):
 
 @pytest.mark.problem
 def test_the_observation_lands_inside_the_interval(original, scenario):
-    repaired = repair_the_model(original)
+    repaired = load_model(REPAIRED)
     low, high = _interval(repaired, scenario)
     assert low <= OBSERVED_MONTHLY <= high, (
         f"the repaired model's 90% interval is {low:,.0f} to {high:,.0f} and the invoices "

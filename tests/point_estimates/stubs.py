@@ -9,45 +9,51 @@ The third has no test. It is about a system you actually run, and there is no or
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from sizing.dsl import Model
 
 
-def spread_of_each(model: Model) -> dict[str, float]:
+def spread_of_each(bands: dict[str, tuple[float, float]]) -> dict[str, float]:
     """Problem 1.1 - how uncertain is each input, on its own?
 
-    Return a dictionary mapping the name of **every input the file gives a band for** to the top
-    of that band over its bottom.
+    ``bands`` maps the name of **every input the file gives a band for** to the two ends of that
+    band, bottom first. Return a dictionary mapping each of those names to the top of its band
+    over its bottom.
 
     The file writes a band one of two ways. Some inputs carry ``p10`` and ``p90``: the value the
     modeller would be surprised to see undercut and the value they would be surprised to see
     exceeded, one time in ten each. Others carry ``minimum``, ``likely`` and ``maximum``: the two
     ends the value cannot be outside, and the value it most often takes. For this problem a band
-    is its two ends either way, ``p90 / p10`` or ``maximum / minimum``. That the two kinds do not
-    mean the same thing by their ends is ch13's business, not yet yours.
+    is its two ends either way, ``p10`` and ``p90`` or ``minimum`` and ``maximum``, and that is
+    what ``bands`` holds. That the two kinds do not mean the same thing by their ends is ch13's
+    business, not yet yours.
 
-    An input written as one number is not in the answer. Somebody has decided it is known well
-    enough to fix, and whether that is true is ch03's subject.
+    An input written as one number has no band, so it is not in ``bands`` and not in the answer.
+    Somebody has decided it is known well enough to fix, and whether that is true is ch03's
+    subject.
 
-    Read the ends off the file. Nothing is drawn at random.
+    Nothing is drawn at random.
     """
     raise NotImplementedError("problem 1.1")
 
 
-def spread_on_paper(model: Model) -> float:
+def spread_on_paper(
+    bands: dict[str, tuple[float, float]], count_at: Callable[[dict[str, float]], float]
+) -> float:
     """Problem 1.1 - and how uncertain are they together?
 
-    Put every input that has a band at the bottom of it, all at once, and work the model through
-    to the hosts it recommends: the ``hosts_recommended`` output, the first row of the chapter's
-    table. Do it again with every one at the top. Return the second count over the first: the
-    same kind of number ``spread_of_each`` gives for one input, now for the answer.
+    ``count_at`` works the model through with the inputs you name held at the values you give,
+    and returns the hosts it then recommends: the ``hosts_recommended`` output, the first row of
+    the chapter's table. Call it with every input in ``bands`` held at the bottom of its band,
+    all at once. Call it again with every one held at the top. Return the second count over the
+    first: the same kind of number ``spread_of_each`` gives for one input, now for the answer.
 
-    ``sizing.evaluate.point`` works a model through with a scenario's overrides standing in for
-    the file's numbers, and ``Scenario`` lives in ``sizing.dsl``. This is the arithmetic you could
-    do on paper, and it claims something nobody's data supports: that every input sits at the
-    same end of its band at the same moment. ch13 replaces that claim with a program that picks
-    each input's value many times over. What this version has is that it needs nothing but the
-    numbers already in the file, and what comes out is still wider than any one input can make
-    it on its own. That is the thing a point estimate cannot say.
+    This is the arithmetic you could do on paper, and it claims something nobody's data supports:
+    that every input sits at the same end of its band at the same moment. ch13 replaces that
+    claim with a program that picks each input's value many times over. What this version has is
+    that it needs nothing but the numbers already in the file, and what comes out is still wider
+    than any one input can make it on its own. That is the thing a point estimate cannot say.
     """
     raise NotImplementedError("problem 1.1")
 

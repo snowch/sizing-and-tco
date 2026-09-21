@@ -24,21 +24,23 @@ def unit_cost(total: float, quantity: float, months: float) -> float:
     raise NotImplementedError("problem 17.1")
 
 
-def denominators(stored_samples: np.ndarray, total_samples: np.ndarray) -> dict[str, float]:
+def denominators(
+    stored_samples: np.ndarray, total_samples: np.ndarray, stored_at_start: float, months: float
+) -> dict[str, float]:
     """Problem 17.2 - the same cost, over four defensible denominators.
 
     You have a bag of five-year totals and a bag of what the service holds at the horizon, sample
-    by sample. Somebody wants a cost per terabyte per month. Return a dictionary with four of
-    them, keyed exactly as below, each a single number. Every one is per month: divide by the
-    months in the horizon, which the model holds as ``horizon``, in years. Day one's holding is
-    the model's ``stored_data_t0``.
+    by sample, and two plain numbers the test takes from the model: ``stored_at_start``, what it
+    holds on day one, and ``months``, the months in the horizon. Somebody wants a cost per
+    terabyte per month. Return a dictionary with four of them, keyed exactly as below, each a
+    single number. Every one is per month: divide by ``months``.
 
     ``"at_horizon"``
         Median total over the median of what is held at the horizon. What you will be paying
         for at the end.
     ``"at_start"``
-        Median total over what is held on day one, which you can get from the model. What you
-        are paying for now.
+        Median total over what is held on day one, ``stored_at_start``. What you are paying for
+        now.
     ``"average_linear"``
         Median total over the mean of the two, which is a straight line drawn under a curve that
         is not straight.
