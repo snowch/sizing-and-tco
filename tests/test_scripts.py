@@ -750,9 +750,9 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     assert css.index("#main > * { max-width: var(--measure); margin-inline: auto; }") > css.index(
         "main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;"
     ), "a media query adds no specificity, so the rule that lifts the cap has to come after it"
-    assert (
-        "#main > :is(figure:has(> iframe), figure:has(> .runner), table) "
-        "{ max-width: min(100%, 84rem); }" in css
+    assert "#main > :is(" not in css, (
+        "a chapter is one column: text and graphics are the same width, and what does not fit "
+        "takes the window on a button rather than stretching the page around it"
     )
     # Both choices are read before the page paints, so a rail does not close again on every page.
     opening = build_site.MENU.split("document.addEventListener")[0]
@@ -768,23 +768,20 @@ def test_a_models_box_follows_the_layout_the_model_chose():
     assert "@container (min-width: 1101px) { iframe.viewer { height: 812px; } }" in css
 
 
-def test_the_chapter_centres_what_keeps_the_measure_and_widens_what_does_not():
-    """Addressed by the id, because nearly every child of a chapter sets its own margins.
+def test_a_chapter_is_one_column_wide():
+    """One width for everything in it, addressed by the id so the children's margins do not win.
 
     `p`, every heading, `.admonition`, `.editable-block` and the turn all write `margin: x 0 y`,
     which is the same specificity as `main > *` and comes later in the sheet, so the element
-    rule won and the whole page stacked against the left of its column. Three widths: prose
-    keeps the measure, a model or a table takes the column, and code takes what it needs --
-    the book's lines stop at 100 columns and its widest block wants 942px.
+    rule won and the whole page stacked against the left of its column. Widths per kind of
+    content came next and were worse: a model three times the width of the paragraph above it
+    is hard to read however much it gains the graph.
     """
     css = site().CSS
     assert "#main > * { max-width: var(--measure); margin-inline: auto; }" in css, (
         "centring a chapter's children has to out-specify the children's own margin rules"
     )
-    assert (
-        "#main > :is(pre, .editable-block, .problem, figure:has(> pre)) "
-        "{ max-width: min(100%, 60rem); }" in css
-    ), "code that a reader edits or reads was cut off at the measure on 33 of 42 pages"
+    assert "60rem" not in css and "84rem" not in css, "one width, not a width per kind"
 
 
 def test_a_model_can_take_the_window_without_losing_the_reader_s_place():
@@ -810,9 +807,17 @@ def test_a_model_can_take_the_window_without_losing_the_reader_s_place():
         "it does nothing without the script, so it is not there without it"
     )
     css = build_site.CSS
-    assert "figure.container:has(> iframe) { position: relative; }" in css
+    assert ":is(figure.container:has(> iframe), .wide-block) { position: relative; }" in css, (
+        "the button sits over the corner of the thing it opens, model or wrapped block"
+    )
     assert "html.model-open { overflow: hidden; }" in css, "the page must not scroll behind it"
-    assert "html.model-open #main > figure.expanded { position: fixed; inset: 0;" in css
+    assert "html.model-open #main .expanded { position: fixed; inset: 0;" in css, (
+        "a table can sit inside a note, so the overlay cannot want a direct child"
+    )
+    assert "const cut = (el) => el.scrollWidth > el.clientWidth + 1;" in build_site.EXPAND, (
+        "code and tables get the control only where they are actually cut off, which the page "
+        "can know only by measuring"
+    )
     script = build_site.EXPAND
     assert "window.scrollTo(0, scrolled)" in script, (
         "the figure leaves the flow while it is open, so the page under it moves"
