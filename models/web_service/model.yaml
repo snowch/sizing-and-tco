@@ -23,6 +23,7 @@ nodes:
 
   peak_request_rate_t0:
     kind: input
+    decided: world
     unit: request/second
     label: peak request rate, day one
     distribution: {triangular: {minimum: 3000.0, likely: 8000.0, maximum: 20000.0}}
@@ -34,6 +35,7 @@ nodes:
 
   stored_data_t0:
     kind: input
+    decided: world
     unit: TB
     value: 15
     label: records held, day one
@@ -45,6 +47,7 @@ nodes:
 
   annual_growth:
     kind: input
+    decided: world
     unit: dimensionless
     label: annual growth factor
     distribution: {lognormal: {p10: 1.12, p90: 1.60}}
@@ -57,6 +60,7 @@ nodes:
 
   horizon:
     kind: input
+    decided: you
     unit: year
     value: 5
     provenance:
@@ -66,6 +70,7 @@ nodes:
 
   one_year:
     kind: input
+    decided: definition
     unit: year
     value: 1
     label: one year
@@ -96,6 +101,7 @@ nodes:
 
   cores_per_host:
     kind: input
+    decided: you
     unit: core/host
     value: 16
     provenance:
@@ -106,6 +112,7 @@ nodes:
 
   ram_per_host:
     kind: input
+    decided: you
     unit: GiB/host
     value: 64
     provenance:
@@ -116,6 +123,7 @@ nodes:
 
   os_reserve:
     kind: input
+    decided: world
     unit: dimensionless
     distribution: {triangular: {minimum: 0.06, likely: 0.10, maximum: 0.18}}
     provenance:
@@ -139,6 +147,7 @@ nodes:
 
   peak_to_mean:
     kind: input
+    decided: world
     unit: dimensionless
     label: peak-to-mean ratio
     distribution: {triangular: {minimum: 2.0, likely: 3.5, maximum: 6.0}}
@@ -158,6 +167,7 @@ nodes:
 
   service_demand:
     kind: input
+    decided: world
     unit: second * core / request
     label: CPU time per request
     note: >-
@@ -180,6 +190,7 @@ nodes:
 
   hosts:
     kind: input
+    decided: you
     unit: host
     value: 54
     label: hosts in the fleet
@@ -204,6 +215,7 @@ nodes:
 
   one_host:
     kind: input
+    decided: definition
     unit: host
     value: 1
     note: "as elsewhere: a conversion has to be a host before the division means anything"
@@ -211,12 +223,14 @@ nodes:
 
   one_core:
     kind: input
+    decided: definition
     unit: core
     value: 1
     provenance: {kind: fact, source: "definition"}
 
   one_request:
     kind: input
+    decided: definition
     unit: request
     value: 1
     provenance: {kind: fact, source: "definition"}
@@ -262,6 +276,7 @@ nodes:
 
   utilisation_cap:
     kind: input
+    decided: you
     unit: dimensionless
     label: utilisation the model will admit to
     note: >-
@@ -275,6 +290,7 @@ nodes:
 
   queueing_margin:
     kind: input
+    decided: you
     unit: dimensionless
     value: 0.3
     label: queueing margin
@@ -348,6 +364,7 @@ nodes:
 
   contention:
     kind: input
+    decided: world
     unit: dimensionless
     label: contention
     note: >-
@@ -363,6 +380,7 @@ nodes:
 
   crosstalk:
     kind: input
+    decided: world
     unit: dimensionless
     label: crosstalk
     note: >-
@@ -458,6 +476,7 @@ nodes:
 
   hot_fraction:
     kind: input
+    decided: world
     unit: dimensionless
     label: share of records touched in a busy hour
     distribution: {triangular: {minimum: 0.01, likely: 0.03, maximum: 0.08}}
@@ -476,6 +495,7 @@ nodes:
 
   cache_margin:
     kind: input
+    decided: you
     unit: dimensionless
     value: 0.25
     label: cache margin
@@ -515,6 +535,7 @@ nodes:
 
   replication_factor:
     kind: input
+    decided: you
     unit: dimensionless
     value: 3
     provenance:
@@ -526,6 +547,7 @@ nodes:
 
   index_overhead:
     kind: input
+    decided: world
     unit: dimensionless
     distribution: {triangular: {minimum: 1.15, likely: 1.30, maximum: 1.60}}
     provenance:
@@ -548,6 +570,7 @@ nodes:
 
   disk_per_host:
     kind: input
+    decided: you
     unit: TB/host
     value: 2
     provenance:
@@ -558,6 +581,7 @@ nodes:
 
   disk_margin:
     kind: input
+    decided: you
     unit: dimensionless
     value: 0.25
     label: disk margin
@@ -645,6 +669,7 @@ nodes:
 
   host_price:
     kind: input
+    decided: world
     unit: USD/host
     distribution: {lognormal: {p10: 4500, p90: 9500}}
     provenance:
@@ -659,6 +684,7 @@ nodes:
 
   network_price_per_host:
     kind: input
+    decided: world
     unit: USD/host
     distribution: {triangular: {minimum: 600, likely: 1100, maximum: 2200}}
     provenance:
@@ -681,6 +707,7 @@ nodes:
 
   host_power:
     kind: input
+    decided: world
     unit: W/host
     distribution: {triangular: {minimum: 220, likely: 300, maximum: 420}}
     provenance:
@@ -691,6 +718,7 @@ nodes:
 
   pue:
     kind: input
+    decided: world
     unit: dimensionless
     label: PUE
     distribution: {triangular: {minimum: 1.15, likely: 1.35, maximum: 1.75}}
@@ -709,6 +737,7 @@ nodes:
 
   hours_per_year:
     kind: input
+    decided: definition
     unit: hour/year
     value: 8766
     provenance:
@@ -723,6 +752,7 @@ nodes:
 
   electricity_price:
     kind: input
+    decided: world
     unit: USD/kWh
     distribution: {lognormal: {p10: 0.085, p90: 0.21}}
     provenance:
@@ -738,6 +768,7 @@ nodes:
 
   licence_per_core:
     kind: input
+    decided: world
     unit: USD/core/year
     distribution: {lognormal: {p10: 40, p90: 160}}
     provenance:
@@ -748,6 +779,7 @@ nodes:
 
   licence_per_host:
     kind: input
+    decided: world
     unit: USD/host/year
     value: 0
     label: licence per host
@@ -774,6 +806,7 @@ nodes:
 
   support_rate:
     kind: input
+    decided: world
     unit: 1/year
     distribution: {triangular: {minimum: 0.07, likely: 0.11, maximum: 0.18}}
     provenance:
@@ -789,6 +822,7 @@ nodes:
 
   staff_fte:
     kind: input
+    decided: world
     unit: dimensionless
     label: engineers, full-time equivalent
     distribution: {triangular: {minimum: 0.5, likely: 1.0, maximum: 2.0}}
@@ -800,6 +834,7 @@ nodes:
 
   fully_loaded_salary:
     kind: input
+    decided: world
     unit: USD/year
     distribution: {lognormal: {p10: 115000, p90: 195000}}
     provenance:
@@ -824,6 +859,7 @@ nodes:
 
   migration_cost:
     kind: input
+    decided: you
     unit: USD
     value: 0
     label: one-off cost of moving to this design
@@ -855,6 +891,7 @@ nodes:
 
   seconds_per_year:
     kind: input
+    decided: definition
     unit: second/year
     value: 31557600
     provenance:

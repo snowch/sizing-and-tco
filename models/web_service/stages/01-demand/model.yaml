@@ -12,6 +12,7 @@ description: The web service model as it stands at the end of ch02.
 nodes:
   peak_request_rate_t0:
     kind: input
+    decided: world
     unit: request/second
     label: peak request rate, day one
     value: 8000
@@ -24,6 +25,7 @@ nodes:
     range: [500, 40000]
   stored_data_t0:
     kind: input
+    decided: world
     unit: TB
     value: 15
     label: records held, day one
@@ -36,6 +38,7 @@ nodes:
     range: [1, 200]
   annual_growth:
     kind: input
+    decided: world
     unit: dimensionless
     label: annual growth factor
     value: 1.3
@@ -48,6 +51,7 @@ nodes:
     range: [1.0, 2.0]
   horizon:
     kind: input
+    decided: you
     unit: year
     value: 5
     provenance:
@@ -56,6 +60,7 @@ nodes:
     range: [3, 8]
   one_year:
     kind: input
+    decided: definition
     unit: year
     value: 1
     label: one year

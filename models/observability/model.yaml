@@ -23,6 +23,7 @@ nodes:
 
   hosts:
     kind: input
+    decided: world
     unit: host
     value: 1200
     provenance: {kind: assumption, source: "stated estate size (ch02)"}
@@ -30,6 +31,7 @@ nodes:
 
   request_rate:
     kind: input
+    decided: world
     unit: request/second
     distribution: {triangular: {minimum: 8000.0, likely: 25000.0, maximum: 90000.0}}
     provenance:
@@ -42,6 +44,7 @@ nodes:
 
   annual_growth:
     kind: input
+    decided: world
     unit: dimensionless
     distribution: {lognormal: {p10: 1.15, p90: 1.70}}
     provenance:
@@ -53,6 +56,7 @@ nodes:
 
   horizon:
     kind: input
+    decided: you
     unit: year
     value: 3
     provenance: {kind: assumption, source: "the planning horizon for this platform"}
@@ -60,6 +64,7 @@ nodes:
 
   one_year:
     kind: input
+    decided: definition
     unit: year
     value: 1
     note: "as in the web service model: an exponent has to be a pure number"
@@ -79,6 +84,7 @@ nodes:
 
   label_values_endpoint:
     kind: input
+    decided: world
     unit: dimensionless
     distribution: {triangular: {minimum: 2.0, likely: 6.0, maximum: 20.0}}
     provenance:
@@ -89,6 +95,7 @@ nodes:
 
   label_values_status:
     kind: input
+    decided: world
     unit: dimensionless
     distribution: {triangular: {minimum: 2.0, likely: 3.0, maximum: 6.0}}
     provenance:
@@ -99,6 +106,7 @@ nodes:
 
   label_values_accidental:
     kind: input
+    decided: world
     unit: dimensionless
     label: accidental label values
     note: >-
@@ -129,6 +137,7 @@ nodes:
 
   base_metrics_per_host:
     kind: input
+    decided: world
     unit: series/host
     value: 60
     label: metric names per host
@@ -142,6 +151,7 @@ nodes:
 
   scrape_interval:
     kind: input
+    decided: you
     unit: second
     value: 30
     provenance: {kind: assumption, source: "a control knob (ch12): doubling it halves the metrics
@@ -150,6 +160,7 @@ nodes:
 
   one_sample_per_series:
     kind: input
+    decided: definition
     unit: sample/series
     value: 1
     note: "one scrape takes one sample from one series. A rate is a count over a duration, and the
@@ -175,6 +186,7 @@ nodes:
 
   metrics_retention:
     kind: input
+    decided: you
     unit: day
     value: 400
     provenance: {kind: assumption, source: "a control knob (ch12)"}
@@ -189,6 +201,7 @@ nodes:
 
   lines_per_request:
     kind: input
+    decided: world
     unit: line/request
     distribution: {triangular: {minimum: 3.0, likely: 9.0, maximum: 30.0}}
     provenance:
@@ -199,6 +212,7 @@ nodes:
 
   log_keep_rate:
     kind: input
+    decided: you
     unit: dimensionless
     value: 1.0
     label: fraction of log lines kept
@@ -224,6 +238,7 @@ nodes:
 
   logs_retention:
     kind: input
+    decided: you
     unit: day
     value: 30
     provenance: {kind: assumption, source: "a control knob (ch12)"}
@@ -249,6 +264,7 @@ nodes:
 
   trace_keep_rate:
     kind: input
+    decided: you
     unit: dimensionless
     value: 0.05
     label: trace sampling rate
@@ -275,6 +291,7 @@ nodes:
 
   traces_retention:
     kind: input
+    decided: you
     unit: day
     value: 14
     provenance: {kind: assumption, source: "a control knob (ch12)"}
@@ -304,6 +321,7 @@ nodes:
 
   collector_cores:
     kind: input
+    decided: you
     unit: core
     value: 16
     provenance: {kind: assumption, source: "the sizing decision for the ingest tier"}
@@ -311,6 +329,7 @@ nodes:
 
   collector_throughput_quoted:
     kind: input
+    decided: world
     unit: MB/s/core
     value: 6
     provenance:
@@ -367,6 +386,7 @@ nodes:
 
   usable_tb_per_node:
     kind: input
+    decided: you
     unit: TB/node
     value: 40
     provenance: {kind: assumption, source: "usable capacity per storage node after replication"}
@@ -374,6 +394,7 @@ nodes:
 
   store_nodes:
     kind: input
+    decided: you
     unit: node
     value: 12
     provenance: {kind: assumption, source: "the sizing decision for the retention tier"}
@@ -406,6 +427,7 @@ nodes:
 
   queries_per_second:
     kind: input
+    decided: world
     unit: query/second
     distribution: {triangular: {minimum: 2.0, likely: 12.0, maximum: 60.0}}
     provenance:
@@ -415,6 +437,7 @@ nodes:
 
   series_per_query_base:
     kind: input
+    decided: world
     unit: series/query
     label: series per query, before labels
     distribution: {triangular: {minimum: 40.0, likely: 300.0, maximum: 2000.0}}
@@ -442,6 +465,7 @@ nodes:
 
   query_nodes:
     kind: input
+    decided: you
     unit: node
     value: 24
     provenance: {kind: assumption, source: "the sizing decision for the query tier"}
@@ -449,6 +473,7 @@ nodes:
 
   query_scan_rate_quoted:
     kind: input
+    decided: world
     unit: series/second/node
     value: 90000
     provenance: {kind: vendor_claim, source: "series scanned per second per query node, quoted"}
@@ -474,6 +499,7 @@ nodes:
 
   storage_price:
     kind: input
+    decided: world
     unit: USD/TB/month
     distribution: {lognormal: {p10: 9.0, p90: 24.0}}
     provenance:

@@ -185,6 +185,13 @@ def dependency_graph(result: str, focus: str | None = None) -> str:
             f'<rect x="{x}" y="{y}" width="{BOX_WIDTH}" height="{BOX_HEIGHT}" rx="3" '
             f'fill="{fill}" stroke="{stroke}" stroke-width="1.2"{dash}/>'
         )
+        # Whether somebody chose this, as the model file declares it rather than as anything
+        # here could infer. `sizing/viewer/app.js` draws the same bar off the same field.
+        if lit and node.get("decided") == "you":
+            boxes.append(
+                f'<rect x="{x}" y="{y + 3}" width="3" height="{BOX_HEIGHT - 6}" rx="1.5" '
+                f'fill="{stroke}"/>'
+            )
         label = node["label"]
         if node["kind"] == "ceiling":
             label = f"limit on {label}"
@@ -227,6 +234,14 @@ def _legend(x: float, y: float) -> str:
             f'<text x="{x + offset + 17}" y="{y + 9}" font-size="9.5" fill="#455a64">{kind}</text>'
         )
         offset += 24 + len(kind) * 5.6
+    # The fifth entry is not a kind. It is the mark an input wears when somebody chose it.
+    out.append(
+        f'<rect x="{x + offset}" y="{y}" width="13" height="10" rx="2" '
+        f'fill="{KIND_FILL["input"]}" stroke="{KIND_STROKE["input"]}"/>'
+        f'<rect x="{x + offset}" y="{y + 1}" width="3" height="8" rx="1.5" '
+        f'fill="{KIND_STROKE["input"]}"/>'
+        f'<text x="{x + offset + 17}" y="{y + 9}" font-size="9.5" fill="#455a64">you decide</text>'
+    )
     return "".join(out)
 
 

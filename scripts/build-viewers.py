@@ -71,10 +71,11 @@ PAGE = """<!doctype html>
     <p class="note narrow-note" id="narrow-note"></p>
     <div class="legend">
       <span><i style="background:var(--input);border:1px solid var(--input-edge)"></i>input</span>
+      <span><i class="decision" style="background:var(--input);border:1px solid var(--input-edge)"></i>you decide</span>
       <span><i style="background:var(--derived);border:1px solid var(--derived-edge)"></i>derived</span>
       <span><i style="background:var(--measured);border:1px solid var(--measured-edge)"></i>measured</span>
       <span><i style="background:var(--ceiling);border:1px solid var(--ceiling-edge)"></i>ceiling</span>
-      <span><i style="background:#fff;border:1px dashed var(--ceiling-edge)"></i>not yet measured</span>
+      <span><i style="background:var(--bg);border:1px dashed var(--ceiling-edge)"></i>not yet measured</span>
     </div>
     <p class="note" id="focus-note"></p>
     <svg id="graph" xmlns="http://www.w3.org/2000/svg"></svg>

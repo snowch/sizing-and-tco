@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "6dd7efbe1a7e844d",
+  "code_fingerprint": "553a0cb347af6d68",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/02-provenance/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-21T02:55:21+00:00",
-  "git_revision": "2110500",
+  "generated_at": "2026-09-21T21:43:45+00:00",
+  "git_revision": "37a337d",
   "kind": "model",
   "name": "web_service_provenance-reference",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -45,10 +45,11 @@
       "ram_for_service": 0.001073741824,
       "stored_data": 1.0
     },
-    "generated_at": "2026-09-21T02:55:21+00:00",
+    "generated_at": "2026-09-21T21:43:45+00:00",
     "model": "web_service_provenance",
     "nodes": {
       "annual_growth": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -68,6 +69,7 @@
         "unit": "dimensionless"
       },
       "horizon": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -114,6 +116,7 @@
         "unit": "dimensionless"
       },
       "one_year": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -129,6 +132,7 @@
         "unit": "year"
       },
       "os_reserve": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -185,6 +189,7 @@
         "unit": "request/second"
       },
       "peak_request_rate_t0": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -240,6 +245,7 @@
         "unit": "TB/host"
       },
       "ram_per_host": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -296,6 +302,7 @@
         "unit": "TB"
       },
       "stored_data_t0": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",

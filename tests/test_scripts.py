@@ -843,6 +843,57 @@ def test_the_rails_take_the_room_as_it_appears():
         )
 
 
+def test_the_model_panel_says_how_far_a_slider_reaches():
+    """Dragging an input and watching nothing move is a question the page used to leave open.
+
+    A reader moved "records held, day one" and the five-year total did not budge, which reads as
+    a broken page and is in fact the model's argument: the bill is for the fleet somebody decided
+    to buy. One hop of "Feeds" cannot say that, so the panel names which of the model's declared
+    outputs an input reaches and, more usefully, which it cannot.
+    """
+    app = (ROOT / "sizing" / "viewer" / "app.js").read_text()
+    assert "const reach = descendants(name);" in app, "the forward closure, not one hop"
+    assert "PAYLOAD.outputs.filter((o) => o !== name && reach.has(o))" in app
+    assert "PAYLOAD.outputs.filter((o) => o !== name && !reach.has(o))" in app, (
+        "naming what it cannot move is the half that answers the question"
+    )
+    assert "Cannot move:" in app
+    # And the same reach, while a slider is held, over the outputs table.
+    assert "const reach = touched ? descendants(touched) : null;" in app
+    assert "Greyed rows cannot be moved by" in app, (
+        "a greyed row with no explanation is a new puzzle rather than an answer"
+    )
+    css = (ROOT / "sizing" / "viewer" / "style.css").read_text()
+    assert "#outputs tr.inert td { color: var(--muted); }" in css
+
+
+def test_a_choice_is_marked_as_one_and_a_year_in_seconds_is_not():
+    """Both graphs read the model's own declaration rather than inferring it.
+
+    The inference available -- an input with no distribution is a decision -- files six unit
+    anchors in this model as choices, and the records a service's users uploaded as one too.
+    `decided` is the model saying which is which, so the mark is a claim it makes rather than a
+    guess about how finished the file is.
+    """
+    from sizing.dsl import discover
+
+    app = (ROOT / "sizing" / "viewer" / "app.js").read_text()
+    assert 'const isDecision = (node) => node.decided === "you";' in app
+    assert "!node.distribution" not in app, "the heuristic is gone, not merely unused"
+    drawing = (ROOT / "bench" / "diagrams.py").read_text()
+    assert 'if lit and node.get("decided") == "you":' in drawing
+    # The payload the graphs read has to carry it.
+    assert 'entry["decided"] = node.decided' in (ROOT / "sizing" / "export.py").read_text()
+
+    # And the classification says what a reader would say.
+    web = next(m for m in discover() if m.name == "web_service")
+    assert web.nodes["hosts"].decided == "you", "the fleet is the decision the book is about"
+    assert web.nodes["stored_data_t0"].decided == "world", (
+        "nobody decides how much their users uploaded"
+    )
+    assert web.nodes["seconds_per_year"].decided == "definition"
+
+
 def test_a_models_box_follows_the_layout_the_model_chose():
     """One fixed height fits none of the viewer's three layouts, and it has all three now."""
     css = site().CSS
