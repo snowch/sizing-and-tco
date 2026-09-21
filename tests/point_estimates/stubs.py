@@ -15,31 +15,39 @@ from sizing.dsl import Model
 def spread_of_each(model: Model) -> dict[str, float]:
     """Problem 1.1 - how uncertain is each input, on its own?
 
-    Return a dictionary mapping the name of **every input that declares a lognormal
-    distribution** to the ratio of its 90th percentile to its 10th.
+    Return a dictionary mapping the name of **every input the file gives a band for** to the top
+    of that band over its bottom.
 
-    That ratio is the honest width of one quantity: a node declaring ``p10: 1.12, p90: 1.6``
-    is a claim that the value is four times out of five somewhere in a band whose top is about
-    1.43 times its bottom. Nodes that declare no distribution are not in the answer — somebody
-    has decided they are known well enough to fix, and whether that is true is ch03's subject.
+    The file writes a band one of two ways. Some inputs carry ``p10`` and ``p90``: the value the
+    modeller would be surprised to see undercut and the value they would be surprised to see
+    exceeded, one time in ten each. Others carry ``minimum``, ``likely`` and ``maximum``: the two
+    ends the value cannot be outside, and the value it most often takes. For this problem a band
+    is its two ends either way, ``p90 / p10`` or ``maximum / minimum``. That the two kinds do not
+    mean the same thing by their ends is ch13's business, not yet yours.
 
-    Read the distributions off the model. Do not sample anything.
+    An input written as one number is not in the answer. Somebody has decided it is known well
+    enough to fix, and whether that is true is ch03's subject.
+
+    Read the ends off the file. Nothing is drawn at random.
     """
     raise NotImplementedError("problem 1.1")
 
 
-def spread_of_the_chain(model: Model) -> float:
+def spread_on_paper(model: Model) -> float:
     """Problem 1.1 - and how uncertain are they together?
 
-    Return what those ratios become when the quantities are multiplied along a chain: the width
-    of a product of uncertain quantities, in the same units as ``spread_of_each`` — a ratio of a
-    high estimate to a low one.
+    Put every input that has a band at the bottom of it, all at once, and work the model through
+    to its five-year total, the ``tco`` output. Do it again with every one at the top. Return the
+    second total over the first: the same kind of number ``spread_of_each`` gives for one input,
+    now for the answer.
 
-    This calculation assumes every input is at its p10 at the same moment and then at its p90 at
-    the same moment — a stronger claim than anybody's data supports, and ch13 is where sampling
-    replaces it. What this version has over that one is that it needs nothing but the numbers
-    already in the file, and what comes out is still far wider than any single input. That is the thing a
-    point estimate cannot say, and you can reach it on paper.
+    ``sizing.evaluate.point`` works a model through with a scenario's overrides standing in for
+    the file's numbers, and ``Scenario`` lives in ``sizing.dsl``. This is the arithmetic you could
+    do on paper, and it claims something nobody's data supports: that every input sits at the
+    same end of its band at the same moment. ch13 replaces that claim with a program that picks
+    each input's value many times over. What this version has is that it needs nothing but the
+    numbers already in the file, and what comes out is still wider than any one input can make
+    it on its own. That is the thing a point estimate cannot say.
     """
     raise NotImplementedError("problem 1.1")
 
