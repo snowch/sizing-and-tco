@@ -7,9 +7,33 @@
   --measured: #fde8c8; --measured-edge: #c8791a;
   --ceiling: #f8d3d0; --ceiling-edge: #b3413a;
   --ok: #2e7d32; --warn: #c8791a; --over: #b3413a;
+  --accent: #1a73e8; --accent-deep: #1660c4; --on-accent: #ffffff;
+  --good: #eef6ee; --good-edge: #b7d8b7; --bad: #fdecea; --bad-edge: #f5b5ae;
+  --edge-line: #607d8b; --row-hover: #eef3f8; --row-focused: #dbe7f3;
+  --ok-wash: #e6f4e7; --warn-wash: #fdf0dc; --over-wash: #fbe3e1;
+  --stale-wash: #fdf6ea; --blocked-wash: #fdeeed;
+}
+/* Read in the dark. The chapter around this panel follows the reader's system, and a white
+ * slab in the middle of a dark page reads as a hole in it. Colour by colour, not an invert:
+ * amber still means a measured constant and red still means a ceiling. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #dde4e8; --muted: #9db0ba; --line: #3d4b53; --bg: #151c20; --panel: #1b2429;
+    --input: #22384a; --input-edge: #5b8fb9;
+    --derived: #232d33; --derived-edge: #6c828d;
+    --measured: #3a2c15; --measured-edge: #d9922c;
+    --ceiling: #3a1f1d; --ceiling-edge: #cf5a52;
+    --ok: #4f9c53; --warn: #d9922c; --over: #cf5a52;
+    --accent: #7fb2dd; --accent-deep: #9cc6eb; --on-accent: #10171b;
+    --good: #1c2a1d; --good-edge: #2f5a32; --bad: #2e1a19; --bad-edge: #6b3330;
+    --edge-line: #7f939e; --row-hover: #1f2b31; --row-focused: #22384a;
+    --ok-wash: #1c2a1d; --warn-wash: #2e2515; --over-wash: #2e1a19;
+    --stale-wash: #2a2317; --blocked-wash: #2e1c1b;
+  }
 }
 * { box-sizing: border-box; }
 body { margin: 0; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); }
+a { color: var(--accent); }
 header { padding: 14px 20px; border-bottom: 1px solid var(--line); }
 /* Embedded in a chapter, the page around this one puts an Expand button over the corner. */
 html.embedded header { padding-right: 104px; }
@@ -51,38 +75,38 @@ button:hover { border-color: var(--muted); }
 #canvas { overflow: auto; }
 #graph { display: block; height: auto; }
 .node rect { cursor: pointer; }
-.node.hot rect { stroke: #1a73e8; stroke-width: 2.2; }
+.node.hot rect { stroke: var(--accent); stroke-width: 2.2; }
 .node text { pointer-events: none; font-size: 9.5px; }
-.edge { fill: none; stroke: #607d8b; stroke-width: 1.1; }
-.edge.hot { stroke: #1a73e8; stroke-width: 2.2; }
-button.link { border: 0; background: none; padding: 0; color: #1a73e8; text-decoration: underline; cursor: pointer; font: inherit; }
+.edge { fill: none; stroke: var(--edge-line); stroke-width: 1.1; }
+.edge.hot { stroke: var(--accent); stroke-width: 2.2; }
+button.link { border: 0; background: none; padding: 0; color: var(--accent); text-decoration: underline; cursor: pointer; font: inherit; }
 #outputs tr { cursor: pointer; }
-#outputs tr:hover td { background: #eef3f8; }
-#outputs tr.focused td { background: #dbe7f3; }
+#outputs tr:hover td { background: var(--row-hover); }
+#outputs tr.focused td { background: var(--row-focused); }
 table { border-collapse: collapse; width: 100%; font-size: 12px; }
 td, th { padding: 3px 6px; border-bottom: 1px solid var(--line); text-align: left; }
 td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
 .badge { display: inline-block; padding: 0 6px; border-radius: 3px; font-size: 11px; font-weight: 600; }
-.badge.ok { background: #e6f4e7; color: var(--ok); }
-.badge.headroom { background: #fdf0dc; color: var(--warn); }
-.badge.over { background: #fbe3e1; color: var(--over); }
+.badge.ok { background: var(--ok-wash); color: var(--ok); }
+.badge.headroom { background: var(--warn-wash); color: var(--warn); }
+.badge.over { background: var(--over-wash); color: var(--over); }
 .note, .stale { font-size: 11.5px; color: var(--muted); margin: 6px 0; }
-.stale { padding: 7px 9px; border-left: 3px solid var(--warn); background: #fdf6ea; }
-.blocked { padding: 7px 9px; border-left: 3px solid var(--over); background: #fdeeed; font-size: 11.5px; }
+.stale { padding: 7px 9px; border-left: 3px solid var(--warn); background: var(--stale-wash); }
+.blocked { padding: 7px 9px; border-left: 3px solid var(--over); background: var(--blocked-wash); font-size: 11.5px; }
 code { font: 12px/1.4 ui-monospace, "SF Mono", Menlo, monospace; background: var(--bg); padding: 1px 4px; border-radius: 2px; border: 1px solid var(--line); }
 .hist { width: 100%; height: 74px; display: block; margin: 4px 0; }
 .legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 11px; color: var(--muted); margin-bottom: 8px; }
 .legend i { display: inline-block; width: 11px; height: 9px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
 
 /* -- resampling ------------------------------------------------------------------ */
-button.primary { background: #1a73e8; color: #fff; border-color: #1a73e8; margin: 8px 0 4px; display: block; }
-button.primary:hover { background: #1660c4; }
+button.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); margin: 8px 0 4px; display: block; }
+button.primary:hover { background: var(--accent-deep); }
 button.primary[disabled] { opacity: .6; cursor: progress; }
 .stale .note { display: block; margin-top: 4px; }
 .banner { margin: 10px 0; padding: 8px 10px; border-radius: 4px; font-size: 12px; line-height: 1.45;
-          background: #eef6ee; border: 1px solid #b7d8b7; }
-.banner.bad { background: #fdecea; border-color: #f5b5ae; }
+          background: var(--good); border: 1px solid var(--good-edge); }
+.banner.bad { background: var(--bad); border-color: var(--bad-edge); }
 .banner.pending { background: var(--panel); border-color: var(--line); }
 .slider .state { font-size: 11px; color: var(--muted); margin-top: 1px; }
-.slider .state.fixed { color: #1a73e8; }
+.slider .state.fixed { color: var(--accent); }
 #reset { margin: 6px 0 10px; }
