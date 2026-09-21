@@ -325,6 +325,11 @@ Take a price you pay, find two years of invoices for it, and decide which of the
 shapes in this chapter you would use and why. Then check what the last two years would have looked
 like under your choice. If the answer embarrasses you, that is the exercise working.
 
+A good answer names the shape, the reason it and not another, and the two ends of the band, as a
+sentence somebody could disagree with. What would show it wrong is the invoices: more than a
+couple of the twenty-four outside the band you declared means the band was too narrow, and none
+anywhere near its ends means it was too wide to be a claim at all.
+
 ## Where to go next
 
 Metropolis and Ulam's original paper @metropolis1949monte is seven pages, is readable without any

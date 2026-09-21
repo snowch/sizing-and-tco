@@ -36,7 +36,7 @@ def cost_of_sizing_on_one(
     they ignored. Return two numbers:
 
     * the fraction of samples in which that fleet is **too small**, because some other chain
-      wanted more;
+      wanted strictly more;
     * the median shortfall **in those samples only**, in hosts.
 
     The first is the one people do not expect. A chain that wins more often than either of the

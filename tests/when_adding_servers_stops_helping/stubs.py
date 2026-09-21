@@ -65,6 +65,7 @@ def peak_hosts(contention: float, crosstalk: float) -> float:
     it.
 
     Handle zero crosstalk. With no coordination cost the curve never turns over, and the honest
-    answer is that there is no peak.
+    answer is that there is no peak: raise, or return an infinity. A large number is not the
+    same answer.
     """
     raise NotImplementedError("problem 7.3")

@@ -57,14 +57,36 @@ def test_the_horizon_one_is_the_ratio_of_medians(samples, evaluated):
 
 
 @pytest.mark.problem
+def test_the_start_one_divides_by_day_one(samples, evaluated):
+    capacity, total = samples
+    months = evaluated.point["horizon"] * 12.0
+    expected = float(np.median(total)) / evaluated.point["stored_data_t0"] / months
+    assert denominators(*samples)["at_start"] == pytest.approx(expected, rel=1e-6), (
+        "the day-one figure is the model's stored_data_t0, and the months are the horizon's"
+    )
+
+
+@pytest.mark.problem
+def test_the_linear_one_divides_by_the_mean_of_the_two(samples, evaluated):
+    capacity, total = samples
+    months = evaluated.point["horizon"] * 12.0
+    held = (evaluated.point["stored_data_t0"] + float(np.median(capacity))) / 2.0
+    expected = float(np.median(total)) / held / months
+    assert denominators(*samples)["average_linear"] == pytest.approx(expected, rel=1e-6), (
+        "a straight line under the curve: the mean of day one and the median horizon holding"
+    )
+
+
+@pytest.mark.problem
 def test_they_are_not_close_together(samples):
     """The point of the problem."""
     answer = denominators(*samples)
     values = list(answer.values())
     assert max(values) / min(values) > 1.5, (
         f"four defensible denominators giving {min(values):.2f} to {max(values):.2f} is the "
-        "finding. If yours are all within a few per cent, check that at_start is using the "
-        "day-one figure and not the horizon one."
+        "finding, and most of it is day one against the rest: a fleet bought for growth looks "
+        "dear per terabyte on the day it is installed. If yours are all within a few per cent, "
+        "check that at_start is using the day-one figure and not the horizon one."
     )
 
 

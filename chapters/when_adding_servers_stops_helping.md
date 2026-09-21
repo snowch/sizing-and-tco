@@ -8,7 +8,7 @@ short_title: "ch07 When adding servers stops helping"
 
 ## The question
 
-How far does a system scale, and how would you find out from the two measurements you have?
+How far does a system scale, and how would you find out from the three measurements you have?
 
 [ch06](#queueing-and-the-knee) ended with a fleet too close to its margin and an obvious remedy:
 buy more machines. This chapter is about how much less that buys than the arithmetic promises. It
@@ -196,19 +196,22 @@ Both are checked by one file, because the peak is what the fit is for:
 python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_2_fit.py
 ```
 
-**7.4 — The time adding machines did not help.** No test: the answer is in somebody's memory, not
-in a file.
+**7.4 — The time adding machines did not help.** No test: the measurements are your fleet's, and
+this repository has none of them.
 
-Ask the people who were there. Somewhere in your organisation there is a tier that got a bigger
-fleet and did not get proportionally faster, and somebody has a theory about why.
+Somewhere in your organisation there is a tier that got a bigger fleet and did not get
+proportionally faster. Find its throughput at two fleet sizes, and a single machine's on a bench
+if anyone ever ran one. Those are the three measurements the chapter says everyone has. Run
+problem 7.2 on them and write down where the peak comes out.
 
-Write down the theory, then write down which of this chapter's two costs it corresponds to:
-contention for something shared, or the cost of machines agreeing with each other. If it is
-neither, you have found a third mechanism, which is more interesting than the chapter.
+Then write down which of this chapter's two costs the numbers point at: contention for something
+shared, or the cost of machines agreeing with each other. If the fit says neither, you have found
+a third mechanism, which is more interesting than the chapter.
 
-A good answer names the tier, the change in machine count, the change in throughput, and which
-mechanism it was. If nobody can remember a case, that is an answer too. It means you have never
-been near the peak, and the coefficients in this chapter are not about you.
+A good answer names the tier, the fleet sizes and their throughputs, the peak the fit implies,
+and why you would not spend money on that peak. If you cannot find throughput at two sizes, that
+is an answer too. It means nobody measured throughput per host when the fleet grew, and the next
+growth is the chance to.
 
 ## Where to go next
 

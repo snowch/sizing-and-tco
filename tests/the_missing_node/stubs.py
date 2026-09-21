@@ -42,7 +42,9 @@ def widen_until_it_fits(samples: np.ndarray, observation: float) -> float:
 
     Return the factor by which the distribution's spread about its median would have to grow for
     ``observation`` to land inside the 90% interval. Scale the samples about their median; do not
-    shift them.
+    shift them. Scaling the output's own draws stands in for widening the inputs, which is what
+    somebody would do to the file: the same repair, one step downstream. The factor is at least
+    one, because an observation already inside needs no widening.
 
     Then look at what that does to the interval. The model now agrees with the observation and can
     no longer distinguish between designs, which is the only thing it was for. A model that cannot

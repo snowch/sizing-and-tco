@@ -37,9 +37,9 @@ def spread_on_paper(model: Model) -> float:
     """Problem 1.1 - and how uncertain are they together?
 
     Put every input that has a band at the bottom of it, all at once, and work the model through
-    to its five-year total, the ``tco`` output. Do it again with every one at the top. Return the
-    second total over the first: the same kind of number ``spread_of_each`` gives for one input,
-    now for the answer.
+    to the hosts it recommends: the ``hosts_recommended`` output, the first row of the chapter's
+    table. Do it again with every one at the top. Return the second count over the first: the
+    same kind of number ``spread_of_each`` gives for one input, now for the answer.
 
     ``sizing.evaluate.point`` works a model through with a scenario's overrides standing in for
     the file's numbers, and ``Scenario`` lives in ``sizing.dsl``. This is the arithmetic you could

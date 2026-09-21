@@ -15,7 +15,7 @@ from bench.stamp import load_result
 from tests.when_adding_servers_stops_helping.stubs import fit, peak_hosts
 
 CASES = {
-    "the book's fleet": (1220.0, 0.005, 3.7e-5),
+    "a fleet like the book's": (1220.0, 0.005, 3.7e-5),
     "heavily serialised": (400.0, 0.12, 1e-4),
     "chatty": (80.0, 0.004, 2e-3),
 }
@@ -55,18 +55,22 @@ def test_the_peak_matches_where_the_curve_actually_turns(name):
 
 @pytest.mark.problem
 def test_without_coordination_there_is_no_peak():
-    answer = peak_hosts(0.05, 0.0)
-    assert not math.isfinite(answer) or answer > 1e9, (
+    try:
+        answer = peak_hosts(0.05, 0.0)
+    except (ZeroDivisionError, ValueError):
+        return
+    assert not math.isfinite(answer), (
         "with no coordination cost the curve never turns over. The honest answer is that there is "
-        "no peak, not a large number that looks like one."
+        "no peak: raise, or return an infinity, not a large number that looks like one."
     )
 
 
-@pytest.mark.problem
 def test_the_books_own_fleet_agrees_with_its_published_peak():
+    """Scaffolding: the chapter says the swept peak and the predicted one agree, and this holds
+    the two stamped figures to that. Nothing of the reader's is in it."""
     summary = load_result("scaling-curve")["summary"]
     predicted = summary["predicted_peak"]
-    assert abs(predicted - summary["peak_at_hosts"]) / summary["peak_at_hosts"] < 0.2, (
+    assert abs(predicted - summary["peak_at_hosts"]) / summary["peak_at_hosts"] < 0.05, (
         "the peak the book sweeps for and the peak its coefficients predict are computed "
         "independently and have to agree"
     )

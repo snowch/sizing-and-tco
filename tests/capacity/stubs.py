@@ -77,9 +77,13 @@ def make_it_a_cost_model(model: Model) -> Model:
     Return a copy of ``model`` that classifies as a **cost** model, while still evaluating and
     still producing at least one of the outputs it produced before.
 
-    You may delete nodes. You may not delete the outputs. And the point of the exercise is in the
-    third test: having removed them, write one sentence in this docstring saying what the
-    resulting model can no longer tell anybody. If you cannot name it, you have removed something
-    that was not doing any work, and the original model should not have had it.
+    You may delete nodes, and you will have to delete outputs: the ceilings are outputs, and the
+    measured constant feeds the recommended host count. Keep at least one of the original outputs
+    working. And the point of the exercise is in the third test: having removed them, finish the
+    last line of this docstring with one sentence saying what the resulting model can no longer
+    tell anybody. If you cannot name it, you have removed something that was not doing any work,
+    and the original model should not have had it.
+
+    What it can no longer say:
     """
     raise NotImplementedError("problem 9.4")

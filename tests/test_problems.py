@@ -123,3 +123,16 @@ def test_a_chapter_ships_its_own_tests_and_nothing_compiled():
         ], f"{slug} ships another chapter's tests"
         for name, text in files.items():
             assert (ROOT / name).read_text() == text, f"{slug}: {name} is not the repository's"
+
+
+def test_a_chapter_that_stamps_ships_what_the_stamp_hashes():
+    """A reader's ``build_result`` hashes ``bench.stamp.CORE_SOURCES``. A page that ships stamp.py
+    without them fails every correct answer with a missing file, and the unsolved stub never gets
+    far enough for the check above to notice."""
+    from bench.stamp import CORE_SOURCES
+
+    for slug in problem_chapters():
+        shipped = problem_files(slug)
+        if "bench/stamp.py" in shipped:
+            missing = set(CORE_SOURCES) - set(shipped)
+            assert not missing, f"{slug} ships bench/stamp.py without {sorted(missing)}"

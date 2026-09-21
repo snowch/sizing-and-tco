@@ -8,6 +8,7 @@ disagreement means one of them is wrong.
 from __future__ import annotations
 
 import pytest
+from pint.util import to_units_container
 
 from sizing.dsl import load_model
 from sizing.units import parse as parse_unit
@@ -23,14 +24,17 @@ def model():
 
 def by_dimension(unit: str) -> str:
     """What a unit says a quantity is, independently of what anybody called it."""
-    dimensions = parse_unit(unit).dimensionality
-    time = dimensions.get("[time]", 0)
+    parsed = parse_unit(unit)
+    time = parsed.dimensionality.get("[time]", 0)
     if time < 0:
         return "flow"
     if time > 0:
         return "neither"  # a duration is not a level
-    # Data, currency, and the counting dimensions are all levels; a bare number is not.
-    return "stock" if any(power > 0 for power in dimensions.values()) else "neither"
+    # A level is an amount of something: bytes, hosts, dollars, series. Bytes carry no
+    # dimension of their own in the registry, so this reads the unit's parts rather than its
+    # dimensions. A bare number is neither, and so is anything per something else.
+    parts = to_units_container(parsed)
+    return "stock" if parts and all(power > 0 for power in parts.values()) else "neither"
 
 
 @pytest.mark.problem

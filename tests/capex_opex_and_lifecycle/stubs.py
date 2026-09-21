@@ -13,7 +13,7 @@ def crossover_year(capex: float, annual_opex: float) -> float:
     argued about, because it arrives as a single invoice with somebody's signature on it. Running
     cost arrives in pieces, monthly, from several directions, and is nobody's decision in
     particular. For most infrastructure the second overtakes the first well inside the horizon it
-    was bought for, and the argument was had about the smaller half.
+    was bought for, and the argument was had about the smaller part.
     """
     raise NotImplementedError("problem 15.1")
 

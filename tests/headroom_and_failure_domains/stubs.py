@@ -38,9 +38,9 @@ def compose(margins: list[float]) -> float:
     applied, expressed as **the margin** - so if a quarter of the system is usable, return 0.75.
 
     Do not add them. Work out what applying one margin and then another does to what is left, and
-    notice that the answer is always worse than the sum for small margins and always better than
-    the sum for large ones. Adding three thirty per cent margins gets you a negative system, which
-    is a clue.
+    notice that the answer is never as large as the sum, and that for large margins the sum is not
+    even a fraction: adding three ninety per cent margins gets you a negative system, which is a
+    clue.
 
     Then look at what a few realistic sets of margins actually leave you, and understand why a
     sizing conversation that treats each margin as a separate reasonable request ends with a

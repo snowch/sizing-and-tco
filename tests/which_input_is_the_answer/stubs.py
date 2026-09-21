@@ -17,7 +17,9 @@ def tornado(model: Model, scenario: Scenario, output: str) -> list[tuple[str, fl
     bar is answering the same question - "across the middle eighty per cent of what this input
     could be" - and an input somebody gave a wide slider to does not get a long bar for free.
 
-    Skip anything the model cannot evaluate and anything the scenario has already pinned.
+    Skip anything the model cannot evaluate, anything the scenario has already pinned, and the
+    measured constants: their uncertainty is a standard error rather than a band, and the build
+    swings them by a different rule.
     """
     raise NotImplementedError("problem 19.1")
 
@@ -35,7 +37,8 @@ def interaction_gap(model: Model, scenario: Scenario, output: str, a: str, b: st
     means they do, and a chart of one-at-a-time swings is understating - or overstating - what
     happens when the world moves two things at once.
 
-    Pick the pair the chapter names when you run it. A model built out of multiplications will
+    The test names the two pairs: one that meets in a product and one that meets in a sum. A
+    model built out of multiplications will
     always show some of this, because a product is not additive in its factors - which is the point,
     and is why a tornado is a guide to what to measure rather than a decomposition of the answer.
     """

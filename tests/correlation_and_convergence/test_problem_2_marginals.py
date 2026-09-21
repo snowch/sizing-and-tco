@@ -69,6 +69,22 @@ def test_the_correlation_is_the_one_that_was_asked_for(model, scenario):
     )
 
 
+@pytest.mark.problem
+def test_the_correlation_says_why(model):
+    """The chapter calls the reason required: a coefficient with nothing attached is the section's
+    own example of a number nobody can argue with."""
+    added = [
+        c
+        for c in correlated_model(model, A, B, RHO).correlations
+        if {c.get("a"), c.get("b")} == {A, B}
+    ]
+    assert added, f"no correlation between {A} and {B} was declared"
+    assert all(str(c.get("because", "")).strip() for c in added), (
+        "say why these two move together, in the correlation's `because`. The chapter calls the "
+        "reason the required column."
+    )
+
+
 def test_the_two_inputs_both_feed_the_output(model):
     """Scaffolding: the problem's premise holds."""
     feeding = model.ancestors(OUTPUT)

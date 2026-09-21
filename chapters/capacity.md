@@ -151,9 +151,10 @@ three decides the answer.
 Five, in `tests/capacity/`. The first four have tests. The last does not, and says why.
 
 **9.1 — The chain.**
-Four terms, one of which divides. Getting the division upside down gives an answer wrong by the
-square of the compression ratio while still looking plausible. Check yours against a
-case you can do in your head first.
+The amount you must keep and the three terms that turn it into the disk you buy, one of which
+divides; the fill limit is left to the node that counts hosts. Getting the division upside down
+gives an answer wrong by the square of the compression ratio while still looking plausible. Check
+yours against a case you can do in your head first.
 
 ```bash
 python3 -m pytest tests/capacity/test_problem_1_raw.py
@@ -178,10 +179,10 @@ python3 -m pytest tests/capacity/test_problem_3_binary_units.py
 ```
 
 **9.4 — Turn it back into a cost model.**
-Remove what makes the web service model a sizing model: the measured constant this chapter adds,
-and every ceiling before and after it. Keep it working. Then write one sentence saying what the
-result can no longer tell anybody. If you cannot name it, you removed something that was doing no
-work, and the model should not have had it.
+Remove what makes the web service model a sizing model: the measured constant this chapter adds, and
+every ceiling before and after it. Keep at least one of its outputs working. Then write one sentence
+saying what the result can no longer tell anybody. If you cannot name it, you removed something that
+was doing no work, and the model should not have had it.
 
 ```bash
 python3 -m pytest tests/capacity/test_problem_4_classification.py

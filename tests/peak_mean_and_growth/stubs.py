@@ -28,16 +28,16 @@ def busy_hour_rate(hourly_shape: np.ndarray, daily_total: float) -> float:
     raise NotImplementedError("problem 4.1")
 
 
-def growth_gap(t0: float, growth_samples: np.ndarray, years: float) -> tuple[float, float]:
+def growth_gap(t0: float, growth_factors: np.ndarray, years: float) -> tuple[float, float]:
     """Problem 4.2 - compound the average, or average the compounds?
 
     You have a starting capacity ``t0`` and a bag of plausible annual growth factors
-    (``growth_samples``: 1.2 means twenty per cent a year). You want the capacity after ``years``.
+    (``growth_factors``: 1.2 means twenty per cent a year). You want the capacity after ``years``.
 
     There are two things you could compute and people compute the wrong one:
 
-    * take the **average growth rate**, and compound it: ``t0 * mean(g) ** years``;
-    * compound **every** growth rate, and average the results: ``mean(t0 * g ** years)``.
+    * take the **average growth rate** and compound it over the years;
+    * compound **every** growth rate over the years, and average the results.
 
     Return both, in that order.
 
@@ -46,6 +46,6 @@ def growth_gap(t0: float, growth_samples: np.ndarray, years: float) -> tuple[flo
     it is largest in exactly the situation people use a five-year plan for.
 
     The test asserts the order and that the gap is material. It does not tell you the answer; the
-    values come from the samples you are handed.
+    values come from the bag you are handed.
     """
     raise NotImplementedError("problem 4.2")

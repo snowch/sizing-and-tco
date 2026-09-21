@@ -44,9 +44,14 @@ def test_it_is_rounded_to_a_precision_the_model_supports(answer, summary):
     """A five-year total written to the dollar claims a precision no input in the model has."""
     value, _ = answer
     spread = summary["p95"] - summary["p5"]
-    assert value % (spread / 100) < spread / 50 or value % 100_000 == 0, (
+    step = spread / 100
+    # Rounded to a precision the model can support: a whole multiple of a round step no finer
+    # than a hundredth of the interval, the steps being the ones a person rounds to.
+    steps = [m * 10**k for k in range(2, 8) for m in (1, 2, 5, 25)]
+    rounded = any(s >= step and abs(value / s - round(value / s)) < 1e-9 for s in steps)
+    assert rounded, (
         f"{value:,.2f} is quoted more precisely than an interval {spread:,.0f} wide can support. "
-        "Round it to something you would defend."
+        f"Round it to a step no finer than {step:,.0f}, and to one you would defend."
     )
 
 

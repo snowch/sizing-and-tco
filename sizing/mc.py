@@ -13,7 +13,7 @@ Every distribution here is sampled the same way, and it is the only sampling ide
 
 That is *inverse transform sampling*. It is why each distribution below needs exactly one
 function — its percentile function, ``ppf`` — and why adding a distribution to this book is
-three lines rather than a new dependency. Problem 12.1 asks the reader to add one.
+three lines rather than a new dependency. Problem 13.1 asks the reader to add one.
 
 ## What is deliberately absent
 
@@ -86,7 +86,7 @@ def triangular_ppf(u: np.ndarray, minimum: float, likely: float, maximum: float)
     the bounds can happen, and the bounds came from somebody's memory.
 
     The two branches meet at the mode. Below it the area grows as the square of the distance from
-    the minimum, which inverts to a square root — the whole derivation, and problem 12.1 asks for
+    the minimum, which inverts to a square root — the whole derivation, and problem 13.1 asks for
     it again for a distribution that is not here.
     """
     if not minimum <= likely <= maximum:
@@ -225,7 +225,7 @@ def correlate(
     line up with which. Correlating the values instead — the obvious first attempt — quietly
     changes the marginals, and then the model is answering a question nobody asked.
 
-    Problem 13.3 checks both halves of that claim: the interval widens, and the marginals do not
+    Problem 14.2 checks both halves of that claim: the interval widens, and the marginals do not
     move.
 
     ``columns`` is (samples, inputs); ``target`` is the square matrix from

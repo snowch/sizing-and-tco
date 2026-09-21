@@ -30,7 +30,8 @@ def test_the_factor_it_returns_actually_works(samples):
     observation = float(np.percentile(samples, 99.9))
     factor = widen_until_it_fits(samples, observation)
     low, high = mc.interval(widened(samples, factor))
-    assert low <= observation <= high, (
+    slack = 1e-9 * (high - low)  # the natural answer lands the end exactly on the observation
+    assert low - slack <= observation <= high + slack, (
         f"widening by {factor:.2f} gives an interval of {low:.2f} to {high:.2f}, which still does "
         f"not contain {observation:.2f}"
     )

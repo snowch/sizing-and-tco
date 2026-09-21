@@ -174,8 +174,8 @@ load moves and how long you take to notice, neither of which this book can see.
 Three, in `tests/regime_changes/`. The first two have tests. The last does not, and says why.
 
 **8.1 — Do what a spreadsheet would do.**
-Fit the line, extrapolate it well past everything it was fitted to, and measure how wrong it is
-where it matters.
+Fit the line and extrapolate it well past everything it was fitted to. The test measures how
+wrong it is where it matters.
 
 ```bash
 python3 -m pytest tests/regime_changes/test_problem_1_straight_line.py

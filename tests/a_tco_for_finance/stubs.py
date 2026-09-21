@@ -23,7 +23,7 @@ def decision_table() -> list[dict]:
 
     Then read it as the person on the other side of the table will. They have one question - what
     am I buying and what am I buying it *instead of* - and every column is there to answer it or it
-    should not be there. Four columns is not a constraint; it is the number that fits in somebody's
+    should not be there. A handful of columns is not a constraint; it is what fits in somebody's
     head while they decide.
     """
     raise NotImplementedError("problem 21.1")
@@ -38,7 +38,7 @@ def one_number() -> tuple[float, str]:
     Return the number you would give for the reference design's five-year total, and a string
     saying what it hides.
 
-    Any defensible choice passes: the median, the mean, a percentile, a rounded figure. The test
+    Any defensible choice passes: the median, a percentile, a rounded figure. The test
     checks that it came out of the model, that you rounded it to a precision the model can support,
     and that your sentence names a specific thing - the percentile you chose, the structural
     omission, the assumption the whole thing rests on. A sentence that says "it is uncertain" is

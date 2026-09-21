@@ -66,10 +66,13 @@ def test_the_low_end_really_does_look_linear(known):
     """Scaffolding: the problem's premise holds — a healthy system looks well behaved.
 
     This is what makes the failure interesting. If the low end were visibly curved, nobody would
-    fit a line to it and there would be nothing to warn anybody about.
+    fit a line to it and there would be nothing to warn anybody about. Stated without fitting a
+    line, so that the method the problem asks for is not written in the file it ships with: no
+    step steepens much on the step before it, and the whole low end rises by less than a factor
+    of two.
     """
     utilisations = np.array([u for u, _ in known])
     residences = np.array([r for _, r in known])
-    slope, intercept = np.polyfit(utilisations, residences, 1)
-    fitted = slope * utilisations + intercept
-    assert np.allclose(fitted, residences, rtol=0.12), "the low end should look nearly straight"
+    slopes = np.diff(residences) / np.diff(utilisations)
+    assert np.all(slopes[1:] / slopes[:-1] < 1.5), "the low end should look nearly straight"
+    assert residences[-1] < 2.0 * residences[0], "the low end should rise gently"

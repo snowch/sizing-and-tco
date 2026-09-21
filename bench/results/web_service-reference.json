@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "cad350d695135b66",
+  "code_fingerprint": "208c94527c389f36",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-19T18:26:51+00:00",
-  "git_revision": "229ed18",
+  "generated_at": "2026-09-21T02:40:24+00:00",
+  "git_revision": "de81099",
   "kind": "model",
   "name": "web_service-reference",
   "produced_by": {
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-19T18:26:50+00:00",
+    "generated_at": "2026-09-21T02:40:22+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {
@@ -12351,7 +12351,7 @@
         "kind": "derived",
         "label": "five-year total cost of ownership",
         "layer": 6,
-        "note": "Capital, running cost over the horizon, and whatever it costs to get there. The last term is zero for the design the plan was built on and is the first thing to look for in a comparison that was not (ch22).",
+        "note": "Capital, running cost over the horizon, and whatever it costs to get there. The last term is zero for the design the plan was built on and is the first thing to look for in a comparison that was not (ch22). One purchase: the horizon is the refresh cycle, so the refresh that ends it belongs to the next plan's capital, not this total (ch15).",
         "point": 2002083.1707651545,
         "row": 1,
         "summary": {

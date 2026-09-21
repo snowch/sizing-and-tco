@@ -22,8 +22,11 @@ def scenario():
 
 
 @pytest.fixture(scope="module")
-def published():
-    return load_result("web_service-reference")["summary"]["tornado"][OUTPUT]
+def published(model):
+    """The build's bars for the inputs that declare a band. The build also swings a measured
+    constant by its standard error, which is a different rule; the problem leaves that out."""
+    bars = load_result("web_service-reference")["summary"]["tornado"][OUTPUT]
+    return [bar for bar in bars if getattr(model.nodes[bar["node"]], "distribution", None)]
 
 
 @pytest.mark.problem

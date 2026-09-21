@@ -1,4 +1,4 @@
-"""Chapter 22's problems. Edit this file; the tests beside it say whether you are right.
+"""Chapter 23's problems. Edit this file; the tests beside it say whether you are right.
 
 The design failed. Both problems are about what the model can say afterwards — and the second is
 about the thing it says with complete confidence and no basis whatsoever.
@@ -37,7 +37,8 @@ def was_anything_extreme(
     """Problem 23.2 - how often the story afterwards is allowed to be about one dramatic thing.
 
     Same arguments. Return the fraction of the failing samples in which *no* input was beyond its
-    own ``percentile`` — that is, the share of failures for which there is no culprit to point at,
+    own ``percentile``, taken across all the draws and not the failing ones alone — that is, the
+    share of failures for which there is no culprit to point at,
     because everything involved was merely somewhat above average.
 
     Predict the answer before you run it, for the web service, and write your prediction in a

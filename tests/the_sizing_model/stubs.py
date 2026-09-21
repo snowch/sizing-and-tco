@@ -17,7 +17,7 @@ def hosts_for_risk(target_p_over: float) -> int:
     monotonic, so a bisection is a few lines and is much faster than stepping, which matters
     because each evaluation samples the whole graph.
 
-    Reduce the sample count while you search and put it back for the final answer. A search that
+    Reduce the number of draws while you search and put it back for the final answer. A search that
     takes a minute is a search nobody runs twice, and the precision you need to compare candidates
     is much lower than the precision you need to report one.
 

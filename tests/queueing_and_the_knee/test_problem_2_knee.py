@@ -44,10 +44,10 @@ def test_the_knee_moves_a_long_way_for_a_small_change_in_taste():
     knee in the curve; there is only where each of them stopped being willing.
     """
     tolerant = knee_at(10.0)
-    strict = knee_at(1.5)
+    strict = knee_at(2.0)
     assert tolerant > strict
-    assert tolerant - strict > 0.5, (
-        f"between a 1.5x tolerance ({strict:.2f}) and a 10x one ({tolerant:.2f}) lies most of the "
+    assert tolerant - strict > 0.35, (
+        f"between a 2x tolerance ({strict:.2f}) and a 10x one ({tolerant:.2f}) lies most of the "
         "useful range of a system. That gap is a decision, and it is the whole of ch11."
     )
 

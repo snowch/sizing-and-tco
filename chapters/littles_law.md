@@ -190,7 +190,8 @@ Three, in `tests/littles_law/`. The first two have tests. The last does not, and
 **5.1 — The law.**
 One multiplication, checked against the model's own node: the one [ch06](#queueing-and-the-knee)
 adds, with the waiting in it, so that the check covers the time a request stays rather than the
-time it is being served. Checked at the point estimate first, then across every sample.
+time it is being served. Checked at the point estimate first, then across every future the
+model drew.
 
 ```bash
 python3 -m pytest tests/littles_law/test_problem_1_the_law.py

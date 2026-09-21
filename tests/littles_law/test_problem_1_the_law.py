@@ -1,4 +1,4 @@
-"""Problem 5.1 - graded against the model, which computes the same thing by a different route."""
+"""Problem 5.1 - graded against the model's own node, which is the law written as a formula."""
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ def test_it_agrees_with_the_model_at_the_point(evaluated):
 
 
 @pytest.mark.problem
-def test_it_agrees_across_every_sample(evaluated):
+def test_it_agrees_across_every_future(evaluated):
     """Not one case: a hundred thousand, over the whole range the model thinks is plausible."""
     mine = concurrency(evaluated.samples["peak_request_rate"], evaluated.samples["residence_time"])
     assert np.allclose(mine, evaluated.samples["concurrency"], rtol=1e-9), (
@@ -42,8 +42,9 @@ def test_the_degenerate_cases_behave(rate, residence):
     assert concurrency(rate, residence) == pytest.approx(rate * residence)
 
 
-def test_the_model_computes_concurrency_independently():
-    """Scaffolding: the oracle is a real derivation and not a copy of the answer."""
+def test_the_models_node_is_the_law():
+    """Scaffolding: the oracle is the law as a formula over the two quantities the reader is
+    handed and nothing else, so agreeing across every future means the reader wrote the law."""
     model = load_model(MODEL)
     node = model.nodes["concurrency"]
-    assert {"peak_request_rate", "residence_time"} <= node.depends_on()
+    assert node.depends_on() == {"peak_request_rate", "residence_time"}

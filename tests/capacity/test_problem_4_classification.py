@@ -34,7 +34,9 @@ def test_it_still_works(base, scenario):
     converted = make_it_a_cost_model(base)
     assert not check_units(converted)[0]
     values = point(converted, scenario)
-    assert converted.outputs, "you may delete nodes; you may not delete the outputs"
+    assert set(converted.outputs) & set(base.outputs), (
+        "keep at least one of the original outputs working"
+    )
     for output in converted.outputs:
         assert output in values, f"{output} no longer evaluates"
 
@@ -46,10 +48,13 @@ def test_you_said_what_was_lost():
     Not graded for content - nothing here can grade a sentence. Graded for existing, because a
     model you cannot say the limits of is a model you should not hand to anybody.
     """
-    doc = (make_it_a_cost_model.__doc__ or "").strip()
-    assert "problem 9.4" not in doc.lower() or len(doc) > 400, (
-        "write one sentence in the stub's docstring naming what the cost model can no longer "
-        "tell anybody. If you cannot name it, you removed something that was doing no work."
+    doc = make_it_a_cost_model.__doc__ or ""
+    marker = "What it can no longer say:"
+    said = doc.split(marker, 1)[1].strip() if marker in doc else ""
+    assert len(said.split()) >= 4, (
+        "finish the last line of the stub's docstring with one sentence naming what the cost "
+        "model can no longer tell anybody. If you cannot name it, you removed something that was "
+        "doing no work."
     )
 
 

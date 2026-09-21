@@ -52,9 +52,24 @@ def test_a_full_system_is_not_a_finite_number(busy):
         answer = float(np.asarray(residence_time(1.0, busy)))
     except (ZeroDivisionError, ValueError):
         return
-    assert not np.isfinite(answer) or answer < 0, (
+    assert not np.isfinite(answer), (
         "at a utilisation of one there is nothing left of the system to do your work. Return an "
-        "infinity or raise; do not return a large finite number that somebody can put in a slide."
+        "infinity or raise; do not return a finite number, of either sign, that somebody can put "
+        "in a slide."
+    )
+
+
+@pytest.mark.problem
+def test_a_full_system_is_not_a_finite_number_in_an_array_either():
+    """numpy does not raise on a division by zero, so the array route has to say it too."""
+    try:
+        values = np.asarray(residence_time(1.0, np.array([0.5, 1.0, 1.2])), dtype=float)
+    except (ZeroDivisionError, ValueError):
+        return
+    assert np.isfinite(values[0])
+    assert not np.any(np.isfinite(values[1:])), (
+        "past a utilisation of one the formula describes nothing. An array of utilisations has "
+        "to come back non-finite where it crosses one, not negative."
     )
 
 

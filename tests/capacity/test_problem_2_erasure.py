@@ -44,6 +44,10 @@ def test_erasure_coding_always_wins_on_space_at_equal_safety(data, parity):
 @pytest.mark.problem
 def test_the_saving_grows_with_the_stripe():
     """Which is the point, and is also where the cost that is not space comes from."""
+    assert erasure_crossover(4, 2) == pytest.approx(erasure_crossover(16, 2)), (
+        "the replication that matches an erasure code's safety depends on its parity alone. The "
+        "stripe width changes what the code costs, not what it survives."
+    )
     narrow = erasure_space(4, 2) / erasure_crossover(4, 2)
     wide = erasure_space(16, 2) / erasure_crossover(16, 2)
     assert wide < narrow, (
