@@ -747,11 +747,12 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     ):
         assert selector in css, selector
     # The measure moved off the column and onto each child, after the rule that caps the column.
-    assert css.index("main > * { max-width: var(--measure); margin-inline: auto; }") > css.index(
+    assert css.index("#main > * { max-width: var(--measure); margin-inline: auto; }") > css.index(
         "main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;"
     ), "a media query adds no specificity, so the rule that lifts the cap has to come after it"
     assert (
-        "main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: 100%; }" in css
+        "#main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: 100%; }"
+        in css
     )
     # Both choices are read before the page paints, so a rail does not close again on every page.
     opening = build_site.MENU.split("document.addEventListener")[0]
@@ -765,3 +766,22 @@ def test_a_models_box_follows_the_layout_the_model_chose():
     assert "figure:has(> iframe.viewer) { container-type: inline-size; }" in css
     assert "@container (min-width: 860px) { iframe.viewer { height: 600px; } }" in css
     assert "@container (min-width: 1101px) { iframe.viewer { height: 812px; } }" in css
+
+
+def test_the_chapter_centres_what_keeps_the_measure_and_widens_what_does_not():
+    """Addressed by the id, because nearly every child of a chapter sets its own margins.
+
+    `p`, every heading, `.admonition`, `.editable-block` and the turn all write `margin: x 0 y`,
+    which is the same specificity as `main > *` and comes later in the sheet, so the element
+    rule won and the whole page stacked against the left of its column. Three widths: prose
+    keeps the measure, a model or a table takes the column, and code takes what it needs --
+    the book's lines stop at 100 columns and its widest block wants 942px.
+    """
+    css = site().CSS
+    assert "#main > * { max-width: var(--measure); margin-inline: auto; }" in css, (
+        "centring a chapter's children has to out-specify the children's own margin rules"
+    )
+    assert (
+        "#main > :is(pre, .editable-block, .problem, figure:has(> pre)) "
+        "{ max-width: min(100%, 60rem); }" in css
+    ), "code that a reader edits or reads was cut off at the measure on 33 of 42 pages"
