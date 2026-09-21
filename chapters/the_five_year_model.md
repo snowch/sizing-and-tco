@@ -166,7 +166,7 @@ cost each time. Predict the direction first. Then say, in a comment, whether you
 file format should have a node kind for this.
 
 ```bash
-python3 -m pytest tests/the_five_year_model/test_problem_1_seam.py
+python3 -m pytest tests/the_five_year_model/test_problem_1_seam.py -m problem
 ```
 
 **18.2 — What your total leaves out.** No test: what a total leaves out is not something a total

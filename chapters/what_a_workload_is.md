@@ -271,7 +271,7 @@ means. The test classifies the same nodes by their declared units. Where your re
 model's units disagree, one of them is wrong. Finding out which is the exercise.
 
 ```bash
-python3 -m pytest tests/what_a_workload_is/test_problem_1_stocks_and_flows.py
+python3 -m pytest tests/what_a_workload_is/test_problem_1_stocks_and_flows.py -m problem
 ```
 
 **2.2 — Turn a rate into a volume.**
@@ -280,7 +280,7 @@ number is still a rate, and the toolkit will keep saying so until something in t
 carries a duration.
 
 ```bash
-python3 -m pytest tests/what_a_workload_is/test_problem_2_daily_volume.py
+python3 -m pytest tests/what_a_workload_is/test_problem_2_daily_volume.py -m problem
 ```
 
 **2.3 — The smallest model that builds.**
@@ -289,7 +289,7 @@ dimensional pass and every rule in `scripts/verify-models.py`. Read the rules be
 the refusals are the point.
 
 ```bash
-python3 -m pytest tests/what_a_workload_is/test_problem_3_smallest.py
+python3 -m pytest tests/what_a_workload_is/test_problem_3_smallest.py -m problem
 ```
 
 **2.4 — Break it on purpose, in a way that still loads.**
@@ -298,7 +298,7 @@ immediately and teach nothing. Write a node that declares a unit its own formula
 A spreadsheet cannot see that class of error at all.
 
 ```bash
-python3 -m pytest tests/what_a_workload_is/test_problem_4_broken.py
+python3 -m pytest tests/what_a_workload_is/test_problem_4_broken.py -m problem
 ```
 
 **2.5 — Your own workload, written down.** No test: this is about a system you run, and there is

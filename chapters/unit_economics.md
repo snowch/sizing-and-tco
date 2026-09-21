@@ -176,7 +176,7 @@ Three, in `tests/unit_economics/`. The first two have tests. The last does not, 
 Two divisions. If your answer is out by twelve, one of you is working in years.
 
 ```bash
-python3 -m pytest tests/unit_economics/test_problem_1_unit_cost.py
+python3 -m pytest tests/unit_economics/test_problem_1_unit_cost.py -m problem
 ```
 
 **17.2 — Four defensible denominators.**
@@ -185,7 +185,7 @@ day one's holding and the months in the horizon. Compute all four and look at th
 decide which you would put on a slide, and whether you would be willing to say which it was.
 
 ```bash
-python3 -m pytest tests/unit_economics/test_problem_2_denominators.py
+python3 -m pytest tests/unit_economics/test_problem_2_denominators.py -m problem
 ```
 
 **17.3 — Your denominator, and who chose it.** No test: the denominator is a choice, and there is

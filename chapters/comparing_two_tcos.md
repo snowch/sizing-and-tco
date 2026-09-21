@@ -304,7 +304,7 @@ share of futures in which the challenger is cheaper. The test can tell whether y
 independent draws instead, because that answer is several times wider.
 
 ```bash
-python3 -m pytest tests/comparing_two_tcos/test_problem_1_paired_difference.py
+python3 -m pytest tests/comparing_two_tcos/test_problem_1_paired_difference.py -m problem
 ```
 
 **22.2 — How expensive can the move be?**
@@ -316,7 +316,7 @@ copied off the page. The total is linear in the cost of the move, so two evaluat
 line.
 
 ```bash
-python3 -m pytest tests/comparing_two_tcos/test_problem_2_break_even.py
+python3 -m pytest tests/comparing_two_tcos/test_problem_2_break_even.py -m problem
 ```
 
 **22.3 — A comparison somebody showed you.** No test: the comparison is theirs, and nothing here

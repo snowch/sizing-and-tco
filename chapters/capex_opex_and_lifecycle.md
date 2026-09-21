@@ -159,7 +159,7 @@ One division. Then look at where it falls relative to the horizon, and at which 
 got the meeting.
 
 ```bash
-python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_1_crossover.py
+python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_1_crossover.py -m problem
 ```
 
 **15.2 — The refresh, and the convention nobody writes down.**
@@ -167,7 +167,7 @@ Decide what happens when a refresh lands exactly on the end of the horizon. Defe
 comment, and be consistent. The difference is a whole fleet.
 
 ```bash
-python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_2_refresh.py
+python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_2_refresh.py -m problem
 ```
 
 **15.3 — Prices you can get.** No test: the prices are the ones you can get, and nobody

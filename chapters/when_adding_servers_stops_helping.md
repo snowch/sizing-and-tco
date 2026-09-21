@@ -179,7 +179,7 @@ Two terms in the denominator, behaving differently. The tests check that content
 the curve and that crosstalk alone turns it over, so the two cannot stand in for each other.
 
 ```bash
-python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_1_law.py
+python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_1_law.py -m problem
 ```
 
 **7.2 — Fit it from three measurements.**
@@ -193,7 +193,7 @@ number is not the same answer.
 Both are checked by one file, because the peak is what the fit is for:
 
 ```bash
-python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_2_fit.py
+python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_2_fit.py -m problem
 ```
 
 **7.4 — The time adding machines did not help.** No test: the measurements are your fleet's, and

@@ -200,7 +200,7 @@ return at a utilisation of one. An infinity is defensible, and so is raising an 
 finite number is not, because somebody will put it in a slide.
 
 ```bash
-python3 -m pytest tests/queueing_and_the_knee/test_problem_1_residence.py
+python3 -m pytest tests/queueing_and_the_knee/test_problem_1_residence.py -m problem
 ```
 
 **6.2 — Where is the knee?**
@@ -209,7 +209,7 @@ time. Then compare what comes out for a tolerant engineer and a strict one. The 
 two answers is a decision, not a discovery.
 
 ```bash
-python3 -m pytest tests/queueing_and_the_knee/test_problem_2_knee.py
+python3 -m pytest tests/queueing_and_the_knee/test_problem_2_knee.py -m problem
 ```
 
 **6.3 — Where your own knee is.** No test: the curve is your system's, and this repository has no

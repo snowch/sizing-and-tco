@@ -221,7 +221,7 @@ from them, with the columns that answer the question and no others. The test gra
 against the stamped results and the shape against what fits in somebody's head.
 
 ```bash
-python3 -m pytest tests/a_tco_for_finance/test_problem_1_decision_table.py
+python3 -m pytest tests/a_tco_for_finance/test_problem_1_decision_table.py -m problem
 ```
 
 **21.2 — They have asked for one number.**
@@ -230,7 +230,7 @@ came out of the model, that it is rounded to a precision the model can support, 
 sentence names something specific.
 
 ```bash
-python3 -m pytest tests/a_tco_for_finance/test_problem_2_one_number.py
+python3 -m pytest tests/a_tco_for_finance/test_problem_2_one_number.py -m problem
 ```
 
 **21.3 — Write the page, and hand it over.** No test: a page is graded by the person it is for.

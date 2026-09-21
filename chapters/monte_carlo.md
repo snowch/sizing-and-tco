@@ -298,7 +298,7 @@ the triangular's. The test grades it against the density itself, integrated at t
 is nothing to look up.
 
 ```bash
-python3 -m pytest tests/monte_carlo/test_problem_1_ppf.py
+python3 -m pytest tests/monte_carlo/test_problem_1_ppf.py -m problem
 ```
 
 **13.2 — Sample a model by hand.**
@@ -308,7 +308,7 @@ through by hand, and reproduce the interval this book publishes for it to within
 The point is to discover how small the machinery is.
 
 ```bash
-python3 -m pytest tests/monte_carlo/test_problem_2_by_hand.py
+python3 -m pytest tests/monte_carlo/test_problem_2_by_hand.py -m problem
 ```
 
 **13.3 — Where the point estimate sits.**
@@ -317,7 +317,7 @@ the point estimate. For a cost it is near a half. For the recommended host count
 the chain says why. Name the step that moved it.
 
 ```bash
-python3 -m pytest tests/monte_carlo/test_problem_3_where_the_point_sits.py
+python3 -m pytest tests/monte_carlo/test_problem_3_where_the_point_sits.py -m problem
 ```
 
 **13.4 — Defend a distribution.** No test: the invoices are yours, and so is the shape you would

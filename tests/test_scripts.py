@@ -12,8 +12,10 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import subprocess
 import sys
+import textwrap
 from pathlib import Path
 
 import pytest
@@ -391,7 +393,8 @@ def test_every_tested_problem_is_checkable_on_its_chapter_page():
             # The command the chapter wrote is a note inside the block, not a block of its own:
             # drawn as one, it read as the next step after Check.
             note = (
-                f'<p class="desk">The same check at a desk: <code>python3 -m pytest {block["test"]}'
+                '<p class="desk">The same check at a desk: '
+                f"<code>python3 -m pytest {block['test']} -m problem"
             )
             assert f"{note}</code></p></div>" in html, f"{source}: no desk note for {block['test']}"
         assert "<pre><code>python3 -m pytest" not in html, f"{source} draws a command as a block"
@@ -656,4 +659,59 @@ def test_the_offline_worker_lists_exactly_what_the_build_produced(tmp_path):
     ), (
         "registering the worker changed every page, so the content hash must change too; "
         "a version that ignores the pages' own bytes would leave readers on a stale copy"
+    )
+
+
+#: The page's own arithmetic for a verdict, lifted out of the script that carries it. Sliced by
+#: text because the rest of the script talks to a document, which node has not got.
+def counting() -> str:
+    runner = site().PROBLEMS
+    start = runner.index("function score(tests) {")
+    return runner[start : runner.index("\n}\n", start) + 3]
+
+
+@pytest.mark.node
+def test_the_page_counts_the_tests_the_reader_has_to_pass(tmp_path):
+    """Not the book's scaffolding beside them, which passes whatever the reader types.
+
+    Counting every test in the file told a reader who had typed nothing that four of six tests
+    passed, and would have withheld "solved" from a right answer until the book's own checks
+    passed too. A scaffolding failure is the book's fault, so it is counted nowhere and shown
+    on its own.
+    """
+    if shutil.which("node") is None:
+        pytest.skip("no node")
+    mine = {"problem": True, "outcome": "failed"}
+    book = {"problem": False, "outcome": "passed"}
+    cases = {
+        "untouched": [mine, mine, book, book, book, book],
+        "half": [{**mine, "outcome": "passed"}, mine, book, book],
+        "solved": [{**mine, "outcome": "passed"}, {**mine, "outcome": "passed"}, book],
+        "book_broken": [{**mine, "outcome": "passed"}, {**book, "outcome": "failed"}],
+    }
+    harness = """
+    const out = {};
+    for (const [name, tests] of Object.entries(JSON.parse(process.argv[2]))) {
+      const verdict = score(tests);
+      out[name] = {yours: verdict.yours.length, passed: verdict.passed,
+                   book: verdict.book.length, solved: verdict.solved};
+    }
+    console.log(JSON.stringify(out));
+    """
+    script = tmp_path / "score.mjs"
+    script.write_text(counting() + textwrap.dedent(harness))
+    run = subprocess.run(
+        ["node", str(script), json.dumps(cases)],
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert run.returncode == 0, run.stderr[-2000:]
+    got = json.loads(run.stdout)
+    assert got["untouched"] == {"yours": 2, "passed": 0, "book": 0, "solved": False}
+    assert got["half"] == {"yours": 2, "passed": 1, "book": 0, "solved": False}
+    assert got["solved"] == {"yours": 2, "passed": 2, "book": 0, "solved": True}
+    assert got["book_broken"] == {"yours": 1, "passed": 1, "book": 1, "solved": True}, (
+        "a failing scaffolding test is the book's fault and never the reader's, so it neither "
+        "counts against them nor withholds the verdict they have earned"
     )

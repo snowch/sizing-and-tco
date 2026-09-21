@@ -190,8 +190,10 @@ def grade(stubs: str, test: str, root: str = "/", files: dict[str, str] | str | 
     they are written where the test will read them.
 
     Returns JSON text, one entry per test, plus the terminal output for a reader who wants all of
-    it. A test file that cannot be imported, a syntax error in the stubs being the usual reason,
-    is reported under ``problems`` rather than as a test.
+    it. Each entry says whether it is the reader's test or the book's own scaffolding, under
+    ``problem``, because only the first kind is theirs to pass and the page counts only those.
+    A test file that cannot be imported, a syntax error in the stubs being the usual reason, is
+    reported under ``problems`` rather than as a test.
     """
     import pytest
 
@@ -243,7 +245,6 @@ def grade(stubs: str, test: str, root: str = "/", files: dict[str, str] | str | 
             "test": test,
             "exit": int(code),
             "tests": tests,
-            "passed": sum(t["outcome"] == "passed" for t in tests),
             "problems": verdicts.problems,
             "output": terminal.getvalue(),
         }

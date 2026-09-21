@@ -174,7 +174,7 @@ One function call. Work out what happens under each of the three obvious wrong a
 writing the right one.
 
 ```bash
-python3 -m pytest tests/bandwidth_and_the_binding_constraint/test_problem_1_all_three.py
+python3 -m pytest tests/bandwidth_and_the_binding_constraint/test_problem_1_all_three.py -m problem
 ```
 
 **10.2 — The cost of sizing on the chain that usually wins.**
@@ -183,7 +183,7 @@ The first is larger than "usually wins" suggests, and the second is what stops t
 looking harmless.
 
 ```bash
-python3 -m pytest tests/bandwidth_and_the_binding_constraint/test_problem_2_cost.py
+python3 -m pytest tests/bandwidth_and_the_binding_constraint/test_problem_2_cost.py -m problem
 ```
 
 **10.3 — Which chain binds for you.** No test: which chain binds depends on quantities only you

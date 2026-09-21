@@ -195,7 +195,7 @@ Given a day's shape as relative weights and a daily total, return the rate durin
 hour. The weights do not sum to anything in particular, which is most of the problem.
 
 ```bash
-python3 -m pytest tests/peak_mean_and_growth/test_problem_1_busy_hour.py
+python3 -m pytest tests/peak_mean_and_growth/test_problem_1_busy_hour.py -m problem
 ```
 
 **4.2 — Compound the average, or average the compounds?**
@@ -204,7 +204,7 @@ it. The gap widens with the spread and with the horizon, so it is worst when the
 most.
 
 ```bash
-python3 -m pytest tests/peak_mean_and_growth/test_problem_2_growth_gap.py
+python3 -m pytest tests/peak_mean_and_growth/test_problem_2_growth_gap.py -m problem
 ```
 
 **4.3 — What is your growth rate a claim about?** No test. This chapter has already said that

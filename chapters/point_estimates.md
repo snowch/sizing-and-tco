@@ -177,7 +177,7 @@ instead of hiding the doubt inside a single figure.
 ## Problems
 
 Three, in `tests/point_estimates/`. The first two have tests; run them with
-`python3 -m pytest tests/point_estimates/`. The third does not, and says why.
+`python3 -m pytest tests/point_estimates/ -m problem`. The third does not, and says why.
 
 **1.1 — The width of a product.** Take the band the web service model gives each uncertain input,
 and write it as the top of the band over the bottom. Then do the arithmetic the way you could on
@@ -187,7 +187,7 @@ neither the widest band nor the average of them. Set it beside the smallest and 
 the table above. The gap between the two is what [ch13](#monte-carlo) exists to close.
 
 ```bash
-python3 -m pytest tests/point_estimates/test_problem_1_compounding.py
+python3 -m pytest tests/point_estimates/test_problem_1_compounding.py -m problem
 ```
 
 **1.2 — Find where it changes kind.** The web service model appears at six stages of being built.
@@ -196,7 +196,7 @@ say, in one sentence and to yourself, why the chapter that adds those nodes coul
 written earlier.
 
 ```bash
-python3 -m pytest tests/point_estimates/test_problem_2_which_kind.py
+python3 -m pytest tests/point_estimates/test_problem_2_which_kind.py -m problem
 ```
 
 **1.3 — Your own system.** No test. There is no oracle for this, and pretending otherwise would be

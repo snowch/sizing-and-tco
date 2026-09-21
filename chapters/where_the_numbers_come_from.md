@@ -236,7 +236,7 @@ each with no time in it, and the corpus and codec that produced them. The test s
 it to every rule in `bench.stamp.provenance_problems`.
 
 ```bash
-python3 -m pytest tests/where_the_numbers_come_from/test_problem_1_measure.py
+python3 -m pytest tests/where_the_numbers_come_from/test_problem_1_measure.py -m problem
 ```
 
 **3.2 — What would it cost to be more sure?**
@@ -245,7 +245,7 @@ Halving your uncertainty costs four times the measuring, and knowing that before
 worth more than knowing it during one.
 
 ```bash
-python3 -m pytest tests/where_the_numbers_come_from/test_problem_2_shards.py
+python3 -m pytest tests/where_the_numbers_come_from/test_problem_2_shards.py -m problem
 ```
 
 **3.3 — Label your own numbers.** No test: these are your numbers, and nothing here can check
