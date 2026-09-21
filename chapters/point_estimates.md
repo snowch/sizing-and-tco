@@ -44,7 +44,7 @@ first step.
 
 Multiplying uncertain numbers does not average their doubt out. It compounds it. Each input can be
 wrong in the same direction as the others, so the answer stretches further than any single input
-does. Problem 1.1 is that arithmetic, done on this book's web service model with nothing but the
+can push it. Problem 1.1 is that arithmetic, done on this book's web service model with nothing but the
 spreads the model already declares. The compounded spread is not the widest input's, and it is not
 their average.
 
@@ -179,12 +179,12 @@ instead of hiding the doubt inside a single figure.
 Three, in `tests/point_estimates/`. The first two have tests; run them with
 `python3 -m pytest tests/point_estimates/`. The third does not, and says why.
 
-**1.1 — The width of a product.** Read each uncertain input's declared spread off the web service
-model. Work out what those spreads become when the inputs are multiplied together. The answer is
-neither the widest input nor the average of them. Do it the way you could on paper: every input at
-its low together, then every input at its high together. Then set your answer beside the
-smallest and largest answer in the table above. The gap between the two is what
-[ch13](#monte-carlo) exists to close.
+**1.1 — The width of a product.** Read the band the web service model gives each uncertain input,
+as the top of the band over the bottom. Then do the arithmetic the way you could on paper: every
+input at the bottom of its band together, then every input at the top together, and the five-year
+total worked through both times. The second total over the first is neither the widest band nor
+the average of them. Set it beside the smallest and largest answer in the table above. The gap
+between the two is what [ch13](#monte-carlo) exists to close.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_1_compounding.py
