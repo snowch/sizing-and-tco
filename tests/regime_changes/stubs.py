@@ -29,22 +29,21 @@ def straight_line_forecast(known: list[tuple[float, float]], at: np.ndarray) -> 
     raise NotImplementedError("problem 8.1")
 
 
-def combinatorial_spread(factors: list[np.ndarray]) -> tuple[float, float]:
-    """Problem 8.2 - why a cardinality node is the widest thing in any model that has one.
+def after_a_host_loss(utilisation: float, hosts: int, service_time: float) -> tuple[float, float]:
+    """Problem 8.2 - a host lost at the busy hour.
 
-    ``factors`` is a list of sample arrays, each one an uncertain count: distinct values of a
-    label, distinct routes, distinct versions in flight. The quantity you care about is their
-    **product** - the number of combinations.
+    ``utilisation`` is how busy the fleet is at the busy hour, ``hosts`` is how many hosts it has,
+    and ``service_time`` is ch05's service time in seconds: how long one request takes alone. All
+    three are plain numbers; the test reads them off the web service model.
 
-    Return two numbers: the ratio of the 95th to the 5th percentile of the widest single factor,
-    and the same ratio for the product.
+    One host is lost. Its share of the requests lands on the survivors. Return two numbers: the
+    survivors' utilisation, and the residence time ch06's division then gives them, the service
+    time divided by what is left of the system. At or past a utilisation of one there is nothing
+    left to divide by, so return something that is not finite, or raise.
 
-    Predict which is larger before you run it, and by roughly how much. Uncertainties do not add
-    when quantities multiply; they compound. Three counts each uncertain by a factor of three give
-    a product uncertain by a great deal more than a factor of three, and no amount of care about
-    any one of them recovers it.
-
-    This is why the observability model's label cardinality dominates every tornado it appears in,
-    and why it is the input nobody's control knobs can touch.
+    Predict before you run it. The utilisation rises by a factor you can write down without a
+    calculator. Does the residence time rise by the same factor? Write your answer down, then run
+    the test. It checks the reference fleet, and then shrinks the fleet at the same utilisation
+    until the survivors are past one.
     """
     raise NotImplementedError("problem 8.2")

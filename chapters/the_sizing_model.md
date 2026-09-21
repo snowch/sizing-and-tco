@@ -119,10 +119,11 @@ the bigger fleet costs is [ch21](#a-tco-for-finance)'s table rather than this on
 *what it costs* beside *how often it breaks*, is the only form in which this decision can be
 handed to somebody.
 
-Problem 12.2 is the shape of the trade. Removing risk costs money. The cost is not linear in the
-risk removed, and the last few percentage points cost more than all the ones before them. Having
-that number is the difference between an argument and a preference, and
-[ch21](#a-tco-for-finance) is about putting it to the person whose decision it is.
+Problem 12.2 is the shape of the trade, counted in hosts, because hosts are all Part III has.
+Removing risk costs machines, and not at a steady rate: the last few percentage points cost more
+hosts than the ones before them. Having that count is the difference between an argument and a
+preference. [ch21](#a-tco-for-finance) prices the same pair of fleets, and puts the price to the
+person whose decision it is.
 
 ### The decision is an input
 
@@ -191,10 +192,11 @@ twice is a search nobody runs.
 python3 -m pytest tests/the_sizing_model/test_problem_1_risk.py
 ```
 
-**12.2 — What a percentage point of risk costs.**
-Price the move between two risk targets, then look at the shape as the target tightens. The last
-few points cost more than all the ones before them, and knowing by how much is the difference
-between an argument and a preference.
+**12.2 — What a percentage point of risk costs, in hosts.**
+Count the hosts between the fleets two risk targets need, then look at the shape as the target
+tightens. The last few points cost more machines than the ones before them, and knowing how many
+is the difference between an argument and a preference. Part III has no prices, so the answer is
+a count of hosts; [ch21](#a-tco-for-finance) prices the same pair.
 
 ```bash
 python3 -m pytest tests/the_sizing_model/test_problem_2_cost_of_certainty.py

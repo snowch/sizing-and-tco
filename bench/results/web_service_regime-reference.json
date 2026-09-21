@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "94a7fdc5ed087b2c",
+  "code_fingerprint": "43330040e2c6f9cd",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/07-regime/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-21T02:40:34+00:00",
-  "git_revision": "de81099",
+  "generated_at": "2026-09-21T02:55:25+00:00",
+  "git_revision": "2110500",
   "kind": "model",
   "name": "web_service_regime-reference",
   "produced_by": {
@@ -85,7 +85,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-21T02:40:34+00:00",
+    "generated_at": "2026-09-21T02:55:24+00:00",
     "model": "web_service_regime",
     "nodes": {
       "achievable_throughput": {

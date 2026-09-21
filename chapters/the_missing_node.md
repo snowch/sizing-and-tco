@@ -106,8 +106,8 @@ Nothing automatic. Four things that are not:
 
 **Compare against an invoice.** The strongest test available. A model of something that already
 exists can be checked against what it cost, and that number is a fact the model did not have.
-[ch14](#correlation-and-convergence)'s problem 14.3 is that check. It is the only exercise in the
-book where the oracle is outside the model.
+Problem 20.3 is that check, and the only exercise in the book where the oracle is outside the
+model.
 
 **Ask what is not in the graph.** Read the node list as a list of *categories*, and ask what
 category is absent. The web service model has no line for rack space, cross-connects, backup,
@@ -181,11 +181,12 @@ is a model whose structure nobody has checked, however good its interval looks.
 
 ## Problems
 
-Three, in `tests/the_missing_node/`. The first two have tests. The last does not, and says why.
+Four, in `tests/the_missing_node/`. The first three have tests. The last does not, and says why.
 
 **20.1 — What would count as evidence?**
-An observation falls outside the interval. Decide what it would take to call the model refuted,
-state a rule that holds together, and implement it. One miss is not it.
+Some observations fall outside the interval. Decide what it would take to call the model refuted,
+state a rule that weighs how far out they fall against how many you have, and implement it over
+the whole set. One miss is not it.
 
 ```bash
 python3 -m pytest tests/the_missing_node/test_problem_1_refuted.py
@@ -199,7 +200,18 @@ A model that cannot be wrong has stopped being able to be useful, and this is wh
 python3 -m pytest tests/the_missing_node/test_problem_2_widening.py
 ```
 
-**20.3 — The node you have not written down.** No test: if a check could find what is missing,
+**20.3 — Find the missing node.**
+A model file in the test directory is deliberately incomplete, and its stated interval is a lie:
+an invented monthly figure, the average of twelve invoices, falls outside it. Repair the model so
+the observation lands inside the interval. The inputs it has stay as they are, and the repair is a
+quantity the model never mentioned and the line that prices it. There is no answer key; the oracle
+is a figure the model does not contain.
+
+```bash
+python3 -m pytest tests/the_missing_node/test_problem_3_missing_node.py
+```
+
+**20.4 — The node you have not written down.** No test: if a check could find what is missing,
 the chapter would not be necessary.
 
 Take your own model and go looking for what is missing. Use whichever of this chapter's
@@ -222,5 +234,6 @@ is no test for completeness, which is what this chapter is about.
 An honest presentation of a total includes what the model does not contain, and saying so out
 loud is harder than any of the arithmetic that came before it.
 
-[ch14](#correlation-and-convergence) has the exercise where an invoice refutes a model, if you
-skipped it.
+[ch14](#correlation-and-convergence) ends on the sentence this chapter expands, if you skipped
+it: a model whose answer has stopped moving between runs has settled its arithmetic, and nothing
+else.

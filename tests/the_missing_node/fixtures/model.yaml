@@ -1,11 +1,11 @@
-# An exercise fixture for problem 14.3, and deliberately incomplete.
+# An exercise fixture for problem 20.3, and deliberately incomplete.
 #
 # This is NOT one of the book's models and nothing in it is measured. It is a small monthly cost
 # model for a hosted service, of the kind somebody would write in an afternoon, and it is missing
 # exactly one cost line. Every number in it is invented for the exercise; the file lives under
 # tests/ rather than models/ so that it can never be mistaken for a figure the book publishes.
 #
-# The reader's job is in tests/correlation_and_convergence/stubs.py.
+# The reader's job is in tests/the_missing_node/stubs.py.
 model: incomplete_service
 title: A hosted service, monthly (exercise fixture — incomplete)
 currency: USD

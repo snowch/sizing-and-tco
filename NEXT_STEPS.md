@@ -32,10 +32,10 @@ page. What is left is the work a first draft leaves:
 ## The toolkit
 
 - **One conversion factor per node.** `check_units` evaluates a formula dimensionally and records
-  one factor that turns its result into the declared unit, so a sum whose operands are declared
-  in different units of one dimension, `TB + TiB` or `USD/year + USD/month`, typechecks and then
-  computes a wrong number in silence. Problem 9.3 runs into it. Either convert per operand or
-  refuse the sum; refusing is smaller and says what the modeller should do.
+  one factor that turns its result into the declared unit. Operands that meet in a sum, a
+  difference or a comparison in different units of one dimension, and a rounding over a number
+  not yet in the node's unit, are refused with the repair named. Converting per operand instead
+  would let `USD/year + USD/month` through as arithmetic; nobody has needed it yet.
 - **Sensitivity beyond one-at-a-time, properly.** `bench/run_information.py` bounds what each
   input is worth on its own, which is most of what ch19 needed. A variance-based decomposition
   over the samples already drawn would answer the interaction question the tornado cannot, and is

@@ -170,9 +170,11 @@ python3 -m pytest tests/capacity/test_problem_2_erasure.py
 ```
 
 **9.3 — The other kind of terabyte.**
-Re-declare every node held in terabytes in binary units and change nothing else. The outputs must
-come out smaller by exactly the right ratio, and the model must still typecheck. If you find
-yourself editing a value to compensate, stop.
+Re-declare every unit in the model that carries a terabyte in tebibytes, inputs included, and
+convert each input's number so that it still means the same bytes. Then check that nothing the
+model buys has moved: the same hosts, the same money, and every tebibyte figure reading smaller
+by exactly the ratio. Converting is not compensating, and the difference between the two is the
+chapter. If a host count moved, a unit was missed, and finding it is the exercise.
 
 ```bash
 python3 -m pytest tests/capacity/test_problem_3_binary_units.py

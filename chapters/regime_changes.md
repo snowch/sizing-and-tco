@@ -66,8 +66,8 @@ expresses this one correctly. The trouble is what that arithmetic does to the un
 
 That is three counts multiplied together, and nobody would describe any of them as alarming. The
 product is far wider than any of the three. Uncertainty compounds when quantities multiply, and
-problem 8.2 is where you measure by how much. The same spread shows up in every tornado the series
-count appears in:
+[ch01](#point-estimates)'s problem 1.1 measured that compounding. The same spread shows up in
+every tornado the series count appears in:
 
 ```{include} _generated/regime-changes-tornado.md
 ```
@@ -181,13 +181,15 @@ wrong it is where it matters.
 python3 -m pytest tests/regime_changes/test_problem_1_straight_line.py
 ```
 
-**8.2 — Why cardinality dominates.**
-Take three counts that nobody would describe as alarming, multiply them, and compare the spread of
-the product against the spread of the widest factor. Predict the direction and the rough size
-before you run it.
+**8.2 — A host lost at the busy hour.**
+Lose one host from the fleet at the busy hour and work out where the survivors land: their
+utilisation, and the residence time [ch06](#queueing-and-the-knee)'s division then gives them.
+Predict before you run it whether the residence time rises by the same factor as the utilisation.
+The test then shrinks the fleet at the same utilisation until the survivors are past one, where
+the division has nothing left to divide by.
 
 ```bash
-python3 -m pytest tests/regime_changes/test_problem_2_combinatorial.py
+python3 -m pytest tests/regime_changes/test_problem_2_host_loss.py
 ```
 
 **8.3 — Every threshold you have.** No test: nothing here knows what your system runs into

@@ -307,9 +307,12 @@ python3 -m pytest tests/comparing_two_tcos/test_problem_1_paired_difference.py
 ```
 
 **22.2 — How expensive can the move be?**
-Find the one-off cost of moving at which the two totals tie at the point estimate, using the
-model's own point evaluation rather than arithmetic of your own. The total is linear in that
-input, so two evaluations fix the line.
+Take the incumbent's fleet as an input. For an incumbent of that many hosts, find the one-off
+cost of moving at which the two totals tie at the point estimate. Use the model's own point
+evaluation rather than arithmetic of your own. The break-even table prints the tie for the fleet
+the incumbent runs. The test grades that fleet and two the page does not print. An answer that
+moves when the fleet does cannot have been copied off the page. The total is linear in the cost
+of the move, so two evaluations fix the line.
 
 ```bash
 python3 -m pytest tests/comparing_two_tcos/test_problem_2_break_even.py

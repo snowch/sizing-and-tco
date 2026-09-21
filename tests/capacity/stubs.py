@@ -52,16 +52,19 @@ def in_binary_units(model: Model) -> Model:
     more. Both are spelled "terabyte" in conversation and the difference has bought a lot of
     people a smaller cluster than they thought.
 
-    Return a copy of ``model`` in which every node currently declared in ``TB`` is declared in
-    ``TiB`` instead - and **change nothing else**. No formula, no input value, no distribution.
+    Return a copy of ``model`` in which every unit that carries a terabyte, in a numerator or a
+    denominator, ``TB``, ``TB/host``, ``USD/TB/month`` and the rest, carries a tebibyte in its
+    place. For a computed node that is a relabelling and nothing else: its number is worked out
+    from the inputs and the build converts it. For an input it is more than that. An input's
+    number is a claim about bytes, and the same number under a new unit is a different claim, so
+    convert the number too: a value, or each end of a band, so that it means the same bytes it
+    meant before. A price per terabyte-month becomes a slightly higher price per tebibyte-month.
+    Change no formula.
 
-    The test then asserts two things that only both hold if the unit system is doing its job:
-    every affected output is numerically *smaller* by the expected ratio, because the same
-    quantity of bytes counted in larger units is a smaller number - and the model still
-    typechecks, because the dimensions did not change, only the units.
-
-    If you find yourself editing a value to compensate, stop. The build does that conversion, and
-    doing it by hand is how the two copies of a model start to disagree.
+    The test then asserts what only a consistent conversion gives: the model still typechecks,
+    nothing the model buys has moved, the same hosts and the same money to the last digit, and
+    every node read in tebibytes reads smaller by exactly the ratio. If a host count moved, you
+    converted a number wrongly or missed a unit, and which one is the exercise.
     """
     raise NotImplementedError("problem 9.3")
 

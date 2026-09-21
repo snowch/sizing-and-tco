@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "11a3c4c782a17b30",
+  "code_fingerprint": "7cf6036e9b5221c8",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/06-scaling/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-21T02:40:33+00:00",
-  "git_revision": "de81099",
+  "generated_at": "2026-09-21T02:55:23+00:00",
+  "git_revision": "2110500",
   "kind": "model",
   "name": "web_service_scaling-reference",
   "produced_by": {
@@ -80,7 +80,7 @@
       "utilisation_including_coordination": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-21T02:40:33+00:00",
+    "generated_at": "2026-09-21T02:55:23+00:00",
     "model": "web_service_scaling",
     "nodes": {
       "achievable_throughput": {

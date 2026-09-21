@@ -7,8 +7,9 @@ import pytest
 from bench.stamp import load_result
 
 REQUIRED = {"scenario", "hosts", "tco_p50", "tco_p95", "p_over_the_knee"}
-#: The web service scenarios that represent something somebody could buy.
-DESIGNS = ("reference", "sized_for_growth", "power_first")
+#: The chapter's two designs, by scenario: the fleet the model recommends at the point estimate,
+#: and the same fleet sized for the growth we might get rather than the growth we expect.
+DESIGNS = ("reference", "sized_for_growth")
 
 
 def stamped(scenario: str) -> dict:
@@ -61,10 +62,11 @@ def test_more_machines_costs_more_and_risks_less(table):
     )
 
 
-def test_the_three_designs_are_meaningfully_different():
+def test_the_two_designs_are_meaningfully_different():
     """Scaffolding: there is a decision to present.
 
-    If the options ever converged, the chapter would be about a formality rather than a choice.
+    If the two designs ever converged, the chapter would be about a formality rather than a
+    choice. Here their shares of futures over the knee differ by more than a fifth.
     """
     risks = [stamped(s)["nodes"]["queueing_headroom"]["ceiling"]["p_over_limit"] for s in DESIGNS]
     assert max(risks) - min(risks) > 0.2, risks
