@@ -1105,12 +1105,19 @@ CSS = """
   --accent: #35648f; --on-accent: #ffffff; --wash: rgba(53,100,143,.09);
   --warn: #c8791a; --stop: #b3413a; --go: #2e7d32;
   --measure: 36rem;
-  /* The two rails. A chapter list that wraps 16 of its 39 entries is hard to scan, and
-     the widths below give the room back where there is room to give -- see the rule at
-     96rem. Under that, the middle column needs every pixel: at 1512 the wider rails
-     would leave an embedded model 853px, under the 861 its own layout needs to put the
-     inputs beside the graph, so it would stack. */
-  --nav: 17rem; --toc: 14rem;
+  /* The two rails, which grow with the window rather than stepping at one width. A chapter
+     list that wraps 16 of its 39 entries is hard to scan, and the room to fix it appears
+     gradually: the middle column stops needing every pixel once the window passes 1440, which
+     is where an embedded model still clears the 861px its own layout needs to put the inputs
+     beside the graph. A single step at 96rem gave a 1512 laptop nothing, and 1512 is the
+     commonest width there is. The ramp starts a rem later than the arithmetic allows, because
+     `100vw` counts a classic scrollbar the layout does not have.
+
+     The chapter list takes four fifths of what is going, because it is the one that wraps;
+     the outline wanted 4px more than its 14rem and gets 16. */
+  --rails: clamp(0rem, (100vw - 91rem) * 0.8, 5rem);
+  --nav: calc(17rem + var(--rails) * 0.8);
+  --toc: calc(14rem + var(--rails) * 0.2);
   --top: 3.1rem;
   --chrome: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --text: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
@@ -1250,12 +1257,7 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
          overscroll-behavior: contain; }
   html.toc-closed .toc { display: none; }
 }
-/* Wide enough that widening the rails takes nothing from the chapter: the middle column
-   still clears the 861px an embedded model needs for its two-column layout, and above
-   2016px it reaches the 84rem cap regardless. Every grid rule above reads these. */
-@media (min-width: 96rem) {
-  :root { --nav: 21rem; --toc: 15rem; }
-}
+
 .nav { border-right: 1px solid var(--edge); }
 .toc { border-left: 1px solid var(--edge); }
 .nav .part, .toc .part { font-size: 11.5px; font-weight: 600; letter-spacing: .08em;

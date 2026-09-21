@@ -781,30 +781,66 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     assert 'localStorage.getItem("toc") === "closed"' in opening
 
 
-def test_the_rails_take_the_room_only_where_there_is_room():
-    """A chapter list that wraps is hard to scan, and above 96rem the wrapping is free to fix.
+def test_the_rails_take_the_room_as_it_appears():
+    """A chapter list that wraps is hard to scan, and the room to fix it arrives gradually.
 
-    Sixteen of the chapter list's thirty-nine entries wrapped onto a second line at 17rem, and
-    "What this cannot tell you" wrapped in a 14rem outline that needed 228px. The widths are
-    variables so one rule moves both, and that rule waits for 96rem: under it the middle column
-    needs every pixel, because at 1512 the wider rails leave an embedded model 853px and its own
-    layout puts the inputs beside the graph only from 861px. A 2000px window used to spend 80px
-    on margin outside a 120rem shell while the rails wrapped, which is where the room comes from.
+    Sixteen of the thirty-nine entries wrapped at 17rem, and "What this cannot tell you" wrapped
+    in a 14rem outline that needed 228px. A single step at 96rem fixed that for a desk and gave
+    a 1512 laptop nothing, 1512 being the commonest width there is. The rails grow with the
+    window instead: the middle column stops needing every pixel past 1440, which is where an
+    embedded model still clears the 861px its layout needs to put the inputs beside the graph,
+    so the extra a rail may take is what the window has over 1440. The ramp starts a rem later
+    than that, because `100vw` counts a classic scrollbar the layout does not have.
     """
     css = site().CSS
-    assert "--nav: 17rem; --toc: 14rem;" in css, "the narrow pair is the default"
-    assert "@media (min-width: 96rem) {\n  :root { --nav: 21rem; --toc: 15rem; }\n}" in css, (
-        "one rule widens both rails, and only above the width that makes it free"
+    # The shape is fixed; the numbers in it are free to move, and the arithmetic below is what
+    # says whether they may. Pinning both here would mean only the shape was ever checked.
+    assert "--rails: clamp(0rem, (100vw" in css, (
+        "the rails take nothing under a start width and never more than a cap"
     )
-    assert css.index("--nav: 21rem") > css.index("--nav: 17rem"), (
-        "a media query adds no specificity, so the wider pair has to come second"
+    assert "--nav: calc(" in css and "var(--rails)" in css, "the chapter list takes a share"
+    assert "--toc: calc(" in css, "so does the outline"
+    assert "@media (min-width: 96rem)" not in css, (
+        "the step this replaced skipped every window between 1440 and 1536"
     )
     assert "max-width: 126rem;" in css, (
-        "the shell's own cap is what hands the rails their extra room rather than a margin"
+        "the shell's own cap is what hands the rails their room rather than a margin"
     )
     assert "grid-template-columns: 17rem" not in css and "5rem)) 14rem" not in css, (
         "every grid rule reads the variables, or widening one rail moves only some of them"
     )
+    # The slope is what keeps the promise, so read it off the stylesheet rather than restating
+    # it: at no width may the rails take more than the middle column can spare, or an embedded
+    # model drops to its stacked layout.
+    rem = 16
+    ramp = re.search(
+        r"--rails: clamp\(0rem, \(100vw - ([\d.]+)rem\) \* ([\d.]+), ([\d.]+)rem\)", css
+    )
+    assert ramp, "the ramp is a clamp of the window less a start, with a slope and a cap"
+    start, slope, most = float(ramp[1]) * rem, float(ramp[2]), float(ramp[3]) * rem
+    shares = {}
+    for rail in ("nav", "toc"):
+        got = re.search(rf"--{rail}: calc\(([\d.]+)rem \+ var\(--rails\) \* ([\d.]+)\)", css)
+        assert got, f"--{rail} is its own width plus a share of the ramp"
+        shares[rail] = (float(got[1]) * rem, float(got[2]))
+    assert abs(sum(share for _, share in shares.values()) - 1) < 1e-9, (
+        "the two shares are the whole of the ramp, or the cap does not mean what it says"
+    )
+    narrow = sum(base for base, _ in shares.values())
+    cap = float(re.search(r"\.shell \{[^}]*max-width: ([\d.]+)rem", css, re.S)[1]) * rem
+    column = float(re.search(r"calc\((\d+)rem \+ 5rem\)", css)[1]) * rem
+    padding, needs = 83, 861
+    for window in range(1400, 2400, 4):
+        taken = min(most, max(0, (window - start) * slope))
+        spare = window - (needs + padding) - narrow
+        assert taken <= max(0, spare) + 0.5, (
+            f"{window}px: the rails take {taken:.0f}px where only {spare:.0f}px is spare"
+        )
+        rails = sum(base + taken * share for base, share in shares.values())
+        model = min(min(window, cap) - rails - padding, column)
+        assert model >= needs or window < needs + padding + narrow, (
+            f"{window}px: the model gets {model:.0f}px and its layout needs {needs}px"
+        )
 
 
 def test_a_models_box_follows_the_layout_the_model_chose():
