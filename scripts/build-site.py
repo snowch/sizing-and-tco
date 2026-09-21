@@ -1166,19 +1166,29 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
 main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem; max-width: calc(var(--measure) + 5rem);
        min-width: 0; width: 100%; margin-inline: auto; }
 /* Above the first breakpoint the measure belongs to each thing in the chapter rather than to
-   the column holding them, so the line length is the same at every width -- prose, headings,
-   code and notes keep it and stay centred -- while what a reader came for spreads into
-   whatever room there is: an embedded model, the runner, and a table wider than the prose.
-   This used to apply only with the chapter list closed, which left a model 573px wide on a
-   1512px laptop, under the 860px its own layout needs to put the inputs beside the graph,
-   with 452px of the window empty. It sits here, after the cap it undoes, because a media
-   query adds no specificity and the later rule is the one that wins. A browser without :has()
-   leaves the model at the measure, which is what every browser did before. */
+   the column holding them, so the line length is the same at every width -- prose, headings
+   and notes keep it and stay centred -- while what a reader came for spreads into whatever
+   room there is. This used to apply only with the chapter list closed, which left a model
+   573px wide on a 1512px laptop, under the 860px its own layout needs to put the inputs
+   beside the graph, with 452px of the window empty.
+
+   Addressed by the id rather than the element, because almost every child of the chapter sets
+   its own horizontal margins -- `p`, every heading, `.admonition`, `.editable-block`, the
+   turn -- and at equal specificity the later rule wins, which stacked the whole page against
+   the left of its column. The rules also sit here, after the cap they undo, because a media
+   query adds no specificity of its own.
+
+   Three widths, not two. A model, the runner and a table take the column, because a graph is
+   worth the room. Code takes what it needs and no more: the book's own lines stop at 100
+   columns, its widest block wants 942px, and 121 blocks over 33 pages were cut off at the
+   measure. A browser without :has() leaves the model at the measure, which is what every
+   browser did before. */
 @media (min-width: 58rem) {
-  main { max-width: none; }
-  main > * { max-width: var(--measure); margin-inline: auto; }
-  main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: 100%; }
-  main > figure > figcaption { margin-inline: auto; }
+  #main { max-width: none; }
+  #main > * { max-width: var(--measure); margin-inline: auto; }
+  #main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: 100%; }
+  #main > :is(pre, .editable-block, .problem, figure:has(> pre)) { max-width: min(100%, 60rem); }
+  #main > figure > figcaption { margin-inline: auto; }
 }
 main :is(h1, h2, h3, h4) { font-family: var(--chrome); letter-spacing: -.012em;
                            scroll-margin-top: calc(var(--top) + 1rem); }
