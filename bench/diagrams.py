@@ -38,6 +38,46 @@ KIND_STROKE = {
     "ceiling": "#b3413a",
 }
 PROVENANCE_STROKE = {"fact": "#2e7d32", "vendor_claim": "#c8791a", "assumption": "#b3413a"}
+
+#: What each of those colours becomes when the page is dark, and the whole reason the figures can
+#: follow it at all: they are drawn inline, so the page's stylesheet reaches every fill and stroke
+#: in them. `scripts/build-site.py` turns this into one rule per colour, inside the dark block.
+#:
+#: A figure is drawn once, in daylight, and read in both. Substituting colour by colour rather
+#: than inverting keeps what the colour means -- amber is a measured constant, red a ceiling, and
+#: a ceiling that inverted to cyan would say nothing. `tests/test_figures.py` fails a figure that
+#: uses a colour this does not name, so a new one cannot quietly ship a white slab.
+DARK_FIGURE = {
+    # Paper and the panels drawn on it.
+    "#ffffff": "#151c20",
+    "#fafafa": "#1b2429",
+    "#eceff1": "#232d33",
+    "#e4e7e9": "#232d33",
+    "#e0e0e0": "#2b363c",
+    "#cfd8dc": "#2b363c",
+    "#bdbdbd": "#3d4b53",
+    # Ink, from the darkest label to the faintest rule.
+    "#263238": "#dde4e8",
+    "#37474f": "#c9d4da",
+    "#455a64": "#b3c1c9",
+    "#546e7a": "#9db0ba",
+    "#607d8b": "#8ea3ae",
+    "#78909c": "#7f939e",
+    "#90a4ae": "#6c828d",
+    # An input, and the blue the book draws data in.
+    "#dbe7f3": "#22384a",
+    "#dde5ec": "#22384a",
+    "#9fc0dd": "#4a7ba7",
+    "#5b8fb9": "#5b8fb9",
+    "#4a7ba7": "#7fb0d8",
+    # A measured constant, a ceiling, a fact, and the second series in a comparison.
+    "#fde8c8": "#3a2c15",
+    "#c8791a": "#d9922c",
+    "#f8d3d0": "#3a1f1d",
+    "#b3413a": "#cf5a52",
+    "#2e7d32": "#4f9c53",
+    "#c98a6b": "#c98a6b",
+}
 PROVENANCE_DASH = {"fact": "", "vendor_claim": "4 2", "assumption": "2 3"}
 
 COLUMN_WIDTH = 188

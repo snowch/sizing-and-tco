@@ -526,6 +526,7 @@ for (const button of document.querySelectorAll(".run-here")) {{
 </script>
 """
 
+
 #: The runtime URL, the module list and the boot script come from one place,
 #: sizing/playground/toolkit.py, and the boot goes into the page's head once, as a plain script,
 #: so that the run control and the problems' checks, each a module of its own, share it.
@@ -1201,21 +1202,27 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
    sidebars, and a single breakpoint at the larger of those left a 1024px tablet with no
    navigation and a third of its width empty. */
 @media (min-width: 58rem) {
-  .shell { grid-template-columns: 17rem minmax(0, 1fr); }
+  /* The middle column is the chapter's width and no wider, and the group of columns is what
+     centres. A middle column of `1fr` put 230px of nothing between the chapter list and the
+     first word, and the same again before the outline, so three columns read as three things
+     adrift rather than as a page. */
+  .shell { grid-template-columns: 17rem minmax(0, calc(var(--measure) + 5rem));
+           justify-content: center; }
   .nav { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
-  html.nav-closed .shell { grid-template-columns: minmax(0, 1fr); }
+  html.nav-closed .shell { grid-template-columns: minmax(0, calc(var(--measure) + 5rem)); }
   html.nav-closed .nav { display: none; }
 }
 /* Two rails, and a reader reading a wide graph wants neither. Each has a button of its own, so
    the chapter takes back 272px, 224px, or both -- and with both away the shell's own cap goes
    too, because at that point the reader has asked for the window. */
 @media (min-width: 72rem) {
-  .shell { grid-template-columns: 17rem minmax(0, 1fr) 14rem; }
-  html.nav-closed .shell { grid-template-columns: minmax(0, 1fr) 14rem; }
-  html.toc-closed .shell { grid-template-columns: 17rem minmax(0, 1fr); }
-  html.nav-closed.toc-closed .shell { grid-template-columns: minmax(0, 1fr); max-width: none; }
+  .shell { grid-template-columns: 17rem minmax(0, calc(var(--measure) + 5rem)) 14rem; }
+  html.nav-closed .shell { grid-template-columns: minmax(0, calc(var(--measure) + 5rem)) 14rem; }
+  html.toc-closed .shell { grid-template-columns: 17rem minmax(0, calc(var(--measure) + 5rem)); }
+  html.nav-closed.toc-closed .shell {
+    grid-template-columns: minmax(0, calc(var(--measure) + 5rem)); max-width: none; }
   .toc { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
@@ -1470,6 +1477,27 @@ figure > .runner { margin: 0; }
   a { color: inherit; }
 }
 """
+
+
+def dark_figures() -> str:
+    """One rule per colour a figure is drawn in, so an inline SVG follows the page into the dark.
+
+    The figures are drawn once, in daylight, by ``bench/diagrams.py``, and every one of them is
+    written into the page rather than linked, so the stylesheet can reach each fill and stroke.
+    Colour by colour rather than a filter: a ceiling is red because red means a ceiling, and
+    inverting the page would make it cyan and say nothing.
+    """
+    from bench.diagrams import DARK_FIGURE
+
+    rules = "\n".join(
+        f'  #main svg [fill="{light}"] {{ fill: {dark}; }}\n'
+        f'  #main svg [stroke="{light}"] {{ stroke: {dark}; }}'
+        for light, dark in DARK_FIGURE.items()
+    )
+    return f"@media (prefers-color-scheme: dark) {{\n  figure img {{ background: var(--panel); }}\n{rules}\n}}\n"
+
+
+CSS += dark_figures()
 
 
 def nav_html(here: str) -> str:

@@ -191,3 +191,25 @@ def test_the_formula_sheet_lists_every_formula_once():
             assert f"`{node.of_text}` against a limit of `{node.limit_text}`" in sheet, name
     assert "Introduced in" in sheet.splitlines()[0]
     assert "Introduced in" not in tables.formulas_table(None, "observability")
+
+
+def test_every_colour_a_figure_is_drawn_in_has_one_for_the_dark():
+    """A figure is drawn once, in daylight, and read in both.
+
+    The figures go into the page inline, so the stylesheet reaches every fill and stroke in
+    them and `scripts/build-site.py` swaps each colour for a dark counterpart. A colour with no
+    counterpart stays as it was drawn, which on a dark page is a white slab or a black label on
+    a dark panel. The book had 38 of those. This is what stops the thirty-ninth.
+    """
+    from bench.diagrams import DARK_FIGURE
+
+    used: dict[str, str] = {}
+    for path in sorted((ROOT / "chapters" / "_figures").glob("*.svg")):
+        for colour in re.findall(r'(?:fill|stroke)="(#[0-9a-fA-F]{3,8})"', path.read_text()):
+            used.setdefault(colour.lower(), path.name)
+    missing = {colour: where for colour, where in used.items() if colour not in DARK_FIGURE}
+    assert not missing, (
+        "these are drawn in colours bench.diagrams.DARK_FIGURE does not name, so they keep "
+        "them on a dark page:\n  "
+        + "\n  ".join(f"{colour} first in {where}" for colour, where in sorted(missing.items()))
+    )

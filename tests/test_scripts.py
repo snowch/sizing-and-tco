@@ -739,10 +739,11 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
         "written hidden showed anyway and did nothing when pressed"
     )
     # Four states, one per pair of rails, and the cap comes off only when both are away.
+    column = "minmax(0, calc(var(--measure) + 5rem))"
     for selector in (
-        "html.nav-closed .shell { grid-template-columns: minmax(0, 1fr) 14rem; }",
-        "html.toc-closed .shell { grid-template-columns: 17rem minmax(0, 1fr); }",
-        "html.nav-closed.toc-closed .shell { grid-template-columns: minmax(0, 1fr); max-width: none; }",
+        f"html.nav-closed .shell {{ grid-template-columns: {column} 14rem; }}",
+        f"html.toc-closed .shell {{ grid-template-columns: 17rem {column}; }}",
+        f"grid-template-columns: {column}; max-width: none; }}",
         "html.toc-closed .toc { display: none; }",
     ):
         assert selector in css, selector
@@ -824,3 +825,40 @@ def test_a_model_can_take_the_window_without_losing_the_reader_s_place():
     )
     assert 'event.key === "Escape"' in script
     assert "button.hidden = false" in script
+
+
+def test_a_figure_and_a_model_follow_the_page_into_the_dark():
+    """The book's own drawings are written inline, so the stylesheet can reach into them.
+
+    They are drawn once, in daylight. On a dark page the stylesheet swaps each colour for the
+    counterpart `bench.diagrams.DARK_FIGURE` names, colour by colour rather than by inverting,
+    because red means a ceiling and a ceiling that came out cyan would say nothing. The model
+    panel is its own document, so it carries its own dark palette.
+    """
+    from bench.diagrams import DARK_FIGURE
+
+    css = site().CSS
+    for light, dark in DARK_FIGURE.items():
+        assert f'#main svg [fill="{light}"] {{ fill: {dark}; }}' in css, light
+        assert f'#main svg [stroke="{light}"] {{ stroke: {dark}; }}' in css, light
+    viewer = (ROOT / "sizing" / "viewer" / "style.css").read_text()
+    assert "@media (prefers-color-scheme: dark)" in viewer
+    outside = re.sub(r":root \{.*?\}", "", viewer, flags=re.S)
+    assert not re.findall(r"#[0-9a-fA-F]{3,8}\b", outside), (
+        "a colour written into a rule cannot follow the page; every one belongs in the palette"
+    )
+
+
+def test_the_three_columns_sit_together():
+    """The middle column is the chapter's width, and the group of columns is what centres.
+
+    A middle column of `1fr` left 230px of nothing between the chapter list and the first word
+    of the chapter, and the same again before the outline, so the page read as three things
+    adrift rather than as one.
+    """
+    css = site().CSS
+    assert "grid-template-columns: 17rem minmax(0, calc(var(--measure) + 5rem));" in css
+    assert "justify-content: center;" in css
+    assert "minmax(0, 1fr)" not in css.split("@media (min-width: 58rem)")[1], (
+        "above the first breakpoint no column is a fraction of the window any more"
+    )
