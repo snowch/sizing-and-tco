@@ -106,8 +106,8 @@ Nothing automatic. Four things that are not:
 
 **Compare against an invoice.** The strongest test available. A model of something that already
 exists can be checked against what it cost, and that number is a fact the model did not have.
-Problem 14.3 is that check. It is the only exercise in the book where the oracle is outside
-the model.
+[ch14](#correlation-and-convergence)'s problem 14.3 is that check. It is the only exercise in the
+book where the oracle is outside the model.
 
 **Ask what is not in the graph.** Read the node list as a list of *categories*, and ask what
 category is absent. The web service model has no line for rack space, cross-connects, backup,
