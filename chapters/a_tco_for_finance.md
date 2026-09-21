@@ -216,9 +216,9 @@ Three, in `tests/a_tco_for_finance/`. The first two have tests and neither is ar
 has no test, and says why.
 
 **21.1 — The decision table.**
-Build the two-design comparison from the stamped results, with the columns that answer the
-question and no others. The test grades the numbers against the model and the shape against what
-fits in somebody's head.
+The test hands you the stamped result of each of the two designs. Build the two-design comparison
+from them, with the columns that answer the question and no others. The test grades the numbers
+against the stamped results and the shape against what fits in somebody's head.
 
 ```bash
 python3 -m pytest tests/a_tco_for_finance/test_problem_1_decision_table.py

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from sizing.dsl import Model
-
 
 def failure_reserve(hosts: int, tolerated_losses: int) -> float:
     """Problem 11.1 - the margin a host loss actually costs.
@@ -47,24 +45,3 @@ def compose(margins: list[float]) -> float:
     cluster twice the size anybody intended.
     """
     raise NotImplementedError("problem 11.2")
-
-
-def add_a_ceiling(model: Model, name: str, of: str, limit: float, headroom: float) -> Model:
-    """Problem 11.3 - add a ceiling to a model, and meet what declaring one commits you to.
-
-    Return a copy of ``model`` with one more node: a ``ceiling`` called ``name``, watching the
-    expression ``of``, against ``limit``, with ``headroom`` of margin, and with a reason.
-
-    Three things the build will insist on:
-
-    * the ceiling's unit must be the unit its expression produces, or the dimensional pass
-      refuses it (ch02);
-    * the headroom must be declared - a limit with no margin is not a sizing rule, which is
-      this chapter's argument;
-    * the reason must not be empty, because a margin nobody can argue with gets copied into the
-      next model by somebody who does not know what it was for.
-
-    Add it to the model's outputs too, or ``verify-models.py`` will point out that it feeds
-    nothing.
-    """
-    raise NotImplementedError("problem 11.3")

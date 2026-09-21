@@ -176,7 +176,7 @@ def _message(report) -> str:
     return ("\n".join(marked) if marked else text)[-DETAIL:]
 
 
-def grade(stubs: str, test: str, root: str = "/") -> str:
+def grade(stubs: str, test: str, root: str = "/", files: dict[str, str] | str | None = None) -> str:
     """Run one problem's tests against the stubs file as the reader has it, and say what happened.
 
     ``test`` is the test file's path under ``root``, ``tests/capacity/test_problem_1_raw.py``,
@@ -184,6 +184,10 @@ def grade(stubs: str, test: str, root: str = "/") -> str:
     chapter's files out, so the tests find ``models/web_service/model.yaml`` at the path they
     name. Nothing here re-implements a runner: pytest runs in this process, over the same file
     the reader would run at a desk, with a plugin that keeps each test's outcome and message.
+
+    ``files`` are the files the reader edits whole, path under ``root`` to text, as JSON text or
+    a dict; a problem whose artefact is a model fragment or a fixture hands them over here, and
+    they are written where the test will read them.
 
     Returns JSON text, one entry per test, plus the terminal output for a reader who wants all of
     it. A test file that cannot be imported, a syntax error in the stubs being the usual reason,
@@ -194,6 +198,13 @@ def grade(stubs: str, test: str, root: str = "/") -> str:
     base = Path(root)
     target = base / test
     (target.parent / "stubs.py").write_text(stubs)
+    edited = json.loads(files) if isinstance(files, str) else (files or {})
+    for path, text in edited.items():
+        if ".." in Path(path).parts:
+            raise ValueError(f"an edited file stays under the root: {path!r}")
+        where = base / path
+        where.parent.mkdir(parents=True, exist_ok=True)
+        where.write_text(text)
     # A compiled copy of the previous stubs would be read in place of the new ones: the check
     # that guards a .pyc is the source's size and its mtime to the second, and an edit that
     # changes one character between two presses of Check defeats both. So nothing under the

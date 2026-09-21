@@ -231,8 +231,9 @@ says why.
 
 **3.1 — Take a constant, and stamp it so somebody else could check it.**
 Pick a quantity a codec decides, measure it over a corpus you generate deterministically, and
-produce a stamped payload that satisfies every rule in `bench.stamp.provenance_problems`: corpus,
-codec, units with no time in them, and a standard error that came from somewhere.
+hand back what a stamp records: a value, a standard error that came from somewhere, a unit for
+each with no time in it, and the corpus and codec that produced them. The test stamps it and holds
+it to every rule in `bench.stamp.provenance_problems`.
 
 ```bash
 python3 -m pytest tests/where_the_numbers_come_from/test_problem_1_measure.py

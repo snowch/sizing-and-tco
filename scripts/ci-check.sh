@@ -22,6 +22,51 @@ python3 -m ruff check "${PY_PATHS[@]}"
 echo "== ruff format =="
 python3 -m ruff format --check "${PY_PATHS[@]}"
 
+echo "== which commit this build is =="
+# Not one of the committed figures: it names the commit being built, so it is written here rather
+# than checked. The pages include it, so MyST needs it to exist before it parses anything.
+python3 scripts/build-stamp.py
+
+echo "== myst content build (strict) =="
+# Before pytest: the page tests render every chapter from this parse and skip without one, and
+# a check that CI never ran is not a check. The build itself is unchanged.
+if ! command -v myst >/dev/null 2>&1; then
+  if [ -n "${CI:-}" ]; then
+    # A check that silently skips itself is not a check. CI installs myst, so its absence here
+    # means the workflow is misconfigured; fail loudly rather than publish a broken link.
+    echo "ERROR: myst is not installed and CI must not skip the book build." >&2
+    exit 1
+  fi
+  echo "  myst not installed; skipping the content build, and every check that reads the parse."
+  echo "  install with: npm install -g \"mystmd@$(node -p "require('./package.json').devDependencies.mystmd")\""
+  myst_built=0
+else
+
+# Content build WITHOUT --html. This matters: with --html, MyST downloads the site theme before it
+# parses anything, so where the template registry is unreachable the build aborts having validated
+# nothing at all. Without it, every page is parsed first and only the final site assembly fails —
+# so the log still says whether the content is sound.
+log=$(mktemp)
+myst build --strict > "$log" 2>&1 || true
+
+# Two conditions, both required. The page count proves parsing actually happened, so a build that
+# died early can never be mistaken for a clean one; the warning check is the verdict.
+if ! grep -qE "Built [0-9]+ pages" "$log"; then
+  echo "ERROR: myst did not parse any pages — the build failed before validating content." >&2
+  tail -25 "$log" >&2
+  rm -f "$log"
+  exit 1
+fi
+if grep -qE "⚠|⛔" "$log"; then
+  echo "ERROR: content warnings (broken reference, citation or literalinclude anchor):" >&2
+  grep -E "⚠|⛔" "$log" >&2
+  rm -f "$log"
+  exit 1
+fi
+echo "  $(grep -oE 'Built [0-9]+ pages' "$log" | tail -1), no warnings"
+  myst_built=1
+fi
+
 echo "== pytest =="
 # `python3 -m pytest`, not bare `pytest`: the module form runs the tests under the interpreter
 # that has the project's dependencies. A standalone pytest (pipx, uv tool) has its own isolated
@@ -109,50 +154,9 @@ echo "== the playground assembles =="
 python3 scripts/build-playground.py --out _build/static/playground > /dev/null
 echo "  OK"
 
-echo "== which commit this build is =="
-# Not one of the committed figures: it names the commit being built, so it is written here rather
-# than checked. The pages include it, so MyST needs it to exist before it parses anything.
-python3 scripts/build-stamp.py
-
-echo "== myst content build (strict) =="
-if ! command -v myst >/dev/null 2>&1; then
-  if [ -n "${CI:-}" ]; then
-    # A check that silently skips itself is not a check. CI installs myst, so its absence here
-    # means the workflow is misconfigured; fail loudly rather than publish a broken link.
-    echo "ERROR: myst is not installed and CI must not skip the book build." >&2
-    exit 1
-  fi
-  echo "  myst not installed; skipping locally."
-  echo "  install with: npm install -g \"mystmd@$(node -p "require('./package.json').devDependencies.mystmd")\""
-  echo
-  echo "All checks passed."
-  exit 0
-fi
-
-# Content build WITHOUT --html. This matters: with --html, MyST downloads the site theme before it
-# parses anything, so where the template registry is unreachable the build aborts having validated
-# nothing at all. Without it, every page is parsed first and only the final site assembly fails —
-# so the log still says whether the content is sound.
-log=$(mktemp)
-myst build --strict > "$log" 2>&1 || true
-
-# Two conditions, both required. The page count proves parsing actually happened, so a build that
-# died early can never be mistaken for a clean one; the warning check is the verdict.
-if ! grep -qE "Built [0-9]+ pages" "$log"; then
-  echo "ERROR: myst did not parse any pages — the build failed before validating content." >&2
-  tail -25 "$log" >&2
-  rm -f "$log"
-  exit 1
-fi
-if grep -qE "⚠|⛔" "$log"; then
-  echo "ERROR: content warnings (broken reference, citation or literalinclude anchor):" >&2
-  grep -E "⚠|⛔" "$log" >&2
-  rm -f "$log"
-  exit 1
-fi
-echo "  $(grep -oE 'Built [0-9]+ pages' "$log" | tail -1), no warnings"
 rm -f "$log"
 
+if [ "$myst_built" = 1 ]; then
 echo "== no price has become an equation =="
 # This book writes money as $4,150,036 and intervals as "$318,062 to $611,522". Two dollar signs
 # on a line are a LaTeX span to MyST, so with dollar-maths on it sets the "to" as a pair of
@@ -185,6 +189,7 @@ echo "== the book installs for offline use =="
 # After every page, viewer and playground is in the tree, because the worker lists them all and
 # a list that names a file the build did not produce fails the install in the reader's browser.
 python3 scripts/build-offline.py --inject _build/static --base /
+fi
 
 echo
 echo "All checks passed."

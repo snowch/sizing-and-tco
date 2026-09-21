@@ -1,8 +1,8 @@
 """Problem 2.1 - levels against rates, graded against the units rather than a list.
 
 The oracle is the model's own declared units, which the reader is not looking at when they answer:
-they are reading names and notes. Two independent routes to the same classification, and a
-disagreement means one of them is wrong.
+they are handed names and the words the file puts beside them, and no unit. Two independent routes
+to the same classification, and a disagreement means one of them is wrong.
 """
 
 from __future__ import annotations
@@ -22,6 +22,15 @@ def model():
     return load_model(MODEL)
 
 
+@pytest.fixture(scope="module")
+def in_words(model) -> dict[str, str]:
+    """What the reader is handed: every node, as the file describes it and never as a unit."""
+    return {
+        name: node.label or node.note or name.replace("_", " ")
+        for name, node in model.nodes.items()
+    }
+
+
 def by_dimension(unit: str) -> str:
     """What a unit says a quantity is, independently of what anybody called it."""
     parsed = parse_unit(unit)
@@ -38,16 +47,16 @@ def by_dimension(unit: str) -> str:
 
 
 @pytest.mark.problem
-def test_every_node_is_classified(model):
-    answer = stocks_and_flows(model)
+def test_every_node_is_classified(model, in_words):
+    answer = stocks_and_flows(in_words)
     missing = set(model.nodes) - set(answer)
     assert not missing, f"no classification for {sorted(missing)[:5]}"
     assert set(answer.values()) <= {"stock", "flow", "neither"}
 
 
 @pytest.mark.problem
-def test_the_classification_agrees_with_the_units(model):
-    answer = stocks_and_flows(model)
+def test_the_classification_agrees_with_the_units(model, in_words):
+    answer = stocks_and_flows(in_words)
     wrong = {
         name: (answer[name], by_dimension(node.unit))
         for name, node in model.nodes.items()
@@ -67,3 +76,9 @@ def test_the_model_has_all_three_kinds(model):
     """Scaffolding: the problem is not three copies of one answer."""
     found = {by_dimension(node.unit) for node in model.nodes.values()}
     assert found == {"stock", "flow", "neither"}, f"only found {found}"
+
+
+def test_every_node_is_described_in_words(model, in_words):
+    """Scaffolding: the reader has something other than a unit to go on for every node."""
+    assert set(in_words) == set(model.nodes)
+    assert all(words.strip() for words in in_words.values())

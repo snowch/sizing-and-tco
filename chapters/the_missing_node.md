@@ -201,7 +201,8 @@ python3 -m pytest tests/the_missing_node/test_problem_2_widening.py
 ```
 
 **20.3 — Find the missing node.**
-A model file in the test directory is deliberately incomplete, and its stated interval is a lie:
+The page shows a copy of a model file that is deliberately incomplete, and its stated interval
+is a lie:
 an invented monthly figure, the average of twelve invoices, falls outside it. Repair the model so
 the observation lands inside the interval. The inputs it has stay as they are, and the repair is a
 quantity the model never mentioned and the line that prices it. There is no answer key; the oracle

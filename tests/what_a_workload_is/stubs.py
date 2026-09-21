@@ -7,13 +7,13 @@ itself: the smallest one the build will accept, and one that loads and is still 
 
 from __future__ import annotations
 
-from sizing.dsl import Model
 
-
-def stocks_and_flows(model: Model) -> dict[str, str]:
+def stocks_and_flows(nodes: dict[str, str]) -> dict[str, str]:
     """Problem 2.1 - which quantities are levels, and which are rates?
 
-    Return a dictionary mapping **every node name** in ``model`` to one of three strings:
+    ``nodes`` maps the name of **every node** in the observability model to what it is, in
+    words: the label the file gives it, or its note, or failing both its name. Return a
+    dictionary mapping every one of those names to one of three strings:
 
     ``"stock"``
         A level. How much there is, right now. Storage held, series alive, requests in flight.
@@ -23,7 +23,7 @@ def stocks_and_flows(model: Model) -> dict[str, str]:
     ``"neither"``
         A pure number, a ratio, a price per unit of something that is not time, a duration.
 
-    Classify by **meaning**, from the node's name, label and note. The test classifies by
+    Classify by **meaning**, from the name and the words beside it. The test classifies by
     **dimension**, from the unit the model declares - a flow has time in its denominator, a stock
     does not, and a duration has time in its numerator. If your reading of what a quantity *is*
     and the unit somebody declared for it disagree, one of the two is wrong, and finding out which
@@ -36,24 +36,26 @@ def stocks_and_flows(model: Model) -> dict[str, str]:
     raise NotImplementedError("problem 2.1")
 
 
-def daily_volume(model: Model) -> Model:
+def daily_volume(model_text: str) -> str:
     """Problem 2.2 - turn a rate into a volume, and make the build agree.
 
     The observability model knows how many bytes a second arrive. Nobody reasons in bytes a
     second; people reason in "how much a day", because that is what a retention conversation is
     about and what an invoice is denominated in.
 
-    Return a copy of ``model`` with one more node, called ``daily_ingest``, giving the bytes that
-    arrive in a day across metrics and logs together. Declare it in ``TB`` - terabytes a day, with
-    the day already divided out, which is the form somebody can act on.
+    ``model_text`` is the observability model file, as written. Return the same text with one
+    more node in it, called ``daily_ingest``, giving the bytes that arrive in a day across
+    metrics and logs together. Declare it in ``TB`` - terabytes a day, with the day already
+    divided out, which is the form somebody can act on.
 
-    You will need a node carrying a duration before the multiplication means anything, exactly as
-    ``one_year`` and ``one_sample_per_series`` do elsewhere in this book. That is not a workaround:
-    a rate times a pure number is still a rate, and the only thing that turns one into a volume is
-    multiplying by an amount of time.
+    You will need a node carrying a duration before the multiplication means anything, as
+    ``one_year`` and ``one_sample_per_series`` do elsewhere in this book. That is not a
+    workaround: a rate times a pure number is still a rate, and the only thing that turns one
+    into a volume is multiplying by an amount of time.
 
-    The test checks the unit typechecks, and that the answer is the ingest rate multiplied by a
-    day - derived from the model's own numbers at test time, so there is nothing to look up.
+    The test writes what you return to a file and loads it as the build would. It checks the
+    unit typechecks, and that the answer is the ingest rate multiplied by a day - derived from
+    the model's own numbers at test time, so there is nothing to look up.
     """
     raise NotImplementedError("problem 2.2")
 

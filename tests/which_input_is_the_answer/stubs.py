@@ -2,44 +2,60 @@
 
 from __future__ import annotations
 
-from sizing.dsl import Model, Scenario
+from collections.abc import Callable
 
 
-def tornado(model: Model, scenario: Scenario, output: str) -> list[tuple[str, float]]:
+def tornado(
+    swings: dict[str, tuple[float, float]], output_at: Callable[[dict[str, float]], float]
+) -> list[tuple[str, float]]:
     """Problem 19.1 - build the chart yourself.
 
+    ``swings`` maps each uncertain input of the web service model to the two ends of its band:
+    its tenth and its ninetieth percentile, as its declared distribution gives them. The swing
+    comes from the distribution rather than from the slider range, so that every bar is answering
+    the same question - "across the middle eighty per cent of what this input could be" - and an
+    input somebody gave a wide slider to does not get a long bar for free.
+
+    ``output_at(held)`` is the model at a point. Hand it a dictionary of input names and values
+    and it returns the number of hosts the model recommends with those inputs held there and
+    everything else at its point value. ``output_at({})`` is the point estimate itself.
+
     Return a list of ``(input_name, span)`` pairs, sorted with the largest span first: for each
-    uncertain input, how far ``output`` moves when that input alone is swung from its own 10th to
-    its own 90th percentile, with everything else held at its point value.
+    input in ``swings``, how far the output moves when that input alone is swung from one end of
+    its band to the other. Two calls per input; you do not have to sample.
 
-    Use ``sizing.evaluate.point`` with an overridden scenario; you do not have to sample. Get the
-    swing from each input's declared distribution rather than from its slider range, so that every
-    bar is answering the same question - "across the middle eighty per cent of what this input
-    could be" - and an input somebody gave a wide slider to does not get a long bar for free.
-
-    Skip anything the model cannot evaluate, anything the scenario has already pinned, and the
+    The test builds both arguments from the model file and the reference scenario. It leaves out
+    anything the scenario has already pinned, anything the model cannot evaluate, and the
     measured constants: their uncertainty is a standard error rather than a band, and the build
     swings them by a different rule.
     """
     raise NotImplementedError("problem 19.1")
 
 
-def interaction_gap(model: Model, scenario: Scenario, output: str, a: str, b: str) -> float:
+def interaction_gap(
+    output_at: Callable[[dict[str, float]], float], swings: dict[str, tuple[float, float]]
+) -> float:
     """Problem 19.2 - what one-at-a-time misses.
 
-    Swing input ``a`` alone from its p10 to its p90 and record the change in ``output``. Swing
-    ``b`` alone and record that. Then swing **both together** and record that.
+    ``swings`` holds exactly two inputs, each mapped to the two ends of its band, its tenth and
+    its ninetieth percentile. ``output_at(held)`` returns one output of the model with the named
+    inputs held at the given values and everything else at its point value, as in problem 19.1.
+
+    Swing the first input alone from the low end of its band to the high end and record the
+    change in the output. Swing the second alone and record that. Then swing **both together**
+    and record that.
 
     Return the difference between the change when both move and the sum of the two individual
     changes, as a fraction of the sum.
 
-    Zero means the two inputs do not interact and the tornado's bars can be added up. Anything else
-    means they do, and a chart of one-at-a-time swings is understating - or overstating - what
-    happens when the world moves two things at once.
+    Zero means the two inputs do not interact and the tornado's bars can be added up. Anything
+    else means they do, and a chart of one-at-a-time swings is understating - or overstating -
+    what happens when the world moves two things at once.
 
-    The test names the two pairs: one that meets in a product and one that meets in a sum. A
-    model built out of multiplications will
-    always show some of this, because a product is not additive in its factors - which is the point,
-    and is why a tornado is a guide to what to measure rather than a decomposition of the answer.
+    The test names the two pairs: one that meets in a product on the way to the raw data, and
+    one that meets in a sum on the way to the annual running cost. A model built out of
+    multiplications will always show some of this, because a product is not additive in its
+    factors - which is the point, and is why a tornado is a guide to what to measure rather than
+    a decomposition of the answer.
     """
     raise NotImplementedError("problem 19.2")

@@ -9,8 +9,6 @@ from __future__ import annotations
 
 import numpy as np
 
-from sizing.dsl import Model
-
 
 def is_refuted(samples: np.ndarray, observed: np.ndarray) -> bool:
     """Problem 20.1 - what would count as evidence against the model?
@@ -60,37 +58,3 @@ def widen_until_it_fits(samples: np.ndarray, observation: float) -> float:
     be wrong has stopped being able to be useful, and this number is what that costs.
     """
     raise NotImplementedError("problem 20.2")
-
-
-def repair_the_model(model: Model) -> Model:
-    """Problem 20.3 - find the missing node.
-
-    ``tests/the_missing_node/fixtures/model.yaml`` is a small monthly cost model for a hosted
-    service. It is arithmetically correct, its inputs carry honest distributions, and it converges
-    beautifully. It is also wrong, because a cost line is missing from it, and no amount of
-    sampling can see that.
-
-    The evidence is in the test: what the service the model describes cost per month, averaged
-    over twelve invoices. The figure is invented for the exercise, and it falls **outside** the
-    model's 90% interval - comfortably outside, on the high side.
-
-    Return a repaired model whose interval contains the observation.
-
-    Three rules, all enforced:
-
-    * every input the model already has keeps its value and its distribution. Not widened, not
-      shifted. Making a model vaguer until it stops disagreeing with reality is the most common
-      wrong answer to this situation, and moving an input until the invoice fits is the same
-      answer with the invoice copied into the file;
-    * the repair adds a **quantity**: a new input whose unit is the thing the missing line is
-      billed on rather than an amount of money, with a provenance source like every other input.
-      A node that is only dollars a month is a plug, and a plug is the observation written into
-      the model under another name;
-    * the repair adds a **cost line**: a new derived node that prices the quantity and feeds the
-      total, and nothing the model already computed moves except what that line feeds.
-
-    The missing line is a real one and it is findable. Ask what a hosted service pays for that is
-    neither a machine, nor a disk, nor a support contract - and which is billed on a quantity
-    nothing in this model currently mentions.
-    """
-    raise NotImplementedError("problem 20.3")

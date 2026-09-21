@@ -277,6 +277,13 @@ A problem is a stub the reader edits and a test that passes only when they are r
   or a literal `load_result("...")`, and `tests/test_problems.py` fails when one is missing. The
   `python3 -m pytest tests/...` line under the problem is how the page finds the test. It is
   drawn as a one-line note under the Check, for a reader at a desk, not as a block.
+- **The form follows what the chapter taught.** A stub takes plain numbers, arrays, dicts or a
+  callable the test builds; the test does the loading and evaluating, so the reader never
+  drives the toolkit's Python API, which no chapter teaches. Where the chapter taught the model
+  file, the artefact is a file: a fragment or a fixture under `tests/<slug>/` that the test names
+  in a module-level `EDITABLE` tuple, shows whole and editable in the page, and writes back
+  before pytest runs. Ship it with the work left in it, and check that in `tests/test_problems.py`
+  rather than in the problem's own test, which the page runs over the reader's copy.
 
 ## Definition of done
 

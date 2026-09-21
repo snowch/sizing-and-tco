@@ -1,4 +1,8 @@
-"""Problem 21.1 - graded against the stamped results the table is supposed to come from."""
+"""Problem 21.1 - graded against the stamped results the table is built from.
+
+The test hands the reader each design's stamped summary and grades the rows against the same
+summaries, so a figure that did not come out of the build has nowhere to come from.
+"""
 
 from __future__ import annotations
 
@@ -20,7 +24,7 @@ def stamped(scenario: str) -> dict:
 def table():
     from tests.a_tco_for_finance.stubs import decision_table
 
-    return decision_table()
+    return decision_table({scenario: stamped(scenario) for scenario in DESIGNS})
 
 
 @pytest.mark.problem
@@ -70,3 +74,12 @@ def test_the_two_designs_are_meaningfully_different():
     """
     risks = [stamped(s)["nodes"]["queueing_headroom"]["ceiling"]["p_over_limit"] for s in DESIGNS]
     assert max(risks) - min(risks) > 0.2, risks
+
+
+def test_every_summary_holds_the_figures_the_table_needs():
+    """Scaffolding: the places the problem says to look exist in both stamped results."""
+    for scenario in DESIGNS:
+        nodes = stamped(scenario)["nodes"]
+        assert nodes["hosts"]["point"] > 0
+        assert nodes["tco"]["summary"]["p50"] < nodes["tco"]["summary"]["p95"]
+        assert 0 <= nodes["queueing_headroom"]["ceiling"]["p_over_limit"] <= 1

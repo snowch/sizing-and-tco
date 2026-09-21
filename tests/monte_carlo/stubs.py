@@ -40,20 +40,33 @@ def log_uniform_ppf(u: np.ndarray, minimum: float, maximum: float) -> np.ndarray
     raise NotImplementedError("problem 13.1")
 
 
-def sample_two_inputs(seed: int, samples: int) -> dict[str, np.ndarray]:
+def sample_two_inputs(declared: dict[str, dict], seed: int, samples: int) -> dict[str, np.ndarray]:
     """Problem 13.2 — sample a model by hand.
 
-    Return a dictionary with three keys. ``staff_fte`` and ``fully_loaded_salary`` each hold
-    ``samples`` draws from the distributions the web service model declares for them, one a
-    triangular and one a lognormal; ``annual_staff_cost`` holds what those draws imply, worked
-    through the model's own formula for it by hand. Read the distributions and the formula out of
-    ``models/web_service/model.yaml`` — do not copy the numbers here, because a problem that goes
-    stale when the model changes is not testing anything.
+    ``declared`` holds two of the web service model's inputs, ``staff_fte`` and
+    ``fully_loaded_salary``, each keyed to the distribution the model declares for it, as the
+    file writes it. One is a triangular::
 
-    Use ``numpy`` and ``sizing.normal`` if you like. Do **not** use ``sizing.mc`` or
-    ``sizing.evaluate``: the point of this one is to find out how little machinery there actually
-    is between a declared distribution and a bag of numbers, and between the bag and an interval
-    the book publishes.
+        {"triangular": {"minimum": ..., "likely": ..., "maximum": ...}}
+
+    and one is a lognormal::
+
+        {"lognormal": {"p10": ..., "p90": ...}}
+
+    The test reads both out of ``models/web_service/model.yaml`` and hands them to you, so a
+    change to the model changes what you are given instead of going stale in a number typed
+    here. Sample what you are handed.
+
+    Return a dictionary with three keys. ``staff_fte`` and ``fully_loaded_salary`` each hold
+    ``samples`` draws from their distribution, seeded with ``seed``; ``annual_staff_cost`` holds
+    what those draws imply, worked draw by draw through the model's own formula for it, which
+    you read out of the same file.
+
+    Do it the way the chapter did: pick the percentiles uniformly at random, then ask each
+    distribution what value sits at each one. Use ``numpy`` and ``sizing.normal`` if you like.
+    Do **not** use ``sizing.mc`` or ``sizing.evaluate``: the point of this one is to find out how
+    little machinery there is between a declared distribution and a bag of numbers, and between
+    the bag and an interval the book publishes.
 
     The test compares your inputs' percentiles against what the declared distributions say, and
     your cost's interval against the one the book publishes for the reference scenario, each to

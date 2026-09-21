@@ -275,8 +275,9 @@ python3 -m pytest tests/what_a_workload_is/test_problem_1_stocks_and_flows.py
 ```
 
 **2.2 — Turn a rate into a volume.**
-Add a node giving terabytes a day of telemetry. A rate times a pure number is still a rate, and
-the toolkit will keep saying so until something in the formula carries a duration.
+Add a node to the observability model giving terabytes a day of telemetry. A rate times a pure
+number is still a rate, and the toolkit will keep saying so until something in the formula
+carries a duration.
 
 ```bash
 python3 -m pytest tests/what_a_workload_is/test_problem_2_daily_volume.py

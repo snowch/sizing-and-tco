@@ -5,34 +5,37 @@ Both are about the moment a sizing model stops producing a number and starts pro
 
 from __future__ import annotations
 
+from collections.abc import Callable
 
-def hosts_for_risk(target_p_over: float) -> int:
+
+def hosts_for_risk(risk_at: Callable[..., float], target: float) -> int:
     """Problem 12.1 - size to a risk, not to a point estimate.
 
     Return the smallest number of hosts for which the web service's queueing ceiling is breached
-    in at most ``target_p_over`` of its samples.
+    in at most ``target`` of its samples.
 
-    Use the model. Load ``models/web_service/model.yaml``, override ``hosts``, and read
-    ``queueing_headroom``'s ``p_over_limit`` out of the evaluation. Search - the relationship is
-    monotonic, so a bisection is a few lines and is much faster than stepping, which matters
-    because each evaluation samples the whole graph.
+    ``risk_at(hosts)`` asks the model: it works the web service through with that many hosts in
+    the fleet and returns the share of its samples in which the queueing ceiling is breached.
+    ``risk_at(hosts, samples=n)`` does the same over ``n`` draws instead of the full number.
+    Search - the relationship is monotonic, so a bisection is a few lines and is much faster
+    than stepping, which matters because each call samples the whole graph.
 
-    Reduce the number of draws while you search and put it back for the final answer. A search that
-    takes a minute is a search nobody runs twice, and the precision you need to compare candidates
-    is much lower than the precision you need to report one.
+    Reduce the number of draws while you search and put it back for the final answer. A search
+    that takes a minute is a search nobody runs twice, and the precision you need to compare
+    candidates is much lower than the precision you need to report one.
 
-    This is what sizing actually is. ch12's point estimate recommends a number; this asks the
-    model a question somebody can be accountable for.
+    This is what sizing is. ch12's point estimate recommends a number; this asks the model a
+    question somebody can be accountable for.
     """
     raise NotImplementedError("problem 12.1")
 
 
-def cost_of_certainty(from_risk: float, to_risk: float) -> int:
+def cost_of_certainty(risk_at: Callable[..., float], from_risk: float, to_risk: float) -> int:
     """Problem 12.2 - what a percentage point of risk costs, in hosts.
 
     Return the additional hosts between the fleet your ``hosts_for_risk`` finds for ``from_risk``
-    and the one it finds for ``to_risk``. Moving to a smaller risk costs hosts; moving the other
-    way gives them back, so the sign matters.
+    and the one it finds for ``to_risk``, asking the same ``risk_at`` both times. Moving to a
+    smaller risk costs hosts; moving the other way gives them back, so the sign matters.
 
     Then look at the shape of the answer as ``to_risk`` falls. Removing risk does not cost the same
     at every point: the last few percentage points cost more hosts than the ones before them, and

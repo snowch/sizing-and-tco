@@ -298,21 +298,22 @@ own design loses.
 Three, in `tests/comparing_two_tcos/`. The first two have tests. The last does not, and says why.
 
 **22.1 — Subtract futures, not intervals.**
-Evaluate both quotes and subtract the totals sample by sample. Return the interval on the
-difference and the share of futures in which the challenger is cheaper. The test can tell whether
-you subtracted two independent draws instead, because that answer is several times wider.
+The test evaluates both quotes on the same draws and hands you the two five-year totals, one
+entry per future. Subtract them sample by sample. Return the interval on the difference and the
+share of futures in which the challenger is cheaper. The test can tell whether you subtracted two
+independent draws instead, because that answer is several times wider.
 
 ```bash
 python3 -m pytest tests/comparing_two_tcos/test_problem_1_paired_difference.py
 ```
 
 **22.2 — How expensive can the move be?**
-Take the incumbent's fleet as an input. For an incumbent of that many hosts, find the one-off
-cost of moving at which the two totals tie at the point estimate. Use the model's own point
-evaluation rather than arithmetic of your own. The break-even table prints the tie for the fleet
-the incumbent runs. The test grades that fleet and two the page does not print. An answer that
-moves when the fleet does cannot have been copied off the page. The total is linear in the cost
-of the move, so two evaluations fix the line.
+The test hands you the difference between the two totals at the point estimate, as a function of
+the one-off cost of moving. Find the cost at which the difference is zero. The break-even table
+prints the tie for the fleet the incumbent runs. The test grades that fleet and two the page does
+not print, with a function for each. An answer that moves when the fleet does cannot have been
+copied off the page. The total is linear in the cost of the move, so two evaluations fix the
+line.
 
 ```bash
 python3 -m pytest tests/comparing_two_tcos/test_problem_2_break_even.py

@@ -1,3 +1,6 @@
+# Problem 20.3 - the copy of the fixture you repair. The page shows this file; the test loads it
+# and compares it with fixtures/model.yaml, the incomplete model as shipped, which stays as it is.
+#
 # An exercise fixture for problem 20.3, and deliberately incomplete.
 #
 # This is NOT one of the book's models and nothing in it is measured. It is a small monthly cost
@@ -5,7 +8,8 @@
 # exactly one cost line. Every number in it is invented for the exercise; the file lives under
 # tests/ rather than models/ so that it can never be mistaken for a figure the book publishes.
 #
-# The copy you repair is fixtures/repaired.yaml; this file stays as it is.
+# Your repair goes in this file, the model's own way: a node with a unit, a formula or a band,
+# and a provenance source, plus the line that prices what it names.
 model: incomplete_service
 title: A hosted service, monthly (exercise fixture — incomplete)
 currency: USD
