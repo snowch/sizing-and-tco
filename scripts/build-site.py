@@ -1094,12 +1094,22 @@ CSS = """
    bold lead-in inside a paragraph from reading as a heading. */
 :root {
   color-scheme: light dark;
-  --ink: #263238; --muted: #546e7a; --faint: #8da2ac;
+  /* Three greys, each one readable on the page, the panel and a code block. `--faint`
+     was a pale #8da2ac, which is 2.4:1 against the paper -- under the 4.5:1 a reader
+     needs for text this size, and it carries every table's headings. Darkening it alone
+     would have landed it on top of `--muted`, so all three moved and kept their order. */
+  --ink: #263238; --muted: #41555e; --faint: #5a707b;
   --edge: #dfe5e8; --rule: #c4d0d6;
   --bg: #fdfdfc; --panel: #f2f6f7; --code: #f0f4f6; --raise: rgba(38,50,56,.06);
   --accent: #35648f; --on-accent: #ffffff; --wash: rgba(53,100,143,.09);
   --warn: #c8791a; --stop: #b3413a; --go: #2e7d32;
   --measure: 36rem;
+  /* The two rails. A chapter list that wraps 16 of its 39 entries is hard to scan, and
+     the widths below give the room back where there is room to give -- see the rule at
+     96rem. Under that, the middle column needs every pixel: at 1512 the wider rails
+     would leave an embedded model 853px, under the 861 its own layout needs to put the
+     inputs beside the graph, so it would stack. */
+  --nav: 17rem; --toc: 14rem;
   --top: 3.1rem;
   --chrome: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --text: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
@@ -1107,7 +1117,7 @@ CSS = """
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink: #dde4e8; --muted: #9db0ba; --faint: #768993;
+    --ink: #dde4e8; --muted: #a7b8c1; --faint: #83949d;
     --edge: #2b363c; --rule: #3d4b53;
     --bg: #14191c; --panel: #1b2327; --code: #1b2327; --raise: rgba(0,0,0,.4);
     --accent: #7fb2dd; --on-accent: #10171b; --wash: rgba(127,178,221,.14);
@@ -1203,7 +1213,7 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
        font-weight: 600; }
 
 /* Frame */
-.shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 120rem;
+.shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 126rem;
          margin-inline: auto; }
 /* Hidden until there is room, and declared before the rules that show them so that those win
    by order rather than by !important. Below the first breakpoint the chapter list opens over
@@ -1217,7 +1227,7 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
   /* The middle column is the widest thing a chapter holds -- a model at 84rem -- and the group
      of columns is what centres. `1fr` instead would make it whatever the window has left, which
      is a column sized by the screen rather than by the book. */
-  .shell { grid-template-columns: 17rem minmax(0, calc(84rem + 5rem));
+  .shell { grid-template-columns: var(--nav) minmax(0, calc(84rem + 5rem));
            justify-content: center; }
   .nav { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
@@ -1229,15 +1239,21 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
    the chapter takes back 272px, 224px, or both -- and with both away the shell's own cap goes
    too, because at that point the reader has asked for the window. */
 @media (min-width: 72rem) {
-  .shell { grid-template-columns: 17rem minmax(0, calc(84rem + 5rem)) 14rem; }
-  html.nav-closed .shell { grid-template-columns: minmax(0, calc(84rem + 5rem)) 14rem; }
-  html.toc-closed .shell { grid-template-columns: 17rem minmax(0, calc(84rem + 5rem)); }
+  .shell { grid-template-columns: var(--nav) minmax(0, calc(84rem + 5rem)) var(--toc); }
+  html.nav-closed .shell { grid-template-columns: minmax(0, calc(84rem + 5rem)) var(--toc); }
+  html.toc-closed .shell { grid-template-columns: var(--nav) minmax(0, calc(84rem + 5rem)); }
   html.nav-closed.toc-closed .shell {
     grid-template-columns: minmax(0, calc(84rem + 5rem)); max-width: none; }
   .toc { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
   html.toc-closed .toc { display: none; }
+}
+/* Wide enough that widening the rails takes nothing from the chapter: the middle column
+   still clears the 861px an embedded model needs for its two-column layout, and above
+   2016px it reaches the 84rem cap regardless. Every grid rule above reads these. */
+@media (min-width: 96rem) {
+  :root { --nav: 21rem; --toc: 15rem; }
 }
 .nav { border-right: 1px solid var(--edge); }
 .toc { border-left: 1px solid var(--edge); }
