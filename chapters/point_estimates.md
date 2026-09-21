@@ -51,8 +51,15 @@ their average.
 So the honest answer to *how big* is not a number. It is a range, and some values in it are far
 more likely than others. You get the range by doing the arithmetic over and over. Each time you
 pick a different value for every input, from the spread that input honestly has, and you keep
-every answer that comes out. Here is that for this book's web service: the single number first,
-then what the repeated answers did.
+every answer that comes out.
+
+The service in question is the one this book carries the whole way through. It answers requests,
+it keeps the records those requests leave behind, and it runs on a fleet of hosts somebody has to
+buy and then pay to run for five years. You need nothing else about it yet:
+[ch02](#what-a-workload-is) starts building its file from nothing, a few nodes at a time, and
+[Appendix E](#appendix-e-web-service-model) shows the finished thing with every formula in it.
+
+Here is its answer, the single number first, then what the repeated answers did.
 
 ```{include} _generated/point-estimates-outputs.md
 ```
@@ -179,10 +186,11 @@ instead of hiding the doubt inside a single figure.
 Three, in `tests/point_estimates/`. The first two have tests; run them with
 `python3 -m pytest tests/point_estimates/ -m problem`. The third does not, and says why.
 
-**1.1 — The width of a product.** Take the band the web service model gives each uncertain input,
-and write it as the top of the band over the bottom. Then do the arithmetic the way you could on
-paper: every input at the bottom of its band together, then every input at the top together, and
-the hosts the model recommends worked through both times. The second count over the first is
+**1.1 — The width of a product.** The test hands you the band the web service model declares for
+each uncertain input, so you do not need to go and read the file. Write each band as its top over
+its bottom. Then do the arithmetic the way you could on paper: every input at the bottom of its
+band together, then every input at the top together, and the hosts the model recommends worked
+through both times. The second count over the first is
 neither the widest band nor the average of them. Set it beside the smallest and largest answer in
 the table above. The gap between the two is what [ch13](#monte-carlo) exists to close.
 
