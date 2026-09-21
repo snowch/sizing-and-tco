@@ -715,3 +715,53 @@ def test_the_page_counts_the_tests_the_reader_has_to_pass(tmp_path):
         "a failing scaffolding test is the book's fault and never the reader's, so it neither "
         "counts against them nor withholds the verdict they have earned"
     )
+
+
+def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
+    """Two rails, two buttons, and the measure on each thing rather than on the column.
+
+    A reader working through a wide graph wants the window. Closing the chapter list gave the
+    room to the chapter already; closing this page's outline did not, because it had no
+    control. With both closed the shell's own cap comes off too, and what widens is a model,
+    the runner and a table -- never a line of prose, which keeps the measure at every width.
+    """
+    build_site = site()
+    page = build_site.PAGE
+    css = build_site.CSS
+    # The button names the rail it controls, and ships hidden because it needs the script.
+    assert 'id="outline"' in page and 'aria-controls="toc"' in page
+    assert '<aside id="toc" class="toc"' in page
+    assert page.index('id="outline"') < page.index('id="menu"'), (
+        "the two rail controls sit together"
+    )
+    assert "[hidden] { display: none !important; }" in css, (
+        "a class that sets display beats the browser's rule for the attribute, so a control "
+        "written hidden showed anyway and did nothing when pressed"
+    )
+    # Four states, one per pair of rails, and the cap comes off only when both are away.
+    for selector in (
+        "html.nav-closed .shell { grid-template-columns: minmax(0, 1fr) 14rem; }",
+        "html.toc-closed .shell { grid-template-columns: 17rem minmax(0, 1fr); }",
+        "html.nav-closed.toc-closed .shell { grid-template-columns: minmax(0, 1fr); max-width: none; }",
+        "html.toc-closed .toc { display: none; }",
+    ):
+        assert selector in css, selector
+    # The measure moved off the column and onto each child, after the rule that caps the column.
+    assert css.index("main > * { max-width: var(--measure); margin-inline: auto; }") > css.index(
+        "main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;"
+    ), "a media query adds no specificity, so the rule that lifts the cap has to come after it"
+    assert (
+        "main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: 100%; }" in css
+    )
+    # Both choices are read before the page paints, so a rail does not close again on every page.
+    opening = build_site.MENU.split("document.addEventListener")[0]
+    assert 'localStorage.getItem("nav") === "closed"' in opening
+    assert 'localStorage.getItem("toc") === "closed"' in opening
+
+
+def test_a_models_box_follows_the_layout_the_model_chose():
+    """One fixed height fits none of the viewer's three layouts, and it has all three now."""
+    css = site().CSS
+    assert "figure:has(> iframe.viewer) { container-type: inline-size; }" in css
+    assert "@container (min-width: 860px) { iframe.viewer { height: 600px; } }" in css
+    assert "@container (min-width: 1101px) { iframe.viewer { height: 812px; } }" in css

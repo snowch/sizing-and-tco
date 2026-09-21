@@ -442,17 +442,24 @@ async function resample() {
 
 if (TOOLKIT) $("resample").addEventListener("click", resample);
 
-// Shown only when the columns have stacked. Inside a chapter that is the embed's width, and the
-// page itself is a click away; on a phone it is the screen, and the sliders still work.
+// Shown only when the columns have stacked. Inside a chapter that is the embed's width, and
+// there are two ways to more of it: close the chapter's rails, which keeps the reader in the
+// chapter, or open the model on its own. The first is only worth saying where the rails exist,
+// so the embedding page is asked; on a phone it is the screen, and the sliders still work.
 {
   const note = $("narrow-note");
   if (window.self !== window.top) {
-    note.textContent = "Embedded at the chapter\u2019s width. ";
+    let rails = false;
+    try { rails = window.top.matchMedia("(min-width: 72rem)").matches; } catch (e) {}
+    note.textContent = rails
+      ? "Embedded at the chapter\u2019s width. Hide the chapter list and this page\u2019s outline, "
+        + "with the two buttons at the top, to give it the window \u2014 or "
+      : "Embedded at the chapter\u2019s width. ";
     const open = document.createElement("a");
     open.href = location.href;
     open.target = "_blank";
     open.rel = "noopener";
-    open.textContent = "Open this model on its own";
+    open.textContent = rails ? "open this model on its own" : "Open this model on its own";
     note.appendChild(open);
     note.appendChild(document.createTextNode(" for the full layout."));
   } else {
