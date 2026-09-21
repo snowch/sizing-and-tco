@@ -97,17 +97,37 @@ class Node:
         return self.label or self.name.replace("_", " ")
 
 
+#: Who settles an input. A model cannot work this out for itself: the nearest signal it has is
+#: whether the input was given a shape, and ch02 is about how poor a proxy that is -- nothing in
+#: that chapter's file has a shape, so the growth rate reads as a choice. Declaring it makes the
+#: split a claim the model makes rather than an inference from how finished the file is.
+#:
+#: ``you`` is a choice somebody made and can change: the fleet, the horizon, a headroom margin.
+#: ``world`` is an observation, whether or not it has been given a shape yet: the busy hour, the
+#: records held, a price. ``definition`` is an identity nobody chooses and the world does not
+#: vary -- a year in seconds, one host, one request.
+DECIDED_BY = ("you", "world", "definition")
+
+
 @dataclass(frozen=True)
 class Input(Node):
     value: float | None = None
     distribution: dict | None = None
     provenance: Provenance | None = None
     slider: tuple[float, float] | None = None
+    #: One of :data:`DECIDED_BY`. Empty only in a file that has not declared it, which
+    #: ``verify-models.py`` refuses.
+    decided: str = ""
     kind: ClassVar[str] = "input"
 
     @property
     def is_uncertain(self) -> bool:
         return self.distribution is not None
+
+    @property
+    def is_yours(self) -> bool:
+        """Whether a reader could have chosen this differently."""
+        return self.decided == "you"
 
 
 @dataclass(frozen=True)
@@ -362,6 +382,7 @@ def _node_from(name: str, spec: dict, where: str) -> Node:
                 source=str(provenance.get("source", "")),
             ),
             slider=tuple(float(v) for v in spec["range"]) if spec.get("range") else None,
+            decided=str(spec.get("decided", "")),
         )
 
     if kind == "derived":

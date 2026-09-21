@@ -94,6 +94,17 @@ still. The ordering is the useful part: it says which input to go and measure fi
 effect only appears in combination with another gets a short bar here and can still be the thing
 that sinks you.
 
+**Every bar is a cost input, and the demand side is not here at all.** No request rate, no growth
+rate, no records held. That is not an omission in the chart. The total prices the fleet that was
+bought, and the fleet is `hosts` — a number somebody decided, not one the model derived. More
+data does not buy more hosts by itself; it makes the fleet you have too small, and the model says
+so through the disk and cache ceilings rather than through the bill. Drag *records held, day one*
+on the interactive page and watch the recommendation and those two ceilings move while the total
+sits still. The panel names, for any input, which outputs it can move and which it cannot.
+
+To see demand move the price you re-decide the fleet, which is what the second scenario below
+does.
+
 ## The answer as a distribution
 
 ```{image} ../chapters/_figures/appendix-e-web-service-model-distribution.svg
@@ -128,6 +139,27 @@ The left column buys what the point estimates recommend. The right buys for the 
 model thinks is plausible but not expected. The difference in capital is a number, and so is the
 difference in how often each ceiling breaks. Choosing between them is a judgement somebody has to
 make and defend, which is [ch21 · A TCO for a finance audience](#a-tco-for-finance).
+
+## What this cannot tell you
+
+**Whether the fleet is the right one.** The model prices `hosts`, and `hosts` is a decision. Every
+figure on this page is conditional on it, and nothing here argues for the number: the reference
+scenario takes the recommendation at the point estimates, which is how the decision is usually
+taken and is not the same as it being right. The ceilings say whether that fleet survives the
+model's futures; they cannot say whether a different fleet would have been a better buy. That
+comparison is a second scenario and a judgement, which is [ch21](#a-tco-for-finance).
+
+**What the structure leaves out.** The chains here are demand, memory and disk, and they meet only
+at the host count. Nothing connects a request to the record it writes, so a model where traffic
+and data grow together cannot be told from one where they do not — and this one assumes they do,
+in a single correlation, rather than deriving it. There is no tier that fails differently from the
+others, no request that costs more than its neighbour, and no second site. Sampling the inputs
+harder will not find any of that: an omission is not a wide interval, it is a chain that was never
+drawn ([ch20](#the-missing-node)).
+
+**Whether five years is the right horizon.** It is a decision too, and it sets how much of the
+total is capital and how much is running cost. A different horizon does not just scale the answer;
+it changes which half of the bill the argument is about ([ch15](#capex-opex-and-lifecycle)).
 
 ## Running it yourself
 

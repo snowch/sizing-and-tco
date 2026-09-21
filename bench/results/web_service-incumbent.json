@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "f391158474ff332c",
+  "code_fingerprint": "a455ad9cbf69ed2c",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-21T02:55:08+00:00",
-  "git_revision": "2110500",
+  "generated_at": "2026-09-21T21:43:36+00:00",
+  "git_revision": "37a337d",
   "kind": "model",
   "name": "web_service-incumbent",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-21T02:55:07+00:00",
+    "generated_at": "2026-09-21T21:43:35+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {
@@ -714,6 +714,7 @@
         "unit": "USD/year"
       },
       "annual_growth": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -2211,6 +2212,7 @@
         "unit": "dimensionless"
       },
       "cache_margin": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -2578,6 +2580,7 @@
         "unit": "request"
       },
       "contention": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -2950,6 +2953,7 @@
         "unit": "core"
       },
       "cores_per_host": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -3327,6 +3331,7 @@
         "unit": "USD/TB/month"
       },
       "crosstalk": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -3681,6 +3686,7 @@
         "unit": "dimensionless"
       },
       "disk_margin": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -3700,6 +3706,7 @@
         "unit": "dimensionless"
       },
       "disk_per_host": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -3894,6 +3901,7 @@
         "unit": "dimensionless"
       },
       "electricity_price": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -4600,6 +4608,7 @@
         "unit": "TB"
       },
       "fully_loaded_salary": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -4951,6 +4960,7 @@
         "unit": "dimensionless"
       },
       "horizon": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -5051,6 +5061,7 @@
         "unit": "dimensionless"
       },
       "host_power": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -5072,6 +5083,7 @@
         "unit": "W/host"
       },
       "host_price": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -5092,6 +5104,7 @@
         "unit": "USD/host"
       },
       "hosts": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -5915,6 +5928,7 @@
         "unit": "host"
       },
       "hot_fraction": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -6087,6 +6101,7 @@
         "unit": "dimensionless"
       },
       "hours_per_year": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -6276,6 +6291,7 @@
         "unit": "request"
       },
       "index_overhead": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -6471,6 +6487,7 @@
         "unit": "TB"
       },
       "licence_per_core": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -6491,6 +6508,7 @@
         "unit": "USD/core/year"
       },
       "licence_per_host": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -7032,6 +7050,7 @@
         "unit": "request/second"
       },
       "migration_cost": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -7225,6 +7244,7 @@
         "unit": "USD"
       },
       "network_price_per_host": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -7393,6 +7413,7 @@
         "unit": "USD/host"
       },
       "one_core": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -7408,6 +7429,7 @@
         "unit": "core"
       },
       "one_host": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -7423,6 +7445,7 @@
         "unit": "host"
       },
       "one_request": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -7438,6 +7461,7 @@
         "unit": "request"
       },
       "one_year": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -7627,6 +7651,7 @@
         "unit": "dimensionless"
       },
       "os_reserve": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -8182,6 +8207,7 @@
         "unit": "request/second"
       },
       "peak_request_rate_t0": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -8354,6 +8380,7 @@
         "unit": "request/second"
       },
       "peak_to_mean": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -8526,6 +8553,7 @@
         "unit": "dimensionless"
       },
       "pue": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -8875,6 +8903,7 @@
         "unit": "dimensionless"
       },
       "queueing_margin": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -9077,6 +9106,7 @@
         "unit": "TB/host"
       },
       "ram_per_host": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -9620,6 +9650,7 @@
         "unit": "dimensionless"
       },
       "replication_factor": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -10365,6 +10396,7 @@
         "unit": "dimensionless"
       },
       "seconds_per_year": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -10380,6 +10412,7 @@
         "unit": "second/year"
       },
       "service_demand": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -10910,6 +10943,7 @@
         "unit": "request/second/host"
       },
       "staff_fte": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -11262,6 +11296,7 @@
         "unit": "TB"
       },
       "stored_data_t0": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -11281,6 +11316,7 @@
         "unit": "TB"
       },
       "support_rate": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -11844,6 +11880,7 @@
         "unit": "dimensionless"
       },
       "utilisation_cap": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",

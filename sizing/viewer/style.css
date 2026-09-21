@@ -89,6 +89,13 @@ button.link { border: 0; background: none; padding: 0; color: var(--accent); tex
 #outputs tr { cursor: pointer; }
 #outputs tr:hover td { background: var(--row-hover); }
 #outputs tr.focused td { background: var(--row-focused); }
+/* An output the input in hand cannot reach. Quiet, not hidden: the row is still the
+   model's answer, and the reader still has to be able to read it. */
+#outputs tr.inert td { color: var(--muted); }
+#outputs tr.inert td .badge { opacity: .55; }
+/* The outputs a node's value never arrives at, under the ones it does. */
+.note.dead { color: var(--muted); }
+.note.dead button.link { color: var(--muted); }
 table { border-collapse: collapse; width: 100%; font-size: 12px; }
 td, th { padding: 3px 6px; border-bottom: 1px solid var(--line); text-align: left; }
 td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
@@ -103,6 +110,8 @@ code { font: 12px/1.4 ui-monospace, "SF Mono", Menlo, monospace; background: var
 .hist { width: 100%; height: 74px; display: block; margin: 4px 0; }
 .legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 11px; color: var(--muted); margin-bottom: 8px; }
 .legend i { display: inline-block; width: 11px; height: 9px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+/* The bar the graph draws down the left edge of an input somebody chose. */
+.legend i.decision { border-left: 3px solid var(--input-edge); }
 
 /* -- resampling ------------------------------------------------------------------ */
 button.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); margin: 8px 0 4px; display: block; }

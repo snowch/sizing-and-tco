@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "74d2632c39a332ab",
+  "code_fingerprint": "e7d785e0456d97cf",
   "code_sources": [
     "bench/run_models.py",
     "models/observability/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-21T02:55:04+00:00",
-  "git_revision": "2110500",
+  "generated_at": "2026-09-21T21:43:33+00:00",
+  "git_revision": "37a337d",
   "kind": "model",
   "name": "observability-reference",
   "produced_by": {
@@ -31,7 +31,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -98,7 +98,7 @@
       "traces_ingest": 1e-06,
       "traces_stored": 0.0864
     },
-    "generated_at": "2026-09-21T02:55:04+00:00",
+    "generated_at": "2026-09-21T21:43:33+00:00",
     "model": "observability",
     "nodes": {
       "active_series": {
@@ -296,6 +296,7 @@
         "unit": "series"
       },
       "annual_growth": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -463,6 +464,7 @@
         "unit": "dimensionless"
       },
       "base_metrics_per_host": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -482,6 +484,7 @@
         "unit": "series/host"
       },
       "collector_cores": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -515,6 +518,7 @@
         "unit": "MB/s/core"
       },
       "collector_throughput_quoted": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -704,6 +708,7 @@
         "unit": "dimensionless"
       },
       "horizon": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -750,6 +755,7 @@
         "unit": "dimensionless"
       },
       "hosts": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -1502,6 +1508,7 @@
         "unit": "dimensionless"
       },
       "label_values_accidental": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -1669,6 +1676,7 @@
         "unit": "dimensionless"
       },
       "label_values_endpoint": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -1837,6 +1845,7 @@
         "unit": "dimensionless"
       },
       "label_values_status": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -2005,6 +2014,7 @@
         "unit": "dimensionless"
       },
       "lines_per_request": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -2173,6 +2183,7 @@
         "unit": "line/request"
       },
       "log_keep_rate": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -2726,6 +2737,7 @@
         "unit": "byte/line"
       },
       "logs_retention": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -3132,6 +3144,7 @@
         "unit": "MB/s"
       },
       "metrics_retention": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -3491,6 +3504,7 @@
         "unit": "TB"
       },
       "one_sample_per_series": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -3506,6 +3520,7 @@
         "unit": "sample/series"
       },
       "one_year": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -3552,6 +3567,7 @@
         "unit": "dimensionless"
       },
       "queries_per_second": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -3747,6 +3763,7 @@
         "unit": "series/second"
       },
       "query_nodes": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -3766,6 +3783,7 @@
         "unit": "node"
       },
       "query_scan_rate_quoted": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -4354,6 +4372,7 @@
         "unit": "dimensionless"
       },
       "request_rate": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -4553,6 +4572,7 @@
         "unit": "sample/series/second"
       },
       "scrape_interval": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -4746,6 +4766,7 @@
         "unit": "series/query"
       },
       "series_per_query_base": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -4977,6 +4998,7 @@
         "unit": "span/request"
       },
       "storage_price": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -5330,6 +5352,7 @@
         "unit": "dimensionless"
       },
       "store_nodes": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -5388,6 +5411,7 @@
         "unit": "MB/s"
       },
       "trace_keep_rate": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -5436,6 +5460,7 @@
         "unit": "MB/s"
       },
       "traces_retention": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -5650,6 +5675,7 @@
         "unit": "TB"
       },
       "usable_tb_per_node": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",

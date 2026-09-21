@@ -25,6 +25,10 @@ const LABEL_CHARS = 28;
 const fit = (text) => (text.length > LABEL_CHARS ? text.slice(0, LABEL_CHARS - 1) + "\u2026" : text);
 
 let overrides = {};
+//: The input the reader last moved. The outputs it cannot reach go quiet while it is
+//: held, because "I dragged this and nothing happened" is the question this page kept
+//: leaving people to answer for themselves.
+let touched = null;
 //: Inputs held at a value by the last resample: name -> value. Shown against their sliders.
 let fixed = {};
 //: The node the graph is cut down to, and which way: what feeds it, or what it feeds.
@@ -69,6 +73,12 @@ function childrenOf() {
   }
   return kids;
 }
+
+// Whether somebody chose this. The model says so itself, because nothing here can work it out:
+// the nearest signal is whether the input was given a shape, and by that rule the records a
+// service's users uploaded read as a decision and so does a year in seconds. ch02 is a whole
+// section on how poor that proxy is.
+const isDecision = (node) => node.decided === "you";
 
 // Everything downstream of a node, itself included: how far its value reaches.
 function descendants(name) {
@@ -164,6 +174,9 @@ function drawGraph(values, blocked) {
     boxes.push(
       `<g class="node" data-node="${name}"><title>${name}</title>` +
       `<rect x="${x}" y="${y}" width="${BOX.w}" height="${BOX.h}" rx="3" fill="${fill}" stroke="${edge}" stroke-width="${selected === name ? 2.2 : 1.2}"${dash}/>` +
+      // A bar down the left edge, which composes with the fill (kind) and the dash (measured
+      // or not) rather than competing with either for the same channel.
+      (isDecision(node) ? `<rect x="${x}" y="${y + 3}" width="3" height="${BOX.h - 6}" rx="1.5" fill="${edge}"/>` : "") +
       `<text x="${x + 6}" y="${y + 13}" fill="var(--ink)">${fit(node.label)}</text>` +
       `<text x="${x + BOX.w - 6}" y="${y + 26}" text-anchor="end" fill="var(--muted)" font-size="9">${value}</text>` +
       `</g>`
@@ -231,6 +244,7 @@ function buildControls() {
   for (const input of $("sliders").querySelectorAll("input")) {
     input.addEventListener("input", () => {
       overrides[input.dataset.node] = parseFloat(input.value);
+      touched = input.dataset.node;
       render();
     });
   }
@@ -239,9 +253,15 @@ function buildControls() {
 /* -- panels ---------------------------------------------------------------------- */
 
 function outputsTable(values, blocked) {
+  // Whatever the reader last moved, and what it cannot reach. Greying those rows says the
+  // number did not fail to update -- it cannot.
+  const reach = touched ? descendants(touched) : null;
   const rows = PAYLOAD.outputs.map((name) => {
     const node = PAYLOAD.nodes[name];
-    const open = `<tr data-node="${name}"${focus === name ? ' class="focused"' : ""} title="Show what feeds ${name}">`;
+    const inert = reach && name !== touched && !reach.has(name);
+    const classes = [focus === name ? "focused" : "", inert ? "inert" : ""].filter(Boolean);
+    const open = `<tr data-node="${name}"${classes.length ? ` class="${classes.join(" ")}"` : ""}`
+      + ` title="Show what feeds ${name}">`;
     if (blocked.has(name)) return `${open}<td>${node.label}</td><td class="n">not measured</td></tr>`;
     const ceiling = node.kind === "ceiling" ? ceilingState(PAYLOAD, name, values) : null;
     const cell = ceiling
@@ -249,7 +269,11 @@ function outputsTable(values, blocked) {
       : fmt(values[name], node.unit);
     return `${open}<td>${node.label}</td><td class="n">${cell}</td></tr>`;
   });
-  $("outputs").innerHTML = `<table>${rows.join("")}</table>`;
+  const why = touched
+    ? `<p class="note">Greyed rows cannot be moved by <strong>${PAYLOAD.nodes[touched].label}</strong>,`
+      + ` however far you drag it.</p>`
+    : "";
+  $("outputs").innerHTML = why + `<table>${rows.join("")}</table>`;
   for (const row of $("outputs").querySelectorAll("tr")) {
     row.addEventListener("click", () => goTo(row.dataset.node));
   }
@@ -294,6 +318,22 @@ function detail(values, blocked) {
   const fed = childrenOf()[name];
   if (node.depends_on.length) parts.push(`<h2>Fed by</h2><p class="note">${neighbours(node.depends_on)}</p>`);
   if (fed.length) parts.push(`<h2>Feeds</h2><p class="note">${neighbours(fed)}</p>`);
+  // One hop cannot answer the question a reader actually has at a slider, which is whether
+  // this changes the answer. Records held feeds four things and reaches the fleet the model
+  // recommends without ever reaching what the fleet costs, because the fleet is a decision and
+  // the cost is of the fleet decided on. Naming the outputs it cannot move is the point: a
+  // short list of what it does move reads as a summary, not as a dead end.
+  const reach = descendants(name);
+  const moves = PAYLOAD.outputs.filter((o) => o !== name && reach.has(o));
+  const stuck = PAYLOAD.outputs.filter((o) => o !== name && !reach.has(o));
+  if (moves.length || stuck.length) {
+    parts.push(`<h2>Reaches</h2>`
+      + `<p class="note">Moves <strong>${moves.length} of ${moves.length + stuck.length}</strong>`
+      + ` outputs: ${moves.length ? neighbours(moves) : "none of them"}.</p>`
+      + (stuck.length
+          ? `<p class="note dead">Cannot move: ${neighbours(stuck)}.</p>`
+          : ""));
+  }
   if (node.provenance && node.provenance.kind) {
     parts.push(`<h2>Provenance</h2><p class="note"><strong>${node.provenance.kind.replace("_", " ")}</strong> — ${node.provenance.source}</p>`);
   }
@@ -353,7 +393,7 @@ function render() {
 }
 
 $("reset").addEventListener("click", () => {
-  overrides = {}; fixed = {}; PAYLOAD = STAMPED;
+  overrides = {}; fixed = {}; touched = null; PAYLOAD = STAMPED;
   $("banner").style.display = "none";
   render();
 });

@@ -80,6 +80,9 @@ def export_payload(model: Model, scenario: Scenario) -> dict:
                 "source": node.provenance.source if node.provenance else "",
             }
             entry["distribution"] = node.distribution
+            # Who settles this one, so the graph can mark it rather than guess. `verify-models`
+            # refuses a model that leaves it out.
+            entry["decided"] = node.decided
             if node.slider:
                 entry["slider"] = {"min": node.slider[0], "max": node.slider[1]}
         elif isinstance(node, Derived):

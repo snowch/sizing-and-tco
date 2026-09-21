@@ -12,6 +12,7 @@ description: The web service model as it stands at the end of ch04.
 nodes:
   peak_request_rate_t0:
     kind: input
+    decided: world
     unit: request/second
     label: peak request rate, day one
     distribution:
@@ -28,6 +29,7 @@ nodes:
     range: [500, 40000]
   stored_data_t0:
     kind: input
+    decided: world
     unit: TB
     value: 15
     label: records held, day one
@@ -40,6 +42,7 @@ nodes:
     range: [1, 200]
   annual_growth:
     kind: input
+    decided: world
     unit: dimensionless
     label: annual growth factor
     distribution:
@@ -56,6 +59,7 @@ nodes:
     range: [1.0, 2.0]
   horizon:
     kind: input
+    decided: you
     unit: year
     value: 5
     provenance:
@@ -64,6 +68,7 @@ nodes:
     range: [3, 8]
   one_year:
     kind: input
+    decided: definition
     unit: year
     value: 1
     label: one year
@@ -91,6 +96,7 @@ nodes:
     formula: stored_data_t0 * annual_growth ** horizon_periods
   ram_per_host:
     kind: input
+    decided: you
     unit: GiB/host
     value: 64
     provenance:
@@ -102,6 +108,7 @@ nodes:
     range: [8, 1024]
   os_reserve:
     kind: input
+    decided: world
     unit: dimensionless
     distribution:
       triangular:
@@ -129,6 +136,7 @@ nodes:
     formula: ram_per_host * (1 - os_reserve)
   peak_to_mean:
     kind: input
+    decided: world
     unit: dimensionless
     label: peak-to-mean ratio
     distribution:

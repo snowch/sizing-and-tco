@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "679a6bc3885c51d5",
+  "code_fingerprint": "b833350c995f5a92",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/09-binding/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-21T02:55:28+00:00",
-  "git_revision": "2110500",
+  "generated_at": "2026-09-21T21:43:50+00:00",
+  "git_revision": "37a337d",
   "kind": "model",
   "name": "web_service_binding-reference",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -95,7 +95,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-21T02:55:27+00:00",
+    "generated_at": "2026-09-21T21:43:50+00:00",
     "model": "web_service_binding",
     "nodes": {
       "achievable_throughput": {
@@ -338,6 +338,7 @@
         "unit": "request/second"
       },
       "annual_growth": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -870,6 +871,7 @@
         "unit": "dimensionless"
       },
       "cache_margin": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -1063,6 +1065,7 @@
         "unit": "request"
       },
       "contention": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -1435,6 +1438,7 @@
         "unit": "core"
       },
       "cores_per_host": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -1454,6 +1458,7 @@
         "unit": "core/host"
       },
       "crosstalk": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -1808,6 +1813,7 @@
         "unit": "dimensionless"
       },
       "disk_margin": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -1827,6 +1833,7 @@
         "unit": "dimensionless"
       },
       "disk_per_host": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -2379,6 +2386,7 @@
         "unit": "dimensionless"
       },
       "horizon": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -2452,6 +2460,7 @@
         "unit": "dimensionless"
       },
       "hosts": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -3248,6 +3257,7 @@
         "unit": "host"
       },
       "hot_fraction": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -3594,6 +3604,7 @@
         "unit": "request"
       },
       "index_overhead": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -4137,6 +4148,7 @@
         "unit": "request/second"
       },
       "one_core": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -4152,6 +4164,7 @@
         "unit": "core"
       },
       "one_host": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -4167,6 +4180,7 @@
         "unit": "host"
       },
       "one_request": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -4182,6 +4196,7 @@
         "unit": "request"
       },
       "one_year": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -4371,6 +4386,7 @@
         "unit": "dimensionless"
       },
       "os_reserve": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -4926,6 +4942,7 @@
         "unit": "request/second"
       },
       "peak_request_rate_t0": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -5098,6 +5115,7 @@
         "unit": "request/second"
       },
       "peak_to_mean": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -5447,6 +5465,7 @@
         "unit": "dimensionless"
       },
       "queueing_margin": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -5649,6 +5668,7 @@
         "unit": "TB/host"
       },
       "ram_per_host": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -6192,6 +6212,7 @@
         "unit": "dimensionless"
       },
       "replication_factor": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -6753,6 +6774,7 @@
         "unit": "dimensionless"
       },
       "service_demand": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -7467,6 +7489,7 @@
         "unit": "TB"
       },
       "stored_data_t0": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -7660,6 +7683,7 @@
         "unit": "dimensionless"
       },
       "utilisation_cap": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",

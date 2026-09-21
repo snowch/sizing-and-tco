@@ -12,6 +12,7 @@ description: The web service model as it stands at the end of ch09.
 nodes:
   peak_request_rate_t0:
     kind: input
+    decided: world
     unit: request/second
     label: peak request rate, day one
     distribution:
@@ -28,6 +29,7 @@ nodes:
     range: [500, 40000]
   stored_data_t0:
     kind: input
+    decided: world
     unit: TB
     value: 15
     label: records held, day one
@@ -40,6 +42,7 @@ nodes:
     range: [1, 200]
   annual_growth:
     kind: input
+    decided: world
     unit: dimensionless
     label: annual growth factor
     distribution:
@@ -56,6 +59,7 @@ nodes:
     range: [1.0, 2.0]
   horizon:
     kind: input
+    decided: you
     unit: year
     value: 5
     provenance:
@@ -64,6 +68,7 @@ nodes:
     range: [3, 8]
   one_year:
     kind: input
+    decided: definition
     unit: year
     value: 1
     label: one year
@@ -91,6 +96,7 @@ nodes:
     formula: stored_data_t0 * annual_growth ** horizon_periods
   cores_per_host:
     kind: input
+    decided: you
     unit: core/host
     value: 16
     provenance:
@@ -102,6 +108,7 @@ nodes:
     range: [4, 128]
   ram_per_host:
     kind: input
+    decided: you
     unit: GiB/host
     value: 64
     provenance:
@@ -113,6 +120,7 @@ nodes:
     range: [8, 1024]
   os_reserve:
     kind: input
+    decided: world
     unit: dimensionless
     distribution:
       triangular:
@@ -140,6 +148,7 @@ nodes:
     formula: ram_per_host * (1 - os_reserve)
   peak_to_mean:
     kind: input
+    decided: world
     unit: dimensionless
     label: peak-to-mean ratio
     distribution:
@@ -161,6 +170,7 @@ nodes:
     formula: peak_request_rate / peak_to_mean
   service_demand:
     kind: input
+    decided: world
     unit: second * core / request
     label: CPU time per request
     note: >-
@@ -192,6 +202,7 @@ nodes:
     range: [0.002, 0.05]
   hosts:
     kind: input
+    decided: you
     unit: host
     value: 54
     label: hosts in the fleet
@@ -222,6 +233,7 @@ nodes:
     range: [4, 200]
   one_host:
     kind: input
+    decided: definition
     unit: host
     value: 1
     note: >-
@@ -232,6 +244,7 @@ nodes:
       source: definition
   one_core:
     kind: input
+    decided: definition
     unit: core
     value: 1
     provenance:
@@ -239,6 +252,7 @@ nodes:
       source: definition
   one_request:
     kind: input
+    decided: definition
     unit: request
     value: 1
     provenance:
@@ -282,6 +296,7 @@ nodes:
     formula: peak_request_rate * service_seconds
   utilisation_cap:
     kind: input
+    decided: you
     unit: dimensionless
     label: utilisation the model will admit to
     note: >-
@@ -298,6 +313,7 @@ nodes:
       source: where this model stops being about queues (ch06)
   queueing_margin:
     kind: input
+    decided: you
     unit: dimensionless
     value: 0.3
     label: queueing margin
@@ -370,6 +386,7 @@ nodes:
     formula: cores_per_host / service_demand
   contention:
     kind: input
+    decided: world
     unit: dimensionless
     label: contention
     note: >-
@@ -392,6 +409,7 @@ nodes:
         measured
   crosstalk:
     kind: input
+    decided: world
     unit: dimensionless
     label: crosstalk
     note: >-
@@ -488,6 +506,7 @@ nodes:
       is the one that is about the system you own (ch07).
   hot_fraction:
     kind: input
+    decided: world
     unit: dimensionless
     label: share of records touched in a busy hour
     distribution:
@@ -510,6 +529,7 @@ nodes:
     formula: stored_data * hot_fraction
   cache_margin:
     kind: input
+    decided: you
     unit: dimensionless
     value: 0.25
     label: cache margin
@@ -547,6 +567,7 @@ nodes:
     result: records-compression
   replication_factor:
     kind: input
+    decided: you
     unit: dimensionless
     value: 3
     provenance:
@@ -559,6 +580,7 @@ nodes:
     range: [1, 4]
   index_overhead:
     kind: input
+    decided: world
     unit: dimensionless
     distribution:
       triangular:
@@ -584,6 +606,7 @@ nodes:
     formula: stored_data * raw_per_stored
   disk_per_host:
     kind: input
+    decided: you
     unit: TB/host
     value: 2
     provenance:
@@ -594,6 +617,7 @@ nodes:
     range: [1, 60]
   disk_margin:
     kind: input
+    decided: you
     unit: dimensionless
     value: 0.25
     label: disk margin

@@ -41,6 +41,7 @@ sys.path.insert(0, str(ROOT))
 from bench.stamp import RESULTS_DIR, code_fingerprint, load_result, shown  # noqa: E402
 from sizing import mc  # noqa: E402
 from sizing.dsl import (  # noqa: E402
+    DECIDED_BY,
     PROVENANCE_KINDS,
     Ceiling,
     Input,
@@ -72,6 +73,17 @@ def check_model(model: Model, problems: list[str]) -> None:
 
         # 2, 3 — provenance
         if isinstance(node, Input):
+            # Who settles this one. The model cannot infer it: the nearest signal is whether the
+            # input was given a shape, and ch02 is a whole section on how poor a proxy that is.
+            # Left to the inference, a model files the records its users uploaded as somebody's
+            # choice, and a year in seconds as one too.
+            if node.decided not in DECIDED_BY:
+                problems.append(
+                    f"{where}: input {name!r} declares decided {node.decided!r}; expected one of "
+                    f"{', '.join(DECIDED_BY)}. `you` is a choice somebody could make "
+                    f"differently, `world` is an observation whether or not it has a shape yet, "
+                    f"and `definition` is an identity like a year in seconds."
+                )
             provenance = node.provenance
             if provenance is None or provenance.kind not in PROVENANCE_KINDS:
                 problems.append(

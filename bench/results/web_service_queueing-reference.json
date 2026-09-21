@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "5167e2fa4d6b6df7",
+  "code_fingerprint": "dfa50a5222554272",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/05-queueing/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-21T02:55:22+00:00",
-  "git_revision": "2110500",
+  "generated_at": "2026-09-21T21:43:46+00:00",
+  "git_revision": "37a337d",
   "kind": "model",
   "name": "web_service_queueing-reference",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -65,10 +65,11 @@
       "utilisation": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-21T02:55:22+00:00",
+    "generated_at": "2026-09-21T21:43:46+00:00",
     "model": "web_service_queueing",
     "nodes": {
       "annual_growth": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -615,6 +616,7 @@
         "unit": "core"
       },
       "cores_per_host": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -809,6 +811,7 @@
         "unit": "dimensionless"
       },
       "horizon": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -855,6 +858,7 @@
         "unit": "dimensionless"
       },
       "hosts": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -1222,6 +1226,7 @@
         "unit": "request/second"
       },
       "one_core": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -1237,6 +1242,7 @@
         "unit": "core"
       },
       "one_request": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -1252,6 +1258,7 @@
         "unit": "request"
       },
       "one_year": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -1267,6 +1274,7 @@
         "unit": "year"
       },
       "os_reserve": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -1623,6 +1631,7 @@
         "unit": "request/second"
       },
       "peak_request_rate_t0": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -1795,6 +1804,7 @@
         "unit": "request/second"
       },
       "peak_to_mean": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -2144,6 +2154,7 @@
         "unit": "dimensionless"
       },
       "queueing_margin": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -2346,6 +2357,7 @@
         "unit": "TB/host"
       },
       "ram_per_host": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -2548,6 +2560,7 @@
         "unit": "second"
       },
       "service_demand": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -3088,6 +3101,7 @@
         "unit": "TB"
       },
       "stored_data_t0": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -3281,6 +3295,7 @@
         "unit": "dimensionless"
       },
       "utilisation_cap": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",

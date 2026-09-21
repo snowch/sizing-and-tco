@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "c29db85d631dfc9a",
+  "code_fingerprint": "3c563a5593722978",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/04-littles_law/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-21T02:55:22+00:00",
-  "git_revision": "2110500",
+  "generated_at": "2026-09-21T21:43:46+00:00",
+  "git_revision": "37a337d",
   "kind": "model",
   "name": "web_service_littles_law-reference",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -58,10 +58,11 @@
       "stored_data": 1.0,
       "utilisation": 1.0
     },
-    "generated_at": "2026-09-21T02:55:22+00:00",
+    "generated_at": "2026-09-21T21:43:46+00:00",
     "model": "web_service_littles_law",
     "nodes": {
       "annual_growth": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -434,6 +435,7 @@
         "unit": "core"
       },
       "cores_per_host": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -453,6 +455,7 @@
         "unit": "core/host"
       },
       "horizon": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -499,6 +502,7 @@
         "unit": "dimensionless"
       },
       "hosts": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -866,6 +870,7 @@
         "unit": "request/second"
       },
       "one_core": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -881,6 +886,7 @@
         "unit": "core"
       },
       "one_request": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -896,6 +902,7 @@
         "unit": "request"
       },
       "one_year": {
+        "decided": "definition",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -911,6 +918,7 @@
         "unit": "year"
       },
       "os_reserve": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -1267,6 +1275,7 @@
         "unit": "request/second"
       },
       "peak_request_rate_t0": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -1439,6 +1448,7 @@
         "unit": "request/second"
       },
       "peak_to_mean": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -1794,6 +1804,7 @@
         "unit": "TB/host"
       },
       "ram_per_host": {
+        "decided": "you",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -1813,6 +1824,7 @@
         "unit": "GiB/host"
       },
       "service_demand": {
+        "decided": "world",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -2353,6 +2365,7 @@
         "unit": "TB"
       },
       "stored_data_t0": {
+        "decided": "world",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
