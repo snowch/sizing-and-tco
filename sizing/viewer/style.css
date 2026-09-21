@@ -11,6 +11,8 @@
 * { box-sizing: border-box; }
 body { margin: 0; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); }
 header { padding: 14px 20px; border-bottom: 1px solid var(--line); }
+/* Embedded in a chapter, the page around this one puts an Expand button over the corner. */
+html.embedded header { padding-right: 104px; }
 header h1 { margin: 0 0 2px; font-size: 17px; font-weight: 600; }
 header p { margin: 0; color: var(--muted); font-size: 12.5px; }
 header .kind { display: inline-block; padding: 1px 7px; border-radius: 3px; background: var(--panel); border: 1px solid var(--line); font-size: 11px; margin-left: 6px; }

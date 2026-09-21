@@ -865,6 +865,48 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>"""
 
+#: The button over a model's corner. A model's graph is drawn at a fixed width, so the chapter's
+#: column shows part of it; this gives it the window without reloading it, which is what a link to
+#: the model's own page cannot do -- that loses the reader's place and every slider they moved.
+EXPAND = r"""<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const root = document.documentElement;
+  let scrolled = 0;
+  const label = (button, text, open) => {
+    button.querySelector("span").textContent = text;
+    button.setAttribute("aria-expanded", String(open));
+  };
+  const close = () => {
+    const open = document.querySelector("figure.expanded");
+    if (!open) return;
+    const button = open.querySelector(".expand");
+    open.classList.remove("expanded");
+    root.classList.remove("model-open");
+    label(button, "Expand", false);
+    // The figure left the flow while it was open, so the page under it moved. Put the reader
+    // back where they were rather than wherever the shorter page ended up.
+    window.scrollTo(0, scrolled);
+    button.focus();
+  };
+  for (const frame of document.querySelectorAll("iframe.viewer, iframe.playground")) {
+    const figure = frame.closest("figure");
+    const button = figure && figure.querySelector(".expand");
+    if (!button) continue;
+    button.hidden = false;   // it does nothing without this script, so it is not there without it
+    button.addEventListener("click", () => {
+      if (figure.classList.contains("expanded")) { close(); return; }
+      close();
+      scrolled = window.scrollY;
+      figure.classList.add("expanded");
+      root.classList.add("model-open");
+      label(button, "Close", true);
+    });
+  }
+  document.addEventListener("keydown", (event) => { if (event.key === "Escape") close(); });
+});
+</script>"""
+
+
 #: The offline control. A Run fetches the Python runtime the first time it is pressed and the
 #: worker keeps whatever it fetched; this fetches the same files ahead of need, with a byte count
 #: while it does, and says when everything is kept. Every file a Run needs is resolved from the
@@ -1178,15 +1220,17 @@ main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem; max-width: calc(var(--measur
    the left of its column. The rules also sit here, after the cap they undo, because a media
    query adds no specificity of its own.
 
-   Three widths, not two. A model, the runner and a table take the column, because a graph is
-   worth the room. Code takes what it needs and no more: the book's own lines stop at 100
-   columns, its widest block wants 942px, and 121 blocks over 33 pages were cut off at the
-   measure. A browser without :has() leaves the model at the measure, which is what every
+   Three widths, and each is what its content needs. Prose keeps the measure. Code takes what
+   it needs and no more: the book's lines stop at 100 columns, its widest block wants 942px,
+   and 121 blocks over 33 pages were cut off at the measure. A model, the runner and a table
+   stop at 84rem, which is a page still reading as one piece; a model's graph wants more than
+   that, and asks for it with the button over its corner rather than by stretching the page
+   around it. A browser without :has() leaves them all at the measure, which is what every
    browser did before. */
 @media (min-width: 58rem) {
   #main { max-width: none; }
   #main > * { max-width: var(--measure); margin-inline: auto; }
-  #main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: 100%; }
+  #main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: min(100%, 84rem); }
   #main > :is(pre, .editable-block, .problem, figure:has(> pre)) { max-width: min(100%, 60rem); }
   #main > figure > figcaption { margin-inline: auto; }
 }
@@ -1243,6 +1287,25 @@ figure img { background: #fff; border-radius: 4px; }
 .admonition.note { border-left-color: var(--accent); }
 .admonition.tip { border-left-color: var(--go); }
 .admonition.important { border-left-color: var(--stop); }
+/* A model is the one thing a chapter's column cannot hold: its graph is drawn at a fixed
+   width -- 1470px for the widest in the book -- so a narrower card shows less of the graph
+   rather than a smaller one. In the chapter it stops at 84rem. The button over its corner
+   gives it the window, and gives it back, in the frame it already has: the model is not
+   reloaded, so the sliders the reader has moved stay where they were put, and closing it
+   returns them to the paragraph they were reading. */
+figure.container:has(> iframe) { position: relative; }
+.expand { position: absolute; top: .5rem; right: .5rem; z-index: 2; display: flex;
+          align-items: center; gap: .35rem; font: 12.5px/1 var(--chrome); color: var(--muted);
+          background: var(--bg); border: 1px solid var(--edge); border-radius: 5px;
+          padding: .35rem .55rem; cursor: pointer; }
+.expand:hover { border-color: var(--accent); color: var(--accent); }
+html.model-open { overflow: hidden; }
+html.model-open #main > figure.expanded { position: fixed; inset: 0; z-index: 40; margin: 0;
+          max-width: none; border-radius: 0; background: var(--bg); display: flex;
+          flex-direction: column; }
+html.model-open #main > figure.expanded > iframe { flex: 1 1 auto; height: auto; border: 0;
+          border-radius: 0; }
+html.model-open #main > figure.expanded > figcaption { display: none; }
 iframe { width: 100%; border: 1px solid var(--rule); border-radius: 6px; height: 680px; }
 iframe.viewer { height: 780px; }
 /* A model lays itself out from its own width: stacked, then the inputs beside the graph at
@@ -1461,7 +1524,7 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         toc=toc,
         body=body,
         search=SEARCH,
-        menu=MENU,
+        menu=MENU + EXPAND,
         offline=OFFLINE_SCRIPT,
         boot=BOOT_SCRIPT if blocks or problems else "",
         headlinks=headlinks,

@@ -252,7 +252,17 @@ def render(node: dict) -> str:
         # is prose and renders as prose.
         src = str(node.get("src", ""))
         kind_class = "viewer" if src.startswith("/models/") else "playground"
-        return f'<iframe class="{kind_class}" src="{html.escape(src)}" loading="lazy"></iframe>'
+        # A control over its corner, because a model's graph is drawn at a fixed width and the
+        # chapter's column cannot hold it. Written `hidden`: without the script it does nothing.
+        # It keeps this same frame, so a reader who has moved the sliders keeps where they are.
+        return (
+            '<button class="expand" type="button" aria-expanded="false" hidden>'
+            '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">'
+            '<path d="M6 2H2v4M10 14h4v-4M2 10v4h4M14 6V2h-4" fill="none" stroke="currentColor"'
+            ' stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+            "<span>Expand</span></button>"
+            f'<iframe class="{kind_class}" src="{html.escape(src)}" loading="lazy"></iframe>'
+        )
     if kind == "link":
         url = str(node.get("url", ""))
         href = html.escape(_published(url) or url)
