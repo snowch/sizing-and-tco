@@ -1,8 +1,10 @@
-"""Problem 12.2 - what a percentage point of risk costs, and why the last ones cost most."""
+"""Problem 12.2 - what a percentage point of risk costs in hosts, and why the last ones cost most.
+
+Graded against the reader's own answer to 12.1, so that both fleets are sized by the same rule,
+and against the model for the range the reference design sits in. Nothing is stored.
+"""
 
 from __future__ import annotations
-
-from dataclasses import replace
 
 import pytest
 
@@ -21,41 +23,29 @@ def scenario():
     return load_scenario("models/web_service/scenarios/reference.yaml")
 
 
-def median_tco(model, scenario, hosts: int) -> float:
-    forced = replace(scenario, overrides={**scenario.overrides, "hosts": float(hosts)})
-    return evaluate(model, forced).summaries["tco"]["p50"]
+@pytest.mark.problem
+def test_it_is_the_gap_between_the_two_fleets_it_compares():
+    assert cost_of_certainty(0.30, 0.10) == hosts_for_risk(0.10) - hosts_for_risk(0.30)
 
 
 @pytest.mark.problem
-def test_it_matches_the_two_designs_it_compares(model, scenario):
-    mine = cost_of_certainty(0.30, 0.10)
-    expected = median_tco(model, scenario, hosts_for_risk(0.10)) - median_tco(
-        model, scenario, hosts_for_risk(0.30)
-    )
-    assert mine == pytest.approx(expected, rel=0.02)
-
-
-@pytest.mark.problem
-def test_removing_risk_costs_money():
+def test_removing_risk_costs_hosts():
     assert cost_of_certainty(0.30, 0.10) > 0
 
 
 @pytest.mark.problem
-def test_going_the_other_way_gives_it_back():
-    there = cost_of_certainty(0.30, 0.10)
-    back = cost_of_certainty(0.10, 0.30)
-    assert back == pytest.approx(-there, rel=0.02)
+def test_going_the_other_way_gives_them_back():
+    assert cost_of_certainty(0.10, 0.30) == -cost_of_certainty(0.30, 0.10)
 
 
 @pytest.mark.problem
-def test_the_last_points_cost_more_than_the_first():
+def test_the_last_points_cost_more_hosts_than_the_first():
     """The shape that makes this a decision rather than an optimisation."""
     early = cost_of_certainty(0.35, 0.25)
     late = cost_of_certainty(0.15, 0.05)
     assert late > early, (
-        f"the first ten points of risk cost {early:,.0f} and the last ten cost {late:,.0f}. If "
-        "they came out the other way round, check that both designs are being sized by the same "
-        "rule."
+        f"the first ten points of risk cost {early} hosts and the last ten cost {late}. If they "
+        "came out the other way round, check that both fleets are being sized by the same rule."
     )
 
 

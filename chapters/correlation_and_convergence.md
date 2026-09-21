@@ -164,7 +164,8 @@ has settled.
 You can run a model at a million samples, watch the interval stabilise to four significant
 figures, and present it with complete confidence, while a whole cost line is missing from the
 model. The sampling converged beautifully on the wrong number. Convergence is a statement about
-the calculation, never about the thing being calculated.
+the calculation, never about the thing being calculated. [ch20](#the-missing-node)'s problem 20.3
+hands you a model in that state, and an invoice it cannot reach.
 
 :::{note} Key takeaways
 - **Inputs that move together must be drawn together.** Drawing a host price and a network price
@@ -205,7 +206,7 @@ only things that narrow it are measuring something or deciding something:
 
 ## Problems
 
-Five. The first three are graded, in `tests/correlation_and_convergence/`. The last two are not,
+Four. The first two are graded, in `tests/correlation_and_convergence/`. The last two are not,
 and say why.
 
 **14.1 — Show the square-root law.**
@@ -228,22 +229,12 @@ property that makes the method trustworthy, and it is one line to check.
 python3 -m pytest tests/correlation_and_convergence/test_problem_2_marginals.py
 ```
 
-**14.3 — Find the missing node.**
-A model file in the test directory is deliberately incomplete, and its stated interval is a lie:
-an observed total, stamped separately, falls outside it. Repair the model so the observation lands
-inside the interval, without widening any input's distribution to get there. There is no answer
-key; the oracle is an independent figure the model does not contain.
-
-```bash
-python3 -m pytest tests/correlation_and_convergence/test_problem_3_missing_node.py
-```
-
-**14.4 — Break the convergence experiment.** No test. The experiment in this chapter uses a
+**14.3 — Break the convergence experiment.** No test. The experiment in this chapter uses a
 different seed for every replicate. Change it so that every replicate at a given sample count
 shares one seed, re-run it, and explain what the figure now shows and why it is worthless. Then say
 what else in this repository would have to be wrong for that mistake to survive review.
 
-**14.5 — Which of your inputs move together.** No test: nothing here can see which of your
+**14.4 — Which of your inputs move together.** No test: nothing here can see which of your
 quantities move together.
 
 Nothing in this book discovers a correlation; they are all declared. Go through your own inputs in

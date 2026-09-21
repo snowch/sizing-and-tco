@@ -31,7 +31,7 @@ def paired_difference() -> dict:
     raise NotImplementedError("problem 22.1")
 
 
-def break_even_migration() -> float:
+def break_even_migration(incumbent_hosts: int) -> float:
     """Problem 22.2 - how expensive can the move be before the challenger stops being cheaper?
 
     At the point estimate the challenger's quote is cheaper than the incumbent's before the cost
@@ -39,11 +39,18 @@ def break_even_migration() -> float:
     zero and the challenger's scenario overrides with the team's own estimate.
 
     Return the one-off cost of moving at which the two five-year totals are equal at the point
-    estimate. Use the model's own point evaluation - ``sizing.evaluate.point`` with the
-    challenger's scenario and a different ``migration_cost`` in its overrides - rather than
-    arithmetic of your own, so that the answer moves when the model does.
+    estimate, when the incumbent runs ``incumbent_hosts`` hosts. The incumbent's scenario pins
+    ``hosts`` at the fleet the model recommended; replace that override with the fleet you are
+    asked about, and leave the challenger's scenario as it is. Use the model's own point
+    evaluation - ``sizing.evaluate.point`` with the challenger's scenario and a different
+    ``migration_cost`` in its overrides - rather than arithmetic of your own, so that the answer
+    moves when the model does.
 
-    The total is linear in that one input, so two evaluations determine the line. Bisection
+    The fleet is a parameter because the chapter prints the tie for the fleet the incumbent runs.
+    The test grades that fleet and two it does not print, and an answer that moves when the fleet
+    does cannot have been copied off the page.
+
+    The total is linear in the cost of the move, so two evaluations determine the line. Bisection
     works too, and is the method to reach for when the next break-even is not linear.
     """
     raise NotImplementedError("problem 22.2")

@@ -292,30 +292,31 @@ Four. The first three are in `tests/monte_carlo/` and are graded against definit
 compute for themselves. The fourth has no test and no known answer.
 
 **13.1 — Add a distribution.**
-Implement the percentile function for a distribution this book does not have, and show that
-inverse-transform sampling reproduces the properties its parameters claim. Both targets are
-derived from the parameters at test time, so there is nothing to look up.
+Implement the percentile function for a shape this book does not have: a quantity known to within
+a factor, whose density is proportional to one over the value. Derive it as the chapter derived
+the triangular's. The test grades it against the density itself, integrated at test time, so there
+is nothing to look up.
 
 ```bash
 python3 -m pytest tests/monte_carlo/test_problem_1_ppf.py
 ```
 
 **13.2 — Sample a model by hand.**
-Take the web service model, sample two of its inputs yourself without using `sizing.evaluate`, and
-reproduce the interval this book publishes for one output to within sampling error. The point is
-to discover how small the machinery is.
+Take the web service model, sample two of its inputs yourself without using `sizing.evaluate`,
+work the cost they feed through by hand, and reproduce the interval this book publishes for it to
+within sampling error. The point is to discover how small the machinery is.
 
 ```bash
 python3 -m pytest tests/monte_carlo/test_problem_2_by_hand.py
 ```
 
-**13.3 — Make the point estimate lie.**
-Find a set of input distributions, within the ranges the model already declares, for which the
-point estimate of the five-year total falls outside the 50% interval of the sampled answer. Then
-say in one sentence what property of the model made it possible.
+**13.3 — Where the point estimate sits.**
+For each output of the web service model, find the share of the sampled answers that fall below
+the point estimate. For a cost it is near a half. For the recommended host count it is not, and
+the chain says why. Name the step that moved it.
 
 ```bash
-python3 -m pytest tests/monte_carlo/test_problem_3_point_lies.py
+python3 -m pytest tests/monte_carlo/test_problem_3_where_the_point_sits.py
 ```
 
 **13.4 — Defend a distribution.** No test: the invoices are yours, and so is the shape you would

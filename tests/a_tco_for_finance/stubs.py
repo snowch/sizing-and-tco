@@ -9,8 +9,10 @@ from __future__ import annotations
 def decision_table() -> list[dict]:
     """Problem 21.1 - two designs, priced, with their risk.
 
-    Return a list of rows, one per scenario of the web service model that represents a
-    purchasable design. Each row is a dictionary with exactly these keys:
+    Return a list of rows, one for each of the chapter's two designs. Both are scenarios of the
+    web service model: ``reference`` buys what the model recommends at the point estimate, and
+    ``sized_for_growth`` buys the same fleet sized for the growth we might get rather than the
+    growth we expect. Each row is a dictionary with exactly these keys:
 
     ``"scenario"``     the scenario's name
     ``"hosts"``        hosts purchased

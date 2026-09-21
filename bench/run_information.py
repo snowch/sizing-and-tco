@@ -147,7 +147,7 @@ def value_of_information(write: bool = True) -> dict:
                 "inputs": len(uncertain),
                 # Each input pinned alone, totalled. If uncertainty were a pie this would come to
                 # one; it does not, and the gap is the interaction a one-at-a-time figure cannot
-                # show (ch19, problem 18.2).
+                # show (ch19, problem 18.1).
                 "sum_of_removals": sum(row["removed"] for row in mine),
                 # Everything pinned at once. A model with nothing uncertain in it is arithmetic.
                 "all_known": everything,

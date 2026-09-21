@@ -251,8 +251,68 @@ def check_units(model: Model) -> tuple[list[str], dict[str, float]]:
             factor = float(UNITS.Quantity(1.0, produced_unit).to(wanted).magnitude)
             key = name if suffix == "" else f"{name}.{suffix.strip()}"
             factors[key] = factor
+            for issue in _mixed_operands(tree, quantities, text, wanted):
+                problems.append(f"{model.name}: node {name!r}{suffix} {issue}")
+            rounding = _rounds_in_the_wrong_unit(tree, quantities, text, wanted)
+            if rounding:
+                problems.append(f"{model.name}: node {name!r}{suffix} {rounding}")
 
     return problems, factors
+
+
+def _unit_name(walked: Any) -> str:
+    """The unit a walked subtree produced, as Pint spells it. A bare number is dimensionless."""
+    return str(_units_of(walked)) if hasattr(walked, "units") else "dimensionless"
+
+
+def _mixed_operands(tree: dict, quantities: dict[str, Any], text: str, wanted: str) -> list[str]:
+    """Where a formula's raw arithmetic is wrong however its result is converted.
+
+    The evaluator applies one conversion factor per node, to the whole formula's result. That is
+    right for products and quotients, whose factors multiply through, and wrong wherever two
+    operands meet other than by multiplying: a sum, a difference, a ``min`` or a ``max`` of
+    quantities declared in different units of one dimension adds or compares their numbers as if
+    the units matched, and a ``ceil`` or ``floor`` at the top of a formula rounds a number that is
+    not yet in the unit it will be read in. Both typecheck, because the dimensions agree, and both
+    compute a wrong number in silence; ``TB + TiB`` and ``USD/year + USD/month`` are the cases
+    that bite. Each is refused here with the repair: declare the operands in one unit.
+    """
+    op = tree["op"]
+    if op in ("const", "ref"):
+        return []
+    args = tree.get("args", [])
+    problems: list[str] = []
+    for arg in args:
+        problems.extend(_mixed_operands(arg, quantities, text, wanted))
+    produced = [_unit_name(_walk(arg, quantities, UNIT_FUNCTIONS)) for arg in args]
+    meets = op in ("+", "-") or (op == "call" and tree["fn"] in ("min", "max"))
+    if meets and len(set(produced)) > 1:
+        named = " and ".join(repr(unit) for unit in dict.fromkeys(produced))
+        how = {"+": "adds", "-": "subtracts"}.get(op, f"takes the {tree.get('fn')} of")
+        problems.append(
+            f"{how} quantities in {named}: `{text}`. The build converts a formula's result "
+            "once, into the node's unit, so quantities that meet in a sum, a difference or a "
+            "comparison must be declared in one unit. Declare them in one, or convert one of "
+            "them in a node of its own."
+        )
+    return problems
+
+
+def _rounds_in_the_wrong_unit(tree: dict, quantities: dict[str, Any], text: str, wanted: str):
+    """A ``ceil`` or ``floor`` at the top of a formula, over a number not yet in the node's unit."""
+    if tree["op"] != "call" or tree["fn"] not in ("ceil", "floor"):
+        return None
+    inside = _unit_name(_walk(tree["args"][0], quantities, UNIT_FUNCTIONS))
+    if not compatible(inside, wanted):
+        return None  # the dimensional check reports that one
+    factor = float(UNITS.Quantity(1.0, inside).to(wanted).magnitude)
+    if abs(factor - 1.0) < 1e-12:
+        return None
+    return (
+        f"rounds a number in {inside!r} that the node reads in {wanted!r}: `{text}`. The build "
+        f"converts after the formula, so `{tree['fn']}` has rounded the wrong number. Declare "
+        "what is under it in the node's own unit."
+    )
 
 
 def conversion_factors(model: Model) -> dict[str, float]:

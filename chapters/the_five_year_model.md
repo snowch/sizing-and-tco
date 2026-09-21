@@ -61,7 +61,7 @@ one. That is correct, because it is uncertain.
 downstream model treats it as known. This is what happens in practice. It happens in a meeting,
 between two teams, and often between two quarters.
 
-Problem 18.2 measures the second one. Predict the result before you run it: the interval on the
+Problem 18.1 measures the second one. Predict the result before you run it: the interval on the
 downstream answer gets **narrower**.
 
 Not wrong. Narrower. The headline number stays roughly where it was, and the doubt disappears.
@@ -88,9 +88,11 @@ estimate at the seam, and once by the correlation that no longer has anywhere to
 The model file format has four node kinds. None of them is *"a distribution that came from
 another model"*.
 
-Problem 18.2 walks you into the gap. To carry the price across, you have to sample the downstream
-model by hand, outside `sizing.evaluate`. A test asserts the gap is still there. Adding a fifth
-node kind fails that test, and the problem gets rewritten.
+Problem 18.1 walks you into the gap. The downstream model cannot be handed the upstream model's
+draws, because no node in a model file can hold them. So the join is arithmetic on two arrays,
+outside `sizing.evaluate`: the terabytes one model stores and the price the other computes,
+multiplied draw by draw. A test asserts the gap is still there. Adding a fifth node kind fails
+that test, and the problem gets rewritten.
 
 Whether the format *should* have one is an open question. The case for: it would make the join
 explicit, checkable and correlatable. The case against: a model reaching into another model's
@@ -154,25 +156,20 @@ now two structures, and the missing lines in each are invisible to the other.
 
 ## Problems
 
-Three, in `tests/the_five_year_model/`. The first two have tests. The last does not, and says why.
+Two, in `tests/the_five_year_model/`. The first has a test. The second does not, and says why.
 
-**18.1 — Carry a distribution across a boundary.**
-Pull the web service model's unit cost out as a sample array, not a summary. The whole array: the
-next problem is about what a summary costs.
-
-```bash
-python3 -m pytest tests/the_five_year_model/test_problem_1_carry.py
-```
-
-**18.2 — What a point estimate costs at the seam.**
-Drive the downstream model both ways and compare the intervals. Predict the direction first. Then
-say, in a comment, whether you think the model file format should have a node kind for this.
+**18.1 — What a point estimate costs at the seam.**
+The test evaluates both models and hands you the two sides of the seam: the terabytes one model
+stores and the price per terabyte-month the other computes. Join them twice, once with the price
+carried across as a distribution and once as its median, and return the interval on the storage
+cost each time. Predict the direction first. Then say, in a comment, whether you think the model
+file format should have a node kind for this.
 
 ```bash
-python3 -m pytest tests/the_five_year_model/test_problem_2_seam.py
+python3 -m pytest tests/the_five_year_model/test_problem_1_seam.py
 ```
 
-**18.3 — What your total leaves out.** No test: what a total leaves out is not something a total
+**18.2 — What your total leaves out.** No test: what a total leaves out is not something a total
 can be asked.
 
 Build the five-year total for something you run, then list what is not in it. This chapter's

@@ -1,7 +1,7 @@
 """Chapter 18's problems. Edit this file; the tests beside it say whether you are right.
 
-Both are about what happens at the seam between two models, which is where most real cost models
-are actually joined and where most of them quietly lose their uncertainty.
+One graded problem, about the seam between two models: where most real cost models are joined,
+and where most of them quietly lose their uncertainty.
 """
 
 from __future__ import annotations
@@ -9,40 +9,33 @@ from __future__ import annotations
 import numpy as np
 
 
-def price_from_web_service() -> np.ndarray:
-    """Problem 18.1 - carry a distribution across a model boundary.
+def joined_interval(
+    stored: np.ndarray, price: np.ndarray, use_distribution: bool
+) -> tuple[float, float]:
+    """Problem 18.1 - what a point estimate costs at the seam.
 
-    The observability model buys storage at a price per terabyte per month. The web service
-    model computes exactly that quantity for the records on its own fleet. Today the
-    observability model declares the price as an assumption with its own invented distribution,
-    which is a way of not joining them.
+    The observability model buys storage at a price per terabyte per month, and the web service
+    model computes exactly that quantity for the records on its own fleet. That is the seam. The
+    test evaluates both models in their reference scenarios and hands you its two sides:
+    ``stored`` is the observability model's ``known_stored``, in terabytes, one draw per sample;
+    ``price`` is the web service model's ``cost_per_stored_tb_month``, one draw per sample. Their
+    product is a storage cost per month - the downstream model's ``known_storage_cost``, with the
+    upstream model's computed price in place of the assumption the file declares.
 
-    Return the web service model's ``cost_per_stored_tb_month`` as a **sample array** from its
-    reference scenario, so that the observability model could be driven by it.
+    Join them both ways, and return the 5th and 95th percentiles of the storage cost each time:
 
-    The whole array, not a summary. A point estimate handed across a seam is the failure mode this
-    problem exists to show you, and 18.2 measures what it costs.
+    * with ``use_distribution`` true, carry the price across **as a distribution**: draw by
+      draw, the i-th stored figure priced at the i-th price;
+    * with it false, carry it across **as its median**, one number. This is what everybody does.
+      Model A produces a figure, somebody writes the figure down, and model B treats it as known.
+
+    The test computes both intervals itself from the same two arrays and grades yours against
+    them, so there is nothing to look up and nothing to approximate; ``sizing.mc.interval`` is
+    the book's definition of a 90% interval. Predict the direction before you run it.
+
+    The join is arithmetic on two arrays, outside ``sizing.evaluate``, and that is not an
+    accident of the exercise. The DSL has no node kind for "a distribution that came from another
+    model", so nothing in a model file can be driven by another model's draws - noticing that gap
+    is part of the problem. Say in a comment whether you think it should have one.
     """
     raise NotImplementedError("problem 18.1")
-
-
-def joined_interval(use_distribution: bool) -> tuple[float, float]:
-    """Problem 18.2 - what a point estimate costs at the seam.
-
-    Evaluate the observability model's ``known_storage_cost`` twice.
-
-    With ``use_distribution`` true, drive ``storage_price`` from the web service model's actual
-    sampled unit cost - the array from 18.1.
-
-    With it false, drive ``storage_price`` from a single number: the median of that same array.
-    This is what everybody does. Model A produces a figure, somebody writes the figure down, and
-    model B treats it as known.
-
-    Return the 5th and 95th percentiles of ``known_storage_cost`` in each case.
-
-    You will need to sample the downstream model yourself rather than through
-    ``sizing.evaluate``, because the DSL has no node kind for "a distribution that came from
-    another model" - and noticing that gap is part of the problem. Say in a comment whether you
-    think it should have one.
-    """
-    raise NotImplementedError("problem 18.2")

@@ -45,32 +45,3 @@ def correlated_model(model: Model, a: str, b: str, rho: float) -> Model:
     section on why the obvious approach is wrong.
     """
     raise NotImplementedError("problem 14.2")
-
-
-def repair_the_model(model: Model) -> Model:
-    """Problem 14.3 — find the missing node.
-
-    ``tests/correlation_and_convergence/fixtures/model.yaml`` is a small monthly cost model for a
-    hosted service. It is arithmetically correct, its inputs carry honest distributions, and it
-    converges beautifully. It is also wrong, because a cost line is missing from it, and no amount
-    of sampling can see that.
-
-    The evidence is in the test: an observed twelve-month total for the service the model
-    describes. It falls **outside** the model's 90% interval — comfortably outside, on the high
-    side.
-
-    Return a repaired model whose interval contains the observation.
-
-    Two rules, both enforced:
-
-    * you may **not** widen any existing input's distribution. Making a model vaguer until it
-      stops disagreeing with reality is the most common wrong answer to this situation, and it
-      makes the model less useful every time;
-    * the repair must be a **new node** with a unit, a formula or a distribution, and a provenance
-      source, like every other node.
-
-    The missing line is a real one and it is findable. Ask what a hosted service pays for that is
-    neither a machine, nor a disk, nor a support contract — and which is billed on a quantity
-    nothing in this model currently mentions.
-    """
-    raise NotImplementedError("problem 14.3")

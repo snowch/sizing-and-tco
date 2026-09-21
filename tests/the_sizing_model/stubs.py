@@ -27,17 +27,17 @@ def hosts_for_risk(target_p_over: float) -> int:
     raise NotImplementedError("problem 12.1")
 
 
-def cost_of_certainty(from_risk: float, to_risk: float) -> float:
-    """Problem 12.2 - what a percentage point of risk costs.
+def cost_of_certainty(from_risk: float, to_risk: float) -> int:
+    """Problem 12.2 - what a percentage point of risk costs, in hosts.
 
-    Return the additional five-year total cost of moving from a design that goes over the
-    queueing ceiling in ``from_risk`` of samples to one that goes over it in ``to_risk``.
+    Return the additional hosts between the fleet your ``hosts_for_risk`` finds for ``from_risk``
+    and the one it finds for ``to_risk``. Moving to a smaller risk costs hosts; moving the other
+    way gives them back, so the sign matters.
 
-    Use your answer to 12.1 to find each host count, then read the median five-year total at each.
-
-    Then look at the shape of the answer as ``to_risk`` falls. The cost of removing risk is not
-    linear in the risk removed - it climbs, steeply, and the last few percentage points cost more
-    than all the ones before them. That is the argument ch21 has to put to somebody, and having
-    the number is the difference between an argument and a preference.
+    Then look at the shape of the answer as ``to_risk`` falls. Removing risk does not cost the same
+    at every point: the last few percentage points cost more hosts than the ones before them, and
+    by more than a little. Part III has said nothing about money, so the answer is counted in
+    machines. ch21 prices the same pair of fleets, and that price is the argument it has to put to
+    the person whose decision it is. The count is where the argument starts.
     """
     raise NotImplementedError("problem 12.2")

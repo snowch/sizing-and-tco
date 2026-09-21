@@ -166,7 +166,6 @@ PROBLEM_RESULTS = {
     "a_tco_for_finance": (
         "web_service-reference",
         "web_service-sized_for_growth",
-        "web_service-power_first",
     ),
 }
 
