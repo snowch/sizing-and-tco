@@ -207,7 +207,10 @@ def problem_files(slug: str) -> dict[str, str]:
     if re.search(r"^\s*(from|import) bench\b", text, re.M) or any(
         name.startswith("scripts/") for name in out
     ):
-        for name in ("bench/__init__.py", "bench/stamp.py"):
+        # And what a stamp hashes: build_result fingerprints bench.stamp.CORE_SOURCES, so a
+        # page that shipped stamp.py without them failed every correct answer with a missing
+        # file. tests/test_problems.py holds the two lists together.
+        for name in ("bench/__init__.py", "bench/stamp.py", "bench/measure.py"):
             out[name] = (ROOT / name).read_text()
     return out
 

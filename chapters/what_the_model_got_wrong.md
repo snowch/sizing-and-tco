@@ -205,9 +205,11 @@ Then apply this chapter's question. Was the cause an input that moved, or a stru
 wrong? An input that moved is a wider distribution next time. A structure that was wrong is a
 quantity nobody had written down, and no amount of sampling would have found it.
 
-A good answer identifies which of the two it was and says what would have caught it. If the
-honest answer is that nothing available at the time would have caught it, write that down. It is
-the most useful entry in the list, and the one most often rewritten into a lesson nobody learned.
+A good answer identifies which of the two it was and says what would have caught it. What would
+show the diagnosis wrong: the input you blamed was inside its declared band at the time, or the
+quantity you called missing was in the model and merely not looked at. If the honest answer is
+that nothing available at the time would have caught it, write that down. It is the most useful
+entry in the list, and the one most often rewritten into a lesson nobody learned.
 
 ## Where to go next
 

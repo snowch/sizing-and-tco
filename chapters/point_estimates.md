@@ -43,8 +43,8 @@ right. But you never had six numbers. You had six ranges, and you threw the rang
 first step.
 
 Multiplying uncertain numbers does not average their doubt out. It compounds it. Each input can be
-wrong in the same direction as the others, so the answer stretches further than any single input
-can push it. Problem 1.1 is that arithmetic, done on this book's web service model with nothing but the
+wrong in the same direction as the others, so the answer stretches further than any single input can
+push it. Problem 1.1 is that arithmetic, done on this book's web service model with nothing but the
 spreads the model already declares. The compounded spread is not the widest input's, and it is not
 their average.
 
@@ -181,10 +181,10 @@ Three, in `tests/point_estimates/`. The first two have tests; run them with
 
 **1.1 — The width of a product.** Read the band the web service model gives each uncertain input,
 as the top of the band over the bottom. Then do the arithmetic the way you could on paper: every
-input at the bottom of its band together, then every input at the top together, and the five-year
-total worked through both times. The second total over the first is neither the widest band nor
-the average of them. Set it beside the smallest and largest answer in the table above. The gap
-between the two is what [ch13](#monte-carlo) exists to close.
+input at the bottom of its band together, then every input at the top together, and the hosts the
+model recommends worked through both times. The second count over the first is neither the widest
+band nor the average of them. Set it beside the smallest and largest answer in the table above.
+The gap between the two is what [ch13](#monte-carlo) exists to close.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_1_compounding.py

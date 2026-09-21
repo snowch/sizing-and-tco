@@ -155,7 +155,7 @@ Three, in `tests/capex_opex_and_lifecycle/`. The first two have tests. The last 
 why.
 
 **15.1 — When does running cost overtake the purchase?**
-One division. Then look at where it falls relative to the horizon, and at which of the two halves
+One division. Then look at where it falls relative to the horizon, and at which of the two parts
 got the meeting.
 
 ```bash

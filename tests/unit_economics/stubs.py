@@ -29,7 +29,9 @@ def denominators(stored_samples: np.ndarray, total_samples: np.ndarray) -> dict[
 
     You have a bag of five-year totals and a bag of what the service holds at the horizon, sample
     by sample. Somebody wants a cost per terabyte per month. Return a dictionary with four of
-    them, keyed exactly as below, each a single number:
+    them, keyed exactly as below, each a single number. Every one is per month: divide by the
+    months in the horizon, which the model holds as ``horizon``, in years. Day one's holding is
+    the model's ``stored_data_t0``.
 
     ``"at_horizon"``
         Median total over the median of what is held at the horizon. What you will be paying

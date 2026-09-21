@@ -17,7 +17,7 @@ from sizing.evaluate import point
 from tests.point_estimates.stubs import spread_of_each, spread_on_paper
 
 MODEL = "models/web_service/model.yaml"
-TOTAL = "tco"
+TOTAL = "hosts_recommended"
 
 
 @pytest.fixture(scope="module")
@@ -38,7 +38,7 @@ def ends(model) -> dict[str, tuple[float, float]]:
 
 
 def total_with(model, held: dict[str, float]) -> float:
-    """The five-year total with these inputs held at these values."""
+    """The hosts the model recommends with these inputs held at these values."""
     return point(model, Scenario("held", "held", held))[TOTAL]
 
 
@@ -72,7 +72,7 @@ def test_the_ends_together_are_the_model_worked_through_twice(model):
     answer = spread_on_paper(model)
     assert math.isclose(answer, expected, rel_tol=1e-9), (
         f"you gave {answer:,.2f}. Every input at the bottom of its band, then every input at the "
-        f"top, with the five-year total worked through both times, comes to {expected:,.2f}."
+        f"top, with the recommended host count worked through both times, comes to {expected:,.2f}."
     )
 
 

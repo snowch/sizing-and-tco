@@ -236,16 +236,16 @@ Three, in `tests/which_input_is_the_answer/`. The first two have tests. The last
 why.
 
 **19.1 — Build the chart.**
-Reproduce the tornado above. Swing from each input's distribution rather than from its slider, so
-that every bar answers the same question.
+Build the tornado for the number of hosts the model recommends. Swing from each input's
+distribution rather than from its slider, so that every bar answers the same question.
 
 ```bash
 python3 -m pytest tests/which_input_is_the_answer/test_problem_1_tornado.py
 ```
 
 **19.2 — What one-at-a-time misses.**
-Move two inputs separately, then together, and measure the difference. Do it for a pair that meets
-in a product and a pair that meets in a sum, and predict which will show a gap.
+Move two inputs separately, then together, and measure the difference. The test names a pair
+that meets in a product and a pair that meets in a sum; predict which will show a gap.
 
 ```bash
 python3 -m pytest tests/which_input_is_the_answer/test_problem_2_interaction.py

@@ -21,7 +21,7 @@ def stocks_and_flows(model: Model) -> dict[str, str]:
         A rate. How much per unit of time. Bytes ingested per second, requests arriving per
         second, dollars per year.
     ``"neither"``
-        A ratio, a count, a price per unit of something that is not time, a duration.
+        A pure number, a ratio, a price per unit of something that is not time, a duration.
 
     Classify by **meaning**, from the node's name, label and note. The test classifies by
     **dimension**, from the unit the model declares - a flow has time in its denominator, a stock

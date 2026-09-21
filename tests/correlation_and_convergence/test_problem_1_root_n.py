@@ -14,15 +14,18 @@ import pytest
 from tests.correlation_and_convergence.stubs import spread_at
 
 COUNTS = (1_000, 10_000, 100_000)
-REPLICATES = 12
+#: Thirty-two runs at each count, as the book's own experiment uses (bench/run_uncertainty.py):
+#: a spread estimated from a dozen runs carries about twenty per cent noise of its own, enough to
+#: fail a correct answer one time in ten.
+REPLICATES = 32
 
 #: The standard deviation of a sample standard deviation is itself about 1/sqrt(2(k-1)) of it, so
-#: with twelve replicates each measured spread carries roughly this much relative noise. The
-#: tolerance is derived from that rather than guessed, and a reader who wants a tighter one has to
-#: run more replicates — which is the chapter's own argument, applied to the chapter's own
-#: experiment.
+#: each measured spread carries roughly this much relative noise, and a *ratio* of two of them
+#: carries root-two times as much. The tolerance is derived from that rather than guessed, and a
+#: reader who wants a tighter one has to run more replicates — which is the chapter's own
+#: argument, applied to the chapter's own experiment.
 RELATIVE_NOISE = 1.0 / math.sqrt(2 * (REPLICATES - 1))
-TOLERANCE = 3.0 * RELATIVE_NOISE * math.sqrt(10.0)
+TOLERANCE = 3.0 * RELATIVE_NOISE * math.sqrt(2.0) * math.sqrt(10.0)
 
 
 @pytest.mark.problem

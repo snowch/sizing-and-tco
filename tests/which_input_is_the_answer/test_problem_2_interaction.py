@@ -44,7 +44,11 @@ def test_inputs_that_only_meet_in_a_sum_do_not(model, scenario):
 def test_the_gap_is_signed(model, scenario):
     """Direction matters: a tornado can understate as well as overstate."""
     gap = interaction_gap(model, scenario, "raw_data", *INTERACTING)
-    assert gap == pytest.approx(gap, abs=0), "return a signed number, not a magnitude"
+    assert gap > 0, (
+        "two factors of a product swung upward together move it further than the sum of their "
+        "separate moves, so this gap is positive. Zero or negative has lost the sign, or the "
+        "direction of a swing."
+    )
 
 
 def test_both_pairs_are_still_in_the_model(model):

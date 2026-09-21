@@ -215,18 +215,21 @@ python3 -m pytest tests/queueing_and_the_knee/test_problem_2_knee.py
 **6.3 — Where your own knee is.** No test: the curve is your system's, and this repository has no
 access to it.
 
-Your monitoring already has this. Plot response time against utilisation for one device or one
-tier, as a scatter of the last few weeks rather than an average, and find where the curve stops
-being flat.
+The chapter says there is no knee, only a tolerance, so start with yours: how many times its idle
+latency may a request take before you would act? Write the multiple down before you look at any
+data. Then plot response time against utilisation for one device or one tier, as a scatter of
+the last few weeks rather than an average, and read off the utilisation at which the scatter
+crosses your multiple. That is your knee, and it is yours rather than the system's.
 
 Then answer the question the chart cannot: what utilisation does your system run at, and who
 chose it? In most places the answer is that nobody chose it. It is wherever the last capacity
 argument left off.
 
-A good answer is a picture with a knee visible in it and a number beside it. If the scatter is a
-flat line, there are two possibilities. Either you are nowhere near the knee, which is worth
-knowing and probably worth money, or your utilisation metric is averaged over a window long
-enough to hide every peak. The second is the commoner.
+A good answer is the multiple, the utilisation the scatter crosses it at, and the name of whoever
+chose the utilisation you run at. If the scatter never crosses, there are two possibilities.
+Either you are nowhere near your tolerance, which is worth knowing and probably worth money, or
+your utilisation metric is averaged over a window long enough to hide every peak. The second is
+the commoner.
 
 ## Where to go next
 

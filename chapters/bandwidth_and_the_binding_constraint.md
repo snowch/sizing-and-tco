@@ -82,7 +82,8 @@ Then read the three rows after the tie. Size on any one chain alone, even the us
 the fleet is too small more often than not. *Wins most often* is a fact about a three-way race.
 *Too small* is a fact about losing to anybody.
 
-The median gap between the winner and the runner-up is large. These are not three estimates of
+The median gap between the winner and the runner-up, the one in the middle when every draw's
+gap is sorted, is large. These are not three estimates of
 the same thing that differ slightly. They are three different questions with three different
 answers. The gap at the 95th percentile is larger still.
 

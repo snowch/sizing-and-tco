@@ -26,11 +26,11 @@ def test_a_perfect_building_costs_nothing_extra():
 
 
 @pytest.mark.problem
-def test_the_fraction_is_larger_than_the_ratio_suggests():
+def test_the_share_is_a_third_where_the_ratio_says_half():
     """The point of the problem.
 
-    A multiplier that sounds like a small surcharge is a substantial share of the bill, and the
-    two framings land very differently in a conversation about money.
+    A multiplier quoted as half again over the machines is a third of the bill, and the two
+    framings land differently in a conversation about money.
     """
     assert pue_premium(1.5) == pytest.approx(1 / 3, rel=1e-9)
     assert pue_premium(2.0) == pytest.approx(0.5)

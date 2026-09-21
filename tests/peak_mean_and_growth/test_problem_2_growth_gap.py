@@ -1,7 +1,8 @@
 """Problem 4.2 - compounding an average is not averaging the compounds.
 
 The oracle is the sample set itself, computed both ways at test time. Nothing is stored, and the
-direction of the inequality is a fact about convexity rather than about these particular numbers.
+direction of the inequality is a fact about how compounding curves upwards, not about these
+particular numbers.
 """
 
 from __future__ import annotations
@@ -10,6 +11,7 @@ import numpy as np
 import pytest
 
 from sizing import mc
+from sizing.dsl import load_model
 from tests.peak_mean_and_growth.stubs import growth_gap
 
 T0 = 4000.0
@@ -19,9 +21,14 @@ def samples(p10: float, p90: float, n: int = 200_000) -> np.ndarray:
     return mc.sample({"lognormal": {"p10": p10, "p90": p90}}, n, mc.rng(404))
 
 
+#: The web service's growth band, read from the model rather than retyped here.
+GROWTH = (
+    load_model("models/web_service/model.yaml").nodes["annual_growth"].distribution["lognormal"]
+)
+
 CASES = {
     "narrow": samples(1.18, 1.24),
-    "the model's own": samples(1.12, 1.55),
+    "the model's own": samples(GROWTH["p10"], GROWTH["p90"]),
     "wide": samples(1.02, 2.2),
 }
 
@@ -41,7 +48,7 @@ def test_both_are_computed_correctly(name, years):
 def test_averaging_the_compounds_is_always_the_larger(name):
     compound_the_average, average_the_compounds = growth_gap(T0, CASES[name], 5.0)
     assert average_the_compounds > compound_the_average, (
-        "compounding is convex, so the average of the compounded outcomes is above the compound "
+        "compounding curves upwards, so the average of the compounded outcomes is above the compound "
         "of the average rate. Always, for any spread at all. If you got the other order, check "
         "which of the two you returned first."
     )

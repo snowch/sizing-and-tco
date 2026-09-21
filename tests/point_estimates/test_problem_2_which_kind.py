@@ -43,15 +43,20 @@ def model(request):
 @pytest.mark.problem
 def test_the_kind_is_right(model):
     expected = "sizing" if deciders(model) else "cost"
-    assert kind_of(model) == expected, (
-        f"{model.name} is a {expected} model. What decides it: "
-        f"{deciders(model) or 'nothing - no measured constant and no ceiling'}"
+    right = kind_of(model) == expected
+    assert right, (
+        f"{model.name}: not that kind. Read the stage again for the two node kinds that decide "
+        "it, a constant somebody measured and a limit the system runs into."
     )
 
 
 @pytest.mark.problem
 def test_the_nodes_that_decide_it_are_named(model):
-    assert what_decides_it(model) == deciders(model)
+    right = what_decides_it(model) == deciders(model)
+    assert right, (
+        f"{model.name}: not those nodes. Every measured constant and every ceiling, sorted, "
+        "and nothing else."
+    )
 
 
 def test_the_model_changes_kind_exactly_once():

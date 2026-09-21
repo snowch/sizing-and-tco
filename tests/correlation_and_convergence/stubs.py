@@ -13,7 +13,8 @@ def spread_at(samples: int, replicates: int) -> float:
 
     Return the *run-to-run spread* of the 95th percentile of the web service's five-year total:
     run the model ``replicates`` times at ``samples`` draws, each with a different seed, take the
-    p95 of each run, and return the standard deviation of those p95 values.
+    p95 of each run, and return how far those p95 values spread from run to run, measured as their
+    standard deviation, since that is the quantity the law is about.
 
     That is the quantity one-over-root-n governs. The interval itself is not — ch14 is mostly
     about the difference, and this problem is where you convince yourself.
@@ -30,8 +31,9 @@ def correlated_model(model: Model, a: str, b: str, rho: float) -> Model:
     """Problem 14.2 — correlate two inputs without disturbing their distributions.
 
     Return a copy of ``model`` that declares a rank correlation ``rho`` between inputs ``a`` and
-    ``b``. Both are inputs with distributions; ``rho`` is the rank correlation the modeller wants,
-    not whatever intermediate quantity the method happens to need.
+    ``b``, with a ``because`` saying why they move together: the chapter calls the reason the
+    required column. Both are inputs with distributions; ``rho`` is the rank correlation the
+    modeller wants, not whatever intermediate quantity the method happens to need.
 
     The test then checks two things, and the second is the one that matters:
 

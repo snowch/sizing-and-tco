@@ -847,7 +847,8 @@ nodes:
     note: >-
       Capital, running cost over the horizon, and whatever it costs to get there. The last term
       is zero for the design the plan was built on and is the first thing to look for in a
-      comparison that was not (ch22).
+      comparison that was not (ch22). One purchase: the horizon is the refresh cycle, so the
+      refresh that ends it belongs to the next plan's capital, not this total (ch15).
     formula: capex + lifecycle_opex + migration_cost
 
   # -- unit economics: two denominators for one fleet ------------------------------------------

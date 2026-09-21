@@ -16,7 +16,9 @@ def measure_something(shards: int = 8) -> dict:
     smaller a column of timestamps gets when you store the differences.
 
     Return a **stamped result payload** - the dictionary ``bench.stamp.build_result`` produces -
-    without writing it to disk. Use ``build_result(..., write=False)``.
+    without writing it to disk. Use ``build_result(..., write=False)``, and name this file in
+    its ``code_sources``: the stamp hashes the code that produced the figure, so a re-run can be
+    told from a retyping.
 
     It must satisfy every rule in ``bench.stamp.provenance_problems``:
 
@@ -29,7 +31,8 @@ def measure_something(shards: int = 8) -> dict:
       corpus. One measurement is a number; the interesting question is how much it would move if
       you did it again.
 
-    Generate the corpus in this file, deterministically, from seeds you state. A constant measured
+    Generate the corpus in this file, deterministically, from starting numbers you state, so that
+    anybody can generate the same one. A constant measured
     over data nobody else can obtain is a constant nobody else can check.
     """
     raise NotImplementedError("problem 3.1")
@@ -43,7 +46,7 @@ def shards_needed(observed_sd: float, at_shards: int, target_sd: float) -> int:
     rounded up.
 
     The standard error of a mean falls as one over the square root of the count, so this is the
-    same arithmetic as ch14's "how many samples is enough", used in the direction people find less
+    arithmetic ch14 uses to ask how many draws are enough, used in the direction people find less
     intuitive. It is also the arithmetic that stops a measurement campaign before it starts: work
     out what halving your uncertainty costs *before* agreeing to halve it.
 

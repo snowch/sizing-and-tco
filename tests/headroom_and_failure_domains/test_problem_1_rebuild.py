@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import pytest
 
+from sizing.dsl import load_model
+from sizing.evaluate import point
 from tests.headroom_and_failure_domains.stubs import failure_reserve
+
+MODEL = "models/web_service/model.yaml"
 
 CASES = [(5, 1), (12, 1), (50, 1), (121, 1), (12, 2), (50, 3), (500, 2)]
 
@@ -18,6 +22,18 @@ def expected(hosts: int, losses: int) -> float:
 @pytest.mark.parametrize(("hosts", "losses"), CASES)
 def test_it_is_the_share_that_goes_away(hosts, losses):
     assert failure_reserve(hosts, losses) == pytest.approx(expected(hosts, losses), rel=1e-9)
+
+
+@pytest.mark.problem
+def test_it_agrees_with_the_models_own_two_utilisations():
+    """The model carries utilisation before and after a host loss; what one loss costs the fleet
+    is the share of the survivors' utilisation that the loss added. Derived from the model."""
+    values = point(load_model(MODEL))
+    lost = values["hosts"] - values["hosts_after_failure"]
+    from_the_model = 1.0 - values["utilisation"] / values["utilisation_after_failure"]
+    assert failure_reserve(int(values["hosts"]), int(lost)) == pytest.approx(
+        from_the_model, rel=1e-9
+    )
 
 
 @pytest.mark.problem

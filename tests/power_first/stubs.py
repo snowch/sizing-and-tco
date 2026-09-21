@@ -28,7 +28,7 @@ def pue_premium(pue: float) -> float:
     machines, as a number between zero and one.
 
     It is one line and it is worth having in your head, because a facility multiplier is quoted as
-    a ratio and paid as a fraction, and the two feel very different. A building that sounds a
-    little inefficient turns out to be spending a third of the bill on itself.
+    a ratio and paid as a fraction, and the two feel different. A building quoted as half again
+    over the machines is spending a third of the bill on itself.
     """
     raise NotImplementedError("problem 16.2")

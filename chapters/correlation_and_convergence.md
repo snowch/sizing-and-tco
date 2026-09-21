@@ -211,16 +211,18 @@ and say why.
 **14.1 — Show the square-root law.**
 Run one output of the web service model at several sample counts, with several independent seeds at
 each, and assert that the run-to-run spread falls as one over the square root of the count. The
-tolerance is itself a sampling question, and the test makes you confront that.
+tolerance is itself a sampling question: the test derives it from the number of runs, and it runs
+as many as the chapter's own experiment did, because a dozen is not enough to assert a ratio of
+two spreads.
 
 ```bash
 python3 -m pytest tests/correlation_and_convergence/test_problem_1_root_n.py
 ```
 
-**14.2 — Correlate without disturbing the marginals.**
-Add a correlation to a model and assert two things: that the interval on a shared output widens,
-and that every input's own distribution is unchanged. The second is the property that makes the
-method trustworthy, and it is one line to check.
+**14.2 — Correlate two inputs, and change neither.**
+Add a correlation to a model, with its reason, and assert two things: that the interval on a
+shared output widens, and that every input's own distribution is unchanged. The second is the
+property that makes the method trustworthy, and it is one line to check.
 
 ```bash
 python3 -m pytest tests/correlation_and_convergence/test_problem_2_marginals.py

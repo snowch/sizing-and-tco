@@ -184,7 +184,7 @@ Three, in `tests/the_sizing_model/`. The first two have tests. The last does not
 
 **12.1 — Size to a risk, not to a point estimate.**
 Find the smallest fleet whose queueing ceiling is breached in at most some fraction of samples.
-Bisect rather than step, and turn the sample count down while searching. A search nobody runs
+Bisect rather than step, and turn the number of draws down while searching. A search nobody runs
 twice is a search nobody runs.
 
 ```bash
@@ -211,9 +211,15 @@ Then find the two things that make it a sizing model rather than a cost model: a
 measured on a particular version of a particular piece of software, and a limit your system runs
 into. Mark each one.
 
-A good answer reaches a number and has at least one mark on it. A chain with no marks is a cost
-model. Either your system genuinely has no measured constants and no ceilings, which is rare, or
-you have not found them yet, which is the more likely reading and the more expensive one.
+Then turn to the fleet you have, rather than the one the chain recommends. Which of its limits
+gives first as the load grows, how often would you expect that to happen over the horizon, and
+who accepted that? This chapter's argument is that somebody did, whether or not they knew it.
+
+A good answer reaches a number, has at least one mark on it, and names the risk the bought fleet
+accepts and the person who accepted it. A chain with no marks is a cost model. Either your system
+genuinely has no measured constants and no ceilings, which is rare, or you have not found them
+yet, which is the more likely reading and the more expensive one. A risk nobody accepted is the
+commoner finding, and it is the one to take to whoever signs for the fleet.
 
 ## Where to go next
 
