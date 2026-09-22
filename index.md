@@ -120,6 +120,7 @@ defend a year later.
 You should be comfortable with code and with arithmetic. You are assumed to know **nothing**
 about statistics. The book uses six statistical words:
 
+% word-ok: the list of the six this book rations, which has to name them
 - distribution;
 - sample;
 - percentile;

@@ -180,8 +180,8 @@ states it is averaging over. A system with a handful of requests in flight on av
 most of its time empty and the rest badly backed up. The average describes neither.
 
 **Anything about the tail.** It relates means. A residence time inferred this way is a mean, and
-it says nothing about the 99th percentile, which is the number anybody cares about during an
-incident.
+it says nothing about the slowest one request in a hundred, which is the number anybody cares
+about during an incident.
 
 ## Problems
 
@@ -227,4 +227,4 @@ Little's original proof @little1961proof is five pages, and worth reading for ho
 assumes.
 
 [ch06](#queueing-and-the-knee) buys a mechanism. It costs assumptions, and it explains the shape
-of the distribution above.
+of the spread above.

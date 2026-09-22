@@ -134,7 +134,7 @@ downstream, every dollar, every watt and every ceiling, follows from what they c
 what the model would recommend in hindsight.
 
 Deriving it instead would make the ceilings tautologies. A fleet sized to sit under the knee sits
-under it in every sample, and the model would cheerfully report no chance at all of queueing.
+under it in every future, and the model would cheerfully report no chance at all of queueing.
 Keeping it an input lets the ceilings ask the only question worth asking: *given what we bought,
 how often does the world break it?*
 
@@ -163,10 +163,10 @@ that is complete from one that is not. That is [ch20 · The missing node](#the-m
 
 **Whether the ceilings are where they were declared.** All six were declared by somebody with a reason
 ([ch11](#headroom-and-failure-domains)). The probabilities in the last two columns are exact
-statements about where the model's samples fall relative to lines that are judgements.
+statements about where the model's own answers fall relative to lines that are judgements.
 
-**Where the uncertainty comes from.** The interval is wide, and this chapter has not said which
-input makes it wide. That is the only actionable question about a wide interval, and
+**Where the uncertainty comes from.** The range is wide, and this chapter has not said which
+input makes it wide. That is the only actionable question about a wide range, and
 [ch19](#which-input-is-the-answer) answers it. The answer will not surprise you if you read
 [ch04 · Peak, mean and growth](#peak-mean-and-growth).
 
@@ -184,7 +184,7 @@ defend.
 Three, in `tests/the_sizing_model/`. The first two have tests. The last does not, and says why.
 
 **12.1 — Size to a risk, not to a point estimate.**
-Find the smallest fleet whose queueing ceiling is breached in at most some fraction of samples.
+Find the smallest fleet whose queueing ceiling is breached in at most some fraction of futures.
 Bisect rather than step, and turn the number of draws down while searching. A search nobody runs
 twice is a search nobody runs.
 

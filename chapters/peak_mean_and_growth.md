@@ -143,8 +143,8 @@ percentile and watch which way the middle goes.
 attached. Forty thousand for ten seconds and forty thousand for four hours size differently. One
 of them is absorbed by a queue; the other is a queue.
 
-**A percentile of the wrong thing.** The 95th percentile of per-minute rates across a year is not
-the busy hour. It is the level one minute in twenty is above. Whether those minutes are scattered
+**The wrong thing, measured well.** Take a year of per-minute rates and find the level that one
+minute in twenty is above. That is not the busy hour. Whether those minutes are scattered
 evenly through the year or bunched into a few afternoons decides whether sizing to it is right or
 badly wrong.
 

@@ -194,6 +194,7 @@ value, so both lists are populated:
 ```{include} _generated/what-a-workload-is-observability.md
 ```
 
+% word-ok: a scrape interval is a length of time and a sampling rate is a trace setting
 Read the decisions. Scrape interval, retention, sampling rate, how many log lines you keep: those
 are the four knobs an observability platform gives you.
 [Appendix F](#appendix-f-observability-model) shows what turning all of them down buys.

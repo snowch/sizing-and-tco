@@ -49,6 +49,7 @@ than a decision:
 
 Read the last column. That ratio belongs to one codec and one body of data. It does not belong to
 compression in general, and it does not belong to your data. Take the method rather than the
+% word-ok: a handful of your own records, not a draw from a spread
 number: point the runner at a sample of your own records and get the ratio that belongs in your
 model ([ch03](#where-the-numbers-come-from)).
 
@@ -92,11 +93,11 @@ Three rows, and each needs a word.
 - *Hosts for storage* is how many hosts' disks that takes. It is this chain's answer, one of three
   the model will have by [ch10](#bandwidth-and-the-binding-constraint).
 - *Disk fill at horizon* is how full the disks of the fleet somebody bought are at the end
-  of the period, as a fraction of what they can hold. One is full. An interval reaching past one
+  of the period, as a fraction of what they can hold. One is full. A range reaching past one
   says that in some futures the records do not fit, because the arithmetic carries on past the
   point where the disks stop.
 
-The interval on the host count spans an order of magnitude. Almost all of that width is the
+The range on the host count spans an order of magnitude. Almost all of that width is the
 growth rate from [ch04](#peak-mean-and-growth), not anything in this chapter's chain. The disk
 arithmetic is the well-understood part of the problem. What it is applied to is not.
 
@@ -115,6 +116,7 @@ its number belongs to, which is more than a spreadsheet cell can say.
 - **Compression is the only term that helps, and the only one that is measured.** Replication and
   the margin are decisions, overhead is an assumption with a shape, and the measured constant
   carries a standard error the others do not.
+% word-ok: a handful of your own records, not a draw from a spread
 - **The measured ratio belongs to one codec and one body of data.** Point the runner at a sample of
   your own records and use the ratio that comes out, not the book's.
 - **A datasheet terabyte and a filesystem terabyte differ by about a tenth.** Every node declares
@@ -195,6 +197,7 @@ python3 -m pytest tests/capacity/test_problem_4_classification.py -m problem
 repository has never seen it.
 
 The constant in this chapter was measured over a synthetic mixture, and the chapter says so.
+% word-ok: a handful of your own records, not a draw from a spread
 Measure your own: take a real sample of what you store, compress it with the codec you run, at
 the setting you run it at, and record the ratio and how much you measured.
 
@@ -202,6 +205,7 @@ Then compare it with the figure your capacity plan is currently using, and find 
 figure came from. In this book's experience it is a vendor's marketing number, a different
 codec's, or nobody remembers.
 
+% word-ok: how many records were compressed, not a draw count
 A good answer has a ratio, a sample size, the codec and its setting, and a sentence about the
 number it replaces. If your measured ratio matches the planning figure exactly, find out who
 measured it first. You may have just re-derived a guess.

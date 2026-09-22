@@ -144,6 +144,13 @@ from is where the answers piled up, which the chart below shows and the two ends
 
 Each bar counts how many of those answers landed on a given five-year total. It is the table's
 second row, drawn. Most of the answers sit in the middle, and a thin tail runs far to the right.
+
+The height of a bar means something only because of how the values were picked. Each input was
+drawn in proportion to its own spread: a value the file says is common was picked often, one the
+file says is rare was picked rarely. So a total that turns up in many of the answers is one that
+many combinations of plausible inputs produce, and a total that turns up in few is one that
+needs an unlikely combination. Had the values been picked evenly across each range instead, the
+pile would be a record of what was tried and would say nothing about what to expect.
 The red line is where the single-number answer falls.
 
 The frame above picks the values and does the arithmetic for you, one press at a time.
@@ -178,8 +185,8 @@ you have.
 **A cost model has a deterministic structure with uncertain parameters.** Its relationships are
 accounting identities and physics: watts times hours times price; capital plus running cost over
 a horizon; a total divided by a denominator. Nothing in that structure is in doubt. Only the
-inputs are uncertain, and the cost moves roughly in proportion to them, so sampling the inputs is
-enough. A cost model can be wrong because a price was wrong. It is rarely wrong because the system
+inputs are uncertain, and the cost moves roughly in proportion to them, so running the arithmetic
+over their ranges is enough. A cost model can be wrong because a price was wrong. It is rarely wrong because the system
 it describes started behaving differently.
 
 **A sizing model has the same structure and adds two things.**
@@ -233,7 +240,7 @@ You find the stage rather than being told it, which is why this page does not na
 
 **What the model's structure omits.** Everything above is about a model that has already been
 written down. A quantity nobody thought of appears in no point estimate, no range and no
-ceiling, and no amount of sampling will put it there. This book's observability model has a hole
+ceiling, and no amount of running the arithmetic again will put it there. This book's observability model has a hole
 of that shape, argued in [Appendix F](#appendix-f-observability-model).
 [ch23](#what-the-model-got-wrong) is a post-mortem on a model that was confidently wrong for this
 reason.
@@ -256,7 +263,11 @@ Three, in `tests/point_estimates/`. The first two have tests; run them with
 `python3 -m pytest tests/point_estimates/ -m problem`. The third does not, and says why.
 
 **1.1 — The width of a product.** The test hands you the band the web service model declares for
-each uncertain input, so you do not need to go and read the file. Write each band as its top over
+each uncertain input, so you do not need to go and read the file. There are more of them than the
+six the panel above moves: the file gives bands to the cost side as well, and several of those
+cannot change a host count at all. Hold them anyway — an input that cannot reach the answer does
+not move it. Some inputs are written as one number and have no band, so they are not in the
+exercise; whether they deserve to be fixed is [ch03](#where-the-numbers-come-from)'s question. Write each band as its top over
 its bottom. Then do the arithmetic the way you could on paper: every input at the bottom of its
 band together, then every input at the top together, and the hosts the model recommends worked
 through both times. The second count over the first is
