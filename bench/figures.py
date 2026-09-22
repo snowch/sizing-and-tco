@@ -100,6 +100,19 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("hosts_recommended", "tco"),
         source_note="the finished model, which ch02 starts building from nothing",
     ),
+    # Drawn from the rule, not from a run: problem 1.1 asks the reader to compound the model's
+    # own declared bands, so a figure of that result would be its answer, one screen above it.
+    "point-estimates-compounding": Diagram(
+        draw=diagrams.compounding,
+        alt="How far the answer moves when one, two, three or more inputs are each a fifth high",
+        computed_from="the rule stated beside it, not the model's own bands",
+    ),
+    "point-estimates-leaves-out": Diagram(
+        draw=diagrams.what_one_number_leaves_out,
+        result="web_service-reference",
+        args=("hosts_recommended",),
+        alt="The single number, the answers the same arithmetic gave, and what neither can reach",
+    ),
     "point-estimates-tco-spread": Diagram(
         draw=diagrams.spread_of_answers,
         result="web_service-reference",
