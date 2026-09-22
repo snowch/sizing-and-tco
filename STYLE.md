@@ -12,7 +12,8 @@ Rules 1 to 16 were written before the chapters. Rules 17 to 22 were added after 
 reviews of the finished book found the same faults on page after page, which is evidence about
 the rules rather than about the pages: a fault that recurs under a rule is a fault the rule did
 not name. Each of the new rules shows a sentence the book printed and the sentence the rule
-produces. The checklist at the end is the whole list in the order to run it over a page.
+produces. The two checklists at the end run every rule: the first pass over the sentences,
+the second over whether the idea arrived.
 
 ## 1. Shorten long sentences
 
@@ -471,9 +472,23 @@ After:
 > Keep that mechanism in mind: it is why leaving each of these correlations undeclared made the
 > interval narrower.
 
-## Before you finish: the checklist
+## Before you finish: two passes
 
-Run it over the page in this order. Each line names the rule.
+The first pass cleans the sentences. The second asks whether the idea arrived. They are separate
+because they cost different things: the first is a scan, and a page can be run through it in
+minutes; the second is reading, and it is slower because judgement is slow.
+
+Keeping them apart is the point. For a long time this section ran twelve of the rules above and
+called itself the whole list, and the ten it left out were, every one of them, the ones that ask
+whether the reader understood — the example beside the abstract idea, the cause said rather than
+implied, the paragraph that holds one thing. What was left was the half a person can run without
+reading for sense. So pages came out clean and stayed abstract: short sentences, no intensifiers,
+plain words, and nothing a reader could take hold of. A checklist that omits the slow half is a
+checklist for the fast half, whatever it says at the top.
+
+### First pass: the sentences
+
+A scan. Each line names the rule.
 
 - [ ] Any sentence much over twenty words: split it (1).
 - [ ] Any sentence of three words or fewer: does it land a point, or label the next sentence? (17)
@@ -484,9 +499,26 @@ Run it over the page in this order. Each line names the rule.
 - [ ] *Somebody*, *nobody*: is who did it unknown, or the point? (21)
 - [ ] *Is worth*, *is the whole of*, *earns its place*: where are the grounds? (22)
 - [ ] A passive: can the reader tell who did it? (14)
+- [ ] A long word where a short one says it: swap it (5).
+- [ ] A sentence built to sound careful rather than to be read: straighten it (11).
 - [ ] Items in a list: the same shape? (8)
 - [ ] A term the ration does not admit: gone, and the plain thing said (6).
 - [ ] A number typed into the prose: never (12).
+
+### Second pass: the idea
+
+Read the page through, once, for sense. These are questions, not searches, and a page can pass
+every line above and fail every line here.
+
+- [ ] An abstract idea with no small example beside it: give it one (4).
+- [ ] A paragraph that answers more than one question: split it (2).
+- [ ] A consequence the reader is left to work out: say it (9).
+- [ ] A distinction worth remembering: is it set against what it is not? (10)
+- [ ] The principle of the section: does that sentence stand up on its own, quoted out of the
+      page? (15)
+- [ ] The headings, read alone: do they carry the argument? (7)
+- [ ] An idea arriving before the reader has a reason to want it: move it (13).
+- [ ] Anything made simple enough to be wrong: put the difficulty back (16).
 
 ## Final test
 
