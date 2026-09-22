@@ -49,9 +49,11 @@ month. There are at least four defensible denominators, and problem 17.2 compute
 - the average of the two, a straight line under a curve that is not straight;
 - the per-sample ratio: each total divided by what its own future holds, then summarised.
 
-They are not close together. The spread between them is larger than most of the things people
-argue about when comparing unit costs. And every one of them is a number somebody could defend in
-a meeting.
+They are not close together, and the reason is growth. What the fleet holds at the horizon is
+what it holds on day one compounded over five years, so the first two entries in that list are
+separated by the largest single multiplier in the model. The spread between the four is larger
+than most of the things people argue about when comparing unit costs, and every one of them is a
+number somebody could defend in a meeting.
 
 Three of the four have a subtler problem. They divide a figure from one possible world by a
 figure from another: a median total that came from a set of futures, over a median capacity that
