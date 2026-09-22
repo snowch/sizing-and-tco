@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "0dedbc5c9fc180ef",
+  "code_fingerprint": "14c1124b335c8dfe",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/01-demand/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-21T21:43:44+00:00",
-  "git_revision": "37a337d",
+  "generated_at": "2026-09-22T19:58:53+00:00",
+  "git_revision": "a2bc3a3",
   "kind": "model",
   "name": "web_service_demand-reference",
   "produced_by": {
@@ -44,7 +44,7 @@
       "peak_request_rate": 1.0,
       "stored_data": 1.0
     },
-    "generated_at": "2026-09-21T21:43:44+00:00",
+    "generated_at": "2026-09-22T19:58:53+00:00",
     "model": "web_service_demand",
     "nodes": {
       "annual_growth": {
@@ -231,7 +231,7 @@
         "kind": "input",
         "label": "records held, day one",
         "layer": 1,
-        "note": null,
+        "note": "This one keeps its single number. You can go and count how much you hold today. Nobody can count next quarter's busy hour. What is uncertain about the records is how fast they grow, and annual_growth carries that for the rate and the level alike.",
         "point": 15.0,
         "provenance": {
           "kind": "assumption",

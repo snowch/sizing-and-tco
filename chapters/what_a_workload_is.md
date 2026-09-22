@@ -88,8 +88,10 @@ held on its own. `provenance` is the line a cell has nowhere to put. A number wi
 rumour, so the field is mandatory from the first node.
 [ch03](#where-the-numbers-come-from) is about what that costs and what it buys.
 
-`label` and `range` are neither. A label reads better in a table than `stored_data_t0` does. A
-range is how far a slider may drag the value on the interactive version of this model. Both are
+`label`, `note` and `range` are neither. A label reads better in a table than `stored_data_t0`
+does. A note is for whatever a reader of this file would otherwise have to ask you about, and the
+one above says why that quantity is a single number when the one before it is not. A range is how
+far a slider may drag the value on the interactive version of this model. All three are
 optional. [Appendix A](#appendix-a-dsl-reference) lists everything a node may carry, which is
 longer than what a node needs.
 

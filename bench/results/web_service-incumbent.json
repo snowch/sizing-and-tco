@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "a455ad9cbf69ed2c",
+  "code_fingerprint": "97f69fea424eee7f",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-21T21:43:36+00:00",
-  "git_revision": "37a337d",
+  "generated_at": "2026-09-22T19:58:41+00:00",
+  "git_revision": "a2bc3a3",
   "kind": "model",
   "name": "web_service-incumbent",
   "produced_by": {
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-21T21:43:35+00:00",
+    "generated_at": "2026-09-22T19:58:40+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {
@@ -11302,7 +11302,7 @@
         "kind": "input",
         "label": "records held, day one",
         "layer": 1,
-        "note": null,
+        "note": "This one keeps its single number. You can go and count how much you hold today. Nobody can count next quarter's busy hour. What is uncertain about the records is how fast they grow, and annual_growth carries that for the rate and the level alike.",
         "point": 15.0,
         "provenance": {
           "kind": "assumption",

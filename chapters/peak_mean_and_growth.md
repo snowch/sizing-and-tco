@@ -92,6 +92,14 @@ the band stays. That is the difference this chapter is about.
 The same graph, with the growth rate as a band rather than a figure. Clicking it shows the band.
 ```
 
+Click *records held, day one* and there is no band. That is a claim rather than an omission: you
+can go and count how much data you hold, and nobody can count next quarter's busy hour. The rate
+has a shape because a peak is something somebody has to catch. The level does not, because it is
+a number a storage system will tell you. The file says as much, in a line beside the value.
+
+Giving every input a band is not the more honest choice. It is the less honest one, if a figure
+among them is something you could have gone and checked.
+
 ### Compounding an average is not averaging the compounds
 
 There is a specific and expensive error here. Work through it once by hand.

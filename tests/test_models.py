@@ -355,6 +355,35 @@ def test_every_input_says_who_settles_it():
             )
 
 
+def test_a_world_input_with_no_band_says_why_it_has_none():
+    """A missing band is a claim, so it needs a reason like any other.
+
+    An input the world settles is one somebody else decides, and in these models almost all of
+    them carry a band. The reader sees that in the viewer: click one node and a spread is drawn,
+    click the next and nothing is. Without a line saying why, the second reads as an oversight,
+    and the honest cases are indistinguishable from the careless ones.
+
+    There are three honest cases, and each states itself in the node's note. You can count it: an
+    estate is a number of hosts, and the records you hold today are a number a storage system
+    will tell you. Somebody quoted it: a vendor states one figure, and widening it here would put
+    a range in their mouth that they never offered. Or it is a declared zero, which is a line the
+    quote does not charge for rather than a line left out.
+
+    The rule is the note, not which of the three it gives. A model that wants a bare number keeps
+    it and writes the sentence.
+    """
+    for model in discover():
+        for name, node in sorted(model.nodes.items()):
+            if not isinstance(node, Input) or node.decided != "world":
+                continue
+            if node.distribution is not None:
+                continue
+            assert node.note.strip(), (
+                f"{model.name}: {name!r} is settled by the world and carries no band, and says "
+                f"nothing about why. Give it a distribution, or a note saying why it has none."
+            )
+
+
 def test_a_definition_is_never_a_choice_and_never_has_a_shape():
     """An identity is the one kind of input nobody argues about.
 

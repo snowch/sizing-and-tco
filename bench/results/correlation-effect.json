@@ -6,8 +6,8 @@
   "conditions": {
     "what_widening_means": "assuming independence is not neutral. It is a claim, and where it is wrong it makes the interval narrower than the evidence supports \u2014 which is the direction that gets a plan approved"
   },
-  "generated_at": "2026-09-21T02:56:13+00:00",
-  "git_revision": "2110500",
+  "generated_at": "2026-09-22T19:59:41+00:00",
+  "git_revision": "a2bc3a3",
   "kind": "measurement",
   "name": "correlation-effect",
   "produced_by": {
@@ -19,7 +19,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
