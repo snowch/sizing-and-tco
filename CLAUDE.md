@@ -180,7 +180,10 @@ still owes the reader *What this cannot tell you*.
 **Statistics vocabulary is rationed.** Distribution, sample, percentile, interval, correlation,
 convergence. Each arrives because a model has just raised a question that needs it, never as a
 definition. Where a term has a plain-English equivalent, use the plain one first and name the term
-second.
+second. `tests/test_vocabulary.py` is what makes that a rule rather than a habit: it reads each
+word's home chapter out of the glossary and fails any page that uses it earlier. A word in a
+different sense — a scrape interval, bytes per sample — takes `% word-ok: <reason>` on the line
+before, which covers the block, and the reason sits where a reviewer sees it.
 
 Those six are what the book *teaches*. A seventh may be named where the point is to tell it apart
 from one of the six — ch13 names the standard deviation of a logarithm to say nobody has an

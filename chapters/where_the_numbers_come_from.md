@@ -98,6 +98,7 @@ flattering. That is fine. Not knowing is not.
 ### A measured constant is not a fact about the world
 
 A compression ratio is not a property of compression. It is a property of *some data* and *some
+% word-ok: a telemetry sample is one reading, not a draw from a spread
 software at some version*, and it moves when either changes. So do bytes per sample, spans per
 request, and throughput per core. This book calls those **measured constants** and gives them
 their own node kind. Every one of them carries the implementation it belongs to:

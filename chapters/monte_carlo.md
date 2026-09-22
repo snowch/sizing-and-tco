@@ -341,4 +341,5 @@ statistics, and is a useful corrective to the idea that this is a modern techniq
 the part about why `default_rng` exists and what it replaced.
 
 [ch14](#correlation-and-convergence) picks up the two things this chapter used without
+% word-ok: named here only to hand it to ch14, which teaches it
 establishing: the correlations the intervals above already carry, and the sample count.

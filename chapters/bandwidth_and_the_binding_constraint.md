@@ -62,7 +62,7 @@ call. Spend a minute on the three wrong answers first. Each of them has shipped:
 
 **The average.** It satisfies at least one chain badly, by construction, and which one depends on
 the day. A fleet sized between what the requests need and what the working set needs is too small
-for one of them in every sample where they differ.
+for one of them in every future where they differ.
 
 **The usual winner.** Take the memory chain, because it asks for the most more often than either
 of the others. This is the commonest of the three. It is defensible until somebody asks the model
@@ -85,7 +85,8 @@ the fleet is too small more often than not. *Wins most often* is a fact about a 
 The median gap between the winner and the runner-up, the one in the middle when every draw's
 gap is sorted, is large. These are not three estimates of
 the same thing that differ slightly. They are three different questions with three different
-answers. The gap at the 95th percentile is larger still.
+answers. Take the draw one in twenty from the top of that sorted list and the gap is larger
+still.
 
 The last row surprises people. The largest of three uncertain counts sits well
 above where any one of them usually does, so the fleet the model recommends is bigger than every
@@ -108,8 +109,8 @@ does without saying so. Two numbers describe what it costs: how often the fleet 
 because another chain wanted more, and by how much when it is. Problem 10.2 computes both.
 
 Neither is small here, and people do not compute the second. Averaged over every
-sample, including the ones where the chosen chain was the right one and the shortfall is zero, it
-looks like a rounding error. Counted only over the samples where the fleet is short, it is not. A
+future, including the ones where the chosen chain was the right one and the shortfall is zero, it
+looks like a rounding error. Counted only over the futures where the fleet is short, it is not. A
 chain overtakes another only when its own inputs have gone somewhere unusual, and by the time
 they have, the gap is wide.
 
@@ -178,7 +179,7 @@ python3 -m pytest tests/bandwidth_and_the_binding_constraint/test_problem_1_all_
 ```
 
 **10.2 — The cost of sizing on the chain that usually wins.**
-Compute how often that fleet comes up short, and the median shortfall *in those samples only*.
+Compute how often that fleet comes up short, and the median shortfall *in those futures only*.
 The first is larger than "usually wins" suggests, and the second is what stops the shortfall
 looking harmless.
 

@@ -146,7 +146,7 @@ above audits against. It is declared once, so that the sizing and the audit cann
 
 Past that point the formula has stopped describing a queue and started describing an arithmetic
 accident. The clamp does not hide that. The ceiling watches the real utilisation rather than the
-capped one, so a sample out there is still reported **over**. The model does not know what happens
+capped one, so a future out there is still reported **over**. The model does not know what happens
 past the cap, and says so rather than extrapolating.
 
 ```{iframe} /playground/queueing-and-the-knee/
@@ -177,8 +177,8 @@ assumptions, swept across one input. A real system is several queues in series w
 between them, and the only honest way to get its curve is to measure it. That needs the reference
 machine, and it is a `rig` measurement nobody has taken.
 
-**Anything about the tail.** This chapter computes mean residence time. The 99th percentile is
-worse, and the gap between the two widens as utilisation rises, by a factor this curve cannot
+**Anything about the tail.** This chapter computes mean residence time. The slowest one request
+in a hundred is worse, and the gap between the two widens as utilisation rises, by a factor this curve cannot
 report.
 
 **When the load will cross the line.** The model says what happens at a given utilisation, not

@@ -148,7 +148,7 @@ provenance. **The shape is the claim. The position of the peak is a guess.**
 ## What this cannot tell you
 
 **Where your peak is.** The coefficients here are assumptions, and the peak follows from them.
-The model's own interval on the peak spans more than a factor of three. Fitting the coefficients
+The model's own range on the peak spans more than a factor of three. Fitting the coefficients
 from three measurements gives numbers with the same problem and a false air of precision. What
 transfers is that a peak exists, and that it is a property of the software.
 
