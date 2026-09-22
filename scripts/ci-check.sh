@@ -143,6 +143,12 @@ echo "== the interactive pages assemble =="
 python3 scripts/build-viewers.py --out _build/static/models > /dev/null
 echo "  OK"
 
+echo "== the one-future-at-a-time page assembles =="
+# Into the site's own tree for the same reason: ch01 embeds it by a `/futures/...` URL, and
+# nothing else checks that the URL resolves to a file.
+python3 scripts/build-futures.py --out _build/static/futures > /dev/null
+echo "  OK"
+
 echo "== the playground assembles =="
 # What CI can check is that the page builds and that the fixtures it holds itself to still have
 # the verdicts this build computes. Whether Python starts is a question about a reader's browser,

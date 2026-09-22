@@ -40,7 +40,13 @@ from sizing.playground.toolkit import PYODIDE, RUNTIME_CACHE, problem_wheels, wh
 #: figures are inlined -- so this is the pages themselves and the things they embed or fetch:
 #: a chapter's problem set is fetched the first time Check is pressed, and kept from the start
 #: so that a chapter works offline whether or not it was.
-PRECACHED = ("*.html", "models/*.html", "playground/*/index.html", "problems/*.json")
+PRECACHED = (
+    "*.html",
+    "models/*.html",
+    "futures/*.html",
+    "playground/*/index.html",
+    "problems/*.json",
+)
 PRECACHED_FILES = (
     "search.json",
     "favicon.svg",

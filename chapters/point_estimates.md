@@ -54,9 +54,17 @@ the model already declares. The compounded spread is not the widest input's, and
 average.
 
 So the honest answer to *how big* is not a number. It is a range, and some values in it are far
-more likely than others. You get the range by doing the arithmetic over and over. Each time you
-pick a different value for every input, from the spread that input honestly has, and you keep
-every answer that comes out.
+more likely than others.
+
+You get that range by doing the arithmetic over and over. Doing a sum twice is pointless if
+nothing changes between the two, so something has to. Each time, you pick a different value for
+every input. Not any value: one drawn from the spread that input honestly has, so a value from
+the fat middle of the spread comes up often and one from the edge comes up rarely. Then you keep
+the answer and go again.
+
+One run answers one question — *what if it turns out like this?* Enough runs answer a different
+one: *which outcomes keep coming up, and which barely ever do?* The second question is the one
+you need answered before you commit to a fleet.
 
 The service in question is the one this book carries the whole way through. It answers requests
 and keeps the records they leave behind. It runs on a fleet of hosts somebody has to buy, and then
@@ -64,7 +72,22 @@ pay to run for five years. You need nothing else about it yet. [ch02](#what-a-wo
 its file from nothing, a few nodes at a time.
 [Appendix E](#appendix-e-web-service-model) shows the finished thing, every formula in it.
 
-Here is its answer, the single number first, then what the repeated answers did.
+Rather than take that on trust, do it. Press the button below. Six inputs jump to the values that
+future brought, the fleet is worked through once, and the answer drops onto the pile. Press it
+again and you get a different answer, because you asked a different question.
+
+```{iframe} /futures/point-estimates.html
+:width: 100%
+One press is one future. The ticks under each input pile up where its shape is fat, which is what
+*drawn from the spread it honestly has* looks like.
+```
+
+A dozen presses is enough to see that the answers are not scattered evenly. A few hundred is
+enough to see the shape. The price of a host is not among the six, because what a host costs
+cannot change how many you need — which is the distinction the next section is about.
+
+Here is the same model's answer as the book's own run computed it, the single number first, then
+what its repeated answers did.
 
 ```{include} _generated/point-estimates-outputs.md
 ```
@@ -87,11 +110,12 @@ Each bar counts how many of those answers landed on a given five-year total. It 
 second row, drawn. Most of the answers sit in the middle, and a thin tail runs far to the right.
 The red line is where the single-number answer falls.
 
-Doing that arithmetic over and over needs a program to pick each input's value, and
-[ch13](#monte-carlo) builds one. You do not need one to feel the force of it. Problem 1.1 does the
-same job on paper: every input at the bottom of its range together, then every input at the top
-together. It asks you to set what comes out beside the smallest and largest answer in the table.
-Those are two honest ways of admitting the same doubt, and they do not agree with each other.
+The frame above picks the values and does the arithmetic for you, one press at a time.
+[ch13](#monte-carlo) is where you build the thing that does it in bulk, and turn a pile of answers
+into a figure you can put in a document. Problem 1.1 needs neither. It does the same job on paper:
+every input at the bottom of its range together, then every input at the top together. It asks you
+to set what comes out beside the smallest and largest answer in the table. Those are two honest
+ways of admitting the same doubt, and they do not agree with each other.
 
 ### The error a range cannot show
 

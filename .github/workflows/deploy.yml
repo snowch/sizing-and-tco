@@ -84,6 +84,12 @@ jobs:
         run: |
           python3 scripts/build-viewers.py --out _build/html/models
 
+      # ch01 claims you get a range by running the arithmetic again and again. This is the page
+      # that lets a reader do it, one press at a time, from the spreads the same stamped result
+      # declares. Embedded in the chapter by a `/futures/...` URL.
+      - name: Build the one-future-at-a-time page
+        run: python3 scripts/build-futures.py --out _build/html/futures
+
       # One page per chapter that builds the model, embedded in that chapter with `{iframe}`.
       # Nothing boots until a reader presses Run, so a chapter page costs no more than before.
       # Verified in Chromium against the real CDN before it was wired up here: Pyodide boots in
