@@ -44,9 +44,8 @@ second times five *seconds* is requests, which is a thing you can hold. The plai
 how much; only the duration changes what kind.
 
 That is why a retention store sized from a rate comes out wrong rather than merely imprecise. A
-spreadsheet accepts the first version and shows you a larger figure, which is the worst of both:
-it looks like the answer and it is not the same quantity. The toolkit refuses it, and problem 2.2
-is that error. [Appendix D](#appendix-d-units) shows how units combine and cancel, on a page of
+spreadsheet gives the same digits either way and cannot say which quantity they are. The toolkit
+refuses it, and problem 2.2 is that error. [Appendix D](#appendix-d-units) shows how units combine and cancel, on a page of
 examples the toolkit works out itself.
 
 ### The demand side, drawn before it is written

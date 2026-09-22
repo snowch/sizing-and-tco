@@ -110,17 +110,15 @@ things you could compute:
 - take the **average growth rate**, and compound it; or
 - compound **every** growth rate, and average the results.
 
-They are not the same number, and the second is always larger, for any spread at all. Take the
-extreme case to see why. Suppose growth might double the traffic every year or might halve it,
-and you think the two equally likely. Compound the average of those two — no growth at all — and
-you get the traffic you started with. Compound each and average the results: over five years
-doubling gives thirty-two times, halving gives a thirty-second, and the average of those two is
-over sixteen times what you started with.
+They are not the same number, and the second is always larger, for any spread at all. Suppose
+growth might double the traffic every year or might halve it, each as likely as the other. The
+average of those two is no growth, so compounding it leaves you where you started. Compound each
+and average the results: over five years doubling gives thirty-two times, halving gives a
+thirty-second, and the average is over sixteen times.
 
 Compounding curves upwards, so the high rates run away faster than the low ones fall. Averaging
-first flattens the curve and throws that away. The gap widens with the spread of the growth rates
-and with the horizon, which makes it largest over exactly the five-year plan a fleet gets bought
-against.
+first flattens the curve and throws that away. The gap widens with the spread and with the
+horizon, which makes it largest over exactly the five-year plan a fleet gets bought against.
 
 Problem 4.2 is that comparison. Write down which way you think it goes before you run it.
 

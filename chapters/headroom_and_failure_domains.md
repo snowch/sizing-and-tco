@@ -97,10 +97,9 @@ now and the next purchase wants some. Each request arrives separately, each is d
 each is granted.
 
 They do not add. Each one takes its share of what the previous one left, so applying them in
-sequence is multiplication. Three margins of a quarter each sound like three quarters of the fleet
-left working, and they are not: three quarters of three quarters of three quarters is a little
-over two fifths. Well under half the fleet is doing the work it was bought for, and nobody asked
-for that. Problem 11.2 is that composition.
+sequence is multiplication. Three margins of a quarter each sound like three quarters of the
+fleet left working, and they are not: three quarters of three quarters of three quarters is a
+little over two fifths. Problem 11.2 is that composition.
 
 Nobody in the room multiplied them. That is how a fleet ends up twice the size anybody intended,
 with every individual decision in the chain defensible.

@@ -71,23 +71,17 @@ first step.
 
 Multiplying uncertain numbers does not average their doubt out. It compounds it.
 
-You know this already, from somewhere with no servers in it. Ask somebody how long they take to
-drive to work and they will not give you a number. They will say twenty-five minutes, forty if
-the bypass is busy. Ask what a year of that commute costs and the same thing happens three times
-over: how many days they go in, what the journey burns, what fuel costs this month. Every one of
-the three is a range, and nobody had to be taught to hold it as one.
+You know this already. Nobody answers *how long does it take you to drive to work* with one
+number: twenty-five minutes, forty if the bypass is busy. A year of that commute is three such
+ranges multiplied together.
 
 ```{image} _figures/point-estimates-commute.svg
 :alt: Three everyday ranges -- days driven, litres a journey, price a litre -- and what a year costs from their middles against what it costs with all three at their tops
 :width: 100%
 ```
 
-Not one of the three is much above its own middle, and the year is more than half as much again.
-Nothing went wrong and nothing cancelled. The highs multiplied instead of taking turns, which is
-the whole of it.
-
-Now the same thing as a rule, so it can be pointed at six inputs instead of three. Say each of
-them could be a fifth higher than the figure you wrote down.
+Now as a rule, so it reaches six inputs instead of three. Say each of them could be a fifth
+higher than the figure you wrote down.
 
 ```{image} _figures/point-estimates-compounding.svg
 :alt: How far the answer moves when one, two, three or more inputs are each a fifth high

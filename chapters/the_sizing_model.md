@@ -58,12 +58,12 @@ The red line is where the point estimate falls. Everything else is the same mode
 and the same margins, with the inputs allowed to be as uncertain as the people who wrote them
 down are. Notice where the line sits: below the middle of the bars.
 
-That is worth a moment, because it is not obvious. At the point estimate each chain hands over its
-own middle, and the model takes the largest of the three. Let the inputs move, and the model comes
-back with a smaller fleet only when *all three* chains have landed low at once — one chain coming
-in low is covered by whichever of the other two did not. Needing three things to go your way
-together is a far weaker bet than needing one, so the largest of three uncertain counts sits above
-the largest of their three middles. The spreadsheet's answer is not merely uncertain. It is low.
+At the point estimate each chain hands over its own middle, and the model takes the largest of the
+three. Let the inputs move, and the model comes back with a smaller fleet only when *all three*
+chains land low together — one chain coming in low is covered by whichever of the other two did
+not. Needing three things to go your way at once is a weaker bet than needing one, so the largest
+of three uncertain counts sits above the largest of their three middles. The spreadsheet's answer
+is not merely uncertain. It is low.
 
 And here is what that fleet does against the ceilings the last six chapters declared:
 
