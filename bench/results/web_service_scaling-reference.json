@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "b4778e4c338753eb",
+  "code_fingerprint": "7b69eea4d6bef5eb",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/06-scaling/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-21T21:43:47+00:00",
-  "git_revision": "37a337d",
+  "generated_at": "2026-09-22T19:58:56+00:00",
+  "git_revision": "a2bc3a3",
   "kind": "model",
   "name": "web_service_scaling-reference",
   "produced_by": {
@@ -80,7 +80,7 @@
       "utilisation_including_coordination": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-21T21:43:47+00:00",
+    "generated_at": "2026-09-22T19:58:56+00:00",
     "model": "web_service_scaling",
     "nodes": {
       "achievable_throughput": {
@@ -5182,7 +5182,7 @@
         "kind": "input",
         "label": "records held, day one",
         "layer": 1,
-        "note": null,
+        "note": "This one keeps its single number. You can go and count how much you hold today. Nobody can count next quarter's busy hour. What is uncertain about the records is how fast they grow, and annual_growth carries that for the rate and the level alike.",
         "point": 15.0,
         "provenance": {
           "kind": "assumption",

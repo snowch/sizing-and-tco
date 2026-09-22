@@ -7,8 +7,8 @@
     "one_slice": "the host count moves and nothing else does; a fleet of denser or leaner machines is a different line on both axes",
     "the_allocation": "a single figure for what the building supplies. Contracted power, breaker capacity, cooling and what the facility will sustain are four different numbers, and this sweep takes one"
   },
-  "generated_at": "2026-09-21T02:56:14+00:00",
-  "git_revision": "2110500",
+  "generated_at": "2026-09-22T19:59:42+00:00",
+  "git_revision": "a2bc3a3",
   "kind": "measurement",
   "name": "power-first-sweep",
   "produced_by": {
@@ -20,7 +20,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",

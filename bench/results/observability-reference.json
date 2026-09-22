@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "e7d785e0456d97cf",
+  "code_fingerprint": "e342e676a4c90e1d",
   "code_sources": [
     "bench/run_models.py",
     "models/observability/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-21T21:43:33+00:00",
-  "git_revision": "37a337d",
+  "generated_at": "2026-09-22T19:58:37+00:00",
+  "git_revision": "a2bc3a3",
   "kind": "model",
   "name": "observability-reference",
   "produced_by": {
@@ -98,7 +98,7 @@
       "traces_ingest": 1e-06,
       "traces_stored": 0.0864
     },
-    "generated_at": "2026-09-21T21:43:33+00:00",
+    "generated_at": "2026-09-22T19:58:36+00:00",
     "model": "observability",
     "nodes": {
       "active_series": {
@@ -470,7 +470,7 @@
         "kind": "input",
         "label": "metric names per host",
         "layer": 2,
-        "note": null,
+        "note": "No band: scrape one host and list them. The uncertainty in this chain is what the labels multiply that list by, and label_cardinality carries it.",
         "point": 60.0,
         "provenance": {
           "kind": "assumption",
@@ -524,7 +524,7 @@
         "kind": "input",
         "label": "collector throughput quoted",
         "layer": 4,
-        "note": null,
+        "note": "No band, and giving a quote one would be inventing a range nobody quoted. A vendor states a single number; the spread belongs to the measurement, and collector_throughput_measured below carries it with a standard error.",
         "point": 6.0,
         "provenance": {
           "kind": "vendor_claim",
@@ -761,7 +761,7 @@
         "kind": "input",
         "label": "hosts",
         "layer": 2,
-        "note": null,
+        "note": "No band: an estate is a thing you can count, and this one has been counted. What it does next is growth_factor's business, not this node's.",
         "point": 1200.0,
         "provenance": {
           "kind": "assumption",
@@ -3789,7 +3789,7 @@
         "kind": "input",
         "label": "query scan rate quoted",
         "layer": 2,
-        "note": null,
+        "note": "No band, for the same reason as the collector's quoted throughput: a quote is one number, and widening it here would put a range in the vendor's mouth. Nobody has measured this one, so nothing in this model disputes it yet.",
         "point": 90000.0,
         "provenance": {
           "kind": "vendor_claim",

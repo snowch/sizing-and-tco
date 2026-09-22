@@ -26,6 +26,9 @@ nodes:
     decided: world
     unit: host
     value: 1200
+    note: >-
+      No band: an estate is a thing you can count, and this one has been counted. What it does
+      next is growth_factor's business, not this node's.
     provenance: {kind: assumption, source: "stated estate size (ch02)"}
     range: [50, 3000]
 
@@ -141,6 +144,9 @@ nodes:
     unit: series/host
     value: 60
     label: metric names per host
+    note: >-
+      No band: scrape one host and list them. The uncertainty in this chain is what the labels
+      multiply that list by, and label_cardinality carries it.
     provenance: {kind: assumption, source: "distinct metric names exposed per host, before labels"}
     range: [10, 400]
 
@@ -332,6 +338,10 @@ nodes:
     decided: world
     unit: MB/s/core
     value: 6
+    note: >-
+      No band, and giving a quote one would be inventing a range nobody quoted. A vendor states a
+      single number; the spread belongs to the measurement, and collector_throughput_measured
+      below carries it with a standard error.
     provenance:
       kind: vendor_claim
       source: "throughput per core as documented by the collector. Unverified here, and marked as
@@ -476,6 +486,10 @@ nodes:
     decided: world
     unit: series/second/node
     value: 90000
+    note: >-
+      No band, for the same reason as the collector's quoted throughput: a quote is one number,
+      and widening it here would put a range in the vendor's mouth. Nobody has measured this one,
+      so nothing in this model disputes it yet.
     provenance: {kind: vendor_claim, source: "series scanned per second per query node, quoted"}
 
   query_capacity:

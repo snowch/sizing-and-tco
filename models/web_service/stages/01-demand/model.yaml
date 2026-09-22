@@ -29,6 +29,12 @@ nodes:
     unit: TB
     value: 15
     label: records held, day one
+    note: >-
+      This one keeps its single number. You can go and count how
+      much you hold today. Nobody can count next quarter's busy
+      hour. What is uncertain about the records is how fast they
+      grow, and annual_growth carries that for the rate and the
+      level alike.
     provenance:
       kind: assumption
       source: >-
