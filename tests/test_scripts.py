@@ -1000,13 +1000,30 @@ def test_a_chapter_is_three_widths_on_one_middle():
     )
     wide = "#main > :is(figure:has(> iframe), figure:has(> .runner), table)"
     code = "#main > :is(pre, .editable-block, .problem, figure:has(> pre))"
-    assert f"{wide} {{ max-width: min(100%, 84rem); }}" in css, (
-        "a model shows its inputs beside its graph only from 860px, and the runner and the "
-        "book's widest tables want the same room"
-    )
-    assert f"{code} {{ max-width: min(100%, 60rem); }}" in css, (
-        "the book's own lines stop at 100 columns, which its widest block draws at 942px"
-    )
+    # The tier and its floor, not the whole declaration. Each cap is in rem because what it sizes
+    # is drawn in pixels and does not grow with a reader's text -- and each is floored at the
+    # prose, because the prose does grow, and once it passed 60rem a problem's stub sat narrower
+    # than the paragraph introducing it. A tier is only ever an exception for being wider.
+    for selector, tier, why in (
+        (
+            wide,
+            "84rem",
+            "a model shows its inputs beside its graph only from 860px, and the "
+            "runner and the book's widest tables want the same room",
+        ),
+        (
+            code,
+            "60rem",
+            "the book's own lines stop at 100 columns, which its widest block draws at 942px",
+        ),
+    ):
+        found = re.search(re.escape(selector) + r"\s*\{\s*max-width: ([^;]+);", css)
+        assert found, f"nothing caps {selector}"
+        assert tier in found.group(1), why
+        assert "--prose" in found.group(1), (
+            f"{selector} is capped by {found.group(1)!r}, which cannot grow with the reader's "
+            "text -- so a paragraph can end up wider than the block it introduces"
+        )
     for rule in (wide, code):
         assert css.index(rule) > css.index("#main > * {"), (
             "the measure is the default and the wider caps are the exceptions, so they have to "

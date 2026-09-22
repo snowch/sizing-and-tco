@@ -1324,8 +1324,15 @@ main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;
 @media (min-width: 58rem) {
   #main { max-width: none; }
   #main > * { max-width: max(var(--measure), var(--prose)); margin-inline: auto; }
-  #main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: min(100%, 84rem); }
-  #main > :is(pre, .editable-block, .problem, figure:has(> pre)) { max-width: min(100%, 60rem); }
+  /* The wide tiers are floored at the prose, not set above it. They are in rem because what they
+     size is drawn in pixels -- a model's own layout, the book's hundred-column lines -- and that
+     does not grow when a reader's text does. The prose does, so at about 30px text it overtook
+     the code tier and a problem's stub sat narrower than the paragraph introducing it, indented
+     on both sides. A tier is only ever an exception for being *wider*. */
+  #main > :is(figure:has(> iframe), figure:has(> .runner), table) {
+    max-width: min(100%, max(84rem, var(--prose))); }
+  #main > :is(pre, .editable-block, .problem, figure:has(> pre)) {
+    max-width: min(100%, max(60rem, var(--prose))); }
   #main > figure > figcaption { margin-inline: auto; }
 }
 main :is(h1, h2, h3, h4) { font-family: var(--chrome); letter-spacing: -.012em;
