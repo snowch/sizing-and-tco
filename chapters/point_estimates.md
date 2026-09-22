@@ -12,26 +12,33 @@ What is a single number worth, and what can it not tell you, even when the arith
 
 You have been asked how many hosts to buy for a service that does not exist yet, and the order
 goes in this week. So you multiply: requests in the busy hour, processor time each one takes,
-what a host holds. The arithmetic is not the hard part. What comes out is one number, and
-nothing in it tells you whether it is a number to sign for.
+how many cores a host has.
 
-Two different things are missing from it. One is the spread you threw away at the first step —
-you wrote down the middle of what growth has done for three years, and from there the arithmetic
-treated that middle as though somebody had gone and measured it. [ch13](#monte-carlo) puts it
-back. The other is an error in the shape of the model: a chain of multiplications has no way to
-say that a queue has tipped over. It will report a fleet running at several times the load it
-could actually carry, in the same flat tone it reports everything else. No amount of measuring
-the inputs finds that one.
+Not one of those three is a single number. Traffic has grown at a different rate every year for
+the last three, and you have not chosen a host yet. So for each one you take the middle value,
+which is what almost anybody would do. The arithmetic is not the hard part. What comes out is
+one number, and nothing in it tells you whether it is a number to sign for.
+
+Two things are missing from that number.
+
+1. **The ranges those middles replaced.** Each middle went into the arithmetic as though
+   somebody had gone and measured it, and what came out carries no trace of the range it came
+   from. [ch13](#monte-carlo) is where you hand the model the whole of each range instead of its
+   middle, and get a range of answers back.
+2. **An error in the shape of the model.** Multiplying cannot notice that a queue has tipped
+   over, so the chain reports a fleet running at several times the load it can carry, in the
+   same flat tone it reports everything else. Measuring the inputs better never finds this one.
 
 ```{image} _figures/point-estimates-leaves-out.svg
 :alt: The single number, the answers the same arithmetic gave, and what neither can reach
 :width: 100%
 ```
 
-The top two rows are this book's own model. The mark is the single number; beneath it is every
-answer the same arithmetic gave once the inputs were allowed to move. The dashed frame is drawn
-off that axis deliberately, because the second kind of error is not a wider band on the same
-scale.
+That is both of them, checked against this book's own model. The mark on *the arithmetic once*
+is the single number; the pile under *the inputs varying* is every answer the same arithmetic
+gave when each input could move, which is the first. The empty frame on *neither can reach* is
+drawn off the axis on purpose: the second is not a wider band on the same scale, and drawing it
+as one would teach the opposite of the point.
 
 ## The material
 
