@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 import re
 
-from bench.reading import BUTTON, CODE_RATIO, KEY, PARENT, SIZES
+from bench.reading import BUTTON, CODE_RATIO, DEFAULT, KEY, PARENT, SIZES
 from bench.stamp import ROOT
 
 
@@ -69,12 +69,26 @@ def test_the_code_keeps_its_proportion_to_the_prose():
     assert "font: var(--reading, 18px)/1.62" in css
     # The fallback is the size the book has always been, so a browser that drops the custom
     # property renders exactly the old page rather than an unstyled one.
-    assert SIZES[0][1] == 18.0, "the first step is not what the book was already set in"
+    steps = {name: px for name, px, _ in SIZES}
+    assert steps[DEFAULT] == 18.0, "the default step is not what the book was already set in"
 
 
-def test_the_steps_are_ordered_and_the_first_is_an_absence():
-    assert [px for _, px, _ in SIZES] == sorted(px for _, px, _ in SIZES)
-    assert SIZES[0][0] == "default"
+def test_the_steps_run_one_way_and_the_default_is_an_absence():
+    """The cycle wraps, so it has to be monotonic or a reader cannot predict the next press.
+
+    It also has to reach *below* the default, which the first version did not: the list ran
+    upwards from 18px, so the smaller step a reader might want did not exist at all.
+    """
+    sizes = [px for _, px, _ in SIZES]
+    assert sizes == sorted(sizes), "the cycle is not monotonic, so a press is unpredictable"
+    names = [name for name, _, _ in SIZES]
+    assert DEFAULT in names
+    assert names.index(DEFAULT) > 0, "there is no step smaller than the default"
+    assert names.index(DEFAULT) < len(names) - 1, "there is no step larger than the default"
+    assert f'let text = "{DEFAULT}"' in PARENT, (
+        "the script starts somewhere other than the default, so a reader who has pressed "
+        "nothing is not on the size the book is set in"
+    )
     assert f'localStorage.removeItem("{KEY}")' in PARENT, (
         "`default` is stored by writing the word rather than by removing the key, so a reader "
         "who never pressed the button and one who cycled back round are told apart for nothing"

@@ -100,6 +100,16 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("hosts_recommended", "tco"),
         source_note="the finished model, which ch02 starts building from nothing",
     ),
+    # What a spread is, with a number in it. The page uses the word from its second paragraph
+    # and never defines it; a reader who has not met the idea has nothing to picture and the
+    # rest of the page rests on it. One input, because the point is what a spread *is* -- six of
+    # them is a reference table, and the widget below shows all six as shapes already.
+    "point-estimates-a-spread": Table(
+        render=tables.a_spread_in_words,
+        result="web_service-reference",
+        args=("annual_growth",),
+        source_note="the model's own declared band for that input, which problem 1.1 also uses",
+    ),
     # Drawn from the rule, not from a run: problem 1.1 asks the reader to compound the model's
     # own declared bands, so a figure of that result would be its answer, one screen above it.
     "point-estimates-compounding": Diagram(
