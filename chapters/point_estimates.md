@@ -78,7 +78,7 @@ again, because the errors multiply instead of taking turns. By six — which is 
 this chapter rests on — the answer has tripled, and no single input moved by more than a fifth.
 Nothing cancels, because nothing made these inputs disagree with each other.
 
-Problem 1.1 is that arithmetic, done on this book's web service model with nothing but the spreads
+Problem 1.2 is that arithmetic, done on this book's web service model with nothing but the spreads
 the model already declares. The compounded spread is not the widest input's, and it is not their
 average.
 
@@ -155,7 +155,7 @@ The red line is where the single-number answer falls.
 
 The frame above picks the values and does the arithmetic for you, one press at a time.
 [ch13](#monte-carlo) is where you build the thing that does it in bulk, and turn a pile of answers
-into a figure you can put in a document. Problem 1.1 needs neither. It does the same job on paper:
+into a figure you can put in a document. Problem 1.2 needs neither. It does the same job on paper:
 every input at the bottom of its range together, then every input at the top together. It asks you
 to set what comes out beside the smallest and largest answer in the table. Those are two honest
 ways of admitting the same doubt, and they do not agree with each other.
@@ -217,7 +217,7 @@ room below it does not build.
 You do not have to take the distinction on trust, and you should not. It decides which half of
 this book applies to what you are holding. The web service model starts as a cost model and
 becomes a sizing model partway through being built. One node makes the change, and it can be
-named. Problem 1.2 is finding it, on the same model at six stages of construction.
+named. Problem 1.3 is finding it, on the same model at six stages of construction.
 
 You find the stage rather than being told it, which is why this page does not name the node.
 
@@ -259,31 +259,37 @@ instead of hiding the doubt inside a single figure.
 
 ## Problems
 
-Three, in `tests/point_estimates/`. The first two have tests; run them with
-`python3 -m pytest tests/point_estimates/ -m problem`. The third does not, and says why.
+Four, in `tests/point_estimates/`. The first three have tests; run them with
+`python3 -m pytest tests/point_estimates/ -m problem`. The fourth does not, and says why.
 
-**1.1 — The width of a product.** The test hands you the band the model declares for each of the
-six inputs above, so you do not need to go and read the file. Write each band as its top over
-its bottom. Then do the arithmetic the way you could on paper: every input at the bottom of its
-band together, then every input at the top together, and the hosts the model recommends worked
-through both times. The second count over the first is
-neither the widest band nor the average of them. Set it beside the smallest and largest answer in
+**1.1 — How wide is one input?** The test hands you the band the model declares for each of the
+six inputs above, so you do not need to go and read the file. Write each band as its top over its
+bottom. Six divisions, and none of them is alarming.
+
+```bash
+python3 -m pytest tests/point_estimates/test_problem_1_each_input.py -m problem
+```
+
+**1.2 — How wide are they together?** Now do the arithmetic the way you could on paper: every one
+of those six at the bottom of its band together, then every one at the top together, with the
+hosts the model recommends worked through both times. The second count over the first is neither
+the widest band from 1.1 nor the average of them. Set it beside the smallest and largest answer in
 the table above. The gap between the two is what [ch13](#monte-carlo) exists to close.
 
 ```bash
-python3 -m pytest tests/point_estimates/test_problem_1_compounding.py -m problem
+python3 -m pytest tests/point_estimates/test_problem_2_together.py -m problem
 ```
 
-**1.2 — Find where it changes kind.** The web service model appears at six stages of being built.
+**1.3 — Find where it changes kind.** The web service model appears at six stages of being built.
 Classify each stage as a cost model or a sizing model, and name the nodes that decide it. Then
 say, in one sentence and to yourself, why the chapter that adds those nodes could not have been
 written earlier.
 
 ```bash
-python3 -m pytest tests/point_estimates/test_problem_2_which_kind.py -m problem
+python3 -m pytest tests/point_estimates/test_problem_3_which_kind.py -m problem
 ```
 
-**1.3 — Your own system.** No test. There is no oracle for this, and pretending otherwise would be
+**1.4 — Your own system.** No test. There is no oracle for this, and pretending otherwise would be
 worse than leaving it ungraded.
 
 Take a system you run. Write down the three to six numbers that decide how big it has

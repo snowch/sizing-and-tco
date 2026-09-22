@@ -66,7 +66,7 @@ expresses this one correctly. The trouble is what that arithmetic does to the un
 
 That is three counts multiplied together, and nobody would describe any of them as alarming. The
 product is far wider than any of the three. Uncertainty compounds when quantities multiply, and
-[ch01](#point-estimates)'s problem 1.1 measured that compounding. The same spread shows up in
+[ch01](#point-estimates)'s problem 1.2 measured that compounding. The same spread shows up in
 every tornado the series count appears in:
 
 ```{include} _generated/regime-changes-tornado.md
