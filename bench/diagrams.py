@@ -837,9 +837,15 @@ def compounding(_result: str | None = None) -> str:
 def once_against_many(result: str, node_name: str) -> str:
     """The same arithmetic run once, and run again with every input free to move.
 
-    The argument is where the single number falls in the pile. It is not the middle of it, and a
-    reader who has only ever seen the single number has no way to know which end of the pile they
-    are standing at.
+    The argument is where the single number falls in the pile: more than half the answers are
+    above it, and a reader who has only ever seen the single number cannot tell that.
+
+    The median is checked rather than drawn. Marking it invites a reader to compare the mark
+    against the tallest bars, which are to its left, and resolving that disagreement needs the
+    difference between the commonest answer and the middle one -- ch13's material at the
+    earliest, on a page written for somebody who has met no statistics at all. Its only job here
+    is to make the footer exact: the median is above the point estimate, so strictly more than
+    half the answers are, and no bin has to be interpolated inside to say so.
 
     This drawing used to carry a third row: an empty dashed frame for the error a chain of
     multiplications cannot represent, deliberately off the axis because it is not a wider band on
@@ -858,7 +864,7 @@ def once_against_many(result: str, node_name: str) -> str:
     counts, edges = histogram["counts"], histogram["edges"]
     unit = node.get("unit", "")
     drawn = sum(counts) or 1
-    middle = summary["p50"]
+    assert summary["p50"] > point, "the claim in this drawing's footer no longer holds"
 
     width, height = 560.0, 236.0
     left, right = 132.0, width - 26
@@ -915,14 +921,6 @@ def once_against_many(result: str, node_name: str) -> str:
         f'y2="{many}" stroke="#b3413a" stroke-width="2" stroke-dasharray="5 3"/>'
     )
     parts.append(
-        f'<line x1="{at(middle):.1f}" y1="{many - tall - 8:.0f}" x2="{at(middle):.1f}" '
-        f'y2="{many}" stroke="#37474f" stroke-width="2"/>'
-    )
-    parts.append(
-        f'<text x="{at(middle) + 7:.1f}" y="{many - tall - 12:.0f}" font-size="11" '
-        f'font-weight="600" fill="#37474f">middle answer, {middle:,.0f}</text>'
-    )
-    parts.append(
         f'<text x="{left}" y="{many + 16:.0f}" font-size="10.5" fill="#546e7a">'
         f"{summary['min']:,.0f} {_esc(unit)}s</text>"
     )
@@ -932,8 +930,7 @@ def once_against_many(result: str, node_name: str) -> str:
     )
     parts.append(
         f'<text x="20" y="{height - 12:.0f}" font-size="10.5" fill="#546e7a">'
-        f"By itself, the single number says nothing about which side of the middle it falls "
-        f"on.</text>"
+        f"More than half the answers came out above the single number.</text>"
     )
     return _svg(width, height, "".join(parts), "The same arithmetic, run once and run many times")
 

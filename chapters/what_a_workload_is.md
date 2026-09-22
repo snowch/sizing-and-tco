@@ -30,7 +30,8 @@ something only if they cover the same period.
 right now. You *can* run out of one, and that is usually what a ceiling is about.
 
 **Everything else is a ratio, a pure number or a price.** A replication factor, a compression ratio,
-a cost per terabyte. These have no time in them at all. They are the constants of a sizing chain.
+a cost per terabyte. These have no time in them at all. They are the constants of a **sizing
+chain**: the string of multiplications that runs from a workload to a number of machines.
 
 The unit tells you which is which. That is why the toolkit can check it, and why every node in
 this book declares one. A flow has time in its denominator. A stock does not. A duration has time
