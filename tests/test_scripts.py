@@ -459,13 +459,27 @@ def test_the_prose_column_is_measured_in_characters():
     prose = re.search(r"--prose:\s*([\d.]+)(ch|em)\s*;", css)
     assert prose, "--prose is not declared in a unit relative to the text it measures"
 
-    for rule in (r"p, li \{ max-width: ([^;]+);", r"#main > :is\(p[^)]*\) \{ max-width: ([^;]+);"):
-        found = re.search(rule, css)
-        assert found, f"no rule caps prose: {rule}"
-        assert "--prose" in found.group(1), (
-            f"prose is capped by {found.group(1)!r}, which does not mention --prose. A cap that "
-            "ignores the text size squeezes the line down as the text grows."
-        )
+    # Registered as a <length>, or it is substituted as three characters and resolved against
+    # whichever element reads it -- so a heading measures it in the heading's font and comes out
+    # a different width from the text beneath it. That shipped, and indented every heading.
+    assert re.search(r'@property --prose \{[^}]*syntax:\s*"<length>"', css), (
+        "--prose is not registered as a <length>, so it resolves per element rather than once "
+        "in the prose font, and blocks in one chapter will not share a column"
+    )
+
+    # One cap for every block in the chapter, so they share a left edge. The wide tiers override
+    # it afterwards on their own selectors; nothing else may.
+    generic = re.search(r"#main > \* \{ max-width: ([^;]+);", css)
+    assert generic, "nothing caps the chapter's blocks"
+    assert "--prose" in generic.group(1), (
+        f"blocks are capped by {generic.group(1)!r}, which ignores --prose. A heading capped "
+        "apart from its paragraphs is centred in a narrower box and reads as indented."
+    )
+    text = re.search(r"p, li \{ max-width: ([^;]+);", css)
+    assert text and text.group(1) == generic.group(1), (
+        f"prose is capped by {text and text.group(1)!r} and the blocks around it by "
+        f"{generic.group(1)!r}. Two caps drift apart the moment one of them moves."
+    )
 
 
 def test_every_embedded_directory_gets_the_base_path():
@@ -835,7 +849,7 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     ):
         assert selector in css, selector
     # The measure moved off the column and onto each child, after the rule that caps the column.
-    assert css.index("#main > * { max-width: var(--measure); margin-inline: auto; }") > css.index(
+    assert css.index("#main > * { max-width:") > css.index(
         "main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;"
     ), "a media query adds no specificity, so the rule that lifts the cap has to come after it"
     # Both choices are read before the page paints, so a rail does not close again on every page.
@@ -977,8 +991,12 @@ def test_a_chapter_is_three_widths_on_one_middle():
     same middle and the page still reads as one column.
     """
     css = site().CSS
-    assert "#main > * { max-width: var(--measure); margin-inline: auto; }" in css, (
+    centred = re.search(r"#main > \* \{ max-width: (.+?); margin-inline: auto; \}", css)
+    assert centred, (
         "centring a chapter's children has to out-specify the children's own margin rules"
+    )
+    assert "--measure" in centred.group(1), (
+        f"the chapter's blocks are capped by {centred.group(1)!r}, which is not the measure"
     )
     wide = "#main > :is(figure:has(> iframe), figure:has(> .runner), table)"
     code = "#main > :is(pre, .editable-block, .problem, figure:has(> pre))"

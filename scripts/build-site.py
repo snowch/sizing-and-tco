@@ -1105,13 +1105,6 @@ CSS = """
   --accent: #35648f; --on-accent: #ffffff; --wash: rgba(53,100,143,.09);
   --warn: #c8791a; --stop: #b3413a; --go: #2e7d32;
   --measure: 36rem;
-  /* The same measure counted in characters rather than root-font units. The prose is sized in
-     px and the column in rem, so the two move apart the moment a reader's text renders at a
-     size the root font does not know about -- a minimum-font-size floor, an accessibility text
-     size, a user stylesheet. At 18px Charter, 36rem and 64ch are both 576px, so today this
-     changes nothing; when the text is larger the column grows with it instead of squeezing the
-     line down to forty characters. */
-  --prose: 64ch;
   /* The two rails, which grow with the window rather than stepping at one width. A chapter
      list that wraps 16 of its 39 entries is hard to scan, and the room to fix it appears
      gradually: the middle column stops needing every pixel once the window passes 1440, which
@@ -1143,9 +1136,26 @@ CSS = """
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+/* The measure counted in characters rather than root-font units. The prose is sized in px and
+   the column was in rem, so the two moved apart the moment a reader's text rendered at a size
+   the root font did not know about -- a minimum-font-size floor, an accessibility text size, a
+   user stylesheet. The column stayed at 576px while the line fell from 73 characters to 40.
+
+   Registering it as a <length> is what makes it usable by more than the paragraphs. An ordinary
+   custom property holding `64ch` is substituted as those three characters and resolved against
+   whichever element uses it, so a heading would read it in the heading's own font and come out
+   a different width from the text beneath it. Registered, it is computed once here -- where the
+   font is the prose font -- and inherits as pixels, so every block in the chapter shares one
+   column and one left edge. Shipping it unregistered is what indented every heading on the page.
+
+   `initial-value` has to be computationally independent, so it is the 576px that 36rem and 64ch
+   both come to at 18px Charter: a browser without @property keeps exactly the layout the book
+   had before any of this. */
+@property --prose { syntax: "<length>"; inherits: true; initial-value: 576px; }
+
 body { margin: 0; background: var(--bg); color: var(--ink);
        font: 18px/1.62 var(--text); text-rendering: optimizeLegibility;
-       -webkit-font-smoothing: antialiased; }
+       -webkit-font-smoothing: antialiased; --prose: 64ch; }
 a { color: var(--accent); text-decoration-thickness: from-font; text-underline-offset: 2px; }
 /* A cross-reference is a link the reader steps over 259 times. Underlining every one of them
    would turn the prose into a rash, so it keeps the italic it has on paper and takes a rule
@@ -1313,8 +1323,7 @@ main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;
    flow; what still does not fit says so and takes the window on a button. */
 @media (min-width: 58rem) {
   #main { max-width: none; }
-  #main > * { max-width: var(--measure); margin-inline: auto; }
-  #main > :is(p, ul, ol, dl, blockquote) { max-width: max(var(--measure), var(--prose)); }
+  #main > * { max-width: max(var(--measure), var(--prose)); margin-inline: auto; }
   #main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: min(100%, 84rem); }
   #main > :is(pre, .editable-block, .problem, figure:has(> pre)) { max-width: min(100%, 60rem); }
   #main > figure > figcaption { margin-inline: auto; }
