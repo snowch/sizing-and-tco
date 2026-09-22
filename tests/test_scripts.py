@@ -849,7 +849,7 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     ):
         assert selector in css, selector
     # The measure moved off the column and onto each child, after the rule that caps the column.
-    assert css.index("#main > * { max-width: var(--measure); margin-inline: auto; }") > css.index(
+    assert css.index("#main > * { max-width:") > css.index(
         "main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;"
     ), "a media query adds no specificity, so the rule that lifts the cap has to come after it"
     # Both choices are read before the page paints, so a rail does not close again on every page.
@@ -991,8 +991,12 @@ def test_a_chapter_is_three_widths_on_one_middle():
     same middle and the page still reads as one column.
     """
     css = site().CSS
-    assert "#main > * { max-width: var(--measure); margin-inline: auto; }" in css, (
+    centred = re.search(r"#main > \* \{ max-width: (.+?); margin-inline: auto; \}", css)
+    assert centred, (
         "centring a chapter's children has to out-specify the children's own margin rules"
+    )
+    assert "--measure" in centred.group(1), (
+        f"the chapter's blocks are capped by {centred.group(1)!r}, which is not the measure"
     )
     wide = "#main > :is(figure:has(> iframe), figure:has(> .runner), table)"
     code = "#main > :is(pre, .editable-block, .problem, figure:has(> pre))"
