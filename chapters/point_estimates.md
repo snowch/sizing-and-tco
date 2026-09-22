@@ -42,22 +42,27 @@ Pick the middle of each, multiply along the chain, and you get one number. The a
 right. But you never had six numbers. You had six ranges, and you threw the ranges away at the
 first step.
 
-Multiplying uncertain numbers does not average their doubt out. It compounds it. Each input can be
-wrong in the same direction as the others, so the answer stretches further than any single input can
-push it. Problem 1.1 is that arithmetic, done on this book's web service model with nothing but the
-spreads the model already declares. The compounded spread is not the widest input's, and it is not
-their average.
+Multiplying uncertain numbers does not average their doubt out. It compounds it.
+
+Take two of them. Say each could be a fifth higher than the figure you wrote down. If both come in
+a fifth high together, the answer is not a fifth high. It is nearly half as much again, because
+the two errors multiply instead of taking turns. Add a third and a fourth and the gap widens
+again. Nothing cancels, because nothing made these inputs disagree with each other.
+
+Problem 1.1 is that arithmetic, done on this book's web service model with nothing but the spreads
+the model already declares. The compounded spread is not the widest input's, and it is not their
+average.
 
 So the honest answer to *how big* is not a number. It is a range, and some values in it are far
 more likely than others. You get the range by doing the arithmetic over and over. Each time you
 pick a different value for every input, from the spread that input honestly has, and you keep
 every answer that comes out.
 
-The service in question is the one this book carries the whole way through. It answers requests,
-it keeps the records those requests leave behind, and it runs on a fleet of hosts somebody has to
-buy and then pay to run for five years. You need nothing else about it yet:
-[ch02](#what-a-workload-is) starts building its file from nothing, a few nodes at a time, and
-[Appendix E](#appendix-e-web-service-model) shows the finished thing with every formula in it.
+The service in question is the one this book carries the whole way through. It answers requests
+and keeps the records they leave behind. It runs on a fleet of hosts somebody has to buy, and then
+pay to run for five years. You need nothing else about it yet. [ch02](#what-a-workload-is) builds
+its file from nothing, a few nodes at a time.
+[Appendix E](#appendix-e-web-service-model) shows the finished thing, every formula in it.
 
 Here is its answer, the single number first, then what the repeated answers did.
 
@@ -79,8 +84,8 @@ and why.
 ```
 
 Each bar counts how many of those answers landed on a given five-year total. It is the table's
-second row, drawn. Most of the answers sit in the middle, a thin tail runs far to the right, and
-the red line is where the single-number answer falls.
+second row, drawn. Most of the answers sit in the middle, and a thin tail runs far to the right.
+The red line is where the single-number answer falls.
 
 Doing that arithmetic over and over needs a program to pick each input's value, and
 [ch13](#monte-carlo) builds one. You do not need one to feel the force of it. Problem 1.1 does the
@@ -96,8 +101,10 @@ Finding that out, rather than guessing it, is [ch19](#which-input-is-the-answer)
 the most useful thing you can do with a model you already have.
 
 The second row moves for different reasons. It is the cost of the fleet somebody decided to buy,
-and the growth rate never reaches it. Keeping those two kinds of doubt apart is most of Parts III
-and V.
+and the growth rate never reaches it. So you can be badly wrong about how many hosts the service
+will need and exactly right about what the fleet you bought will cost. One is a question about the
+world. The other is arithmetic on a decision already taken. Keeping those two kinds of doubt apart
+is most of Parts III and V.
 
 Letting inputs vary and watching what happens is honest work, and most of this book is about
 doing it well. But it can only report the doubt somebody wrote down. There is a second kind of
@@ -134,16 +141,16 @@ measured constant or a declared limit in it **is** a sizing model. One with neit
 model. The two are held to different rules, and a sizing model that names a limit and keeps no
 room below it does not build.
 
-### Where the kind changes
+### Where a cost model becomes a sizing model
 
 You do not have to take the distinction on trust, and you should not. It decides which half of
 this book applies to what you are holding. The web service model starts as a cost model and
-becomes a sizing model partway through being built, and the node that changes it can be named.
-Problem 1.2 is finding it, on the same model at six stages of construction.
+becomes a sizing model partway through being built. One node makes the change, and it can be
+named. Problem 1.2 is finding it, on the same model at six stages of construction.
 
 Nobody declares the change. It happens when you add a measured constant or a ceiling to the file,
-and the toolkit works the rest out. That is why the stage is worth finding rather than being told,
-and why this page does not tell you.
+and the toolkit works the rest out. So you find the stage rather than being told it, which is why
+this page does not name it.
 
 :::{note} Key takeaways
 - **A point estimate is silent, not wrong.** One value per input and the arithmetic done once gives
@@ -216,10 +223,10 @@ where it came from: something you measured, something a supplier told you, or so
 decided.
 
 Then answer two questions. Which of them, if it turned out to be wrong by half, would change what
-you would buy? And is there a constant in your list that somebody measured on a particular version
-of a particular piece of software, or a limit your system runs into before it runs out of
-capacity? If there is, you are holding a sizing model, and the chain of multiplications you have
-been using is quietly lying to you.
+you would buy? And is there a constant in your list that somebody measured, on one version of one
+piece of software? Or a limit your system meets before it runs out of capacity? If there is, you
+are holding a sizing model, and the chain of multiplications you have been using is quietly lying
+to you.
 
 A good answer is short, names its sources, and is uncomfortable in at least one place. If nothing
 in it is uncomfortable, you have probably written down the numbers you can measure easily rather
@@ -230,7 +237,7 @@ about a system you run, and this is the first of them. They work best on the sam
 
 [ch02](#what-a-workload-is) starts the model this chapter has been quoting from. It writes the
 first nodes. By the end you have a file that computes a busy hour and a data volume at the
-horizon, and refuses to get there by multiplying a rate by a plain number.
+horizon. It refuses to get there by multiplying a rate by a plain number.
 
 [ch03](#where-the-numbers-come-from) is the question this chapter kept deferring: once you have
 written a number down, what are you claiming about it?
