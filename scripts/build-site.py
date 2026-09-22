@@ -43,6 +43,7 @@ from bench.outline import APPENDICES, BY_SLUG, CHAPTERS, PART_PAGES  # noqa: E40
 from bench.stages import stages  # noqa: E402
 from bench.stamp import shown  # noqa: E402
 from bench.tables import GLOSSARY  # noqa: E402
+from bench.theme import BUTTON, PARENT, both_ways  # noqa: E402
 from sizing.dsl import load_model  # noqa: E402
 from sizing.playground.toolkit import (  # noqa: E402
     BOOT,
@@ -1055,6 +1056,7 @@ PAGE = """<!doctype html>
 {headlinks}
 <style>{css}</style>
 {boot}
+{theme}
 {menu}
 {offline}
 </head>
@@ -1065,6 +1067,7 @@ PAGE = """<!doctype html>
   <button id="find-open" class="find" type="button" hidden>Search <kbd>/</kbd></button>
   <button id="offline" class="offline" type="button" hidden data-state=""
           title="Fetch the Python runtime now, so the models run with no network"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 1.5v8.5m0 0L4.8 6.8M8 10l3.2-3.2M2 11.5v2.5h12v-2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Keep offline</span></button>
+  {theme_button}
   <button id="outline" type="button" aria-label="On this page" aria-controls="toc" hidden
           title="Show or hide this page’s outline"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="1.5" y="2.7" width="13" height="10.6" rx="1.3" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.7 2.7v10.6" stroke="currentColor" stroke-width="1.4"/></svg></button>
   <button id="menu" type="button" aria-label="Chapters" aria-controls="nav"
@@ -1215,6 +1218,16 @@ a.xref:hover { text-decoration: underline; }
 .offline[data-state="kept"] { color: var(--go); border-color: var(--go); }
 .offline[data-state="failed"] { color: var(--stop); }
 @media (max-width: 40rem) { .offline span { display: none; } .offline { padding: .45rem .5rem; } }
+/* The light/dark control, beside it. */
+.theme { display: flex; align-items: center; gap: .45rem; font: 13.5px/1 var(--chrome);
+         color: var(--muted); background: var(--panel); border: 1px solid var(--edge);
+         border-radius: 6px; padding: .45rem .7rem; cursor: pointer; }
+.theme:hover { border-color: var(--accent); color: var(--accent); }
+.theme svg { display: none; }
+.theme[data-state="system"] .t-system,
+.theme[data-state="light"] .t-light,
+.theme[data-state="dark"] .t-dark { display: block; }
+@media (max-width: 46rem) { .theme span { display: none; } .theme { padding: .45rem .5rem; } }
 dialog#find { width: min(46rem, calc(100vw - 2rem)); max-height: min(34rem, calc(100vh - 5rem));
               padding: 0; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden;
               background: var(--bg); color: var(--ink); margin-top: 8vh;
@@ -1572,7 +1585,10 @@ def dark_figures() -> str:
     return f"@media (prefers-color-scheme: dark) {{\n  figure img {{ background: var(--panel); }}\n{rules}\n}}\n"
 
 
-CSS += dark_figures()
+# Every dark block in the stylesheet -- the palette above and the figure swaps just added --
+# rewritten so a reader can overrule their machine. One pass at the end rather than a rule per
+# block, so a dark block added later is covered without anybody remembering to cover it.
+CSS = both_ways(CSS + dark_figures())
 
 
 def nav_html(here: str) -> str:
@@ -1671,6 +1687,8 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         body=body,
         search=SEARCH,
         menu=MENU + EXPAND,
+        theme=PARENT,
+        theme_button=BUTTON,
         offline=OFFLINE_SCRIPT,
         boot=BOOT_SCRIPT if blocks or problems else "",
         headlinks=headlinks,

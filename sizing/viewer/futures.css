@@ -1,6 +1,7 @@
 /* One future at a time. Plain CSS, no framework, no build step, and the same palette as the
  * model viewer beside it — so a chapter that embeds both does not look like two books. */
 :root {
+  color-scheme: light dark;
   --ink: #1f2933; --muted: #52606d; --line: #cbd2d9; --bg: #ffffff; --panel: #f5f7fa;
   --accent: #1a73e8; --accent-deep: #1660c4; --on-accent: #ffffff;
   --hist: #9fc0dd; --hist-edge: #4a7ba7;

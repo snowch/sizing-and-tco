@@ -96,12 +96,15 @@ def test_every_script_is_executable_and_parses():
         compile(source, str(script), "exec")
 
 
-#: The constants in scripts/build-site.py that hold JavaScript rather than Python.
-JS_TEMPLATES = ("EXPAND", "MENU", "OFFLINE", "PROBLEMS", "RUNNER", "SEARCH")
+#: The constants that hold JavaScript rather than Python, and the file each one is in.
+JS_TEMPLATES = [
+    ("scripts/build-site.py", name)
+    for name in ("EXPAND", "MENU", "OFFLINE", "PROBLEMS", "RUNNER", "SEARCH")
+] + [("bench/theme.py", name) for name in ("_PARENT", "FRAME")]
 
 
-@pytest.mark.parametrize("name", JS_TEMPLATES)
-def test_a_javascript_template_is_a_raw_string(name):
+@pytest.mark.parametrize(("where", "name"), JS_TEMPLATES)
+def test_a_javascript_template_is_a_raw_string(where, name):
     """Python must not eat the escapes in a script it is only carrying.
 
     This has bitten twice. A ``\\n`` inside a JavaScript regex became a real newline, and a
@@ -109,10 +112,10 @@ def test_a_javascript_template_is_a_raw_string(name):
     silently, because nothing on the Python side was wrong. The fix both times was a raw
     string, and this is what stops the third time.
     """
-    source = (ROOT / "scripts" / "build-site.py").read_text()
+    source = (ROOT / where).read_text()
     raw = f"{name} = r" + '"""'
     assert raw in source, (
-        f"{name} in scripts/build-site.py carries JavaScript, so it must be a raw string, "
+        f"{name} in {where} carries JavaScript, so it must be a raw string, "
         f"or Python will interpret its backslashes as its own."
     )
 

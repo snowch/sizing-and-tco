@@ -1,6 +1,7 @@
 /* The interactive model page. Plain CSS, no framework, no build step: this ships beside a book
  * and has to still work in five years. */
 :root {
+  color-scheme: light dark;
   --ink: #1f2933; --muted: #52606d; --line: #cbd2d9; --bg: #ffffff; --panel: #f5f7fa;
   --input: #dbe7f3; --input-edge: #4a7ba7;
   --derived: #eceff1; --derived-edge: #90a4ae;

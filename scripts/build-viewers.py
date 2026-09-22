@@ -26,6 +26,7 @@ sys.path.insert(0, str(ROOT))
 
 from bench.stamp import RESULTS_DIR, load_result, shown  # noqa: E402
 from bench.tables import REPOSITORY  # noqa: E402
+from bench.theme import FRAME, both_ways  # noqa: E402
 from sizing.dsl import load_model  # noqa: E402
 from sizing.playground.toolkit import BOOT, PYODIDE, results_for, sources, wheels  # noqa: E402
 
@@ -39,6 +40,7 @@ PAGE = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title} — {scenario}</title>
 <style>{css}</style>
+{theme}
 </head>
 <body>
 <header>
@@ -136,7 +138,8 @@ def build(result_name: str, out_dir: Path) -> Path:
         # checkable and two hundred kilobytes of JSON is not. The file is still the evidence, so
         # it is one click from here for anybody who wants it.
         stamp=f"{REPOSITORY}/bench/results/{result_name}.json",
-        css=(VIEWER / "style.css").read_text(),
+        css=both_ways((VIEWER / "style.css").read_text()),
+        theme=FRAME,
         payload=json.dumps(payload, separators=(",", ":")),
         evaluate_js=evaluate_js,
         app_js=app_js,
