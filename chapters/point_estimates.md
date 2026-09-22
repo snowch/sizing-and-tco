@@ -262,12 +262,8 @@ instead of hiding the doubt inside a single figure.
 Three, in `tests/point_estimates/`. The first two have tests; run them with
 `python3 -m pytest tests/point_estimates/ -m problem`. The third does not, and says why.
 
-**1.1 — The width of a product.** The test hands you the band the web service model declares for
-each uncertain input, so you do not need to go and read the file. There are more of them than the
-six the panel above moves: the file gives bands to the cost side as well, and several of those
-cannot change a host count at all. Hold them anyway — an input that cannot reach the answer does
-not move it. Some inputs are written as one number and have no band, so they are not in the
-exercise; whether they deserve to be fixed is [ch03](#where-the-numbers-come-from)'s question. Write each band as its top over
+**1.1 — The width of a product.** The test hands you the band the model declares for each of the
+six inputs above, so you do not need to go and read the file. Write each band as its top over
 its bottom. Then do the arithmetic the way you could on paper: every input at the bottom of its
 band together, then every input at the top together, and the hosts the model recommends worked
 through both times. The second count over the first is

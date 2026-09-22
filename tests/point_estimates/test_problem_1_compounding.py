@@ -26,21 +26,35 @@ def model():
     return load_model(MODEL)
 
 
+def total_with(model, held: dict[str, float]) -> float:
+    """The hosts the model recommends with these inputs held at these values."""
+    return point(model, Scenario("held", "held", held))[TOTAL]
+
+
 def ends(model) -> dict[str, tuple[float, float]]:
-    """The bottom and top of each input's band, however the file writes it."""
+    """The bottom and top of each band that can move the host count, however the file writes it.
+
+    The file bands eighteen inputs. Twelve of them are on the cost side and cannot reach a host
+    count at all, so holding them at their extremes does nothing: the ratio this problem asks for
+    is the same number to the last digit with them and without them. Handing a reader eighteen
+    entries after a chapter that discussed six, twelve of which are inert, cost the chapter a
+    paragraph explaining that they were harmless -- which is a problem apologising for its own
+    scope.
+
+    Which ones move it is decided by moving them, rather than by walking the graph. That is the
+    definition the problem cares about, it needs nothing but the model, and it stays true if the
+    model's wiring changes.
+    """
     out = {}
     for name, node in model.nodes.items():
         for parameters in (getattr(node, "distribution", None) or {}).values():
             if "p10" in parameters:
-                out[name] = (parameters["p10"], parameters["p90"])
+                band = (parameters["p10"], parameters["p90"])
             else:
-                out[name] = (parameters["minimum"], parameters["maximum"])
+                band = (parameters["minimum"], parameters["maximum"])
+            if total_with(model, {name: band[0]}) != total_with(model, {name: band[1]}):
+                out[name] = band
     return out
-
-
-def total_with(model, held: dict[str, float]) -> float:
-    """The hosts the model recommends with these inputs held at these values."""
-    return point(model, Scenario("held", "held", held))[TOTAL]
 
 
 def on_paper(model) -> float:
@@ -96,6 +110,38 @@ def test_the_ends_together_are_the_model_worked_through_twice(model, bands, coun
 def test_the_model_has_several_uncertain_inputs(model):
     """Scaffolding: a band on one input would make the problem say nothing."""
     assert len(ends(model)) >= 3, "too few inputs with a band for the point to hold"
+
+
+def test_the_stub_shows_the_names_it_actually_hands_over(model):
+    """Scaffolding: the example in the stub is of this model, not of one it used to be.
+
+    The stub shows the reader what `bands` looks like, because a type is not a picture and a
+    reader at ch01 has never opened the model file. An example naming inputs the model no longer
+    bands would be worse than none.
+    """
+    import inspect
+
+    shown = [
+        line.split("'")[1]
+        for line in inspect.getdoc(spread_of_each).splitlines()
+        if line.strip().startswith("'") and "': (" in line
+    ]
+    assert shown, "the stub no longer shows what bands looks like"
+    handed = ends(model)
+    missing = [name for name in shown if name not in handed]
+    assert not missing, f"the stub's example names {missing}, which the reader is not handed"
+
+
+def test_every_band_handed_over_can_move_the_answer(model):
+    """Scaffolding: nothing inert is handed to the reader.
+
+    An input that cannot move the host count is one the reader holds at both ends for no effect,
+    and then has to be told to ignore. The chapter should not have to apologise for the problem.
+    """
+    for name, (bottom, top) in ends(model).items():
+        assert total_with(model, {name: bottom}) != total_with(model, {name: top}), (
+            f"{name} is handed to the reader and cannot change the answer"
+        )
 
 
 def test_the_file_writes_a_band_both_ways(model):
