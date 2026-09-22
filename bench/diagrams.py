@@ -935,7 +935,7 @@ def what_one_number_leaves_out(result: str, node_name: str) -> str:
     )
     parts.append(
         f'<text x="20" y="{height - 12:.0f}" font-size="10.5" fill="#546e7a">'
-        f"The first two rows are one model. The third is not on their axis at all.</text>"
+        f"The top two share one axis. The third is not on it, and that is the point.</text>"
     )
     return _svg(width, height, "".join(parts), "What the one number is silent about")
 
