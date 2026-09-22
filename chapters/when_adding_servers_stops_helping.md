@@ -26,7 +26,9 @@ cost grows with the *count* of machines, and the curve flattens. This is the fam
 argument, and the ceiling it implies.
 
 **Crosstalk.** Machines have to agree with each other. Every new one has to be told about all the
-others, so the cost grows with the number of *pairs*, not the number of machines.
+others, so the cost grows with the number of *pairs*, not the number of machines. Ten machines
+make forty-five pairs. Twenty make a hundred and ninety. Doubling the fleet did not double the
+agreeing; it roughly quadrupled it.
 
 Crosstalk does something contention never does. Contention flattens the curve. Crosstalk **turns
 it over**. Past some count, the next machine costs more in agreement than it brings in work, and

@@ -69,8 +69,10 @@ assumed. Replication and the margin are decisions, and a decision is certain. Th
 assumption with a shape, because nobody has counted the indexes. And a measurement over somebody's
 corpus carries a standard error, which none of the others do.
 
-A sizing that treats all four as constants is optimistic in the one place that helps. That place
-is the one whose uncertainty was measured.
+A sizing that treats all four as constants is optimistic, and it is optimistic about compression:
+the one term of the four that reduces what you buy. Compression is also the only one anybody has
+measured, so it is the only one that arrives with an uncertainty attached. The term you could
+have put a range on is the term a careless sizing quietly fixes.
 
 ### Two kinds of terabyte, and the ten per cent
 
@@ -90,8 +92,8 @@ Three rows, and each needs a word.
 
 - *Raw data* is what the disks must hold once every copy, every index and the compression are
   counted.
-- *Hosts for storage* is how many hosts' disks that takes. It is this chain's answer, one of three
-  the model will have by [ch10](#bandwidth-and-the-binding-constraint).
+- *Hosts for storage* is how many hosts' disks that takes. It is this chain's answer, and the
+  model will end up with three such answers and have to choose between them.
 - *Disk fill at horizon* is how full the disks of the fleet somebody bought are at the end
   of the period, as a fraction of what they can hold. One is full. A range reaching past one
   says that in some futures the records do not fit, because the arithmetic carries on past the

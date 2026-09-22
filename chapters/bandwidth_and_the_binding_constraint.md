@@ -124,8 +124,10 @@ eviction rate, the network between the hosts, a licence tier. Each is another ch
 answer to be set by something nobody was watching.
 
 The chance that *some* constraint binds unexpectedly rises with the number of chains, even while
-the chance of any particular one doing so stays small. A model with six chains, each binding a
-fraction of the time, spends most of its life with at least one of them unexpectedly in charge.
+the chance of any particular one doing so stays small. Say six chains, each of which surprises you
+one time in ten. The chance that none of them does is nine-tenths multiplied by itself six times,
+which is a little over a half. So a model with six chains spends about half its life with
+something nobody was watching in charge, and every one of the six looked safe on its own.
 
 The observability model in [Appendix F](#appendix-f-observability-model) has three parallel chains
 and three separate ceilings for this reason. There is no single number that summarises

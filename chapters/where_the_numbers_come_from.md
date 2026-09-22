@@ -74,9 +74,12 @@ The graph as ch03 leaves it. The vendor's claim is a node like any other, and sa
 The same file, with the vendor's claim in it. Change the `provenance` of a node and run it again.
 ```
 
-Still a cost model. A vendor's claim is a claim about a number. This book's distinction is not
-about who said a number. It is about whether the arithmetic around it stops applying somewhere,
-and [ch06](#queueing-and-the-knee) is where that changes.
+Still a cost model, and a vendor's claim does not change that. A claim is about a number: how
+much anybody should trust it. The distinction this book is built on is about the *shape* of the
+arithmetic: whether the chain of multiplications stops applying somewhere. So a model can be
+built entirely out of figures a salesperson supplied and still be a cost model, and a model built
+entirely out of your own measurements can be a sizing one. What flips it is a limit the system
+runs into, and [ch06](#queueing-and-the-knee) adds the first.
 
 ### Three claims, counted
 
@@ -126,9 +129,7 @@ The first two are cheap, and the book is full of them. The third is refused on a
 is not the declared one, because a throughput measured on whatever machine was free is
 indistinguishable from a real one once it is a number in a table.
 
-The fourth cannot be checked by anybody at all.
-
-### The target nobody can check
+### The target that cannot be checked, only disclosed
 
 An observation of a running system cannot be reproduced by anybody, including you, next Tuesday.
 There is no corpus to re-run and no machine to re-run it on. The system has moved on.

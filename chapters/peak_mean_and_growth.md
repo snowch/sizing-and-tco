@@ -11,8 +11,8 @@ short_title: "ch04 Peak, mean and growth"
 Which number in a demand curve sizes you, and what is a five-year growth rate a claim about?
 
 [ch02](#what-a-workload-is) established that a workload is a set of quantities. Each of them
-varies over time, and somebody has collapsed each one into a single number. This chapter is about
-which collapse is the right one.
+varies over time, and that chapter collapsed every one into a single number without saying which
+moment it had picked. This chapter is about which collapse is the right one.
 
 ## The material
 
@@ -23,9 +23,9 @@ in November. Sizing for the average means sizing for a level that demand passes 
 day.
 
 The number that sizes you is the busy hour. Or the busy minute, or the busy Tuesday, depending on
-how long your system takes to fail and how long anybody will wait for it to recover. Which
-of those you should use depends on your traffic and your tolerance, and somebody has to decide
-it.
+how long your system takes to fail and how long your users will wait for it to recover. Which of
+those to use is yours to decide, from your traffic and your tolerance, and the model cannot make
+the choice for you.
 
 The arithmetic is trivial: the busiest hour's share of the day, times the day's total. Problem
 4.1 is that arithmetic. The peak-to-mean ratio behind it is not trivial. It is a measured
@@ -110,9 +110,17 @@ things you could compute:
 - take the **average growth rate**, and compound it; or
 - compound **every** growth rate, and average the results.
 
-They are not the same number. The second is always larger, for any spread at all, because
-compounding curves upwards. The gap widens with the spread of the growth rates and with the
-horizon, so it is largest when somebody reaches for a five-year plan.
+They are not the same number, and the second is always larger, for any spread at all. Take the
+extreme case to see why. Suppose growth might double the traffic every year or might halve it,
+and you think the two equally likely. Compound the average of those two — no growth at all — and
+you get the traffic you started with. Compound each and average the results: over five years
+doubling gives thirty-two times, halving gives a thirty-second, and the average of those two is
+over sixteen times what you started with.
+
+Compounding curves upwards, so the high rates run away faster than the low ones fall. Averaging
+first flattens the curve and throws that away. The gap widens with the spread of the growth rates
+and with the horizon, which makes it largest over exactly the five-year plan a fleet gets bought
+against.
 
 Problem 4.2 is that comparison. Write down which way you think it goes before you run it.
 

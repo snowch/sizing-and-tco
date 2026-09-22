@@ -36,9 +36,16 @@ The unit tells you which is which. That is why the toolkit can check it, and why
 this book declares one. A flow has time in its denominator. A stock does not. A duration has time
 in its numerator, and is none of the three.
 
-The commonest error in sizing is turning a flow into a stock by multiplying it by a number instead
-of by an amount of time. A spreadsheet accepts it. The toolkit does not, and problem 2.2 is that
-error. [Appendix D](#appendix-d-units) shows how units combine and cancel, on a page of
+The commonest error in sizing turns a flow into a stock by multiplying it by a plain number
+instead of by an amount of time. Requests a second times five is still requests a second: five
+times as many of them, arriving just as fast, and not one of them stored anywhere. Requests a
+second times five *seconds* is requests, which is a thing you can hold. The plain number changes
+how much; only the duration changes what kind.
+
+That is why a retention store sized from a rate comes out wrong rather than merely imprecise. A
+spreadsheet accepts the first version and shows you a larger figure, which is the worst of both:
+it looks like the answer and it is not the same quantity. The toolkit refuses it, and problem 2.2
+is that error. [Appendix D](#appendix-d-units) shows how units combine and cancel, on a page of
 examples the toolkit works out itself.
 
 ### The demand side, drawn before it is written
@@ -141,7 +148,7 @@ Every quantity is filed under *what you decide*, and one of them is the growth r
 decides a growth rate.
 
 The table is not wrong about the model. The model is wrong, and the table shows you the only
-signal it has: whether somebody gave the quantity a shape instead of a single number. A shape says
+signal it has: whether the file gives the quantity a shape instead of a single number. A shape says
 *the world settles this one, and here is how much it varies*. One number says *I chose this*.
 Nothing in the file has a shape yet, so everything reads as a choice.
 [ch04](#peak-mean-and-growth) gives the growth rate one, and this table splits in two for the
@@ -160,7 +167,7 @@ claiming. **●** means traceable to a measurement or a definition. **◐** mean
 is selling it. **○** means somebody's assumption. [ch03](#where-the-numbers-come-from) is about
 what that difference is worth.
 
-### What it says, and what the toolkit calls it
+### What the file computes, and what kind of model it is
 
 You have run it already. Press **Run** and [`sizing`](#appendix-a-dsl-reference), the toolkit,
 reads the file, checks that every formula produces the unit its node declares, and works each
@@ -201,8 +208,11 @@ Read the decisions. Scrape interval, retention, sampling rate, how many log line
 are the four knobs an observability platform gives you.
 [Appendix F](#appendix-f-observability-model) shows what turning all of them down buys.
 
-Then read the demand, and notice what is *not* in the decisions: the number of label values. It
-dominates the whole model and it is not a knob. That is [ch08](#regime-changes)'s subject.
+Then read the demand, and notice what is *not* among the decisions: the number of label values.
+It dominates the model, and no knob on the platform reaches it. Turn all four of them down and
+the label count sits exactly where it was. The only lever is the code that emits the labels, and
+that belongs to whoever wrote the application rather than to whoever runs the platform — which is
+[ch08](#regime-changes)'s subject.
 
 ### A workload can be described badly in three ways
 
@@ -220,10 +230,10 @@ for today, and nobody buys infrastructure for today.
 
 Two of the rows in the table above are the workload proper: how fast requests arrive, and how much
 is held. What is not in the file yet is what each request *costs*: how much of a processor's time
-it takes. That quantity, with the arrival rate and a count of machines, is what
-[ch05](#littles-law) through [ch07](#when-adding-servers-stops-helping) are built on. It is not
-here because it is not a fact about the workload. It is a fact about one build of the software on
-one kind of machine. Somebody has to measure it, and [ch05](#littles-law) says what that changes.
+it takes. It is not here because it is not a fact about the workload. It is a fact about one build of the
+software on one kind of machine, which means somebody has to go and measure it before any of the
+next part's arithmetic can run. That quantity, the arrival rate and a count of machines are what
+[ch05](#littles-law) through [ch07](#when-adding-servers-stops-helping) are built on.
 The demand side describes what is asked of the system. How the system behaves under it is a
 distinction this table cannot draw, and the next part exists to make it.
 
