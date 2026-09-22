@@ -17,21 +17,20 @@ from sizing.dsl import Model
 def spread_of_each(bands: dict[str, tuple[float, float]]) -> dict[str, float]:
     """Problem 1.1 - how uncertain is each input, on its own?
 
-    ``bands`` maps the name of **every input the file gives a band for** to the two ends of that
-    band, bottom first. Return a dictionary mapping each of those names to the top of its band
-    over its bottom.
+    ``bands`` holds the six inputs the chapter has been using -- the ones the panel draws and the
+    ones that can move a host count -- mapped to the two ends of each band, bottom first::
 
-    The file writes a band one of two ways. Some inputs carry ``p10`` and ``p90``: the value the
-    modeller would be surprised to see undercut and the value they would be surprised to see
-    exceeded, one time in ten each. Others carry ``minimum``, ``likely`` and ``maximum``: the two
-    ends the value cannot be outside, and the value it most often takes. For this problem a band
-    is its two ends either way, ``p10`` and ``p90`` or ``minimum`` and ``maximum``, and that is
-    what ``bands`` holds. That the two kinds do not mean the same thing by their ends is ch13's
-    business, not yet yours.
+        bands = {
+            'annual_growth': (bottom, top),
+            'service_demand': (bottom, top),
+            ...   # six in all, the six the chapter has been using
+        }
 
-    An input written as one number has no band, so it is not in ``bands`` and not in the answer.
-    Somebody has decided it is known well enough to fix, and whether that is true is ch03's
-    subject.
+    Return a dictionary mapping each of those names to the top of its band over its bottom.
+
+    The file writes the two ends one of two ways, and ``bands`` has already reduced both to a
+    bottom and a top, so you do not have to care which. What the two kinds mean by their ends
+    differs, and that is ch13's business rather than yours here.
 
     Nothing is drawn at random.
     """
