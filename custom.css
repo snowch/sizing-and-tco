@@ -1,8 +1,21 @@
 /* Sizing and TCO — small adjustments to the book theme.
  *
  * Deliberately short. The theme is fine; what it does not know about is this book's two recurring
- * shapes: a wide table of figures with their conditions underneath, and a dependency graph that
- * is wider than a column. */
+ * shapes: a wide table of figures with their conditions underneath, and a dependency graph that is
+ * wider than a column. */
+
+/* The book theme's desktop grid gives normal prose a deliberately narrow ~40ch body column.
+ * That is too narrow for this book: it makes ordinary explanatory paragraphs wrap excessively,
+ * while leaving a lot of unused space in the centre pane. Widen the prose measure without changing
+ * the surrounding navigation/outline layout. */
+@media (min-width: 1280px) {
+  .article {
+    width: 65ch;
+    max-width: none;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
 
 /* A conditions line belongs to the table above it and should read as a footnote, not a paragraph. */
 .myst-content p em:only-child {
