@@ -620,3 +620,29 @@ def test_no_product_is_named(path):
         "figure. Describe what it does instead, or name the implementation a measurement "
         "belongs to."
     )
+
+
+def test_the_style_checklist_runs_every_style_rule():
+    """A rule nobody runs is a paragraph, and this document knows it about other things.
+
+    STYLE.md held twenty-two rules and a closing checklist that ran twelve of them while calling
+    itself the whole list. The ten it omitted were not a random ten: every one asked whether the
+    reader had understood -- the example beside the abstract idea, the cause said rather than
+    implied, one question to a paragraph -- and what was left was the half a person can run
+    without reading for sense. Pages came out short-sentenced, plain-worded and abstract, which
+    is what the omission selects for.
+    """
+    style = (ROOT / "STYLE.md").read_text()
+    rules = {int(m[1]): m[2].strip() for m in re.finditer(r"^## (\d+)\. (.+)$", style, re.M)}
+    assert rules, "STYLE.md numbers its rules"
+
+    where = style.index("Before you finish")
+    run = {int(n) for n in re.findall(r"\((\d+)\)", style[where:])}
+    missing = sorted(set(rules) - run)
+    assert not missing, "STYLE.md rules nothing runs: " + "; ".join(
+        f"{n}. {rules[n]}" for n in missing
+    )
+
+    # And the two passes stay two, because collapsing them is how the slow half went missing.
+    for pass_name in ("First pass: the sentences", "Second pass: the idea"):
+        assert pass_name in style, f"STYLE.md declares its {pass_name!r}"

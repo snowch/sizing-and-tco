@@ -163,7 +163,9 @@ mechanism.
 
 **STYLE.md is the checklist** that gets a page to this voice: one idea per paragraph, the point
 first, a concrete example, ordinary words, the reader as *you*. Edit every page against it, and
-run the checklist at its end over the page before you finish. Its rules 17 to 22 name the habits
+run both of its closing passes over the page before you finish: the first over the sentences, the
+second over whether the idea arrived. The second is the one that was missing for a long time, and
+its absence is why pages came out short-sentenced and still abstract. Its rules 17 to 22 name the habits
 two outside reviews of the finished book found on page after page: very short sentences that
 label instead of landing, demonstratives with no noun in reach, intensifiers, decorative idiom,
 *somebody* for any actor, and evaluations with no grounds. Where its rule to define a term at
