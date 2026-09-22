@@ -84,6 +84,11 @@ class UnknownNodeError(Exception):
 #: `_runner_here`, and this comes out in its place.
 RUNNER_SLOT = "<!-- runner -->"
 
+#: What sort of panel an `{iframe}` holds, keyed by the first segment of the site-root URL it
+#: points at. Read from the address rather than from an option an author has to remember, because
+#: each sort needs a height of its own and the address is the thing that cannot be forgotten.
+FRAME_KINDS = {"models": "viewer", "futures": "futures", "playground": "playground"}
+
 #: What the site calls each page, keyed by the slug a site-root URL ends in. The site build fills
 #: it in before it renders anything; while it is empty, a cross-reference renders as its text.
 PAGES: dict[str, str] = {}
@@ -251,7 +256,7 @@ def render(node: dict) -> str:
         # has to remember: a viewer needs more height than a playground. The caption beside it
         # is prose and renders as prose.
         src = str(node.get("src", ""))
-        kind_class = "viewer" if src.startswith("/models/") else "playground"
+        kind_class = FRAME_KINDS.get(src.split("/")[1] if src.startswith("/") else "", "playground")
         # A control over its corner, because a model's graph is drawn at a fixed width and the
         # chapter's column cannot hold it. Written `hidden`: without the script it does nothing.
         # It keeps this same frame, so a reader who has moved the sliders keeps where they are.

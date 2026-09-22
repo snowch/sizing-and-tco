@@ -1,0 +1,106 @@
+/* One future at a time. Plain CSS, no framework, no build step, and the same palette as the
+ * model viewer beside it — so a chapter that embeds both does not look like two books. */
+:root {
+  --ink: #1f2933; --muted: #52606d; --line: #cbd2d9; --bg: #ffffff; --panel: #f5f7fa;
+  --accent: #1a73e8; --accent-deep: #1660c4; --on-accent: #ffffff;
+  --hist: #9fc0dd; --hist-edge: #4a7ba7;
+  --over: #b3413a; --shape: #dce7f1; --shape-edge: #93aec7;
+  --tick: #6b8299;
+}
+/* Read in the dark. The chapter around this frame follows the reader's system, and a white slab
+ * in the middle of a dark page reads as a hole in it. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #dde4e8; --muted: #9db0ba; --line: #3d4b53; --bg: #151c20; --panel: #1b2429;
+    --accent: #7fb2dd; --accent-deep: #9cc6eb; --on-accent: #10171b;
+    --hist: #4d7ea8; --hist-edge: #7fb2dd;
+    --over: #d46c65; --shape: #24333d; --shape-edge: #4a6578;
+    --tick: #8aa4b8;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; color: var(--ink); background: var(--bg);
+  font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+a { color: var(--accent); }
+header { padding: 11px 18px 9px; border-bottom: 1px solid var(--line); }
+/* Embedded in a chapter, the page around this one puts an Expand button over the corner. */
+html.embedded header { padding-right: 104px; }
+header h1 { margin: 0 0 3px; font-size: 16px; font-weight: 600; }
+header p { margin: 0; color: var(--muted); font-size: 12.5px; max-width: 76ch; }
+
+/* Sticky, so the button that makes the page do anything is in reach from every scroll position.
+   On a phone the pile is above the inputs and both are taller than the window. */
+#bar {
+  grid-column: 1 / -1;
+  position: sticky; top: 0; z-index: 2;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  padding: 9px 18px; border-bottom: 1px solid var(--line); background: var(--panel);
+}
+button {
+  font: inherit; padding: 7px 13px; border-radius: 5px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--bg); color: var(--ink);
+}
+button:hover { border-color: var(--accent); }
+button.primary { background: var(--accent); border-color: var(--accent-deep); color: var(--on-accent); }
+button.primary:hover { background: var(--accent-deep); }
+#count { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* The inputs get the width six labels need and no more; the pile gets the rest, because the
+   pile is what a reader is here to watch fill up. */
+main { display: grid; grid-template-columns: minmax(250px, 330px) minmax(0, 1fr); }
+section { padding: 11px 18px 14px; min-width: 0; }
+/* The pile scales with its column, and a very wide window would otherwise give it a metre of
+   height for no extra information. Capped, and the text beside it capped to match. */
+#right { border-left: 1px solid var(--line); }
+#right > * { max-width: 760px; }
+/* Stacked, the pile goes above the inputs: it is what a reader is here to watch, and it must not
+   be the thing that scrolls out of reach. The controls stay above both. */
+@media (max-width: 720px) {
+  main { grid-template-columns: minmax(0, 1fr); }
+  #bar { order: -2; }
+  #right { border-left: 0; border-top: 1px solid var(--line); order: -1; }
+}
+h2 { margin: 0 0 3px; font-size: 13px; font-weight: 600; letter-spacing: .02em; }
+.note { margin: 0 0 10px; color: var(--muted); font-size: 12px; }
+
+/* -- an input ------------------------------------------------------------------------------ */
+.draw { margin-bottom: 8px; }
+.what { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.what .label { font-size: 12.5px; }
+.ends .unit { flex: 1 1 auto; text-align: center; padding: 0 6px; }
+.what .value {
+  font-variant-numeric: tabular-nums; font-size: 12.5px; font-weight: 600;
+  white-space: nowrap;
+}
+svg.spread { display: block; width: 100%; height: 28px; margin-top: 1px; overflow: hidden; }
+svg.spread .shape { fill: var(--shape); stroke: var(--shape-edge); stroke-width: 1; }
+svg.spread .trail line { stroke: var(--tick); stroke-width: 1.4; }
+svg.spread .marker { stroke: var(--accent); stroke-width: 2; }
+svg.spread line { vector-effect: non-scaling-stroke; }
+.ends {
+  display: flex; justify-content: space-between; gap: 4px;
+  color: var(--muted); font-size: 10.5px; font-variant-numeric: tabular-nums;
+}
+
+/* -- the pile ------------------------------------------------------------------------------ */
+svg#pile { display: block; width: 100%; height: auto; }
+svg#pile .paper { fill: var(--panel); }
+svg#pile .bars rect { fill: var(--hist); }
+svg#pile .over rect { fill: var(--over); opacity: .55; }
+svg#pile .behind { stroke: var(--panel); stroke-width: 5; opacity: .85; }
+svg#pile .point { stroke: var(--over); stroke-width: 2.2; stroke-dasharray: 6 3; }
+svg#pile .landed { stroke: var(--accent); stroke-width: 2; }
+svg#pile text { fill: var(--muted); font: 11px system-ui, sans-serif; }
+svg#pile text.right { text-anchor: end; }
+svg#pile text.mid { text-anchor: middle; }
+.verdict { margin: 8px 0 0; font-size: 12.5px; min-height: 3em; }
+.verdict b { font-variant-numeric: tabular-nums; }
+.key { display: flex; flex-wrap: wrap; gap: 12px; margin: 6px 0 0; font-size: 11.5px; color: var(--muted); }
+.key i { display: inline-block; width: 15px; height: 0; border-top-width: 2px; margin-right: 5px; vertical-align: middle; }
+.key .est { border-top: 2px dashed var(--over); }
+.key .now { border-top: 2px solid var(--accent); }
+footer { padding: 9px 18px 13px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11.5px; }
+footer p { margin: 0 0 5px; max-width: 86ch; }
+footer p:last-child { margin-bottom: 0; }

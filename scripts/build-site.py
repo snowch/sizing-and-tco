@@ -914,7 +914,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
   // A model: the button is in the page already, drawn beside the frame it belongs to.
-  for (const frame of document.querySelectorAll("iframe.viewer, iframe.playground")) {
+  for (const frame of document.querySelectorAll("iframe.viewer, iframe.playground, iframe.futures")) {
     const figure = frame.closest("figure");
     const button = figure && figure.querySelector(".expand");
     if (!button) continue;
@@ -1410,6 +1410,12 @@ iframe.viewer { height: 780px; }
 figure:has(> iframe.viewer) { container-type: inline-size; }
 @container (min-width: 860px) { iframe.viewer { height: 600px; } }
 @container (min-width: 1101px) { iframe.viewer { height: 812px; } }
+/* Drawing one future at a time has two shapes and no more: the inputs beside the pile, or the
+   pile above the inputs. Measured at 852px of content beside and 1324px stacked, and the stacked
+   one is taller than any phone, which is what the rule below is for. */
+figure:has(> iframe.futures) { container-type: inline-size; }
+iframe.futures { height: 1344px; }
+@container (min-width: 721px) { iframe.futures { height: 856px; } }
 @media (max-width: 720px) { iframe { height: 80vh; min-height: 540px; } }
 
 /* A quoted piece of the model the reader may edit where the chapter shows it. Nothing but the

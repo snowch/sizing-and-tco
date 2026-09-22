@@ -28,6 +28,7 @@ from bench.stamp import ROOT, shown
 #: runs the tests, because the book build comes after them.
 TAKES_AN_OUT = [
     ("scripts/build-viewers.py", "--out"),
+    ("scripts/build-futures.py", "--out"),
     ("scripts/build-icons.py", "--out"),
     ("scripts/build-playground.py", "--out"),
 ]

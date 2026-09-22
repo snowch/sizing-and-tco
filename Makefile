@@ -84,6 +84,10 @@ icons:  ## Redraw the favicon and home-screen icons into public/
 viewers:  ## Build the interactive model pages into _build/viewers/
 	$(PYTHON) scripts/build-viewers.py
 
+.PHONY: futures
+futures:  ## Build ch01's draw-one-future page into _build/futures/
+	$(PYTHON) scripts/build-futures.py
+
 # -- the book ------------------------------------------------------------------------------
 
 .PHONY: book
