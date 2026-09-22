@@ -448,14 +448,19 @@ def test_the_prose_column_is_measured_in_characters():
     The prose is sized in ``px`` and the column was capped in ``rem``, which is the root font.
     Those two never move together: a minimum-font-size floor, an accessibility text size or a
     user stylesheet raises the glyphs and leaves the column where it was, and the reader gets a
-    column too narrow for their own text. Measured in a browser, an 18px page at 576px holds 73
+    column too narrow for their own text. Measured in a browser, an 18px page at 576px holds 78
     characters to a line; the same 576px holds 42 at 32px text and 31 at 40px. It fails the
     other way too -- raise the browser's default font size and ``36rem`` grows while 18px prose
     does not, so the line gets longer rather than shorter.
 
     So the cap is ``max(--measure, --prose)`` with ``--prose`` in ``ch``, which resolves against
-    the element's own font. At 18px Charter both are 576px, so nothing moves for a reader on
-    defaults; above that the column tracks the text and the line stays at 73 characters.
+    the element's own font, and the line stays the same length whatever the reader's text does.
+
+    ``ch`` is the width of a zero, and Charter's lowercase is narrower than its zero, so the
+    number in the declaration is not the number of characters: 82ch renders 101 a line, 64ch
+    rendered 78. Counted per rendered line over six paragraphs, last lines excluded -- an
+    average that includes them measures where the paragraphs end rather than where the column
+    does, and reports 64 for the column that holds 78.
     """
     css = (ROOT / "scripts" / "build-site.py").read_text()
 
@@ -842,8 +847,13 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
         "a class that sets display beats the browser's rule for the attribute, so a control "
         "written hidden showed anyway and did nothing when pressed"
     )
-    # Four states, one per pair of rails, and the cap comes off only when both are away.
-    column = "minmax(0, calc(84rem + 5rem))"
+    # Four states, one per pair of rails, and the cap comes off only when both are away. The
+    # column's width is read rather than written: what this is checking is that all four states
+    # use the same one, and pinning the number here means a change to it fails four tests that
+    # have nothing to say about it.
+    wide = re.search(r"calc\((\d+)rem \+ 5rem\)", css)
+    assert wide, "the middle column is the widest thing a chapter holds, plus its gutter"
+    column = f"minmax(0, calc({wide.group(1)}rem + 5rem))"
     for selector in (
         f"html.nav-closed .shell {{ grid-template-columns: {column} var(--toc); }}",
         f"html.toc-closed .shell {{ grid-template-columns: var(--nav) {column}; }}",
@@ -982,16 +992,18 @@ def test_a_models_box_follows_the_layout_the_model_chose():
     assert "@container (min-width: 1101px) { iframe.viewer { height: 812px; } }" in css
 
 
-def test_a_chapter_is_three_widths_on_one_middle():
-    """Prose, code and a model each get what they need, addressed by the id so margins lose.
+def test_a_chapter_is_two_widths_on_one_middle():
+    """Prose, and one column for everything that cannot fit in it. Addressed by the id.
 
     `p`, every heading, `.admonition`, `.editable-block` and the turn all write `margin: x 0 y`,
     which is the same specificity as `main > *` and comes later in the sheet, so the element
-    rule won and the whole page stacked against the left of its column. One width for all three
-    was worse still in the other direction: the measure cut 121 code blocks over 33 pages off
-    mid-word and left a model at 576px, far under the 860px its own layout needs to put the
-    inputs beside the graph. Each width is a cap rather than a size, so all three centre on the
-    same middle and the page still reads as one column.
+    rule won and the whole page stacked against the left of its column.
+
+    One width for everything was worse in the other direction: the prose column cut 121 code
+    blocks over 33 pages off mid-word and left a model far under the 860px its own layout needs
+    to put the inputs beside the graph. Three widths was worse again -- prose, then code, then a
+    model further out than either, which reads as three columns stacked rather than one. Each
+    width is a cap rather than a size, so both centre on the same middle.
     """
     css = site().CSS
     centred = re.search(r"#main > \* \{ max-width: (.+?); margin-inline: auto; \}", css)
@@ -1001,41 +1013,51 @@ def test_a_chapter_is_three_widths_on_one_middle():
     assert "--measure" in centred.group(1), (
         f"the chapter's blocks are capped by {centred.group(1)!r}, which is not the measure"
     )
-    wide = "#main > :is(figure:has(> iframe), figure:has(> .runner), table)"
-    code = "#main > :is(pre, .editable-block, .problem, figure:has(> pre))"
-    # The tier and its floor, not the whole declaration. Each cap is in rem because what it sizes
-    # is drawn in pixels and does not grow with a reader's text -- and each is floored at the
-    # prose, because the prose does grow, and once it passed 60rem a problem's stub sat narrower
-    # than the paragraph introducing it. A tier is only ever an exception for being wider.
-    for selector, tier, why in (
-        (
-            wide,
-            "84rem",
-            "a model shows its inputs beside its graph only from 860px, and the "
-            "runner and the book's widest tables want the same room",
-        ),
-        (
-            code,
-            "60rem",
-            "the book's own lines stop at 100 columns, which its widest block draws at 942px",
-        ),
+    # One selector, holding both tenants. Two selectors is what put a model at a different edge
+    # from the code block above it.
+    # Non-greedy to the first `)` that a `max-width` follows: the selector has `:has(...)` in
+    # it, so a paren-counting pattern would stop inside it.
+    wide = re.search(r"#main > :is\((.*?)\)\s*\{\s*max-width: ([^;]+);", css, re.S)
+    assert wide, "nothing caps the wide column"
+    selector, cap = wide.group(1), wide.group(2)
+    for part in (
+        "figure:has(> iframe)",
+        "figure:has(> .runner)",
+        "table",
+        "pre",
+        ".editable-block",
+        ".problem",
+        "figure:has(> pre)",
     ):
-        found = re.search(re.escape(selector) + r"\s*\{\s*max-width: ([^;]+);", css)
-        assert found, f"nothing caps {selector}"
-        assert tier in found.group(1), why
-        assert "--prose" in found.group(1), (
-            f"{selector} is capped by {found.group(1)!r}, which cannot grow with the reader's "
-            "text -- so a paragraph can end up wider than the block it introduces"
+        assert part in selector, (
+            f"{part} is not in the wide column, so it sits at an edge of its own"
         )
-    for rule in (wide, code):
-        assert css.index(rule) > css.index("#main > * {"), (
-            "the measure is the default and the wider caps are the exceptions, so they have to "
-            "come after it -- at equal specificity the later rule wins"
-        )
-    assert "min(100%," in css, (
-        "a cap in rem alone overflows the column on a narrow window; each one yields to the "
-        "room there actually is"
+    assert "--prose" in cap, (
+        f"the wide column is capped by {cap!r}, which cannot grow with the reader's text -- so "
+        "a paragraph can end up wider than the block it introduces"
     )
+    assert "min(100%," in cap, (
+        "a cap in rem alone overflows the column on a narrow window; it yields to the room "
+        "there actually is"
+    )
+    assert css.index("#main > :is(") > css.index("#main > * {"), (
+        "the measure is the default and the wider cap is the exception, so it has to come "
+        "after it -- at equal specificity the later rule wins"
+    )
+
+    # What the number has to clear, read from the files that set it rather than restated. The
+    # model viewer is a separate document with its own breakpoint, and the two drifting apart is
+    # invisible here: the chapter would simply stop showing the detail panel beside the graph.
+    rem = 16
+    tier = float(re.search(r"max\((\d+(?:\.\d+)?)rem,", cap).group(1)) * rem
+    viewer = (ROOT / "sizing" / "viewer" / "style.css").read_text()
+    panel = float(re.search(r"@media \(max-width: (\d+)px\)", viewer).group(1))
+    assert tier > panel, (
+        f"the wide column is {tier:.0f}px and the model viewer stacks its detail panel under "
+        f"the graph at {panel:.0f}px, so an embedded model never shows it"
+    )
+    # The book's own code lines stop at 100 columns; its widest block draws at 942px.
+    assert tier >= 942, f"the wide column is {tier:.0f}px and the widest code block wants 942px"
 
 
 def test_a_model_can_take_the_window_without_losing_the_reader_s_place():
@@ -1233,7 +1255,9 @@ def test_the_three_columns_sit_together():
     adrift rather than as one.
     """
     css = site().CSS
-    assert "grid-template-columns: var(--nav) minmax(0, calc(84rem + 5rem));" in css
+    wide = re.search(r"calc\((\d+)rem \+ 5rem\)", css)
+    assert wide, "the middle column is the widest thing a chapter holds, plus its gutter"
+    assert f"grid-template-columns: var(--nav) minmax(0, calc({wide.group(1)}rem + 5rem));" in css
     assert "justify-content: center;" in css
     assert "minmax(0, 1fr)" not in css.split("@media (min-width: 58rem)")[1], (
         "above the first breakpoint no column is a fraction of the window any more"

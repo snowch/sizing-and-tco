@@ -1142,7 +1142,7 @@ html { scroll-behavior: smooth; }
 /* The measure counted in characters rather than root-font units. The prose is sized in px and
    the column was in rem, so the two moved apart the moment a reader's text rendered at a size
    the root font did not know about -- a minimum-font-size floor, an accessibility text size, a
-   user stylesheet. The column stayed at 576px while the line fell from 73 characters to 40.
+   user stylesheet. The column stayed at 576px while the line fell from 78 characters to 40.
 
    Registering it as a <length> is what makes it usable by more than the paragraphs. An ordinary
    custom property holding `64ch` is substituted as those three characters and resolved against
@@ -1151,14 +1151,14 @@ html { scroll-behavior: smooth; }
    font is the prose font -- and inherits as pixels, so every block in the chapter shares one
    column and one left edge. Shipping it unregistered is what indented every heading on the page.
 
-   `initial-value` has to be computationally independent, so it is the 576px that 36rem and 64ch
-   both come to at 18px Charter: a browser without @property keeps exactly the layout the book
-   had before any of this. */
-@property --prose { syntax: "<length>"; inherits: true; initial-value: 576px; }
+   `initial-value` has to be computationally independent -- no `ch`, no `rem` -- so it is the
+   738px that 82ch comes to at 18px Charter. A browser without @property gets the same column,
+   fixed rather than following the reader's text. */
+@property --prose { syntax: "<length>"; inherits: true; initial-value: 738px; }
 
 body { margin: 0; background: var(--bg); color: var(--ink);
        font: 18px/1.62 var(--text); text-rendering: optimizeLegibility;
-       -webkit-font-smoothing: antialiased; --prose: 64ch; }
+       -webkit-font-smoothing: antialiased; --prose: 82ch; }
 a { color: var(--accent); text-decoration-thickness: from-font; text-underline-offset: 2px; }
 /* A cross-reference is a link the reader steps over 259 times. Underlining every one of them
    would turn the prose into a rash, so it keeps the italic it has on paper and takes a rule
@@ -1265,23 +1265,23 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
   /* The middle column is the widest thing a chapter holds -- a model at 84rem -- and the group
      of columns is what centres. `1fr` instead would make it whatever the window has left, which
      is a column sized by the screen rather than by the book. */
-  .shell { grid-template-columns: var(--nav) minmax(0, calc(84rem + 5rem));
+  .shell { grid-template-columns: var(--nav) minmax(0, calc(72rem + 5rem));
            justify-content: center; }
   .nav { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
-  html.nav-closed .shell { grid-template-columns: minmax(0, calc(84rem + 5rem)); }
+  html.nav-closed .shell { grid-template-columns: minmax(0, calc(72rem + 5rem)); }
   html.nav-closed .nav { display: none; }
 }
 /* Two rails, and a reader reading a wide graph wants neither. Each has a button of its own, so
    the chapter takes back 272px, 224px, or both -- and with both away the shell's own cap goes
    too, because at that point the reader has asked for the window. */
 @media (min-width: 72rem) {
-  .shell { grid-template-columns: var(--nav) minmax(0, calc(84rem + 5rem)) var(--toc); }
-  html.nav-closed .shell { grid-template-columns: minmax(0, calc(84rem + 5rem)) var(--toc); }
-  html.toc-closed .shell { grid-template-columns: var(--nav) minmax(0, calc(84rem + 5rem)); }
+  .shell { grid-template-columns: var(--nav) minmax(0, calc(72rem + 5rem)) var(--toc); }
+  html.nav-closed .shell { grid-template-columns: minmax(0, calc(72rem + 5rem)) var(--toc); }
+  html.toc-closed .shell { grid-template-columns: var(--nav) minmax(0, calc(72rem + 5rem)); }
   html.nav-closed.toc-closed .shell {
-    grid-template-columns: minmax(0, calc(84rem + 5rem)); max-width: none; }
+    grid-template-columns: minmax(0, calc(72rem + 5rem)); max-width: none; }
   .toc { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
@@ -1326,26 +1326,34 @@ main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;
    the left of its column. The rules also sit here, after the cap they undo, because a media
    query adds no specificity of its own.
 
-   Three widths, each what its content needs, all centred on the same middle. Prose keeps the
-   measure: 576px is about seventy characters, and a longer line is harder to read however much
-   room the window has. Code takes up to 60rem, because the book's own lines stop at 100 columns
-   and its widest block wants 942px -- at the measure, 121 blocks over 33 pages were cut off
-   mid-word and the bar above them wrapped onto two lines. A model, the runner and a table take
-   up to 84rem, which is 2.3 times the prose: wide enough that a model shows its inputs beside
-   its graph, near enough that the page still reads as one column. Nothing goes wider in the
-   flow; what still does not fit says so and takes the window on a button. */
+   Two widths, each what its content needs, centred on the same middle. Prose takes 82ch, which
+   renders 101 characters a line in Charter -- counted per rendered line, last lines excluded,
+   over six paragraphs. The old 64ch gave 78, and `ch` is the width of a zero rather than of a
+   character, so neither number is the one in the declaration. A hundred characters is long by
+   the convention print settled on and readable on a screen at this size and leading, which is
+   what the column is for.
+
+   Everything that cannot fit in that takes one wider column of 72rem. One, not two: a chapter
+   with three left edges -- prose, then code, then a model further out than either -- reads as
+   three columns stacked rather than one. 72rem is the smallest number that serves both of its
+   tenants. Below 1100px the model viewer puts its detail panel under the graph instead of
+   beside it, and the book's own code lines stop at 100 columns, whose widest block wants 942px
+   -- at the prose column, 121 blocks over 33 pages were cut off mid-word and the bar above them
+   wrapped onto two lines. 1152px clears the first by 52 and the second by 210.
+
+   Nothing goes wider in the flow; what still does not fit says so and takes the window on a
+   button. */
 @media (min-width: 58rem) {
   #main { max-width: none; }
   #main > * { max-width: max(var(--measure), var(--prose)); margin-inline: auto; }
-  /* The wide tiers are floored at the prose, not set above it. They are in rem because what they
-     size is drawn in pixels -- a model's own layout, the book's hundred-column lines -- and that
-     does not grow when a reader's text does. The prose does, so at about 30px text it overtook
-     the code tier and a problem's stub sat narrower than the paragraph introducing it, indented
-     on both sides. A tier is only ever an exception for being *wider*. */
-  #main > :is(figure:has(> iframe), figure:has(> .runner), table) {
-    max-width: min(100%, max(84rem, var(--prose))); }
-  #main > :is(pre, .editable-block, .problem, figure:has(> pre)) {
-    max-width: min(100%, max(60rem, var(--prose))); }
+  /* Floored at the prose, not set above it. The wide column is in rem because what it sizes is
+     drawn in pixels -- a model's own layout, the book's hundred-column lines -- and that does
+     not grow when a reader's text does. The prose does, so at large text it overtook the column
+     and a problem's stub sat narrower than the paragraph introducing it. The column is only
+     ever an exception for being *wider*. */
+  #main > :is(figure:has(> iframe), figure:has(> .runner), table,
+              pre, .editable-block, .problem, figure:has(> pre)) {
+    max-width: min(100%, max(72rem, var(--prose))); }
   #main > figure > figcaption { margin-inline: auto; }
 }
 main :is(h1, h2, h3, h4) { font-family: var(--chrome); letter-spacing: -.012em;
