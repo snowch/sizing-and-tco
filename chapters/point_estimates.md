@@ -26,22 +26,24 @@ Two things are missing from that number.
    from. [ch13](#monte-carlo) is where you hand the model the whole of each range instead of its
    middle, and get a range of answers back.
 2. **An error in the shape of the model.** Multiplying cannot notice that a queue has tipped
-   over, so the chain reports a fleet running at several times the load it can carry, in the
-   same flat tone it reports everything else. Measuring the inputs better never finds this one.
+   over. The answer comes back describing a fleet running at several times the load it can
+   carry, in the same flat tone as everything else. Measuring the inputs better never finds this
+   one.
 
 Here is the first of the two, on the web service this book sizes. The mark near the top is the
 sums done once. The pile underneath it is the same sums done again and again, with every input
-free to move between the ends its own file declares:
+free to move between the two ends somebody wrote down for it:
 
 ```{image} _figures/point-estimates-once-and-many.svg
 :alt: The single number marked above the pile of answers the same arithmetic gave, with the single number low in the pile rather than in the middle of it
 :width: 100%
 ```
 
-Nothing changed between the mark and the pile except what the inputs were allowed to do. The
-single number came out below the middle answer, and to the right of both there is a long tail of
-futures that need far more hosts than either. The tail is the part a single number cannot show
-you at all.
+Nothing changed between the mark and the pile except what the inputs were allowed to do. More
+than half the answers came out above the single number, and a long tail of them runs off to the
+right: answers that need a fleet several times the size. A single number shows none of that —
+not how wide the pile is, not where in it you are standing, and not the tail. The tail is the
+part that costs money, because those are the answers that need a fleet you did not buy.
 
 ## The material
 
@@ -63,13 +65,29 @@ Think about what goes into one. To size a fleet for a web service you need to kn
 Six numbers, and you know none of them exactly. The growth rate is a forecast. The time per
 request was measured on somebody else's build. The price is a quote that expires.
 
-Pick the middle of each, multiply along the chain, and you get one number. The arithmetic is
+Pick the middle of each, multiply them together, and you get one number. The arithmetic is
 right. But you never had six numbers. You had six ranges, and you threw the ranges away at the
 first step.
 
 Multiplying uncertain numbers does not average their doubt out. It compounds it.
 
-Say each of them could be a fifth higher than the figure you wrote down.
+You know this already, from somewhere with no servers in it. Ask somebody how long they take to
+drive to work and they will not give you a number. They will say twenty-five minutes, forty if
+the bypass is busy. Ask what a year of that commute costs and the same thing happens three times
+over: how many days they go in, what the journey burns, what fuel costs this month. Every one of
+the three is a range, and nobody had to be taught to hold it as one.
+
+```{image} _figures/point-estimates-commute.svg
+:alt: Three everyday ranges -- days driven, litres a journey, price a litre -- and what a year costs from their middles against what it costs with all three at their tops
+:width: 100%
+```
+
+Not one of the three is much above its own middle, and the year is more than half as much again.
+Nothing went wrong and nothing cancelled. The highs multiplied instead of taking turns, which is
+the whole of it.
+
+Now the same thing as a rule, so it can be pointed at six inputs instead of three. Say each of
+them could be a fifth higher than the figure you wrote down.
 
 ```{image} _figures/point-estimates-compounding.svg
 :alt: How far the answer moves when one, two, three or more inputs are each a fifth high
@@ -227,9 +245,9 @@ You find the stage rather than being told it, which is why this page does not na
 :::{note} Key takeaways
 - **A point estimate is silent, not wrong.** One value per input and the arithmetic done once gives
   a correct number that says nothing about how far it could be out.
-- **Doubt compounds along a chain.** Multiplying uncertain numbers stretches the answer further than
-  any single input does, so the honest answer to *how big* is a range with a most-likely region in
-  it, not a figure.
+- **Doubt compounds along a chain of multiplications.** Multiplying uncertain numbers stretches
+  the answer further than any single input does, so the honest answer to *how big* is a range with
+  a most-likely region in it, not a figure.
 - **A range reports only the doubt somebody wrote down.** An error in the model's shape is invisible
   to any amount of varying the inputs.
 - **Two kinds of model, held to two rules.** A cost model has a structure nobody doubts and

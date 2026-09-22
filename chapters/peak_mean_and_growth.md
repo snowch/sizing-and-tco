@@ -68,7 +68,7 @@ under, and high enough that only about one in ten comes in over.
 The growth rate is at the top, and nothing else is close. It is at the top of every tornado in this
 book whose answer depends on the future. Not every answer does: the cost of a fleet somebody has
 already bought is a question about prices, and [ch15](#capex-opex-and-lifecycle) is where that
-difference is drawn. But wherever the future is in the chain, growth is at the top of it. That is
+difference is drawn. But wherever the future enters the arithmetic, growth is at the top of it. That is
 not a quirk of these numbers. A growth rate is the one input that is *raised to a power*; everything
 else is multiplied. Over a five-year horizon, the exponent turns an uncertainty in the rate into a
 much larger uncertainty in the demand.
