@@ -47,7 +47,7 @@ Think about what goes into one. To size a fleet for a web service you need to kn
 - how fast that grows;
 - how much processor time each request takes;
 - how much of the data has to stay in memory;
-- what a host holds; and
+- how many cores, how much memory and how much disk one host has; and
 - what a host costs.
 
 Six numbers, and you know none of them exactly. The growth rate is a forecast. The time per
@@ -84,6 +84,11 @@ every input. Not any value: one drawn from the spread that input honestly has, s
 the fat middle of the spread comes up often and one from the edge comes up rarely. Then you keep
 the answer and go again.
 
+A spread is the part of the model file that says how wrong one input might be.
+
+```{include} _generated/point-estimates-a-spread.md
+```
+
 One run answers one question — *what if it turns out like this?* Enough runs answer a different
 one: *which outcomes keep coming up, and which barely ever do?* The second question is the one
 you need answered before you commit to a fleet.
@@ -94,9 +99,11 @@ pay to run for five years. You need nothing else about it yet: [ch02](#what-a-wo
 its file a few nodes at a time, and [Appendix E](#appendix-e-web-service-model) shows the finished
 thing.
 
-Rather than take that on trust, do it. Press the button below. Six inputs jump to the values that
-future brought, the fleet is worked through once, and the answer drops onto the pile. Press it
-again and you get a different answer, because you asked a different question.
+Rather than take that on trust, do it. Press the button below. Every uncertain input the host
+count rests on jumps to the value that future brought, the fleet is worked through once, and the
+answer drops onto the pile. Press it again and you get a different answer, because you asked a
+different question. What a host costs is not among them: the price cannot change how many you
+need.
 
 ```{iframe} /futures/point-estimates.html
 :width: 100%
@@ -104,9 +111,9 @@ One press is one future. The ticks under each input pile up where its shape is f
 *drawn from the spread it honestly has* looks like.
 ```
 
-A dozen presses is enough to see that the answers are not scattered evenly. A few hundred is
-enough to see the shape. The price of a host is not among the six, because what a host costs
-cannot change how many you need — which is the distinction the next section is about.
+A dozen presses is enough to see that the answers are not scattered evenly. Press it fifty
+times, or use *Draw 100* once: the shape does not appear until the pile is deep, and the shape
+is the whole of the argument.
 
 Here is the same model's answer as the book's own run computed it, the single number first, then
 what its repeated answers did.
@@ -118,8 +125,10 @@ Read the first row. The point estimate is a real number, correctly computed. Bes
 smallest and the largest of the answers the same arithmetic gave, and they are not close.
 Nothing in the first calculation was wrong. It had no way to say that it was a bet.
 
-The smallest and the largest are a poor summary of the spread: a handful of extreme answers
-set them. The chart below shows where the answers piled up.
+That second column is not the model admitting it is useless. It is the lowest and the highest
+single answer in the whole run — one draw each, and it takes most of the inputs going the same
+way at once to produce either. Almost nothing lands near either end. What you would size a fleet
+from is where the answers piled up, which the chart below shows and the two ends cannot.
 
 ```{image} _figures/point-estimates-tco-spread.svg
 :alt: The five-year total cost as a spread of answers, with the single number marked on it
@@ -138,6 +147,10 @@ to set what comes out beside the smallest and largest answer in the table. Those
 ways of admitting the same doubt, and they do not agree with each other.
 
 ### The error a range cannot show
+
+Everything so far has been about how wide the answer is. The rest of this chapter is about a
+different error, one that running the arithmetic again cannot find however many times you run
+it, and which decides whether your model needs the second half of this book at all.
 
 Almost all of the first row's width came from one input: the growth rate. It is a forecast, it
 compounds over five years, and it moves the host count further than any other input in the model.
@@ -270,9 +283,9 @@ piece of software? Or a limit your system meets before it runs out of capacity? 
 are holding a sizing model, and the chain of multiplications you have been using is quietly lying
 to you.
 
-A good answer is short, names its sources, and is uncomfortable in at least one place. If nothing
-in it is uncomfortable, you have probably written down the numbers you can measure easily rather
-than the ones that decide the answer. Keep it. Every chapter in this book ends with a problem
+**A good answer is short, names its sources, and is uncomfortable in at least one place.** If
+nothing in it is uncomfortable, you have probably written down the numbers you can measure
+easily rather than the ones that decide the answer. Keep it. Every chapter in this book ends with a problem
 about a system you run, and this is the first of them. They work best on the same one.
 
 ## Where to go next

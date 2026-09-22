@@ -425,6 +425,14 @@ def distribution(result: str, node_name: str, plain: bool = False) -> str:
         f'<line x1="{plot_left}" y1="{plot_bottom}" x2="{plot_right}" y2="{plot_bottom}" '
         f'stroke="#90a4ae" stroke-width="1"/>'
     )
+    if plain:
+        # What the height of a bar means, said once on the chapter that has no word for it yet.
+        # The later chapters draw the same figure for readers who have met a distribution and do
+        # not need telling that taller means more.
+        body.append(
+            f'<text x="{plot_left - 4:.0f}" y="{plot_top - 6:.0f}" font-size="8.5" '
+            f'text-anchor="start" fill="#90a4ae">taller = more answers landed there</text>'
+        )
     for value, anchor in _ticks(low, high, logarithmic):
         x = at_x(value)
         body.append(
@@ -435,11 +443,15 @@ def distribution(result: str, node_name: str, plain: bool = False) -> str:
         )
     if hidden:
         total = sum(counts) or 1
+        # What the number is for, not just what it is. A fraction of a per cent in the corner
+        # reads as a rounding note; it is the tail, and the tail is the case the plan is betting
+        # against. The plain chapter says so, the later ones have a word for it by then.
+        tail = " — the expensive futures a plan bets against" if plain else ""
         body.append(
             f'<text x="{plot_right:.0f}" y="{plot_top - 22:.0f}" font-size="8.5" '
             f'text-anchor="end" fill="#90a4ae">'
             f"{hidden / total * 100:.1f}% of {'answers' if plain else 'samples'} run on to "
-            f"{_esc(fmt(edges[-1], node['unit']))}</text>"
+            f"{_esc(fmt(edges[-1], node['unit']))}{tail}</text>"
         )
     return _svg(
         width,
@@ -778,8 +790,11 @@ def compounding(_result: str | None = None) -> str:
     of multiplications, and by six inputs -- which is what this book's own fleet rests on -- the
     answer has tripled while no single input moved by more than a fifth.
     """
-    width, height = 560.0, 254.0
-    left, right, top, bottom = 172.0, width - 76, 42.0, height - 42
+    # Room on the right for the longest value label, which is the percentage and the multiple
+    # together: at 11.5px "+199% (2.99x the answer)" wants about 150px, and the bar beside the
+    # last row reaches the full width of the plot.
+    width, height = 680.0, 254.0
+    left, right, top, bottom = 172.0, width - 168, 42.0, height - 42
     excess = [(1 + COMPOUNDING_OVER) ** n - 1 for n in range(1, COMPOUNDING_CHAIN + 1)]
     widest = excess[-1]
     row = (bottom - top) / COMPOUNDING_CHAIN
@@ -801,9 +816,14 @@ def compounding(_result: str | None = None) -> str:
             f'<text x="{left - 10}" y="{y + row / 2 - 2:.1f}" text-anchor="end" font-size="11.5" '
             f'fill="#263238">{count} input{"" if count == 1 else "s"} a fifth high</text>'
         )
+        # The multiple beside the percentage. The paragraph says the answer has tripled by six
+        # inputs, and "+199%" is that same fact in a notation a reader has to convert before
+        # they can agree with the sentence.
         parts.append(
             f'<text x="{left + bar + 7:.1f}" y="{y + row / 2 - 2:.1f}" font-size="11.5" '
-            f'font-weight="600" fill="#263238">+{over * 100:.0f}%</text>'
+            f'font-weight="600" fill="#263238">+{over * 100:.0f}% '
+            f'<tspan font-weight="400" fill="#546e7a">'
+            f"({1 + over:.2f}\u00d7 the answer)</tspan></text>"
         )
     parts.append(
         f'<text x="20" y="{height - 14:.0f}" font-size="10.5" fill="#546e7a">'

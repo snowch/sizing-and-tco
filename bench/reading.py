@@ -26,8 +26,22 @@ import json
 
 #: What the button cycles through: the prose size in pixels, and the name shown beside it. 18px is
 #: what the book has always been. The steps are about a sixth each -- large enough to be worth a
-#: press, small enough that the third step is still a book rather than a poster.
-SIZES = (("default", 18.0, "Default"), ("large", 21.0, "Large"), ("larger", 24.0, "Larger"))
+#: press, small enough that the widest is still a book rather than a poster.
+#:
+#: Smallest first, so the cycle runs one way and wraps, which is the only order a reader can
+#: predict. It starts at `default` rather than at the head of the list, so the first press is
+#: larger -- the direction almost everybody wants -- and the one below is three presses away
+#: rather than unreachable, which it was when the list ran upwards from the default.
+SIZES = (
+    ("small", 16.0, "Small"),
+    ("default", 18.0, "Default"),
+    ("large", 21.0, "Large"),
+    ("larger", 24.0, "Larger"),
+)
+
+#: The step a reader who has never pressed the button is on. Stored by removing the key rather
+#: than by writing the word, so that reader and one who has cycled back round are the same.
+DEFAULT = "default"
 
 #: The key in `localStorage`, alongside `nav`, `toc` and `theme`. Per browser, not per page.
 KEY = "text"
@@ -41,7 +55,7 @@ _PARENT = r"""<script>
   const root = document.documentElement;
   const SIZES = __SIZES__;
   const names = SIZES.map((s) => s[0]);
-  let text = "default";
+  let text = "__DEFAULT__";
   try {
     const kept = localStorage.getItem("text");
     if (names.includes(kept)) text = kept;
@@ -65,7 +79,7 @@ _PARENT = r"""<script>
     button.addEventListener("click", () => {
       text = names[(names.indexOf(text) + 1) % names.length];
       try {
-        if (text === "default") localStorage.removeItem("text");
+        if (text === "__DEFAULT__") localStorage.removeItem("text");
         else localStorage.setItem("text", text);
       } catch (e) {}
       apply();
@@ -77,7 +91,9 @@ _PARENT = r"""<script>
 })();
 </script>"""
 
-PARENT = _PARENT.replace("__SIZES__", json.dumps([[name, px, label] for name, px, label in SIZES]))
+PARENT = _PARENT.replace(
+    "__SIZES__", json.dumps([[name, px, label] for name, px, label in SIZES])
+).replace("__DEFAULT__", DEFAULT)
 
 #: The control: two letter A's, a small one and a large one, drawn as paths rather than set as
 #: `<text>`. A glyph would be a different size on every device, which is the reason the
