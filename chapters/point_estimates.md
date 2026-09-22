@@ -12,15 +12,16 @@ What is a single number worth, and what can it not tell you, even when the arith
 
 You have been asked how many hosts to buy for a service that does not exist yet, and the order
 goes in this week. So you multiply: requests in the busy hour, processor time each one takes,
-what a host holds. The arithmetic is a morning's work, and it is not the hard part. What comes
-out is one number, and nothing in it tells you whether it is a number to sign for.
+what a host holds. The arithmetic is not the hard part. What comes out is one number, and
+nothing in it tells you whether it is a number to sign for.
 
 Two different things are missing from it. One is the spread you threw away at the first step —
 you wrote down the middle of what growth has done for three years, and from there the arithmetic
 treated that middle as though somebody had gone and measured it. [ch13](#monte-carlo) puts it
 back. The other is an error in the shape of the model: a chain of multiplications has no way to
-say that a queue has tipped over, so it will report a fleet running at several times its own
-limit and sound exactly as confident. No amount of measuring the inputs finds that one.
+say that a queue has tipped over. It will report a fleet running at several times the load it
+could actually carry, in the same flat tone it reports everything else. No amount of measuring
+the inputs finds that one.
 
 ```{image} _figures/point-estimates-leaves-out.svg
 :alt: The single number, the answers the same arithmetic gave, and what neither can reach
@@ -89,9 +90,9 @@ you need answered before you commit to a fleet.
 
 The service in question is the one this book carries the whole way through. It answers requests
 and keeps the records they leave behind. It runs on a fleet of hosts somebody has to buy, and then
-pay to run for five years. You need nothing else about it yet. [ch02](#what-a-workload-is) builds
-its file from nothing, a few nodes at a time.
-[Appendix E](#appendix-e-web-service-model) shows the finished thing, every formula in it.
+pay to run for five years. You need nothing else about it yet: [ch02](#what-a-workload-is) builds
+its file a few nodes at a time, and [Appendix E](#appendix-e-web-service-model) shows the finished
+thing.
 
 Rather than take that on trust, do it. Press the button below. Six inputs jump to the values that
 future brought, the fleet is worked through once, and the answer drops onto the pile. Press it
@@ -117,10 +118,8 @@ Read the first row. The point estimate is a real number, correctly computed. Bes
 smallest and the largest of the answers the same arithmetic gave, and they are not close.
 Nothing in the first calculation was wrong. It had no way to say that it was a bet.
 
-The smallest and the largest are a poor summary of the spread, because a handful of extreme
-answers set them. The chart below shows where the answers piled up. Every later table
-in this book reports a narrower band than this column, and [ch13](#monte-carlo) says which band
-and why.
+The smallest and the largest are a poor summary of the spread: a handful of extreme answers
+set them. The chart below shows where the answers piled up.
 
 ```{image} _figures/point-estimates-tco-spread.svg
 :alt: The five-year total cost as a spread of answers, with the single number marked on it
@@ -177,8 +176,8 @@ has capacity to spare. A host failing at the busy hour, so that its share of the
 on survivors that were already busy. A new field on a measurement, which multiplies the number of
 things you store by however many values the field turns out to take. A working set outgrowing
 memory. These are regime changes, and **a chain of multiplications cannot model a regime
-change**. It will happily report a system running at several times its own limit, which describes
-nothing that can happen.
+change**. It reports a system running at several times its own limit, which describes nothing
+that can happen.
 
 So a sizing model has to do more than produce a number. It has to say how much room it keeps
 below each limit, and why. The toolkit enforces that rather than asking for it. A model with a
@@ -193,9 +192,7 @@ this book applies to what you are holding. The web service model starts as a cos
 becomes a sizing model partway through being built. One node makes the change, and it can be
 named. Problem 1.2 is finding it, on the same model at six stages of construction.
 
-Nobody declares the change. It happens when you add a measured constant or a ceiling to the file,
-and the toolkit works the rest out. So you find the stage rather than being told it, which is why
-this page does not name it.
+You find the stage rather than being told it, which is why this page does not name the node.
 
 :::{note} Key takeaways
 - **A point estimate is silent, not wrong.** One value per input and the arithmetic done once gives
@@ -222,8 +219,8 @@ of that shape, argued in [Appendix F](#appendix-f-observability-model).
 reason.
 
 **Whether the spread anybody declared is the right spread.** The range above faithfully reports
-the spreads in the model file. If the growth rate's spread was somebody's mood on a Tuesday, the
-range inherits that and says nothing about it. [ch03](#where-the-numbers-come-from) is about
+the spreads in the model file. If the growth rate's spread was a guess nobody checked, the range
+inherits the guess and says nothing about it. [ch03](#where-the-numbers-come-from) is about
 telling a measurement from a claim from a guess. That difference decides whether a range is a
 finding or a decoration.
 

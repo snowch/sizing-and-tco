@@ -486,6 +486,50 @@ reading for sense. So pages came out clean and stayed abstract: short sentences,
 plain words, and nothing a reader could take hold of. A checklist that omits the slow half is a
 checklist for the fast half, whatever it says at the top.
 
+## 23. A turn of phrase is rationed like everything else
+
+Rules 17 to 22 each ban a habit. This one bans a *density*. *Somebody's mood on a Tuesday*, *a
+purchase order signed on Friday*, *the arithmetic is a morning's work* — each is a good line, and
+three of them within a page make a reader parse the style instead of the meaning. A reader who is
+enjoying the writing has stopped reading the argument.
+
+One or two to a section. The test is not whether the phrase is good; it is whether the reader has
+met one recently. Where two do the same job, keep the one nearer the point it is making, and
+where two are the same *shape* — two arbitrary weekdays, two homely units of time — cut one
+whatever their quality.
+
+Before, from ch01, one section apart:
+
+> If the growth rate's spread was somebody's mood on a Tuesday, the range inherits that…
+>
+> A narrow one on a purchase order signed on Friday might be.
+
+After: the second stays, because the purchase order is the decision the paragraph is about. The
+first becomes *a guess nobody checked*.
+
+## 24. A forward reference is a debt the reader cannot call in
+
+*[ch13] measures it*, *[ch19] is that subject*, *[Appendix E] shows the finished thing* each tell
+a reader the answer is somewhere they are not. A few are a map. A dozen is being told, over and
+over, that this page is not where the thing is explained — and most chapters are read on their
+own, as a web page, by somebody who will not turn to ch19 today.
+
+So: one to a paragraph, none in a sentence already doing two jobs, and where two point at the
+same thing, put them in one sentence rather than two. *Where to go next* exists to carry the rest.
+A chapter that has said what it has to say does not need to keep promising.
+
+Before, from ch01:
+
+> The smallest and the largest are a poor summary of the spread, because a handful of extreme
+> answers set them. The chart below shows where the answers piled up. Every later table in this
+> book reports a narrower band than this column, and [ch13](#monte-carlo) says which band and why.
+
+After — three jobs become two, and the reference goes, because ch13 is named two paragraphs later
+with something substantial to say:
+
+> The smallest and the largest are a poor summary of the spread: a handful of extreme answers set
+> them. The chart below shows where the answers piled up.
+
 ### First pass: the sentences
 
 A scan. Each line names the rule.
@@ -504,6 +548,7 @@ A scan. Each line names the rule.
 - [ ] Items in a list: the same shape? (8)
 - [ ] A term the ration does not admit: gone, and the plain thing said (6).
 - [ ] A number typed into the prose: never (12).
+- [ ] Two forward references in one sentence, or one in a sentence already busy: thin them (24).
 
 ### Second pass: the idea
 
@@ -519,6 +564,9 @@ every line above and fail every line here.
 - [ ] The headings, read alone: do they carry the argument? (7)
 - [ ] An idea arriving before the reader has a reason to want it: move it (13).
 - [ ] Anything made simple enough to be wrong: put the difficulty back (16).
+- [ ] Count the turns of phrase in each section. More than two: cut to the best (23).
+- [ ] Count the forward references on the page. Is the reader being told the answer is
+      elsewhere more often than they are being given one? (24)
 
 ## Final test
 
