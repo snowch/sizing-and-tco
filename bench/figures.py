@@ -117,11 +117,12 @@ FIGURES: dict[str, Table | Diagram] = {
         alt="How far the answer moves when one, two, three or more inputs are each a fifth high",
         computed_from="the rule stated beside it, not the model's own bands",
     ),
-    "point-estimates-leaves-out": Diagram(
-        draw=diagrams.what_one_number_leaves_out,
+    "point-estimates-once-and-many": Diagram(
+        draw=diagrams.once_against_many,
         result="web_service-reference",
         args=("hosts_recommended",),
-        alt="The single number, the answers the same arithmetic gave, and what neither can reach",
+        alt="The single number marked above the pile of answers the same arithmetic gave, "
+        "with the single number low in the pile rather than in the middle of it",
     ),
     "point-estimates-tco-spread": Diagram(
         draw=diagrams.spread_of_answers,

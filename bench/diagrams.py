@@ -834,18 +834,19 @@ def compounding(_result: str | None = None) -> str:
     )
 
 
-def what_one_number_leaves_out(result: str, node_name: str) -> str:
-    """The two different things a single number is silent about, on one drawing.
+def once_against_many(result: str, node_name: str) -> str:
+    """The same arithmetic run once, and run again with every input free to move.
 
-    ch01 claims a point estimate leaves out two things that are not the same thing, and then
-    names both in a sentence each. The first two rows here are that claim checked against the
-    model: the single number as a mark, and underneath it every answer the same arithmetic gave
-    when the inputs were allowed to vary. Where the mark falls in that pile is the argument.
+    The argument is where the single number falls in the pile. It is not the middle of it, and a
+    reader who has only ever seen the single number has no way to know which end of the pile they
+    are standing at.
 
-    The third row is drawn off the axis on purpose. A quantity nobody wrote down is not a wider
-    interval on the same scale -- it is a different picture -- and drawing it as one would teach
-    exactly the thing the paragraph is warning against. It is an empty dashed frame, which is
-    what this book already draws for a constant nobody has measured.
+    This drawing used to carry a third row: an empty dashed frame for the error a chain of
+    multiplications cannot represent, deliberately off the axis because it is not a wider band on
+    the same scale. The idea was sound and the picture was not. A reader met three rows, one of
+    them empty, labelled with a phrase that only parses once you already know what it is denying.
+    The second thing a point estimate leaves out is stated in the list above the figure and drawn
+    properly in ch08, where a regime change has a curve of its own.
     """
     payload = load_result(result)["summary"]
     node = payload["nodes"][node_name]
@@ -856,9 +857,11 @@ def what_one_number_leaves_out(result: str, node_name: str) -> str:
         )
     counts, edges = histogram["counts"], histogram["edges"]
     unit = node.get("unit", "")
+    drawn = sum(counts) or 1
+    middle = summary["p50"]
 
-    width, height = 560.0, 306.0
-    left, right = 150.0, width - 26
+    width, height = 560.0, 236.0
+    left, right = 132.0, width - 26
     # Far enough right to hold the bulk without spending most of the width on the last few answers.
     edge = summary["p95"] * 1.6
     span = (edge - edges[0]) or 1.0
@@ -867,14 +870,14 @@ def what_one_number_leaves_out(result: str, node_name: str) -> str:
         return left + min(max((value - edges[0]) / span, 0.0), 1.0) * (right - left)
 
     parts = [
-        '<text x="20" y="22" font-size="12.5" font-weight="600" fill="#263238">'
-        "What the one number is silent about</text>"
+        f'<text x="20" y="22" font-size="12.5" font-weight="600" fill="#263238">'
+        f"The same arithmetic, run once and run {drawn:,} times</text>"
     ]
 
-    one = 62.0
+    one = 66.0
     parts.append(
-        f'<text x="{left - 10}" y="{one + 4:.0f}" text-anchor="end" font-size="11.5" '
-        f'fill="#263238">the arithmetic once</text>'
+        f'<text x="{left - 12}" y="{one + 4:.0f}" text-anchor="end" font-size="11.5" '
+        f'fill="#263238">run once</text>'
     )
     parts.append(f'<line x1="{left}" y1="{one}" x2="{right}" y2="{one}" stroke="#cfd8dc"/>')
     parts.append(
@@ -886,10 +889,14 @@ def what_one_number_leaves_out(result: str, node_name: str) -> str:
         f'font-weight="600" fill="#b3413a">{point:,.0f} {_esc(unit)}s</text>'
     )
 
-    many, tall = 158.0, 62.0
+    many, tall = 168.0, 70.0
     parts.append(
-        f'<text x="{left - 10}" y="{many - tall / 2 + 4:.0f}" text-anchor="end" font-size="11.5" '
-        f'fill="#263238">the inputs varying</text>'
+        f'<text x="{left - 12}" y="{many - tall / 2 - 3:.0f}" text-anchor="end" font-size="11.5" '
+        f'fill="#263238">run again with every</text>'
+    )
+    parts.append(
+        f'<text x="{left - 12}" y="{many - tall / 2 + 12:.0f}" text-anchor="end" font-size="11.5" '
+        f'fill="#263238">input free to move</text>'
     )
     biggest = max(counts) or 1
     for index, count in enumerate(counts):
@@ -908,36 +915,27 @@ def what_one_number_leaves_out(result: str, node_name: str) -> str:
         f'y2="{many}" stroke="#b3413a" stroke-width="2" stroke-dasharray="5 3"/>'
     )
     parts.append(
-        f'<text x="{left}" y="{many + 15:.0f}" font-size="10.5" fill="#546e7a">'
-        f"{summary['min']:,.0f}</text>"
+        f'<line x1="{at(middle):.1f}" y1="{many - tall - 8:.0f}" x2="{at(middle):.1f}" '
+        f'y2="{many}" stroke="#37474f" stroke-width="2"/>'
     )
     parts.append(
-        f'<text x="{right}" y="{many + 15:.0f}" text-anchor="end" font-size="10.5" '
-        f'fill="#546e7a">{edge:,.0f} and past it ({beyond:,} of them)</text>'
-    )
-
-    neither = 218.0
-    parts.append(
-        f'<text x="{left - 10}" y="{neither + 28:.0f}" text-anchor="end" font-size="11.5" '
-        f'fill="#263238">neither can reach</text>'
+        f'<text x="{at(middle) + 7:.1f}" y="{many - tall - 12:.0f}" font-size="11" '
+        f'font-weight="600" fill="#37474f">middle answer, {middle:,.0f}</text>'
     )
     parts.append(
-        f'<rect x="{left}" y="{neither}" width="{right - left:.1f}" height="50" fill="none" '
-        f'stroke="#b3413a" stroke-width="1.4" stroke-dasharray="6 4" rx="4"/>'
+        f'<text x="{left}" y="{many + 16:.0f}" font-size="10.5" fill="#546e7a">'
+        f"{summary['min']:,.0f} {_esc(unit)}s</text>"
     )
     parts.append(
-        f'<text x="{left + 16:.0f}" y="{neither + 22:.0f}" font-size="11" fill="#546e7a">'
-        f"a quantity nobody wrote down; a limit a chain of</text>"
-    )
-    parts.append(
-        f'<text x="{left + 16:.0f}" y="{neither + 38:.0f}" font-size="11" fill="#546e7a">'
-        f"multiplications cannot represent</text>"
+        f'<text x="{right}" y="{many + 16:.0f}" text-anchor="end" font-size="10.5" '
+        f'fill="#546e7a">{edge:,.0f} {_esc(unit)}s, and {beyond:,} answers past this edge</text>'
     )
     parts.append(
         f'<text x="20" y="{height - 12:.0f}" font-size="10.5" fill="#546e7a">'
-        f"The top two share one axis. The third is not on it, and that is the point.</text>"
+        f"By itself, the single number says nothing about which side of the middle it falls "
+        f"on.</text>"
     )
-    return _svg(width, height, "".join(parts), "What the one number is silent about")
+    return _svg(width, height, "".join(parts), "The same arithmetic, run once and run many times")
 
 
 def distribution_shapes(_result: str | None = None) -> str:
