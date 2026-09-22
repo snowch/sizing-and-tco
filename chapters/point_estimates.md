@@ -41,9 +41,9 @@ free to move between the two ends somebody wrote down for it:
 
 Nothing changed between the mark and the pile except what the inputs were allowed to do. More
 than half the answers came out above the single number, and a long tail of them runs off to the
-right: futures that need a fleet several times the size. A single number shows none of that —
+right: answers that need a fleet several times the size. A single number shows none of that —
 not how wide the pile is, not where in it you are standing, and not the tail. The tail is the
-part that costs money, because those are the futures that need a fleet you did not buy.
+part that costs money, because those are the answers that need a fleet you did not buy.
 
 ## The material
 
@@ -71,7 +71,23 @@ first step.
 
 Multiplying uncertain numbers does not average their doubt out. It compounds it.
 
-Say each of them could be a fifth higher than the figure you wrote down.
+You know this already, from somewhere with no servers in it. Ask somebody how long they take to
+drive to work and they will not give you a number. They will say twenty-five minutes, forty if
+the bypass is busy. Ask what a year of that commute costs and the same thing happens three times
+over: how many days they go in, what the journey burns, what fuel costs this month. Every one of
+the three is a range, and nobody had to be taught to hold it as one.
+
+```{image} _figures/point-estimates-commute.svg
+:alt: Three everyday ranges -- days driven, litres a journey, price a litre -- and what a year costs from their middles against what it costs with all three at their tops
+:width: 100%
+```
+
+Not one of the three is much above its own middle, and the year is more than half as much again.
+Nothing went wrong and nothing cancelled. The highs multiplied instead of taking turns, which is
+the whole of it.
+
+Now the same thing as a rule, so it can be pointed at six inputs instead of three. Say each of
+them could be a fifth higher than the figure you wrote down.
 
 ```{image} _figures/point-estimates-compounding.svg
 :alt: How far the answer moves when one, two, three or more inputs are each a fifth high

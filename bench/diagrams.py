@@ -769,6 +769,97 @@ def scaling_curve(result: str) -> str:
     return _svg(width, height, "".join(body), "Throughput against host count")
 
 
+#: An everyday chain, declared here rather than typed into the chapter, because nobody measured
+#: it: a commute, and three quantities a driver already holds as ranges without being asked to.
+#: Chosen so that no single input is more than a fifth above its middle, which is the same fifth
+#: the rule beside it uses, so a reader can watch that rule produce this case.
+COMMUTE = (
+    ("days you drive in", "", "{:,.0f}", 190.0, 210.0, 230.0),
+    ("litres, there and back", "", "{:,.1f}", 2.5, 3.0, 3.6),
+    ("price a litre", "$", "{:,.2f}", 1.30, 1.50, 1.80),
+)
+
+
+def everyday_compounding(_result: str | None = None) -> str:
+    """The same compounding, on a chain the reader has driven rather than one they have sized.
+
+    ch01 asserts that doubt compounds along a chain of multiplications and then asks the reader to
+    accept a stipulation -- say each input is a fifth high -- before showing them anything. This
+    is the case underneath the stipulation, in quantities anybody who drives to work already
+    holds as ranges: how many days they go in, what the journey burns, what fuel costs.
+
+    A drawing of a rule rather than of a run, like ``compounding`` beside it. The figures are
+    illustrative and the drawing says so, because no commute was measured to produce them. What
+    is not illustrative is the arithmetic: the totals are computed from the three ranges, so the
+    claim the paragraph makes can be read off rather than taken.
+    """
+    # The gutter holds the longest label, "a year, all three at their tops", which wants about
+    # 186px at 11.5px and is anchored to the gutter's right edge.
+    width, height = 660.0, 258.0
+    gutter, line_from, line_to = 204.0, 250.0, width - 132
+    middles = [middle for _label, _sign, _pattern, _low, middle, _high in COMMUTE]
+    tops = [high for _label, _sign, _pattern, _low, _middle, high in COMMUTE]
+    from_middles = math.prod(middles)
+    from_tops = math.prod(tops)
+    worst = max(high / middle for _l, _s, _p, _lo, middle, high in COMMUTE) - 1
+
+    parts = [
+        '<text x="20" y="22" font-size="12.5" font-weight="600" fill="#263238">'
+        "What a year of driving to work costs</text>"
+    ]
+
+    for index, (label, sign, pattern, low, middle, high) in enumerate(COMMUTE):
+        y = 62.0 + index * 40
+        parts.append(
+            f'<text x="{gutter}" y="{y + 4:.0f}" text-anchor="end" font-size="11.5" '
+            f'fill="#263238">{_esc(label)}</text>'
+        )
+        parts.append(
+            f'<line x1="{line_from}" y1="{y}" x2="{line_to}" y2="{y}" stroke="#9fc0dd" '
+            f'stroke-width="2"/>'
+        )
+        at = line_from + (middle - low) / (high - low) * (line_to - line_from)
+        parts.append(f'<circle cx="{at:.1f}" cy="{y}" r="4.5" fill="#37474f"/>')
+        parts.append(
+            f'<text x="{at:.1f}" y="{y - 11:.0f}" text-anchor="middle" font-size="11" '
+            f'font-weight="600" fill="#37474f">{sign}{pattern.format(middle)}</text>'
+        )
+        parts.append(
+            f'<text x="{line_from - 8:.0f}" y="{y + 4:.0f}" text-anchor="end" font-size="10.5" '
+            f'fill="#546e7a">{sign}{pattern.format(low)}</text>'
+        )
+        parts.append(
+            f'<text x="{line_to + 8:.0f}" y="{y + 4:.0f}" font-size="10.5" fill="#546e7a">'
+            f"{sign}{pattern.format(high)}</text>"
+        )
+
+    for index, (label, value, colour) in enumerate(
+        [
+            ("a year, from the middles", from_middles, "#37474f"),
+            ("a year, all three at their tops", from_tops, "#b3413a"),
+        ]
+    ):
+        y = 200.0 + index * 22
+        parts.append(
+            f'<text x="{gutter}" y="{y}" text-anchor="end" font-size="11.5" fill="#263238">'
+            f"{_esc(label)}</text>"
+        )
+        parts.append(
+            f'<text x="{line_from}" y="{y}" font-size="11.5" font-weight="600" fill="{colour}">'
+            f"${value:,.0f}</text>"
+        )
+    parts.append(
+        f'<text x="{line_from + 92:.0f}" y="{222.0:.0f}" font-size="11.5" font-weight="600" '
+        f'fill="#b3413a">+{(from_tops / from_middles - 1) * 100:.0f}%</text>'
+    )
+    parts.append(
+        f'<text x="20" y="{height - 12:.0f}" font-size="10.5" fill="#546e7a">'
+        f"None of the three is more than {worst * 100:.0f}% above its middle. "
+        f"Illustrative figures, not a measurement.</text>"
+    )
+    return _svg(width, height, "".join(parts), "What a year of driving to work costs")
+
+
 #: The illustrative case ch01's compounding paragraph already argues in words: every input a
 #: fifth above the figure that was written down. A fifth, and not the bands the web service model
 #: actually declares, because problem 1.2 asks the reader to do that arithmetic on those bands and

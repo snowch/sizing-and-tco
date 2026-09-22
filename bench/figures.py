@@ -112,6 +112,15 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     # Drawn from the rule, not from a run: problem 1.2 asks the reader to compound the model's
     # own declared bands, so a figure of that result would be its answer, one screen above it.
+    # Drawn from the rule, not from a run: the chapter asks the reader to accept that doubt
+    # compounds before showing them a case of it, and this is the case, in quantities somebody
+    # who drives to work already holds as ranges.
+    "point-estimates-commute": Diagram(
+        draw=diagrams.everyday_compounding,
+        alt="Three everyday ranges -- days driven, litres a journey, price a litre -- and what a "
+        "year costs from their middles against what it costs with all three at their tops",
+        computed_from="three illustrative ranges stated in the drawing, not a measurement",
+    ),
     "point-estimates-compounding": Diagram(
         draw=diagrams.compounding,
         alt="How far the answer moves when one, two, three or more inputs are each a fifth high",
