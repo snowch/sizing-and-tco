@@ -29,16 +29,19 @@ Two things are missing from that number.
    over, so the chain reports a fleet running at several times the load it can carry, in the
    same flat tone it reports everything else. Measuring the inputs better never finds this one.
 
-```{image} _figures/point-estimates-leaves-out.svg
-:alt: The single number, the answers the same arithmetic gave, and what neither can reach
+Here is the first of the two, on the web service this book sizes. The mark near the top is the
+sums done once. The pile underneath it is the same sums done again and again, with every input
+free to move between the ends its own file declares:
+
+```{image} _figures/point-estimates-once-and-many.svg
+:alt: The single number marked above the pile of answers the same arithmetic gave, with the single number low in the pile rather than in the middle of it
 :width: 100%
 ```
 
-That is both of them, checked against this book's own model. The mark on *the arithmetic once*
-is the single number; the pile under *the inputs varying* is every answer the same arithmetic
-gave when each input could move, which is the first. The empty frame on *neither can reach* is
-drawn off the axis on purpose: the second is not a wider band on the same scale, and drawing it
-as one would teach the opposite of the point.
+Nothing changed between the mark and the pile except what the inputs were allowed to do. The
+single number came out below the middle answer, and to the right of both there is a long tail of
+futures that need far more hosts than either. The tail is the part a single number cannot show
+you at all.
 
 ## The material
 
