@@ -37,6 +37,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from bench.diagrams import KIND_FILL  # noqa: E402
+from bench.render import FRAME_KINDS  # noqa: E402
 from bench.stamp import load_result, shown  # noqa: E402
 
 DEFAULT_OUT = ROOT / "public"
@@ -246,7 +247,14 @@ def files() -> dict[str, bytes]:
 #: project site and does not rewrite an `{iframe}` directive's `src`, so a panel embedded in a
 #: chapter asks the wrong address and gets a 404. Narrow on purpose: it matches the directories
 #: this repository publishes beside the book, not every absolute URL on the page.
-UNBASED = re.compile(r'(src|href)="/((?:playground|models)/[^"]*)"')
+#:
+#: Those directories are `bench.render.FRAME_KINDS`, not a list of their own. Written out twice
+#: they drift, and the drift is silent on a laptop: `ci-check.sh` checks the links at the site
+#: root, where a missing base path is not missing. Adding `/futures/` and forgetting this line is
+#: what took the deploy down once; the only fix that holds is having nothing here to forget.
+UNBASED = re.compile(
+    r'(src|href)="/((?:' + "|".join(sorted(map(re.escape, FRAME_KINDS))) + r')/[^"]*)"'
+)
 
 
 def rebase(html: Path, base: str) -> bool:

@@ -191,6 +191,21 @@ python3 scripts/build-site.py --out _build/static > /dev/null
 python3 scripts/check-built-links.py _build/static > /dev/null
 echo "  OK"
 
+echo "== every link still resolves under the base path =="
+# The check above runs at the site root, where a URL missing the base path is indistinguishable
+# from one that has it. This book publishes at /sizing-and-tco/, and a root-relative `src` that
+# nothing rebased 404s there and nowhere else -- which is why it can only be caught after the
+# site is assembled *under* a base path. It has taken the deploy down twice: once when the
+# playground was added, once when `/futures/` was, and on both days this script was green.
+#
+# The base here is a stand-in, not the real one. What matters is that it is non-empty.
+rm -rf _build/based
+mkdir -p _build/based/book
+cp -r _build/static/. _build/based/book/
+python3 scripts/build-icons.py --inject _build/based/book --base /book/ > /dev/null
+python3 scripts/check-built-links.py _build/based/book /book > /dev/null
+echo "  OK"
+
 echo "== the book installs for offline use =="
 # After every page, viewer and playground is in the tree, because the worker lists them all and
 # a list that names a file the build did not produce fails the install in the reader's browser.
