@@ -110,7 +110,7 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("annual_growth",),
         source_note="the model's own declared band for that input, which problem 1.1 also uses",
     ),
-    # Drawn from the rule, not from a run: problem 1.1 asks the reader to compound the model's
+    # Drawn from the rule, not from a run: problem 1.2 asks the reader to compound the model's
     # own declared bands, so a figure of that result would be its answer, one screen above it.
     "point-estimates-compounding": Diagram(
         draw=diagrams.compounding,

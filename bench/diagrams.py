@@ -771,7 +771,7 @@ def scaling_curve(result: str) -> str:
 
 #: The illustrative case ch01's compounding paragraph already argues in words: every input a
 #: fifth above the figure that was written down. A fifth, and not the bands the web service model
-#: actually declares, because problem 1.1 asks the reader to do that arithmetic on those bands and
+#: actually declares, because problem 1.2 asks the reader to do that arithmetic on those bands and
 #: compare it with the table -- so drawing it here would put the problem's answer on the page
 #: above the problem.
 COMPOUNDING_OVER = 0.2

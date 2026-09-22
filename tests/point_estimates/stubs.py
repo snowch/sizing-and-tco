@@ -1,10 +1,11 @@
 """Chapter 1's problems. Edit this file; the tests beside it say whether you are right.
 
-The first two are about what a single number leaves out: how far a chain of uncertain quantities
-can move, and which of two kinds of model you are holding. Neither needs a sampler — the chapter
-is about what a point estimate hides, not yet about how to measure it.
+The first three are about what a single number leaves out: how far one uncertain quantity can
+move, how far the six of them move the answer together, and which of two kinds of model you are
+holding. None needs a sampler — the chapter is about what a point estimate hides, not yet about
+how to measure it.
 
-The third has no test. It is about a system you actually run, and there is no oracle for that.
+The fourth has no test. It is about a system you actually run, and there is no oracle for that.
 """
 
 from __future__ import annotations
@@ -26,7 +27,8 @@ def spread_of_each(bands: dict[str, tuple[float, float]]) -> dict[str, float]:
             ...   # six in all, the six the chapter has been using
         }
 
-    Return a dictionary mapping each of those names to the top of its band over its bottom.
+    Return a dictionary mapping each of those names to the top of its band over its bottom. That
+    is one division per input, and the next problem is what those six do together.
 
     The file writes the two ends one of two ways, and ``bands`` has already reduced both to a
     bottom and a top, so you do not have to care which. What the two kinds mean by their ends
@@ -40,13 +42,19 @@ def spread_of_each(bands: dict[str, tuple[float, float]]) -> dict[str, float]:
 def spread_on_paper(
     bands: dict[str, tuple[float, float]], count_at: Callable[[dict[str, float]], float]
 ) -> float:
-    """Problem 1.1 - and how uncertain are they together?
+    """Problem 1.2 - and how uncertain are they together?
+
+    ``bands`` is the same dictionary problem 1.1 handed you: the six inputs, each mapped to the
+    two ends of its band, bottom first.
 
     ``count_at`` works the model through with the inputs you name held at the values you give,
     and returns the hosts it then recommends: the ``hosts_recommended`` output, the first row of
     the chapter's table. Call it with every input in ``bands`` held at the bottom of its band,
     all at once. Call it again with every one held at the top. Return the second count over the
-    first: the same kind of number ``spread_of_each`` gives for one input, now for the answer.
+    first: the same kind of number problem 1.1 gave you for one input, now for the answer.
+
+    Then set it beside the six you got from problem 1.1. It is not the largest of them, and it is
+    not their average.
 
     This is the arithmetic you could do on paper, and it claims something nobody's data supports:
     that every input sits at the same end of its band at the same moment. ch13 replaces that
@@ -54,11 +62,11 @@ def spread_on_paper(
     that it needs nothing but the numbers already in the file, and what comes out is still wider
     than any one input can make it on its own. That is the thing a point estimate cannot say.
     """
-    raise NotImplementedError("problem 1.1")
+    raise NotImplementedError("problem 1.2")
 
 
 def kind_of(model: Model) -> str:
-    """Problem 1.2 - which of the two kinds of model is this?
+    """Problem 1.3 - which of the two kinds of model is this?
 
     Return ``"cost"`` or ``"sizing"``.
 
@@ -71,11 +79,11 @@ def kind_of(model: Model) -> str:
     Decide by reading the model. The test decides from the node types the loader produced, which
     is the same rule ``scripts/verify-models.py`` applies to every model in this repository.
     """
-    raise NotImplementedError("problem 1.2")
+    raise NotImplementedError("problem 1.3")
 
 
 def what_decides_it(model: Model) -> list[str]:
-    """Problem 1.2 - and which nodes make it that?
+    """Problem 1.3 - and which nodes make it that?
 
     Return the names of the nodes that decide the answer to ``kind_of``, sorted. For a sizing
     model that is every measured constant and every ceiling in it. For a cost model it is the
@@ -84,4 +92,4 @@ def what_decides_it(model: Model) -> list[str]:
     The point of naming them: a sizing model is not a mood. It is a specific short list of
     quantities that a chain of multiplications is quietly lying about, and you can write it down.
     """
-    raise NotImplementedError("problem 1.2")
+    raise NotImplementedError("problem 1.3")
