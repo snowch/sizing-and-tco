@@ -439,6 +439,39 @@ def test_every_tested_problem_is_checkable_on_its_chapter_page():
         assert f"tests/{slug}/stubs.py" in payload["files"]
 
 
+def test_every_embedded_directory_gets_the_base_path():
+    """A `/futures/...` that nothing rebased is a 404 on the project site and nowhere else.
+
+    MyST rewrites `href` for a base path and does not rewrite an `{iframe}` directive's `src`, so
+    ``build-icons.py`` stamps the base onto the root-relative URLs this repository publishes
+    beside the book. It does that from a pattern, and a pattern is a list: add a publish
+    directory, forget the list, and every chapter embedding that directory breaks on deploy and
+    only on deploy -- ``check-built-links.py`` at the site root cannot tell a URL missing the base
+    path from one that has it.
+
+    That has now happened twice. This asserts the pattern covers every directory the chapters
+    actually embed, read from the chapters rather than from a third list.
+    """
+    from importlib import util
+
+    spec = util.spec_from_file_location("build_icons", ROOT / "scripts" / "build-icons.py")
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    embedded = {
+        match
+        for path in (ROOT / "chapters").glob("*.md")
+        for match in re.findall(r"\{iframe\}\s+/([a-z0-9-]+)/", path.read_text())
+    }
+    assert embedded, "no chapter embeds a panel -- this test is checking nothing"
+    for directory in sorted(embedded):
+        url = f'src="/{directory}/whatever.html"'
+        assert module.UNBASED.search(url), (
+            f"a chapter embeds /{directory}/ and build-icons.py would not give it the base path, "
+            f"so every reader of that chapter gets a 404 on the project site"
+        )
+
+
 def test_the_pages_that_run_the_toolkit_share_one_runtime_and_one_boot():
     """Three pages start Python in a browser. One copy of how, or they drift.
 
