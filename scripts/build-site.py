@@ -1105,6 +1105,13 @@ CSS = """
   --accent: #35648f; --on-accent: #ffffff; --wash: rgba(53,100,143,.09);
   --warn: #c8791a; --stop: #b3413a; --go: #2e7d32;
   --measure: 36rem;
+  /* The same measure counted in characters rather than root-font units. The prose is sized in
+     px and the column in rem, so the two move apart the moment a reader's text renders at a
+     size the root font does not know about -- a minimum-font-size floor, an accessibility text
+     size, a user stylesheet. At 18px Charter, 36rem and 64ch are both 576px, so today this
+     changes nothing; when the text is larger the column grows with it instead of squeezing the
+     line down to forty characters. */
+  --prose: 64ch;
   /* The two rails, which grow with the window rather than stepping at one width. A chapter
      list that wraps 16 of its 39 entries is hard to scan, and the room to fix it appears
      gradually: the middle column stops needing every pixel once the window passes 1440, which
@@ -1280,7 +1287,8 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
 /* Centred, because the slack has to go somewhere and all of it on the right reads as a mistake.
    Below the first breakpoint this cap is the whole of the layout; above it, the rule below
    hands the cap to each child instead, so a figure can be wider than a paragraph. */
-main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem; max-width: calc(var(--measure) + 5rem);
+main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;
+       max-width: calc(max(var(--measure), var(--prose)) + 5rem);
        min-width: 0; width: 100%; margin-inline: auto; }
 /* Above the first breakpoint the measure belongs to each thing in the chapter rather than to
    the column holding them, so the line length is the same at every width -- prose, headings
@@ -1306,6 +1314,7 @@ main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem; max-width: calc(var(--measur
 @media (min-width: 58rem) {
   #main { max-width: none; }
   #main > * { max-width: var(--measure); margin-inline: auto; }
+  #main > :is(p, ul, ol, dl, blockquote) { max-width: max(var(--measure), var(--prose)); }
   #main > :is(figure:has(> iframe), figure:has(> .runner), table) { max-width: min(100%, 84rem); }
   #main > :is(pre, .editable-block, .problem, figure:has(> pre)) { max-width: min(100%, 60rem); }
   #main > figure > figcaption { margin-inline: auto; }
@@ -1321,7 +1330,7 @@ h2 { font-size: 1.35rem; font-weight: 650; line-height: 1.25; margin: 2.5rem 0 .
      padding-top: 1.1rem; border-top: 1px solid var(--edge); }
 h3 { font-size: 1.04rem; font-weight: 700; line-height: 1.3; margin: 1.9rem 0 .6rem; }
 h4 { font-size: .95rem; font-weight: 600; color: var(--muted); margin: 1.6rem 0 .4rem; }
-p, li { max-width: var(--measure); }
+p, li { max-width: max(var(--measure), var(--prose)); }
 p { margin: 0 0 1.05rem; }
 ul, ol { padding-left: 1.4rem; }
 li { margin-bottom: .35rem; }

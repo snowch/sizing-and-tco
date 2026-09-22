@@ -439,6 +439,35 @@ def test_every_tested_problem_is_checkable_on_its_chapter_page():
         assert f"tests/{slug}/stubs.py" in payload["files"]
 
 
+def test_the_prose_column_is_measured_in_characters():
+    """The column has to grow when the reader's text does, or the line collapses.
+
+    The prose is sized in ``px`` and the column was capped in ``rem``, which is the root font.
+    Those two never move together: a minimum-font-size floor, an accessibility text size or a
+    user stylesheet raises the glyphs and leaves the column where it was, and the reader gets a
+    column too narrow for their own text. Measured in a browser, an 18px page at 576px holds 73
+    characters to a line; the same 576px holds 42 at 32px text and 31 at 40px. It fails the
+    other way too -- raise the browser's default font size and ``36rem`` grows while 18px prose
+    does not, so the line gets longer rather than shorter.
+
+    So the cap is ``max(--measure, --prose)`` with ``--prose`` in ``ch``, which resolves against
+    the element's own font. At 18px Charter both are 576px, so nothing moves for a reader on
+    defaults; above that the column tracks the text and the line stays at 73 characters.
+    """
+    css = (ROOT / "scripts" / "build-site.py").read_text()
+
+    prose = re.search(r"--prose:\s*([\d.]+)(ch|em)\s*;", css)
+    assert prose, "--prose is not declared in a unit relative to the text it measures"
+
+    for rule in (r"p, li \{ max-width: ([^;]+);", r"#main > :is\(p[^)]*\) \{ max-width: ([^;]+);"):
+        found = re.search(rule, css)
+        assert found, f"no rule caps prose: {rule}"
+        assert "--prose" in found.group(1), (
+            f"prose is capped by {found.group(1)!r}, which does not mention --prose. A cap that "
+            "ignores the text size squeezes the line down as the text grows."
+        )
+
+
 def test_every_embedded_directory_gets_the_base_path():
     """A `/futures/...` that nothing rebased is a 404 on the project site and nowhere else.
 
