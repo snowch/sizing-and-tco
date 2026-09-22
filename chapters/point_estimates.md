@@ -10,13 +10,27 @@ short_title: "ch01 Point estimates"
 
 What is a single number worth, and what can it not tell you, even when the arithmetic is right?
 
-Somebody has asked how big the system needs to be. You can do the arithmetic. That is rarely the
-hard part. What comes out is one number, and the number says nothing about how much you would
-stake on it.
+You have been asked how many hosts to buy for a service that does not exist yet, and the order
+goes in this week. So you multiply: requests in the busy hour, processor time each one takes,
+what a host holds. The arithmetic is a morning's work, and it is not the hard part. What comes
+out is one number, and nothing in it tells you whether it is a number to sign for.
 
-A single number leaves out two things, and they are not the same thing. The first is the spread
-the arithmetic threw away, and [ch13](#monte-carlo) measures it. The second is an error in the
-model's shape, and no amount of measuring will find it.
+Two different things are missing from it. One is the spread you threw away at the first step —
+you wrote down the middle of what growth has done for three years, and from there the arithmetic
+treated that middle as though somebody had gone and measured it. [ch13](#monte-carlo) puts it
+back. The other is an error in the shape of the model: a chain of multiplications has no way to
+say that a queue has tipped over, so it will report a fleet running at several times its own
+limit and sound exactly as confident. No amount of measuring the inputs finds that one.
+
+```{image} _figures/point-estimates-leaves-out.svg
+:alt: The single number, the answers the same arithmetic gave, and what neither can reach
+:width: 100%
+```
+
+The top two rows are this book's own model. The mark is the single number; beneath it is every
+answer the same arithmetic gave once the inputs were allowed to move. The dashed frame is drawn
+off that axis deliberately, because the second kind of error is not a wider band on the same
+scale.
 
 ## The material
 
@@ -44,10 +58,17 @@ first step.
 
 Multiplying uncertain numbers does not average their doubt out. It compounds it.
 
-Take two of them. Say each could be a fifth higher than the figure you wrote down. If both come in
-a fifth high together, the answer is not a fifth high. It is nearly half as much again, because
-the two errors multiply instead of taking turns. Add a third and a fourth and the gap widens
-again. Nothing cancels, because nothing made these inputs disagree with each other.
+Say each of them could be a fifth higher than the figure you wrote down.
+
+```{image} _figures/point-estimates-compounding.svg
+:alt: How far the answer moves when one, two, three or more inputs are each a fifth high
+:width: 100%
+```
+
+Two inputs a fifth high do not make the answer a fifth high. They make it nearly half as much
+again, because the errors multiply instead of taking turns. By six — which is what the fleet in
+this chapter rests on — the answer has tripled, and no single input moved by more than a fifth.
+Nothing cancels, because nothing made these inputs disagree with each other.
 
 Problem 1.1 is that arithmetic, done on this book's web service model with nothing but the spreads
 the model already declares. The compounded spread is not the widest input's, and it is not their

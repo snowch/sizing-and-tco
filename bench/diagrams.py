@@ -757,6 +757,169 @@ def scaling_curve(result: str) -> str:
     return _svg(width, height, "".join(body), "Throughput against host count")
 
 
+#: The illustrative case ch01's compounding paragraph already argues in words: every input a
+#: fifth above the figure that was written down. A fifth, and not the bands the web service model
+#: actually declares, because problem 1.1 asks the reader to do that arithmetic on those bands and
+#: compare it with the table -- so drawing it here would put the problem's answer on the page
+#: above the problem.
+COMPOUNDING_OVER = 0.2
+COMPOUNDING_CHAIN = 6
+
+
+def compounding(_result: str | None = None) -> str:
+    """How far the answer moves when several inputs are out the same way.
+
+    A drawing of a rule rather than of a run. The paragraph beside it says the answer is "nearly
+    half as much again" from two inputs a fifth out, which is a sentence a reader has to do
+    arithmetic to believe. The bars are that arithmetic: each one is
+    ``(1 + a fifth) ** n - 1``, so the claim can be read off rather than taken.
+
+    The point is the shape of the rise, not any one bar. Doubt does not average out along a chain
+    of multiplications, and by six inputs -- which is what this book's own fleet rests on -- the
+    answer has tripled while no single input moved by more than a fifth.
+    """
+    width, height = 560.0, 254.0
+    left, right, top, bottom = 172.0, width - 76, 42.0, height - 42
+    excess = [(1 + COMPOUNDING_OVER) ** n - 1 for n in range(1, COMPOUNDING_CHAIN + 1)]
+    widest = excess[-1]
+    row = (bottom - top) / COMPOUNDING_CHAIN
+
+    parts = [
+        '<text x="20" y="22" font-size="12.5" font-weight="600" fill="#263238">'
+        "How far the answer moves when every input is out the same way</text>"
+    ]
+    for index, over in enumerate(excess):
+        y = top + index * row + 3
+        bar = (over / widest) * (right - left)
+        # The second bar is the one the paragraph names, so it is the one drawn in full strength.
+        fill = "#4a7ba7" if index == 1 else "#9fc0dd"
+        count = index + 1
+        parts.append(
+            f'<rect x="{left}" y="{y:.1f}" width="{bar:.1f}" height="{row - 9:.1f}" fill="{fill}"/>'
+        )
+        parts.append(
+            f'<text x="{left - 10}" y="{y + row / 2 - 2:.1f}" text-anchor="end" font-size="11.5" '
+            f'fill="#263238">{count} input{"" if count == 1 else "s"} a fifth high</text>'
+        )
+        parts.append(
+            f'<text x="{left + bar + 7:.1f}" y="{y + row / 2 - 2:.1f}" font-size="11.5" '
+            f'font-weight="600" fill="#263238">+{over * 100:.0f}%</text>'
+        )
+    parts.append(
+        f'<text x="20" y="{height - 14:.0f}" font-size="10.5" fill="#546e7a">'
+        f"Nothing cancels, because nothing makes the inputs disagree with each other.</text>"
+    )
+    return _svg(
+        width, height, "".join(parts), "The answer's excess against how many inputs are out"
+    )
+
+
+def what_one_number_leaves_out(result: str, node_name: str) -> str:
+    """The two different things a single number is silent about, on one drawing.
+
+    ch01 claims a point estimate leaves out two things that are not the same thing, and then
+    names both in a sentence each. The first two rows here are that claim checked against the
+    model: the single number as a mark, and underneath it every answer the same arithmetic gave
+    when the inputs were allowed to vary. Where the mark falls in that pile is the argument.
+
+    The third row is drawn off the axis on purpose. A quantity nobody wrote down is not a wider
+    interval on the same scale -- it is a different picture -- and drawing it as one would teach
+    exactly the thing the paragraph is warning against. It is an empty dashed frame, which is
+    what this book already draws for a constant nobody has measured.
+    """
+    payload = load_result(result)["summary"]
+    node = payload["nodes"][node_name]
+    point, summary, histogram = node["point"], node.get("summary"), node.get("histogram")
+    if not summary or not histogram:
+        return _svg(
+            360, 40, '<text x="8" y="24" font-size="11">this node does not vary</text>', "fixed"
+        )
+    counts, edges = histogram["counts"], histogram["edges"]
+    unit = node.get("unit", "")
+
+    width, height = 560.0, 306.0
+    left, right = 150.0, width - 26
+    # Far enough right to hold the bulk without spending most of the width on the last few answers.
+    edge = summary["p95"] * 1.6
+    span = (edge - edges[0]) or 1.0
+
+    def at(value: float) -> float:
+        return left + min(max((value - edges[0]) / span, 0.0), 1.0) * (right - left)
+
+    parts = [
+        '<text x="20" y="22" font-size="12.5" font-weight="600" fill="#263238">'
+        "What the one number is silent about</text>"
+    ]
+
+    one = 62.0
+    parts.append(
+        f'<text x="{left - 10}" y="{one + 4:.0f}" text-anchor="end" font-size="11.5" '
+        f'fill="#263238">the arithmetic once</text>'
+    )
+    parts.append(f'<line x1="{left}" y1="{one}" x2="{right}" y2="{one}" stroke="#cfd8dc"/>')
+    parts.append(
+        f'<line x1="{at(point):.1f}" y1="{one - 13:.0f}" x2="{at(point):.1f}" '
+        f'y2="{one + 13:.0f}" stroke="#b3413a" stroke-width="2.5"/>'
+    )
+    parts.append(
+        f'<text x="{at(point):.1f}" y="{one - 19:.0f}" text-anchor="middle" font-size="11" '
+        f'font-weight="600" fill="#b3413a">{point:,.0f} {_esc(unit)}s</text>'
+    )
+
+    many, tall = 158.0, 62.0
+    parts.append(
+        f'<text x="{left - 10}" y="{many - tall / 2 + 4:.0f}" text-anchor="end" font-size="11.5" '
+        f'fill="#263238">the inputs varying</text>'
+    )
+    biggest = max(counts) or 1
+    for index, count in enumerate(counts):
+        if not count or edges[index] > edge:
+            continue
+        x0, x1 = at(edges[index]), at(edges[index + 1])
+        bar = (count / biggest) * tall
+        parts.append(
+            f'<rect x="{x0:.1f}" y="{many - bar:.1f}" width="{max(x1 - x0 - 0.6, 0.6):.1f}" '
+            f'height="{bar:.1f}" fill="#9fc0dd"/>'
+        )
+    beyond = sum(c for i, c in enumerate(counts) if edges[i] > edge)
+    parts.append(f'<line x1="{left}" y1="{many}" x2="{right}" y2="{many}" stroke="#cfd8dc"/>')
+    parts.append(
+        f'<line x1="{at(point):.1f}" y1="{many - tall - 8:.0f}" x2="{at(point):.1f}" '
+        f'y2="{many}" stroke="#b3413a" stroke-width="2" stroke-dasharray="5 3"/>'
+    )
+    parts.append(
+        f'<text x="{left}" y="{many + 15:.0f}" font-size="10.5" fill="#546e7a">'
+        f"{summary['min']:,.0f}</text>"
+    )
+    parts.append(
+        f'<text x="{right}" y="{many + 15:.0f}" text-anchor="end" font-size="10.5" '
+        f'fill="#546e7a">{edge:,.0f} and past it ({beyond:,} of them)</text>'
+    )
+
+    neither = 218.0
+    parts.append(
+        f'<text x="{left - 10}" y="{neither + 28:.0f}" text-anchor="end" font-size="11.5" '
+        f'fill="#263238">neither can reach</text>'
+    )
+    parts.append(
+        f'<rect x="{left}" y="{neither}" width="{right - left:.1f}" height="50" fill="none" '
+        f'stroke="#b3413a" stroke-width="1.4" stroke-dasharray="6 4" rx="4"/>'
+    )
+    parts.append(
+        f'<text x="{left + 16:.0f}" y="{neither + 22:.0f}" font-size="11" fill="#546e7a">'
+        f"a quantity nobody wrote down; a limit a chain of</text>"
+    )
+    parts.append(
+        f'<text x="{left + 16:.0f}" y="{neither + 38:.0f}" font-size="11" fill="#546e7a">'
+        f"multiplications cannot represent</text>"
+    )
+    parts.append(
+        f'<text x="20" y="{height - 12:.0f}" font-size="10.5" fill="#546e7a">'
+        f"The first two rows are one model. The third is not on their axis at all.</text>"
+    )
+    return _svg(width, height, "".join(parts), "What the one number is silent about")
+
+
 def distribution_shapes(_result: str | None = None) -> str:
     """The four shapes this book uses, drawn from their own percentile functions.
 
