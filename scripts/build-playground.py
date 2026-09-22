@@ -37,6 +37,7 @@ sys.path.insert(0, str(ROOT))
 
 from bench.stages import label_of, stages  # noqa: E402
 from bench.stamp import shown  # noqa: E402
+from bench.theme import FRAME, both_ways  # noqa: E402
 from sizing.dsl import load_model  # noqa: E402
 from sizing.playground.driver import check  # noqa: E402
 from sizing.playground.toolkit import BOOT, PYODIDE, results_for, sources, wheels  # noqa: E402
@@ -100,6 +101,7 @@ PAGE = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title} &mdash; Sizing and TCO</title>
 <style>{css}</style>
+{theme}
 </head>
 <body>
 <header>
@@ -324,7 +326,8 @@ def build(stage) -> str:
     """One page for one stage of the running example."""
     model = stage.path.read_text()
     return PAGE.format(
-        css=CSS,
+        css=both_ways(CSS),
+        theme=FRAME,
         title=html.escape(f"{label_of(stage.chapter)} \u00b7 {stage.title}"),
         model=html.escape(model),
         model_json=json.dumps(model),

@@ -37,6 +37,7 @@ sys.path.insert(0, str(ROOT))
 from bench.outline import CHAPTERS  # noqa: E402
 from bench.stamp import load_result, shown  # noqa: E402
 from bench.tables import REPOSITORY  # noqa: E402
+from bench.theme import FRAME, both_ways  # noqa: E402
 
 VIEWER = ROOT / "sizing" / "viewer"
 DEFAULT_OUT = ROOT / "_build" / "futures"
@@ -76,6 +77,7 @@ PAGE = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>One future at a time — {answer_label}</title>
 <style>{css}</style>
+{theme}
 </head>
 <body>
 <header>
@@ -149,9 +151,15 @@ def ancestors(payload: dict, target: str) -> set[str]:
 
 
 def trim(payload: dict, keep: set[str]) -> dict:
-    """The part of the export the browser needs: the graph, and nothing said about it."""
+    """The part of the export the browser needs: the graph, and nothing said about it.
+
+    In name order, not set order: a set iterates in whatever order its hashes fell, so two
+    builds of the same payload came out with the same values under keys in a different order.
+    Nothing read the file differently, but a rebuild showed as a diff, which makes a real one
+    easy to miss.
+    """
     nodes = {}
-    for name in keep:
+    for name in sorted(keep):
         node = payload["nodes"][name]
         cut = {"kind": node["kind"], "point": node.get("point")}
         for field in ("ast", "label", "unit", "distribution", "blocked_by"):
@@ -214,7 +222,8 @@ def build(slug: str, out_dir: Path) -> Path:
 
     chapter = next(c for c in CHAPTERS if c.slug == "point_estimates")
     rendered = PAGE.format(
-        css=(VIEWER / "futures.css").read_text(),
+        css=both_ways((VIEWER / "futures.css").read_text()),
+        theme=FRAME,
         answer_label=html.escape(page["answer_label"]),
         answer_unit=html.escape(page["answer_unit"]),
         lo=0,
