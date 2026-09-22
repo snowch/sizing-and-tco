@@ -97,10 +97,14 @@ def test_every_script_is_executable_and_parses():
 
 
 #: The constants that hold JavaScript rather than Python, and the file each one is in.
-JS_TEMPLATES = [
-    ("scripts/build-site.py", name)
-    for name in ("EXPAND", "MENU", "OFFLINE", "PROBLEMS", "RUNNER", "SEARCH")
-] + [("bench/theme.py", name) for name in ("_PARENT", "FRAME")]
+JS_TEMPLATES = (
+    [
+        ("scripts/build-site.py", name)
+        for name in ("EXPAND", "MENU", "OFFLINE", "PROBLEMS", "RUNNER", "SEARCH")
+    ]
+    + [("bench/theme.py", name) for name in ("_PARENT", "FRAME")]
+    + [("bench/reading.py", "_PARENT")]
+)
 
 
 @pytest.mark.parametrize(("where", "name"), JS_TEMPLATES)
@@ -856,11 +860,21 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     column = f"minmax(0, calc({wide.group(1)}rem + 5rem))"
     for selector in (
         f"html.nav-closed .shell {{ grid-template-columns: {column} var(--toc); }}",
-        f"html.toc-closed .shell {{ grid-template-columns: var(--nav) {column}; }}",
+        f"grid-template-columns: var(--nav) {column}; }}",
         f"grid-template-columns: {column}; max-width: none; }}",
-        "html.toc-closed .toc { display: none; }",
     ):
         assert selector in css, selector
+    # Two ways the outline goes: the reader closed it, or the chapter could not spare the room.
+    # They are the same layout, so every rule that serves one serves the other -- written apart,
+    # the arithmetic one would hide the rail and leave its column standing empty.
+    for selector, declaration in (
+        ("", "grid-template-columns: var\\(--nav\\)"),
+        (" \\.toc", "display: none"),
+    ):
+        for state in ("toc-closed", "toc-cramped"):
+            assert re.search(
+                rf"html\.{state}{selector}[^{{}}]*\{{[^}}]*{declaration}", css, re.S
+            ), f"nothing gives `{state}` its {declaration.replace(chr(92), '')}"
     # The measure moved off the column and onto each child, after the rule that caps the column.
     assert css.index("#main > * { max-width:") > css.index(
         "main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;"
@@ -881,6 +895,14 @@ def test_the_rails_take_the_room_as_it_appears():
     embedded model still clears the 861px its layout needs to put the inputs beside the graph,
     so the extra a rail may take is what the window has over 1440. The ramp starts a rem later
     than that, because `100vw` counts a classic scrollbar the layout does not have.
+
+    Swept over the reader's text size as well as the window, which the first version of this was
+    not, and that is how it passed while the layout was broken. It hardcoded ``rem = 16`` and so
+    only ever checked a reader on browser defaults. ``rem`` means two things here: in these
+    declarations it is the reader's text, and in the ``@media`` rules that decide whether a rail
+    is shown at all the spec fixes it at 16px whatever the reader has done. At 24px text the
+    layout showed both rails and drew them half as wide again -- 744px of a 1440px window, the
+    chapter down to 696px, the code to 65 of its 100 columns, the model to 581px and stacked.
     """
     css = site().CSS
     # The shape is fixed; the numbers in it are free to move, and the arithmetic below is what
@@ -888,8 +910,8 @@ def test_the_rails_take_the_room_as_it_appears():
     assert "--rails: clamp(0rem, (100vw" in css, (
         "the rails take nothing under a start width and never more than a cap"
     )
-    assert "--nav: calc(" in css and "var(--rails)" in css, "the chapter list takes a share"
-    assert "--toc: calc(" in css, "so does the outline"
+    assert "--nav: min(calc(" in css and "var(--rails)" in css, "the chapter list takes a share"
+    assert "--toc: min(calc(" in css, "so does the outline"
     assert "@media (min-width: 96rem)" not in css, (
         "the step this replaced skipped every window between 1440 and 1536"
     )
@@ -899,38 +921,53 @@ def test_the_rails_take_the_room_as_it_appears():
     assert "grid-template-columns: 17rem" not in css and "5rem)) 14rem" not in css, (
         "every grid rule reads the variables, or widening one rail moves only some of them"
     )
-    # The slope is what keeps the promise, so read it off the stylesheet rather than restating
-    # it: at no width may the rails take more than the middle column can spare, or an embedded
-    # model drops to its stacked layout.
-    rem = 16
     ramp = re.search(
         r"--rails: clamp\(0rem, \(100vw - ([\d.]+)rem\) \* ([\d.]+), ([\d.]+)rem\)", css
     )
     assert ramp, "the ramp is a clamp of the window less a start, with a slope and a cap"
-    start, slope, most = float(ramp[1]) * rem, float(ramp[2]), float(ramp[3]) * rem
-    shares = {}
+
+    rails = {}
     for rail in ("nav", "toc"):
-        got = re.search(rf"--{rail}: calc\(([\d.]+)rem \+ var\(--rails\) \* ([\d.]+)\)", css)
-        assert got, f"--{rail} is its own width plus a share of the ramp"
-        shares[rail] = (float(got[1]) * rem, float(got[2]))
-    assert abs(sum(share for _, share in shares.values()) - 1) < 1e-9, (
+        got = re.search(
+            rf"--{rail}: min\(calc\(([\d.]+)rem \+ var\(--rails\) \* ([\d.]+)\), "
+            rf"([\d.]+)px\)",
+            css,
+        )
+        assert got, f"--{rail} is its own width plus a share of the ramp, capped in px"
+        rails[rail] = (float(got[1]), float(got[2]), float(got[3]))
+    assert abs(sum(share for _, share, _ in rails.values()) - 1) < 1e-9, (
         "the two shares are the whole of the ramp, or the cap does not mean what it says"
     )
-    narrow = sum(base for base, _ in shares.values())
-    cap = float(re.search(r"\.shell \{[^}]*max-width: ([\d.]+)rem", css, re.S)[1]) * rem
-    column = float(re.search(r"calc\((\d+)rem \+ 5rem\)", css)[1]) * rem
-    padding, needs = 83, 861
-    for window in range(1400, 2400, 4):
-        taken = min(most, max(0, (window - start) * slope))
-        spare = window - (needs + padding) - narrow
-        assert taken <= max(0, spare) + 0.5, (
-            f"{window}px: the rails take {taken:.0f}px where only {spare:.0f}px is spare"
+    # Each cap is that rail at its widest on browser defaults, so a reader who has changed
+    # nothing sees exactly what they saw before, at every window width.
+    for rail, (base, share, cap) in rails.items():
+        widest = base * 16 + float(ramp[3]) * 16 * share
+        assert abs(cap - widest) < 0.5, (
+            f"--{rail} is capped at {cap:.0f}px but reaches {widest:.0f}px on browser defaults, "
+            f"so the cap changes the page for a reader who never asked for anything"
         )
-        rails = sum(base + taken * share for base, share in shares.values())
-        model = min(min(window, cap) - rails - padding, column)
-        assert model >= needs or window < needs + padding + narrow, (
-            f"{window}px: the model gets {model:.0f}px and its layout needs {needs}px"
-        )
+
+    def width(rail, rem, window):
+        base, share, cap = rails[rail]
+        taken = min(float(ramp[3]) * rem, max(0.0, window - float(ramp[1]) * rem)) * share
+        return min(base * rem + taken, cap)
+
+    needs, column = 861, float(re.search(r"calc\((\d+)rem \+ 5rem\)", css)[1]) * 16
+    shell = float(re.search(r"\.shell \{[^}]*max-width: ([\d.]+)rem", css, re.S)[1]) * 16
+    # Every text size a reader might be on, not just the one the browser ships with.
+    for rem in (16, 18, 20, 24, 28, 32):
+        padding = min(max(rem, 0.04 * 1440), 2.6 * rem) * 2
+        for window in range(1400, 2400, 4):
+            nav, toc = width("nav", rem, window), width("toc", rem, window)
+            # The outline gives way when the chapter cannot have what a model needs; the page
+            # measures that for itself, because a media query cannot see the reader's text.
+            if window - nav - toc - padding < needs:
+                toc = 0
+            model = min(min(window, shell) - nav - toc - padding, column)
+            assert model >= needs or window - nav - padding < needs, (
+                f"{window}px at {rem}px text: the chapter gets {model:.0f}px and a model's "
+                f"layout needs {needs}px, with the outline already away"
+            )
 
 
 def test_the_model_panel_says_how_far_a_slider_reaches():
@@ -1122,12 +1159,29 @@ def test_a_control_never_sits_on_the_thing_it_opens():
         ".wide-block > .expand { position: static; width: fit-content; margin: 0 0 .4rem auto; }"
         in css
     ), "taken out of the flow it overlays the block; left in it, above and right, it does not"
-    assert "html.model-open #main .wide-block.expanded > .expand { align-self: flex-end;" in css, (
-        "open, the wrapper is a flex column, so the button is its first row rather than an "
-        "overlay on the header row"
+    # Open, the control is pinned to the window rather than laid out in the box, because the box
+    # scrolls: at the right-hand edge of a 715px table in a 412px phone, a control in the flow is
+    # 300px away from a reader who has scrolled back to the first column. Pinned it is out of the
+    # flow, so the box keeps a row for it -- or it lands on the header row, which is the fault
+    # the control was moved out of the corner to fix, arriving by the other door.
+    assert "html.model-open #main .expanded > .expand { position: fixed;" in css
+    assert "html.model-open #main .expanded:has(> .expand) { padding-top:" in css, (
+        "the control is out of the flow and the box keeps no row for it, so it sits on the "
+        "first line of whatever it just opened"
     )
     assert ".wide-block { position: relative" not in css, (
         "a wrapper that establishes a containing block invites the button back over the content"
+    )
+    # The page behind an expanded box cannot scroll, so anything outside the box is unreachable
+    # rather than merely off-screen. A phone had 715px of table in a 412px box with the last
+    # three columns simply gone.
+    opened = re.search(r"html\.model-open #main \.expanded \{([^}]*)\}", css, re.S)
+    assert opened and "overflow: auto" in opened.group(1), (
+        "the expanded box does not scroll, and `model-open` stops the page scrolling too, so "
+        "content wider than the window has nothing that can reach it"
+    )
+    assert "html.model-open { overflow: hidden; }" in css, (
+        "the reason the box has to scroll; if this goes, the assertion above is the wrong one"
     )
     # The stylesheet can only put the control on top if the script puts it there first.
     script = build_site.EXPAND
