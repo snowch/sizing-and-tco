@@ -40,6 +40,8 @@ sys.path.insert(0, str(ROOT))
 
 from bench import render as renderer  # noqa: E402
 from bench.outline import APPENDICES, BY_SLUG, CHAPTERS, PART_PAGES  # noqa: E402
+from bench.reading import BUTTON as TEXT_BUTTON  # noqa: E402
+from bench.reading import PARENT as TEXT_PARENT  # noqa: E402
 from bench.stages import stages  # noqa: E402
 from bench.stamp import shown  # noqa: E402
 from bench.tables import GLOSSARY  # noqa: E402
@@ -844,17 +846,54 @@ document.addEventListener("DOMContentLoaded", () => {
       nav.classList.toggle("open");
     }
     reflect();
+    reflectOutline();
   });
   wide.addEventListener("change", reflect);
   reflect();
 
   const outline = document.getElementById("outline"), roomy = matchMedia("(min-width: 72rem)");
+  // What the chapter must keep, whichever is the larger: the 860px an embedded model needs to
+  // put its inputs beside its graph, or a hundred columns of code -- which is where the book's
+  // own lines stop, so a reader who has to scroll one sideways is being shown a file the page
+  // could have held. The second grows with the reading size, so it is measured rather than
+  // assumed: a character's advance differs between the fonts in the monospace stack, and this
+  // is the difference between a rule that holds on every machine and one that holds on mine.
+  const MODEL_NEEDS = 860;
+  const columnsNeed = () => {
+    const pre = document.querySelector("#main pre");
+    if (!pre) return 0;
+    const cs = getComputedStyle(pre);
+    const probe = document.createElement("span");
+    probe.style.cssText = "position:absolute;visibility:hidden;white-space:pre;"
+      + `font-family:${cs.fontFamily};font-size:${cs.fontSize}`;
+    probe.textContent = "0".repeat(100);
+    document.body.appendChild(probe);
+    const hundred = probe.getBoundingClientRect().width;
+    probe.remove();
+    return hundred + parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+                   + parseFloat(cs.borderLeftWidth) * 2;
+  };
+  // A media query cannot see the reader's text size -- `rem` inside one is fixed at 16px
+  // whatever the reader has set -- so the one decision that depends on it is made here. The
+  // rails' own widths are read rather than recomputed, and neither depends on whether the
+  // outline is currently shown, so this does not chase itself between the two answers.
+  const cramped = () => {
+    if (!roomy.matches) return false;
+    const style = getComputedStyle(root), main = document.getElementById("main");
+    const px = (name) => parseFloat(style.getPropertyValue(name)) || 0;
+    const pad = parseFloat(getComputedStyle(main).paddingLeft) * 2;
+    const rails = (root.classList.contains("nav-closed") ? 0 : px("--nav")) + px("--toc");
+    return window.innerWidth - rails - pad < Math.max(MODEL_NEEDS, columnsNeed());
+  };
   const reflectOutline = () => {
-    // Below the breakpoint the rail is not laid out at all, so neither is the button: a
-    // control for something the reader cannot see is worse than no control.
-    outline.hidden = !roomy.matches;
+    root.classList.toggle("toc-cramped", cramped());
+    // Below the breakpoint, or with no room for it, the rail is not laid out at all, so neither
+    // is the button: a control for something the reader cannot see is worse than no control.
+    outline.hidden = !roomy.matches || root.classList.contains("toc-cramped");
     outline.setAttribute("aria-expanded", String(!root.classList.contains("toc-closed")));
   };
+  addEventListener("resize", reflectOutline);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(reflectOutline);
   outline.addEventListener("click", () => {
     const closed = root.classList.toggle("toc-closed");
     try {
@@ -1057,6 +1096,7 @@ PAGE = """<!doctype html>
 <style>{css}</style>
 {boot}
 {theme}
+{text}
 {menu}
 {offline}
 </head>
@@ -1067,6 +1107,7 @@ PAGE = """<!doctype html>
   <button id="find-open" class="find" type="button" hidden>Search <kbd>/</kbd></button>
   <button id="offline" class="offline" type="button" hidden data-state=""
           title="Fetch the Python runtime now, so the models run with no network"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 1.5v8.5m0 0L4.8 6.8M8 10l3.2-3.2M2 11.5v2.5h12v-2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Keep offline</span></button>
+  {text_button}
   {theme_button}
   <button id="outline" type="button" aria-label="On this page" aria-controls="toc" hidden
           title="Show or hide this page’s outline"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><rect x="1.5" y="2.7" width="13" height="10.6" rx="1.3" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.7 2.7v10.6" stroke="currentColor" stroke-width="1.4"/></svg></button>
@@ -1119,8 +1160,18 @@ CSS = """
      The chapter list takes four fifths of what is going, because it is the one that wraps;
      the outline wanted 4px more than its 14rem and gets 16. */
   --rails: clamp(0rem, (100vw - 91rem) * 0.8, 5rem);
-  --nav: calc(17rem + var(--rails) * 0.8);
-  --toc: calc(14rem + var(--rails) * 0.2);
+  /* Capped in px, and the cap is what each rail reaches today at default text on the widest
+     window -- 17rem + 5rem*0.8 and 14rem + 5rem*0.2. So nothing moves for a reader on browser
+     defaults at any width, and the cap bites only when the reader's own text is larger.
+
+     It has to bite, because `rem` means two things here. In these declarations it is the
+     reader's text; in the `@media` rules that decide whether a rail is *shown* at all, the
+     spec fixes it at 16px whatever the reader has done. So at 24px text the layout decided
+     there was room for both rails at 1152px and then drew them half as wide again: 744px of a
+     1440px window, the chapter down to 696px, the code down to 65 of its 100 columns, and an
+     embedded model at 581px against the 860px its own layout needs. */
+  --nav: min(calc(17rem + var(--rails) * 0.8), 336px);
+  --toc: min(calc(14rem + var(--rails) * 0.2), 240px);
   --top: 3.1rem;
   --chrome: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --text: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
@@ -1155,9 +1206,16 @@ html { scroll-behavior: smooth; }
    738px that 82ch comes to at 18px Charter. A browser without @property gets the same column,
    fixed rather than following the reader's text. */
 @property --prose { syntax: "<length>"; inherits: true; initial-value: 738px; }
+@property --rails { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --nav { syntax: "<length>"; inherits: true; initial-value: 272px; }
+@property --toc { syntax: "<length>"; inherits: true; initial-value: 224px; }
 
+/* The reading text, and the only thing the header's size control moves. The rails, the
+   breakpoints and the page padding are all in `rem` and stay where they are: scaling the root
+   instead would widen both rails and *narrow* the chapter, so pressing `larger` would make the
+   book smaller. `--prose` is `82ch` of this font, so the reading column follows on its own. */
 body { margin: 0; background: var(--bg); color: var(--ink);
-       font: 18px/1.62 var(--text); text-rendering: optimizeLegibility;
+       font: var(--reading, 18px)/1.62 var(--text); text-rendering: optimizeLegibility;
        -webkit-font-smoothing: antialiased; --prose: 82ch; }
 a { color: var(--accent); text-decoration-thickness: from-font; text-underline-offset: 2px; }
 /* A cross-reference is a link the reader steps over 259 times. Underlining every one of them
@@ -1218,6 +1276,14 @@ a.xref:hover { text-decoration: underline; }
 .offline[data-state="kept"] { color: var(--go); border-color: var(--go); }
 .offline[data-state="failed"] { color: var(--stop); }
 @media (max-width: 40rem) { .offline span { display: none; } .offline { padding: .45rem .5rem; } }
+/* The text size control, beside those two. */
+.text-size { display: flex; align-items: center; gap: .45rem; font: 13.5px/1 var(--chrome);
+             color: var(--muted); background: var(--panel); border: 1px solid var(--edge);
+             border-radius: 6px; padding: .45rem .7rem; cursor: pointer; }
+.text-size:hover { border-color: var(--accent); color: var(--accent); }
+.text-size svg { flex: none; }
+@media (max-width: 52rem) { .text-size span { display: none; }
+                            .text-size { padding: .45rem .5rem; } }
 /* The light/dark control, beside it. */
 .theme { display: flex; align-items: center; gap: .45rem; font: 13.5px/1 var(--chrome);
          color: var(--muted); background: var(--panel); border: 1px solid var(--edge);
@@ -1279,13 +1345,14 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
 @media (min-width: 72rem) {
   .shell { grid-template-columns: var(--nav) minmax(0, calc(72rem + 5rem)) var(--toc); }
   html.nav-closed .shell { grid-template-columns: minmax(0, calc(72rem + 5rem)) var(--toc); }
-  html.toc-closed .shell { grid-template-columns: var(--nav) minmax(0, calc(72rem + 5rem)); }
-  html.nav-closed.toc-closed .shell {
+  html.toc-closed .shell, html.toc-cramped .shell {
+    grid-template-columns: var(--nav) minmax(0, calc(72rem + 5rem)); }
+  html.nav-closed.toc-closed .shell, html.nav-closed.toc-cramped .shell {
     grid-template-columns: minmax(0, calc(72rem + 5rem)); max-width: none; }
   .toc { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
-  html.toc-closed .toc { display: none; }
+  html.toc-closed .toc, html.toc-cramped .toc { display: none; }
 }
 
 .nav { border-right: 1px solid var(--edge); }
@@ -1379,7 +1446,7 @@ hr { border: 0; border-top: 1px solid var(--edge); margin: 2.4rem 0; }
 code, pre, kbd { font-family: var(--mono); }
 code { font-size: .85em; background: var(--code); padding: .08em .3em; border-radius: 3px;
        overflow-wrap: break-word; }   /* a test path is one long token, and phones are narrow */
-pre { font-size: 13.5px; line-height: 1.55; background: var(--code); color: var(--ink);
+pre { font-size: calc(var(--reading, 18px) * 0.75); line-height: 1.55; background: var(--code); color: var(--ink);
       padding: .85rem 1rem; border-radius: 6px; border: 1px solid var(--edge);
       margin: 1.3rem 0; white-space: pre; overflow-x: auto; overscroll-behavior-x: contain; }
 pre code { background: none; border: 0; padding: 0; font-size: inherit; }
@@ -1435,15 +1502,28 @@ figure.container:has(> iframe) { position: relative; }
 .wide-block > .expand { position: static; width: fit-content; margin: 0 0 .4rem auto; }
 .editable-bar .expand { position: static; }
 html.model-open { overflow: hidden; }
+/* The box scrolls, because the page behind it cannot: `model-open` sets `overflow: hidden` on
+   the document, so anything that leaves this box is unreachable rather than merely off-screen.
+   A wide table on a phone did exactly that -- 715px of table in a 412px box, the last three
+   columns gone, and nothing to scroll. */
 html.model-open #main .expanded { position: fixed; inset: 0; z-index: 40; margin: 0;
           max-width: none; border-radius: 0; background: var(--bg); display: flex;
-          flex-direction: column; padding: 0; }
+          flex-direction: column; padding: 0; overflow: auto; overscroll-behavior: contain; }
 html.model-open #main .expanded > :is(iframe, pre, table) { flex: 1 1 auto; height: auto;
           max-height: none; max-width: none; width: auto; border: 0; border-radius: 0;
           overflow: auto; }
 html.model-open #main .expanded > table { width: max-content; }
-html.model-open #main .wide-block.expanded > .expand { align-self: flex-end;
-          margin: .5rem .5rem .4rem auto; }
+/* Pinned to the window rather than to the box, which is now a scrolling one: laid out in the
+   flow it sits at the right-hand edge of the *content*, so on a table wider than the screen the
+   way out scrolled away with the columns the reader went looking for.
+
+   Pinned, it is out of the flow, so the box keeps a row for it. Without that it sat on top of
+   the first line of the thing it had just opened -- which is the fault the control was moved
+   out of the corner to fix, arriving again by the other door. A box whose control is in a bar
+   of its own keeps that bar and needs no row. */
+html.model-open #main .expanded > .expand { position: fixed; top: .5rem; right: .5rem;
+          z-index: 41; margin: 0; }
+html.model-open #main .expanded:has(> .expand) { padding-top: 2.7rem; }
 html.model-open #main .expanded > figcaption { display: none; }
 html.model-open #main .expanded.editable-block { border-radius: 0; }
 iframe { width: 100%; border: 1px solid var(--rule); border-radius: 6px; height: 680px; }
@@ -1697,6 +1777,8 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         menu=MENU + EXPAND,
         theme=PARENT,
         theme_button=BUTTON,
+        text=TEXT_PARENT,
+        text_button=TEXT_BUTTON,
         offline=OFFLINE_SCRIPT,
         boot=BOOT_SCRIPT if blocks or problems else "",
         headlinks=headlinks,
