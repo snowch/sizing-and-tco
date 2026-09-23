@@ -317,6 +317,10 @@ def render(node: dict) -> str:
         return children()
     if kind == "comment":
         return ""
+    if kind == "div":
+        cls = node.get("class")
+        class_attr = f' class="{html.escape(cls)}"' if cls else ""
+        return f"<div{class_attr}>{children()}</div>"
     raise UnknownNodeError(
         f"the renderer does not handle {kind!r}. Add a branch for it rather than letting the "
         "content disappear silently — see this module's docstring."
