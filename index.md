@@ -51,10 +51,16 @@ To answer it you need to know:
 
 You build one model, and it lasts the whole book.
 
-A model is how you reason about your system: which numbers matter, how they connect, what happens
-when they change. We implement it as a YAML file: plain text you can read and edit. Each number has
-a name, a unit, and a note saying where its value came from. Each computed number has a formula that
-refers to the others by name. You can read a whole model in one sitting.
+:::{div}
+:class: definition
+
+**Model** — a YAML file containing numbers with their units and sources, plus formulas connecting them.
+:::
+
+We build it this way so you can reason about your system: which numbers matter, how they connect,
+what happens when they change. Each number has a name, a unit, and a note saying where its value
+came from. Each computed number has a formula that refers to the others by name. You can read a
+whole model in one sitting.
 
 The model grows through the book. [ch02 · What a workload is](#what-a-workload-is) writes the
 first nodes: what arrives and what accumulates. Later chapters add pieces: where each number came
