@@ -356,7 +356,7 @@ def test_every_figure_belongs_to_a_page_by_name():
 
 @pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
 def test_a_written_chapter_has_the_shape_the_outline_declares(path):
-    """Every chapter, the same five headings, in the same order.
+    """Every chapter, the same headings, in the same order.
 
     The repetition is what makes the book read as one book, so the shape is a contract rather
     than a default. It is checked here because it was written down in three places that
@@ -372,9 +372,26 @@ def test_a_written_chapter_has_the_shape_the_outline_declares(path):
     )
 
 
+def test_the_chapter_generator_writes_the_shape_the_outline_declares():
+    """A new chapter starts from the generator's stub, so a stub with the wrong shape is copied.
+
+    The generator writes its headings out by hand rather than reading them from the outline, and
+    that is how it came to disagree with it before. This catches the next time.
+    """
+    from importlib import util
+
+    spec = util.spec_from_file_location("new_chapter", ROOT / "scripts" / "new-chapter.py")
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    found = tuple(re.findall(r"^## (.+)$", module.chapter_stub(CHAPTERS[0]), re.M))
+    assert found == CHAPTER_SHAPE, (
+        f"scripts/new-chapter.py writes {found}, and a chapter has {CHAPTER_SHAPE}"
+    )
+
+
 @pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
 def test_a_written_chapter_says_what_it_cannot_tell_you(path):
-    """The mandatory section, and the one that makes the other six believable."""
+    """The mandatory section, and the one that makes the rest believable."""
     if path.parent.name != "chapters":
         pytest.skip("parts and appendices are not chapters")
     assert "## What this cannot tell you" in path.read_text(), (

@@ -236,7 +236,8 @@ That is not fastidiousness. An unseeded simulation is a measurement nobody can r
 figure nobody can repeat is a figure nobody can check. This book refuses that everywhere else,
 and has no reason to start allowing it here.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **Give the model a bag of plausible values instead of one, and the bag of answers is the answer.**
   Filling the bag is one line: pick a percentile at random and ask the distribution what value sits
   there.
@@ -252,7 +253,6 @@ and has no reason to start allowing it here.
 - **The ceilings are what the machinery is for.** Not *you need this many hosts*, but *at this many,
   this is how often the thing you were avoiding happens anyway*, which is an answer somebody can be
   accountable for.
-:::
 
 ## What this cannot tell you
 

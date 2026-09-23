@@ -114,7 +114,8 @@ the other side of it belongs to somebody whose job it is.
 ```{include} _generated/capex-opex-and-lifecycle-outputs.md
 ```
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **The running cost is several times the capital, and only the capital gets argued about.** Capital
   arrives as one signed invoice. Running cost arrives in pieces that are each too small to fight.
 - **The four running lines are four different kinds of number.** Energy is physics, licences are a
@@ -126,7 +127,6 @@ the other side of it belongs to somebody whose job it is.
   is right is a choice. Saying which one you chose is not optional.
 - **The model produces cash out over time, from physics and prices, and stops there.** Tax,
   depreciation, discount rates and procurement belong to somebody whose job they are.
-:::
 
 ## What this cannot tell you
 

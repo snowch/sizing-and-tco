@@ -172,10 +172,10 @@ label instead of landing, demonstratives with no noun in reach, intensifiers, de
 once meets the vocabulary ration below, the ration wins.
 
 **Length follows the material.** There is no page target. A chapter is as long as what it has to
-convey and no longer. The five headings in `bench.outline.CHAPTER_SHAPE` are the book's shape and
-stay whatever the length — the repetition is what makes twenty-one chapters read as one book. The
-test is per *sub*section inside them: every one earns its place or comes out, and a short chapter
-still owes the reader *What this cannot tell you*.
+convey and no longer. The six headings in `bench.outline.CHAPTER_SHAPE` are the book's shape and
+stay whatever the length — the repetition is what makes every chapter read as one book. The test
+is per *sub*section inside them: every one earns its place or comes out, and a short chapter still
+owes the reader its *Key takeaways* and *What this cannot tell you*.
 
 **Statistics vocabulary is rationed.** Distribution, sample, percentile, interval, correlation,
 convergence. Each arrives because a model has just raised a question that needs it, never as a

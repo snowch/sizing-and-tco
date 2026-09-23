@@ -121,7 +121,8 @@ The finished model. Click *five-year total cost of ownership* to see how much of
 it, and how much does not.
 ```
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **Models are joined by numbers written down, and the joins are undefended.** Each model is
   defensible on its own terms. The seam between them is where the doubt goes missing.
 - **Hand over a number instead of a distribution and the downstream interval gets narrower, not
@@ -135,7 +136,6 @@ it, and how much does not.
   honest small ones with a documented seam.
 - **What Part V hands on is a total, its composition, and what crossed a seam.** Most of the money
   was never argued about, and a good deal of it rests on numbers that crossed a join.
-:::
 
 ## What this cannot tell you
 

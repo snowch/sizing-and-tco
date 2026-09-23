@@ -240,7 +240,8 @@ when the item is missing.
 Check the first item twice. Two quotes that were sized differently are not two
 prices for the same thing, and no amount of care over the lines below it repairs that.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **A comparison is about the lines that differ.** What both designs pay alike drops out of the
   difference however large it is, so every line goes on both sides, with a declared zero where a
   quote has no such line.
@@ -257,7 +258,6 @@ prices for the same thing, and no amount of care over the lines below it repairs
 - **A comparison somebody else built arrives with one column already won.** The checklist says what
   it has to show, and the item to check twice is whether both designs were sized by the same rule to
   the same margins.
-:::
 
 ## What this cannot tell you
 

@@ -131,7 +131,8 @@ comfortably inside the margin tells you about one future only. [ch13](#monte-car
 other futures come from. [ch12](#the-sizing-model) is what the difference between the two
 readings costs.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **Headroom is a rule because the right number differs for every ceiling.** A capacity margin
   protects against a cliff, a queueing margin against a slope, a scaling margin against a budget,
   and one percentage cannot serve all three.
@@ -144,7 +145,6 @@ readings costs.
   can be argued with, adjusted when the reason changes, and dropped when it goes away.
 - **What a margin produces is a probability, not a verdict.** Across every future the model thinks
   plausible, how often the design ends up past this limit.
-:::
 
 ## What this cannot tell you
 

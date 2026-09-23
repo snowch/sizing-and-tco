@@ -143,7 +143,8 @@ the headline number is unchanged and only the doubt has grown, which is why it p
 becomes unfalsifiable. An unfalsifiable model is an expensive way of writing down what somebody
 already believed.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **There are two ways to be wrong, and sampling sees only one.** Wrong about a number is what the
   interval reports. Wrong about the shape produces a converged interval around the wrong answer, and
   the convergence looks like rigour.
@@ -158,7 +159,6 @@ already believed.
 - **Widening the inputs until the observation fits is how a model becomes unfalsifiable.** The
   median does not move, only the doubt grows, and a model that cannot be wrong has stopped being
   useful.
-:::
 
 ## What this cannot tell you
 
