@@ -221,7 +221,11 @@ def title_for(source: str, page: dict) -> str:
 def href_for(source: str) -> str:
     """Where a source file is published. Flat, and named for the slug a reader sees."""
     stem = Path(source).stem
-    return "index.html" if source == "index.md" else f"{stem.replace('_', '-')}.html"
+    if source == "cover.md":
+        return "index.html"
+    if source == "index.md":
+        return "preface.html"
+    return f"{stem.replace('_', '-')}.html"
 
 
 #: Node types whose text is never a glossary link: code, headings, and text that is already a
