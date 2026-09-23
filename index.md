@@ -119,10 +119,7 @@ yours to replace:
   how it behaves under load is not a chain of multiplications at all; and
 - an observability platform, which has a hole in it where a measurement should be.
 
-Every chapter ends with problems. They are there so that you do what the chapter argued rather than
-agree with it: write the law yourself, add the node the toolkit refuses until its unit is right, say
-what a result will be and then run it. Most of them are tests: they fail until you have solved them,
-and the answer is nowhere in the repository.
+Every chapter ends with problems. Most are implemented as Python tests that fail until you have solved them.
 
 The last problem in every chapter is different. It asks about a system you run, and no test can
 check your answer, because only you have the system. Instead, the problem tells you what a good
