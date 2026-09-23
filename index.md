@@ -84,9 +84,7 @@ The toolkit enforces what spreadsheets cannot:
 
 A spreadsheet loses all of this on the first copy.
 
-[ch02](#what-a-workload-is) writes the first nodes of the model. Each number in the file carries
-a unit and a line saying where it came from, and the **build**, the set of checks that turns
-these files into this book, refuses a node that leaves either out.
+[ch02](#what-a-workload-is) writes the first nodes.
 
 ## Who this book is for
 

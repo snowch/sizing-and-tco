@@ -102,9 +102,7 @@ A sizing model must do more than produce a number. It says how much room it keep
 
 ### Where a cost model becomes a sizing model
 
-Do not take the distinction on trust. It decides which half of this book applies. The web service model starts as a cost model and becomes a sizing model partway through. One node makes the change. Problem 1.3 is finding it at six stages of construction.
-
-You find the stage rather than being told it.
+Do not take the distinction on trust. It decides which half of this book applies. The web service model starts as a cost model and becomes a sizing model partway through. One node makes the change. Problem 1.3 is finding it by reading three model descriptions.
 
 ## What this cannot tell you
 
@@ -149,39 +147,16 @@ python3 -m pytest tests/point_estimates/test_problem_1_each_input.py -m problem
 python3 -m pytest tests/point_estimates/test_problem_2_together.py -m problem
 ```
 
-**1.3 — Find where it changes kind.** Below are the six stages of this book's web service model,
-in the order the book builds it. Say which are cost models and which are sizing models, at which
-stage the kind changes, and which node makes the change.
+**1.3 — Find where it changes kind.** Below are three descriptions of models for sizing a web service. Which are cost models (deterministic structure, uncertain inputs only)? Which are sizing models (adding measured constants or ceilings)? Name the characteristics—the measured constants or ceilings—that decide it.
 
-**Stage 1.** What the service is asked to do: the busy-hour request rate on day one
-(`peak_request_rate_t0`), the records held on day one (`stored_data_t0`), how fast both grow each
-year (`annual_growth`), and how many years the fleet must last (`horizon`). From these it computes
-the busy hour and the records held at the end of that time.
+% number-ok: model example, not a measurement
+**Model A.** Peak requests per second × processor time per request × (100% ÷ utilization fraction) = cores needed. Inputs: peak rate (assumption), processor time per request (assumption), utilization (assumption).
 
-**Stage 2.** Stage 1, plus the memory one host carries (`ram_per_host`), as the vendor quotes it,
-and the share of that memory the operating system keeps (`os_reserve`). From these it computes
-the memory the service can use on each host.
+% number-ok: measured constant example, not a measurement of the book's model
+**Model B.** Same structure. The processor time per request was measured at 0.5 ms on version 2.1 of the backend.
 
-**Stage 3.** Stage 2, with the busy-hour rate, the growth rate and the operating system's share
-each given as a range instead of one number. It adds how much busier the busy hour is than the
-average hour (`peak_to_mean`), also a range, and the average rate that implies.
-
-**Stage 4.** Stage 3, plus the processor time one request takes (`service_demand`), an assumption
-given as a range because no reference machine has measured it; the cores one host has
-(`cores_per_host`), as the vendor quotes it; and how many hosts you buy (`hosts`), which is your
-decision. From these it computes how busy the fleet is (`utilisation`) and how many requests are
-in flight.
-
-**Stage 5.** Stage 4, plus the time a request spends queueing and in the system; the highest
-utilisation the waiting-time formula will accept (`utilisation_cap`); a margin you choose
-(`queueing_margin`); and a declared limit (`queueing_headroom`): utilisation at the busy hour must
-stay that margin below a fully busy fleet.
-
-**Stage 6.** Stage 5, plus two properties of the software, each a range: the share of the work
-that cannot run in parallel (`contention`) and the cost of hosts agreeing with each other
-(`crosstalk`). From these it computes the throughput the fleet can really reach, and it adds two
-more declared limits: on utilisation once that coordination is counted (`coordination_headroom`),
-and on the share of the fleet doing nothing useful (`scaling_loss`).
+% number-ok: uncertainty examples and ceilings, not measurements of the book's model
+**Model C.** Same structure, plus: requests in flight = peak rate × time per request (Little's law). Response time climbs steeply when utilization exceeds 75%. A host can scale from 1 to 32 cores; beyond that, adding more cores helps less (contention). These are ceilings: the model cannot run at 150% utilization or with infinite cores, but arithmetic alone would claim it could.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_3_which_kind.py -m problem
