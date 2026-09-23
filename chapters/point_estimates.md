@@ -141,43 +141,19 @@ python3 -m pytest tests/point_estimates/test_problem_1_each_input.py -m problem
 python3 -m pytest tests/point_estimates/test_problem_2_together.py -m problem
 ```
 
-**1.3 — Find where it changes kind.** Below are six stages of the web service model as it is built through ch02 to ch07. Read each one. Which are cost models (deterministic structure, uncertain inputs only)? Which are sizing models (adding measured constants or ceilings)? At which stage does the kind change? Name the nodes—the quantities—that decide it.
+**1.3 — Find where it changes kind.** Below are six descriptions of models for sizing a web service. Which are cost models (deterministic structure, uncertain inputs only)? Which are sizing models (adding measured constants or ceilings)? At which stage does the kind change? Name the characteristics—the measured constants or ceilings—that decide it.
 
-```{literalinclude} /models/web_service/stages/01-demand/model.yaml
-:language: yaml
-```
+**Stage 1.** Peak requests per second × processor time per request × (100% ÷ utilization fraction) = cores needed. Inputs: peak rate (assumption), processor time per request (assumption), utilization (assumption).
 
-Stage 1: What it demands (the inputs and what grows).
+**Stage 2.** Same structure. The processor time per request was measured at 0.5 ms on version 2.1 of the backend.
 
-```{literalinclude} /models/web_service/stages/02-provenance/model.yaml
-:language: yaml
-```
+**Stage 3.** Same structure. Peak rate is uncertain: it might be 5,000 or 15,000 requests per second. Processor time is uncertain: it might be 0.3 or 0.7 ms. Utilization is uncertain: it might be 50% or 80%.
 
-Stage 2: Where the inputs came from.
+**Stage 4.** Same structure, plus: requests in flight = peak rate × time per request. This is always true (Little's law), not an assumption.
 
-```{literalinclude} /models/web_service/stages/03-uncertainty/model.yaml
-:language: yaml
-```
+**Stage 5.** Stage 4, plus: response time climbs steeply when utilization exceeds 75%. Below that, response time is roughly constant. Above it, queueing dominates. This is a ceiling: the model cannot run at 150% utilization, but the arithmetic above would claim it could.
 
-Stage 3: How uncertain each input is.
-
-```{literalinclude} /models/web_service/stages/04-littles_law/model.yaml
-:language: yaml
-```
-
-Stage 4: Little's law (queue = rate × delay).
-
-```{literalinclude} /models/web_service/stages/05-queueing/model.yaml
-:language: yaml
-```
-
-Stage 5: The queueing knee.
-
-```{literalinclude} /models/web_service/stages/06-scaling/model.yaml
-:language: yaml
-```
-
-Stage 6: What the hosts can do.
+**Stage 6.** Stage 5, plus: a host can scale from 1 to 32 cores. Beyond 32 cores, adding more cores helps less (contention makes each additional core slower). This is another ceiling: scaling is not linear.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_3_which_kind.py -m problem

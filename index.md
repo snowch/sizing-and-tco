@@ -43,19 +43,17 @@ Almost nobody is taught this. It is what decides whether anybody should act on y
 
 You build one model, and it lasts the whole book.
 
-A model here is a YAML file: plain text you can read and edit. It holds the numbers that went into
-an answer and the arithmetic that joins them. Each number has a name, a unit, and a note saying
-where its value came from. Each computed number has a formula that refers to the others by name.
-That is all there is to it. You can read a whole model in one sitting.
+A model here is a YAML file: plain text you can read and edit. Each number has a name, a unit,
+and a note saying where its value came from. Each computed number has a formula that refers to the
+others by name. You can read a whole model in one sitting.
 
-The model starts in [ch02 · What a workload is](#what-a-workload-is), with what arrives and what
-accumulates. Later chapters add to it one piece at a time: where each number came from, what the
-hardware can hold, where it stops coping, and what it costs to run.
-[ch12 · The sizing model](#the-sizing-model) is where it produces a host count.
-[ch18 · The five-year model](#the-five-year-model) is where it produces a cost.
+The model grows through the book. [ch02 · What a workload is](#what-a-workload-is) writes the
+first nodes: what arrives and what accumulates. Later chapters add pieces: where each number came
+from, what the hardware can hold, where it stops coping, what it costs. [ch12 · The sizing
+model](#the-sizing-model) produces a host count. [ch18 · The five-year model](#the-five-year-model)
+produces a cost.
 
-Every figure about the service in this book is computed from that file as it stands at that
-point in the book.
+Every figure in this book is computed from that file as it stands at that point.
 
 ## Why a file, and not a spreadsheet
 
@@ -71,11 +69,10 @@ A spreadsheet cell holds a value and nothing about it.
 Everything this book does depends on those three things being written down beside the number. A
 file is where they can be. A file also diffs and reviews like code.
 
-The toolkit checks the units of every formula. A rate times a duration is an amount, so
-`requests per second × seconds = requests`. A rate times a plain number is still a rate, and a
-formula that calls it an amount is refused, where a spreadsheet would accept it without
-complaint. [ch02](#what-a-workload-is) teaches the rule, and [Appendix D](#appendix-d-units)
-works through a page of such combinations, with the toolkit computing every result.
+The toolkit checks the units of every formula. A rate times a duration is an amount:
+`requests per second × seconds = requests`. A rate times a plain number is still a rate. A formula
+that calls it an amount is refused. [ch02](#what-a-workload-is) teaches the rule. [Appendix
+D](#appendix-d-units) works through the combinations that bite.
 
 [ch02](#what-a-workload-is) writes the first nodes of the model. Each number in the file carries
 a unit and a line saying where it came from, and the **build**, the set of checks that turns
@@ -83,33 +80,27 @@ these files into this book, refuses a node that leaves either out.
 
 ## Every number can be checked
 
-Every number in this book can be checked, and the page tells you how. That promise is kept in
-three ways.
+Every number in this book can be checked, and the page tells you how.
 
 **Every number was computed, never typed in.** The italic line under each table opens the model
 it came from, with every input on a slider.
 
-**Every model is a file, not a spreadsheet.** Every number in it declares a unit, so the toolkit
-can refuse a model that multiplies the wrong two things. Every input says whether it is a fact, a
-vendor's claim, or somebody's assumption. An uncertain input has to say what shape its
-uncertainty has, and why that shape rather than another. Every measured constant names the
-measurement behind it. [ch03](#where-the-numbers-come-from) explains what those distinctions are
-worth. [Appendix A](#appendix-a-dsl-reference) describes the file format that holds them.
+**Every model is a file.** Every number declares a unit, so the toolkit refuses a model that
+multiplies the wrong two things. Every input says whether it is a fact, a vendor's claim, or an
+assumption. An uncertain input says what shape its uncertainty has, and why. Every measured
+constant names the measurement behind it. [ch03](#where-the-numbers-come-from) explains what
+those distinctions mean.
 
-**Every chapter ends by saying what it cannot tell you.** Every chapter has a section with that
-name. In a book about estimates, it is usually the most useful part of the chapter.
+**Every chapter says what it cannot tell you.** In a book about estimates, that section is usually
+the most useful part of the chapter.
 
 ## Unknown numbers stay unknown
 
 If a required number has not been measured, the model does not invent one.
 
-When a constant has not been measured, the number that needs it has no value. Neither does
-anything computed from it. Those figures show as *not yet measured*, and the page names the chain
-of numbers that is affected. There is never a placeholder, and never a number taken from a
-different system.
-
-[Appendix F](#appendix-f-observability-model) publishes one of those gaps on purpose, and
-explains why.
+When a constant has not been measured, everything that depends on it stays unknown. Those figures
+show as *not yet measured*, and the page names the chain that is blocked. There is never a
+placeholder, and never a number taken from somewhere else.
 
 ## Who this book is for
 
@@ -154,45 +145,30 @@ answer looks like, and what would show that yours is wrong.
 
 ## What you need
 
-To read the book and run its models: nothing.
+To read the book and run its models: nothing. The book is a website, and the models are things
+you drag. The prose reads on any screen. The models want a tablet held sideways or larger.
 
-[ch02](#what-a-workload-is) and [ch03](#where-the-numbers-come-from) carry the model file running in
-the page. Press **Run**, change a number, and try to multiply a rate by a plain number where the
-file expects an amount. The build refuses it. That is the book's own loader and unit checker,
-fetched as a Python runtime and run in your browser. What the page does and what the book was
-computed from cannot come apart.
+The first models appear in [ch02](#what-a-workload-is) and [ch03](#where-the-numbers-come-from) as
+live editors. Press **Run**, change a number, and try to multiply a rate by a plain number where
+the file expects an amount. The build refuses it.
 
-The finished models in [Appendix E](#appendix-e-web-service-model) and
-[Appendix F](#appendix-f-observability-model) have a slider on every input. A small JavaScript
-version evaluates those. It is checked against Python's answers for every node of every model
-before it ships.
+The finished models have a slider on every input. The appendices name them and show what they
+produce.
 
-The book is a website, and it is meant to be read as one. The models are the point, and they are
-things you drag. The prose reads on any screen. The models want a tablet held sideways, or
-anything larger, and say so when they have less. There is no PDF, because paper cannot hold a
-model you drag.
+Once you open the book, it works offline. If you press **Run** once while online, the Python
+runtime is kept. **Keep offline** in the header fetches it ahead of need.
 
-Once you have opened the book, it works with no network. Your browser keeps it. If you press
-**Resample** or **Run** once while online, the Python runtime those fetch is kept too. **Keep
-offline**, in the header, fetches that runtime ahead of need, about ten megabytes once, and says
-when it is kept.
+The problems run in the page. Under each one that has a test sits the code it grades, yours to
+edit. **Check** runs the tests in your browser. Nothing leaves your machine.
 
-The problems run in the page too. Under each one that has a test sits the piece of code it grades,
-yours to edit, and **Check** runs that problem's tests in your browser on the same runtime. Each
-test says whether it passed, and if not, why. Nothing leaves your machine.
-
-To work the problems at a desk instead, with an editor and a shell, you need a checkout. The
-problems are tests, and the same tests run there:
+To work the problems at a desk with an editor and shell, clone the repository:
 
 ```bash
 git clone https://github.com/snowch/sizing-and-tco.git
 cd sizing-and-tco
 python3 -m pip install -r requirements.txt -r requirements-dev.txt
-python3 -m pytest tests/point_estimates/ -m problem   # ch01's, which fail until solved
+python3 -m pytest tests/point_estimates/ -m problem
 ```
-
-[Appendix H](#appendix-h-running-the-toolkit) has the rest: re-taking a measurement, re-running a
-model, rebuilding the book, and checking any figure against the repository.
 
 Nothing in this book needs a datacentre, a cloud account, or a licence.
 
