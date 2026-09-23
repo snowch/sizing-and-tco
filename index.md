@@ -117,12 +117,7 @@ answer looks like, and what would show that yours is wrong.
 To read the book and run its models: nothing. The book is a website, and the models are things
 you drag. The prose reads on any screen. The models want a tablet held sideways or larger.
 
-The first models appear in [ch02](#what-a-workload-is) and [ch03](#where-the-numbers-come-from) as
-live editors. Press **Run**, change a number, and try to multiply a rate by a plain number where
-the file expects an amount. The build refuses it.
-
-The finished models have a slider on every input. The appendices name them and show what they
-produce.
+All models and code run in your browser.
 
 Once you open the book, it works offline. If you press **Run** once while online, the Python
 runtime is kept. **Keep offline** in the header fetches it ahead of need.
