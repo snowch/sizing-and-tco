@@ -82,7 +82,7 @@ So far this is about how wide the answer is. Now a different error: one that run
 
 Almost all of the first row's width in the web service model came from the growth rate. It is a forecast. It compounds over five years. It moves the host count more than any other input. Finding that out, rather than guessing, is [ch19](#which-input-is-the-answer). It is the most useful thing you can do with a model you have.
 
-The second row moves for different reasons. It is the cost of the fleet you decided to buy. The growth rate does not reach it. You can be wrong about how many hosts you need and right about what the fleet costs. One is a question about the world. The other is arithmetic on a decision you already made. Keeping those apart is most of Parts III and V.
+The second row (costing) moves for different reasons. Once you decide how many hosts to buy, the cost is just arithmetic. Sizing is about the world; costing is about a decision you have already made. Keeping those apart is most of Parts III and V.
 
 Letting inputs vary is honest work, and most of this book is about doing it well. But it reports only the doubt you wrote down. There is a second kind of error it cannot see. Whether you meet it depends on which of two kinds of model you have.
 
