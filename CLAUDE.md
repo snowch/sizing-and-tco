@@ -29,14 +29,23 @@ When a rule and the material fight, the rule is the more likely to be wrong.
 Everything follows from this, so do not work around it. ch01 teaches it, the introduction points
 at ch01, and `scripts/verify-models.py` enforces it.
 
-- **A cost model** has a deterministic structure with uncertain parameters. Accounting identities
-  and physics. Sampling the inputs is sufficient.
-- **A sizing model** has the same structure plus **measured constants** (empirical, stack- and
-  version-specific, with a standard error) and **non-linear ceilings** (regime changes a chain of
-  multiplications cannot represent). It needs headroom rules, not just a number.
+- **A definitional model** has a deterministic structure with uncertain parameters. Accounting
+  identities and physics: relationships true by definition. Sampling the inputs is sufficient.
+- **A conditional model** has the same structure plus **measured constants** (empirical, stack-
+  and version-specific, with a standard error) and **non-linear ceilings** (regime changes a chain
+  of multiplications cannot represent). It holds only on those conditions, so it needs headroom
+  rules, not just a number.
 
-In the DSL, a model with a `measured` node or a `ceiling` node **is** a sizing model. A sizing
-model that declares a limit with no headroom does not build. If you find yourself wanting to relax
+The test ch01 teaches: *could every input be right and the answer still be wrong?* If so, the
+model is conditional.
+
+In the DSL, a model with a `measured` node or a `ceiling` node **is** a conditional model. A
+conditional model that declares a limit with no headroom does not build.
+
+These were once called *cost* and *sizing* models. Readers took those as steps in a job — size,
+then cost — and the book used them that way too, so the classification collided with the
+pipeline. "Sizing model" and "cost model" keep their ordinary meaning (the model that produces a
+host count; the one that turns it into money). Do not use them for the classification. If you find yourself wanting to relax
 that: the distinction is the book's thesis, and a thesis the repository does not enforce is a
 paragraph.
 
@@ -116,7 +125,7 @@ make machine   # what this computer is, and whether it may take a rig measuremen
    **A problem about the reader's own system has no oracle, and is still a problem.** This rule
    arrived from a book whose exercises were code, where a passing test or a booting kernel is the
    oracle. Here the reader's output is judgement — how much headroom to keep, which input to go
-   and measure, whether what they have is a cost model or a sizing one — and demanding an oracle
+   and measure, whether what they have is a definitional model or a conditional one — and demanding an oracle
    for that left the book with fifty-two problems of which fifty-one were arithmetic on its own
    models. A problem of the second kind carries no test. It says what a good answer contains and
    what would falsify it, and sits in the same `## Problems` section, numbered the same way. The

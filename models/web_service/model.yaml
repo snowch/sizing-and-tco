@@ -8,7 +8,7 @@ description: >-
   arrive and data accumulates; a host has cores, memory and disk, and each of those is a chain
   that ends in a count of hosts. One of the three binds.
 
-  It is a sizing model. Its ceilings are the queueing knee, the point where more hosts stop
+  It is a conditional model. Its ceilings are the queueing knee, the point where more hosts stop
   helping, the working set outgrowing memory, disk filling, and a host dying at the busy hour;
   its one measured constant is how well the stored records compress. Its one rate constant —
   CPU time per request — belongs on a rig nobody has declared, and is held as a labelled claim

@@ -4,6 +4,6 @@
 |---|---:|
 | `input` nodes | 5 |
 | `derived` nodes | 3 |
-| **What the toolkit calls it** | **cost model** |
+| **What the toolkit calls it** | **definitional model** |
 
 *Source — [`web_service_demand-reference`](/models/web_service_demand-reference.html) · every input on a slider*

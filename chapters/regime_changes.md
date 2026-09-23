@@ -12,8 +12,8 @@ Which ceilings can a chain of multiplications not model at all?
 
 Everything in Parts I and III is a product of quantities. This chapter is about the points where a
 system stops behaving like a product. It is also about why no amount of care over the inputs will
-warn you that you are near one. Those points are why [ch01](#point-estimates) separates a sizing
-model from a cost model.
+warn you that you are near one. Those points are why [ch01](#point-estimates) separates a conditional
+model from a definitional one.
 
 ## The material
 
@@ -119,18 +119,18 @@ away from it, and reports how much of the model's own uncertainty falls on the w
 Read the last two columns. Not "the system will be this busy", but "across everything this model
 thinks could happen, this fraction of it puts you past the point where the model stops applying".
 
-### Why running a cost model over its ranges is enough, and a sizing model's is not
+### Why running a definitional model over its ranges is enough, and a conditional model's is not
 
-A cost model has no regime changes in it. Watts times hours times price is an accounting identity.
+A definitional model has no regime changes in it. Watts times hours times price is an accounting identity.
 It is true at every scale, and there is no load at which electricity starts behaving differently.
-So for a cost model, running the arithmetic over the inputs' ranges is enough. The structure is not in doubt; only the
+So for a definitional model, running the arithmetic over the inputs' ranges is enough. The structure is not in doubt; only the
 numbers are.
 
-A sizing model has thresholds in it, and past a threshold the structure itself changes. Run the
+A conditional model has thresholds in it, and past a threshold the structure itself changes. Run the
 inputs of a model that has stopped applying across their ranges and you measure, precisely, the
 doubt in a number that has stopped describing anything.
 
-So a model with a `ceiling` in it is classified as a sizing model, and the toolkit refuses one
+So a model with a `ceiling` in it is classified as a conditional model, and the toolkit refuses one
 that declares a limit with no margin. The distinction is not taxonomy. It separates a model whose
 uncertainty you can quantify from a model whose *applicability* you have to bound.
 
@@ -169,8 +169,9 @@ load moves and how long you take to notice, neither of which this book can see.
   away from it and reports how much of the model's own uncertainty falls beyond it.
 - **A model fitted where the system was healthy predicts the wrong thing, confidently.** Nothing in
   the flat part of the curve holds any information about the vertical part.
-- **A ceiling is what makes a model a sizing model.** Running the inputs over their ranges
-  quantifies a cost model's doubt. A sizing model's applicability has to be bounded as well.
+- **A ceiling is what makes a model conditional.** Running the inputs over their ranges
+  quantifies a definitional model's doubt. A conditional model's applicability has to be bounded
+  as well.
 :::
 
 ## Problems

@@ -344,7 +344,7 @@ def test_every_playground_the_build_ships_is_reachable_from_its_chapter():
     The build shipped five of these and two were embedded. The three orphans deployed on every
     push, cost a Pyodide fetch to anybody who found them, and one of them printed a sentence that
     contradicted itself -- it told a reader the model had neither a measured constant nor a
-    ceiling while classifying it as a sizing model, which is only possible because it has one.
+    ceiling while classifying it as a conditional model, which is only possible because it has one.
     That survived because the only pages anybody looked at were the two that are linked.
     """
     embedded = {

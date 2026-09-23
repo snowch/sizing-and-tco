@@ -39,10 +39,11 @@ def stages_and_kinds() -> list[str]:
 
     The chapter shows three model descriptions: A, B, and C.
 
-    Return a list of three strings, each ``"cost"`` or ``"sizing"``, in order: A, B, C.
+    Return a list of three strings, each ``"definitional"`` or ``"conditional"``, in order:
+    A, B, C.
 
-    A **cost model** has a deterministic structure with uncertain parameters.
-    A **sizing model** adds a measured constant or a ceiling.
+    A **definitional model** is built from relationships true by definition, with uncertain
+    inputs. A **conditional model** adds a measured constant or a ceiling.
 
     Read each description and decide by looking for measured constants and ceilings.
     """

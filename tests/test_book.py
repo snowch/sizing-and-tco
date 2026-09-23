@@ -544,12 +544,12 @@ def test_a_chapter_states_the_distinction_the_book_is_built_on():
     cannot have those. It is a chapter now, and a chapter is where an argument goes.
     """
     body = (ROOT / "chapters" / "point_estimates.md").read_text().lower()
-    for required in ("deterministic structure", "measured constants", "ceiling"):
+    for required in ("definitional model", "conditional model", "measured constants", "ceiling"):
         assert required in body, (
-            f"ch01 must explain the cost-model / sizing-model distinction; {required!r} is missing"
+            f"ch01 must explain the definitional / conditional distinction; {required!r} is missing"
         )
     preface = (ROOT / "index.md").read_text().lower()
-    assert "deterministic structure" not in preface, (
+    assert "definitional model" not in preface, (
         "the introduction is explaining the distinction again. It points at the chapter that "
         "teaches it; saying it twice is how the two versions start to disagree."
     )

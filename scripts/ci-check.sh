@@ -83,14 +83,14 @@ python3 -m pytest tests/ -q -m "not problem"
 echo "== every model typechecks, and says where its numbers came from =="
 # Units, provenance, measured constants, ceilings, graph shape — and the rule that makes the
 # book's central distinction enforceable rather than rhetorical: a model with a measured constant
-# or a ceiling in it is a sizing model, and a sizing model must declare its headroom.
+# or a ceiling in it is a conditional model, and a conditional model must declare its headroom.
 python3 scripts/verify-models.py
 
 echo "== the running example, as each chapter leaves it =="
 # The book builds this model a few nodes at a time, so the intermediate models have to be real:
 # they are derived from the finished file by bench/stages.py and held to the same rules above.
 # tests/test_stages.py is where the invariants live — every node introduced by some chapter, no
-# stage taking a node away, and the change from a cost model to a sizing model happening in the
+# stage taking a node away, and the change from a definitional model to a conditional one happening in the
 # chapter that claims it.
 python3 -m bench.stages --check
 

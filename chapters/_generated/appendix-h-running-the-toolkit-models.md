@@ -6,6 +6,6 @@
 | `derived` | 51 | a formula, whose declared unit is checked against what it produces |
 | `measured` | 1 | a stamped result, a standard error, and the implementation it belongs to |
 | `ceiling` | 6 | a limit, a declared headroom, and a reason |
-| | | **classified as a sizing model** — it has measured constants or ceilings in it, so sampling the inputs is not sufficient on its own |
+| | | **classified as a conditional model** — it has measured constants or ceilings in it, so sampling the inputs is not sufficient on its own |
 
 *Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*

@@ -385,8 +385,8 @@ def sampled_inputs(model: Model) -> tuple[str, ...]:
 
     Inputs with a declared distribution, and measured constants with a stated standard error.
     Those are the only two places randomness enters a model: everything else is arithmetic, which
-    is the whole reason Monte Carlo over the inputs is the right tool for a cost model (ch13) and
-    not sufficient on its own for a sizing one.
+    is the whole reason Monte Carlo over the inputs is the right tool for a definitional model (ch13)
+    and not sufficient on its own for a conditional one.
     """
     names = []
     for name in sorted(model.nodes):

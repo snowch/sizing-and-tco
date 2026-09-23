@@ -20,12 +20,12 @@ A web service and the data it keeps, on a fleet of Linux hosts, sized from a sta
 costed over five years. No product is named and none is implied: what is on this page is a
 structure, and the numbers in it are placeholders for yours.
 
-This is the model the chapters build a few nodes at a time, and it is a **sizing model by the
+This is the model the chapters build a few nodes at a time, and it is a **conditional model by the
 rule and by its shape**. Most of it is accounting identity and physics: requests times CPU time
 per request, watts times hours times price, capital plus running cost over a horizon. That is the
-structure [the introduction](#preface) says sampling the inputs is sufficient for. But it
+structure [ch01](#point-estimates) says sampling the inputs is sufficient for. But it
 carries one measured constant and six ceilings, so `scripts/verify-models.py` classifies it a
-sizing model and holds it to the stricter rules. That is the right call: a compression ratio
+conditional model and holds it to the stricter rules. That is the right call: a compression ratio
 belongs to a codec, and a fleet asked for more than it can serve does not slow down
 proportionally. [Appendix F](#appendix-f-observability-model) is the book's second model, and
 shows what one looks like when a whole chain of it has not been measured.

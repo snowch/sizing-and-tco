@@ -24,7 +24,7 @@ from bench.stamp import load_result
 from bench.tables import fmt, signed_money, unit_label
 
 #: Node kinds, by fill. The distinction the whole book rests on is visible here: a model with no
-#: amber and no red in it is a cost model, and one with either is a sizing model.
+#: amber and no red in it is a definitional model, and one with either is a conditional model.
 KIND_FILL = {
     "input": "#dbe7f3",
     "derived": "#eceff1",

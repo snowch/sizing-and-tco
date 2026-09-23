@@ -42,10 +42,10 @@ typecheck instead of quietly adding them. `description` is prose, and it is wher
 ```
 
 The last row is the distinction the book is built on, and the file decides it rather than its
-author's opinion of it. A model containing a `measured` node or a `ceiling` node **is** a sizing
+author's opinion of it. A model containing a `measured` node or a `ceiling` node **is** a conditional
 model. It has an empirical constant that belongs to one stack at one version, or a limit past
 which its arithmetic stops describing anything. In either case sampling the inputs is not
-sufficient on its own. A model with neither is a cost model.
+sufficient on its own. A model with neither is a definitional model.
 
 Here are the kinds, as the loader defines them:
 
@@ -227,7 +227,7 @@ Scenarios are how you compare two designs without editing either one into the ot
 
 The running example as [ch02](#what-a-workload-is) leaves it, the smallest graph in the book:
 five inputs, three derived nodes and nothing else. It has no ceiling and no measured constant, so
-it is a cost model, and [ch06](#queueing-and-the-knee) is where it stops being one.
+it is a definitional model, and [ch06](#queueing-and-the-knee) is where it stops being one.
 [Appendix F](#appendix-f-observability-model) is the model with all four kinds in it. Reading
 right to left from any answer gives exactly the quantities it rests on; reading left to right
 shows how few inputs most of the graph is downstream of.

@@ -7,8 +7,8 @@
     "the_largest_of_three": "the recommended count is the largest of three uncertain numbers, and the largest of three sits above where any one of them usually does. Sizing on the chain that wins most often is still sizing on one chain, and the other two are larger whenever it loses",
     "three_chains_only": "this model has three. A real service has more - a database's connection limit, a cache's eviction rate, the network between them - and each one is another chance for the answer to be set by something nobody was watching"
   },
-  "generated_at": "2026-09-22T19:59:43+00:00",
-  "git_revision": "a2bc3a3",
+  "generated_at": "2026-09-23T23:51:41+00:00",
+  "git_revision": "4199a5e",
   "kind": "measurement",
   "name": "binding-constraint",
   "produced_by": {

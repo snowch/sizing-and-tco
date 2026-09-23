@@ -6,7 +6,7 @@ English first and named second, in the chapter where a model first needs it. Tha
 nothing keeping it: the words were rationed in CLAUDE.md, their home chapters were recorded in
 the glossary, and no two of those three ever met.
 
-So they leaked. ch01 said "sampling" in the sentence separating a cost model from a sizing model
+So they leaked. ch01 said "sampling" in the sentence separating the two kinds of model
 -- a page whose own introduction claims it names none of the six -- and five more chapters used
 a word before the chapter that teaches it.
 

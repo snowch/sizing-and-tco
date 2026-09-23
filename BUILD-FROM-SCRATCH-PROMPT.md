@@ -51,16 +51,16 @@ By the end a reader should be able to:
 
 Everything follows from this. Do not work around it.
 
-- **A cost model** has a deterministic structure with uncertain parameters. Accounting identities
+- **A definitional model** has a deterministic structure with uncertain parameters. Accounting identities
   and physics: watts × hours × price, capital plus running cost over a horizon. Sampling the
   inputs is genuinely sufficient.
-- **A sizing model** has the same structure plus **measured constants** (empirical, specific to
+- **A conditional model** has the same structure plus **measured constants** (empirical, specific to
   one stack at one version, with a standard error) and **non-linear ceilings** (regime changes
-  that a chain of multiplications cannot represent). It needs headroom rules, not just a number.
+  that a chain of multiplications cannot represent). It holds only on those conditions, and needs headroom rules, not just a number.
 
 **Enforce this in the build, not in prose.** A model file with a `measured` node or a `ceiling`
-node *is* a sizing model; one with neither *is* a cost model; a script decides which and holds the
-two to different rules. A sizing model that declares a limit with no headroom must fail to build.
+node *is* a conditional model; one with neither *is* a definitional model; a script decides which and holds the
+two to different rules. A conditional model that declares a limit with no headroom must fail to build.
 A thesis the repository does not enforce is a paragraph.
 
 ## Non-negotiable: build the model in front of the reader
@@ -81,12 +81,12 @@ story:
 - No stage ever takes a node away; stages run in the book's own reading order.
 - Every stage passes every rule the finished model passes.
 - **Each stage classifies as the kind of model the book says it is** — and ask the loader rather
-  than asserting it. This pins the moment a cost model becomes a sizing model to the chapter that
+  than asserting it. This pins the moment a definitional model becomes a conditional one to the chapter that
   claims it. If someone later moves the ceiling, the test names the chapter whose claim just
   became false.
 
 The payoff: the reader adds a measured constant and a ceiling, runs the build, and **the build
-tells them their cost model has become a sizing model**. The book's thesis is discovered, not
+tells them their definitional model has become a conditional one**. The book's thesis is discovered, not
 defined. It is the one idea that genuinely cannot be taught before the reader has a model in hand.
 
 Two traps this will surface, both of which are the design working:

@@ -323,7 +323,7 @@ def ceilings_table(name: str) -> str:
         if node.get("kind") == "ceiling"
     }
     if not declared:
-        return "*This model declares no ceilings. It is a cost model: see the front matter.*"
+        return "*This model declares no ceilings. It is a definitional model: see ch01.*"
     rows = [
         "| Ceiling | At the plan | Headroom | Allowed | Limit | Verdict "
         "| Over allowed | Over limit |",
@@ -359,7 +359,7 @@ def margins_table(name: str) -> str:
         if node.get("kind") == "ceiling"
     }
     if not declared:
-        return "*This model declares no ceilings. It is a cost model: see the front matter.*"
+        return "*This model declares no ceilings. It is a definitional model: see ch01.*"
     rows = ["| Ceiling | Margin | Why this margin |", "|---|---:|---|"]
     for _node_name, node in sorted(declared.items()):
         ceiling = node.get("ceiling")
@@ -866,8 +866,9 @@ def cost_split_table(name: str) -> str:
 def node_kinds_table(name: str) -> str:
     """What a model is made of, counted.
 
-    The census that classifies it. A model with no measured constant and no ceiling is a cost
-    model and sampling its inputs is enough; one with either is a sizing model and it is not.
+    The census that classifies it. A model with no measured constant and no ceiling is a
+    definitional model and sampling its inputs is enough; one with either is a conditional model
+    and it is not.
     """
     payload = load_result(name)["summary"]
     counts: dict[str, int] = {}
@@ -887,8 +888,8 @@ def node_kinds_table(name: str) -> str:
         + (
             " — it has measured constants or ceilings in it, so sampling the inputs is not "
             "sufficient on its own"
-            if payload["classification"] == "sizing"
-            else " — accounting identities with uncertain parameters, and sampling the inputs is "
+            if payload["classification"] == "conditional"
+            else " — relationships true by definition with uncertain inputs, and sampling the inputs is "
             "sufficient"
         )
         + " |"
@@ -1131,6 +1132,17 @@ def _produced_unit(model, node_name: str) -> str:
 #: and the plain-English phrase it replaces). The glossary table is rendered from this, and
 #: the site links a term's first mention on any page after that chapter to its entry.
 GLOSSARY: dict[str, tuple[str, str, str]] = {
+    "definitional model": (
+        "point_estimates",
+        "a model built only from relationships true by definition, so sampling its inputs is enough",
+        "it can only be wrong through its inputs",
+    ),
+    "conditional model": (
+        "point_estimates",
+        "a model with a measured constant or a ceiling in it, which must keep headroom below each "
+        "ceiling",
+        "every input can be right and the answer still wrong",
+    ),
     "distribution": (
         "monte_carlo",
         "the bag of values an uncertain quantity could take",

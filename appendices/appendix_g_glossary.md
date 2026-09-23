@@ -17,7 +17,7 @@ short_title: "Appendix G · Glossary"
 
 This book rations its vocabulary. Every term below arrives in one chapter, because a model has
 just raised a question that needs it, and never as a definition at the front of a section. The
-list is short by design: a reader who finishes the book should have gained under twenty words,
+list is short by design: a reader who finishes the book should have gained about twenty words,
 not a dialect.
 
 Four of the terms name kinds of error. Read them as a group. Measurement uncertainty and
