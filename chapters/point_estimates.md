@@ -89,17 +89,17 @@ Varying inputs across their ranges gives you the complete picture, and most of t
 :::{div}
 :class: definition
 
-**Sizing model.** Deterministic structure with uncertain parameters, plus two things.
+**Sizing model.** A model where the relationships are fixed but inputs vary. Its relationships are between demand, resource usage per request, hardware capacity—and the ceilings where a system stops coping.
 
 *Measured constants.* How much smaller a record is on disk than in memory after compression. How many records one request leaves. How much work one processor core does per second. These are measured, not derived. Each belongs to one implementation at one version. Each has a measurement error. None is a fact about the world. A chain of multiplications built on them inherits their errors, their version, and their standing as measurements, not facts. A model that hides all three treats them as constants.
 
-*Non-linear ceilings.* The queueing knee, where response time climbs steeply with spare capacity left. A host failing at the busy hour, so its load lands on already busy survivors. A new field on a measurement, multiplying stored things by how many values the field takes. A working set outgrowing memory. These are regime changes. **A chain of multiplications cannot model a regime change.** It reports a system running at several times its own limit, which cannot happen.
+*Ceilings.* The queueing knee, where response time climbs steeply with spare capacity left. A host failing at the busy hour, so its load lands on already busy survivors. A new field on a measurement, multiplying stored things by how many values the field takes. A working set outgrowing memory. These are regime changes. **A chain of multiplications cannot model a regime change.** It reports a system running at several times its own limit, which cannot happen.
 :::
 
 :::{div}
 :class: definition
 
-**Cost model.** Deterministic structure with uncertain parameters. Its relationships are accounting identities and physics: watts times hours times price; capital plus running cost; a total divided by a denominator. Nothing in that structure is in doubt. Only the inputs are uncertain. Cost moves roughly with them, so running the arithmetic over their ranges is enough. A cost model fails when a price was wrong, rarely when the system behaves differently.
+**Cost model.** A model where the relationships are fixed but inputs vary. Its relationships are accounting identities and physics: watts times hours times price; capital plus running cost; a total divided by a denominator. It takes the sizing decision and calculates its cost. Only the inputs are uncertain. Cost moves roughly with them, so running the arithmetic over their ranges is enough.
 :::
 
 A sizing model must do more than produce a number. It says how much room it keeps below each limit and why. The toolkit enforces it. A model with a measured constant or a declared limit **is** a sizing model. One with neither **is** a cost model. They are held to different rules. A sizing model that names a limit and keeps no room below it does not build.
