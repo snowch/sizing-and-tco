@@ -24,7 +24,7 @@ Here is the first of the two. When you work the web service arithmetic the way w
 ```{include} _generated/point-estimates-outputs.md
 ```
 
-The first row is your point estimate. The second and third columns show the smallest and largest answers. They are not close. The point estimate was right arithmetic on numbers you chose. It had no way to say it was a bet.
+The first row shows the point estimate you'd normally use (54 hosts). Beside it are the smallest and largest answers from all the runs (3 to 1,481). They are not close. The point estimate was right arithmetic on numbers you chose. It had no way to say it was a bet.
 
 ## The material
 
