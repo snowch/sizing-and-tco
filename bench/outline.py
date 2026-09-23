@@ -23,6 +23,7 @@ from dataclasses import dataclass
 CHAPTER_SHAPE = (
     "The question",
     "The material",
+    "Key takeaways",
     "What this cannot tell you",
     "Problems",
     "Where to go next",

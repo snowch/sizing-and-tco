@@ -167,7 +167,8 @@ model. The sampling converged beautifully on the wrong number. Convergence is a 
 the calculation, never about the thing being calculated. [ch20](#the-missing-node)'s problem 20.3
 hands you a model in that state, and an invoice it cannot reach.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **Inputs that move together must be drawn together.** Drawing a host price and a network price
   independently claims that one can save you from the other, and it makes every interval narrower
   than the evidence supports.
@@ -181,7 +182,6 @@ hands you a model in that state, and an invoice it cannot reach.
 - **Enough samples is when the answer stops moving at the precision you will report it to, and a
   settled answer has settled its arithmetic and nothing else.** A model can converge beautifully on
   the wrong number.
-:::
 
 ## What this cannot tell you
 

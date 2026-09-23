@@ -132,7 +132,8 @@ machines from three points clustered at the low end, and you are about to spend 
 extrapolation. The coefficients in this book's model are assumptions, and they say so in their
 provenance. **The shape is the claim. The position of the peak is a guess.**
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **Machines do not add up, for two separate reasons.** Contention takes a fixed share of every
   machine you add and flattens the curve. Crosstalk grows with the number of pairs and turns the
   curve over.
@@ -145,7 +146,6 @@ provenance. **The shape is the claim. The position of the peak is a guess.**
 - **The shape of the curve is the claim. The position of the peak is a guess.** Three measurements
   at different sizes fit the coefficients exactly, and extrapolating them to hundreds of machines is
   the bet you are placing.
-:::
 
 ## What this cannot tell you
 

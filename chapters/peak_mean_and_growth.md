@@ -166,7 +166,8 @@ badly wrong.
 long. Over one year it is a rounding error against the other uncertainties. Over five it is the
 model.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **The busy hour sizes you. The mean is what you serve most of the time.** The mean is the one
   number nobody experiences, and the model carries both because each has a job.
 - **The peak-to-mean ratio is a measurement, not a constant.** It belongs to your traffic, and
@@ -180,7 +181,6 @@ model.
 - **A growth rate is a claim about the future, and no provenance turns it into a measurement.** The
   honest form is a band stated as *surprised below this, surprised above that*, with a horizon
   attached.
-:::
 
 ## What this cannot tell you
 

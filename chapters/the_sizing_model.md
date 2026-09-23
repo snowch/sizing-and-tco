@@ -143,7 +143,8 @@ under it in every future, and the model would cheerfully report no chance at all
 Keeping it an input lets the ceilings ask the only question worth asking: *given what we bought,
 how often does the world break it?*
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **A sizing model is a dozen multiplications anybody could check.** The difficulty has never been
   the arithmetic.
 - **The spreadsheet's answer is not merely uncertain. It is low.** The largest of three uncertain
@@ -157,7 +158,6 @@ how often does the world break it?*
 - **The fleet is an input, because the decision is.** Keeping the host count an input lets the
   ceilings ask the only question worth asking: given what was bought, how often does the world
   break it?
-:::
 
 ## What this cannot tell you
 

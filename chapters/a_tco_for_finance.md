@@ -164,7 +164,8 @@ why this book does not discount: the rate is a policy decision, not an engineeri
 thing a finance team will do with a five-year total is discount it. They can only do that if the
 years have not already been added together.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **Finance wants a number to commit to. Engineering wants to say what the number hides.** Both are
   right, and they fit together.
 - **The deliverable is one number and one sentence saying what it leaves out.** The number is a
@@ -177,7 +178,6 @@ years have not already been added together.
   hour it was bought for is a sentence everybody in the room has an opinion about.
 - **Volunteer where every number came from.** A model that says which of its inputs are the
   supplier's is not a model trying to win an argument, and it is believed more for it.
-:::
 
 ## What this cannot tell you
 

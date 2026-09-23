@@ -112,7 +112,8 @@ The chain above, running. Read the measured constant's row: it says which corpus
 its number belongs to, which is more than a spreadsheet cell can say.
 ```
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **Four terms stand between the bytes an application holds and what you buy.** Replication and
   overhead multiply it, compression divides it, and the fill limit is a surcharge on all of it.
 - **Compression is the only term that helps, and the only one that is measured.** Replication and
@@ -125,7 +126,6 @@ its number belongs to, which is more than a spreadsheet cell can say.
   its unit and the toolkit converts, because this is the chapter where getting it wrong costs money.
 - **Almost all of the width in the host count is the growth rate, not the disk arithmetic.** The
   chain is the well-understood part of the problem. What it is applied to is not.
-:::
 
 ## What this cannot tell you
 

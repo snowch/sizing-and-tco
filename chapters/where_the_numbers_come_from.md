@@ -191,7 +191,8 @@ expect. It falls as one over the square root of the count, so halving it costs f
 work. Problem 3.2 is that arithmetic. Do it *before* agreeing to a measurement campaign rather
 than during one.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **Every input says how much its author was claiming.** A fact is traceable to something, a
   vendor's claim was stated by somebody selling it and is never quietly promoted, and an assumption
   is a decision a reviewer can argue with.
@@ -204,7 +205,6 @@ than during one.
   placeholder, no estimate, no number borrowed from a different stack.
 - **One measurement says nothing about its own wobble.** A constant is measured over several shards
   and reported with a standard error, and halving that error costs four times the work.
-:::
 
 ## What this cannot tell you
 

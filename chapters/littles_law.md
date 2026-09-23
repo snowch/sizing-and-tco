@@ -151,7 +151,8 @@ opinion about which of them is causing the others.
 A law that assumes nothing has no mechanism in it, and a chapter about it has less to say than
 the ones that buy one.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **Requests in the system equal the arrival rate times the time each one stays.** One
   multiplication, true of any system in a steady state, assuming nothing about how the system works.
 - **What a request costs is not how long it takes.** Service demand is processor time per request,
@@ -164,7 +165,6 @@ the ones that buy one.
   every ceiling from here on asks what happens to the fleet that was bought.
 - **The law relates three numbers and has no opinion about which one moved.** Outside a steady
   state, or about the tail, it says nothing at all.
-:::
 
 ## What this cannot tell you
 

@@ -135,7 +135,7 @@ about the worlds, and nobody can decide anything with it.
 which for the metrics encoder is this repository's own — because that is what makes it a
 measurement rather than a claim.
 
-## 5. The five-part chapter shape
+## 5. The six-part chapter shape
 
 Every chapter, every time. The repetition is what makes the book read as one book. The headings
 live in `bench.outline.CHAPTER_SHAPE` and `tests/test_book.py` holds every chapter to them.
@@ -144,12 +144,14 @@ live in `bench.outline.CHAPTER_SHAPE` and `tests/test_book.py` holds every chapt
    open.
 2. **The material** — the body. Short sections. Code and models quoted from the working tree, and
    generated fragments included where the prose needs them.
-3. **What this cannot tell you** — **mandatory**, and for a chapter with a model in it, it must
+3. **Key takeaways** — a short list of what the reader should carry away, each claim in bold
+   with its reason after it. Nothing in it is new: every claim was made in the material.
+4. **What this cannot tell you** — **mandatory**, and for a chapter with a model in it, it must
    name what the *structure* omits.
-4. **Problems** — each a stub under `tests/<chapter-slug>/` with a test that passes only when
+5. **Problems** — each a stub under `tests/<chapter-slug>/` with a test that passes only when
    solved, or, where the reader's own system is the subject and no oracle exists, a statement of
    what a good answer contains and what would falsify it. CLAUDE.md invariant 5.
-5. **Where to go next** — primary sources via `@citekey`.
+6. **Where to go next** — primary sources via `@citekey`.
 
 Two sections have gone, both inherited from the book this was bootstrapped from and neither
 missed. A collapsed table at the top gave prerequisites, outputs and sources: a reader does not
@@ -158,6 +160,9 @@ prerequisite was "the previous one". A trailing **What the model says** collecte
 fragments: twenty-one chapters were written and twenty of them put those fragments where the
 argument needed them instead, which reads better. The data behind both stays in
 `bench/outline.py`, where the tests can check it.
+
+One has arrived. **Key takeaways** began as a box at the end of the material, and is now a heading
+of its own: the page's outline lists it, and the shape test holds every chapter to having one.
 
 ## 6. Conventions
 

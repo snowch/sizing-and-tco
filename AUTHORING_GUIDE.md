@@ -37,16 +37,21 @@ Not the order the chapter is read in.
 
 Writing the prose first produces a chapter that explains what you meant to model.
 
-## The five-part shape
+## The six-part shape
 
 `bench.outline.CHAPTER_SHAPE`, PLAN.md §5, and it is not negotiable — the repetition is what makes
 every chapter read as one book. `python3 scripts/new-chapter.py <slug>` generates the shape with
 the question already filled in from `bench/outline.py`, and `tests/test_book.py` fails a chapter
-that grows a sixth heading or loses one. A section a chapter needs and the shape does not have is
-a subsection of **The material**.
+that grows a seventh heading or loses one. A section a chapter needs and the shape does not have
+is a subsection of **The material**.
 
-The section that matters most is the third: **What this cannot tell you**. It is the easiest to
-skip and the one that makes the other four believable. For a chapter with a model in it, it must
+**Key takeaways** follows the material: a short list of what the reader should carry away. Each
+item opens with its claim in bold and says why in a sentence or two. Nothing in it is new. Every
+claim was made, and shown, in the material, and the page's outline lists the heading, so a reader
+can go straight to it.
+
+The section that matters most is the fourth: **What this cannot tell you**. It is the easiest to
+skip and the one that makes the other five believable. For a chapter with a model in it, it must
 name **what the model's structure omits** — because that is the error no amount of sampling can
 see, and a chapter that only lists its input uncertainties has described the easy half.
 
@@ -294,6 +299,7 @@ A problem is a stub the reader edits and a test that passes only when they are r
 - [ ] Scaffolding tests beside them, unmarked, proving the problems are answerable
 - [ ] Model merged, passing `make verify`
 - [ ] Every figure declared in `bench/figures.py` and rendered from a stamped result
+- [ ] *Key takeaways* written, each claim in bold and each one made in the material first
 - [ ] *What this cannot tell you* written, naming what the structure omits
 - [ ] Edited against `STYLE.md`: short sentences, one idea per paragraph, the point stated first,
       and its closing checklist run over the page

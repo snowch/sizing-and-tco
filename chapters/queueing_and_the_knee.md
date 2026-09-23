@@ -155,7 +155,8 @@ The same file, running. Raise the request rate until utilisation passes the cap 
 the residence time stops rising, while the ceiling goes on reporting the real utilisation.
 ```
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **Response time is the work divided by what is left of the system.** Nearly flat while there is
   slack, nearly vertical when there is not, and nothing in the arithmetic warns you which side you
   are on.
@@ -168,7 +169,6 @@ the residence time stops rising, while the ceiling goes on reporting the real ut
 - **A queueing ceiling is a slope, not a cliff.** Nothing fails and nobody is paged. The system gets
   slower for as long as nobody looks, and the way back is adding machines, which buys less than it
   promises.
-:::
 
 ## What this cannot tell you
 

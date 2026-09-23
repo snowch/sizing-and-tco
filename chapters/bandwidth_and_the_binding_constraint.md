@@ -133,7 +133,8 @@ The observability model in [Appendix F](#appendix-f-observability-model) has thr
 and three separate ceilings for this reason. There is no single number that summarises
 them, and a model that produced one would be hiding the thing you needed.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **Three chains size the same fleet, and none of them is the answer.** Requests, memory and disk
   each ask for a host count from a different arithmetic, and they share the workload and nothing
   else.
@@ -145,7 +146,6 @@ them, and a model that produced one would be hiding the thing you needed.
   much when it is. Either one alone is a way of not answering.
 - **More chains mean more chances to be caught out.** The chance that some constraint binds
   unexpectedly rises with their number, even while each one's chance stays small.
-:::
 
 ## What this cannot tell you
 

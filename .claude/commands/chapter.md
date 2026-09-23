@@ -23,7 +23,7 @@ previous chapter. Then:
 3. **Declare the figures** in `bench/figures.py` and stamp the results with `make models` or a
    runner under `bench/`. For a constant nobody has measured, do nothing special — the state
    propagates and the tables say so. Never a placeholder number.
-4. **Write the chapter** to serve the problems and the figures, in the five-part shape. Quote
+4. **Write the chapter** to serve the problems and the figures, in the six-part shape. Quote
    code and model files with `{literalinclude}` and text anchors; include figures with
    `{include}` and `{image}`. No number is ever typed into prose.
 5. Run `./scripts/ci-check.sh`, then commit.

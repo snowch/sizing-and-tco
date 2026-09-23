@@ -134,7 +134,8 @@ is not a reason to buy from the supplier.
 The decision needs the total, the risk, and what the alternatives would cost. That is
 [ch21](#a-tco-for-finance). A unit cost is what gets you invited to that meeting.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **A unit cost is a total divided by a quantity, and the trap is in the division.** Per month and
   per year differ by a factor of twelve. The busy hour and the mean differ by the peak-to-mean
   ratio. Both look equally authoritative on a slide.
@@ -149,7 +150,6 @@ The decision needs the total, the risk, and what the alternatives would cost. Th
   requests.
 - **A unit cost finds the question worth asking. It does not decide.** The decision needs the total,
   the risk, and what the alternatives would cost.
-:::
 
 ## What this cannot tell you
 

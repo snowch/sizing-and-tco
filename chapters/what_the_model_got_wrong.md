@@ -134,7 +134,8 @@ evidence, because memory adjusts, and the adjustment always runs in the directio
 present bearable. Every stamped result in this book exists so that somebody who was not there can
 make the comparison without taking anybody's word for it.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **The failure was forecast, in writing, by the people it later surprised.** A percentage in a
   table is not an event, and a number nobody has to sign for is a number nobody reads out loud.
 - **Inside the model, *what went wrong* is a filter.** Take the futures in which the ceiling was
@@ -146,7 +147,6 @@ make the comparison without taking anybody's word for it.
   inputs were a little above usual, and there was no margin for unremarkable.
 - **A post-mortem inside a model is a post-mortem of that model.** It will confidently name the
   guiltiest-looking of the things you thought of, and never the chain that is missing.
-:::
 
 ## What this cannot tell you
 
