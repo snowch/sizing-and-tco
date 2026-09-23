@@ -40,6 +40,7 @@ if ! command -v myst >/dev/null 2>&1; then
   echo "  myst not installed; skipping the content build, and every check that reads the parse."
   echo "  install with: npm install -g \"mystmd@$(node -p "require('./package.json').devDependencies.mystmd")\""
   myst_built=0
+  log=""
 else
 
 # Content build WITHOUT --html. This matters: with --html, MyST downloads the site theme before it

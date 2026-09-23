@@ -84,17 +84,7 @@ The toolkit enforces what spreadsheets cannot:
 
 A spreadsheet loses all of this on the first copy.
 
-[ch02](#what-a-workload-is) writes the first nodes of the model. Each number in the file carries
-a unit and a line saying where it came from, and the **build**, the set of checks that turns
-these files into this book, refuses a node that leaves either out.
-
-## Unknown numbers stay unknown
-
-If a required number has not been measured, the model does not invent one.
-
-When a constant has not been measured, everything that depends on it stays unknown. Those figures
-show as *not yet measured*, and the page names the chain that is blocked. There is never a
-placeholder, and never a number taken from somewhere else.
+[ch02](#what-a-workload-is) writes the first nodes.
 
 ## Who this book is for
 
