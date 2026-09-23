@@ -20,7 +20,7 @@ Two things are hidden in that number.
 2. **A structural flaw.** A chain of multiplications cannot see the queueing knee: the point where spare capacity runs out and response time climbs steeply. Measuring the inputs better will never find this error.
 
 :::{note}
-Two paths forward from here. [ch06](#queueing-and-the-knee) addresses the structural flaw by adding ceilings—explicit limits that a chain of multiplications cannot model. [ch13](#monte-carlo) addresses the ranges you threw away by showing how to give the model a full range instead of a single value and get a range of answers back. The first path is structural; the second is computational. Both are necessary.
+Both flaws will be addressed as the book progresses: structural limits in [ch06](#queueing-and-the-knee), and ranges in [ch13](#monte-carlo).
 :::
 
 Here is the first of the two. When you work the web service arithmetic the way we just did—all inputs at their bottom, then all at their top—you get two answers. The point estimate (all at middle) sits between them. But not in the middle. Most futures need more hosts than the point estimate says.
