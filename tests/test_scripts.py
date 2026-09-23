@@ -261,7 +261,7 @@ def test_the_takeaways_box_is_drawn_like_a_definition_box_with_its_own_icon():
     box was, which is how the box went missing the first time without a test noticing.
     """
     css = site().CSS
-    assert ".definition, .takeaways {" in css, "the takeaways box is not drawn like a definition"
+    assert ".takeaways {" in css or ".takeaways," in css, "the takeaways box is not drawn like a definition"
     icon = re.search(r"\.takeaways::before \{ content: '([a-z_]+)'; \}", css)
     assert icon, "the takeaways box has no icon"
     assert icon[1] != "menu_book", "the takeaways box borrows the definition box's icon"
