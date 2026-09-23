@@ -106,7 +106,7 @@ A sizing model declares headroom below each ceiling—how much spare capacity it
 
 ### Where a cost model becomes a sizing model
 
-Do not take the distinction on trust. It decides which half of this book applies. The web service model starts as a cost model and becomes a sizing model partway through. One node makes the change. Problem 1.3 is finding it by reading three model descriptions.
+Why does this distinction matter? It determines which chapters apply to your model. The web service model—our running example—starts as a cost model and becomes a sizing model when we add a measured constant or ceiling. Problem 1.3 asks you to find that moment in three different model descriptions.
 
 ## What this cannot tell you
 
