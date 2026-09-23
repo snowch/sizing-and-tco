@@ -19,14 +19,12 @@ Two things are hidden in that number.
 1. **The ranges you threw away.** Each middle went into the arithmetic as a measured fact. What came out has no trace of the range it came from. Later you will give the model the full range instead of its middle and get a range of answers back.
 2. **A flaw in the model's shape.** A chain of multiplications cannot see that a queue has tipped over. The answer describes a fleet running at several times its capacity. Measuring the inputs better will never find this error.
 
-Here is the first of the two. The mark at the top is the single number. The pile is the same arithmetic done over and over, with every input free to move:
+Here is the first of the two. When you work the web service arithmetic the way we just did—all inputs at their bottom, then all at their top—you get two answers. The point estimate (all at middle) sits between them. But not in the middle. Most futures need more hosts than the point estimate says.
 
-```{image} _figures/point-estimates-once-and-many.svg
-:alt: The single number marked above the pile of answers the same arithmetic gave, with the single number low in the pile rather than in the middle of it
-:width: 100%
+```{include} _generated/point-estimates-outputs.md
 ```
 
-Only the inputs changed between the mark and the pile. More than half the answers came out above the single number. A long tail runs right: answers needing fleets several times the size. A single number shows none of this. Not the width, not where you stand, not the tail. The tail costs money because those answers need a fleet you did not buy.
+The first row is your point estimate. The second and third columns show the smallest and largest answers. They are not close. The point estimate was right arithmetic on numbers you chose. It had no way to say it was a bet.
 
 ## The material
 
@@ -49,70 +47,27 @@ Pick the middle of each and multiply. You get one number. The arithmetic is righ
 
 Multiplying uncertain numbers does not average their doubt. It compounds it.
 
-You know this without servers. Ask how long people take to drive to work. They do not give a number. They say "twenty-five minutes, forty if the bypass is busy." Ask what a year costs. Now three ranges compound: days driving, litres per journey, price per litre. Each is a range, and nobody needs to learn to think of them that way.
+You know this without servers. Ask someone: *how much will your commute cost this year?* They do not give a number. They say: *"Maybe 250 days, maybe 260 if I'm in the office more. 25 minutes usually, 40 if the bypass is busy. Fuel is around £1.30 a litre this month, might be £1.50."*
 
-```{image} _figures/point-estimates-commute.svg
-:alt: Three everyday ranges -- days driven, litres a journey, price a litre -- and what a year costs from their middles against what it costs with all three at their tops
-:width: 100%
-```
+That is three ranges, not three numbers. Work through what that means:
 
-Each is close to its own middle. The year costs more than half again. Nothing went wrong. The highs multiplied instead of cancelling.
+**Run 1** (most likely): 250 days × 25 min × £1.30 = £X
 
-Now as a rule for six inputs. Suppose each is a fifth higher than your guess.
+**Run 2** (worse growth): 260 days × 25 min × £1.30 = £Y (higher—more days)
 
-```{image} _figures/point-estimates-compounding.svg
-:alt: How far the answer moves when one, two, three or more inputs are each a fifth high
-:width: 100%
-```
+**Run 3** (worse traffic): 250 days × 40 min × £1.30 = £Z (higher—slower journey)
 
-Two inputs a fifth high do not make the answer a fifth high. They make it nearly half as much again. The errors multiply instead of cancelling. By six inputs the answer has tripled. No single input moved by more than a fifth.
+**Run 4** (worst case): 260 days × 40 min × £1.50 = £W (much higher—everything bad at once)
 
-Problem 1.2 is that arithmetic on the web service model, using only the spreads the file declares. The combined spread is not the widest input and not their average.
+The arithmetic is right in each run. But the four answers are different. Pick one number? Which one did you pick? You do not know.
 
-The honest answer to *how big* is not a number. It is a range.
+If you picked the middle value for each (250 days, 25 minutes, £1.30), you got run 1. But the future could be run 2, 3, or 4. Run 4 costs a lot more.
 
-Get that range by running the arithmetic over and over. Doing a sum twice is pointless if nothing changes, so something must. Each time, pick a different value for every input. Not any value: one drawn from the spread that input has. A value from the fat middle comes up often. One from the edge comes up rarely. Keep the answer and repeat.
+A point estimate assumes everything lands in the middle. Reality does not work that way.
 
-A spread is the part of the model file that says how wrong one input might be.
+Problem 1.2 does the same arithmetic on the web service model: all six inputs at their bottom together, then all at their top. Two runs, two answers. The second is not the widest input alone, and not their average. It is what happens when everything goes the wrong way at once.
 
-```{include} _generated/point-estimates-a-spread.md
-```
-
-One run answers one question: *what if it turns out like this?* Enough runs answer another: *which outcomes come up often?* You need the second answer before you buy.
-
-The web service we use is a running example: it answers requests and keeps the records they leave. It runs on a fleet you have to buy and pay to run for five years. You need nothing else yet.
-
-Rather than trust this, try it. Press the button below. Every uncertain input to the host count jumps to a different value. The fleet is worked through once. The answer drops onto the pile. Press again for a different answer because you asked a different question. The host cost is not uncertain: price does not change how many you need.
-
-```{iframe} /futures/point-estimates.html
-:width: 100%
-One press is one future. The ticks under each input pile up where its shape is fat, which is what
-*drawn from the spread it honestly has* looks like.
-```
-
-A dozen presses shows the answers are not even. Press fifty times or use *Draw 100*: the shape needs a deep pile. The shape is what matters.
-
-Here is the model's answer. The single number first, then what the repeated answers did.
-
-```{include} _generated/point-estimates-outputs.md
-```
-
-The first row: the point estimate is right. Beside it are the smallest and largest answers. They are not close. Nothing in the first calculation was wrong. It had no way to say it was a bet.
-
-The second column is not the model saying it is useless. It is one extreme draw from each end. It takes most inputs going the same way at once to produce either. Almost nothing lands near the ends. You would size a fleet from where the answers piled up, which the chart shows.
-
-```{image} _figures/point-estimates-tco-spread.svg
-:alt: The five-year total cost as a spread of answers, with the single number marked on it
-:width: 100%
-```
-
-Each bar counts how many answers landed on a given five-year total. Most sit in the middle. A thin tail runs right.
-
-The bar heights mean something because of how values were picked. Each input was drawn from its own spread: common values often, rare values rarely. A total that comes up many times is one many plausible combinations produce. One that comes up few times needs unlikely combinations. If values had been picked evenly instead, the pile would say nothing about what to expect.
-
-The red line is the single-number answer.
-
-The frame picks values and does the arithmetic for you, one press at a time. Problem 1.2 does the same on paper: every input at its bottom, then at its top. It asks you to set what comes out beside the smallest and largest answer in the table. Two ways of saying the same doubt. They do not agree.
+The honest answer to *how big* is not one number. It is the list of answers you could get depending on what turns out to be true.
 
 ### The error a range cannot show
 
