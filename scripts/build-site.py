@@ -1483,12 +1483,10 @@ figure img { background: #fff; border-radius: 4px; }
 .definition { background: var(--panel); border: 1px solid var(--edge); border-left: 3px solid var(--accent);
               border-radius: 6px; padding: .8rem 1rem; margin: 1.5rem 0; font-size: .98em;
               position: relative; padding-left: 3.2rem; }
-.definition::before { content: attr(data-icon); font-family: 'Material Icons'; font-size: 1.5rem;
+.definition::before { content: 'menu_book'; font-family: 'Material Icons'; font-size: 1.5rem;
                       position: absolute; left: .8rem; top: .8rem; color: var(--accent); }
 .definition > :first-child { margin-top: 0; }
 .definition > :last-child { margin-bottom: 0; }
-.definition.cost-model::before { content: 'calculate'; }
-.definition.sizing-model::before { content: 'architecture'; }
 
 /* A model is the one thing a chapter's column can never hold: its graph is drawn at a fixed
    width -- 1470px for the widest in the book -- so a narrower card shows less of the graph
