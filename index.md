@@ -78,22 +78,6 @@ D](#appendix-d-units) works through the combinations that bite.
 a unit and a line saying where it came from, and the **build**, the set of checks that turns
 these files into this book, refuses a node that leaves either out.
 
-## Every number can be checked
-
-Every number in this book can be checked, and the page tells you how.
-
-**Every number was computed, never typed in.** The italic line under each table opens the model
-it came from, with every input on a slider.
-
-**Every model is a file.** Every number declares a unit, so the toolkit refuses a model that
-multiplies the wrong two things. Every input says whether it is a fact, a vendor's claim, or an
-assumption. An uncertain input says what shape its uncertainty has, and why. Every measured
-constant names the measurement behind it. [ch03](#where-the-numbers-come-from) explains what
-those distinctions mean.
-
-**Every chapter says what it cannot tell you.** In a book about estimates, that section is usually
-the most useful part of the chapter.
-
 ## Unknown numbers stay unknown
 
 If a required number has not been measured, the model does not invent one.
