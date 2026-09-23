@@ -135,7 +135,7 @@ Do not take the distinction on trust. It decides which half of this book applies
 
 Four in `tests/point_estimates/`. The first three have tests: run with `python3 -m pytest tests/point_estimates/ -m problem`. The fourth has no test.
 
-**1.1 — How wide is one input?** The test gives you the band the model declares for each of six inputs. Write each as its top over its bottom.
+**1.1 — How wide is one input?** The test gives you the band the web service model declares for each of six inputs that move the host count. Write each as its top over its bottom.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_1_each_input.py -m problem
