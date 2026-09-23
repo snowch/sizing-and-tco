@@ -155,21 +155,6 @@ The same file, running. Raise the request rate until utilisation passes the cap 
 the residence time stops rising, while the ceiling goes on reporting the real utilisation.
 ```
 
-## Key takeaways
-
-- **Response time is the work divided by what is left of the system.** Nearly flat while there is
-  slack, nearly vertical when there is not, and nothing in the arithmetic warns you which side you
-  are on.
-- **There is no knee.** The curve has no special point. What people call the knee is where the slope
-  first exceeded what they would put up with, which is a fact about the person.
-- **So the book declares a margin with a reason instead of a knee rule.** A ceiling records where
-  the quantity stops meaning anything, how much room is kept below that, and why.
-- **The verdict judges one future. The last two columns judge them all.** A design can read *ok* at
-  the point estimate and still be over the limit in a good share of its futures.
-- **A queueing ceiling is a slope, not a cliff.** Nothing fails and nobody is paged. The system gets
-  slower for as long as nobody looks, and the way back is adding machines, which buys less than it
-  promises.
-
 ## What this cannot tell you
 
 **What your system's curve looks like.** Everything above is one queueing model with strong
@@ -188,6 +173,25 @@ on a growth rate nobody can measure.
 **Whether the service time is constant.** It is not, the model says it is, and the declared link
 between arrival rate and service demand admits that without correcting for it. The real curve is
 steeper, and this chapter cannot say by how much.
+
+## Key takeaways
+
+:::{div}
+:class: takeaways
+
+- **Response time is the work divided by what is left of the system.** Nearly flat while there is
+  slack, nearly vertical when there is not, and nothing in the arithmetic warns you which side you
+  are on.
+- **There is no knee.** The curve has no special point. What people call the knee is where the slope
+  first exceeded what they would put up with, which is a fact about the person.
+- **So the book declares a margin with a reason instead of a knee rule.** A ceiling records where
+  the quantity stops meaning anything, how much room is kept below that, and why.
+- **The verdict judges one future. The last two columns judge them all.** A design can read *ok* at
+  the point estimate and still be over the limit in a good share of its futures.
+- **A queueing ceiling is a slope, not a cliff.** Nothing fails and nobody is paged. The system gets
+  slower for as long as nobody looks, and the way back is adding machines, which buys less than it
+  promises.
+:::
 
 ## Problems
 

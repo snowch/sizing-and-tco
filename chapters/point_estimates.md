@@ -106,7 +106,18 @@ Do not take the distinction on trust. It decides which half of this book applies
 
 You find the stage rather than being told it.
 
+## What this cannot tell you
+
+**What the model's structure omits.** Everything above is about a model already written down. A quantity nobody thought of appears nowhere in the model. No amount of running the arithmetic will put it there. The observability model has a hole of that shape.
+
+**Whether the spread is right.** The range reports the spreads in the file. If the growth rate's spread was a guess nobody checked, the range inherits the guess. It says nothing about it. The difference between measurement, claim and guess decides whether a range is a finding or decoration.
+
+**How much the range should worry you.** A wide range on a number nobody will act on for a year is not a problem. A narrow one on a purchase order might be. The arithmetic knows neither. This book has no opinion about your risk appetite.
+
 ## Key takeaways
+
+:::{div}
+:class: takeaways
 
 - **A point estimate is silent, not wrong.** One value per input and the arithmetic done once gives
   a correct number that says nothing about how far it could be out.
@@ -120,14 +131,7 @@ You find the stage rather than being told it.
   room it keeps below each limit.
 - **The kind is read from the file, never declared.** A measured constant or a declared limit makes
   a sizing model, and the toolkit works that out from what is in the model.
-
-## What this cannot tell you
-
-**What the model's structure omits.** Everything above is about a model already written down. A quantity nobody thought of appears nowhere in the model. No amount of running the arithmetic will put it there. The observability model has a hole of that shape.
-
-**Whether the spread is right.** The range reports the spreads in the file. If the growth rate's spread was a guess nobody checked, the range inherits the guess. It says nothing about it. The difference between measurement, claim and guess decides whether a range is a finding or decoration.
-
-**How much the range should worry you.** A wide range on a number nobody will act on for a year is not a problem. A narrow one on a purchase order might be. The arithmetic knows neither. This book has no opinion about your risk appetite.
+:::
 
 ## Problems
 

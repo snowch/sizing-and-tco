@@ -121,22 +121,6 @@ The finished model. Click *five-year total cost of ownership* to see how much of
 it, and how much does not.
 ```
 
-## Key takeaways
-
-- **Models are joined by numbers written down, and the joins are undefended.** Each model is
-  defensible on its own terms. The seam between them is where the doubt goes missing.
-- **Hand over a number instead of a distribution and the downstream interval gets narrower, not
-  wrong.** The headline stays where it was and the doubt disappears, which is why it survives
-  review.
-- **The seam is also where the correlations live.** Both sides are usually driven by the same
-  growth, and two separate models each give it an independent rate, understating the joint
-  uncertainty twice over.
-- **This toolkit has no node for a distribution that came from another model.** The gap is named,
-  tested for, and left open on purpose, because one large model is not obviously better than two
-  honest small ones with a documented seam.
-- **What Part V hands on is a total, its composition, and what crossed a seam.** Most of the money
-  was never argued about, and a good deal of it rests on numbers that crossed a join.
-
 ## What this cannot tell you
 
 **Whether the seam is in the right place.** Two models joined at a price is one choice. Joined at
@@ -153,6 +137,26 @@ neither.
 **What the structure omits.** The same as [ch15](#capex-opex-and-lifecycle), and worse. There are
 now two structures, and the missing lines in each are invisible to the other.
 [ch20 · The missing node](#the-missing-node).
+
+## Key takeaways
+
+:::{div}
+:class: takeaways
+
+- **Models are joined by numbers written down, and the joins are undefended.** Each model is
+  defensible on its own terms. The seam between them is where the doubt goes missing.
+- **Hand over a number instead of a distribution and the downstream interval gets narrower, not
+  wrong.** The headline stays where it was and the doubt disappears, which is why it survives
+  review.
+- **The seam is also where the correlations live.** Both sides are usually driven by the same
+  growth, and two separate models each give it an independent rate, understating the joint
+  uncertainty twice over.
+- **This toolkit has no node for a distribution that came from another model.** The gap is named,
+  tested for, and left open on purpose, because one large model is not obviously better than two
+  honest small ones with a documented seam.
+- **What Part V hands on is a total, its composition, and what crossed a seam.** Most of the money
+  was never argued about, and a good deal of it rests on numbers that crossed a join.
+:::
 
 ## Problems
 

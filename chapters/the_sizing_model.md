@@ -143,22 +143,6 @@ under it in every future, and the model would cheerfully report no chance at all
 Keeping it an input lets the ceilings ask the only question worth asking: *given what we bought,
 how often does the world break it?*
 
-## Key takeaways
-
-- **A sizing model is a dozen multiplications anybody could check.** The difficulty has never been
-  the arithmetic.
-- **The spreadsheet's answer is not merely uncertain. It is low.** The largest of three uncertain
-  counts is usually larger than the largest of their three point estimates.
-- **A fleet sized from point estimates satisfies its ceilings by construction, and still breaks.**
-  Across the futures the model thinks plausible it is over the knee at the busy hour in a
-  substantial share of them, with nothing having gone wrong.
-- **A sizing model produces a relationship between a number and a risk, not a number.** Somebody has
-  to pick a point on it, and the only form the choice can be handed over in is *what it costs*
-  beside *how often it breaks*.
-- **The fleet is an input, because the decision is.** Keeping the host count an input lets the
-  ceilings ask the only question worth asking: given what was bought, how often does the world
-  break it?
-
 ## What this cannot tell you
 
 **Whether the structure is right.** Everything above takes the chains as given and asks what the
@@ -183,6 +167,26 @@ careful, its uncertainty.
 appearing since [ch06](#queueing-and-the-knee) without explanation. [ch13](#monte-carlo) is the
 explanation, and it is next because this is the chapter where a number appeared that you cannot
 defend.
+
+## Key takeaways
+
+:::{div}
+:class: takeaways
+
+- **A sizing model is a dozen multiplications anybody could check.** The difficulty has never been
+  the arithmetic.
+- **The spreadsheet's answer is not merely uncertain. It is low.** The largest of three uncertain
+  counts is usually larger than the largest of their three point estimates.
+- **A fleet sized from point estimates satisfies its ceilings by construction, and still breaks.**
+  Across the futures the model thinks plausible it is over the knee at the busy hour in a
+  substantial share of them, with nothing having gone wrong.
+- **A sizing model produces a relationship between a number and a risk, not a number.** Somebody has
+  to pick a point on it, and the only form the choice can be handed over in is *what it costs*
+  beside *how often it breaks*.
+- **The fleet is an input, because the decision is.** Keeping the host count an input lets the
+  ceilings ask the only question worth asking: given what was bought, how often does the world
+  break it?
+:::
 
 ## Problems
 

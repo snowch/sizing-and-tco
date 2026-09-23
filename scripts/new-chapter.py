@@ -62,18 +62,23 @@ twenty-one of twenty-three it reprinted a table the reader had already seen a fe
 earlier with nothing new said about it. Show a figure where the argument needs it. If a chapter
 genuinely ends on its numbers, give the section a name that says what is in it.]
 
-## Key takeaways
-
-[To write: a short list of what the reader should carry away. Each item opens with its claim in
-bold, then says why in a sentence or two. Nothing here is new: every claim was made, and shown, in
-The material, and no number is typed here either.]
-
 ## What this cannot tell you
 
 [To write. **Mandatory.** What the model, the measurement or the method could not show, and what
 was done instead. For a chapter with a model in it this must name what the model's *structure*
 omits, because that is the error no amount of sampling can see. This chapter is not finished
 while this section is missing.]
+
+## Key takeaways
+
+:::{{div}}
+:class: takeaways
+
+[To write: a short list of what the reader should carry away, kept in this box. The box has no
+title because the heading names it. Each item opens with its claim in bold, then says why in a
+sentence or two. Nothing here is new: every claim was made, and shown, in The material, and no
+number is typed here either.]
+:::
 
 ## Problems
 

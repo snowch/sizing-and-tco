@@ -164,21 +164,6 @@ why this book does not discount: the rate is a policy decision, not an engineeri
 thing a finance team will do with a five-year total is discount it. They can only do that if the
 years have not already been added together.
 
-## Key takeaways
-
-- **Finance wants a number to commit to. Engineering wants to say what the number hides.** Both are
-  right, and they fit together.
-- **The deliverable is one number and one sentence saying what it leaves out.** The number is a
-  choice made out loud: the median, a high percentile, or a round figure above the median. The
-  sentence names something specific.
-- **Present two designs with a price, not one design with an interval.** The question becomes
-  whether the difference between the columns is worth the difference in how often each one breaks,
-  and that is a question the room can answer.
-- **Lead with the rows that have a consequence in them.** How often the fleet cannot serve the busy
-  hour it was bought for is a sentence everybody in the room has an opinion about.
-- **Volunteer where every number came from.** A model that says which of its inputs are the
-  supplier's is not a model trying to win an argument, and it is believed more for it.
-
 ## What this cannot tell you
 
 **What running out is worth.** Every figure in the decision table is a cost of *building*. There
@@ -209,6 +194,25 @@ host count hurts both columns. But "more robust" is not "unaffected".
 **Whether it worked.** There is no measurement in this repository of whether a document shaped
 like this gets a better decision than one shaped some other way. This chapter is the one place in
 the book arguing from experience rather than from a stamped result.
+
+## Key takeaways
+
+:::{div}
+:class: takeaways
+
+- **Finance wants a number to commit to. Engineering wants to say what the number hides.** Both are
+  right, and they fit together.
+- **The deliverable is one number and one sentence saying what it leaves out.** The number is a
+  choice made out loud: the median, a high percentile, or a round figure above the median. The
+  sentence names something specific.
+- **Present two designs with a price, not one design with an interval.** The question becomes
+  whether the difference between the columns is worth the difference in how often each one breaks,
+  and that is a question the room can answer.
+- **Lead with the rows that have a consequence in them.** How often the fleet cannot serve the busy
+  hour it was bought for is a sentence everybody in the room has an opinion about.
+- **Volunteer where every number came from.** A model that says which of its inputs are the
+  supplier's is not a model trying to win an argument, and it is believed more for it.
+:::
 
 ## Problems
 

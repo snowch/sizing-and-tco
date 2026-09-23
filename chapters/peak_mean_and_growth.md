@@ -166,22 +166,6 @@ badly wrong.
 long. Over one year it is a rounding error against the other uncertainties. Over five it is the
 model.
 
-## Key takeaways
-
-- **The busy hour sizes you. The mean is what you serve most of the time.** The mean is the one
-  number nobody experiences, and the model carries both because each has a job.
-- **The peak-to-mean ratio is a measurement, not a constant.** It belongs to your traffic, and
-  borrowing somebody else's sizes a system for a shape it does not have.
-- **Growth is the one input raised to a power, so it tops every tornado that depends on the
-  future.** Over a horizon, an uncertainty in the rate becomes a much larger uncertainty in the
-  demand.
-- **Compounding the average growth rate understates the expected capacity.** Compound every
-  plausible rate and average the results, and the answer is always larger. The gap grows with the
-  spread and with the horizon.
-- **A growth rate is a claim about the future, and no provenance turns it into a measurement.** The
-  honest form is a band stated as *surprised below this, surprised above that*, with a horizon
-  attached.
-
 ## What this cannot tell you
 
 **What your peak-to-mean ratio is.** Nothing in this repository can measure it. It is a property
@@ -199,6 +183,26 @@ often they were surprised. Nothing here calibrates that.
 **Anything about a shape that changes.** Every figure above assumes demand grows without changing
 its daily profile. A workload that grows by adding a different kind of user grows in a different
 shape, and the busy hour moves.
+
+## Key takeaways
+
+:::{div}
+:class: takeaways
+
+- **The busy hour sizes you. The mean is what you serve most of the time.** The mean is the one
+  number nobody experiences, and the model carries both because each has a job.
+- **The peak-to-mean ratio is a measurement, not a constant.** It belongs to your traffic, and
+  borrowing somebody else's sizes a system for a shape it does not have.
+- **Growth is the one input raised to a power, so it tops every tornado that depends on the
+  future.** Over a horizon, an uncertainty in the rate becomes a much larger uncertainty in the
+  demand.
+- **Compounding the average growth rate understates the expected capacity.** Compound every
+  plausible rate and average the results, and the answer is always larger. The gap grows with the
+  spread and with the horizon.
+- **A growth rate is a claim about the future, and no provenance turns it into a measurement.** The
+  honest form is a band stated as *surprised below this, surprised above that*, with a horizon
+  attached.
+:::
 
 ## Problems
 

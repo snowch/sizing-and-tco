@@ -372,6 +372,39 @@ def test_a_written_chapter_has_the_shape_the_outline_declares(path):
     )
 
 
+#: How a chapter's takeaways open and close: a box drawn like a definition box, with no title of
+#: its own because the heading above it already says what it is.
+TAKEAWAYS_BOX = ([":::{div}", ":class: takeaways"], ":::")
+
+
+def takeaways(text: str) -> list[str]:
+    """The lines under a page's Key takeaways heading, up to the next heading."""
+    section = re.search(r"^## Key takeaways\n(.*?)(?=^## )", text, re.M | re.S)
+    return section.group(1).strip().splitlines() if section else []
+
+
+def in_the_box(lines: list[str]) -> bool:
+    opening, closing = TAKEAWAYS_BOX
+    return lines[:2] == opening and lines[-1:] == [closing] and lines.count(closing) == 1
+
+
+@pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
+def test_a_written_chapter_keeps_its_takeaways_in_the_box_under_their_heading(path):
+    """The heading puts the takeaways in the page's outline, and the box sets them apart on it.
+
+    The heading arrived by replacing the box rather than sitting above it, and nothing noticed
+    that the box had gone.
+    """
+    if path.parent.name != "chapters":
+        pytest.skip("parts and appendices carry no takeaways")
+    lines = takeaways(path.read_text())
+    assert in_the_box(lines), (
+        f"{path.name}'s takeaways are not the only thing under their heading, in a `{{div}}` "
+        "marked `:class: takeaways`"
+    )
+    assert any(line.startswith("- ") for line in lines), f"{path.name}'s takeaways are not a list"
+
+
 def test_the_chapter_generator_writes_the_shape_the_outline_declares():
     """A new chapter starts from the generator's stub, so a stub with the wrong shape is copied.
 
@@ -383,10 +416,12 @@ def test_the_chapter_generator_writes_the_shape_the_outline_declares():
     spec = util.spec_from_file_location("new_chapter", ROOT / "scripts" / "new-chapter.py")
     module = util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    found = tuple(re.findall(r"^## (.+)$", module.chapter_stub(CHAPTERS[0]), re.M))
+    stub = module.chapter_stub(CHAPTERS[0])
+    found = tuple(re.findall(r"^## (.+)$", stub, re.M))
     assert found == CHAPTER_SHAPE, (
         f"scripts/new-chapter.py writes {found}, and a chapter has {CHAPTER_SHAPE}"
     )
+    assert in_the_box(takeaways(stub)), "the stub's takeaways are not in the box"
 
 
 @pytest.mark.parametrize("path", WRITTEN, ids=lambda p: p.name)
