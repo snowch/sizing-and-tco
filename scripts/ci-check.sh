@@ -188,7 +188,7 @@ echo "== the book renders =="
 # content, so rendering every page on every push is what stops a new directive from silently
 # disappearing from the site.
 python3 scripts/build-site.py --out _build/static > /dev/null
-python3 scripts/check-built-links.py _build/static > /dev/null
+python3 scripts/check-built-links.py _build/static
 echo "  OK"
 
 echo "== every link still resolves under the base path =="
@@ -203,7 +203,7 @@ rm -rf _build/based
 mkdir -p _build/based/book
 cp -r _build/static/. _build/based/book/
 python3 scripts/build-icons.py --inject _build/based/book --base /book/ > /dev/null
-python3 scripts/check-built-links.py _build/based/book /book > /dev/null
+python3 scripts/check-built-links.py _build/based/book /book
 echo "  OK"
 
 echo "== the book installs for offline use =="

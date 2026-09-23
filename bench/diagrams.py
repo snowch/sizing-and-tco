@@ -324,14 +324,8 @@ def tornado_chart(result: str, output: str, limit: int = 9) -> str:
 SHOWN_MASS = 0.99
 
 
-def distribution(result: str, node_name: str, plain: bool = False) -> str:
+def distribution(result: str, node_name: str) -> str:
     """One node's sampled distribution, with the interval and the point estimate on it.
-
-    ``plain`` labels the same drawing without a statistical word on it, for the chapter that
-    comes before the words: the arithmetic done over and over, the smallest and largest answer,
-    and where the single number sits. Not the count of runs, which is a sample size by another
-    name, and not the band's edges, which are a convention. Nothing else changes, so a reader
-    who meets the figure again in ch13 is looking at the same picture with its names on.
 
     The point estimate is drawn as a line through the histogram deliberately. Seeing where the
     single number a plan was built on actually sits in the distribution it came from is the whole
@@ -364,19 +358,12 @@ def distribution(result: str, node_name: str, plain: bool = False) -> str:
         travelled = math.log10(max(value, low) / low) if logarithmic else value - low
         return plot_left + travelled / span * (plot_right - plot_left)
 
-    if plain:
-        heading = "the arithmetic done over and over"
-        detail = (
-            f"every answer kept · the smallest was {_esc(fmt(summary['min'], node['unit']))} "
-            f"and the largest {_esc(fmt(summary['max'], node['unit']))}"
-        )
-    else:
-        heading = f"{payload['scenario']['samples']:,} samples"
-        detail = (
-            f"90% interval {_esc(fmt(summary['p5'], node['unit']))} to "
-            f"{_esc(fmt(summary['p95'], node['unit']))} · median "
-            f"{_esc(fmt(summary['p50'], node['unit']))}"
-        )
+    heading = f"{payload['scenario']['samples']:,} samples"
+    detail = (
+        f"90% interval {_esc(fmt(summary['p5'], node['unit']))} to "
+        f"{_esc(fmt(summary['p95'], node['unit']))} · median "
+        f"{_esc(fmt(summary['p50'], node['unit']))}"
+    )
     body = [
         f'<text x="{MARGIN}" y="20" font-size="11.5" fill="#263238">'
         f"{_esc(node['label'])} — {heading}</text>",
@@ -386,17 +373,15 @@ def distribution(result: str, node_name: str, plain: bool = False) -> str:
     for i, count in enumerate(counts[:drawn]):
         x1, x2 = at_x(edges[i]), at_x(edges[i + 1])
         bar = (count / tallest) * (plot_bottom - plot_top)
-        inside = plain or summary["p5"] <= (edges[i] + edges[i + 1]) / 2 <= summary["p95"]
+        inside = summary["p5"] <= (edges[i] + edges[i + 1]) / 2 <= summary["p95"]
         body.append(
             f'<rect x="{x1:.2f}" y="{plot_bottom - bar:.2f}" width="{max(x2 - x1 - 0.4, 0.4):.2f}" '
             f'height="{bar:.2f}" fill="{"#9fc0dd" if inside else "#dde5ec"}"/>'
         )
-    # In plain mode the band's edges are not drawn either: a band is a convention, and the
-    # chapter before the convention shows only the answers and the single number.
     markers = [
-        (None if plain else summary["p5"], "#455a64", "p5"),
-        (node.get("point"), "#b3413a", "the single number" if plain else "point"),
-        (None if plain else summary["p95"], "#455a64", "p95"),
+        (summary["p5"], "#455a64", "p5"),
+        (node.get("point"), "#b3413a", "point"),
+        (summary["p95"], "#455a64", "p95"),
     ]
     # Two rows, so that a point estimate sitting almost on top of a percentile does not print
     # one label over the other. Both rows clear the subtitle and the line below them.
@@ -425,14 +410,6 @@ def distribution(result: str, node_name: str, plain: bool = False) -> str:
         f'<line x1="{plot_left}" y1="{plot_bottom}" x2="{plot_right}" y2="{plot_bottom}" '
         f'stroke="#90a4ae" stroke-width="1"/>'
     )
-    if plain:
-        # What the height of a bar means, said once on the chapter that has no word for it yet.
-        # The later chapters draw the same figure for readers who have met a distribution and do
-        # not need telling that taller means more.
-        body.append(
-            f'<text x="{plot_left - 4:.0f}" y="{plot_top - 6:.0f}" font-size="8.5" '
-            f'text-anchor="start" fill="#90a4ae">taller = more answers landed there</text>'
-        )
     for value, anchor in _ticks(low, high, logarithmic):
         x = at_x(value)
         body.append(
@@ -443,27 +420,18 @@ def distribution(result: str, node_name: str, plain: bool = False) -> str:
         )
     if hidden:
         total = sum(counts) or 1
-        # What the number is for, not just what it is. A fraction of a per cent in the corner
-        # reads as a rounding note; it is the tail, and the tail is the case the plan is betting
-        # against. The plain chapter says so, the later ones have a word for it by then.
-        tail = " — the expensive futures a plan bets against" if plain else ""
         body.append(
             f'<text x="{plot_right:.0f}" y="{plot_top - 22:.0f}" font-size="8.5" '
             f'text-anchor="end" fill="#90a4ae">'
-            f"{hidden / total * 100:.1f}% of {'answers' if plain else 'samples'} run on to "
-            f"{_esc(fmt(edges[-1], node['unit']))}{tail}</text>"
+            f"{hidden / total * 100:.1f}% of samples run on to "
+            f"{_esc(fmt(edges[-1], node['unit']))}</text>"
         )
     return _svg(
         width,
         height,
         "".join(body),
-        f"{'The spread of' if plain else 'Distribution of'} {node['label']}",
+        f"Distribution of {node['label']}",
     )
-
-
-def spread_of_answers(result: str, node_name: str) -> str:
-    """:func:`distribution`, labelled without a statistical word, for ch01."""
-    return distribution(result, node_name, plain=True)
 
 
 def _ticks(low: float, high: float, logarithmic: bool) -> list[tuple[float, str]]:
@@ -767,263 +735,6 @@ def scaling_curve(result: str) -> str:
         f"requests per second</text>"
     )
     return _svg(width, height, "".join(body), "Throughput against host count")
-
-
-#: An everyday chain, declared here rather than typed into the chapter, because nobody measured
-#: it: a commute, and three quantities a driver already holds as ranges without being asked to.
-#: Chosen so that no single input is more than a fifth above its middle, which is the same fifth
-#: the rule beside it uses, so a reader can watch that rule produce this case.
-COMMUTE = (
-    ("days you drive in", "", "{:,.0f}", 190.0, 210.0, 230.0),
-    ("litres, there and back", "", "{:,.1f}", 2.5, 3.0, 3.6),
-    ("price a litre", "$", "{:,.2f}", 1.30, 1.50, 1.80),
-)
-
-
-def everyday_compounding(_result: str | None = None) -> str:
-    """The same compounding, on a chain the reader has driven rather than one they have sized.
-
-    ch01 asserts that doubt compounds along a chain of multiplications and then asks the reader to
-    accept a stipulation -- say each input is a fifth high -- before showing them anything. This
-    is the case underneath the stipulation, in quantities anybody who drives to work already
-    holds as ranges: how many days they go in, what the journey burns, what fuel costs.
-
-    A drawing of a rule rather than of a run, like ``compounding`` beside it. The figures are
-    illustrative and the drawing says so, because no commute was measured to produce them. What
-    is not illustrative is the arithmetic: the totals are computed from the three ranges, so the
-    claim the paragraph makes can be read off rather than taken.
-    """
-    # The gutter holds the longest label, "a year, all three at their tops", which wants about
-    # 186px at 11.5px and is anchored to the gutter's right edge.
-    width, height = 660.0, 258.0
-    gutter, line_from, line_to = 204.0, 250.0, width - 132
-    middles = [middle for _label, _sign, _pattern, _low, middle, _high in COMMUTE]
-    tops = [high for _label, _sign, _pattern, _low, _middle, high in COMMUTE]
-    from_middles = math.prod(middles)
-    from_tops = math.prod(tops)
-    worst = max(high / middle for _l, _s, _p, _lo, middle, high in COMMUTE) - 1
-
-    parts = [
-        '<text x="20" y="22" font-size="12.5" font-weight="600" fill="#263238">'
-        "What a year of driving to work costs</text>"
-    ]
-
-    for index, (label, sign, pattern, low, middle, high) in enumerate(COMMUTE):
-        y = 62.0 + index * 40
-        parts.append(
-            f'<text x="{gutter}" y="{y + 4:.0f}" text-anchor="end" font-size="11.5" '
-            f'fill="#263238">{_esc(label)}</text>'
-        )
-        parts.append(
-            f'<line x1="{line_from}" y1="{y}" x2="{line_to}" y2="{y}" stroke="#9fc0dd" '
-            f'stroke-width="2"/>'
-        )
-        at = line_from + (middle - low) / (high - low) * (line_to - line_from)
-        parts.append(f'<circle cx="{at:.1f}" cy="{y}" r="4.5" fill="#37474f"/>')
-        parts.append(
-            f'<text x="{at:.1f}" y="{y - 11:.0f}" text-anchor="middle" font-size="11" '
-            f'font-weight="600" fill="#37474f">{sign}{pattern.format(middle)}</text>'
-        )
-        parts.append(
-            f'<text x="{line_from - 8:.0f}" y="{y + 4:.0f}" text-anchor="end" font-size="10.5" '
-            f'fill="#546e7a">{sign}{pattern.format(low)}</text>'
-        )
-        parts.append(
-            f'<text x="{line_to + 8:.0f}" y="{y + 4:.0f}" font-size="10.5" fill="#546e7a">'
-            f"{sign}{pattern.format(high)}</text>"
-        )
-
-    for index, (label, value, colour) in enumerate(
-        [
-            ("a year, from the middles", from_middles, "#37474f"),
-            ("a year, all three at their tops", from_tops, "#b3413a"),
-        ]
-    ):
-        y = 200.0 + index * 22
-        parts.append(
-            f'<text x="{gutter}" y="{y}" text-anchor="end" font-size="11.5" fill="#263238">'
-            f"{_esc(label)}</text>"
-        )
-        parts.append(
-            f'<text x="{line_from}" y="{y}" font-size="11.5" font-weight="600" fill="{colour}">'
-            f"${value:,.0f}</text>"
-        )
-    parts.append(
-        f'<text x="{line_from + 92:.0f}" y="{222.0:.0f}" font-size="11.5" font-weight="600" '
-        f'fill="#b3413a">+{(from_tops / from_middles - 1) * 100:.0f}%</text>'
-    )
-    parts.append(
-        f'<text x="20" y="{height - 12:.0f}" font-size="10.5" fill="#546e7a">'
-        f"None of the three is more than {worst * 100:.0f}% above its middle. "
-        f"Illustrative figures, not a measurement.</text>"
-    )
-    return _svg(width, height, "".join(parts), "What a year of driving to work costs")
-
-
-#: The illustrative case ch01's compounding paragraph already argues in words: every input a
-#: fifth above the figure that was written down. A fifth, and not the bands the web service model
-#: actually declares, because problem 1.2 asks the reader to do that arithmetic on those bands and
-#: compare it with the table -- so drawing it here would put the problem's answer on the page
-#: above the problem.
-COMPOUNDING_OVER = 0.2
-COMPOUNDING_CHAIN = 6
-
-
-def compounding(_result: str | None = None) -> str:
-    """How far the answer moves when several inputs are out the same way.
-
-    A drawing of a rule rather than of a run. The paragraph beside it says the answer is "nearly
-    half as much again" from two inputs a fifth out, which is a sentence a reader has to do
-    arithmetic to believe. The bars are that arithmetic: each one is
-    ``(1 + a fifth) ** n - 1``, so the claim can be read off rather than taken.
-
-    The point is the shape of the rise, not any one bar. Doubt does not average out along a chain
-    of multiplications, and by six inputs -- which is what this book's own fleet rests on -- the
-    answer has tripled while no single input moved by more than a fifth.
-    """
-    # Room on the right for the longest value label, which is the percentage and the multiple
-    # together: at 11.5px "+199% (2.99x the answer)" wants about 150px, and the bar beside the
-    # last row reaches the full width of the plot.
-    width, height = 680.0, 254.0
-    left, right, top, bottom = 172.0, width - 168, 42.0, height - 42
-    excess = [(1 + COMPOUNDING_OVER) ** n - 1 for n in range(1, COMPOUNDING_CHAIN + 1)]
-    widest = excess[-1]
-    row = (bottom - top) / COMPOUNDING_CHAIN
-
-    parts = [
-        '<text x="20" y="22" font-size="12.5" font-weight="600" fill="#263238">'
-        "How far the answer moves when every input is out the same way</text>"
-    ]
-    for index, over in enumerate(excess):
-        y = top + index * row + 3
-        bar = (over / widest) * (right - left)
-        # The second bar is the one the paragraph names, so it is the one drawn in full strength.
-        fill = "#4a7ba7" if index == 1 else "#9fc0dd"
-        count = index + 1
-        parts.append(
-            f'<rect x="{left}" y="{y:.1f}" width="{bar:.1f}" height="{row - 9:.1f}" fill="{fill}"/>'
-        )
-        parts.append(
-            f'<text x="{left - 10}" y="{y + row / 2 - 2:.1f}" text-anchor="end" font-size="11.5" '
-            f'fill="#263238">{count} input{"" if count == 1 else "s"} a fifth high</text>'
-        )
-        # The multiple beside the percentage. The paragraph says the answer has tripled by six
-        # inputs, and "+199%" is that same fact in a notation a reader has to convert before
-        # they can agree with the sentence.
-        parts.append(
-            f'<text x="{left + bar + 7:.1f}" y="{y + row / 2 - 2:.1f}" font-size="11.5" '
-            f'font-weight="600" fill="#263238">+{over * 100:.0f}% '
-            f'<tspan font-weight="400" fill="#546e7a">'
-            f"({1 + over:.2f}\u00d7 the answer)</tspan></text>"
-        )
-    parts.append(
-        f'<text x="20" y="{height - 14:.0f}" font-size="10.5" fill="#546e7a">'
-        f"Nothing cancels, because nothing makes the inputs disagree with each other.</text>"
-    )
-    return _svg(
-        width, height, "".join(parts), "The answer's excess against how many inputs are out"
-    )
-
-
-def once_against_many(result: str, node_name: str) -> str:
-    """The same arithmetic run once, and run again with every input free to move.
-
-    The argument is where the single number falls in the pile: more than half the answers are
-    above it, and a reader who has only ever seen the single number cannot tell that.
-
-    The median is checked rather than drawn. Marking it invites a reader to compare the mark
-    against the tallest bars, which are to its left, and resolving that disagreement needs the
-    difference between the commonest answer and the middle one -- ch13's material at the
-    earliest, on a page written for somebody who has met no statistics at all. Its only job here
-    is to make the footer exact: the median is above the point estimate, so strictly more than
-    half the answers are, and no bin has to be interpolated inside to say so.
-
-    This drawing used to carry a third row: an empty dashed frame for the error a chain of
-    multiplications cannot represent, deliberately off the axis because it is not a wider band on
-    the same scale. The idea was sound and the picture was not. A reader met three rows, one of
-    them empty, labelled with a phrase that only parses once you already know what it is denying.
-    The second thing a point estimate leaves out is stated in the list above the figure and drawn
-    properly in ch08, where a regime change has a curve of its own.
-    """
-    payload = load_result(result)["summary"]
-    node = payload["nodes"][node_name]
-    point, summary, histogram = node["point"], node.get("summary"), node.get("histogram")
-    if not summary or not histogram:
-        return _svg(
-            360, 40, '<text x="8" y="24" font-size="11">this node does not vary</text>', "fixed"
-        )
-    counts, edges = histogram["counts"], histogram["edges"]
-    unit = node.get("unit", "")
-    drawn = sum(counts) or 1
-    assert summary["p50"] > point, "the claim in this drawing's footer no longer holds"
-
-    width, height = 560.0, 236.0
-    left, right = 132.0, width - 26
-    # Far enough right to hold the bulk without spending most of the width on the last few answers.
-    edge = summary["p95"] * 1.6
-    span = (edge - edges[0]) or 1.0
-
-    def at(value: float) -> float:
-        return left + min(max((value - edges[0]) / span, 0.0), 1.0) * (right - left)
-
-    parts = [
-        f'<text x="20" y="22" font-size="12.5" font-weight="600" fill="#263238">'
-        f"The same arithmetic, run once and run {drawn:,} times</text>"
-    ]
-
-    one = 66.0
-    parts.append(
-        f'<text x="{left - 12}" y="{one + 4:.0f}" text-anchor="end" font-size="11.5" '
-        f'fill="#263238">run once</text>'
-    )
-    parts.append(f'<line x1="{left}" y1="{one}" x2="{right}" y2="{one}" stroke="#cfd8dc"/>')
-    parts.append(
-        f'<line x1="{at(point):.1f}" y1="{one - 13:.0f}" x2="{at(point):.1f}" '
-        f'y2="{one + 13:.0f}" stroke="#b3413a" stroke-width="2.5"/>'
-    )
-    parts.append(
-        f'<text x="{at(point):.1f}" y="{one - 19:.0f}" text-anchor="middle" font-size="11" '
-        f'font-weight="600" fill="#b3413a">{point:,.0f} {_esc(unit)}s</text>'
-    )
-
-    many, tall = 168.0, 70.0
-    parts.append(
-        f'<text x="{left - 12}" y="{many - tall / 2 - 3:.0f}" text-anchor="end" font-size="11.5" '
-        f'fill="#263238">run again with every</text>'
-    )
-    parts.append(
-        f'<text x="{left - 12}" y="{many - tall / 2 + 12:.0f}" text-anchor="end" font-size="11.5" '
-        f'fill="#263238">input free to move</text>'
-    )
-    biggest = max(counts) or 1
-    for index, count in enumerate(counts):
-        if not count or edges[index] > edge:
-            continue
-        x0, x1 = at(edges[index]), at(edges[index + 1])
-        bar = (count / biggest) * tall
-        parts.append(
-            f'<rect x="{x0:.1f}" y="{many - bar:.1f}" width="{max(x1 - x0 - 0.6, 0.6):.1f}" '
-            f'height="{bar:.1f}" fill="#9fc0dd"/>'
-        )
-    beyond = sum(c for i, c in enumerate(counts) if edges[i] > edge)
-    parts.append(f'<line x1="{left}" y1="{many}" x2="{right}" y2="{many}" stroke="#cfd8dc"/>')
-    parts.append(
-        f'<line x1="{at(point):.1f}" y1="{many - tall - 8:.0f}" x2="{at(point):.1f}" '
-        f'y2="{many}" stroke="#b3413a" stroke-width="2" stroke-dasharray="5 3"/>'
-    )
-    parts.append(
-        f'<text x="{left}" y="{many + 16:.0f}" font-size="10.5" fill="#546e7a">'
-        f"{summary['min']:,.0f} {_esc(unit)}s</text>"
-    )
-    parts.append(
-        f'<text x="{right}" y="{many + 16:.0f}" text-anchor="end" font-size="10.5" '
-        f'fill="#546e7a">{edge:,.0f} {_esc(unit)}s, and {beyond:,} answers past this edge</text>'
-    )
-    parts.append(
-        f'<text x="20" y="{height - 12:.0f}" font-size="10.5" fill="#546e7a">'
-        f"More than half the answers came out above the single number.</text>"
-    )
-    return _svg(width, height, "".join(parts), "The same arithmetic, run once and run many times")
 
 
 def distribution_shapes(_result: str | None = None) -> str:

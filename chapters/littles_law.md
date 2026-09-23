@@ -97,9 +97,9 @@ The other two are easy. Every system counts requests. Every system can expose a 
 are in flight: a connection count, a thread-pool depth, a semaphore.
 
 So divide. Two hundred requests in flight while a thousand arrive a second is a fifth of a second
-each, and that fifth of a second is the *true* residence time: every queue the request sat in on
-the way, including the ones before your application saw it. If the service's own timer reports
-half that, the missing half is queueing it cannot see. Problem 5.2 is that division.
+each — the *true* residence time, including every queue the request sat in before your
+application saw it. If the service's own timer reports half that, the missing half is queueing it
+cannot see. Problem 5.2 is that division.
 
 ### What the fleet says
 

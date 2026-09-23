@@ -4,7 +4,7 @@ short_title: Preface
 ---
 
 (preface)=
-# Introduction
+# Preface
 
 *How to size a system, cost it, and know how much to trust the answer.*
 
@@ -64,9 +64,9 @@ whole model in one sitting.
 
 The model grows through the book. [ch02 · What a workload is](#what-a-workload-is) writes the
 first nodes: what arrives and what accumulates. Later chapters add pieces: where each number came
-from, what the hardware can hold, where it stops coping, what it costs. [ch12 · The sizing
-model](#the-sizing-model) produces a host count. [ch18 · The five-year model](#the-five-year-model)
-produces a cost.
+from, what the hardware can hold, where it stops coping, what it costs.
+[ch12 · The sizing model](#the-sizing-model) produces a host count.
+[ch18 · The five-year model](#the-five-year-model) produces a cost.
 
 Every figure in this book is computed from that file as it stands at that point.
 

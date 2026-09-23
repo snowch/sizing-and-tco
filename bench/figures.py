@@ -100,45 +100,6 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("hosts_recommended", "tco"),
         source_note="the finished model, which ch02 starts building from nothing",
     ),
-    # What a spread is, with a number in it. The page uses the word from its second paragraph
-    # and never defines it; a reader who has not met the idea has nothing to picture and the
-    # rest of the page rests on it. One input, because the point is what a spread *is* -- six of
-    # them is a reference table, and the widget below shows all six as shapes already.
-    "point-estimates-a-spread": Table(
-        render=tables.a_spread_in_words,
-        result="web_service-reference",
-        args=("annual_growth",),
-        source_note="the model's own declared band for that input, which problem 1.1 also uses",
-    ),
-    # Drawn from the rule, not from a run: problem 1.2 asks the reader to compound the model's
-    # own declared bands, so a figure of that result would be its answer, one screen above it.
-    # Drawn from the rule, not from a run: the chapter asks the reader to accept that doubt
-    # compounds before showing them a case of it, and this is the case, in quantities somebody
-    # who drives to work already holds as ranges.
-    "point-estimates-commute": Diagram(
-        draw=diagrams.everyday_compounding,
-        alt="Three everyday ranges -- days driven, litres a journey, price a litre -- and what a "
-        "year costs from their middles against what it costs with all three at their tops",
-        computed_from="three illustrative ranges stated in the drawing, not a measurement",
-    ),
-    "point-estimates-compounding": Diagram(
-        draw=diagrams.compounding,
-        alt="How far the answer moves when one, two, three or more inputs are each a fifth high",
-        computed_from="the rule stated beside it, not the model's own bands",
-    ),
-    "point-estimates-once-and-many": Diagram(
-        draw=diagrams.once_against_many,
-        result="web_service-reference",
-        args=("hosts_recommended",),
-        alt="The single number marked above the pile of answers the same arithmetic gave, "
-        "with the single number low in the pile rather than in the middle of it",
-    ),
-    "point-estimates-tco-spread": Diagram(
-        draw=diagrams.spread_of_answers,
-        result="web_service-reference",
-        args=("tco",),
-        alt="The five-year total cost as a spread of answers, with the single number marked on it",
-    ),
     # -- ch13 Monte Carlo -------------------------------------------------------------------------
     "monte-carlo-outputs": Table(render=tables.outputs_table, result="web_service-reference"),
     "monte-carlo-hosts-distribution": Diagram(
