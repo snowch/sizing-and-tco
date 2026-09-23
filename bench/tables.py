@@ -268,43 +268,6 @@ def outputs_in_plain_words(name: str, *only: str) -> str:
     return outputs_table(name, *only, spread="Smallest and largest answer", ends=("min", "max"))
 
 
-def a_spread_in_words(name: str, node_name: str) -> str:
-    """One input's declared spread, spelled out, for the page that uses the word first.
-
-    ch01 leans on "the spread that input honestly has" from its second paragraph and never says
-    what one is with a number in it. A reader who has not met the idea has nothing to picture,
-    and the rest of the page -- drawing from a spread, compounding spreads, a pile of answers --
-    rests on it.
-
-    One input rather than all six. The point is what a spread *is*, and six of them is a
-    reference table; the widget below already shows all six as shapes.
-
-    Read out of the model file, because a number typed here would be a number the model could
-    move away from. The bands the file declares are also what problem 1.1 hands the reader, so
-    the page and the problem cannot disagree about them.
-    """
-    payload = load_result(name)["summary"]
-    node = payload["nodes"][node_name]
-    declared = node.get("distribution")
-    if not declared:
-        raise KeyError(f"{node_name} declares no spread, so it cannot be the example of one")
-    shape, band = next(iter(declared.items()))
-    # Whichever pair of ends the file happens to use. Both are two numbers a reader can read
-    # without a convention, which is the whole reason this page can print them.
-    ends = ("p10", "p90") if "p10" in band else ("minimum", "maximum")
-    low, high = (fmt(band[end], node["unit"]) for end in ends)
-    often = "one in ten falls below" if ends[0] == "p10" else "it never falls below"
-    rarely = "one in ten above" if ends[0] == "p10" else "and never rises above"
-    middle = fmt(band.get("likely", node.get("point")), node["unit"])
-    return (
-        f"Take the **{node['label']}**. The point estimate used {middle}. The model file does "
-        f"not say it *is* {middle}: it says {often} {low}, {rarely} {high}, and that values "
-        f"near the middle come up far more often than values near either end. That is a spread "
-        f"— not one number, but every value the input might take and how often it takes it. "
-        f"Every uncertain input in the model has one, and they are not all this wide."
-    )
-
-
 def stage_outputs(name: str) -> str:
     """What the model says while the book is still building it.
 

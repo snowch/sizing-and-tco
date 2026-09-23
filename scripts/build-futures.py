@@ -42,33 +42,8 @@ from bench.theme import FRAME, both_ways  # noqa: E402
 VIEWER = ROOT / "sizing" / "viewer"
 DEFAULT_OUT = ROOT / "_build" / "futures"
 
-#: One page, for now: ch01's. Keyed by the file it is published as, because the chapter's
-#: `{iframe}` names that path and nothing else resolves it.
-PAGES = {
-    "point-estimates": {
-        "result": "web_service-reference",
-        "answer": "hosts_recommended",
-        # The order the six inputs are listed in the chapter's own paragraph, so a reader meets
-        # them in the same order twice.
-        "order": [
-            "peak_request_rate_t0",
-            "annual_growth",
-            "service_demand",
-            "hot_fraction",
-            "index_overhead",
-            "os_reserve",
-        ],
-        # Where the pile's right-hand edge sits, as a multiple of the stamped p95. Everything
-        # past it goes in the column marked *more*, which is a column rather than a clamp so a
-        # reader can see there is a tail and how little of it there is. At 1.6 the edge lands
-        # near the stamped p99: about one future in a hundred is out there.
-        "reach": 1.6,
-        # Roughly how many bars. Rounded below so that each one covers a whole number of hosts:
-        # this answer is a whole number, and bins of eight beside bins of nine draw a sawtooth
-        # nothing in the model put there. The first version of this page had one.
-        "bars": 46,
-    },
-}
+#: Futures pages, keyed by the file they are published as.
+PAGES = {}
 
 PAGE = """<!doctype html>
 <html lang="en">
