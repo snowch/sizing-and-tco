@@ -1133,6 +1133,8 @@ PAGE = """<!doctype html>
 """
 
 CSS = """
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 /* The figures in this book are drawn by `bench/diagrams.py`: blue-grey, with four accents that
    each mean something. The page borrows that palette so a diagram sits on the page rather than
    on top of it. Prose is a serif and every piece of furniture is a sans, which is what keeps a
@@ -1479,9 +1481,14 @@ figure img { background: #fff; border-radius: 4px; }
 
 /* Definition boxes for key terms. */
 .definition { background: var(--panel); border: 1px solid var(--edge); border-left: 3px solid var(--accent);
-              border-radius: 6px; padding: .8rem 1rem; margin: 1.5rem 0; font-size: .98em; }
+              border-radius: 6px; padding: .8rem 1rem; margin: 1.5rem 0; font-size: .98em;
+              position: relative; padding-left: 3.2rem; }
+.definition::before { content: attr(data-icon); font-family: 'Material Icons'; font-size: 1.5rem;
+                      position: absolute; left: .8rem; top: .8rem; color: var(--accent); }
 .definition > :first-child { margin-top: 0; }
 .definition > :last-child { margin-bottom: 0; }
+.definition.cost-model::before { content: 'calculate'; }
+.definition.sizing-model::before { content: 'architecture'; }
 
 /* A model is the one thing a chapter's column can never hold: its graph is drawn at a fixed
    width -- 1470px for the widest in the book -- so a narrower card shows less of the graph
