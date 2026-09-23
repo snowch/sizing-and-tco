@@ -114,20 +114,6 @@ the other side of it belongs to somebody whose job it is.
 ```{include} _generated/capex-opex-and-lifecycle-outputs.md
 ```
 
-## Key takeaways
-
-- **The running cost is several times the capital, and only the capital gets argued about.** Capital
-  arrives as one signed invoice. Running cost arrives in pieces that are each too small to fight.
-- **The four running lines are four different kinds of number.** Energy is physics, licences are a
-  price per core, support is a deferred share of the purchase, and people is the largest line and
-  the one most models leave out.
-- **Support is indexed to the capital.** Negotiate the purchase down and the support falls with it,
-  which is worth knowing before you negotiate.
-- **Where the refresh lands against the horizon can add or remove a whole fleet.** Which convention
-  is right is a choice. Saying which one you chose is not optional.
-- **The model produces cash out over time, from physics and prices, and stops there.** Tax,
-  depreciation, discount rates and procurement belong to somebody whose job they are.
-
 ## What this cannot tell you
 
 **What the model's structure omits.** Every cost line above is one somebody thought of. There is
@@ -148,6 +134,24 @@ includes an unplanned purchase. No line here represents it.
 **Anything about when the money is spent.** The split above is a total over a horizon. Whether
 the capital lands in one quarter or three changes nothing in this model, and a great deal in
 somebody's budget.
+
+## Key takeaways
+
+:::{div}
+:class: takeaways
+
+- **The running cost is several times the capital, and only the capital gets argued about.** Capital
+  arrives as one signed invoice. Running cost arrives in pieces that are each too small to fight.
+- **The four running lines are four different kinds of number.** Energy is physics, licences are a
+  price per core, support is a deferred share of the purchase, and people is the largest line and
+  the one most models leave out.
+- **Support is indexed to the capital.** Negotiate the purchase down and the support falls with it,
+  which is worth knowing before you negotiate.
+- **Where the refresh lands against the horizon can add or remove a whole fleet.** Which convention
+  is right is a choice. Saying which one you chose is not optional.
+- **The model produces cash out over time, from physics and prices, and stops there.** Tax,
+  depreciation, discount rates and procurement belong to somebody whose job they are.
+:::
 
 ## Problems
 

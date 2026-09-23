@@ -254,6 +254,19 @@ def test_a_provenance_mark_is_drawn_not_typeset():
     assert renderer.render({"type": "inlineCode", "value": "\u25cf"}) == "<code>\u25cf</code>"
 
 
+def test_the_takeaways_box_is_drawn_like_a_definition_box_with_its_own_icon():
+    """Every chapter's takeaways sit in a `takeaways` box, which is only a box because of this.
+
+    A class the stylesheet has forgotten fails nothing: the page renders a plain list where the
+    box was, which is how the box went missing the first time without a test noticing.
+    """
+    css = site().CSS
+    assert ".definition, .takeaways {" in css, "the takeaways box is not drawn like a definition"
+    icon = re.search(r"\.takeaways::before \{ content: '([a-z_]+)'; \}", css)
+    assert icon, "the takeaways box has no icon"
+    assert icon[1] != "menu_book", "the takeaways box borrows the definition box's icon"
+
+
 def test_a_term_link_carries_its_meaning_and_the_glossary_rows_carry_ids():
     build_site = site()
     node = {

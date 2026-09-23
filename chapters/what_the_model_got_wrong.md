@@ -134,20 +134,6 @@ evidence, because memory adjusts, and the adjustment always runs in the directio
 present bearable. Every stamped result in this book exists so that somebody who was not there can
 make the comparison without taking anybody's word for it.
 
-## Key takeaways
-
-- **The failure was forecast, in writing, by the people it later surprised.** A percentage in a
-  table is not an event, and a number nobody has to sign for is a number nobody reads out loud.
-- **Inside the model, *what went wrong* is a filter.** Take the futures in which the ceiling was
-  breached and look at what each input was doing in them.
-- **What broke it, what moves the answer and what is worth measuring are three different
-  questions.** Attribution ranks inputs by how far they moved, and has to be read with the model's
-  shape beside it.
-- **Most failures have no smoking gun.** In a large minority of them nothing was extreme. Several
-  inputs were a little above usual, and there was no margin for unremarkable.
-- **A post-mortem inside a model is a post-mortem of that model.** It will confidently name the
-  guiltiest-looking of the things you thought of, and never the chain that is missing.
-
 ## What this cannot tell you
 
 **Whether the cause was in the model at all.** The whole chapter conditions on the model's own
@@ -171,6 +157,24 @@ not to pretend a diagnosis is a remedy.
 **Whether any of this happened.** It did not. These are computed futures. The only honest way to
 run this chapter against reality is to have written the prediction down first and to observe
 the system afterwards, and a book can do neither for you.
+
+## Key takeaways
+
+:::{div}
+:class: takeaways
+
+- **The failure was forecast, in writing, by the people it later surprised.** A percentage in a
+  table is not an event, and a number nobody has to sign for is a number nobody reads out loud.
+- **Inside the model, *what went wrong* is a filter.** Take the futures in which the ceiling was
+  breached and look at what each input was doing in them.
+- **What broke it, what moves the answer and what is worth measuring are three different
+  questions.** Attribution ranks inputs by how far they moved, and has to be read with the model's
+  shape beside it.
+- **Most failures have no smoking gun.** In a large minority of them nothing was extreme. Several
+  inputs were a little above usual, and there was no margin for unremarkable.
+- **A post-mortem inside a model is a post-mortem of that model.** It will confidently name the
+  guiltiest-looking of the things you thought of, and never the chain that is missing.
+:::
 
 ## Problems
 

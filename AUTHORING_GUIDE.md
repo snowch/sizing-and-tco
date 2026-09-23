@@ -45,15 +45,21 @@ the question already filled in from `bench/outline.py`, and `tests/test_book.py`
 that grows a seventh heading or loses one. A section a chapter needs and the shape does not have
 is a subsection of **The material**.
 
-**Key takeaways** follows the material: a short list of what the reader should carry away. Each
-item opens with its claim in bold and says why in a sentence or two. Nothing in it is new. Every
-claim was made, and shown, in the material, and the page's outline lists the heading, so a reader
-can go straight to it.
-
-The section that matters most is the fourth: **What this cannot tell you**. It is the easiest to
+The section that matters most is the third: **What this cannot tell you**. It is the easiest to
 skip and the one that makes the other five believable. For a chapter with a model in it, it must
 name **what the model's structure omits** — because that is the error no amount of sampling can
 see, and a chapter that only lists its input uncertainties has described the easy half.
+
+**Key takeaways** comes next, before the problems: a short list of what the reader should carry
+away. Each item opens with its claim in bold and says why in a sentence or two. Nothing in it is
+new. Every claim was made, and shown, earlier in the chapter. The page's outline lists the
+heading, so a reader can go straight to it. The list sits in a `{div}` marked
+`:class: takeaways`, which draws it like a definition box with an icon of its own, and it has no
+title because the heading names it.
+
+It comes after *What this cannot tell you* rather than before it, so that the *this* in that
+heading follows the material it means. With the takeaways in between, a reader could take it to
+mean the takeaways.
 
 ## Five rules that are not negotiable
 
@@ -299,8 +305,8 @@ A problem is a stub the reader edits and a test that passes only when they are r
 - [ ] Scaffolding tests beside them, unmarked, proving the problems are answerable
 - [ ] Model merged, passing `make verify`
 - [ ] Every figure declared in `bench/figures.py` and rendered from a stamped result
-- [ ] *Key takeaways* written, each claim in bold and each one made in the material first
 - [ ] *What this cannot tell you* written, naming what the structure omits
+- [ ] *Key takeaways* written, each claim in bold and each one made earlier in the chapter
 - [ ] Edited against `STYLE.md`: short sentences, one idea per paragraph, the point stated first,
       and its closing checklist run over the page
 - [ ] Cross-references and citations resolve; `./scripts/ci-check.sh` clean

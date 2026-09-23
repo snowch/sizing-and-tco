@@ -175,7 +175,7 @@ once meets the vocabulary ration below, the ration wins.
 convey and no longer. The six headings in `bench.outline.CHAPTER_SHAPE` are the book's shape and
 stay whatever the length — the repetition is what makes every chapter read as one book. The test
 is per *sub*section inside them: every one earns its place or comes out, and a short chapter still
-owes the reader its *Key takeaways* and *What this cannot tell you*.
+owes the reader its *What this cannot tell you* and its *Key takeaways*.
 
 **Statistics vocabulary is rationed.** Distribution, sample, percentile, interval, correlation,
 convergence. Each arrives because a model has just raised a question that needs it, never as a

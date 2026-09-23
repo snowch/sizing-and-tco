@@ -112,21 +112,6 @@ The chain above, running. Read the measured constant's row: it says which corpus
 its number belongs to, which is more than a spreadsheet cell can say.
 ```
 
-## Key takeaways
-
-- **Four terms stand between the bytes an application holds and what you buy.** Replication and
-  overhead multiply it, compression divides it, and the fill limit is a surcharge on all of it.
-- **Compression is the only term that helps, and the only one that is measured.** Replication and
-  the margin are decisions, overhead is an assumption with a shape, and the measured constant
-  carries a standard error the others do not.
-% word-ok: a handful of your own records, not a draw from a spread
-- **The measured ratio belongs to one codec and one body of data.** Point the runner at a sample of
-  your own records and use the ratio that comes out, not the book's.
-- **A datasheet terabyte and a filesystem terabyte differ by about a tenth.** Every node declares
-  its unit and the toolkit converts, because this is the chapter where getting it wrong costs money.
-- **Almost all of the width in the host count is the growth rate, not the disk arithmetic.** The
-  chain is the well-understood part of the problem. What it is applied to is not.
-
 ## What this cannot tell you
 
 **What your data compresses to.** The constant above was measured over a synthetic mixture this
@@ -149,6 +134,25 @@ else. The chain has no term for the window in which that is happening
 that most often decides, and the model assumes neither.
 [ch10](#bandwidth-and-the-binding-constraint) is the other two chains, and how often each of the
 three decides the answer.
+
+## Key takeaways
+
+:::{div}
+:class: takeaways
+
+- **Four terms stand between the bytes an application holds and what you buy.** Replication and
+  overhead multiply it, compression divides it, and the fill limit is a surcharge on all of it.
+- **Compression is the only term that helps, and the only one that is measured.** Replication and
+  the margin are decisions, overhead is an assumption with a shape, and the measured constant
+  carries a standard error the others do not.
+% word-ok: a handful of your own records, not a draw from a spread
+- **The measured ratio belongs to one codec and one body of data.** Point the runner at a sample of
+  your own records and use the ratio that comes out, not the book's.
+- **A datasheet terabyte and a filesystem terabyte differ by about a tenth.** Every node declares
+  its unit and the toolkit converts, because this is the chapter where getting it wrong costs money.
+- **Almost all of the width in the host count is the growth rate, not the disk arithmetic.** The
+  chain is the well-understood part of the problem. What it is applied to is not.
+:::
 
 ## Problems
 

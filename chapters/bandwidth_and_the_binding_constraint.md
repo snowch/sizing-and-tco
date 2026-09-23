@@ -133,20 +133,6 @@ The observability model in [Appendix F](#appendix-f-observability-model) has thr
 and three separate ceilings for this reason. There is no single number that summarises
 them, and a model that produced one would be hiding the thing you needed.
 
-## Key takeaways
-
-- **Three chains size the same fleet, and none of them is the answer.** Requests, memory and disk
-  each ask for a host count from a different arithmetic, and they share the workload and nothing
-  else.
-- **Buy the largest, not the average, the usual winner or the sum.** Each of the three wrong answers
-  has shipped, and each is too small for one chain in every future where they differ.
-- **No chain wins most of the time.** Size on any single chain, even the one that wins most often,
-  and the fleet is too small more often than not.
-- **The honest summary of sizing on one chain is two numbers.** How often it is wrong, and by how
-  much when it is. Either one alone is a way of not answering.
-- **More chains mean more chances to be caught out.** The chance that some constraint binds
-  unexpectedly rises with their number, even while each one's chance stays small.
-
 ## What this cannot tell you
 
 **Whether there are only three chains.** This model has the three somebody thought of. A chain
@@ -166,6 +152,24 @@ which raises the cost of a request, which moves the request chain. That is
 **Which chain binds *for you*.** The shares above come from one model's uncertainty over one
 stated workload. A service that serves small records to many users and one that holds large
 records for a few are the same model with different inputs and opposite answers.
+
+## Key takeaways
+
+:::{div}
+:class: takeaways
+
+- **Three chains size the same fleet, and none of them is the answer.** Requests, memory and disk
+  each ask for a host count from a different arithmetic, and they share the workload and nothing
+  else.
+- **Buy the largest, not the average, the usual winner or the sum.** Each of the three wrong answers
+  has shipped, and each is too small for one chain in every future where they differ.
+- **No chain wins most of the time.** Size on any single chain, even the one that wins most often,
+  and the fleet is too small more often than not.
+- **The honest summary of sizing on one chain is two numbers.** How often it is wrong, and by how
+  much when it is. Either one alone is a way of not answering.
+- **More chains mean more chances to be caught out.** The chance that some constraint binds
+  unexpectedly rises with their number, even while each one's chance stays small.
+:::
 
 ## Problems
 
