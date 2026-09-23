@@ -18,11 +18,19 @@ tell them.
 
 The first two questions are arithmetic.
 
+:::{div}
+:class: definition
+
 **Sizing** means working out how much hardware a stated workload needs, and where that hardware
 stops coping.
+:::
+
+:::{div}
+:class: definition
 
 **Total cost of ownership** (TCO) means what that hardware costs over the years you keep it. That
 is not the same as what it costs to buy.
+:::
 
 Anybody can do the arithmetic for both.
 
