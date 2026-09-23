@@ -160,7 +160,13 @@ def nav() -> list[dict]:
     appendices. The theme derived the same tree from myst.yml; deriving it here from the outline
     means a chapter cannot appear in the navigation without appearing in the tests that check it.
     """
-    out = []
+    out = [
+        {
+            "title": "Preface",
+            "href": href_for("index.md"),
+            "children": [],
+        }
+    ]
     for part in PART_PAGES:
         out.append(
             {
