@@ -1481,7 +1481,9 @@ figure img { background: #fff; border-radius: 4px; }
 .admonition > :last-child { margin-bottom: 0; }
 .admonition-title { font: 600 13px/1.4 var(--chrome); letter-spacing: .04em;
                     text-transform: uppercase; color: var(--muted); margin: 0 0 .4rem; }
-.admonition.note { border-left-color: var(--accent); }
+.admonition.note { border-left-color: var(--accent); position: relative; padding-left: 3.2rem; }
+.admonition.note::before { content: 'info'; font-family: 'Material Icons'; font-size: 1.5rem;
+                           position: absolute; left: .8rem; top: .8rem; color: var(--accent); }
 .admonition.tip { border-left-color: var(--go); }
 .admonition.important { border-left-color: var(--stop); }
 
