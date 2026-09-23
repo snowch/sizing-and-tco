@@ -64,7 +64,7 @@ That is three ranges, not three numbers. Work through what that means:
 
 The arithmetic is right in each run. But the four answers are different. Pick one number? Which one did you pick? You do not know.
 
-If you picked the middle value for each (250 days, 25 minutes, £0.50), you got run 1. But the future could be run 2, 3, or 4. Run 4 costs more than twice as much.
+If you picked the middle value for each (250 days, 25 minutes, £0.50), you got run 1. But the outcome could be run 2, 3, or 4. Run 4 costs more than twice as much.
 
 A point estimate assumes everything lands in the middle. Reality does not work that way.
 
