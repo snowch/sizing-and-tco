@@ -87,7 +87,7 @@ The toolkit enforces what spreadsheets cannot:
 - Limits with headroom
 - Dependency tracking
 
-A spreadsheet loses all of this on the first copy.
+A spreadsheet loses all of this on the first copy. The structured format also makes models intelligible to LLMs and other tools. A spreadsheet hides provenance, ranges, units, and measurement status inside human knowledge. A YAML file makes all of it explicit and machine-readable, so an LLM can reason about the model instead of just copying numbers.
 
 [ch02](#what-a-workload-is) writes the first nodes.
 
