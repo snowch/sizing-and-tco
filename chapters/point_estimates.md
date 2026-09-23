@@ -84,7 +84,7 @@ Almost all of the first row's width in the web service model came from the growt
 
 The second row (costing) moves for different reasons. Once you decide how many hosts to buy, the cost is just arithmetic. Sizing is about the world; costing is about a decision you have already made. Keeping those apart is most of Parts III and V.
 
-Letting inputs vary is honest work, and most of this book is about doing it well. But it reports only the doubt you wrote down. There is a second kind of error it cannot see. Whether you meet it depends on which of two kinds of model you have.
+Varying inputs across their ranges gives you the complete picture, and most of this book teaches how to do it well. But it reports only the doubt you wrote down. There is a second kind of error it cannot see. Whether you meet it depends on which of two kinds of model you have.
 
 :::{div}
 :class: definition
