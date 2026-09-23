@@ -1136,6 +1136,11 @@ GLOSSARY: dict[str, tuple[str, str, str]] = {
         "the bag of values an uncertain quantity could take",
         "a range of plausible values",
     ),
+    "flow": (
+        "what_a_workload_is",
+        "a rate — requests per second, bytes per second, dollars per year",
+        "something that arrives",
+    ),
     "sample": ("monte_carlo", "one value drawn from that bag", "one guess"),
     "percentile": (
         "monte_carlo",
@@ -1177,6 +1182,16 @@ GLOSSARY: dict[str, tuple[str, str, str]] = {
         "bandwidth_and_the_binding_constraint",
         "the chain that decides the answer, out of several that could",
         "whichever runs out first",
+    ),
+    "sizing chain": (
+        "what_a_workload_is",
+        "the string of multiplications that runs from a workload to a number of machines",
+        "how you calculate hosts needed",
+    ),
+    "stock": (
+        "what_a_workload_is",
+        "a level — terabytes held, series alive, requests in flight",
+        "how much there is right now",
     ),
     "utilisation": (
         "queueing_and_the_knee",
