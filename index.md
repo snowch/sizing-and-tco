@@ -49,7 +49,12 @@ To answer it you need to know:
 
 ## How the model works
 
-You build one model, and it lasts the whole book.
+Two models carry the book. Both are written so that the structure is the point and the numbers are
+yours to replace:
+
+- a web service and its data, on a fleet of Linux hosts. It is sized and costed end to end, and
+  how it behaves under load is not a chain of multiplications at all; and
+- an observability platform, which has a hole in it where a measurement should be.
 
 :::{div}
 :class: definition
@@ -62,7 +67,7 @@ what happens when they change. Each number has a name, a unit, and a note saying
 came from. Each computed number has a formula that refers to the others by name. You can read a
 whole model in one sitting.
 
-The model grows through the book. [ch02 · What a workload is](#what-a-workload-is) writes the
+The web service model grows through the book. [ch02 · What a workload is](#what-a-workload-is) writes the
 first nodes: what arrives and what accumulates. Later chapters add pieces: where each number came
 from, what the hardware can hold, where it stops coping, what it costs.
 [ch12 · The sizing model](#the-sizing-model) produces a host count.
@@ -95,13 +100,6 @@ defend a year later.
 You should be comfortable with code and with arithmetic. You are assumed to know **nothing**
 about statistics. This book introduces statistical terms as it needs them, in plain English first.
 All terms are defined in the chapter where they first matter.
-
-Two models carry the book. Both are written so that the structure is the point and the numbers are
-yours to replace:
-
-- a web service and its data, on a fleet of Linux hosts. It is sized and costed end to end, and
-  how it behaves under load is not a chain of multiplications at all; and
-- an observability platform, which has a hole in it where a measurement should be.
 
 Every chapter ends with problems. Most are implemented as Python tests that fail until you have solved them.
 
