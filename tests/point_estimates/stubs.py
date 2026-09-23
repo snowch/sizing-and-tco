@@ -34,29 +34,18 @@ def spread_on_paper() -> float:
     raise NotImplementedError("problem 1.2")
 
 
-def stages_and_kinds() -> tuple[list[str], int]:
-    """Problem 1.3 - which kind of model is this at each stage?
+def stages_and_kinds() -> list[str]:
+    """Problem 1.3 - which kind of model is this?
 
-    The chapter shows six stages of the web service model (01 through 06).
+    The chapter shows three model descriptions: A, B, and C.
 
-    Return a tuple:
-    - A list of six strings, each ``"cost"`` or ``"sizing"``, in order from stage 01 to 06.
-    - The stage number (1-6) where the kind changes from cost to sizing.
+    Return a list of three strings, each ``"cost"`` or ``"sizing"``, in order: A, B, C.
 
     A **cost model** has a deterministic structure with uncertain parameters.
     A **sizing model** adds a measured constant or a ceiling.
 
-    Read each stage and decide by looking for measured constants and ceilings.
+    Read each description and decide by looking for measured constants and ceilings.
     """
     raise NotImplementedError("problem 1.3")
 
 
-def nodes_that_decide_it() -> list[str]:
-    """Problem 1.3 - which quantities decide the kind change?
-
-    At the stage where the model becomes a sizing model, which nodes (quantities) appear
-    that are either measured constants or ceilings?
-
-    Return them as a list of node names, sorted. Name only those that change the model's kind.
-    """
-    raise NotImplementedError("problem 1.3")
