@@ -47,21 +47,20 @@ Pick the middle of each and multiply. You get one number. The arithmetic is righ
 
 Multiplying uncertain numbers does not average their doubt. It compounds it.
 
-You know this without servers. Ask someone: *how much will your commute cost this year?* They do not give a number. They say: *"Maybe 250 days, maybe 260 if I'm in the office more. 25 minutes usually, 40 if the bypass is busy. Fuel is around £1.30 a litre this month, might be £1.50."*
+You know this without servers. Suppose you take a taxi to work and the fare is charged by the minute. Ask someone: *how much will your commute cost this year?* They do not give a number. They say: *"Maybe 250 days, maybe 260 if I'm in the office more. 25 minutes usually, 40 if the bypass is busy. The rate is around £0.50 a minute, might be £0.75 in rush hour."*
 
 That is three ranges, not three numbers. Work through what that means:
 
-**Run 1** (most likely): 250 days × 25 min × £1.30 = £X
-
-**Run 2** (worse growth): 260 days × 25 min × £1.30 = £Y (higher—more days)
-
-**Run 3** (worse traffic): 250 days × 40 min × £1.30 = £Z (higher—slower journey)
-
-**Run 4** (worst case): 260 days × 40 min × £1.50 = £W (much higher—everything bad at once)
+| Run | Days | Minutes/day | Rate/min | Total cost |
+|-----|------|-------------|----------|-----------|
+| 1 (most likely) | 250 | 25 | £0.50 | £3,125 |
+| 2 (worse growth) | 260 | 25 | £0.50 | £3,250 |
+| 3 (worse traffic) | 250 | 40 | £0.50 | £5,000 |
+| 4 (worst case) | 260 | 40 | £0.75 | £7,800 |
 
 The arithmetic is right in each run. But the four answers are different. Pick one number? Which one did you pick? You do not know.
 
-If you picked the middle value for each (250 days, 25 minutes, £1.30), you got run 1. But the future could be run 2, 3, or 4. Run 4 costs a lot more.
+If you picked the middle value for each (250 days, 25 minutes, £0.50), you got run 1. But the future could be run 2, 3, or 4. Run 4 costs more than twice as much.
 
 A point estimate assumes everything lands in the middle. Reality does not work that way.
 
