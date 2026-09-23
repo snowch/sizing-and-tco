@@ -106,7 +106,8 @@ Do not take the distinction on trust. It decides which half of this book applies
 
 You find the stage rather than being told it.
 
-:::{note} Key takeaways
+## Key takeaways
+
 - **A point estimate is silent, not wrong.** One value per input and the arithmetic done once gives
   a correct number that says nothing about how far it could be out.
 - **Doubt compounds along a chain of multiplications.** Multiplying uncertain numbers stretches
@@ -119,7 +120,6 @@ You find the stage rather than being told it.
   room it keeps below each limit.
 - **The kind is read from the file, never declared.** A measured constant or a declared limit makes
   a sizing model, and the toolkit works that out from what is in the model.
-:::
 
 ## What this cannot tell you
 
