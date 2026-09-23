@@ -65,27 +65,17 @@ Every figure in this book is computed from that file as it stands at that point.
 
 ## Why a file, and not a spreadsheet
 
-A spreadsheet cell holds a value and nothing about it.
+A spreadsheet cell holds a value and nothing about it. It doesn't tell you the unit, where it came from, or how certain it is. Everything this book does depends on those three things being written down beside the number.
 
-- It does not tell you the unit. Multiply the wrong two cells and the result looks like any other
-  number.
-- It does not tell you where the number came from. A vendor's claim and a measurement sit in the
-  same column, looking the same.
-- It does not tell you how certain the number is. The spread is gone after the first
-  multiplication.
+The toolkit enforces what spreadsheets cannot:
 
-Everything this book does depends on those three things being written down beside the number. A
-file is where they can be. A file also diffs and reviews like code.
+- Units on every formula
+- Provenance (fact, claim, assumption)
+- Measurement status
+- Limits with headroom
+- Dependency tracking
 
-The toolkit enforces rigor spreadsheets cannot maintain:
-
-- Unit checking on every formula
-- Where each number came from (fact, claim, or assumption)
-- Whether a constant has been measured
-- Limits with mandatory headroom below them
-- Dependency tracking when data is missing
-
-A spreadsheet loses all of these on the first copy.
+A spreadsheet loses all of this on the first copy.
 
 [ch02](#what-a-workload-is) writes the first nodes of the model. Each number in the file carries
 a unit and a line saying where it came from, and the **build**, the set of checks that turns
