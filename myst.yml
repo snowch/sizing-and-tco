@@ -53,6 +53,8 @@ project:
     - NEXT_STEPS.md
     - BUILD-FROM-SCRATCH-PROMPT.md
   toc:
+    - file: cover.md
+
     - file: index.md
       title: Preface
 
