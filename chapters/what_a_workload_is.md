@@ -22,16 +22,28 @@ will have a file that runs.
 
 ### Three kinds of quantity, and two of them get confused
 
-**A flow is a rate.** Requests per second, bytes per second, dollars per year. It has time
+:::{div}
+:class: definition
+
+**A flow** is a rate. Requests per second, bytes per second, dollars per year. It has time
 underneath it. You cannot store one and you cannot run out of one. Adding two of them means
 something only if they cover the same period.
+:::
 
-**A stock is a level.** Terabytes held, series alive, requests in flight. It is how much there is
+:::{div}
+:class: definition
+
+**A stock** is a level. Terabytes held, series alive, requests in flight. It is how much there is
 right now. You *can* run out of one, and that is usually what a ceiling is about.
+:::
+
+:::{div}
+:class: definition
 
 **Everything else is a ratio, a pure number or a price.** A replication factor, a compression ratio,
 a cost per terabyte. These have no time in them at all. They are the constants of a **sizing
 chain**: the string of multiplications that runs from a workload to a number of machines.
+::::
 
 The unit tells you which is which. That is why the toolkit can check it, and why every node in
 this book declares one. A flow has time in its denominator. A stock does not. A duration has time

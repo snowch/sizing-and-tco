@@ -62,6 +62,7 @@ def published_pages() -> list[Path]:
     """
     return sorted(
         [
+            ROOT / "cover.md",
             ROOT / "index.md",
             *(ROOT / "parts").glob("*.md"),
             *(ROOT / "chapters").glob("*.md"),

@@ -3,6 +3,7 @@
 | Term | Introduced in | What it means here | Said plainly |
 |---|---|---|---|
 | **distribution** | [ch13](#monte-carlo) | the bag of values an uncertain quantity could take | a range of plausible values |
+| **flow** | [ch02](#what-a-workload-is) | a rate — requests per second, bytes per second, dollars per year | something that arrives |
 | **sample** | [ch13](#monte-carlo) | one value drawn from that bag | one guess |
 | **percentile** | [ch13](#monte-carlo) | the value a given fraction of the bag is below | the value nine tenths are under |
 | **interval** | [ch13](#monte-carlo) | the gap between two percentiles | how wide the answer is |
@@ -13,6 +14,8 @@
 | **ceiling** | [ch08](#regime-changes) | a limit past which a chain of multiplications stops describing anything | where it breaks |
 | **headroom** | [ch11](#headroom-and-failure-domains) | the margin a design keeps below a ceiling, and the reason for it | the slack you keep |
 | **binding constraint** | [ch10](#bandwidth-and-the-binding-constraint) | the chain that decides the answer, out of several that could | whichever runs out first |
+| **sizing chain** | [ch02](#what-a-workload-is) | the string of multiplications that runs from a workload to a number of machines | how you calculate hosts needed |
+| **stock** | [ch02](#what-a-workload-is) | a level — terabytes held, series alive, requests in flight | how much there is right now |
 | **utilisation** | [ch06](#queueing-and-the-knee) | the fraction of a system that is busy | how busy it is |
 | **unit economics** | [ch17](#unit-economics) | a cost divided by a denominator you can defend | cost per something |
 | **structural error** | [ch20](#the-missing-node) | a model that is wrong in shape rather than in its numbers | something is missing |

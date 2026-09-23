@@ -56,6 +56,8 @@ project:
     - file: index.md
       title: Preface
 
+    - file: cover.md
+
     - file: parts/what_you_are_sizing.md
       children:
         - file: chapters/point_estimates.md
