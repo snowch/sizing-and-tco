@@ -1,5 +1,6 @@
 ---
 title: "Sizing and TCO"
+short_title: Cover
 ---
 
 (cover)=
