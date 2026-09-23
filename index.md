@@ -82,7 +82,15 @@ The toolkit enforces what spreadsheets cannot:
 - Limits with headroom
 - Dependency tracking
 
-A spreadsheet loses all of this on the first copy.
+The toolkit enforces rigor spreadsheets cannot maintain:
+
+- Unit checking on every formula
+- Where each number came from (fact, claim, or assumption)
+- Whether a constant has been measured
+- Limits with mandatory headroom below them
+- Dependency tracking when data is missing
+
+A spreadsheet loses all of these on the first copy.
 
 [ch02](#what-a-workload-is) writes the first nodes of the model. Each number in the file carries
 a unit and a line saying where it came from, and the **build**, the set of checks that turns
