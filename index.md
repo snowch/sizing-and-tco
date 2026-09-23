@@ -1,6 +1,6 @@
 ---
-title: "Introduction"
-short_title: Introduction
+title: "Preface"
+short_title: Preface
 ---
 
 (preface)=
