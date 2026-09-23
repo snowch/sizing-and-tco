@@ -17,7 +17,11 @@ None of those is a single number. Traffic has grown at a different rate each yea
 Two things are hidden in that number.
 
 1. **The ranges you threw away.** Each middle went into the arithmetic as a measured fact. What came out has no trace of the range it came from. Later you will give the model the full range instead of its middle and get a range of answers back.
-2. **A flaw in the model's shape.** A chain of multiplications cannot see that a queue has tipped over. The answer describes a fleet running at several times its capacity. Measuring the inputs better will never find this error.
+2. **A structural flaw.** A chain of multiplications cannot see the queueing knee: the point where spare capacity runs out and response time climbs steeply. Measuring the inputs better will never find this error.
+
+:::{note}
+This flaw is the reason for Part II. [ch06](#queueing-and-the-knee) addresses it by adding ceilings—explicit limits that a chain of multiplications cannot model on its own. That distinction between cost models (no ceilings) and sizing models (with ceilings) is what the rest of this book is built on.
+:::
 
 Here is the first of the two. When you work the web service arithmetic the way we just did—all inputs at their bottom, then all at their top—you get two answers. The point estimate (all at middle) sits between them. But not in the middle. Most futures need more hosts than the point estimate says.
 
