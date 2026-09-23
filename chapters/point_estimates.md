@@ -68,8 +68,6 @@ If you picked the middle value for each (250 days, 25 minutes, £0.50), you got 
 
 A point estimate assumes everything lands in the middle. Reality does not work that way.
 
-Problem 1.2 does the same arithmetic on the web service model: all six inputs at their bottom together, then all at their top. Two runs, two answers. The second is not the widest input alone, and not their average. It is what happens when everything goes the wrong way at once.
-
 The honest answer to *how big* is not one number. It is the list of answers you could get depending on what turns out to be true.
 
 ### The error a range cannot show
