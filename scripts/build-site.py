@@ -1432,7 +1432,7 @@ a.term { color: inherit; text-decoration: underline dotted var(--muted); text-un
 a.term:hover { color: var(--accent); text-decoration-color: var(--accent); }
 h2 { font-size: 1.35rem; font-weight: 650; line-height: 1.25; margin: 2.5rem 0 .9rem;
      padding-top: 1.1rem; border-top: 1px solid var(--edge); }
-h3 { font-size: 1.04rem; font-weight: 700; line-height: 1.3; margin: 1.9rem 0 .6rem; }
+h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.3; margin: 1.9rem 0 .6rem; }
 h4 { font-size: .95rem; font-weight: 600; color: var(--muted); margin: 1.6rem 0 .4rem; }
 p, li { max-width: max(var(--measure), var(--prose)); }
 p { margin: 0 0 1.05rem; }
