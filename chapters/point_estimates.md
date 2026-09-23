@@ -23,7 +23,7 @@ Two things are hidden in that number.
 Both flaws will be addressed as the book progresses: structural limits in [ch06](#queueing-and-the-knee), and ranges in [ch13](#monte-carlo).
 :::
 
-Here is an example of the first of the two. When you work the web service arithmetic the way we just did—all inputs at their bottom, then all at their top—you get two answers. The point estimate (all at middle) sits between them. But not in the middle. Most futures need more hosts than the point estimate says.
+Here is an example of the first of the two. When you work the web service arithmetic the way we just did—all inputs at their bottom, then all at their top—you get two answers. The point estimate (all at middle) sits between them. But not in the middle. Most possible outcomes need more hosts than the point estimate says.
 
 ```{include} _generated/point-estimates-outputs.md
 ```
