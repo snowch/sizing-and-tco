@@ -47,5 +47,3 @@ def stages_and_kinds() -> list[str]:
     Read each description and decide by looking for measured constants and ceilings.
     """
     raise NotImplementedError("problem 1.3")
-
-
