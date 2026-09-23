@@ -145,19 +145,39 @@ python3 -m pytest tests/point_estimates/test_problem_1_each_input.py -m problem
 python3 -m pytest tests/point_estimates/test_problem_2_together.py -m problem
 ```
 
-**1.3 — Find where it changes kind.** Below are six descriptions of models for sizing a web service. Which are cost models (deterministic structure, uncertain inputs only)? Which are sizing models (adding measured constants or ceilings)? At which stage does the kind change? Name the characteristics—the measured constants or ceilings—that decide it.
+**1.3 — Find where it changes kind.** Below are the six stages of this book's web service model,
+in the order the book builds it. Say which are cost models and which are sizing models, at which
+stage the kind changes, and which node makes the change.
 
-**Stage 1.** Peak requests per second × processor time per request × (100% ÷ utilization fraction) = cores needed. Inputs: peak rate (assumption), processor time per request (assumption), utilization (assumption).
+**Stage 1.** What the service is asked to do: the busy-hour request rate on day one
+(`peak_request_rate_t0`), the records held on day one (`stored_data_t0`), how fast both grow each
+year (`annual_growth`), and how many years the fleet must last (`horizon`). From these it computes
+the busy hour and the records held at the end of that time.
 
-**Stage 2.** Same structure. The processor time per request was measured at 0.5 ms on version 2.1 of the backend.
+**Stage 2.** Stage 1, plus the memory one host carries (`ram_per_host`), as the vendor quotes it,
+and the share of that memory the operating system keeps (`os_reserve`). From these it computes
+the memory the service can use on each host.
 
-**Stage 3.** Same structure. Peak rate is uncertain: it might be 5,000 or 15,000 requests per second. Processor time is uncertain: it might be 0.3 or 0.7 ms. Utilization is uncertain: it might be 50% or 80%.
+**Stage 3.** Stage 2, with the busy-hour rate, the growth rate and the operating system's share
+each given as a range instead of one number. It adds how much busier the busy hour is than the
+average hour (`peak_to_mean`), also a range, and the average rate that implies.
 
-**Stage 4.** Same structure, plus: requests in flight = peak rate × time per request. This is always true (Little's law), not an assumption.
+**Stage 4.** Stage 3, plus the processor time one request takes (`service_demand`), an assumption
+given as a range because no reference machine has measured it; the cores one host has
+(`cores_per_host`), as the vendor quotes it; and how many hosts you buy (`hosts`), which is your
+decision. From these it computes how busy the fleet is (`utilisation`) and how many requests are
+in flight.
 
-**Stage 5.** Stage 4, plus: response time climbs steeply when utilization exceeds 75%. Below that, response time is roughly constant. Above it, queueing dominates. This is a ceiling: the model cannot run at 150% utilization, but the arithmetic above would claim it could.
+**Stage 5.** Stage 4, plus the time a request spends queueing and in the system; the highest
+utilisation the waiting-time formula will accept (`utilisation_cap`); a margin you choose
+(`queueing_margin`); and a declared limit (`queueing_headroom`): utilisation at the busy hour must
+stay that margin below a fully busy fleet.
 
-**Stage 6.** Stage 5, plus: a host can scale from 1 to 32 cores. Beyond 32 cores, adding more cores helps less (contention makes each additional core slower). This is another ceiling: scaling is not linear.
+**Stage 6.** Stage 5, plus two properties of the software, each a range: the share of the work
+that cannot run in parallel (`contention`) and the cost of hosts agreeing with each other
+(`crosstalk`). From these it computes the throughput the fleet can really reach, and it adds two
+more declared limits: on utilisation once that coordination is counted (`coordination_headroom`),
+and on the share of the fleet doing nothing useful (`scaling_loss`).
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_3_which_kind.py -m problem
