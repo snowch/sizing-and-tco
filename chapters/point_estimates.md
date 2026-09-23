@@ -30,7 +30,7 @@ The first row shows the point estimate (54). Beside it are the smallest and larg
 
 ### A point estimate is not wrong. It is silent.
 
-A **point estimate** is the number you get when you pick one value for every input and do the arithmetic once. It is what a spreadsheet gives. It is what sizing conversations are about.
+A **point estimate** is the number you get when you pick one value for every input—typically the middle of a range—and do the arithmetic once. It is what a spreadsheet gives. It is what sizing conversations are about.
 
 To size a fleet for a web service you need:
 
