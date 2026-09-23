@@ -1490,14 +1490,15 @@ figure img { background: #fff; border-radius: 4px; }
 /* Definition boxes for key terms, and a chapter's takeaways, which are drawn the same way with an
    icon of their own. Neither carries a title: a definition names its term in bold, and the
    takeaways sit under a heading that names them. */
-.definition, .takeaways { background: var(--panel); border: 1px solid var(--edge);
+.definition, .takeaways, .example { background: var(--panel); border: 1px solid var(--edge);
               border-left: 3px solid var(--accent); border-radius: 6px; padding: .8rem 1rem;
               margin: 1.5rem 0; font-size: .98em; position: relative; padding-left: 3.2rem; }
-.definition::before, .takeaways::before { content: 'menu_book'; font-family: 'Material Icons';
+.definition::before, .takeaways::before, .example::before { content: 'menu_book'; font-family: 'Material Icons';
               font-size: 1.5rem; position: absolute; left: .8rem; top: .8rem; color: var(--accent); }
 .takeaways::before { content: 'lightbulb'; }
-.definition > :first-child, .takeaways > :first-child { margin-top: 0; }
-.definition > :last-child, .takeaways > :last-child { margin-bottom: 0; }
+.example::before { content: 'explore'; }
+.definition > :first-child, .takeaways > :first-child, .example > :first-child { margin-top: 0; }
+.definition > :last-child, .takeaways > :last-child, .example > :last-child { margin-bottom: 0; }
 
 /* A model is the one thing a chapter's column can never hold: its graph is drawn at a fixed
    width -- 1470px for the widest in the book -- so a narrower card shows less of the graph

@@ -23,7 +23,7 @@ Two things are hidden in that number.
 Both flaws will be addressed as the book progresses: structural limits in [ch06](#queueing-and-the-knee), and ranges in [ch13](#monte-carlo).
 :::
 
-Here is an example of the first of the two. When you work the web service arithmetic the way we just did—all inputs at their bottom, then all at their top—you get two answers. The point estimate (all at middle) sits between them. But not in the middle. Most futures need more hosts than the point estimate says.
+Here is an example of the first of the two. When you work the web service arithmetic the way we just did—all inputs at their bottom, then all at their top—you get two answers. The point estimate (all at middle) sits between them. But not in the middle. Most possible outcomes need more hosts than the point estimate says, as [ch13](#monte-carlo) will show.
 
 ```{include} _generated/point-estimates-outputs.md
 ```
@@ -51,6 +51,9 @@ Pick the middle of each and multiply. You get one number. The arithmetic is righ
 
 Multiplying uncertain numbers does not average their doubt. It compounds it.
 
+:::{div}
+:class: example
+
 You know this without servers. Suppose you take a taxi to work and the fare is charged by the minute. Ask someone: *how much will your commute cost this year?* They do not give a number. They say: *"Maybe 250 days, maybe 260 if I'm in the office more. 25 minutes usually, 40 if the bypass is busy. The rate is around £0.50 a minute, might be £0.75 in rush hour."*
 
 That is three ranges, not three numbers. Work through what that means:
@@ -64,11 +67,12 @@ That is three ranges, not three numbers. Work through what that means:
 
 The arithmetic is right in each run. But the four answers are different. Pick one number? Which one did you pick? You do not know.
 
-If you picked the middle value for each (250 days, 25 minutes, £0.50), you got run 1. But the future could be run 2, 3, or 4. Run 4 costs more than twice as much.
+If you picked the middle value for each (250 days, 25 minutes, £0.50), you got run 1. But the outcome could be run 2, 3, or 4. Run 4 costs more than twice as much.
+
+:::
+
 
 A point estimate assumes everything lands in the middle. Reality does not work that way.
-
-Problem 1.2 does the same arithmetic on the web service model: all six inputs at their bottom together, then all at their top. Two runs, two answers. The second is not the widest input alone, and not their average. It is what happens when everything goes the wrong way at once.
 
 The honest answer to *how big* is not one number. It is the list of answers you could get depending on what turns out to be true.
 
@@ -76,33 +80,33 @@ The honest answer to *how big* is not one number. It is the list of answers you 
 
 So far this is about how wide the answer is. Now a different error: one that running the arithmetic again cannot find, and which decides whether your model needs the second half of this book.
 
-Almost all of the first row's width came from the growth rate. It is a forecast. It compounds over five years. It moves the host count more than any other input. Finding that out, rather than guessing, is later in this book. It is the most useful thing you can do with a model you have.
+Almost all of the first row's width in the web service model came from the growth rate. It is a forecast. It compounds over five years. It moves the host count more than any other input. Finding that out, rather than guessing, is [ch19](#which-input-is-the-answer). It is the most useful thing you can do with a model you have.
 
-The second row moves for different reasons. It is the cost of the fleet you decided to buy. The growth rate does not reach it. You can be wrong about how many hosts you need and right about what the fleet costs. One is a question about the world. The other is arithmetic on a decision you already made. Keeping those apart is most of Parts III and V.
+The second row (costing) moves for different reasons. Once you decide how many hosts to buy, the cost is just arithmetic. Sizing is about the world; costing is about a decision you have already made. Keeping those apart is most of Parts III and V.
 
-Letting inputs vary is honest work, and most of this book is about doing it well. But it reports only the doubt you wrote down. There is a second kind of error it cannot see. Whether you meet it depends on which of two kinds of model you have.
-
-:::{div}
-:class: definition
-
-**Cost model.** Deterministic structure with uncertain parameters. Its relationships are accounting identities and physics: watts times hours times price; capital plus running cost; a total divided by a denominator. Nothing in that structure is in doubt. Only the inputs are uncertain. Cost moves roughly with them, so running the arithmetic over their ranges is enough. A cost model fails when a price was wrong, rarely when the system behaves differently.
-:::
+Varying inputs across their ranges gives you the complete picture, and most of this book teaches how to do it well. But it reports only the doubt you wrote down. There is a second kind of error it cannot see. Whether you meet it depends on which of two kinds of model you have.
 
 :::{div}
 :class: definition
 
-**Sizing model.** The same structure plus two things.
+**Sizing model.** A model where the relationships are fixed but inputs vary. Its relationships are between demand, resource usage per request, hardware capacity—and the ceilings where a system stops coping.
 
 *Measured constants.* How much smaller a record is on disk than in memory after compression. How many records one request leaves. How much work one processor core does per second. These are measured, not derived. Each belongs to one implementation at one version. Each has a measurement error. None is a fact about the world. A chain of multiplications built on them inherits their errors, their version, and their standing as measurements, not facts. A model that hides all three treats them as constants.
 
-*Non-linear ceilings.* The queueing knee, where response time climbs steeply with spare capacity left. A host failing at the busy hour, so its load lands on already busy survivors. A new field on a measurement, multiplying stored things by how many values the field takes. A working set outgrowing memory. These are regime changes. **A chain of multiplications cannot model a regime change.** It reports a system running at several times its own limit, which cannot happen.
+*Ceilings.* The queueing knee, where response time climbs steeply with spare capacity left. A host failing at the busy hour, so its load lands on already busy survivors. A new field on a measurement, multiplying stored things by how many values the field takes. A working set outgrowing memory. These are regime changes. **A chain of multiplications cannot model a regime change.** It reports a system running at several times its own limit, which cannot happen.
 :::
 
-A sizing model must do more than produce a number. It says how much room it keeps below each limit and why. The toolkit enforces it. A model with a measured constant or a declared limit **is** a sizing model. One with neither **is** a cost model. They are held to different rules. A sizing model that names a limit and keeps no room below it does not build.
+:::{div}
+:class: definition
+
+**Cost model.** A model where the relationships are fixed but inputs vary. Its relationships are accounting identities and physics: watts times hours times price; capital plus running cost; a total divided by a denominator. It takes the sizing decision and calculates its cost. Only the inputs are uncertain. Cost moves roughly with them, so running the arithmetic over their ranges is enough.
+:::
+
+A sizing model declares headroom below each ceiling—how much spare capacity it keeps and why. A sizing model has a measured constant or a declared ceiling. A cost model has neither. The toolkit enforces this: a sizing model must keep headroom below every ceiling, or it will not build.
 
 ### Where a cost model becomes a sizing model
 
-Do not take the distinction on trust. It decides which half of this book applies. The web service model starts as a cost model and becomes a sizing model partway through. One node makes the change. Problem 1.3 is finding it by reading three model descriptions.
+Why does this distinction matter? It determines which chapters apply to your model. The web service model—our running example—starts as a cost model and becomes a sizing model when we add a measured constant or ceiling. Problem 1.3 asks you to find that moment in three different model descriptions.
 
 ## What this cannot tell you
 
