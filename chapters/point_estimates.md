@@ -78,11 +78,15 @@ The second row moves for different reasons. It is the cost of the fleet you deci
 
 Letting inputs vary is honest work, and most of this book is about doing it well. But it reports only the doubt you wrote down. There is a second kind of error it cannot see. Whether you meet it depends on which of two kinds of model you have.
 
-:::{div} definition
+:::{div}
+:class: definition
+
 **Cost model.** Deterministic structure with uncertain parameters. Its relationships are accounting identities and physics: watts times hours times price; capital plus running cost; a total divided by a denominator. Nothing in that structure is in doubt. Only the inputs are uncertain. Cost moves roughly with them, so running the arithmetic over their ranges is enough. A cost model fails when a price was wrong, rarely when the system behaves differently.
 :::
 
-:::{div} definition
+:::{div}
+:class: definition
+
 **Sizing model.** The same structure plus two things.
 
 *Measured constants.* How much smaller a record is on disk than in memory after compression. How many records one request leaves. How much work one processor core does per second. These are measured, not derived. Each belongs to one implementation at one version. Each has a measurement error. None is a fact about the world. A chain of multiplications built on them inherits their errors, their version, and their standing as measurements, not facts. A model that hides all three treats them as constants.
