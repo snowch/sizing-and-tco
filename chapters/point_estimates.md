@@ -102,7 +102,7 @@ Varying inputs across their ranges gives you the complete picture, and most of t
 **Cost model.** A model where the relationships are fixed but inputs vary. Its relationships are accounting identities and physics: watts times hours times price; capital plus running cost; a total divided by a denominator. It takes the sizing decision and calculates its cost. Only the inputs are uncertain. Cost moves roughly with them, so running the arithmetic over their ranges is enough.
 :::
 
-A sizing model must do more than produce a number. It says how much room it keeps below each limit and why. The toolkit enforces it. A model with a measured constant or a declared limit **is** a sizing model. One with neither **is** a cost model. They are held to different rules. A sizing model that names a limit and keeps no room below it does not build.
+A sizing model declares headroom below each ceiling—how much spare capacity it keeps and why. A sizing model has a measured constant or a declared ceiling. A cost model has neither. The toolkit enforces this: a sizing model must keep headroom below every ceiling, or it will not build.
 
 ### Where a cost model becomes a sizing model
 
