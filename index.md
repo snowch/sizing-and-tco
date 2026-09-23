@@ -77,10 +77,15 @@ A spreadsheet cell holds a value and nothing about it.
 Everything this book does depends on those three things being written down beside the number. A
 file is where they can be. A file also diffs and reviews like code.
 
-The toolkit checks the units of every formula. A rate times a duration is an amount:
-`requests per second × seconds = requests`. A rate times a plain number is still a rate. A formula
-that calls it an amount is refused. [ch02](#what-a-workload-is) teaches the rule. [Appendix
-D](#appendix-d-units) works through the combinations that bite.
+The toolkit enforces rigor spreadsheets cannot maintain:
+
+- Unit checking on every formula
+- Where each number came from (fact, claim, or assumption)
+- Whether a constant has been measured
+- Limits with mandatory headroom below them
+- Dependency tracking when data is missing
+
+A spreadsheet loses all of these on the first copy.
 
 [ch02](#what-a-workload-is) writes the first nodes of the model. Each number in the file carries
 a unit and a line saying where it came from, and the **build**, the set of checks that turns
