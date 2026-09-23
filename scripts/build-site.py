@@ -1476,6 +1476,13 @@ figure img { background: #fff; border-radius: 4px; }
 .admonition.note { border-left-color: var(--accent); }
 .admonition.tip { border-left-color: var(--go); }
 .admonition.important { border-left-color: var(--stop); }
+
+/* Definition boxes for key terms. */
+.definition { background: var(--panel); border: 1px solid var(--edge); border-left: 3px solid var(--accent);
+              border-radius: 6px; padding: .8rem 1rem; margin: 1.5rem 0; font-size: .98em; }
+.definition > :first-child { margin-top: 0; }
+.definition > :last-child { margin-bottom: 0; }
+
 /* A model is the one thing a chapter's column can never hold: its graph is drawn at a fixed
    width -- 1470px for the widest in the book -- so a narrower card shows less of the graph
    rather than a smaller one. It sits at the chapter's width like everything else, and the
