@@ -51,6 +51,9 @@ Pick the middle of each and multiply. You get one number. The arithmetic is righ
 
 Multiplying uncertain numbers does not average their doubt. It compounds it.
 
+:::{div}
+:class: example
+
 You know this without servers. Suppose you take a taxi to work and the fare is charged by the minute. Ask someone: *how much will your commute cost this year?* They do not give a number. They say: *"Maybe 250 days, maybe 260 if I'm in the office more. 25 minutes usually, 40 if the bypass is busy. The rate is around £0.50 a minute, might be £0.75 in rush hour."*
 
 That is three ranges, not three numbers. Work through what that means:
@@ -65,6 +68,9 @@ That is three ranges, not three numbers. Work through what that means:
 The arithmetic is right in each run. But the four answers are different. Pick one number? Which one did you pick? You do not know.
 
 If you picked the middle value for each (250 days, 25 minutes, £0.50), you got run 1. But the outcome could be run 2, 3, or 4. Run 4 costs more than twice as much.
+
+:::
+
 
 A point estimate assumes everything lands in the middle. Reality does not work that way.
 
