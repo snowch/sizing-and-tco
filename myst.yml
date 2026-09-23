@@ -53,10 +53,10 @@ project:
     - NEXT_STEPS.md
     - BUILD-FROM-SCRATCH-PROMPT.md
   toc:
-    - file: cover.md
-
     - file: index.md
       title: Preface
+
+    - file: cover.md
 
     - file: parts/what_you_are_sizing.md
       children:
