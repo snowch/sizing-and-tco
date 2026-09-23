@@ -54,6 +54,7 @@ project:
     - BUILD-FROM-SCRATCH-PROMPT.md
   toc:
     - file: index.md
+      title: Preface
 
     - file: parts/what_you_are_sizing.md
       children:

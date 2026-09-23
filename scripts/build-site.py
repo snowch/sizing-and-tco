@@ -160,7 +160,13 @@ def nav() -> list[dict]:
     appendices. The theme derived the same tree from myst.yml; deriving it here from the outline
     means a chapter cannot appear in the navigation without appearing in the tests that check it.
     """
-    out = []
+    out = [
+        {
+            "title": "Preface",
+            "href": href_for("index.md"),
+            "children": [],
+        }
+    ]
     for part in PART_PAGES:
         out.append(
             {
@@ -1133,6 +1139,8 @@ PAGE = """<!doctype html>
 """
 
 CSS = """
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 /* The figures in this book are drawn by `bench/diagrams.py`: blue-grey, with four accents that
    each mean something. The page borrows that palette so a diagram sits on the page rather than
    on top of it. Prose is a serif and every piece of furniture is a sans, which is what keeps a
@@ -1432,7 +1440,7 @@ a.term { color: inherit; text-decoration: underline dotted var(--muted); text-un
 a.term:hover { color: var(--accent); text-decoration-color: var(--accent); }
 h2 { font-size: 1.35rem; font-weight: 650; line-height: 1.25; margin: 2.5rem 0 .9rem;
      padding-top: 1.1rem; border-top: 1px solid var(--edge); }
-h3 { font-size: 1.04rem; font-weight: 700; line-height: 1.3; margin: 1.9rem 0 .6rem; }
+h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.3; margin: 1.9rem 0 .6rem; }
 h4 { font-size: .95rem; font-weight: 600; color: var(--muted); margin: 1.6rem 0 .4rem; }
 p, li { max-width: max(var(--measure), var(--prose)); }
 p { margin: 0 0 1.05rem; }
@@ -1476,6 +1484,16 @@ figure img { background: #fff; border-radius: 4px; }
 .admonition.note { border-left-color: var(--accent); }
 .admonition.tip { border-left-color: var(--go); }
 .admonition.important { border-left-color: var(--stop); }
+
+/* Definition boxes for key terms. */
+.definition { background: var(--panel); border: 1px solid var(--edge); border-left: 3px solid var(--accent);
+              border-radius: 6px; padding: .8rem 1rem; margin: 1.5rem 0; font-size: .98em;
+              position: relative; padding-left: 3.2rem; }
+.definition::before { content: 'menu_book'; font-family: 'Material Icons'; font-size: 1.5rem;
+                      position: absolute; left: .8rem; top: .8rem; color: var(--accent); }
+.definition > :first-child { margin-top: 0; }
+.definition > :last-child { margin-bottom: 0; }
+
 /* A model is the one thing a chapter's column can never hold: its graph is drawn at a fixed
    width -- 1470px for the widest in the book -- so a narrower card shows less of the graph
    rather than a smaller one. It sits at the chapter's width like everything else, and the
