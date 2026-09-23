@@ -4,7 +4,7 @@ short_title: Preface
 ---
 
 (preface)=
-# Introduction
+# Preface
 
 *How to size a system, cost it, and know how much to trust the answer.*
 
