@@ -36,14 +36,14 @@ Anybody can do the arithmetic for both.
 
 ## The question this book answers
 
-The third question is the hard one, and it is the one this book teaches. To answer it you need
-to know:
+Understanding how trustworthy your answer is: the hardest and most important question in sizing and
+TCO. Almost nobody is taught it. This book teaches you.
+
+To answer it you need to know:
 
 - which input your answer rests on;
 - how far the answer moves when that input moves; and
 - what it would cost to find out.
-
-Almost nobody is taught this. It is what decides whether anybody should act on your number.
 
 [ch01](#point-estimates) starts there. It shows you what a single number leaves out.
 
