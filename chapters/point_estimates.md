@@ -127,13 +127,49 @@ Four in `tests/point_estimates/`. The first three have tests: run with `python3 
 python3 -m pytest tests/point_estimates/test_problem_1_each_input.py -m problem
 ```
 
-**1.2 — How wide are they together?** Do the arithmetic on paper: all six inputs at their bottom together, then at their top. Set the ratio beside the smallest and largest answers in the table above.
+**1.2 — How wide are they together?** Look at the taxi table above. What is the ratio of run 4's cost to run 1's cost? Compare that ratio to the six you found in problem 1.1. The combined effect is wider than any single input's effect. This is why a point estimate cannot be defended by pointing at how carefully each input was chosen.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_2_together.py -m problem
 ```
 
-**1.3 — Find where it changes kind.** The web service model appears at six stages of construction. Classify each as cost or sizing. Name the nodes that decide it. Say why the chapter that adds those nodes could not have been written earlier.
+**1.3 — Find where it changes kind.** Below are six stages of the web service model as it is built through ch02 to ch07. Read each one. Which are cost models (deterministic structure, uncertain inputs only)? Which are sizing models (adding measured constants or ceilings)? At which stage does the kind change? Name the nodes—the quantities—that decide it.
+
+```{literalinclude} /models/web_service/stages/01-demand/model.yaml
+:language: yaml
+```
+
+Stage 1: What it demands (the inputs and what grows).
+
+```{literalinclude} /models/web_service/stages/02-provenance/model.yaml
+:language: yaml
+```
+
+Stage 2: Where the inputs came from.
+
+```{literalinclude} /models/web_service/stages/03-uncertainty/model.yaml
+:language: yaml
+```
+
+Stage 3: How uncertain each input is.
+
+```{literalinclude} /models/web_service/stages/04-littles_law/model.yaml
+:language: yaml
+```
+
+Stage 4: Little's law (queue = rate × delay).
+
+```{literalinclude} /models/web_service/stages/05-queueing/model.yaml
+:language: yaml
+```
+
+Stage 5: The queueing knee.
+
+```{literalinclude} /models/web_service/stages/06-scaling/model.yaml
+:language: yaml
+```
+
+Stage 6: What the hosts can do.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_3_which_kind.py -m problem

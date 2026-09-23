@@ -7,10 +7,6 @@ The fourth has no test. It is about a system you run, and there is no oracle for
 
 from __future__ import annotations
 
-from collections.abc import Callable
-
-from sizing.dsl import Model
-
 
 def spread_of_each(bands: dict[str, tuple[float, float]]) -> dict[str, float]:
     """Problem 1.1 - how uncertain is each input?
@@ -28,38 +24,39 @@ def spread_of_each(bands: dict[str, tuple[float, float]]) -> dict[str, float]:
     raise NotImplementedError("problem 1.1")
 
 
-def spread_on_paper(
-    bands: dict[str, tuple[float, float]], count_at: Callable[[dict[str, float]], float]
-) -> float:
+def spread_on_paper() -> float:
     """Problem 1.2 - how uncertain are they together?
 
-    ``count_at`` runs the model with inputs at the values you give, returning hosts_recommended.
+    Look at the taxi table in the chapter: run 1 costs £3,125, run 4 costs £7,800.
 
-    Call it with every input in ``bands`` at its bottom. Then at its top. Return the second count over the first.
-
-    Set it beside the six from problem 1.1. It is not the largest and not their average.
+    Return the ratio: run 4 cost divided by run 1 cost.
     """
     raise NotImplementedError("problem 1.2")
 
 
-def kind_of(model: Model) -> str:
-    """Problem 1.3 - which kind of model is this?
+def stages_and_kinds() -> tuple[list[str], int]:
+    """Problem 1.3 - which kind of model is this at each stage?
 
-    Return ``"cost"`` or ``"sizing"``.
+    The chapter shows six stages of the web service model (01 through 06).
+
+    Return a tuple:
+    - A list of six strings, each ``"cost"`` or ``"sizing"``, in order from stage 01 to 06.
+    - The stage number (1-6) where the kind changes from cost to sizing.
 
     A **cost model** has a deterministic structure with uncertain parameters.
     A **sizing model** adds a measured constant or a ceiling.
 
-    Decide by reading the model.
+    Read each stage and decide by looking for measured constants and ceilings.
     """
     raise NotImplementedError("problem 1.3")
 
 
-def what_decides_it(model: Model) -> list[str]:
-    """Problem 1.3 - which nodes decide it?
+def nodes_that_decide_it() -> list[str]:
+    """Problem 1.3 - which quantities decide the kind change?
 
-    Return the node names that make it a sizing model, sorted. For a cost model, return empty.
+    At the stage where the model becomes a sizing model, which nodes (quantities) appear
+    that are either measured constants or ceilings?
 
-    A sizing model is a specific list of quantities the multiplication is lying about.
+    Return them as a list of node names, sorted. Name only those that change the model's kind.
     """
     raise NotImplementedError("problem 1.3")
