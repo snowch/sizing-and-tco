@@ -1764,7 +1764,25 @@ def toc_html(page: dict) -> str:
     return f'<div class="part">On this page</div><ul>{body}</ul>'
 
 
+def before_sampling(source: str) -> bool:
+    """Whether this chapter comes before the one the glossary says teaches what a sample is.
+
+    A model's page opens with the run behind it: the scenario, the samples, the seed. Before that
+    chapter none of those mean anything to a reader, and "sample" is a word the book rations.
+    """
+    order = [c.path for c in CHAPTERS]
+    home = next(c.path for c in CHAPTERS if c.slug == GLOSSARY["sample"][0])
+    return source in order and order.index(source) < order.index(home)
+
+
 def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) -> str:
+    if before_sampling(source):
+        # The viewer reads the flag and leaves the run out. It rides in the address, so a reader
+        # who opens the model on its own page from here still does not meet the words early.
+        for node in walk(page.get("mdast", page)):
+            src = str(node.get("src", ""))
+            if node.get("type") == "iframe" and src.startswith("/models/"):
+                node["src"] = src + ("&" if "?" in src else "?") + "run=hidden"
     # Editable excerpts have to be marked before the body is rendered, because the renderer
     # decides from the mark whether a quoted block is a picture of the file or the file itself.
     stage = stage_for(source)

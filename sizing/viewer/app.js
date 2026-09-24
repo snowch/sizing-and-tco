@@ -485,25 +485,17 @@ async function resample() {
 
 if (TOOLKIT) $("resample").addEventListener("click", resample);
 
-// Shown only when the columns have stacked. Inside a chapter that is the embed's width, and
-// Expand, over this panel's corner, gives it the whole window without reloading it, so every
-// slider stays where it was put. Opening it on its own page is the other way, and starts over.
-// On a phone the embed is the screen already, and the sliders still work.
 {
   const note = $("narrow-note");
+  // A chapter that comes before samples and seeds are taught asks for the run to be left out.
+  if (new URLSearchParams(location.search).get("run") === "hidden") $("run").hidden = true;
   if (window.self !== window.top) {
     // The chapter floats its Expand button over this panel's top right corner, so the header
     // keeps a space clear for it. On a phone the title wrapped under the button without it.
     document.documentElement.classList.add("embedded");
-    note.textContent = "Embedded at the chapter\u2019s width. Press Expand, at the top right, "
-      + "for the whole window \u2014 or ";
-    const open = document.createElement("a");
-    open.href = location.href;
-    open.target = "_blank";
-    open.rel = "noopener";
-    open.textContent = "open this model on its own";
-    note.appendChild(open);
-    note.appendChild(document.createTextNode(" for the full layout."));
+    // The button says what it does, so a note explaining it only pushed the graph down. Removed
+    // rather than hidden: the stacked layout's rule shows the note, and would beat `hidden`.
+    note.remove();
     // Inputs and Details start closed, so a chapter shows the graph and the reader opens the rest.
     for (const [button, content] of [["toggle-controls", "controls-content"], ["toggle-detail", "detail-content"]]) {
       const toggle = $(button), body = $(content), section = body.closest("section");

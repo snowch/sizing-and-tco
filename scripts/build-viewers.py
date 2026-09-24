@@ -45,7 +45,7 @@ PAGE = """<!doctype html>
 <body>
 <header>
   <h1>{title} <span class="kind">{classification} model</span></h1>
-  <p>{scenario_title} · {samples} samples · seed {seed} · generated {generated} ·
+  <p id="run">{scenario_title} · {samples} samples · seed {seed} · generated {generated} ·
   <a href="{stamp}">the stamped result</a></p>
 </header>
 <main>
