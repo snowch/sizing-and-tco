@@ -499,7 +499,7 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
     "demand_inputs_all",
     "demand_horizon_exponent"
   ];
-  const modelName = STAMPED?.model_name || "";
+  const modelName = STAMPED?.model || "";
   const isProgressiveStage = progressiveStages.some(stage => modelName.includes(stage));
 
   if (window.self !== window.top) {
