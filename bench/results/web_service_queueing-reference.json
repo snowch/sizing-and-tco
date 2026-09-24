@@ -1,9 +1,9 @@
 {
-  "code_fingerprint": "92274785f765c8a3",
+  "code_fingerprint": "75f3caf7b8cc56b3",
   "code_sources": [
     "bench/run_models.py",
-    "models/web_service/stages/05-queueing/model.yaml",
-    "models/web_service/stages/05-queueing/scenarios/reference.yaml",
+    "models/web_service/stages/08-queueing/model.yaml",
+    "models/web_service/stages/08-queueing/scenarios/reference.yaml",
     "sizing/export.py",
     "sizing/expr.py",
     "sizing/graph.py"
@@ -12,14 +12,14 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-23T23:51:02+00:00",
-  "git_revision": "4199a5e",
+  "generated_at": "2026-09-24T10:58:36+00:00",
+  "git_revision": "2bc52ac",
   "kind": "model",
   "name": "web_service_queueing-reference",
   "produced_by": {
     "classification": "conditional",
     "model": "web_service_queueing",
-    "model_file": "models/web_service/stages/05-queueing/model.yaml",
+    "model_file": "models/web_service/stages/08-queueing/model.yaml",
     "sampler": "sizing.mc \u2014 inverse transform, Iman-Conover rank correlation",
     "samples": 100000,
     "scenario": "reference",
@@ -65,7 +65,7 @@
       "utilisation": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-23T23:51:02+00:00",
+    "generated_at": "2026-09-24T10:58:36+00:00",
     "model": "web_service_queueing",
     "nodes": {
       "annual_growth": {
