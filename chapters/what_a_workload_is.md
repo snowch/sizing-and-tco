@@ -60,40 +60,21 @@ spreadsheet gives the same digits either way and cannot say which quantity they 
 refuses it, and problem 2.2 is that error. [Appendix D](#appendix-d-units) shows how units combine and cancel, on a page of
 examples the toolkit works out itself.
 
-### The demand side, drawn before it is written
+### Writing down the first quantities
 
-Here is the demand side of the model this book builds, as a graph. Eight quantities: four you
-were given, one a definition, three computed. Drag *annual growth factor* and watch *peak request
-rate at horizon* and *records held at horizon* move together. That is a flow, a stock and one
-exponent, and they are all this chapter adds.
+A model is a file of named quantities, each with a unit and a source. A spreadsheet cell holds a
+value and nothing else. It does not hold the fact that the value was measured last March against
+version 2.4 of something. It does not say that the value is a vendor's claim nobody has checked,
+or that it was agreed in a meeting by people who have since left. Those facts live in the head of
+whoever built the sheet, and they leave when that person does. Nor does a cell have a unit.
+`=B4*C7` is as valid as any other product, and multiplying series by requests gives a number that
+looks like a number of bytes.
 
-```{iframe} /models/web_service_demand-reference.html
-:width: 100%
-The demand side, with a slider on every input. Click a node to see what fed it.
-```
+A model in YAML diffs and reviews like code. It is one file. This chapter builds it a piece at a
+time, as concepts appear.
 
-### Turning the workload into a file
-
-That graph was drawn from a file, and the file is what you write.
-
-The workload you have been given is the one this book carries all the way through. It is a busy
-hour of requests today and some amount of data held today, both growing at some rate, over the
-life of whatever gets bought.
-
-You could put that in a spreadsheet, and most people do. A cell holds a value and nothing else. It
-does not hold the fact that the value was measured last March against version 2.4 of something.
-It does not say that the value is a vendor's claim nobody has checked, or that it was agreed in a
-meeting by people who have since left. Those facts live in the head of whoever built the sheet,
-and they leave when that person does. Nor does a cell have a unit. `=B4*C7` is as valid as any
-other product, and multiplying series by requests gives a number that looks like a number of
-bytes.
-
-So a model here is a YAML file of named quantities, each with a unit and a source. It diffs and
-reviews like code, and it is one file. What follows is three pieces of it, in the order you would
-write them. The whole thing is eighty lines by the end of this chapter.
-
-The first two nodes are the rate and the level you were given: what arrives, and what
-accumulates.
+You are given two facts about your workload: how many requests arrive in the busy hour, and how
+much data you hold. Here are those two quantities as the first nodes:
 
 ```{literalinclude} ../models/web_service/stages/01-demand/model.yaml
 :language: yaml
@@ -101,35 +82,67 @@ accumulates.
 :end-before: annual_growth:
 ```
 
-Four lines in each of those are the argument of this book. The rest are convenience. `kind` and
-`unit` let the toolkit tell a level from a rate. `value` is the number a spreadsheet would have
-held on its own. `provenance` is the line a cell has nowhere to put. A number with no source is a
-rumour, so the field is mandatory from the first node.
-[ch03](#where-the-numbers-come-from) is about what that costs and what it buys.
+Four lines in each are what this book cares about. The rest are convenience. `kind` and `unit`
+let the toolkit tell a level from a rate. `value` is the number a spreadsheet would have held on
+its own. `provenance` is the line a cell has nowhere to put. A number with no source is a
+rumour, so the field is mandatory from the first node. [ch03](#where-the-numbers-come-from) is
+about what that costs and what it buys.
 
 `label`, `note` and `range` are neither. A label reads better in a table than `stored_data_t0`
 does. A note is for whatever a reader of this file would otherwise have to ask you about, and the
 one above says why that quantity is a single number when the one before it is not. A range is how
-far a slider may drag the value on the interactive version of this model. All three are
-optional. [Appendix A](#appendix-a-dsl-reference) lists everything a node may carry, which is
-longer than what a node needs.
+far a slider may drag the value on the interactive version of this model. All three are optional.
+[Appendix A](#appendix-a-dsl-reference) lists everything a node may carry, which is longer than
+what a node needs.
 
-Growing them over the horizon takes one exponent and one thing that is easy to miss:
+### Adding growth and time
+
+You have measured the workload today. But infrastructure is bought for years, not days. The
+quantity grows. You need to say how fast, and how long you are buying for.
+
+Here are the three more quantities:
 
 ```{literalinclude} ../models/web_service/stages/01-demand/model.yaml
 :language: yaml
 :start-at: annual_growth:
+:end-before: horizon_periods:
+```
+
+`annual_growth` is what it says. `horizon` is your purchase cycle — the refresh window you are
+sizing for. `one_year` is not a choice. It is here because growth compounds exponentially, and an
+exponent must be a pure number.
+
+That last point is easy to miss and crucial. `horizon / one_year` looks like ceremony and is not.
+Five years is a duration — something with time in it. Five is a number — dimensionless. Growth
+compounds, so the horizon has to be an exponent, and an exponent must be a pure number. Dividing
+the duration by a declared year is how the first becomes the second. A spreadsheet does this
+silently and correctly, until the quarter when somebody types a horizon in months into the same
+cell.
+
+### Computing what you need: deriving the horizon as an exponent
+
+You have given the toolkit five quantities. Now it computes one, not from direct measurement but
+from a formula applied to the five you gave:
+
+```{literalinclude} ../models/web_service/stages/01-demand/model.yaml
+:language: yaml
+:start-at: horizon_periods:
 :end-before: peak_request_rate:
 ```
 
-`horizon / one_year` looks like ceremony and is not. Growth compounds, so the horizon has to be an
-exponent, and an exponent has to be a pure number. Five years is a duration. Five is a number.
-Dividing the duration by a declared year is how the first becomes the second. A spreadsheet does
-this silently and correctly, until the quarter when somebody types a horizon in months into the
-same cell.
+`kind: derived` means this quantity is not stated — it is computed. The toolkit reads the formula,
+checks that it produces the unit the node declares, works it out, and stores the result. This is
+the first quantity in the book that you do not measure or decide: the toolkit makes it from the
+others.
 
-Then the two quantities at the end, which are the first in this book that are *computed* rather
-than stated:
+The formula `horizon / one_year` is unit division: a duration divided by a duration produces a
+pure number. That number is the exponent for growth. Change the horizon value and watch
+`horizon_periods` change with it.
+
+### Growing the demand to the horizon
+
+Now take the two quantities you started with — the rate and the stock at day one — and grow them
+to the end of the purchase cycle. That takes two more derived quantities:
 
 ```{literalinclude} ../models/web_service/stages/01-demand/model.yaml
 :language: yaml
@@ -137,10 +150,20 @@ than stated:
 :end-before: outputs:
 ```
 
-That completes the demand side. Here it is, with the toolkit that reads it: this
-repository's, not a copy. Press **Run**, then change a number and watch the total move. Change
-`stored_data`'s formula to multiply the request rate by a plain number, and the toolkit
-refuses: the node holds terabytes, and a rate times a plain number is still a rate.
+`peak_request_rate` is the flow at the horizon. `stored_data` is the stock at the horizon. Both
+use the same growth formula: the initial value, times the growth factor raised to an exponent (the
+number of years that have passed).
+
+That completes the demand side. You have written eight quantities: four you choose or measure,
+one you define (one_year), three the toolkit computes (horizon_periods, and the two projections).
+
+### The demand side, complete
+
+Here it is all together, running: this repository's toolkit, not a copy. Press **Run**, then
+change a number and watch the outputs move. Drag *annual growth factor* and observe how
+*peak request rate at horizon* and *records held at horizon* change. Try changing `stored_data`'s
+formula to multiply the request rate by a plain number: the toolkit refuses. The node holds
+terabytes, and a rate times a plain number is still a rate. The formula is wrong, not imprecise.
 
 ```{iframe} /playground/what-a-workload-is/
 :width: 100%

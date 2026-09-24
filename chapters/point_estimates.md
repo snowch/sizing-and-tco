@@ -86,9 +86,9 @@ The second row (costing) moves for different reasons. Once you decide how many h
 
 Varying inputs across their ranges gives you the complete picture, and most of this book teaches how to do it well. But it reports only the doubt you wrote down. There is a second kind of error it cannot see, and one question tells you whether your model is exposed to it:
 
-**Could every input be right and the answer still be wrong?**
+**Is the answer guaranteed to be right if every input is right?**
 
-If not, you have a definitional model. If so, you have a conditional one.
+If yes, you have a definitional model. If no, you have a conditional one.
 
 :::{div}
 :class: definition
@@ -105,7 +105,7 @@ If not, you have a definitional model. If so, you have a conditional one.
 
 *Ceilings.* The queueing knee, where response time climbs steeply while there is still spare capacity. A host failing at the busy hour, so its load lands on survivors that are already busy. A working set outgrowing memory. These are regime changes, and **a chain of multiplications cannot model a regime change.** It carries on past the limit as if nothing happened, and reports a system running at several times its own limit.
 
-Every input can be right and the answer still wrong. So a conditional model keeps a declared margin, its headroom, below each ceiling, and the toolkit will not build one that does not.
+Every input can be right and the answer still wrong. So a conditional model must declare the headroom—the margin below each ceiling—it will not cross. The toolkit enforces this: you cannot build one without these declarations.
 :::
 
 The names say what a model contains, not what it is for. A model that works out how many hosts to buy can still be definitional, and the web service model is, until [ch06](#queueing-and-the-knee) adds its first ceiling. When this book says *sizing model* or *cost model* it means what those words mean at work: the model that produces a host count, and the model that turns it into money.
@@ -134,8 +134,8 @@ The kind decides what you must guard against. In a definitional model, uncertain
   a most-likely region in it, not a figure.
 - **A range reports only the doubt you wrote down.** An error in the model's shape is invisible
   to any amount of varying the inputs.
-- **One question sorts every model.** Could every input be right and the answer still be wrong?
-  If not, the model is definitional and all its doubt is in its inputs. If so, it is conditional:
+- **One question sorts every model.** Is the answer guaranteed to be right if every input is right?
+  If yes, the model is definitional and all its doubt is in its inputs. If no, it is conditional:
   it rests on measured constants or ceilings, and must say how much room it keeps below each
   limit.
 - **The kind is read from the file, never declared.** A measured constant or a declared limit makes

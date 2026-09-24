@@ -36,7 +36,7 @@ at ch01, and `scripts/verify-models.py` enforces it.
   of multiplications cannot represent). It holds only on those conditions, so it needs headroom
   rules, not just a number.
 
-The test ch01 teaches: *could every input be right and the answer still be wrong?* If so, the
+The test ch01 teaches: *is the answer guaranteed to be right if every input is right?* If no, the
 model is conditional.
 
 In the DSL, a model with a `measured` node or a `ceiling` node **is** a conditional model. A
