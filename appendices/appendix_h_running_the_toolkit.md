@@ -96,24 +96,24 @@ and [ch06](#queueing-and-the-knee) is where the reader's own model crosses that 
 
 If you have a model of your own, point the toolkit at it in two ways.
 
+### Running the toolkit: desktop
+
 At a desk, with Python:
 
 ```bash
 python3 -m sizing.playground.driver /path/to/your/model.yaml
 ```
 
-The output is a JSON fixture, suitable for the browser as a `window.__MODEL__` payload. Feed it to the interactive viewer and you will see your model's structure, dependencies, inputs and outputs.
+The output is a JSON fixture, suitable for the browser as a `window.__MODEL__` payload. You can feed this to the interactive viewer on the right to see your model's structure, dependencies, inputs and outputs. Or load it into your own pages that embed the viewer the same way the chapters do.
 
-In your browser:
+### Running the toolkit: online
 
-Visit the [custom model viewer](#custom-model-viewer) below. Paste your model file, and the viewer shows your model's structure, dependencies, and what each node computes. You can inspect the graph and click each node to see its definition. If anything is wrong — a formula will not typecheck, or a provenance is missing — the page says so.
+In your browser, use the custom model viewer below. Paste your model file, and the viewer shows your model's structure, dependencies, and what each node computes. You can inspect the graph, click each node to see its definition, and read off formulas and dependencies. If anything is wrong — a formula will not typecheck, or a provenance is missing — the page says so.
 
 (custom-model-viewer)=
-### The custom model viewer
 
 ```{iframe} /models/custom-model-viewer.html
 :width: 100%
-:height: 600px
 ```
 
 The viewer runs the real `sizing.dsl` machinery, unmodified, in your browser. What you paste is parsed the same way `make check` parses the book's own models. Every error it rejects is one the toolkit will reject at the desk.
