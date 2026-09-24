@@ -3,8 +3,8 @@
  *
  * Four of the book's six outputs live here: the dependency graph coloured by kind and provenance,
  * the input UI generated from each node's declared range, the distribution on *any* node rather
- * than only the outputs, and the tornado. The other two — unit checking and the reference-scenario
- * tests — happen in the build, which is the only place they could.
+ * than only the outputs, and the tornado. The other two \u2014 unit checking and the reference-scenario
+ * tests \u2014 happen in the build, which is the only place they could.
  *
  * What this page will not do is resample. See evaluate.js.
  */
@@ -40,7 +40,7 @@ let pyodide = null, booting = null, agreement = null;
 const $ = (id) => document.getElementById(id);
 
 function fmt(value, unit) {
-  if (value === undefined || value === null || Number.isNaN(value)) return "—";
+  if (value === undefined || value === null || Number.isNaN(value)) return "\u2014";
   const money = /USD|\$/.test(unit || "");
   const abs = Math.abs(value);
   if (money) return "$" + value.toLocaleString(undefined, { maximumFractionDigits: abs >= 1000 ? 0 : 2 });
@@ -170,7 +170,7 @@ function drawGraph(values, blocked) {
     if (unmeasured || blocked.has(name)) fill = "var(--bg)";
     if (ceiling && ceiling.verdict === "over") fill = "var(--ceiling)";
     const dash = unmeasured || blocked.has(name) ? ' stroke-dasharray="3 3"' : "";
-    const value = blocked.has(name) ? "—" : fmt(values[name], node.unit);
+    const value = blocked.has(name) ? "\u2014" : fmt(values[name], node.unit);
     boxes.push(
       `<g class="node" data-node="${name}"><title>${name}</title>` +
       `<rect x="${x}" y="${y}" width="${BOX.w}" height="${BOX.h}" rx="3" fill="${fill}" stroke="${edge}" stroke-width="${selected === name ? 2.2 : 1.2}"${dash}/>` +
@@ -335,7 +335,7 @@ function detail(values, blocked) {
           : ""));
   }
   if (node.provenance && node.provenance.kind) {
-    parts.push(`<h2>Provenance</h2><p class="note"><strong>${node.provenance.kind.replace("_", " ")}</strong> — ${node.provenance.source}</p>`);
+    parts.push(`<h2>Provenance</h2><p class="note"><strong>${node.provenance.kind.replace("_", " ")}</strong> \u2014 ${node.provenance.source}</p>`);
   }
   if (node.measured) {
     parts.push(`<h2>Measured</h2><p class="note">${fmt(node.measured.value, node.unit)} ± ${fmt(node.measured.sd, node.unit)}<br>${node.measured.stack}<br><code>bench/results/${node.result}.json</code></p>`);
@@ -491,81 +491,30 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
 // On a phone the embed is the screen already, and the sliders still work.
 {
   const note = $("narrow-note");
-  const graphOnly = new URLSearchParams(location.search).get("graphOnly") === "true";
-  // Auto-apply graph-only mode for progressive viewer stages in ch02
-  const progressiveStages = [
-    "demand_inputs_initial",
-    "demand_inputs_all",
-    "demand_horizon_exponent"
-  ];
-  const modelName = STAMPED?.model || "";
-  const isProgressiveStage = progressiveStages.some(stage => modelName.includes(stage));
-
   if (window.self !== window.top) {
     // The chapter floats its Expand button over this panel's top right corner, so the header
     // keeps a space clear for it. On a phone the title wrapped under the button without it.
     document.documentElement.classList.add("embedded");
-    if (graphOnly || isProgressiveStage) {
-      // Graph-only mode: hide controls and detail, expand canvas to full width
-      document.documentElement.classList.add("graph-only");
-      $("controls").style.display = "none";
-      $("detail").style.display = "none";
-      note.textContent = "Click Expand to interact with this model.";
-    } else {
-      note.textContent = "Embedded at the chapter\u2019s width. Press Expand, at the top right, "
-        + "for the whole window \u2014 or ";
-      const open = document.createElement("a");
-      open.href = location.href;
-      open.target = "_blank";
-      open.rel = "noopener";
-      open.textContent = "open this model on its own";
-      note.appendChild(open);
-      note.appendChild(document.createTextNode(" for the full layout."));
-      // Set up collapsible panels in embedded mode
-      const toggleControls = $("toggle-controls");
-      const toggleDetail = $("toggle-detail");
-      const controlsContent = $("controls-content");
-      const detailContent = $("detail-content");
-      if (toggleControls && controlsContent) {
-        const isExpanded = toggleControls.getAttribute("aria-expanded") === "true";
-        // Initialize maxHeight based on initial aria-expanded state
-        controlsContent.style.maxHeight = isExpanded ? "100vh" : "0";
-        // Mark section as collapsed to remove padding
-        const controlsSection = $("controls");
-        if (!isExpanded) controlsSection.setAttribute("data-collapsed", "true");
-
-        toggleControls.addEventListener("click", () => {
-          const nowExpanded = toggleControls.getAttribute("aria-expanded") === "true";
-          toggleControls.setAttribute("aria-expanded", String(!nowExpanded));
-          toggleControls.textContent = nowExpanded ? "\u25b6" : "\u25bc";
-          controlsContent.style.maxHeight = nowExpanded ? "0" : "100vh";
-          if (nowExpanded) {
-            controlsSection.setAttribute("data-collapsed", "true");
-          } else {
-            controlsSection.removeAttribute("data-collapsed");
-          }
-        });
-      }
-      if (toggleDetail && detailContent) {
-        const isExpanded = toggleDetail.getAttribute("aria-expanded") === "true";
-        // Initialize maxHeight based on initial aria-expanded state
-        detailContent.style.maxHeight = isExpanded ? "100vh" : "0";
-        // Mark section as collapsed to remove padding
-        const detailSection = $("detail");
-        if (!isExpanded) detailSection.setAttribute("data-collapsed", "true");
-
-        toggleDetail.addEventListener("click", () => {
-          const nowExpanded = toggleDetail.getAttribute("aria-expanded") === "true";
-          toggleDetail.setAttribute("aria-expanded", String(!nowExpanded));
-          toggleDetail.textContent = nowExpanded ? "\u25b6" : "\u25bc";
-          detailContent.style.maxHeight = nowExpanded ? "0" : "100vh";
-          if (nowExpanded) {
-            detailSection.setAttribute("data-collapsed", "true");
-          } else {
-            detailSection.removeAttribute("data-collapsed");
-          }
-        });
-      }
+    note.textContent = "Embedded at the chapter\u2019s width. Press Expand, at the top right, "
+      + "for the whole window \u2014 or ";
+    const open = document.createElement("a");
+    open.href = location.href;
+    open.target = "_blank";
+    open.rel = "noopener";
+    open.textContent = "open this model on its own";
+    note.appendChild(open);
+    note.appendChild(document.createTextNode(" for the full layout."));
+    // Inputs and Details start closed, so a chapter shows the graph and the reader opens the rest.
+    for (const [button, content] of [["toggle-controls", "controls-content"], ["toggle-detail", "detail-content"]]) {
+      const toggle = $(button), body = $(content), section = body.closest("section");
+      const show = (open) => {
+        toggle.setAttribute("aria-expanded", String(open));
+        toggle.textContent = open ? "\u25bc" : "\u25b6";
+        body.style.maxHeight = open ? "100vh" : "0";
+        section.toggleAttribute("data-collapsed", !open);
+      };
+      show(toggle.getAttribute("aria-expanded") === "true");
+      toggle.addEventListener("click", () => show(toggle.getAttribute("aria-expanded") !== "true"));
     }
     // The chapter sizes the frame to whatever this page reports. Not scrollHeight: that is never
     // less than the frame's current height, so a frame that grew when a panel opened would never

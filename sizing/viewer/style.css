@@ -127,12 +127,6 @@ button.primary[disabled] { opacity: .6; cursor: progress; }
 .slider .state.fixed { color: var(--accent); }
 #reset { margin: 6px 0 10px; }
 
-/* Graph-only mode: embedded view showing only the graph, click to expand for full interactivity */
-html.graph-only main { grid-template-columns: 1fr; }
-html.graph-only #canvas { grid-column: 1; grid-row: 1; border: 0; }
-html.graph-only #canvas .legend { flex-wrap: wrap; }
-html.graph-only section { padding: 0; }
-
 /* Collapsible panels in embedded mode */
 html.embedded .toggle-panel {
   background: none;
