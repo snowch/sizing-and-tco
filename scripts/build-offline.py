@@ -105,11 +105,13 @@ async function cacheFirst(request, name) {
 
 // Pages come from the network when there is one, so an update shows up as soon as it is
 // deployed, and from the cache when there is not. Everything else is content-addressed by
-// this build's version and can be served from the cache without asking.
+// this build's version and can be served from the cache without asking. "no-cache" asks the
+// server every time: without it the browser's own cache answers for ten minutes after a
+// visit, and a reader who looked just before a deploy goes on seeing the old page.
 async function networkFirst(request) {
   const cache = await caches.open(SITE);
   try {
-    const fresh = await fetch(request);
+    const fresh = await fetch(request, { cache: "no-cache" });
     if (fresh.ok) cache.put(request, fresh.clone());
     return fresh;
   } catch (error) {
