@@ -132,3 +132,28 @@ html.graph-only main { grid-template-columns: 1fr; }
 html.graph-only #canvas { grid-column: 1; grid-row: 1; border: 0; }
 html.graph-only #canvas .legend { flex-wrap: wrap; }
 html.graph-only section { padding: 0; }
+
+/* Collapsible panels in embedded mode */
+html.embedded .toggle-panel {
+  background: none;
+  border: none;
+  padding: 0 4px 0 0;
+  cursor: pointer;
+  color: var(--ink);
+  font-size: inherit;
+  margin-right: 4px;
+}
+html.embedded #controls-content,
+html.embedded #detail-content {
+  max-height: 100vh;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+html.embedded .toggle-panel:not([aria-expanded="true"]) + * > *,
+html.embedded #toggle-detail:not([aria-expanded="true"]) ~ #detail-content {
+  max-height: 0;
+}
+html.embedded #controls[data-collapsed] #controls-content,
+html.embedded #detail[data-collapsed] #detail-content {
+  max-height: 0;
+}

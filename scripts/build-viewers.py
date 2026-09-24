@@ -50,24 +50,26 @@ PAGE = """<!doctype html>
 </header>
 <main>
   <section id="controls">
-    <h2>Inputs</h2>
-    <p class="note">Every slider comes from a range the model file declares. Moving one recomputes
-    the whole graph immediately.</p>
-    <!-- The control and its outcome sit above the sliders: on a model with twenty inputs the
-         reader presses a button at the top and reads the answer where they pressed it. -->
-    <div id="banner" class="banner" style="display:none"></div>
-    <div id="stale" class="stale" style="display:none">
-      These are point values for the settings you have chosen. The distributions and the
-      probabilities below still belong to the scenario.
-      <button id="resample" class="primary">Resample with these fixed</button>
-      <span class="note">Runs the book's own sampler in this tab — the same code and seed that
-      stamped the intervals — with the inputs you have moved held at their values. The first
-      press fetches a Python runtime, about ten megabytes, once; nothing is sent anywhere.</span>
+    <h2><button id="toggle-controls" class="toggle-panel" aria-expanded="true">▼</button> Inputs</h2>
+    <div id="controls-content">
+      <p class="note">Every slider comes from a range the model file declares. Moving one recomputes
+      the whole graph immediately.</p>
+      <!-- The control and its outcome sit above the sliders: on a model with twenty inputs the
+           reader presses a button at the top and reads the answer where they pressed it. -->
+      <div id="banner" class="banner" style="display:none"></div>
+      <div id="stale" class="stale" style="display:none">
+        These are point values for the settings you have chosen. The distributions and the
+        probabilities below still belong to the scenario.
+        <button id="resample" class="primary">Resample with these fixed</button>
+        <span class="note">Runs the book's own sampler in this tab — the same code and seed that
+        stamped the intervals — with the inputs you have moved held at their values. The first
+        press fetches a Python runtime, about ten megabytes, once; nothing is sent anywhere.</span>
+      </div>
+      <button id="reset">Back to the scenario</button>
+      <div id="sliders"></div>
+      <h2>Outputs</h2>
+      <div id="outputs"></div>
     </div>
-    <button id="reset">Back to the scenario</button>
-    <div id="sliders"></div>
-    <h2>Outputs</h2>
-    <div id="outputs"></div>
   </section>
   <section id="canvas">
     <p class="note narrow-note" id="narrow-note"></p>
@@ -83,7 +85,10 @@ PAGE = """<!doctype html>
     <svg id="graph" xmlns="http://www.w3.org/2000/svg"></svg>
   </section>
   <section id="detail">
-    <div id="detail-body"></div>
+    <h2><button id="toggle-detail" class="toggle-panel" aria-expanded="true">▼</button> Details</h2>
+    <div id="detail-content">
+      <div id="detail-body"></div>
+    </div>
   </section>
 </main>
 <script>window.__MODEL__ = {payload};</script>

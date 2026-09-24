@@ -521,6 +521,27 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
       open.textContent = "open this model on its own";
       note.appendChild(open);
       note.appendChild(document.createTextNode(" for the full layout."));
+      // Set up collapsible panels in embedded mode
+      const toggleControls = $("toggle-controls");
+      const toggleDetail = $("toggle-detail");
+      const controlsContent = $("controls-content");
+      const detailContent = $("detail-content");
+      if (toggleControls && controlsContent) {
+        toggleControls.addEventListener("click", () => {
+          const isExpanded = toggleControls.getAttribute("aria-expanded") === "true";
+          toggleControls.setAttribute("aria-expanded", String(!isExpanded));
+          toggleControls.textContent = isExpanded ? "\u25b6" : "\u25bc";
+          controlsContent.style.maxHeight = isExpanded ? "0" : "100vh";
+        });
+      }
+      if (toggleDetail && detailContent) {
+        toggleDetail.addEventListener("click", () => {
+          const isExpanded = toggleDetail.getAttribute("aria-expanded") === "true";
+          toggleDetail.setAttribute("aria-expanded", String(!isExpanded));
+          toggleDetail.textContent = isExpanded ? "\u25b6" : "\u25bc";
+          detailContent.style.maxHeight = isExpanded ? "0" : "100vh";
+        });
+      }
     }
   } else {
     note.textContent = "This graph wants a wider screen \u2014 a tablet held sideways, or larger. " +
