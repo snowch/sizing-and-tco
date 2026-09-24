@@ -549,6 +549,8 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
           setTimeout(updateHeight, 350); // After transition completes
         });
       }
+      // Send initial height to parent iframe on page load
+      setTimeout(updateHeight, 100);
     }
   } else {
     note.textContent = "This graph wants a wider screen \u2014 a tablet held sideways, or larger. " +

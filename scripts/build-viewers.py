@@ -50,7 +50,7 @@ PAGE = """<!doctype html>
 </header>
 <main>
   <section id="controls">
-    <h2><button id="toggle-controls" class="toggle-panel" aria-expanded="true">▼</button> Inputs</h2>
+    <h2><button id="toggle-controls" class="toggle-panel" aria-expanded="false">▶</button> Inputs</h2>
     <div id="controls-content">
       <p class="note">Every slider comes from a range the model file declares. Moving one recomputes
       the whole graph immediately.</p>
@@ -85,7 +85,7 @@ PAGE = """<!doctype html>
     <svg id="graph" xmlns="http://www.w3.org/2000/svg"></svg>
   </section>
   <section id="detail">
-    <h2><button id="toggle-detail" class="toggle-panel" aria-expanded="true">▼</button> Details</h2>
+    <h2><button id="toggle-detail" class="toggle-panel" aria-expanded="false">▶</button> Details</h2>
     <div id="detail-content">
       <div id="detail-body"></div>
     </div>

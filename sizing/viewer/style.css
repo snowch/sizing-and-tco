@@ -149,7 +149,7 @@ html.embedded #detail-content {
   overflow: hidden;
   transition: max-height 0.3s ease;
 }
-html.embedded .toggle-panel:not([aria-expanded="true"]) + * > *,
+html.embedded #toggle-controls:not([aria-expanded="true"]) ~ #controls-content,
 html.embedded #toggle-detail:not([aria-expanded="true"]) ~ #detail-content {
   max-height: 0;
 }
