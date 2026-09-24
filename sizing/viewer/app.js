@@ -532,26 +532,44 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
         window.parent.postMessage({ sizing: height }, "*");
       };
       if (toggleControls && controlsContent) {
+        const isExpanded = toggleControls.getAttribute("aria-expanded") === "true";
         // Initialize maxHeight based on initial aria-expanded state
-        controlsContent.style.maxHeight = toggleControls.getAttribute("aria-expanded") === "true" ? "100vh" : "0";
+        controlsContent.style.maxHeight = isExpanded ? "100vh" : "0";
+        // Mark section as collapsed to remove padding
+        const controlsSection = $("controls");
+        if (!isExpanded) controlsSection.setAttribute("data-collapsed", "true");
 
         toggleControls.addEventListener("click", () => {
-          const isExpanded = toggleControls.getAttribute("aria-expanded") === "true";
-          toggleControls.setAttribute("aria-expanded", String(!isExpanded));
-          toggleControls.textContent = isExpanded ? "\u25b6" : "\u25bc";
-          controlsContent.style.maxHeight = isExpanded ? "0" : "100vh";
+          const nowExpanded = toggleControls.getAttribute("aria-expanded") === "true";
+          toggleControls.setAttribute("aria-expanded", String(!nowExpanded));
+          toggleControls.textContent = nowExpanded ? "\u25b6" : "\u25bc";
+          controlsContent.style.maxHeight = nowExpanded ? "0" : "100vh";
+          if (nowExpanded) {
+            controlsSection.setAttribute("data-collapsed", "true");
+          } else {
+            controlsSection.removeAttribute("data-collapsed");
+          }
           setTimeout(updateHeight, 350); // After transition completes
         });
       }
       if (toggleDetail && detailContent) {
+        const isExpanded = toggleDetail.getAttribute("aria-expanded") === "true";
         // Initialize maxHeight based on initial aria-expanded state
-        detailContent.style.maxHeight = toggleDetail.getAttribute("aria-expanded") === "true" ? "100vh" : "0";
+        detailContent.style.maxHeight = isExpanded ? "100vh" : "0";
+        // Mark section as collapsed to remove padding
+        const detailSection = $("detail");
+        if (!isExpanded) detailSection.setAttribute("data-collapsed", "true");
 
         toggleDetail.addEventListener("click", () => {
-          const isExpanded = toggleDetail.getAttribute("aria-expanded") === "true";
-          toggleDetail.setAttribute("aria-expanded", String(!isExpanded));
-          toggleDetail.textContent = isExpanded ? "\u25b6" : "\u25bc";
-          detailContent.style.maxHeight = isExpanded ? "0" : "100vh";
+          const nowExpanded = toggleDetail.getAttribute("aria-expanded") === "true";
+          toggleDetail.setAttribute("aria-expanded", String(!nowExpanded));
+          toggleDetail.textContent = nowExpanded ? "\u25b6" : "\u25bc";
+          detailContent.style.maxHeight = nowExpanded ? "0" : "100vh";
+          if (nowExpanded) {
+            detailSection.setAttribute("data-collapsed", "true");
+          } else {
+            detailSection.removeAttribute("data-collapsed");
+          }
           setTimeout(updateHeight, 350); // After transition completes
         });
       }

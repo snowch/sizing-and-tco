@@ -153,6 +153,13 @@ html.embedded #toggle-controls:not([aria-expanded="true"]) ~ #controls-content,
 html.embedded #toggle-detail:not([aria-expanded="true"]) ~ #detail-content {
   max-height: 0;
 }
+/* Collapse sections when all content is hidden */
+html.embedded #controls[data-collapsed] {
+  padding: 0;
+}
+html.embedded #detail[data-collapsed] {
+  padding: 0;
+}
 html.embedded #controls[data-collapsed] #controls-content,
 html.embedded #detail[data-collapsed] #detail-content {
   max-height: 0;
