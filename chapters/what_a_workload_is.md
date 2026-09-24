@@ -184,6 +184,11 @@ terabytes, and a rate times a plain number is still a rate. The formula is wrong
 The file above, running. The first press fetches a Python runtime; after that a check takes milliseconds.
 ```
 
+```{iframe} /models/web_service_demand-reference.html
+:width: 100%
+An interactive reference of the eight-node demand model, ready to explore.
+```
+
 ### The demand and the decisions
 
 A model's inputs are two different kinds of thing wearing the same clothes. Some describe what the
