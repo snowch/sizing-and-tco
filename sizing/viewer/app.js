@@ -491,19 +491,38 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
 // On a phone the embed is the screen already, and the sliders still work.
 {
   const note = $("narrow-note");
+  const graphOnly = new URLSearchParams(location.search).get("graphOnly") === "true";
+  // Auto-apply graph-only mode for progressive viewer stages in ch02
+  const progressiveStages = [
+    "demand_inputs_single",
+    "demand_inputs_initial",
+    "demand_inputs_all",
+    "demand_horizon_exponent"
+  ];
+  const modelName = STAMPED?.model_name || "";
+  const isProgressiveStage = progressiveStages.some(stage => modelName.includes(stage));
+
   if (window.self !== window.top) {
     // The chapter floats its Expand button over this panel's top right corner, so the header
     // keeps a space clear for it. On a phone the title wrapped under the button without it.
     document.documentElement.classList.add("embedded");
-    note.textContent = "Embedded at the chapter\u2019s width. Press Expand, at the top right, "
-      + "for the whole window \u2014 or ";
-    const open = document.createElement("a");
-    open.href = location.href;
-    open.target = "_blank";
-    open.rel = "noopener";
-    open.textContent = "open this model on its own";
-    note.appendChild(open);
-    note.appendChild(document.createTextNode(" for the full layout."));
+    if (graphOnly || isProgressiveStage) {
+      // Graph-only mode: hide controls and detail, expand canvas to full width
+      document.documentElement.classList.add("graph-only");
+      $("controls").style.display = "none";
+      $("detail").style.display = "none";
+      note.textContent = "Click Expand to interact with this model.";
+    } else {
+      note.textContent = "Embedded at the chapter\u2019s width. Press Expand, at the top right, "
+        + "for the whole window \u2014 or ";
+      const open = document.createElement("a");
+      open.href = location.href;
+      open.target = "_blank";
+      open.rel = "noopener";
+      open.textContent = "open this model on its own";
+      note.appendChild(open);
+      note.appendChild(document.createTextNode(" for the full layout."));
+    }
   } else {
     note.textContent = "This graph wants a wider screen \u2014 a tablet held sideways, or larger. " +
       "The sliders below still work here.";

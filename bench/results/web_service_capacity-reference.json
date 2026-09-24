@@ -1,9 +1,9 @@
 {
-  "code_fingerprint": "508186cc83cfbf87",
+  "code_fingerprint": "b264d2a384ce2014",
   "code_sources": [
     "bench/run_models.py",
-    "models/web_service/stages/11-capacity/model.yaml",
-    "models/web_service/stages/11-capacity/scenarios/reference.yaml",
+    "models/web_service/stages/12-capacity/model.yaml",
+    "models/web_service/stages/12-capacity/scenarios/reference.yaml",
     "sizing/export.py",
     "sizing/expr.py",
     "sizing/graph.py"
@@ -12,14 +12,14 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-24T10:58:39+00:00",
-  "git_revision": "2bc52ac",
+  "generated_at": "2026-09-24T14:10:41+00:00",
+  "git_revision": "cacb76d",
   "kind": "model",
   "name": "web_service_capacity-reference",
   "produced_by": {
     "classification": "conditional",
     "model": "web_service_capacity",
-    "model_file": "models/web_service/stages/11-capacity/model.yaml",
+    "model_file": "models/web_service/stages/12-capacity/model.yaml",
     "sampler": "sizing.mc \u2014 inverse transform, Iman-Conover rank correlation",
     "samples": 100000,
     "scenario": "reference",
@@ -92,7 +92,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-24T10:58:39+00:00",
+    "generated_at": "2026-09-24T14:10:40+00:00",
     "model": "web_service_capacity",
     "nodes": {
       "achievable_throughput": {

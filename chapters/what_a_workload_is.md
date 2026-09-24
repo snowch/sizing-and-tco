@@ -78,20 +78,27 @@ A model in YAML diffs and reviews like code. It is one file. This chapter builds
 time, as concepts appear.
 
 You are given two facts about your workload: how many requests arrive in the busy hour, and how
-much data you hold. Here are those two quantities as the first nodes:
+much data you hold. Start with the first one:
 
-```{literalinclude} ../models/web_service/stages/01-demand/model.yaml
+```{literalinclude} ../models/web_service/stages/01-demand_inputs_single/model.yaml
 :language: yaml
 :start-at: peak_request_rate_t0:
-:end-before: annual_growth:
+:end-before: outputs:
 ```
 
-```{iframe} /models/web_service_demand_inputs_initial-reference.html
+```{iframe} /models/web_service_demand_inputs_single-reference.html?graphOnly=true
 :width: 100%
-Interactive viewer: the first two quantities. Drag the sliders to see how peak rate and stored data move independently.
 ```
 
-**What you are looking at.** This is a graph: blue circles (nodes) are quantities. Edges connect them where one depends on another. Right now there are no edges because these two are independent — neither depends on the other. Each blue node is an input: a number you choose or measure. The sliders below let you drag them.
+**This is a node.** Blue means you choose it. A slider appears below to let you drag the value.
+
+Now add the second one:
+
+```{iframe} /models/web_service_demand_inputs_initial-reference.html?graphOnly=true
+:width: 100%
+```
+
+**These two are independent.** Neither depends on the other, so there are no edges between them. Dragging either one leaves the other alone.
 
 Four lines in each are what this book cares about. The rest are convenience. `kind` and `unit`
 let the toolkit tell a level from a rate. `value` is the number a spreadsheet would have held on
@@ -111,20 +118,19 @@ what a node needs.
 You have measured the workload today. But infrastructure is bought for years, not days. The
 quantity grows. You need to say how fast, and how long you are buying for.
 
-Here are the three more quantities:
+Here are three more quantities:
 
-```{literalinclude} ../models/web_service/stages/01-demand/model.yaml
+```{literalinclude} ../models/web_service/stages/02-demand_inputs_all/model.yaml
 :language: yaml
 :start-at: annual_growth:
-:end-before: horizon_periods:
+:end-before: outputs:
 ```
 
-```{iframe} /models/web_service_demand_inputs_all-reference.html
+```{iframe} /models/web_service_demand_inputs_all-reference.html?graphOnly=true
 :width: 100%
-Interactive viewer: all five inputs. Notice that no derived quantities exist yet — the model shows only what you choose or define.
 ```
 
-**Still only inputs.** All five nodes are still blue, still independent. Dragging any slider does not change the others. The model has no arithmetic yet; it only holds the five choices you made. That changes next.
+**Five choices the model needs.** All five nodes are blue — inputs. Dragging any slider does not change the others. The model has no arithmetic yet; it only holds the five decisions you made.
 
 `annual_growth` is what it says. `horizon` is your purchase cycle — the refresh window you are
 sizing for. `one_year` is not a choice. It is here because growth compounds exponentially, and an
@@ -142,18 +148,17 @@ cell.
 You have given the toolkit five quantities. Now it computes one, not from direct measurement but
 from a formula applied to the five you gave:
 
-```{literalinclude} ../models/web_service/stages/01-demand/model.yaml
+```{literalinclude} ../models/web_service/stages/04-demand_horizon_exponent/model.yaml
 :language: yaml
 :start-at: horizon_periods:
 :end-before: peak_request_rate:
 ```
 
-```{iframe} /models/web_service_demand_horizon_exponent-reference.html
+```{iframe} /models/web_service_demand_horizon_exponent-reference.html?graphOnly=true
 :width: 100%
-Interactive viewer: the first derived node. Drag the horizon slider and watch horizon_periods compute instantly. Click horizon_periods to see its formula.
 ```
 
-**Your first derived node.** Now one node is grey: `horizon_periods`. It is not a choice—the toolkit computes it from the blue ones. Drag the horizon slider and watch it change instantly. Click the grey node to see its formula: `horizon / one_year`. That is the arithmetic the toolkit ran to produce it. If you had typed the formula wrong, the toolkit would reject it because the unit would not match. A spreadsheet would just give you a number and say nothing.
+**Grey means derived.** One node is now grey: `horizon_periods`. The toolkit computes it from a formula applied to the blue nodes. Drag the horizon slider and it changes instantly. Click the grey node to see the formula: `horizon / one_year`. The toolkit checked that the unit was correct before accepting it. A spreadsheet would just give you a number and say nothing.
 
 `kind: derived` means this quantity is not stated — it is computed. The toolkit reads the formula,
 checks that it produces the unit the node declares, works it out, and stores the result. This is

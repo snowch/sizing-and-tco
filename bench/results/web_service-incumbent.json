@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-24T10:58:24+00:00",
-  "git_revision": "2bc52ac",
+  "generated_at": "2026-09-24T14:10:25+00:00",
+  "git_revision": "cacb76d",
   "kind": "model",
   "name": "web_service-incumbent",
   "produced_by": {
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-24T10:58:23+00:00",
+    "generated_at": "2026-09-24T14:10:24+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {

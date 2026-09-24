@@ -1,9 +1,9 @@
 {
-  "code_fingerprint": "0f2381058a69d4f9",
+  "code_fingerprint": "59bd3da2bc3f1b3e",
   "code_sources": [
     "bench/run_models.py",
-    "models/web_service/stages/03-demand_horizon_exponent/model.yaml",
-    "models/web_service/stages/03-demand_horizon_exponent/scenarios/reference.yaml",
+    "models/web_service/stages/04-demand_horizon_exponent/model.yaml",
+    "models/web_service/stages/04-demand_horizon_exponent/scenarios/reference.yaml",
     "sizing/export.py",
     "sizing/expr.py",
     "sizing/graph.py"
@@ -12,14 +12,14 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-24T10:58:34+00:00",
-  "git_revision": "2bc52ac",
+  "generated_at": "2026-09-24T14:10:35+00:00",
+  "git_revision": "cacb76d",
   "kind": "model",
   "name": "web_service_demand_horizon_exponent-reference",
   "produced_by": {
     "classification": "definitional",
     "model": "web_service_demand_horizon_exponent",
-    "model_file": "models/web_service/stages/03-demand_horizon_exponent/model.yaml",
+    "model_file": "models/web_service/stages/04-demand_horizon_exponent/model.yaml",
     "sampler": "sizing.mc \u2014 inverse transform, Iman-Conover rank correlation",
     "samples": 100000,
     "scenario": "reference",
@@ -42,7 +42,7 @@
     "factors": {
       "horizon_periods": 1.0
     },
-    "generated_at": "2026-09-24T10:58:34+00:00",
+    "generated_at": "2026-09-24T14:10:35+00:00",
     "model": "web_service_demand_horizon_exponent",
     "nodes": {
       "annual_growth": {

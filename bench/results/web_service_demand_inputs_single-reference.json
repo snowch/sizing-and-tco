@@ -1,9 +1,9 @@
 {
-  "code_fingerprint": "ef2675ff951b8362",
+  "code_fingerprint": "27c1751077848431",
   "code_sources": [
     "bench/run_models.py",
-    "models/web_service/stages/02-demand_inputs_initial/model.yaml",
-    "models/web_service/stages/02-demand_inputs_initial/scenarios/reference.yaml",
+    "models/web_service/stages/01-demand_inputs_single/model.yaml",
+    "models/web_service/stages/01-demand_inputs_single/scenarios/reference.yaml",
     "sizing/export.py",
     "sizing/expr.py",
     "sizing/graph.py"
@@ -12,14 +12,14 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-24T14:10:35+00:00",
+  "generated_at": "2026-09-24T14:10:34+00:00",
   "git_revision": "cacb76d",
   "kind": "model",
-  "name": "web_service_demand_inputs_initial-reference",
+  "name": "web_service_demand_inputs_single-reference",
   "produced_by": {
     "classification": "definitional",
-    "model": "web_service_demand_inputs_initial",
-    "model_file": "models/web_service/stages/02-demand_inputs_initial/model.yaml",
+    "model": "web_service_demand_inputs_single",
+    "model_file": "models/web_service/stages/01-demand_inputs_single/model.yaml",
     "sampler": "sizing.mc \u2014 inverse transform, Iman-Conover rank correlation",
     "samples": 100000,
     "scenario": "reference",
@@ -40,8 +40,8 @@
     "currency": "USD",
     "description": "The web service model as it stands at the end of ch02.",
     "factors": {},
-    "generated_at": "2026-09-24T14:10:35+00:00",
-    "model": "web_service_demand_inputs_initial",
+    "generated_at": "2026-09-24T14:10:34+00:00",
+    "model": "web_service_demand_inputs_single",
     "nodes": {
       "peak_request_rate_t0": {
         "decided": "world",
@@ -62,35 +62,13 @@
           "min": 500.0
         },
         "unit": "request/second"
-      },
-      "stored_data_t0": {
-        "decided": "world",
-        "depends_on": [],
-        "distribution": null,
-        "kind": "input",
-        "label": "records held, day one",
-        "layer": 0,
-        "note": "This one keeps its single number. You can go and count how much you hold today. Nobody can count next quarter's busy hour. What is uncertain about the records is how fast they grow, and annual_growth carries that for the rate and the level alike.",
-        "point": 15.0,
-        "provenance": {
-          "kind": "assumption",
-          "source": "stated workload (ch02) \u2014 what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression"
-        },
-        "row": 1,
-        "slider": {
-          "max": 200.0,
-          "min": 1.0
-        },
-        "unit": "TB"
       }
     },
     "order": [
-      "peak_request_rate_t0",
-      "stored_data_t0"
+      "peak_request_rate_t0"
     ],
     "outputs": [
-      "peak_request_rate_t0",
-      "stored_data_t0"
+      "peak_request_rate_t0"
     ],
     "scenario": {
       "because": "The same conditions the finished model is quoted under, so that a number from a stage and a number from the whole model differ only by what the stage does not contain yet.",
@@ -103,68 +81,56 @@
     "scenarios": [
       "reference"
     ],
-    "title": "A web service and its data, on a fleet of Linux hosts \u2014 The first two quantities",
+    "title": "A web service and its data, on a fleet of Linux hosts \u2014 The first quantity",
     "tornado": {
-      "peak_request_rate_t0": [],
-      "stored_data_t0": []
+      "peak_request_rate_t0": []
     },
     "unmeasured": [],
     "viewer_expectations": [
       {
         "overrides": {
-          "peak_request_rate_t0": 500.0,
-          "stored_data_t0": 1.0
+          "peak_request_rate_t0": 500.0
         },
         "values": {
-          "peak_request_rate_t0": 500.0,
-          "stored_data_t0": 1.0
+          "peak_request_rate_t0": 500.0
         }
       },
       {
         "overrides": {
-          "peak_request_rate_t0": 10375.0,
-          "stored_data_t0": 50.75
+          "peak_request_rate_t0": 10375.0
         },
         "values": {
-          "peak_request_rate_t0": 10375.0,
-          "stored_data_t0": 50.75
+          "peak_request_rate_t0": 10375.0
         }
       },
       {
         "overrides": {
-          "peak_request_rate_t0": 20250.0,
-          "stored_data_t0": 100.5
+          "peak_request_rate_t0": 20250.0
         },
         "values": {
-          "peak_request_rate_t0": 20250.0,
-          "stored_data_t0": 100.5
+          "peak_request_rate_t0": 20250.0
         }
       },
       {
         "overrides": {
-          "peak_request_rate_t0": 36050.0,
-          "stored_data_t0": 180.1
+          "peak_request_rate_t0": 36050.0
         },
         "values": {
-          "peak_request_rate_t0": 36050.0,
-          "stored_data_t0": 180.1
+          "peak_request_rate_t0": 36050.0
         }
       },
       {
         "overrides": {
-          "peak_request_rate_t0": 40000.0,
-          "stored_data_t0": 200.0
+          "peak_request_rate_t0": 40000.0
         },
         "values": {
-          "peak_request_rate_t0": 40000.0,
-          "stored_data_t0": 200.0
+          "peak_request_rate_t0": 40000.0
         }
       }
     ]
   },
   "target": "model",
   "units": {
-    "peak_request_rate_t0": "request/second",
-    "stored_data_t0": "TB"
+    "peak_request_rate_t0": "request/second"
   }
 }

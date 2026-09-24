@@ -42,6 +42,15 @@ certain_until:
       host and nobody has measured it on these.
 
 stages:
+  - stage: demand_inputs_single
+    chapter: what_a_workload_is
+    title: The first quantity
+    classification: definitional
+    outputs:
+      - peak_request_rate_t0
+    introduces:
+      - peak_request_rate_t0
+
   - stage: demand_inputs_initial
     chapter: what_a_workload_is
     title: The first two quantities
@@ -50,7 +59,6 @@ stages:
       - peak_request_rate_t0
       - stored_data_t0
     introduces:
-      - peak_request_rate_t0
       - stored_data_t0
 
   - stage: demand_inputs_all
