@@ -118,6 +118,24 @@ In your browser, use the custom model viewer below. Paste your model file, and t
 
 The viewer runs the real `sizing.dsl` machinery, unmodified, in your browser. What you paste is parsed the same way `make check` parses the book's own models. Every error it rejects is one the toolkit will reject at the desk.
 
+## Interactive viewer features
+
+The toolkit's interactive viewers appear throughout the book. Each feature is introduced when the chapter needs it. This table lists them all and where they first appear.
+
+| Feature | Introduced | What it does |
+|---------|------------|--------------|
+| **Nodes and edges** | [ch02](#what-a-workload-is) | Circles (nodes) are quantities. Lines (edges) show dependencies. Blue = input (you choose), grey = derived (toolkit computes). |
+| **Sliders** | [ch02](#what-a-workload-is) | Appear below each input node. Drag to change the value. Everything downstream updates instantly. |
+| **Click to see formula** | [ch02](#what-a-workload-is) | Click any node. Derived nodes show their arithmetic. Input nodes show their source. |
+| **Unit checking** | [ch02](#what-a-workload-is) | The toolkit validates every formula. A quantity with the wrong unit is rejected, not silently accepted like a spreadsheet. |
+| **Provenance detail** | [ch03](#where-the-numbers-come-from) | Click an input node to see where it came from: measurement (●), vendor claim (◐), or assumption (○). |
+| **Measured constants** | [ch06](#queueing-and-the-knee) | Some inputs are measured on a specific version of specific software. Nodes that carry them are marked. Upgrade the version and the constant may be wrong. |
+| **Ceiling nodes** | [ch06](#queueing-and-the-knee) | Grey nodes that represent regime changes (queueing knee, memory limit, etc.). A chain of multiplications cannot model these. The model refuses to run without declaring headroom below them. |
+| **Run button** | [ch02](#what-a-workload-is) | Press to execute the model. The toolkit checks the file, computes every node, and shows results. |
+| **Problem Check** | Throughout | Embedded under chapter problems. Runs your solution against the toolkit's test suite. Passes only when solved. |
+
+The colour language is consistent across all viewers: blue for input, grey for derived. The same interactions (drag, click, run) work everywhere. Once you understand the pattern in one chapter, you can read any model in the book.
+
 ## What this cannot tell you
 
 **Whether your machine gives the same answers as the one that produced these figures.** The
