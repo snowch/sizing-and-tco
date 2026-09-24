@@ -7,7 +7,7 @@ short_title: "ch21 A TCO for a finance audience"
 # ch21 · A TCO for a finance audience
 
 :::{note}
-**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+**Draft.** Content drafted. This chapter is undergoing final review and polish.
 :::
 
 ## The question

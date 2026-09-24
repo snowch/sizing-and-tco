@@ -7,7 +7,7 @@ short_title: "ch15 Capex, opex and where the total stops"
 # ch15 · Capex, opex and where the total stops
 
 :::{note}
-**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+**Draft.** Content drafted. This chapter is undergoing final review and polish.
 :::
 
 ## The question

@@ -7,7 +7,7 @@ short_title: "ch05 Little's law"
 # ch05 · Little's law
 
 :::{note}
-**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+**Draft.** Content drafted. This chapter is undergoing final review and polish.
 :::
 
 ## The question

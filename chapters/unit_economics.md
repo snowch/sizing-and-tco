@@ -7,7 +7,7 @@ short_title: "ch17 Unit economics"
 # ch17 · Unit economics
 
 :::{note}
-**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+**Draft.** Content drafted. This chapter is undergoing final review and polish.
 :::
 
 ## The question

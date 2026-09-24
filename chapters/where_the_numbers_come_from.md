@@ -7,7 +7,7 @@ short_title: "ch03 Where the numbers come from"
 # ch03 · Where the numbers come from
 
 :::{note}
-**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+**Draft.** Content drafted. This chapter is undergoing final review and polish.
 :::
 
 ## The question

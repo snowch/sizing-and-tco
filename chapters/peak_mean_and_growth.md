@@ -7,7 +7,7 @@ short_title: "ch04 Peak, mean and growth"
 # ch04 · Peak, mean and growth
 
 :::{note}
-**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+**Draft.** Content drafted. This chapter is undergoing final review and polish.
 :::
 
 ## The question

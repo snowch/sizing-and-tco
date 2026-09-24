@@ -7,7 +7,7 @@ short_title: "ch07 When adding servers stops helping"
 # ch07 · When adding servers stops helping
 
 :::{note}
-**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+**Draft.** Content drafted. This chapter is undergoing final review and polish.
 :::
 
 ## The question
