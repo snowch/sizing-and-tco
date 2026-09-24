@@ -1,0 +1,54 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8f4f0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f0e8e0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="400" fill="url(#bgGradient)"/>
+
+  <!-- Capacity visualization: scaling bars -->
+  <g transform="translate(100, 80)">
+    <!-- Left axis label -->
+    <text x="-40" y="150" font-size="14" fill="#666">Capacity</text>
+
+    <!-- Bar 1: Current -->
+    <rect x="0" y="180" width="80" height="80" fill="#4A90E2" opacity="0.8"/>
+    <text x="40" y="280" text-anchor="middle" font-size="12" fill="#333">Today</text>
+
+    <!-- Bar 2: Growth -->
+    <rect x="120" y="100" width="80" height="160" fill="#7B68EE" opacity="0.8"/>
+    <text x="160" y="280" text-anchor="middle" font-size="12" fill="#333">Year 2</text>
+
+    <!-- Bar 3: Horizon -->
+    <rect x="240" y="40" width="80" height="220" fill="#50C878" opacity="0.8"/>
+    <text x="280" y="280" text-anchor="middle" font-size="12" fill="#333">Year 5</text>
+
+    <!-- Horizontal ceiling line -->
+    <line x1="-20" y1="30" x2="340" y2="30" stroke="#E74C3C" stroke-width="3" stroke-dasharray="5,5"/>
+    <text x="350" y="35" font-size="12" fill="#E74C3C">Ceiling</text>
+  </g>
+
+  <!-- Title area -->
+  <g transform="translate(500, 100)">
+    <text x="0" y="0" font-size="24" font-weight="bold" fill="#333">Sizing</text>
+    <text x="0" y="40" font-size="24" font-weight="bold" fill="#333">&amp; TCO</text>
+    <text x="0" y="80" font-size="14" fill="#666">Capacity, cost, and confidence</text>
+  </g>
+
+  <!-- Decorative nodes and connections (model graph) -->
+  <g transform="translate(500, 200)" stroke="#999" stroke-width="1" fill="none">
+    <!-- Node connections -->
+    <line x1="0" y1="20" x2="40" y2="50"/>
+    <line x1="40" y1="50" x2="80" y2="80"/>
+    <line x1="40" y1="50" x2="60" y2="20"/>
+
+    <!-- Nodes -->
+    <circle cx="0" cy="20" r="6" fill="#4A90E2"/>
+    <circle cx="40" cy="50" r="6" fill="#7B68EE"/>
+    <circle cx="80" cy="80" r="6" fill="#50C878"/>
+    <circle cx="60" cy="20" r="6" fill="#50C878"/>
+  </g>
+</svg>

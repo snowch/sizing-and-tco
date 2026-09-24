@@ -1,0 +1,57 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#357ABD;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="gradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#7B68EE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6A5ACD;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="300" fill="#fafafa"/>
+
+  <!-- Title -->
+  <text x="200" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#333">Model Graph</text>
+
+  <!-- Inputs (blue) -->
+  <g transform="translate(50, 80)">
+    <rect x="0" y="0" width="70" height="50" rx="4" fill="url(#gradient1)"/>
+    <text x="35" y="28" text-anchor="middle" font-size="12" fill="white" font-weight="bold">Input 1</text>
+  </g>
+
+  <g transform="translate(280, 80)">
+    <rect x="0" y="0" width="70" height="50" rx="4" fill="url(#gradient1)"/>
+    <text x="35" y="28" text-anchor="middle" font-size="12" fill="white" font-weight="bold">Input 2</text>
+  </g>
+
+  <!-- Derived (purple) -->
+  <g transform="translate(165, 160)">
+    <rect x="0" y="0" width="70" height="50" rx="4" fill="url(#gradient2)"/>
+    <text x="35" y="28" text-anchor="middle" font-size="12" fill="white" font-weight="bold">Compute</text>
+  </g>
+
+  <!-- Output (green) -->
+  <g transform="translate(165, 240)">
+    <rect x="0" y="0" width="70" height="40" rx="4" fill="#50C878"/>
+    <text x="35" y="25" text-anchor="middle" font-size="12" fill="white" font-weight="bold">Output</text>
+  </g>
+
+  <!-- Arrows showing dependencies -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#999"/>
+    </marker>
+  </defs>
+
+  <!-- Input 1 to Compute -->
+  <line x1="85" y1="105" x2="165" y2="160" stroke="#999" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Input 2 to Compute -->
+  <line x1="280" y1="105" x2="235" y2="160" stroke="#999" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Compute to Output -->
+  <line x1="200" y1="210" x2="200" y2="240" stroke="#999" stroke-width="2" marker-end="url(#arrowhead)"/>
+</svg>
