@@ -157,6 +157,20 @@ number of years that have passed).
 That completes the demand side. You have written eight quantities: four you choose or measure,
 one you define (one_year), three the toolkit computes (horizon_periods, and the two projections).
 
+### How to read the model: the interactive viewer
+
+The toolkit's interactive viewer lets you explore a model instead of reading it as prose. Understanding what you are looking at turns a visualization from decoration into instruction.
+
+A model is a graph: nodes are quantities, and edges are dependencies. Each node is one colour if it is an input (blue—you choose or measure it), another if it is derived (grey—the toolkit computes it from the others).
+
+A slider appears below each input node. Drag it to change the value. Everything downstream changes instantly. Drag *annual growth factor* and watch *peak request rate at horizon* and *records held at horizon* move together: they depend on it. Drag *horizon* and watch *horizon_periods* move first (it divides horizon by one_year), then the two outputs move (they use horizon_periods in their formulas). The viewer shows which changes feed where.
+
+Click on any node to see its formula. A derived node shows the arithmetic that produces it. An input node shows its provenance: what the number represents and where it came from.
+
+The colours and dependencies are the first read. Drag a slider and watch what changes. Click a node that moved and see why. Every quantity on this page has a unit, and the toolkit checks that every formula produces the unit its node declares. A quantity with the wrong unit will be rejected, not silently accepted like a spreadsheet would.
+
+Now run the model below. Press **Run** on first load, then change a number and watch the outputs move.
+
 ### The demand side, complete
 
 Here it is all together, running: this repository's toolkit, not a copy. Press **Run**, then
@@ -168,6 +182,11 @@ terabytes, and a rate times a plain number is still a rate. The formula is wrong
 ```{iframe} /playground/what-a-workload-is/
 :width: 100%
 The file above, running. The first press fetches a Python runtime; after that a check takes milliseconds.
+```
+
+```{iframe} /models/web_service_demand-reference.html
+:width: 100%
+An interactive reference of the eight-node demand model, ready to explore.
 ```
 
 ### The demand and the decisions
