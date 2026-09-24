@@ -1,10 +1,12 @@
 ---
 title: "Sizing and TCO"
 short_title: Cover
+numbering: false
 ---
 
 (cover)=
 
+:::{div} cover-page
 # Sizing and TCO
 
 :::{note}
@@ -18,3 +20,4 @@ short_title: Cover
 ![Model graph showing inputs and computation flow](/public/cover-model.svg)
 
 By Chris Snow
+:::
