@@ -42,6 +42,34 @@ certain_until:
       host and nobody has measured it on these.
 
 stages:
+  - stage: demand_inputs_initial
+    chapter: what_a_workload_is
+    title: The first two quantities
+    classification: definitional
+    outputs: []
+    introduces:
+      - peak_request_rate_t0
+      - stored_data_t0
+
+  - stage: demand_inputs_all
+    chapter: what_a_workload_is
+    title: Adding growth and time
+    classification: definitional
+    outputs: []
+    introduces:
+      - annual_growth
+      - horizon
+      - one_year
+
+  - stage: demand_horizon_exponent
+    chapter: what_a_workload_is
+    title: Computing what you need
+    classification: definitional
+    outputs:
+      - horizon_periods
+    introduces:
+      - horizon_periods
+
   - stage: demand
     chapter: what_a_workload_is
     title: What arrives, and what accumulates
@@ -50,12 +78,6 @@ stages:
       - peak_request_rate
       - stored_data
     introduces:
-      - peak_request_rate_t0
-      - stored_data_t0
-      - annual_growth
-      - horizon
-      - one_year
-      - horizon_periods
       - peak_request_rate
       - stored_data
 

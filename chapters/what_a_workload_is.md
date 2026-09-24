@@ -82,6 +82,11 @@ much data you hold. Here are those two quantities as the first nodes:
 :end-before: annual_growth:
 ```
 
+```{iframe} /models/demand_inputs_initial-reference.html
+:width: 100%
+Interactive viewer: the first two quantities. Drag the sliders to see how peak rate and stored data move independently.
+```
+
 Four lines in each are what this book cares about. The rest are convenience. `kind` and `unit`
 let the toolkit tell a level from a rate. `value` is the number a spreadsheet would have held on
 its own. `provenance` is the line a cell has nowhere to put. A number with no source is a
@@ -108,6 +113,11 @@ Here are the three more quantities:
 :end-before: horizon_periods:
 ```
 
+```{iframe} /models/demand_inputs_all-reference.html
+:width: 100%
+Interactive viewer: all five inputs. Notice that no derived quantities exist yet — the model shows only what you choose or define.
+```
+
 `annual_growth` is what it says. `horizon` is your purchase cycle — the refresh window you are
 sizing for. `one_year` is not a choice. It is here because growth compounds exponentially, and an
 exponent must be a pure number.
@@ -128,6 +138,11 @@ from a formula applied to the five you gave:
 :language: yaml
 :start-at: horizon_periods:
 :end-before: peak_request_rate:
+```
+
+```{iframe} /models/demand_horizon_exponent-reference.html
+:width: 100%
+Interactive viewer: the first derived node. Drag the horizon slider and watch horizon_periods compute instantly. Click horizon_periods to see its formula.
 ```
 
 `kind: derived` means this quantity is not stated — it is computed. The toolkit reads the formula,
