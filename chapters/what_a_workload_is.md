@@ -83,7 +83,7 @@ much data you hold. Start with the first one:
 ```{literalinclude} ../models/web_service/stages/01-demand_inputs_single/model.yaml
 :language: yaml
 :start-at: peak_request_rate_t0:
-:end-before: outputs:
+:end-at: range: [500, 40000]
 ```
 
 ```{iframe} /models/web_service_demand_inputs_single-reference.html?graphOnly=true
@@ -120,7 +120,7 @@ quantity grows. You need to say how fast, and how long you are buying for.
 
 Here are three more quantities:
 
-```{literalinclude} ../models/web_service/stages/02-demand_inputs_all/model.yaml
+```{literalinclude} ../models/web_service/stages/03-demand_inputs_all/model.yaml
 :language: yaml
 :start-at: annual_growth:
 :end-before: outputs:
@@ -150,8 +150,8 @@ from a formula applied to the five you gave:
 
 ```{literalinclude} ../models/web_service/stages/04-demand_horizon_exponent/model.yaml
 :language: yaml
-:start-at: horizon_periods:
-:end-before: peak_request_rate:
+:start-at:   horizon_periods:
+:end-before: outputs:
 ```
 
 ```{iframe} /models/web_service_demand_horizon_exponent-reference.html?graphOnly=true
@@ -174,10 +174,10 @@ pure number. That number is the exponent for growth. Change the horizon value an
 Now take the two quantities you started with — the rate and the stock at day one — and grow them
 to the end of the purchase cycle. That takes two more derived quantities:
 
-```{literalinclude} ../models/web_service/stages/01-demand/model.yaml
+```{literalinclude} ../models/web_service/stages/05-demand/model.yaml
 :language: yaml
-:start-at: peak_request_rate:
-:end-before: outputs:
+:start-at:   peak_request_rate:
+:end-at:     formula: stored_data_t0 * annual_growth ** horizon_periods
 ```
 
 `peak_request_rate` is the flow at the horizon. `stored_data` is the stock at the horizon. Both

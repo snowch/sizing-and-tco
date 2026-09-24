@@ -40,7 +40,7 @@ the total goes down.
 
 Both terms together are the universal scalability law @gunther2007usl:
 
-```{literalinclude} ../models/web_service/stages/06-scaling/model.yaml
+```{literalinclude} ../models/web_service/stages/10-scaling/model.yaml
 :language: yaml
 :start-at: achievable_throughput:
 :end-before: scaling_efficiency:
@@ -103,7 +103,7 @@ by what the fleet can deliver.
 
 The model carries both numbers, side by side, on purpose:
 
-```{literalinclude} ../models/web_service/stages/06-scaling/model.yaml
+```{literalinclude} ../models/web_service/stages/10-scaling/model.yaml
 :language: yaml
 :start-at: utilisation_including_coordination:
 :end-before: optimism:

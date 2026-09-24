@@ -43,7 +43,7 @@ many requests arrive, how much is held, how fast both grow, how long the fleet h
 next one does not. How much memory a host carries is decided by whoever sells it. This is the
 form that takes:
 
-```{literalinclude} ../models/web_service/stages/02-provenance/model.yaml
+```{literalinclude} ../models/web_service/stages/06-provenance/model.yaml
 :language: yaml
 :start-at: ram_per_host:
 :end-before: os_reserve:

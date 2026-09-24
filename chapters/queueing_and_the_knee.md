@@ -26,7 +26,7 @@ A request costs some amount of work. The system is already busy some fraction of
 what is left over is available to do that work. The time it takes is the work divided by what is
 left.
 
-```{literalinclude} ../models/web_service/stages/05-queueing/model.yaml
+```{literalinclude} ../models/web_service/stages/09-queueing/model.yaml
 :language: yaml
 :start-at: residence_time:
 :end-before: waiting_time:
@@ -142,7 +142,7 @@ At a utilisation of one the formula divides by zero. Infinity is not a predictio
 clamps, and says so in a node with a name and a stated reason. Beside it is the margin the ceiling
 above audits against. It is declared once, so that the sizing and the audit cannot drift apart:
 
-```{literalinclude} ../models/web_service/stages/05-queueing/model.yaml
+```{literalinclude} ../models/web_service/stages/09-queueing/model.yaml
 :language: yaml
 :start-at: utilisation_cap:
 :end-before: effective_utilisation:

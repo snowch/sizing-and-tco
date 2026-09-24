@@ -40,7 +40,7 @@ This chapter puts that ratio into the model as an input with a shape rather than
 because nobody has measured it on this service, and the file says so. It then derives the mean
 rate from the busy hour:
 
-```{literalinclude} ../models/web_service/stages/03-uncertainty/model.yaml
+```{literalinclude} ../models/web_service/stages/07-uncertainty/model.yaml
 :language: yaml
 :start-at: peak_to_mean:
 :end-before: outputs:

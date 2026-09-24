@@ -76,7 +76,7 @@ somebody starts a rolling upgrade.
 The running example carries this as a ceiling of its own: the queueing margin again, audited with
 one host gone, because a host lost at the busy hour is a queueing problem for the survivors:
 
-```{literalinclude} ../models/web_service/stages/10-headroom/model.yaml
+```{literalinclude} ../models/web_service/stages/14-headroom/model.yaml
 :language: yaml
 :start-at: hosts_after_failure:
 :end-before: outputs:

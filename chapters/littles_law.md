@@ -26,7 +26,7 @@ works.
 
 The number of requests in a system is the rate they arrive at, times how long each one stays.
 
-```{literalinclude} ../models/web_service/stages/04-littles_law/model.yaml
+```{literalinclude} ../models/web_service/stages/08-littles_law/model.yaml
 :language: yaml
 :start-at: service_seconds:
 :end-before: outputs:
@@ -48,7 +48,7 @@ going out as coming in.
 Little's law needs a rate and a time. [ch04](#peak-mean-and-growth) supplied the rate. The time
 is the first quantity in this book that belongs to the software rather than to the workload:
 
-```{literalinclude} ../models/web_service/stages/04-littles_law/model.yaml
+```{literalinclude} ../models/web_service/stages/08-littles_law/model.yaml
 :language: yaml
 :start-at: service_demand:
 :end-before: one_core:
@@ -68,7 +68,7 @@ what happens to the fleet that was bought.
 Multiply the rate by the cost and you have the processors the busy hour keeps busy. Divide by the
 processors the fleet has and you have how busy it is:
 
-```{literalinclude} ../models/web_service/stages/04-littles_law/model.yaml
+```{literalinclude} ../models/web_service/stages/08-littles_law/model.yaml
 :language: yaml
 :start-at: cores:
 :end-before: service_seconds:

@@ -85,7 +85,7 @@ This is the one this chapter adds to the running example: the share of the recor
 touches, the memory the fleet has for them, and a ceiling on the ratio, whose reason says what is
 on the other side of it.
 
-```{literalinclude} ../models/web_service/stages/07-regime/model.yaml
+```{literalinclude} ../models/web_service/stages/11-regime/model.yaml
 :language: yaml
 :start-at: hot_fraction:
 :end-before: outputs:
