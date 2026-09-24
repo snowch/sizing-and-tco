@@ -1897,6 +1897,12 @@ def main() -> int:
     favicon = ROOT / "public" / "favicon.svg"
     if favicon.exists():
         (args.out / "favicon.svg").write_text(favicon.read_text())
+    # Copy the custom model viewer to the models directory so the appendix can link to it
+    custom_viewer = ROOT / "public" / "custom-model-viewer.html"
+    if custom_viewer.exists():
+        models_dir = args.out / "models"
+        models_dir.mkdir(parents=True, exist_ok=True)
+        (models_dir / "custom-model-viewer.html").write_text(custom_viewer.read_text())
     # The index is taken from every page before any page is rendered: rendering promotes the
     # headings, and the index reads the depths MyST wrote.
     records: list[dict] = []

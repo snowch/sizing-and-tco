@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Model Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel h2 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        textarea {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: "Courier New", monospace;
+            font-size: 12px;
+            resize: none;
+            background: #fafafa;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #0066cc;
+            background: white;
+        }
+
+        .error {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .success {
+            background: #efe;
+            border: 1px solid #cfc;
+            color: #363;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .nodes-list {
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .node {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #f9f9f9;
+            border-left: 4px solid #0066cc;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .node:hover {
+            background: #f0f5ff;
+        }
+
+        .node.input {
+            border-left-color: #0066cc;
+        }
+
+        .node.derived {
+            border-left-color: #666;
+        }
+
+        .node.measured {
+            border-left-color: #ff9900;
+        }
+
+        .node.ceiling {
+            border-left-color: #cc0000;
+        }
+
+        .node-name {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 3px;
+        }
+
+        .node-kind {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .node-formula {
+            font-size: 11px;
+            color: #999;
+            font-family: monospace;
+            margin-top: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .node-selected {
+            background: #e8f2ff;
+            border-left-color: #0066cc;
+        }
+
+        .detail-panel {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .detail-panel.active {
+            display: block;
+        }
+
+        .detail-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #222;
+        }
+
+        .detail-content {
+            font-family: "Courier New", monospace;
+            font-size: 11px;
+            background: #f5f5f5;
+            padding: 8px;
+            border-radius: 3px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .instructions {
+            background: #f0f5ff;
+            border: 1px solid #cce;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+            font-size: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-box {
+            width: 12px;
+            height: 12px;
+            border-left: 4px solid;
+            border-radius: 1px;
+        }
+
+        .count {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="panel">
+            <h2>Model YAML</h2>
+            <div class="instructions">
+                Paste a model.yaml file here. The viewer will parse it and show the structure on the right.
+            </div>
+            <textarea id="yaml-input" placeholder="Paste your model YAML here...">inputs:
+  requests_per_second:
+    kind: input
+    unit: 1/s
+    range: [100, 10000]
+
+nodes:
+  daily_requests:
+    kind: derived
+    unit: 1/d
+    formula: requests_per_second * 86400
+</textarea>
+            <div id="error-container"></div>
+        </div>
+
+        <div class="panel">
+            <h2>Model Structure</h2>
+            <div id="stats" class="count"></div>
+            <div id="message" class="success" style="display: none;"></div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-box" style="border-left-color: #0066cc;"></div>
+                    <span>Input</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="border-left-color: #666;"></div>
+                    <span>Derived</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="border-left-color: #ff9900;"></div>
+                    <span>Measured</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="border-left-color: #cc0000;"></div>
+                    <span>Ceiling</span>
+                </div>
+            </div>
+            <div class="nodes-list" id="nodes-container"></div>
+            <div class="detail-panel" id="detail-panel">
+                <div class="detail-title" id="detail-name"></div>
+                <div class="detail-title" id="detail-kind" style="font-size: 12px; font-weight: normal; color: #666;"></div>
+                <div class="detail-content" id="detail-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const yamlInput = document.getElementById('yaml-input');
+        const errorContainer = document.getElementById('error-container');
+        const nodesContainer = document.getElementById('nodes-container');
+        const messageDiv = document.getElementById('message');
+        const statsDiv = document.getElementById('stats');
+        const detailPanel = document.getElementById('detail-panel');
+        const detailName = document.getElementById('detail-name');
+        const detailKind = document.getElementById('detail-kind');
+        const detailContent = document.getElementById('detail-content');
+
+        function parseModel() {
+            errorContainer.innerHTML = '';
+            messageDiv.style.display = 'none';
+            nodesContainer.innerHTML = '';
+            detailPanel.classList.remove('active');
+
+            try {
+                const yaml = jsyaml.load(yamlInput.value);
+                if (!yaml) {
+                    throw new Error('Empty YAML');
+                }
+
+                // Flatten all nodes from inputs and nodes sections
+                const allNodes = {};
+
+                if (yaml.inputs) {
+                    for (const [name, node] of Object.entries(yaml.inputs)) {
+                        allNodes[name] = { ...node, name };
+                    }
+                }
+
+                if (yaml.nodes) {
+                    for (const [name, node] of Object.entries(yaml.nodes)) {
+                        allNodes[name] = { ...node, name };
+                    }
+                }
+
+                const nodeNames = Object.keys(allNodes);
+                if (nodeNames.length === 0) {
+                    throw new Error('No nodes found in model');
+                }
+
+                // Update stats
+                const counts = {
+                    input: 0,
+                    derived: 0,
+                    measured: 0,
+                    ceiling: 0,
+                };
+                for (const node of Object.values(allNodes)) {
+                    const kind = node.kind || 'derived';
+                    if (counts.hasOwnProperty(kind)) {
+                        counts[kind]++;
+                    }
+                }
+
+                statsDiv.textContent = `${nodeNames.length} nodes: ${counts.input} inputs, ${counts.derived} derived, ${counts.measured} measured, ${counts.ceiling} ceilings`;
+                messageDiv.textContent = 'Model parsed successfully';
+                messageDiv.style.display = 'block';
+
+                // Render nodes
+                for (const name of nodeNames.sort()) {
+                    const node = allNodes[name];
+                    const kind = node.kind || 'derived';
+                    const nodeEl = document.createElement('div');
+                    nodeEl.className = `node ${kind}`;
+                    nodeEl.innerHTML = `
+                        <div class="node-name">${name}</div>
+                        <div class="node-kind">${kind}${node.unit ? ` • ${node.unit}` : ''}</div>
+                        ${node.formula ? `<div class="node-formula">${node.formula}</div>` : ''}
+                    `;
+
+                    nodeEl.addEventListener('click', () => showDetail(name, node));
+                    nodesContainer.appendChild(nodeEl);
+                }
+
+            } catch (e) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.textContent = `Parse error: ${e.message}`;
+                errorContainer.appendChild(errorDiv);
+                statsDiv.textContent = 'Error parsing model';
+            }
+        }
+
+        function showDetail(name, node) {
+            detailName.textContent = name;
+            const kind = node.kind || 'derived';
+            detailKind.textContent = `Kind: ${kind}${node.unit ? ` • Unit: ${node.unit}` : ''}`;
+
+            let content = '';
+            if (node.formula) {
+                content += `Formula:\n${node.formula}\n\n`;
+            }
+            if (node.range) {
+                content += `Range: ${JSON.stringify(node.range)}\n`;
+            }
+            if (node.value) {
+                content += `Value: ${node.value}\n`;
+            }
+            if (node.source) {
+                content += `Source:\n${node.source}\n`;
+            }
+            if (Object.keys(node).length === 0) {
+                content = '(empty node)';
+            }
+
+            detailContent.textContent = content || '(no details)';
+            detailPanel.classList.add('active');
+        }
+
+        // Parse on input change
+        yamlInput.addEventListener('input', () => {
+            // Debounce
+            clearTimeout(yamlInput._parseTimeout);
+            yamlInput._parseTimeout = setTimeout(parseModel, 500);
+        });
+
+        // Initial parse
+        parseModel();
+    </script>
+</body>
+</html>

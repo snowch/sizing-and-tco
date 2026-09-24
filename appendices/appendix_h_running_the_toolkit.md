@@ -92,6 +92,32 @@ The last row says whether the build classifies the model as a definitional model
 one. It works that out from the file, since a `measured` node or a `ceiling` makes it conditional,
 and [ch06](#queueing-and-the-knee) is where the reader's own model crosses that line.
 
+## Running your own model
+
+If you have a model of your own, point the toolkit at it in two ways.
+
+At a desk, with Python:
+
+```bash
+python3 -m sizing.playground.driver /path/to/your/model.yaml
+```
+
+The output is a JSON fixture, suitable for the browser as a `window.__MODEL__` payload. Feed it to the interactive viewer and you will see your model's structure, dependencies, inputs and outputs.
+
+In your browser:
+
+Visit the [custom model viewer](#custom-model-viewer) below. Paste your model file, and the viewer shows your model's structure, dependencies, and what each node computes. You can inspect the graph and click each node to see its definition. If anything is wrong — a formula will not typecheck, or a provenance is missing — the page says so.
+
+(custom-model-viewer)=
+### The custom model viewer
+
+```{iframe} /models/custom-model-viewer.html
+:width: 100%
+:height: 600px
+```
+
+The viewer runs the real `sizing.dsl` machinery, unmodified, in your browser. What you paste is parsed the same way `make check` parses the book's own models. Every error it rejects is one the toolkit will reject at the desk.
+
 ## What this cannot tell you
 
 **Whether your machine gives the same answers as the one that produced these figures.** The
