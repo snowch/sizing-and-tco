@@ -969,7 +969,8 @@ document.addEventListener("DOMContentLoaded", () => {
   addEventListener("message", (e) => {
     if (e.data && typeof e.data.sizing === "number" && e.source) {
       const frame = Array.from(document.querySelectorAll("iframe")).find(f => f.contentWindow === e.source);
-      if (frame) frame.style.height = e.data.sizing + "px";
+      // The frame is border-box, so its own border comes on top of the content it reports.
+      if (frame) frame.style.height = e.data.sizing + frame.offsetHeight - frame.clientHeight + "px";
     }
   });
   // A model: the button is in the page already, drawn beside the frame it belongs to.
@@ -1593,6 +1594,11 @@ figure:has(> iframe.futures) { container-type: inline-size; }
 iframe.futures { height: 1344px; }
 @container (min-width: 721px) { iframe.futures { height: 856px; } }
 @media (max-width: 720px) { iframe { height: 80vh; min-height: 540px; } }
+/* Expanded, the window decides the frame's height, not the height the model last reported. */
+html.model-open #main .expanded > iframe { height: auto !important; }
+/* A model reports its own height, so the floor that stops a phone frame collapsing would hold
+   it open under a model shorter than the floor. */
+@media (max-width: 720px) { iframe.viewer { min-height: 0; } }
 
 /* A quoted piece of the model the reader may edit where the chapter shows it. Nothing but the
    bar above it says so, so the bar has to carry its weight: what file this is, that it is

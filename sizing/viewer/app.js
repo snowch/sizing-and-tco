@@ -526,11 +526,6 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
       const toggleDetail = $("toggle-detail");
       const controlsContent = $("controls-content");
       const detailContent = $("detail-content");
-      const updateHeight = () => {
-        // Tell parent frame to resize the iframe to fit content
-        const height = document.documentElement.scrollHeight;
-        window.parent.postMessage({ sizing: height }, "*");
-      };
       if (toggleControls && controlsContent) {
         const isExpanded = toggleControls.getAttribute("aria-expanded") === "true";
         // Initialize maxHeight based on initial aria-expanded state
@@ -549,7 +544,6 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
           } else {
             controlsSection.removeAttribute("data-collapsed");
           }
-          setTimeout(updateHeight, 350); // After transition completes
         });
       }
       if (toggleDetail && detailContent) {
@@ -570,12 +564,15 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
           } else {
             detailSection.removeAttribute("data-collapsed");
           }
-          setTimeout(updateHeight, 350); // After transition completes
         });
       }
-      // Send initial height to parent iframe on page load
-      setTimeout(updateHeight, 100);
     }
+    // The chapter sizes the frame to whatever this page reports. Not scrollHeight: that is never
+    // less than the frame's current height, so a frame that grew when a panel opened would never
+    // shrink when it closed. The observer fires through a panel's transition and on a resize.
+    new ResizeObserver(() => {
+      window.parent.postMessage({ sizing: Math.ceil(document.body.getBoundingClientRect().height) }, "*");
+    }).observe(document.body);
   } else {
     note.textContent = "This graph wants a wider screen \u2014 a tablet held sideways, or larger. " +
       "The sliders below still work here.";
