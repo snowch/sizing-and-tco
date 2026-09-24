@@ -88,14 +88,18 @@ much data you hold. Start with the first one:
 
 ```{iframe} /models/web_service_demand_inputs_single-reference.html?graphOnly=true
 :width: 100%
+
+This is a node.
 ```
 
-**This is a node.** Blue means you choose it. A slider appears below to let you drag the value.
+Blue means you choose it. A slider appears below to let you drag the value.
 
 Now add the second one:
 
 ```{iframe} /models/web_service_demand_inputs_initial-reference.html?graphOnly=true
 :width: 100%
+
+Interactive viewer: the first two quantities. Drag the sliders to see how peak rate and stored data move independently.
 ```
 
 **These two are independent.** Neither depends on the other, so there are no edges between them. Dragging either one leaves the other alone.
@@ -128,6 +132,7 @@ Here are three more quantities:
 
 ```{iframe} /models/web_service_demand_inputs_all-reference.html?graphOnly=true
 :width: 100%
+Interactive viewer: all five inputs. Notice that no derived quantities exist yet — the model shows only what you choose or define.
 ```
 
 **Five choices the model needs.** All five nodes are blue — inputs. Dragging any slider does not change the others. The model has no arithmetic yet; it only holds the five decisions you made.
@@ -156,6 +161,7 @@ from a formula applied to the five you gave:
 
 ```{iframe} /models/web_service_demand_horizon_exponent-reference.html?graphOnly=true
 :width: 100%
+Interactive viewer: the first derived node. Drag the horizon slider and watch horizon_periods compute instantly. Click horizon_periods to see its formula.
 ```
 
 **Grey means derived.** One node is now grey: `horizon_periods`. The toolkit computes it from a formula applied to the blue nodes. Drag the horizon slider and it changes instantly. Click the grey node to see the formula: `horizon / one_year`. The toolkit checked that the unit was correct before accepting it. A spreadsheet would just give you a number and say nothing.
