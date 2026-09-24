@@ -1,6 +1,7 @@
 # Build output. Everything here is regenerated from committed sources.
 _build/
 models/_out/
+models/*/stages/
 
 # Python
 __pycache__/
