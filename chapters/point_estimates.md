@@ -112,7 +112,7 @@ The names say what a model contains, not what it is for. A model that works out 
 
 ### Where a definitional model becomes a conditional one
 
-The kind decides which chapters apply to your model. A definitional model needs Parts IV and VI: ranges, and which input the answer rests on. A conditional model needs Part II as well, because its ranges can be exact about a number that has stopped describing anything. The toolkit reads the kind from the file: add one measured constant or one ceiling and the verdict changes. Problem 1.3 asks you to find that moment in three model descriptions.
+The kind decides what you must guard against. In a definitional model, uncertainty in the inputs produces uncertainty in the output, and ranges on the inputs alone tell you everything you need. In a conditional model, an input can be inside its range and the answer still be wrong—because an unstated ceiling has been crossed. The toolkit reads the kind from the file: add one measured constant or one ceiling and the verdict changes. Problem 1.3 asks you to find that moment in three model descriptions.
 
 ## What this cannot tell you
 
