@@ -86,9 +86,9 @@ The second row (costing) moves for different reasons. Once you decide how many h
 
 Varying inputs across their ranges gives you the complete picture, and most of this book teaches how to do it well. But it reports only the doubt you wrote down. There is a second kind of error it cannot see, and one question tells you whether your model is exposed to it:
 
-**Could every input be right and the answer still be wrong?**
+**Is the answer guaranteed to be right if every input is right?**
 
-If not, you have a definitional model. If so, you have a conditional one.
+If yes, you have a definitional model. If no, you have a conditional one.
 
 :::{div}
 :class: definition
@@ -134,8 +134,8 @@ The kind decides what you must guard against. In a definitional model, uncertain
   a most-likely region in it, not a figure.
 - **A range reports only the doubt you wrote down.** An error in the model's shape is invisible
   to any amount of varying the inputs.
-- **One question sorts every model.** Could every input be right and the answer still be wrong?
-  If not, the model is definitional and all its doubt is in its inputs. If so, it is conditional:
+- **One question sorts every model.** Is the answer guaranteed to be right if every input is right?
+  If yes, the model is definitional and all its doubt is in its inputs. If no, it is conditional:
   it rests on measured constants or ceilings, and must say how much room it keeps below each
   limit.
 - **The kind is read from the file, never declared.** A measured constant or a declared limit makes
