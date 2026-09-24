@@ -1558,14 +1558,29 @@ html.model-open #main .expanded > figcaption { display: none; }
 html.model-open #main .expanded.editable-block { border-radius: 0; }
 iframe { width: 100%; border: 1px solid var(--rule); border-radius: 6px; height: 680px; }
 iframe.viewer { height: 780px; }
+/* Progressive viewer stages in ch02: smaller heights to fit single/few nodes */
+iframe.viewer[src*="demand_inputs_single"] { height: 380px; }
+iframe.viewer[src*="demand_inputs_initial"] { height: 420px; }
+iframe.viewer[src*="demand_inputs_all"] { height: 500px; }
+iframe.viewer[src*="demand_horizon_exponent"] { height: 480px; }
 /* A model lays itself out from its own width: stacked, then the inputs beside the graph at
    860px, then the detail panel too at 1100px. Each of those is a different height, and one
    fixed box fits none of them. The figure is the model's container, so the box follows.
    Measured at 578px and 791px of content; a browser without container queries keeps 780px,
    which is what every browser had before. */
 figure:has(> iframe.viewer) { container-type: inline-size; }
-@container (min-width: 860px) { iframe.viewer { height: 600px; } }
-@container (min-width: 1101px) { iframe.viewer { height: 812px; } }
+@container (min-width: 860px) { iframe.viewer { height: 600px; }
+  iframe.viewer[src*="demand_inputs_single"] { height: 380px; }
+  iframe.viewer[src*="demand_inputs_initial"] { height: 420px; }
+  iframe.viewer[src*="demand_inputs_all"] { height: 480px; }
+  iframe.viewer[src*="demand_horizon_exponent"] { height: 450px; }
+}
+@container (min-width: 1101px) { iframe.viewer { height: 812px; }
+  iframe.viewer[src*="demand_inputs_single"] { height: 380px; }
+  iframe.viewer[src*="demand_inputs_initial"] { height: 420px; }
+  iframe.viewer[src*="demand_inputs_all"] { height: 480px; }
+  iframe.viewer[src*="demand_horizon_exponent"] { height: 450px; }
+}
 /* Drawing one future at a time has two shapes and no more: the inputs beside the pile, or the
    pile above the inputs. Measured at 852px of content beside and 1324px stacked, and the stacked
    one is taller than any phone, which is what the rule below is for. */
