@@ -86,13 +86,13 @@ much data you hold. Start with the first one:
 :end-at: range: [500, 40000]
 ```
 
-```{iframe} /models/web_service_demand_inputs_single-reference.html
+```{iframe} /models/web_service_demand_inputs_single-reference.html?graphOnly=true
 :width: 100%
 
-Interactive viewer with one input. Click on the node to see its provenance. Drag the slider to change the value, then click Run to recompute (or it happens automatically on the page).
+This is a node.
 ```
 
-Blue means you choose it — this is an input. The slider appears because the node declares a range. Click on a node to see where it came from and what it is measured in.
+Blue means you choose it. A slider appears below to let you drag the value.
 
 Now add the second one:
 
