@@ -965,6 +965,13 @@ document.addEventListener("DOMContentLoaded", () => {
       label(button, "Close", true);
     });
   };
+  // Handle resize messages from embedded iframes
+  addEventListener("message", (e) => {
+    if (e.data && typeof e.data.sizing === "number" && e.source) {
+      const frame = Array.from(document.querySelectorAll("iframe")).find(f => f.contentWindow === e.source);
+      if (frame) frame.style.height = e.data.sizing + "px";
+    }
+  });
   // A model: the button is in the page already, drawn beside the frame it belongs to.
   for (const frame of document.querySelectorAll("iframe.viewer, iframe.playground, iframe.futures")) {
     const figure = frame.closest("figure");

@@ -526,12 +526,18 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
       const toggleDetail = $("toggle-detail");
       const controlsContent = $("controls-content");
       const detailContent = $("detail-content");
+      const updateHeight = () => {
+        // Tell parent frame to resize the iframe to fit content
+        const height = document.documentElement.scrollHeight;
+        window.parent.postMessage({ sizing: height }, "*");
+      };
       if (toggleControls && controlsContent) {
         toggleControls.addEventListener("click", () => {
           const isExpanded = toggleControls.getAttribute("aria-expanded") === "true";
           toggleControls.setAttribute("aria-expanded", String(!isExpanded));
           toggleControls.textContent = isExpanded ? "\u25b6" : "\u25bc";
           controlsContent.style.maxHeight = isExpanded ? "0" : "100vh";
+          setTimeout(updateHeight, 350); // After transition completes
         });
       }
       if (toggleDetail && detailContent) {
@@ -540,6 +546,7 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
           toggleDetail.setAttribute("aria-expanded", String(!isExpanded));
           toggleDetail.textContent = isExpanded ? "\u25b6" : "\u25bc";
           detailContent.style.maxHeight = isExpanded ? "0" : "100vh";
+          setTimeout(updateHeight, 350); // After transition completes
         });
       }
     }
