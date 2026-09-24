@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "97f69fea424eee7f",
+  "code_fingerprint": "32b604880631028c",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/model.yaml",
@@ -12,12 +12,12 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-22T19:58:41+00:00",
-  "git_revision": "a2bc3a3",
+  "generated_at": "2026-09-23T23:50:53+00:00",
+  "git_revision": "4199a5e",
   "kind": "model",
   "name": "web_service-incumbent",
   "produced_by": {
-    "classification": "sizing",
+    "classification": "conditional",
     "model": "web_service",
     "model_file": "models/web_service/model.yaml",
     "sampler": "sizing.mc \u2014 inverse transform, Iman-Conover rank correlation",
@@ -35,7 +35,7 @@
     "python": "3.11.15"
   },
   "summary": {
-    "classification": "sizing",
+    "classification": "conditional",
     "correlations": [
       {
         "a": "peak_request_rate_t0",
@@ -51,7 +51,7 @@
       }
     ],
     "currency": "USD",
-    "description": "The book's running example: a service that takes requests and keeps records, run on some number of ordinary hosts, sized from a stated workload and costed over five years. Requests arrive and data accumulates; a host has cores, memory and disk, and each of those is a chain that ends in a count of hosts. One of the three binds.\nIt is a sizing model. Its ceilings are the queueing knee, the point where more hosts stop helping, the working set outgrowing memory, disk filling, and a host dying at the busy hour; its one measured constant is how well the stored records compress. Its one rate constant \u2014 CPU time per request \u2014 belongs on a rig nobody has declared, and is held as a labelled claim until one is.\nVendor-neutral by construction. Nothing below names a product; every figure is a workload assumption, a price you would get quoted, a spec sheet, or the measured constant.",
+    "description": "The book's running example: a service that takes requests and keeps records, run on some number of ordinary hosts, sized from a stated workload and costed over five years. Requests arrive and data accumulates; a host has cores, memory and disk, and each of those is a chain that ends in a count of hosts. One of the three binds.\nIt is a conditional model. Its ceilings are the queueing knee, the point where more hosts stop helping, the working set outgrowing memory, disk filling, and a host dying at the busy hour; its one measured constant is how well the stored records compress. Its one rate constant \u2014 CPU time per request \u2014 belongs on a rig nobody has declared, and is held as a labelled claim until one is.\nVendor-neutral by construction. Nothing below names a product; every figure is a workload assumption, a price you would get quoted, a spec sheet, or the measured constant.",
     "factors": {
       "achievable_throughput": 1.0,
       "annual_energy": 1.0,
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-22T19:58:40+00:00",
+    "generated_at": "2026-09-23T23:50:52+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {

@@ -27,8 +27,8 @@ what you must buy. One divides it. One is a surcharge.
 
 Here is that chain with the rest of the model around it. One node is a colour nothing earlier in
 the book has had: the measured constant is orange. The ceiling the chain ends in is the third in
-the model. The constant is the other thing that makes a sizing model, and it would have made this
-one a sizing model even if no ceiling had.
+the model. The constant is the other thing that makes a model conditional, and it would have made
+this one conditional even if no ceiling had.
 
 ```{iframe} /models/web_service_capacity-reference.html
 :width: 100%
@@ -188,8 +188,8 @@ chapter. If a host count moved, a unit was missed, and finding it is the exercis
 python3 -m pytest tests/capacity/test_problem_3_binary_units.py -m problem
 ```
 
-**9.4 — Turn it back into a cost model.**
-Name what has to go to make the web service model a cost model: the measured constant this
+**9.4 — Turn it back into a definitional model.**
+Name what has to go to make the web service model a definitional model: the measured constant this
 chapter adds, every ceiling before and after it, and everything downstream of them. At least one
 of its outputs has to survive. Then write one sentence saying what the result can no longer tell
 anybody. If you cannot name it, you removed something that was doing no work, and the model

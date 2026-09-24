@@ -184,8 +184,8 @@ assumes they missed something.
 
 ### A term doing work before it is defined
 
-Page one used "model" from the Source line onwards and then ran a whole taxonomy on it — cost
-model, sizing model, which kind you have decides what you are exposed to — with nothing having
+Page one used "model" from the Source line onwards and then ran a whole taxonomy on it — definitional
+model, conditional model, which kind you have decides what you are exposed to — with nothing having
 said what a model is here.
 
 A term that carries an argument must be defined before the argument, on the same page, in the

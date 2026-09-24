@@ -24,12 +24,12 @@ preface, with no problems, nothing the reader could run against it, and no *What
 you* — none of which front matter can have. The introduction now says what the book is and points
 at the chapter.
 
-**A cost model** has a deterministic structure with uncertain parameters. Its relationships are
-accounting identities and physics. Cost scales roughly in proportion to its inputs. Monte Carlo
+**A definitional model** has a deterministic structure with uncertain parameters. Its
+relationships are accounting identities and physics, true by definition. Cost scales roughly in proportion to its inputs. Monte Carlo
 over the inputs is sufficient. It can be wrong because a price was wrong; it is rarely wrong
 because it changed shape.
 
-**A sizing model** has the same structure and adds two things:
+**A conditional model** has the same structure and adds two things:
 
 - **Measured constants** — empirical, stack- and version-specific, with measurement error and
   provenance. A chain of multiplications built on them inherits all of that.
@@ -37,9 +37,9 @@ because it changed shape.
   working set spilling past memory. Regime changes, which a chain of multiplications cannot
   represent at all.
 
-So a sizing model needs headroom rules, not just a number. In the DSL that distinction is
-structural: a model with a `measured` node or a `ceiling` node **is** a sizing model, a model with
-neither **is** a cost model, and the two are held to different rules by the build. A thesis the
+So a conditional model needs headroom rules, not just a number. In the DSL that distinction is
+structural: a model with a `measured` node or a `ceiling` node **is** a conditional model, a model
+with neither **is** a definitional model, and the two are held to different rules by the build. A thesis the
 repository does not enforce is a paragraph.
 
 **Sizing comes before cost in the book because cost consumes sizing's output.** Parts I–III
@@ -103,7 +103,7 @@ The host is the unit and the fleet is what gets costed. Requests arrive and data
 host's spec sheet is the first number somebody else supplied; growth gets its shape. Part II stops
 being a side model: Little's law, the knee, what more cores buy and a working set outgrowing memory
 are stages of the same file, so the reader watches the graph grow through the ceilings rather
-than switching models to meet them — and the model becomes a sizing model when the first ceiling
+than switching models to meet them — and the model becomes a conditional model when the first ceiling
 arrives, in Part II, not when the measured constant does. Capacity is disk, with the stored
 records' compression as the measured constant. Three chains ask for a host count and one binds.
 A host dies and the survivors absorb its load, which is a better headroom rule than rebuild. N

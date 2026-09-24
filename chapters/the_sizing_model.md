@@ -218,7 +218,7 @@ Take the quantities from your workload and assemble them into a chain that ends 
 machines. Not in a file, unless you want to; on paper is fine. The point is to get from what
 arrives to what you buy without skipping a step.
 
-Then find the two things that make it a sizing model rather than a cost model: a constant somebody
+Then find the two things that make it a conditional model rather than a definitional one: a constant somebody
 measured on a particular version of a particular piece of software, and a limit your system runs
 into. Mark each one.
 
@@ -227,7 +227,7 @@ gives first as the load grows, how often would you expect that to happen over th
 who accepted that? This chapter's argument is that somebody did, whether or not they knew it.
 
 A good answer reaches a number, has at least one mark on it, and names the risk the bought fleet
-accepts and the person who accepted it. A chain with no marks is a cost model. Either your system
+accepts and the person who accepted it. A chain with no marks is a definitional model. Either your system
 genuinely has no measured constants and no ceilings, which is rare, or you have not found them
 yet, which is the more likely reading and the more expensive one. A risk nobody accepted is the
 commoner finding, and it is the one to take to whoever signs for the fleet.

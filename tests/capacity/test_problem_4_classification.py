@@ -56,10 +56,10 @@ def converted(model: Model) -> Model:
 
 
 @pytest.mark.problem
-def test_it_classifies_as_a_cost_model(base):
+def test_it_classifies_as_a_definitional_model(base):
     after = converted(base)
-    assert after.classification == "cost", (
-        f"still a {after.classification} model. A model is a sizing model if it has a "
+    assert after.classification == "definitional", (
+        f"still a {after.classification} model. A model is a conditional model if it has a "
         "measured node or a ceiling in it - both, here."
     )
     assert not after.of_kind("measured") and not after.of_kind("ceiling")
@@ -88,15 +88,15 @@ def test_you_said_what_was_lost():
     marker = "What it can no longer say:"
     said = doc.split(marker, 1)[1].strip() if marker in doc else ""
     assert len(said.split()) >= 4, (
-        "finish the last line of the stub's docstring with one sentence naming what the cost "
-        "model can no longer tell anybody. If you cannot name it, you removed something that was "
+        "finish the last line of the stub's docstring with one sentence naming what the "
+        "definitional model can no longer tell anybody. If you cannot name it, you removed something that was "
         "doing no work."
     )
 
 
-def test_the_web_service_model_is_a_sizing_model_to_begin_with(base):
+def test_the_web_service_model_is_conditional_to_begin_with(base):
     """Scaffolding: there is something to remove."""
-    assert base.classification == "sizing"
+    assert base.classification == "conditional"
     assert base.of_kind("measured") and base.of_kind("ceiling")
 
 

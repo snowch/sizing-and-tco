@@ -74,11 +74,11 @@ The graph as ch03 leaves it. The vendor's claim is a node like any other, and sa
 The same file, with the vendor's claim in it. Change the `provenance` of a node and run it again.
 ```
 
-Still a cost model, and a vendor's claim does not change that. A claim is about a number: how
+Still a definitional model, and a vendor's claim does not change that. A claim is about a number: how
 much anybody should trust it. The distinction this book is built on is about the *shape* of the
 arithmetic: whether the chain of multiplications stops applying somewhere. So a model can be
-built entirely out of figures a salesperson supplied and still be a cost model, and a model built
-entirely out of your own measurements can be a sizing one. What flips it is a limit the system
+built entirely out of figures a salesperson supplied and still be a definitional model, and a model built
+entirely out of your own measurements can be a conditional one. What flips it is a limit the system
 runs into, and [ch06](#queueing-and-the-knee) adds the first.
 
 ### Three claims, counted

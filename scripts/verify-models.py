@@ -24,10 +24,10 @@ becomes something the build enforces.
 7. **The graph is acyclic and every node is reachable from an output.** An unreachable node is
    either a mistake or a leftover, and both are worth a sentence.
 8. **The classification is honest.** A model with a `measured` node or a `ceiling` in it is a
-   sizing model, and a sizing model must declare headroom on every ceiling it has. A model with
-   neither is a cost model, and is allowed to be simple — because for it, sampling the inputs
-   really is enough. That is the distinction the front matter is built on, and this is where the
-   repository holds itself to it.
+   conditional model, and a conditional model must declare headroom on every ceiling it has. A
+   model with neither is a definitional model, and is allowed to be simple — because for it,
+   sampling the inputs really is enough. That is the distinction ch01 is built on, and this is
+   where the repository holds itself to it.
 """
 
 from __future__ import annotations
@@ -146,8 +146,8 @@ def check_model(model: Model, problems: list[str]) -> None:
             if not node.declares_headroom:
                 problems.append(
                     f"{where}: ceiling {name!r} declares no headroom. A limit with no margin is "
-                    "not a sizing rule — see ch11, and the front matter's distinction between a "
-                    "cost model and a sizing one."
+                    "not a sizing rule — see ch11, and ch01's distinction between a definitional "
+                    "model and a conditional one."
                 )
             if not node.because.strip():
                 problems.append(
@@ -170,7 +170,7 @@ def check_model(model: Model, problems: list[str]) -> None:
 
     # 8 — the distinction
     ceilings = model.of_kind("ceiling")
-    if model.is_sizing_model:
+    if model.is_conditional:
         if not ceilings:
             problems.append(
                 f"{where}: has measured constants but no ceiling. A model with empirical inputs "
@@ -179,7 +179,7 @@ def check_model(model: Model, problems: list[str]) -> None:
                 "than by leaving it out."
             )
     elif ceilings:  # pragma: no cover - unreachable by construction, kept as a tripwire
-        problems.append(f"{where}: classified as a cost model but declares ceilings")
+        problems.append(f"{where}: classified as a definitional model but declares ceilings")
 
 
 def check_scenarios(model: Model, problems: list[str]) -> None:

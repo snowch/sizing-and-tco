@@ -2,6 +2,8 @@
 
 | Term | Introduced in | What it means here | Said plainly |
 |---|---|---|---|
+| **definitional model** | [ch01](#point-estimates) | a model built only from relationships true by definition, so sampling its inputs is enough | it can only be wrong through its inputs |
+| **conditional model** | [ch01](#point-estimates) | a model with a measured constant or a ceiling in it, which must keep headroom below each ceiling | every input can be right and the answer still wrong |
 | **distribution** | [ch13](#monte-carlo) | the bag of values an uncertain quantity could take | a range of plausible values |
 | **flow** | [ch02](#what-a-workload-is) | a rate — requests per second, bytes per second, dollars per year | something that arrives |
 | **sample** | [ch13](#monte-carlo) | one value drawn from that bag | one guess |

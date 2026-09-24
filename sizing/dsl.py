@@ -28,10 +28,11 @@ unit and a kind, in a file that diffs and reviews like code. Four kinds:
     Reports where a scenario sits relative to it, and under sampling reports how much of the
     distribution is over.
 
-The last two are the whole of the book's central distinction (front matter). A model with neither
-is a **cost model**: its structure is accounting identities, its inputs are uncertain, and
-sampling the inputs is sufficient. A model with either is a **sizing model**, where a chain of
-multiplications meets something it cannot represent, and a number alone is not an answer.
+The last two are the whole of the book's central distinction (ch01). A model with neither is a
+**definitional model**: its relationships hold by definition, its inputs are uncertain, and
+sampling the inputs is sufficient. A model with either is a **conditional model**: it holds only
+on the implementation its constants were measured on and below the limits it declares, where a
+chain of multiplications meets something it cannot represent, and a number alone is not an answer.
 ``scripts/verify-models.py`` classifies every model on exactly that basis and holds the two to
 different rules, so the distinction is something the build enforces rather than something the
 front matter asserts.
@@ -281,18 +282,18 @@ class Model:
     # -- the distinction the book is built on -------------------------------------------
 
     @property
-    def is_sizing_model(self) -> bool:
+    def is_conditional(self) -> bool:
         """Whether this model has something in it that sampling the inputs cannot cover.
 
-        A measured constant or a ceiling, either one. See the module docstring, and the front
-        matter, and ``scripts/verify-models.py``, which holds the two kinds of model to different
-        rules on the strength of this one property.
+        A measured constant or a ceiling, either one. See the module docstring, ch01, and
+        ``scripts/verify-models.py``, which holds the two kinds of model to different rules on
+        the strength of this one property.
         """
         return bool(self.of_kind("measured") or self.of_kind("ceiling"))
 
     @property
     def classification(self) -> str:
-        return "sizing" if self.is_sizing_model else "cost"
+        return "conditional" if self.is_conditional else "definitional"
 
     # -- what is not yet known -----------------------------------------------------------
 

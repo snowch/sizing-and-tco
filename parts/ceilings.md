@@ -9,7 +9,7 @@ short_title: "Part II — Ceilings"
 > Where does a chain of multiplications stop describing a real system?
 
 Part I described demand. This part is about what happens to a system when that demand arrives.
-It justifies [ch01](#point-estimates)'s distinction between a cost model and a sizing one.
+It justifies [ch01](#point-estimates)'s distinction between a definitional model and a conditional one.
 
 **[ch05 · Little's law](#littles-law)** is the one relationship that needs no assumptions at all,
 and can therefore explain nothing.

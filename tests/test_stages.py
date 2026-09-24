@@ -143,14 +143,14 @@ def test_a_stage_obeys_every_rule_the_finished_model_obeys(stage):
 
 @pytest.mark.parametrize("stage", STAGES, ids=lambda s: f"{s.model}:{s.stage}")
 def test_a_stage_is_the_kind_of_model_the_book_says_it_is(stage):
-    """The moment a cost model becomes a sizing model is the book's thesis, so it is pinned here.
+    """The moment a definitional model becomes a conditional model is the book's thesis, so it is pinned here.
 
     Not by asserting it: by asking the loader, which decides from the file. If somebody moves the
     measured constant or the ceiling to a different chapter, this fails and the chapter that
     claims the change of kind is the one that has to move.
     """
     model = load_model(stage.path)
-    got = "sizing" if model.is_sizing_model else "cost"
+    got = model.classification
     assert got == stage.classification, (
         f"stage {stage.name} ({stage.chapter}) is declared a {stage.classification} model and "
         f"the build makes it a {got} one"
@@ -160,10 +160,10 @@ def test_a_stage_is_the_kind_of_model_the_book_says_it_is(stage):
 @pytest.mark.parametrize("model", MODELS)
 def test_the_change_of_kind_happens_exactly_once(model):
     kinds = [stage.classification for stage in stages(model)]
-    assert kinds == sorted(kinds, key=["cost", "sizing"].index), (
-        f"{model}: a model does not go back to being a cost model: {kinds}"
+    assert kinds == sorted(kinds, key=["definitional", "conditional"].index), (
+        f"{model}: a model does not go back to being a definitional model: {kinds}"
     )
-    assert "cost" in kinds and "sizing" in kinds, (
+    assert "definitional" in kinds and "conditional" in kinds, (
         f"{model}: the book's thesis is that a model changes kind when it gains a measured "
         f"constant or a ceiling. These stages never show that happening: {kinds}"
     )

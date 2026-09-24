@@ -84,29 +84,35 @@ Almost all of the first row's width in the web service model came from the growt
 
 The second row (costing) moves for different reasons. Once you decide how many hosts to buy, the cost is just arithmetic. Sizing is about the world; costing is about a decision you have already made. Keeping those apart is most of Parts III and V.
 
-Varying inputs across their ranges gives you the complete picture, and most of this book teaches how to do it well. But it reports only the doubt you wrote down. There is a second kind of error it cannot see. Whether you meet it depends on which of two kinds of model you have.
+Varying inputs across their ranges gives you the complete picture, and most of this book teaches how to do it well. But it reports only the doubt you wrote down. There is a second kind of error it cannot see, and one question tells you whether your model is exposed to it:
+
+**Could every input be right and the answer still be wrong?**
+
+If not, you have a definitional model. If so, you have a conditional one.
 
 :::{div}
 :class: definition
 
-**Sizing model.** A model where the relationships are fixed but inputs vary. Its relationships are between demand, resource usage per request, hardware capacity—and the ceilings where a system stops coping.
-
-*Measured constants.* How much smaller a record is on disk than in memory after compression. How many records one request leaves. How much work one processor core does per second. These are measured, not derived. Each belongs to one implementation at one version. Each has a measurement error. None is a fact about the world. A chain of multiplications built on them inherits their errors, their version, and their standing as measurements, not facts. A model that hides all three treats them as constants.
-
-*Ceilings.* The queueing knee, where response time climbs steeply with spare capacity left. A host failing at the busy hour, so its load lands on already busy survivors. A new field on a measurement, multiplying stored things by how many values the field takes. A working set outgrowing memory. These are regime changes. **A chain of multiplications cannot model a regime change.** It reports a system running at several times its own limit, which cannot happen.
+**Definitional model.** A model built only from relationships that hold by definition: watts times hours times price, requests times bytes per request, capital plus running cost. If every input is right, the answer is right. All of its doubt is in its inputs, so running the arithmetic over their ranges shows you all of it.
 :::
 
 :::{div}
 :class: definition
 
-**Cost model.** A model where the relationships are fixed but inputs vary. Its relationships are accounting identities and physics: watts times hours times price; capital plus running cost; a total divided by a denominator. It takes the sizing decision and calculates its cost. Only the inputs are uncertain. Cost moves roughly with them, so running the arithmetic over their ranges is enough.
+**Conditional model.** A model that holds only on conditions. It has at least one of two things a definitional model does not.
+
+*Measured constants.* How much smaller a record is on disk than in memory after compression. How much work one processor core does per request. These are measured, not derived. Each belongs to one implementation at one version, and each has a measurement error. Upgrade the software and the constant is not uncertain, it is wrong, and it is outside the range you gave it, because that range described the old version.
+
+*Ceilings.* The queueing knee, where response time climbs steeply while there is still spare capacity. A host failing at the busy hour, so its load lands on survivors that are already busy. A working set outgrowing memory. These are regime changes, and **a chain of multiplications cannot model a regime change.** It carries on past the limit as if nothing happened, and reports a system running at several times its own limit.
+
+Every input can be right and the answer still wrong. So a conditional model keeps a declared margin, its headroom, below each ceiling, and the toolkit will not build one that does not.
 :::
 
-A sizing model declares headroom below each ceiling—how much spare capacity it keeps and why. A sizing model has a measured constant or a declared ceiling. A cost model has neither. The toolkit enforces this: a sizing model must keep headroom below every ceiling, or it will not build.
+The names say what a model contains, not what it is for. A model that works out how many hosts to buy can still be definitional, and the web service model is, until [ch06](#queueing-and-the-knee) adds its first ceiling. When this book says *sizing model* or *cost model* it means what those words mean at work: the model that produces a host count, and the model that turns it into money.
 
-### Where a cost model becomes a sizing model
+### Where a definitional model becomes a conditional one
 
-Why does this distinction matter? It determines which chapters apply to your model. The web service model—our running example—starts as a cost model and becomes a sizing model when we add a measured constant or ceiling. Problem 1.3 asks you to find that moment in three different model descriptions.
+The kind decides which chapters apply to your model. A definitional model needs Parts IV and VI: ranges, and which input the answer rests on. A conditional model needs Part II as well, because its ranges can be exact about a number that has stopped describing anything. The toolkit reads the kind from the file: add one measured constant or one ceiling and the verdict changes. Problem 1.3 asks you to find that moment in three model descriptions.
 
 ## What this cannot tell you
 
@@ -128,11 +134,12 @@ Why does this distinction matter? It determines which chapters apply to your mod
   a most-likely region in it, not a figure.
 - **A range reports only the doubt you wrote down.** An error in the model's shape is invisible
   to any amount of varying the inputs.
-- **Two kinds of model, held to two rules.** A cost model has a structure in no doubt and
-  uncertain inputs. A sizing model adds measured constants and ceilings. It must say how much
-  room it keeps below each limit.
+- **One question sorts every model.** Could every input be right and the answer still be wrong?
+  If not, the model is definitional and all its doubt is in its inputs. If so, it is conditional:
+  it rests on measured constants or ceilings, and must say how much room it keeps below each
+  limit.
 - **The kind is read from the file, never declared.** A measured constant or a declared limit makes
-  a sizing model, and the toolkit works that out from what is in the model.
+  a model conditional, and the toolkit works that out from what is in the model.
 :::
 
 ## Problems
@@ -151,7 +158,7 @@ python3 -m pytest tests/point_estimates/test_problem_1_each_input.py -m problem
 python3 -m pytest tests/point_estimates/test_problem_2_together.py -m problem
 ```
 
-**1.3 — Find where it changes kind.** Below are three descriptions of models for sizing a web service. Which are cost models (deterministic structure, uncertain inputs only)? Which are sizing models (adding measured constants or ceilings)? Name the characteristics—the measured constants or ceilings—that decide it.
+**1.3 — Find where it changes kind.** Below are three descriptions of models for sizing a web service. Which are definitional (relationships true by definition, uncertain inputs only)? Which are conditional (adding measured constants or ceilings)? Name the measured constants or ceilings that decide it.
 
 % number-ok: model example, not a measurement
 **Model A.** Peak requests per second × processor time per request × (100% ÷ utilization fraction) = cores needed. Inputs: peak rate (assumption), processor time per request (assumption), utilization (assumption).
@@ -170,7 +177,7 @@ python3 -m pytest tests/point_estimates/test_problem_3_which_kind.py -m problem
 
 Take a system you run. Write down three to six numbers that decide how big it must be. Not everything you know about it: what would change the answer. Beside each, write where it came from: measured, told by a supplier, or decided.
 
-Then answer two questions. Which, if wrong by half, would change what you would buy? Is there a constant somebody measured on one version of one piece of software? Or a limit your system hits before running out of capacity? If so, you are holding a sizing model, and your multiplications are quietly lying.
+Then answer two questions. Which, if wrong by half, would change what you would buy? Is there a constant somebody measured on one version of one piece of software? Or a limit your system hits before running out of capacity? If so, you are holding a conditional model: every input in it can be right and the answer still wrong.
 
 A good answer is short, names its sources, and is uncomfortable somewhere. Keep it. Every chapter ends with a problem about a system you run. They work best on the same one.
 

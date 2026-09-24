@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "2a1a56d7c1365d0e",
+  "code_fingerprint": "2221d454eae10d69",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/02-provenance/model.yaml",
@@ -12,12 +12,12 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-22T19:58:53+00:00",
-  "git_revision": "a2bc3a3",
+  "generated_at": "2026-09-23T23:51:01+00:00",
+  "git_revision": "4199a5e",
   "kind": "model",
   "name": "web_service_provenance-reference",
   "produced_by": {
-    "classification": "cost",
+    "classification": "definitional",
     "model": "web_service_provenance",
     "model_file": "models/web_service/stages/02-provenance/model.yaml",
     "sampler": "sizing.mc \u2014 inverse transform, Iman-Conover rank correlation",
@@ -35,7 +35,7 @@
     "python": "3.11.15"
   },
   "summary": {
-    "classification": "cost",
+    "classification": "definitional",
     "correlations": [],
     "currency": "USD",
     "description": "The web service model as it stands at the end of ch03.",
@@ -45,7 +45,7 @@
       "ram_for_service": 0.001073741824,
       "stored_data": 1.0
     },
-    "generated_at": "2026-09-22T19:58:53+00:00",
+    "generated_at": "2026-09-23T23:51:01+00:00",
     "model": "web_service_provenance",
     "nodes": {
       "annual_growth": {

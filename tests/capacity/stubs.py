@@ -73,16 +73,16 @@ def in_binary_units(
 
 
 def what_to_remove(kinds: dict[str, str], feeds: dict[str, set[str]]) -> list[str]:
-    """Problem 9.4 - turn a sizing model back into a cost model, honestly.
+    """Problem 9.4 - turn a conditional model back into a definitional one, honestly.
 
     ``scripts/verify-models.py`` classifies a model by what is in it: a ``measured`` node or a
-    ``ceiling`` makes it a sizing model, and a model with neither is a cost model whose inputs
-    can be sampled. The web service model crossed that line in ch06, when its first ceiling
+    ``ceiling`` makes it a conditional model, and a model with neither is a definitional model whose
+    inputs can be sampled. The web service model crossed that line in ch06, when its first ceiling
     arrived; this chapter adds the measured constant that would have crossed it anyway.
 
     ``kinds`` maps every node in the web service model to its kind: ``input``, ``derived``,
     ``measured`` or ``ceiling``. ``feeds`` maps every node to the names of the nodes its formula
-    reads. Return the names to delete so that what is left classifies as a **cost** model and
+    reads. Return the names to delete so that what is left classifies as a **definitional** model and
     still evaluates: every measured constant, every ceiling, and everything downstream of them,
     because a node that reads a deleted node cannot be worked out.
 

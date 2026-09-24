@@ -88,9 +88,9 @@ A model is a file. Here is what each one is made of:
 ```{include} ../chapters/_generated/appendix-h-running-the-toolkit-models.md
 ```
 
-The last row says whether the build classifies the model as a cost model or a sizing one. It works
-that out from the file, since a `measured` node or a `ceiling` makes it a sizing model, and
-[ch09](#capacity) is where the reader's own model crosses that line.
+The last row says whether the build classifies the model as a definitional model or a conditional
+one. It works that out from the file, since a `measured` node or a `ceiling` makes it conditional,
+and [ch06](#queueing-and-the-knee) is where the reader's own model crosses that line.
 
 ## What this cannot tell you
 

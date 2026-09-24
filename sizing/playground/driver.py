@@ -85,7 +85,7 @@ def check(text: str) -> dict:
         "nodes": nodes,
         "order": list(model.order),
         "outputs": list(model.outputs),
-        "classification": "sizing" if model.is_sizing_model else "cost",
+        "classification": model.classification,
         "factors": {name: value for name, value in factors.items() if value != 1.0},
     }
 

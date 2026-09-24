@@ -10,7 +10,7 @@
 # `introduces` is the whole of it. Every node in model.yaml appears in exactly one stage, and a
 # stage whose nodes refer to something no earlier stage introduced will not load.
 #
-# The model becomes a sizing model in ch06, when the first ceiling arrives, and not in ch09 when
+# The model becomes a conditional model in ch06, when the first ceiling arrives, and not in ch09 when
 # the measured constant does. Part II is about ceilings, and this is what that means for the file.
 
 # How a stage refers to the model in its one-line description.
@@ -45,7 +45,7 @@ stages:
   - stage: demand
     chapter: what_a_workload_is
     title: What arrives, and what accumulates
-    classification: cost
+    classification: definitional
     outputs:
       - peak_request_rate
       - stored_data
@@ -62,7 +62,7 @@ stages:
   - stage: provenance
     chapter: where_the_numbers_come_from
     title: The first number somebody else supplied
-    classification: cost
+    classification: definitional
     outputs:
       - peak_request_rate
       - stored_data
@@ -75,7 +75,7 @@ stages:
   - stage: uncertainty
     chapter: peak_mean_and_growth
     title: The growth rate stops being a number
-    classification: cost
+    classification: definitional
     outputs:
       - peak_request_rate
       - stored_data
@@ -88,7 +88,7 @@ stages:
   - stage: littles_law
     chapter: littles_law
     title: How busy the fleet is
-    classification: cost
+    classification: definitional
     outputs:
       - stored_data
       - ram_for_service
@@ -111,7 +111,7 @@ stages:
   - stage: queueing
     chapter: queueing_and_the_knee
     title: The knee, and the first ceiling
-    classification: sizing
+    classification: conditional
     outputs:
       - stored_data
       - ram_for_service
@@ -134,7 +134,7 @@ stages:
   - stage: scaling
     chapter: when_adding_servers_stops_helping
     title: What more hosts buy
-    classification: sizing
+    classification: conditional
     outputs:
       - stored_data
       - ram_for_service
@@ -171,7 +171,7 @@ stages:
   - stage: regime
     chapter: regime_changes
     title: The working set outgrows memory
-    classification: sizing
+    classification: conditional
     outputs:
       - mean_request_rate
       - utilisation
@@ -200,7 +200,7 @@ stages:
   - stage: capacity
     chapter: capacity
     title: A measured constant, and the disk chain
-    classification: sizing
+    classification: conditional
     outputs:
       - mean_request_rate
       - utilisation
@@ -237,7 +237,7 @@ stages:
   - stage: binding
     chapter: bandwidth_and_the_binding_constraint
     title: Three chains, and the one that binds
-    classification: sizing
+    classification: conditional
     outputs:
       - mean_request_rate
       - utilisation
@@ -271,7 +271,7 @@ stages:
   - stage: headroom
     chapter: headroom_and_failure_domains
     title: A host dies at the busy hour
-    classification: sizing
+    classification: conditional
     outputs:
       - mean_request_rate
       - utilisation
@@ -307,7 +307,7 @@ stages:
   - stage: sizing
     chapter: the_sizing_model
     title: The whole sizing, before a price
-    classification: sizing
+    classification: conditional
     outputs:
       - mean_request_rate
       - utilisation
@@ -340,7 +340,7 @@ stages:
   - stage: cost
     chapter: the_five_year_model
     title: What the fleet costs
-    classification: sizing
+    classification: conditional
     outputs:
       - hosts_recommended
       - hosts
