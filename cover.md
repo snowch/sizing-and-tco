@@ -6,13 +6,15 @@ numbering: false
 
 (cover)=
 
-# Sizing and TCO
+# 
+
+## Sizing and TCO
 
 :::{note}
 **DRAFT** — This book is still being written.
 :::
 
-*How to size a system, cost it, and know how much to trust the answer.*
+### How to size a system, cost it, and know how much to trust the answer.
 
 ![Capacity scaling visualization showing growth over time with ceiling limit](/public/cover-hero.svg)
 
