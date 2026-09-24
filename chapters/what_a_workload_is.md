@@ -82,7 +82,7 @@ much data you hold. Here are those two quantities as the first nodes:
 :end-before: annual_growth:
 ```
 
-```{iframe} /models/demand_inputs_initial-reference.html
+```{iframe} /models/web_service_demand_inputs_initial-reference.html
 :width: 100%
 Interactive viewer: the first two quantities. Drag the sliders to see how peak rate and stored data move independently.
 ```
@@ -113,7 +113,7 @@ Here are the three more quantities:
 :end-before: horizon_periods:
 ```
 
-```{iframe} /models/demand_inputs_all-reference.html
+```{iframe} /models/web_service_demand_inputs_all-reference.html
 :width: 100%
 Interactive viewer: all five inputs. Notice that no derived quantities exist yet — the model shows only what you choose or define.
 ```
@@ -140,7 +140,7 @@ from a formula applied to the five you gave:
 :end-before: peak_request_rate:
 ```
 
-```{iframe} /models/demand_horizon_exponent-reference.html
+```{iframe} /models/web_service_demand_horizon_exponent-reference.html
 :width: 100%
 Interactive viewer: the first derived node. Drag the horizon slider and watch horizon_periods compute instantly. Click horizon_periods to see its formula.
 ```
