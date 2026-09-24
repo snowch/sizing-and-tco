@@ -112,7 +112,10 @@ code { font: 12px/1.4 ui-monospace, "SF Mono", Menlo, monospace; background: var
 .legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 11px; color: var(--muted); margin-bottom: 8px; }
 .legend i { display: inline-block; width: 11px; height: 9px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
 /* The bar the graph draws down the left edge of an input somebody chose. */
-.legend i.decision { border-left: 3px solid var(--input-edge); }
+/* A shadow, not a border: the swatch's inline border would override a border-left, and did,
+   so the key showed "you decide" identical to "input". Inset, it sits inside the outline the way
+   the graph's bar does. */
+.legend i.decision { box-shadow: inset 3px 0 0 var(--input-edge); }
 
 /* -- resampling ------------------------------------------------------------------ */
 button.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); margin: 8px 0 4px; display: block; }
