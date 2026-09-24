@@ -100,12 +100,6 @@ The graph as ch08 leaves it. Drag *share of records touched in a busy hour* and 
 set cross the memory the fleet has.
 ```
 
-```{iframe} /playground/regime-changes/
-:width: 100%
-The same file, running. The ceiling's reason is the only place in it that says what happens on the
-other side.
-```
-
 ### What the four have in common
 
 Each of them is a **threshold with different physics on either side**. In each case a

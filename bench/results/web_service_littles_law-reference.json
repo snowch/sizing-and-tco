@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "1e45922364704b21",
+  "code_fingerprint": "d4fc46dc51973ce9",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/08-littles_law/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-24T14:41:38+00:00",
-  "git_revision": "37ad791",
+  "generated_at": "2026-09-24T21:17:52+00:00",
+  "git_revision": "6df525c",
   "kind": "model",
   "name": "web_service_littles_law-reference",
   "produced_by": {
@@ -58,7 +58,7 @@
       "stored_data": 1.0,
       "utilisation": 1.0
     },
-    "generated_at": "2026-09-24T14:41:38+00:00",
+    "generated_at": "2026-09-24T21:17:52+00:00",
     "model": "web_service_littles_law",
     "nodes": {
       "annual_growth": {
@@ -508,7 +508,7 @@
         "kind": "input",
         "label": "hosts in the fleet",
         "layer": 2,
-        "note": "**The most important node in this model, and the one a spreadsheet hides.** Sizing does not produce a fleet; it produces a recommendation, and then a person decides. It arrives here, in Part II, because a queue needs something to stand in front of \u2014 but it is decided in ch12, and everything downstream of it, every dollar, every watt, every ceiling, is a consequence of the number chosen here and not of the number the model would recommend in hindsight.\nDeriving it instead would make the ceilings below tautologies: a fleet sized to sit under the knee sits under it in every sample, and the model would cheerfully report a zero per cent chance of queueing. Making it an input is what lets the ceilings ask the only question worth asking \u2014 *given what we actually bought, how often does the world break it?*",
+        "note": "**The most important node in this model, and the one a spreadsheet hides.** Sizing does not produce a fleet; it produces a recommendation, and then a person decides. It arrives here, in Part II, because a queue needs something to stand in front of \u2014 but it is decided in ch12, and everything downstream of it, every dollar, every watt, every ceiling, is a consequence of the number chosen here and not of the number the model would recommend in hindsight.\nDeriving it instead would make the ceilings below tautologies: a fleet sized to sit under the knee sits under it in every future, and the model would cheerfully report a zero per cent chance of queueing. Making it an input is what lets the ceilings ask the only question worth asking \u2014 *given what we actually bought, how often does the world break it?*",
         "point": 54.0,
         "provenance": {
           "kind": "assumption",

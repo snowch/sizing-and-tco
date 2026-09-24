@@ -42,11 +42,9 @@ from bench import render as renderer  # noqa: E402
 from bench.outline import APPENDICES, BY_SLUG, CHAPTERS, PART_PAGES  # noqa: E402
 from bench.reading import BUTTON as TEXT_BUTTON  # noqa: E402
 from bench.reading import PARENT as TEXT_PARENT  # noqa: E402
-from bench.stages import stages  # noqa: E402
 from bench.stamp import shown  # noqa: E402
 from bench.tables import GLOSSARY  # noqa: E402
 from bench.theme import BUTTON, PARENT, both_ways  # noqa: E402
-from sizing.dsl import load_model  # noqa: E402
 from sizing.playground.toolkit import (  # noqa: E402
     BOOT,
     PYODIDE,
@@ -55,46 +53,11 @@ from sizing.playground.toolkit import (  # noqa: E402
     problem_files,
     problem_pieces,
     problem_wheels,
-    results_for,
     sources,
     wheels,
 )
 
 DEFAULT_OUT = ROOT / "_build" / "static"
-
-
-def stage_for(source: str):
-    """The stage of the running example a chapter leaves the reader with, if it has one."""
-    slug = Path(source).stem
-    for stage in stages():
-        if stage.chapter == slug and not stage.is_the_finished_model:
-            return stage
-    return None
-
-
-def editable_excerpts(page: dict, stage) -> list[dict]:
-    """The quoted pieces of the model, marked with where each sits inside the whole file.
-
-    The chapter shows the model in pieces, with prose between them. Those pieces are the reader's
-    natural place to edit it — not a fourth copy of the file in a box below. MyST keeps the
-    resolved text of a literalinclude but not its anchors, so each piece is located by finding it
-    in the file the chapter's stage points at. Locating it by content alone would not do: the
-    stages are subsets of one another, so the same node text appears in five files.
-    """
-    whole = stage.path.read_text()
-    found = []
-    for node in walk(page.get("mdast", page)):
-        if node.get("type") != "code" or not str(node.get("filename", "")).endswith(".yaml"):
-            continue
-        text = str(node.get("value", ""))
-        at = whole.find(text)
-        if at < 0 or whole.find(text, at + 1) >= 0:
-            # Not in this stage, or in it twice. Either way it is not safe to splice an edit
-            # back, so the piece stays read-only rather than silently editing the wrong lines.
-            continue
-        node["_editable"] = {"start": at, "end": at + len(text)}
-        found.append(node)
-    return found
 
 
 #: The command under a tested problem, as every chapter writes it. ``-m problem`` is part of the
@@ -429,120 +392,9 @@ def sections_of(source: str, page: dict, title: str, href: str) -> list[dict]:
     return [r for r in out if r["t"]]
 
 
-RUNNER = r"""
-<script type="application/json" id="model-whole">{whole}</script>
-<script type="application/json" id="model-modules">{modules}</script>
-<script type="application/json" id="model-results">{results}</script>
-<script type="application/json" id="model-wheels">{wheels}</script>
-<div id="runner" class="runner">
-  <div class="bar">
-    <button id="run" class="primary" type="button">Run the model</button>
-    <span id="status">Change any block above, then press Run. The first press fetches Python.</span>
-  </div>
-  <div id="results" aria-live="polite"></div>
-</div>
-<script type="module">
-const WHOLE = JSON.parse(document.getElementById("model-whole").textContent);
-const MODULES = JSON.parse(document.getElementById("model-modules").textContent);
-const RESULTS = JSON.parse(document.getElementById("model-results").textContent);
-const WHEELS = JSON.parse(document.getElementById("model-wheels").textContent);
-const $ = (id) => document.getElementById(id);
-let pyodide = null, booting = null;
-
-// The document the toolkit is handed: the file on disk, with each edited block spliced back
-// into the range it came from. Later ranges first, so earlier offsets stay valid.
-function assemble() {{
-  const blocks = [...document.querySelectorAll("pre.model")]
-    .map((el) => ({{start: +el.dataset.start, end: +el.dataset.end, text: el.innerText}}))
-    .sort((a, b) => b.start - a.start);
-  let out = WHOLE;
-  for (const b of blocks) out = out.slice(0, b.start) + b.text.replace(/\n$/, "") + out.slice(b.end);
-  return out;
-}}
-
-async function boot() {{
-  pyodide = await shareToolkit({{
-    pyodideUrl: "{pyodide}", modules: MODULES, results: RESULTS, wheels: WHEELS,
-    status: (text) => {{ $("status").textContent = text; }},
-  }});
-}}
-
-function show(result) {{
-  const r = $("results");
-  if (result.stage === "ok") {{
-    // Whose numbers these are. Untouched, the file is the chapter's and so are the figures;
-    // once a block has been edited, the chapter's tables no longer describe this file.
-    const verdict = assemble() === WHOLE
-      ? "It runs. This is the file as the chapter left it."
-      : "It runs. These numbers are for the file as you have changed it; the chapter\u2019s "
-        + "tables are for the file as it left it.";
-    r.innerHTML = '<p class="verdict good">' + verdict + '</p>'
-      + '<div class="outputs">' + result.outputs.map((name) => {{
-          const n = result.nodes.find((x) => x.name === name) || {{}};
-          const v = n.value == null ? "\u2014"
-            : n.value.toLocaleString(undefined, {{maximumFractionDigits: Math.abs(n.value) >= 100 ? 0 : 2}});
-          return `<div class="output"><div class="figure">${{v}}</div>`
-               + `<div class="unit">${{n.unit || ""}}</div>`
-               + `<div class="what">${{n.label || name}}</div></div>`;
-        }}).join("") + "</div>";
-  }} else {{
-    r.textContent = "";
-    const head = document.createElement("p");
-    head.className = "verdict bad";
-    head.textContent = result.stage === "load"
-      ? "It does not load." : "It loads, and the units do not work out.";
-    const list = document.createElement("ul");
-    for (const problem of result.problems) {{
-      const item = document.createElement("li");
-      item.textContent = problem;   // a message about the reader's file is text, never markup
-      list.appendChild(item);
-    }}
-    r.append(head, list);
-  }}
-}}
-
-// A block the reader has typed in says so, so that the page shows which of its own numbers
-// are no longer the book's.
-for (const pre of document.querySelectorAll("pre.model")) {{
-  const block = pre.closest(".editable-block");
-  pre.addEventListener("input", () => {{
-    block.classList.add("changed");
-    block.querySelector(".hint").textContent = "edited";
-  }}, {{once: true}});
-}}
-
-async function run(from) {{
-  for (const b of document.querySelectorAll("#run, .run-here")) b.disabled = true;
-  try {{
-    booting = booting || boot();
-    await booting;
-    const began = performance.now();
-    pyodide.globals.set("_source", assemble());
-    const result = (await pyodide.runPythonAsync("check(_source)"))
-      .toJs({{dict_converter: Object.fromEntries}});
-    show(result);
-    $("status").textContent = "checked in " + Math.round(performance.now() - began) + "ms";
-  }} catch (error) {{
-    $("status").textContent = "Python did not start: " + error;
-  }} finally {{
-    for (const b of document.querySelectorAll("#run, .run-here")) b.disabled = false;
-    // Pressed from a block, the answer is further down the page than the block is. Take the
-    // reader to it rather than leaving them looking at what they typed.
-    if (from === "block") $("runner").scrollIntoView({{behavior: "smooth", block: "center"}});
-  }}
-}}
-
-$("run").addEventListener("click", () => run("runner"));
-for (const button of document.querySelectorAll(".run-here")) {{
-  button.addEventListener("click", () => run("block"));
-}}
-</script>
-"""
-
-
 #: The runtime URL, the module list and the boot script come from one place,
 #: sizing/playground/toolkit.py, and the boot goes into the page's head once, as a plain script,
-#: so that the run control and the problems' checks, each a module of its own, share it.
+#: so that the problems' checks, each a module of its own, share it.
 BOOT_SCRIPT = f"<script>\n{BOOT}\n</script>"
 
 #: The check under each tested problem. The chapter's tests, the model files they name and the
@@ -1440,7 +1292,7 @@ main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;
      not grow when a reader's text does. The prose does, so at large text it overtook the column
      and a problem's stub sat narrower than the paragraph introducing it. The column is only
      ever an exception for being *wider*. */
-  #main > :is(figure:has(> iframe), figure:has(> .runner), table,
+  #main > :is(figure:has(> iframe), table,
               pre, .editable-block, .problem, figure:has(> pre)) {
     max-width: min(100%, max(72rem, var(--prose))); }
   #main > figure > figcaption { margin-inline: auto; }
@@ -1627,31 +1479,10 @@ button:disabled { opacity: .45; cursor: progress; }
 button.primary { background: var(--accent); border-color: transparent; color: var(--on-accent);
                  font-weight: 600; padding: .55rem 1.1rem; }
 button.primary:hover:not(:disabled) { color: var(--on-accent); filter: brightness(1.1); }
-.run-here { margin-left: auto; padding: .25rem .7rem; font-size: 12.5px; }
 
-/* The run control, spliced in after the last block of the model the chapter quotes. */
-.runner { margin: 1.8rem 0 2.4rem; border: 1px solid var(--rule); border-radius: 8px;
-          background: var(--panel); padding: 1rem 1.1rem; }
-.runner .bar { display: flex; gap: .9rem; align-items: center; flex-wrap: wrap; }
-#status { font: 13.5px/1.4 var(--chrome); color: var(--muted); }
 .verdict { font: 600 15px/1.4 var(--chrome); margin: 1rem 0 .3rem; }
 .verdict.good { color: var(--go); }
 .verdict.bad { color: var(--stop); }
-#results > .verdict + * { margin-top: .5rem; }
-.outputs { display: grid; gap: .9rem; margin-top: .9rem;
-           grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
-.output { border-top: 2px solid var(--rule); padding-top: .45rem; }
-.output .figure { font: 700 26px/1.1 var(--chrome); font-variant-numeric: tabular-nums;
-                  letter-spacing: -.02em; }
-.output .unit { font: 12px/1.4 var(--chrome); color: var(--faint); }
-.output .what { font: 13px/1.35 var(--chrome); color: var(--muted); margin-top: .15rem; }
-#results ul { margin: 0; padding: .7rem 1rem .7rem 2rem; list-style: square;
-              background: var(--bg); border: 1px solid var(--edge); border-radius: 6px; }
-#results li { font-family: var(--mono); font-size: 12.5px; line-height: 1.5; color: var(--stop);
-              margin-bottom: .3rem; }
-#results li::marker { color: var(--stop); }
-
-figure > .runner { margin: 0; }
 
 /* A problem's stub, editable under the problem it grades, and the verdict under that: one
    line per test, pytest's own message beside the ones that fail, and everything it said for a
@@ -1702,7 +1533,7 @@ figure > .runner { margin: 0; }
 
 /* On paper the furniture is noise and the controls do nothing. */
 @media print {
-  .top, .nav, .toc, .runner, .editable-bar, .verdicts, .turn, .find, .offline { display: none; }
+  .top, .nav, .toc, .editable-bar, .verdicts, .turn, .find, .offline { display: none; }
   .shell { display: block; }
   main { max-width: none; padding: 0; }
   .editable-block { border: 1px solid #ccc; }
@@ -1764,6 +1595,11 @@ def toc_html(page: dict) -> str:
     return f'<div class="part">On this page</div><ul>{body}</ul>'
 
 
+#: What a chapter before sampling adds to a viewer's address, naming the chapter it comes before.
+#: sizing/viewer/app.js reads it.
+UNTAUGHT = f"before={GLOSSARY['sample'][0]}"
+
+
 def before_sampling(source: str) -> bool:
     """Whether this chapter comes before the one the glossary says teaches what a sample is.
 
@@ -1777,36 +1613,13 @@ def before_sampling(source: str) -> bool:
 
 def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) -> str:
     if before_sampling(source):
-        # The viewer reads the flag and leaves the run out. It rides in the address, so a reader
-        # who opens the model on its own page from here still does not meet the words early.
+        # The viewer reads the flag and uses plain words (sizing/viewer/words.json). It rides in
+        # the address, so a reader who opens the model on its own page from here still does not
+        # meet the words early.
         for node in walk(page.get("mdast", page)):
             src = str(node.get("src", ""))
             if node.get("type") == "iframe" and src.startswith("/models/"):
-                node["src"] = src + ("&" if "?" in src else "?") + "run=hidden"
-    # Editable excerpts have to be marked before the body is rendered, because the renderer
-    # decides from the mark whether a quoted block is a picture of the file or the file itself.
-    stage = stage_for(source)
-    blocks = editable_excerpts(page, stage) if stage else []
-    if blocks:
-        # The chapter's playground `{iframe}` is the same toolkit in a box, so with the model
-        # editable in place it comes out: two Run buttons is worse than one. The run control
-        # takes its slot rather than the end of the page, because the prose around the panel
-        # already introduces it — press this, change a number, watch the total move. Failing a
-        # panel, the control goes after the last piece of the file, which is where the reader
-        # has all of it.
-        #
-        # Only the playground's panel, though. A chapter also embeds its stage's viewer — the
-        # graph with a slider on every input — and that is not the toolkit in a box, it is the
-        # other half of the lesson. Suppressing every iframe took the viewer out of ch02 and ch03
-        # silently, which is how the first version of this shipped.
-        panels = [
-            n
-            for n in walk(page.get("mdast", page))
-            if n.get("type") == "iframe" and str(n.get("src", "")).startswith("/playground/")
-        ]
-        for node in panels:
-            node["_suppressed"] = True
-        (panels[0] if panels else blocks[-1])["_runner_here"] = True
+                node["src"] = src + ("&" if "?" in src else "?") + UNTAUGHT
     problems = problem_excerpts(source, page)
     toc = toc_html(page)  # taken before the promotion below, which renumbers what it reads
     if source in TITLED_PAGES:
@@ -1822,15 +1635,6 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         # in the text, so the page opens on a blockquote with nothing above it saying where
         # the reader is.
         body = f"<h1>{html.escape(title_for(source, page))}</h1>" + body
-    if blocks:
-        runner = RUNNER.format(
-            whole=json.dumps(stage.path.read_text()),
-            modules=json.dumps(sources()),
-            results=json.dumps(results_for(load_model(stage.path))),
-            wheels=json.dumps(wheels()),
-            pyodide=PYODIDE,
-        )
-        body = body.replace(renderer.RUNNER_SLOT, runner, 1)
     if problems:
         spec = {
             "pyodide": PYODIDE,
@@ -1854,7 +1658,7 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         text=TEXT_PARENT,
         text_button=TEXT_BUTTON,
         offline=OFFLINE_SCRIPT,
-        boot=BOOT_SCRIPT if blocks or problems else "",
+        boot=BOOT_SCRIPT if problems else "",
         headlinks=headlinks,
         turn=turn,
     )

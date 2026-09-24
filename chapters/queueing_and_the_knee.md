@@ -153,12 +153,6 @@ accident. The clamp does not hide that. The ceiling watches the real utilisation
 capped one, so a future out there is still reported **over**. The model does not know what happens
 past the cap, and says so rather than extrapolating.
 
-```{iframe} /playground/queueing-and-the-knee/
-:width: 100%
-The same file, running. Raise the request rate until utilisation passes the cap and run it again:
-the residence time stops rising, while the ceiling goes on reporting the real utilisation.
-```
-
 ## What this cannot tell you
 
 **What your system's curve looks like.** Everything above is one queueing model with strong

@@ -19,9 +19,9 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        ch02 - the busy hour, as one number. ch04 replaces it
-        with a distribution, because an engineer who gives you
-        this figure is giving you a range and rounding it.
+        ch02 - the busy hour, as one number. ch04 gives it a shape,
+        because an engineer who gives you this figure is giving
+        you a range and rounding it.
     range: [500, 40000]
 outputs: [peak_request_rate_t0]
 correlations: []

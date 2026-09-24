@@ -224,7 +224,7 @@ nodes:
 
       Deriving it instead would make the ceilings below tautologies:
       a fleet sized to sit under the knee sits under it in every
-      sample, and the model would cheerfully report a zero per
+      future, and the model would cheerfully report a zero per
       cent chance of queueing. Making it an input is what lets
       the ceilings ask the only question worth asking — *given
       what we actually bought, how often does the world break

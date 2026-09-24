@@ -115,12 +115,6 @@ second one disappointing.
 
 Measuring the fleet at more than one size is also how the coefficients get fitted.
 
-```{iframe} /playground/when-adding-servers-stops-helping/
-:width: 100%
-The same file, running. Double the contention and watch where the peak goes: it is the software's
-number, and no host count in the file moves it.
-```
-
 ### Fitting the coefficients from what you have
 
 Three unknowns, so three measurements determine them exactly. You will usually have three: one

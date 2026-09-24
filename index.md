@@ -114,11 +114,11 @@ you drag. The prose reads on any screen. The models want a tablet held sideways 
 
 All models and code run in your browser.
 
-Once you open the book, it works offline. If you press **Run** once while online, the Python
-runtime is kept. **Keep offline** in the header fetches it ahead of need.
-
 The problems run in the page. Under each one that has a test sits the code it grades, yours to
 edit. **Check** runs the tests in your browser. Nothing leaves your machine.
+
+Once you open the book, it works offline. If you press a problem's **Check** once while online,
+the Python runtime is kept. **Keep offline** in the header fetches it ahead of need.
 
 To work the problems at a desk with an editor and shell, clone the repository:
 

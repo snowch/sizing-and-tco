@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "8b970f9d136a260c",
+  "code_fingerprint": "c6bcfaf39982a42d",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/03-demand_inputs_all/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-24T14:41:37+00:00",
-  "git_revision": "37ad791",
+  "generated_at": "2026-09-24T21:17:50+00:00",
+  "git_revision": "6df525c",
   "kind": "model",
   "name": "web_service_demand_inputs_all-reference",
   "produced_by": {
@@ -40,7 +40,7 @@
     "currency": "USD",
     "description": "The web service model as it stands at the end of ch02.",
     "factors": {},
-    "generated_at": "2026-09-24T14:41:37+00:00",
+    "generated_at": "2026-09-24T21:17:50+00:00",
     "model": "web_service_demand_inputs_all",
     "nodes": {
       "annual_growth": {
@@ -54,7 +54,7 @@
         "point": 1.3,
         "provenance": {
           "kind": "assumption",
-          "source": "ch02 - one growth rate, chosen rather than measured. ch04 replaces it with a distribution, because a single number cannot say how sure anybody is of it."
+          "source": "ch02 - one growth rate, chosen rather than measured. ch04 gives it a shape, because a single number cannot say how sure anybody is of it."
         },
         "row": 0,
         "slider": {
@@ -110,7 +110,7 @@
         "point": 8000.0,
         "provenance": {
           "kind": "assumption",
-          "source": "ch02 - the busy hour, as one number. ch04 replaces it with a distribution, because an engineer who gives you this figure is giving you a range and rounding it."
+          "source": "ch02 - the busy hour, as one number. ch04 gives it a shape, because an engineer who gives you this figure is giving you a range and rounding it."
         },
         "row": 3,
         "slider": {

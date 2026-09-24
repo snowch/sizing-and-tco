@@ -112,8 +112,8 @@ rather than its number:
 
 ```{iframe} /playground/capacity/
 :width: 100%
-The chain above, running. Read the measured constant's row: it says which corpus and which codec
-its number belongs to, which is more than a spreadsheet cell can say.
+The chain above, as the file holds it. The measured constant's entry holds no number, only the
+name of the stamped result its number comes from, which is more than a spreadsheet cell can say.
 ```
 
 ## What this cannot tell you

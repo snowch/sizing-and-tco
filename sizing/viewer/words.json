@@ -1,0 +1,41 @@
+{
+  "taught": {
+    "band": "Distribution",
+    "at_book": " (at the scenario)",
+    "book_value": "At the scenario",
+    "low": "p5",
+    "middle": "median",
+    "high": "p95",
+    "over_limit": "At the scenario, over its limit in {share} of samples.",
+    "stale": "These are point values for the settings you have chosen. The distributions and the probabilities below still belong to the scenario.",
+    "moved": "moved from the book's value",
+    "reset": "Back to the scenario",
+    "single": "a single value",
+    "lognormal": "lognormal, p10 {p10} to p90 {p90}",
+    "triangular": "triangular, {minimum} / {likely} / {maximum}",
+    "uniform": "uniform, {minimum} to {maximum}",
+    "resample_held": "held here — resample to see what that leaves",
+    "resample_checking": "Checking this browser against the build…",
+    "resample_running": "Sampling with {count} input(s) held…",
+    "resample_done": "Resampled: {samples} samples, seed {seed}",
+    "resample_with": ", with {held} held. ",
+    "resample_after": "The intervals and the histograms below are for these settings. ",
+    "resample_failed": "The sampler did not run here: {error} — the stamped intervals stand."
+  },
+  "plain": {
+    "band": "Band",
+    "at_book": " (at the book's values)",
+    "book_value": "The book's value",
+    "low": "low: 1 future in 20 below",
+    "middle": "middle",
+    "high": "high: 1 in 20 above",
+    "over_limit": "Over its limit in {share} of the model's futures.",
+    "stale": "The bands under Details are for the book's values, not the ones you have moved.",
+    "moved": "moved from the book's value",
+    "reset": "Back to the book's values",
+    "single": "a single value",
+    "lognormal": "1 future in 10 below {p10}, 1 in 10 above {p90}",
+    "triangular": "from {minimum} to {maximum}, most likely {likely}",
+    "uniform": "anywhere from {minimum} to {maximum}"
+  }
+}

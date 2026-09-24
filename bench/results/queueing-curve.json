@@ -7,8 +7,8 @@
     "one_slice": "the request rate moves and nothing else does. A service whose demand per request also rises with load - which is most of them - is on a steeper curve than this one",
     "the_cap": "the model clamps utilisation before it divides by zero; past that point the formula has stopped describing a queue"
   },
-  "generated_at": "2026-09-24T14:42:18+00:00",
-  "git_revision": "37ad791",
+  "generated_at": "2026-09-24T21:18:32+00:00",
+  "git_revision": "6df525c",
   "kind": "measurement",
   "name": "queueing-curve",
   "produced_by": {

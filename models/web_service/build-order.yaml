@@ -25,13 +25,13 @@ certain_until:
     stage: uncertainty
     value: 1.3
     source: >-
-      ch02 - one growth rate, chosen rather than measured. ch04 replaces it with a distribution,
-      because a single number cannot say how sure anybody is of it.
+      ch02 - one growth rate, chosen rather than measured. ch04 gives it a shape, because
+      a single number cannot say how sure anybody is of it.
   peak_request_rate_t0:
     stage: uncertainty
     value: 8000
     source: >-
-      ch02 - the busy hour, as one number. ch04 replaces it with a distribution, because an
+      ch02 - the busy hour, as one number. ch04 gives it a shape, because an
       engineer who gives you this figure is giving you a range and rounding it.
   os_reserve:
     stage: uncertainty

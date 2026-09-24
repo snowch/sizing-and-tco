@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "12a9537d79a708ad",
+  "code_fingerprint": "a9f40a728efe0eac",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-24T14:41:26+00:00",
-  "git_revision": "37ad791",
+  "generated_at": "2026-09-24T21:17:39+00:00",
+  "git_revision": "6df525c",
   "kind": "model",
   "name": "web_service-challenger",
   "produced_by": {
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-24T14:41:25+00:00",
+    "generated_at": "2026-09-24T21:17:38+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {
@@ -2563,7 +2563,7 @@
         "kind": "derived",
         "label": "requests in the system",
         "layer": 7,
-        "note": "Little's law, and the only relationship in Part II that is always true: the number of requests in a system is the rate they arrive at times how long each one stays. No distribution assumed, no queue discipline assumed, nothing assumed except that the system is in a steady state. ch05 is about what that buys and what it does not.",
+        "note": "Little's law, and the only relationship in Part II that is always true: the number of requests in a system is the rate they arrive at times how long each one stays. No pattern of arrivals assumed, no queue discipline assumed, nothing assumed except that the system is in a steady state. ch05 is about what that buys and what it does not.",
         "point": 1467.5597127225526,
         "row": 2,
         "summary": {
@@ -5110,7 +5110,7 @@
         "kind": "input",
         "label": "hosts in the fleet",
         "layer": 0,
-        "note": "**The most important node in this model, and the one a spreadsheet hides.** Sizing does not produce a fleet; it produces a recommendation, and then a person decides. It arrives here, in Part II, because a queue needs something to stand in front of \u2014 but it is decided in ch12, and everything downstream of it, every dollar, every watt, every ceiling, is a consequence of the number chosen here and not of the number the model would recommend in hindsight.\nDeriving it instead would make the ceilings below tautologies: a fleet sized to sit under the knee sits under it in every sample, and the model would cheerfully report a zero per cent chance of queueing. Making it an input is what lets the ceilings ask the only question worth asking \u2014 *given what we actually bought, how often does the world break it?*",
+        "note": "**The most important node in this model, and the one a spreadsheet hides.** Sizing does not produce a fleet; it produces a recommendation, and then a person decides. It arrives here, in Part II, because a queue needs something to stand in front of \u2014 but it is decided in ch12, and everything downstream of it, every dollar, every watt, every ceiling, is a consequence of the number chosen here and not of the number the model would recommend in hindsight.\nDeriving it instead would make the ceilings below tautologies: a fleet sized to sit under the knee sits under it in every future, and the model would cheerfully report a zero per cent chance of queueing. Making it an input is what lets the ceilings ask the only question worth asking \u2014 *given what we actually bought, how often does the world break it?*",
         "point": 14.0,
         "provenance": {
           "kind": "assumption",

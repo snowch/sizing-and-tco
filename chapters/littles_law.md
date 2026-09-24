@@ -86,11 +86,6 @@ meeting. Drag *hosts in the fleet* and watch it move, while nothing yet says how
 The graph as ch05 leaves it: the busy hour, what a request costs, and how busy that makes a fleet.
 ```
 
-```{iframe} /playground/littles-law/
-:width: 100%
-The same file, running. Halve the CPU time per request and watch how many requests are in flight.
-```
-
 ### Running the law backwards
 
 Nobody measures residence time. It is the hardest of the three quantities to get at honestly. An

@@ -145,16 +145,6 @@ with: *surprised below this, surprised above that*. That is the most honest form
 because a sentence can be argued with and a bare number cannot. It is not a measurement, and the
 model does not pretend otherwise.
 
-Here is that stage of the web service model, with the two ends of a band where a number used to
-be:
-
-```{iframe} /playground/peak-mean-and-growth/
-:width: 100%
-The growth rate, as a claim rather than a figure. The value shown against it is not one anybody
-typed — it is the middle of the band, and it is not the average of the two ends. Move either
-percentile and watch which way the middle goes.
-```
-
 ### Three ways a demand curve is described badly
 
 **A single peak.** "We do forty thousand requests a second at peak" is a rate with no duration

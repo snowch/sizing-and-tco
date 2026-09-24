@@ -2,11 +2,11 @@
 
 | | Input | Provenance | Source |
 |---|---|---|---|
-| ○ | annual growth factor | assumption | ch02 - one growth rate, chosen rather than measured. ch04 replaces it with a distribution, because a single number cannot say how sure anybody is of it. |
+| ○ | annual growth factor | assumption | ch02 - one growth rate, chosen rather than measured. ch04 gives it a shape, because a single number cannot say how sure anybody is of it. |
 | ○ | horizon | assumption | the refresh cycle this fleet is bought against |
 | ● | one year | fact | definition |
 | ○ | os reserve | assumption | ch03 - the share of memory the kernel, the agents and the page cache floor keep before the service sees any, as one number. ch04 gives it a shape, because it differs from host to host and nobody has measured it on these. |
-| ○ | peak request rate, day one | assumption | ch02 - the busy hour, as one number. ch04 replaces it with a distribution, because an engineer who gives you this figure is giving you a range and rounding it. |
+| ○ | peak request rate, day one | assumption | ch02 - the busy hour, as one number. ch04 gives it a shape, because an engineer who gives you this figure is giving you a range and rounding it. |
 | ◐ | ram per host | vendor claim | spec sheet: the modules fitted. The sheet says 64 GB and means GiB — appendix D — and the operating system will report less than either, which is os_reserve's job |
 | ○ | records held, day one | assumption | stated workload (ch02) — what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression |
 | | **7 inputs** | | **1 fact, 1 vendor claim, 5 assumption** |

@@ -6,7 +6,7 @@
 // the toolkit looks for them on disk. Nothing is sent anywhere: after the fetch, everything
 // runs here.
 async function bootToolkit({ pyodideUrl, modules, results, wheels, files, status }) {
-  // Whether the runtime is already on this device: kept by the worker after an earlier Run, or
+  // Whether the runtime is already on this device: kept by the worker after an earlier start, or
   // fetched ahead of need by the offline control. The line under the button should not promise
   // a download that is not going to happen.
   let kept = false;
@@ -20,12 +20,12 @@ async function bootToolkit({ pyodideUrl, modules, results, wheels, files, status
   const { loadPyodide } = await import(pyodideUrl + "pyodide.mjs");
   const pyodide = await loadPyodide({ indexURL: pyodideUrl });
   // numpy and PyYAML come with the runtime, from its own pinned lock file. Pint and what it
-  // needs are exact wheels from PyPI, pinned in sizing/playground/toolkit.py, so that a Run
+  // needs are exact wheels from PyPI, pinned in sizing/playground/toolkit.py, so that a start
   // installs the same code on every day it is pressed and the offline control knows what to keep.
   await pyodide.loadPackage(["numpy", "pyyaml", ...(wheels || [])]);
   layOut(pyodide, { modules, results, files });
   await pyodide.runPythonAsync(
-    "import sys\nsys.path.insert(0, '/')\nfrom sizing.playground.driver import check, resample");
+    "import sys\nsys.path.insert(0, '/')\nfrom sizing.playground.driver import resample");
   return pyodide;
 }
 
@@ -41,8 +41,8 @@ function layOut(pyodide, { modules, results, files }) {
   for (const [path, text] of Object.entries(files || {})) write("/" + path, text);
 }
 
-// One runtime per tab, however many controls on the page ask for it. A chapter can carry the
-// model's Run and a Check under each of its problems: the first to be pressed starts Python,
+// One runtime per tab, however many controls on the page ask for it. A chapter can carry a
+// Check under each of its problems: the first to be pressed starts Python,
 // the rest wait for the same start and then lay their own files out beside it. Every caller's
 // status line hears how the start is going, whichever of them began it.
 function shareToolkit(options) {

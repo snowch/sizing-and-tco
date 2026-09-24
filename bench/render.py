@@ -80,10 +80,6 @@ class UnknownNodeError(Exception):
     """A node type the renderer does not handle. Raised, never skipped."""
 
 
-#: Where a caller may splice a run control in. The caller marks the node it should follow with
-#: `_runner_here`, and this comes out in its place.
-RUNNER_SLOT = "<!-- runner -->"
-
 #: What sort of panel an `{iframe}` holds, keyed by the first segment of the site-root URL it
 #: points at. Read from the address rather than from an option an author has to remember, because
 #: each sort needs a height of its own and the address is the thing that cannot be forgotten.
@@ -169,23 +165,6 @@ def render(node: dict) -> str:
         return f"<em>{children()}</em>"
     if kind == "inlineCode":
         return f"<code>{html.escape(node.get('value', ''))}</code>"
-    if kind == "code" and node.get("_editable"):
-        # The piece of the model the chapter is quoting, made editable where the chapter shows
-        # it. `data-start`/`data-end` are where it sits in the whole file, so an edit here can be
-        # spliced back into the document the toolkit is handed. The bar above it is the only
-        # thing that says so: a block a reader may type into has to look unlike one they may not.
-        span = node["_editable"]
-        name = html.escape(str(node.get("filename") or "model.yaml"))
-        return (
-            '<div class="editable-block">'
-            f'<div class="editable-bar"><span class="file">{name}</span>'
-            '<span class="hint">yours to edit</span>'
-            '<button class="run-here" type="button">Run</button></div>'
-            '<pre class="editable model" contenteditable="plaintext-only" spellcheck="false"'
-            f' data-start="{span["start"]}" data-end="{span["end"]}">'
-            f"<code>{html.escape(str(node.get('value', '')))}</code></pre></div>"
-            + (RUNNER_SLOT if node.get("_runner_here") else "")
-        )
     if kind == "code" and node.get("_problem"):
         # The command under a tested problem, with the piece of the stubs file that problem
         # grades made editable above it. `data-start`/`data-end` place each piece in the whole
@@ -250,8 +229,6 @@ def render(node: dict) -> str:
         classes = " ".join(["container", *str(node.get("kind", "")).split()])
         return f'<figure class="{classes}">{children()}</figure>'
     if kind == "iframe":
-        if node.get("_suppressed"):
-            return RUNNER_SLOT if node.get("_runner_here") else ""
         # Which kind of panel this is comes from where it points, not from an option an author
         # has to remember: a viewer needs more height than a playground. The caption beside it
         # is prose and renders as prose.

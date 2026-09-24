@@ -100,7 +100,7 @@ def test_every_script_is_executable_and_parses():
 JS_TEMPLATES = (
     [
         ("scripts/build-site.py", name)
-        for name in ("EXPAND", "MENU", "OFFLINE", "PROBLEMS", "RUNNER", "SEARCH")
+        for name in ("EXPAND", "MENU", "OFFLINE", "PROBLEMS", "SEARCH")
     ]
     + [("bench/theme.py", name) for name in ("_PARENT", "FRAME")]
     + [("bench/reading.py", "_PARENT")]
@@ -314,28 +314,18 @@ def playground():
     return module
 
 
-def test_the_runner_splits_in_two_only_once_both_halves_hold_the_model():
-    """A second column is worth having only when the first still shows the file as written.
+def test_the_model_file_page_shows_the_file_and_runs_nothing():
+    """The file beside a chapter's graph is there to be read. The graph is what a reader moves.
 
-    The runner puts the model beside its results, which it earns only if the model is readable.
-    It split at 900px, so a chapter embedding it at 933px gave the editor 443px and broke 183 of
-    the model's 685 lines -- the generator wraps a node's source at 66 characters and 443px
-    holds about 56. Worse, the page capped itself at 1080px, so every column above that width
-    stayed 516px and a bigger window bought the reader nothing at all, Expand included.
+    It used to be a second place to run the model, with its own Run, its own editor and a ten
+    megabyte download, from before the chapters embedded the graph.
     """
-    import re
-
-    css = playground().CSS
-    split = int(re.search(r"@media \(min-width: (\d+)px\) \{ main \{ grid-template", css)[1])
-    cap = int(re.search(r"body \{[^}]*?max-width: (\d+)px", css, re.S)[1])
-    assert cap > split, (
-        "a cap at or below the split freezes both columns at half of it, so widening the "
-        "window -- or pressing Expand -- changes nothing"
-    )
-    assert split >= 1300, (
-        "half of the split, less the gap and the padding, is what the editor gets; under about "
-        "600px the file the chapter is asking the reader to read arrives broken"
-    )
+    module = playground()
+    stage = next(iter(module.pages().values()))
+    page = module.build(stage)
+    assert "<pre>" in page and stage.path.read_text().splitlines()[-1].strip() in page
+    for sign in ("<textarea", "<button", "contenteditable", "bootToolkit", "pyodide"):
+        assert sign not in page, f"the model file page still carries {sign}"
 
 
 def test_every_playground_the_build_ships_is_reachable_from_its_chapter():
@@ -543,22 +533,22 @@ def test_every_embedded_directory_gets_the_base_path():
 
 
 def test_the_pages_that_run_the_toolkit_share_one_runtime_and_one_boot():
-    """Three pages start Python in a browser. One copy of how, or they drift.
+    """Two pages start Python in a browser. One copy of how, or they drift.
 
     The inline runner, the playground and the viewer each carried their own runtime URL, module
     list and boot sequence until the third one was about to be written. Now
     ``sizing/playground/toolkit.py`` holds the URL and the list, ``boot.js`` the sequence, and
     every builder inlines them. A builder that spells the CDN out again is a fourth copy.
     """
-    builders = ("scripts/build-site.py", "scripts/build-playground.py", "scripts/build-viewers.py")
+    builders = ("scripts/build-site.py", "scripts/build-viewers.py")
     for builder in builders:
         text = (ROOT / builder).read_text()
         assert "cdn.jsdelivr.net/pyodide" not in text, f"{builder} pins its own runtime URL"
         assert "{boot}" in text, f"{builder} does not inline boot.js"
         assert "from sizing.playground.toolkit import" in text, f"{builder} does not import toolkit"
-    # The call itself: in the two page templates, and in the viewer's own app. A chapter page
-    # goes through the shared start, because its Run and its Checks are one runtime.
-    for caller in ("scripts/build-site.py", "scripts/build-playground.py", "sizing/viewer/app.js"):
+    # The call itself: in the chapter page's template, and in the viewer's own app. A chapter
+    # page goes through the shared start, because its Checks are one runtime.
+    for caller in ("scripts/build-site.py", "sizing/viewer/app.js"):
         assert re.search(r"\b(bootToolkit|shareToolkit)\(", (ROOT / caller).read_text()), (
             f"{caller} does not call bootToolkit"
         )
@@ -625,18 +615,16 @@ def test_the_toolkit_pins_the_runner_a_check_installs():
     for url, digest in PROBLEM_WHEELS:
         assert url.startswith("https://files.pythonhosted.org/") and url.endswith(".whl"), url
         assert re.fullmatch(r"[0-9a-f]{64}", digest), url
-    # The offline control keeps what a Check fetches as well as what a Run does.
+    # The offline control keeps what a Check fetches as well as what a Resample does.
     assert offline_manifest()["wheels"] == wheels() + problem_wheels()
 
 
 def test_every_page_that_boots_the_toolkit_hands_it_the_same_wheels():
-    """Three pages boot the runtime, and each has to pass the pinned wheels to the one boot."""
+    """Two pages boot the runtime, and each has to pass the pinned wheels to the one boot."""
     boot = (ROOT / "sizing" / "playground" / "boot.js").read_text()
     assert 'loadPackage(["numpy", "pyyaml", ...(wheels || [])])' in boot
     assert "micropip" not in boot, "an install by name is an install of whatever PyPI has today"
-    assert "wheels: WHEELS" in (ROOT / "scripts" / "build-site.py").read_text()
-    assert 'id="model-wheels"' in (ROOT / "scripts" / "build-site.py").read_text()
-    assert "wheels: WHEELS" in (ROOT / "scripts" / "build-playground.py").read_text()
+    assert "wheels: SPEC.wheels" in (ROOT / "scripts" / "build-site.py").read_text()
     assert "wheels: TOOLKIT.wheels" in (ROOT / "sizing" / "viewer" / "app.js").read_text()
     assert '"wheels": wheels()' in (ROOT / "scripts" / "build-viewers.py").read_text()
 
@@ -1074,7 +1062,6 @@ def test_a_chapter_is_two_widths_on_one_middle():
     selector, cap = wide.group(1), wide.group(2)
     for part in (
         "figure:has(> iframe)",
-        "figure:has(> .runner)",
         "table",
         "pre",
         ".editable-block",

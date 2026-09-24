@@ -236,7 +236,7 @@ whether the reader has to decode it.
   type it does not handle, deliberately — the alternative is content silently missing from a
   page. `make check` renders every page, so it fails there rather than in the deploy.
 
-- **JavaScript in a Python string that is not raw.** `RUNNER` and `SEARCH` in
+- **JavaScript in a Python string that is not raw.** `PROBLEMS` and `SEARCH` in
   `scripts/build-site.py` carry JavaScript. Without `r"""`, Python eats `\n` and the page ships a
   regex literal that cannot parse — silently, because nothing on the Python side is wrong. This
   has happened twice; `tests/test_scripts.py` now fails without the `r`.

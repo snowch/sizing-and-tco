@@ -56,7 +56,6 @@ All three chains are in one file, and it is short enough to read in a sitting:
 ```{iframe} /playground/bandwidth-and-the-binding-constraint/
 :width: 100%
 Two more chains, added. Three nodes now ask for a host count and a fourth takes the largest.
-Change the cost of a request and watch which chain is in charge.
 ```
 
 ### Buy the largest, not the average, the usual winner or the sum

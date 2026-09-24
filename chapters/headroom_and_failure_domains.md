@@ -88,12 +88,6 @@ The graph as ch11 leaves it, with every margin the model declares. Click any cei
 reason.
 ```
 
-```{iframe} /playground/headroom-and-failure-domains/
-:width: 100%
-The same file, running. Set the queueing margin to zero and two ceilings move at once, because
-they share it.
-```
-
 ### Margins do not add
 
 A sizing conversation collects margins. Rebuild wants some. Queueing wants some. Growth between

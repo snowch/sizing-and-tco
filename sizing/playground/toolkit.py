@@ -20,15 +20,15 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 #: Pinned, because an unpinned runtime changes what a reader sees without changing a line here.
 PYODIDE = "https://cdn.jsdelivr.net/pyodide/v0.28.3/full/"
 
-#: The packages a Run loads from the runtime's own distribution, at the versions its lock file
+#: The packages a start loads from the runtime's own distribution, at the versions its lock file
 #: pins.
 RUNTIME_PACKAGES = ("numpy", "pyyaml")
 
-#: What a Run installs from PyPI, as exact files rather than names: Pint at the version
+#: What a start installs from PyPI, as exact files rather than names: Pint at the version
 #: ``requirements.txt`` pins for the native toolkit, and the four pure-Python packages it needs,
 #: each with the digest PyPI published beside it. Pinned for the reason the runtime is, so that
-#: Run installs the same code on every day it is pressed, and listed so that the offline control
-#: knows what a Run will fetch. ``tests/test_scripts.py`` holds the Pint version to the native pin.
+#: every start installs the same code on every day, and listed so that the offline control
+#: knows what a start will fetch. ``tests/test_scripts.py`` holds the Pint version to the native pin.
 WHEELS = (
     (
         "https://files.pythonhosted.org/packages/1b/dd/a9fe6a0a09512da23951c68bf36466aeecd89def3183dc095edbc807ddc5/pint-0.25.3-py3-none-any.whl",
@@ -86,12 +86,12 @@ RUNTIME_CACHE = "sizing-and-tco-runtime-v1"
 
 
 def wheels() -> list[str]:
-    """The pinned wheels a Run installs, as the URLs a page hands the runtime."""
+    """The pinned wheels a start installs, as the URLs a page hands the runtime."""
     return [url for url, _digest in WHEELS]
 
 
 def problem_wheels() -> list[str]:
-    """The pinned wheels a Check installs on top of a Run's."""
+    """The pinned wheels a Check installs on top of a start's."""
     return [url for url, _digest in PROBLEM_WHEELS]
 
 

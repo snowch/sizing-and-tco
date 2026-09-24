@@ -45,7 +45,7 @@ PAGE = """<!doctype html>
 <body>
 <header>
   <h1>{title} <span class="kind">{classification} model</span></h1>
-  <p id="run">{scenario_title} · {samples} samples · seed {seed} · generated {generated} ·
+  <p data-once-taught>{scenario_title} · {samples} samples · seed {seed} · generated {generated} ·
   <a href="{stamp}">the stamped result</a></p>
 </header>
 <main>
@@ -57,15 +57,19 @@ PAGE = """<!doctype html>
       <!-- The control and its outcome sit above the sliders: on a model with twenty inputs the
            reader presses a button at the top and reads the answer where they pressed it. -->
       <div id="banner" class="banner" style="display:none"></div>
+      <!-- Its words come from words.json, which has a plain version for a chapter before
+           sampling is taught. What only makes sense once it is taught is marked, and app.js takes
+           it out: data-once-taught before then, data-resample wherever a resample could change
+           nothing. -->
       <div id="stale" class="stale" style="display:none">
-        These are point values for the settings you have chosen. The distributions and the
-        probabilities below still belong to the scenario.
-        <button id="resample" class="primary">Resample with these fixed</button>
-        <span class="note">Runs the book's own sampler in this tab — the same code and seed that
-        stamped the intervals — with the inputs you have moved held at their values. The first
-        press fetches a Python runtime, about ten megabytes, once; nothing is sent anywhere.</span>
+        <span id="stale-text"></span>
+        <button id="resample" class="primary" data-resample>Resample with these fixed</button>
+        <span class="note" data-resample>Runs the book's own sampler in this tab — the same code
+        and seed that stamped the intervals — with the inputs you have moved held at their values.
+        The first press fetches a Python runtime, about ten megabytes, once; nothing is sent
+        anywhere.</span>
       </div>
-      <button id="reset">Back to the scenario</button>
+      <button id="reset"></button>
       <div id="sliders"></div>
       <h2>Outputs</h2>
       <div id="outputs"></div>
@@ -93,6 +97,7 @@ PAGE = """<!doctype html>
 </main>
 <script>window.__MODEL__ = {payload};</script>
 <script>window.__TOOLKIT__ = {toolkit};</script>
+<script>window.__WORDS__ = {words};</script>
 <script type="module">
 {boot}
 {evaluate_js}
@@ -132,6 +137,7 @@ def build(result_name: str, out_dir: Path) -> Path:
     page = PAGE.format(
         title=html.escape(payload["title"]),
         toolkit=json.dumps(toolkit),
+        words=json.dumps(json.loads((VIEWER / "words.json").read_text())),
         boot=BOOT,
         scenario=html.escape(payload["scenario"]["name"]),
         scenario_title=html.escape(payload["scenario"]["title"]),

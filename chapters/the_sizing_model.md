@@ -102,7 +102,7 @@ The sizing model, complete. Nothing arrives in this chapter: it is every earlier
 
 ```{iframe} /playground/the-sizing-model/
 :width: 100%
-The same file, running. It is the file ch02 started, eleven chapters on.
+The file behind the graph above. It is the file ch02 started, eleven chapters on.
 ```
 
 ### So what is the answer?

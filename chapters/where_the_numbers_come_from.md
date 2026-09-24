@@ -73,11 +73,6 @@ in the model that is about hardware. Click *ram per host* to see whose claim it 
 The graph as ch03 leaves it. The vendor's claim is a node like any other, and says so when clicked.
 ```
 
-```{iframe} /playground/where-the-numbers-come-from/
-:width: 100%
-The same file, with the vendor's claim in it. Change the `provenance` of a node and run it again.
-```
-
 Still a definitional model, and a vendor's claim does not change that. A claim is about a number: how
 much anybody should trust it. The distinction this book is built on is about the *shape* of the
 arithmetic: whether the chain of multiplications stops applying somewhere. So a model can be

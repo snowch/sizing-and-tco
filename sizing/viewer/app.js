@@ -16,6 +16,16 @@ const STAMPED = window.__MODEL__;
 let PAYLOAD = STAMPED;
 //: The toolkit the page carries for a resample, or undefined on a page built without one.
 const TOOLKIT = window.__TOOLKIT__;
+//: Words the chapter around the page decides between: sizing/viewer/words.json holds the plain
+//: ones, for a chapter before the one that teaches sampling, and the ones it teaches.
+const WORDS = window.__WORDS__;
+const UNTAUGHT = new URLSearchParams(location.search).has("before");
+const say = (key, fill = {}) =>
+  (UNTAUGHT ? WORDS.plain : WORDS.taught)[key].replace(/\{(\w+)\}/g, (_, name) => fill[name]);
+//: Whether anything here was drawn rather than stated. Before ch04 nothing is: there is no band
+//: to go stale, and nothing a resample could change.
+const SAMPLED = Object.values(STAMPED.nodes).some((node) => node.histogram);
+const CAN_RESAMPLE = Boolean(TOOLKIT) && SAMPLED && !UNTAUGHT;
 const BOX = { w: 154, h: 32, col: 188, row: 46, margin: 16 };
 
 // A box is a box. What does not fit says so, rather than stopping mid-word and leaving the
@@ -191,6 +201,7 @@ function drawGraph(values, blocked) {
       const name = g.dataset.node;
       selected = name;
       focus = focus === name ? null : name;
+      reveal();
       render();
     });
     g.addEventListener("mouseenter", () => hot(g.dataset.node, true));
@@ -221,8 +232,15 @@ function goTo(name) {
   selected = name;
   focus = name;
   direction = "up";
+  reveal();
   render();
 }
+
+//: How to open a closed panel by its toggle's id. Filled in only where panels can close.
+const panels = {};
+// A node the reader picks is shown under Details, so a closed Details opens: a click that
+// changed nothing on screen is what the chapter would otherwise be asking them to make.
+const reveal = () => panels["toggle-detail"]?.(true);
 
 /* -- sliders --------------------------------------------------------------------- */
 
@@ -312,7 +330,7 @@ function detail(values, blocked) {
     parts.push(`<div class="blocked"><strong>Not yet measured.</strong> This depends on ${node.blocked_by.map((b) => `<code>${b}</code>`).join(", ")}, which nobody has measured. Nothing is estimated in its place.</div>`);
   } else {
     parts.push(`<table><tr><td>Value here</td><td class="n">${fmt(values[name], node.unit)}</td></tr>` +
-      (node.point !== undefined ? `<tr><td>At the scenario</td><td class="n">${fmt(node.point, node.unit)}</td></tr>` : "") + `</table>`);
+      (node.point !== undefined ? `<tr><td>${say("book_value")}</td><td class="n">${fmt(node.point, node.unit)}</td></tr>` : "") + `</table>`);
   }
   if (node.formula) parts.push(`<h2>Formula</h2><p><code>${node.formula}</code></p>`);
   const fed = childrenOf()[name];
@@ -346,14 +364,14 @@ function detail(values, blocked) {
       `<tr><td>Headroom</td><td class="n">${(c.headroom * 100).toFixed(0)}%</td></tr>` +
       `<tr><td>Allowed</td><td class="n">${fmt(c.allowed, "")}</td></tr></table>` +
       `<p class="note">${c.because}</p>` +
-      (isStale() ? "" : `<p class="note">At the scenario, over its limit in <strong>${((node.ceiling.p_over_limit ?? 0) * 100).toFixed(0)}%</strong> of samples.</p>`));
+      (isStale() ? "" : `<p class="note">${say("over_limit", { share: `<strong>${((node.ceiling.p_over_limit ?? 0) * 100).toFixed(0)}%</strong>` })}</p>`));
   }
   if (node.histogram) {
-    parts.push(`<h2>Distribution${isStale() ? " (at the scenario)" : ""}</h2>` + histogram(node));
+    parts.push(`<h2>${say("band")}${isStale() ? say("at_book") : ""}</h2>` + histogram(node));
     const s = node.summary;
-    parts.push(`<table><tr><td>p5</td><td class="n">${fmt(s.p5, node.unit)}</td></tr>` +
-      `<tr><td>median</td><td class="n">${fmt(s.p50, node.unit)}</td></tr>` +
-      `<tr><td>p95</td><td class="n">${fmt(s.p95, node.unit)}</td></tr></table>`);
+    parts.push(`<table><tr><td>${say("low")}</td><td class="n">${fmt(s.p5, node.unit)}</td></tr>` +
+      `<tr><td>${say("middle")}</td><td class="n">${fmt(s.p50, node.unit)}</td></tr>` +
+      `<tr><td>${say("high")}</td><td class="n">${fmt(s.p95, node.unit)}</td></tr></table>`);
   }
   if (node.note) parts.push(`<h2>Note</h2><p class="note">${node.note}</p>`);
   $("detail-body").innerHTML = parts.join("");
@@ -373,7 +391,7 @@ function render() {
     const name = input.dataset.node;
     const state = $(`st-${name}`);
     if (name in overrides) {
-      state.textContent = "held here \u2014 resample to see what that leaves";
+      state.textContent = CAN_RESAMPLE ? say("resample_held") : say("moved");
       state.className = "state fixed";
     } else if (name in fixed) {
       state.textContent = `fixed at ${fmt(fixed[name], PAYLOAD.nodes[name].unit)}`;
@@ -383,8 +401,7 @@ function render() {
       state.className = "state";
     }
   }
-  $("stale").style.display = isStale() ? "block" : "none";
-  $("resample").style.display = TOOLKIT ? "block" : "none";
+  $("stale").style.display = isStale() && SAMPLED ? "block" : "none";
   $("reset").style.display = isStale() || Object.keys(fixed).length ? "inline-block" : "none";
   drawGraph(values, blocked);
   focusNote();
@@ -403,11 +420,14 @@ $("reset").addEventListener("click", () => {
 // A declared shape, said the way the model file says it.
 function shape(node) {
   const d = node.distribution;
-  if (!d) return "a single value";
+  if (!d) return say("single");
   const u = node.unit;
-  if (d.lognormal) return `lognormal, p10 ${fmt(d.lognormal.p10, u)} to p90 ${fmt(d.lognormal.p90, u)}`;
-  if (d.triangular) return `triangular, ${fmt(d.triangular.minimum, u)} / ${fmt(d.triangular.likely, u)} / ${fmt(d.triangular.maximum, u)}`;
-  if (d.uniform) return `uniform, ${fmt(d.uniform.minimum, u)} to ${fmt(d.uniform.maximum, u)}`;
+  if (d.lognormal) return say("lognormal", { p10: fmt(d.lognormal.p10, u), p90: fmt(d.lognormal.p90, u) });
+  if (d.triangular) {
+    const t = d.triangular;
+    return say("triangular", { minimum: fmt(t.minimum, u), likely: fmt(t.likely, u), maximum: fmt(t.maximum, u) });
+  }
+  if (d.uniform) return say("uniform", { minimum: fmt(d.uniform.minimum, u), maximum: fmt(d.uniform.maximum, u) });
   return Object.keys(d)[0];
 }
 
@@ -460,10 +480,10 @@ async function resample() {
     });
     pyodide = await booting;
     if (agreement === null) {
-      banner("Checking this browser against the build\u2026", "pending");
+      banner(say("resample_checking"), "pending");
       agreement = agree(await resampleWith({}));
     }
-    banner(`Sampling with ${Object.keys(held).length} input(s) held\u2026`, "pending");
+    banner(say("resample_running", { count: Object.keys(held).length }), "pending");
     const fresh = await resampleWith(held);
     PAYLOAD = fresh;
     fixed = held;
@@ -471,24 +491,28 @@ async function resample() {
     const s = fresh.scenario;
     const heldText = Object.entries(held)
       .map(([n, v]) => `${STAMPED.nodes[n].label} at ${fmt(v, STAMPED.nodes[n].unit)}`).join(", ");
-    banner(`Resampled: ${s.samples.toLocaleString()} samples, seed ${s.seed}` +
-      (heldText ? `, with ${heldText} held. ` : ". ") +
-      "The intervals and the histograms below are for these settings. " + agreement,
+    banner(say("resample_done", { samples: s.samples.toLocaleString(), seed: s.seed }) +
+      (heldText ? say("resample_with", { held: heldText }) : ". ") +
+      say("resample_after") + agreement,
       agreement.startsWith("At the scenario") ? "" : "bad");
   } catch (error) {
-    banner("The sampler did not run here: " + error + " \u2014 the stamped intervals stand.", "bad");
+    banner(say("resample_failed", { error }), "bad");
   } finally {
     button.disabled = false;
     render();
   }
 }
 
-if (TOOLKIT) $("resample").addEventListener("click", resample);
+if (CAN_RESAMPLE) $("resample").addEventListener("click", resample);
 
 {
   const note = $("narrow-note");
-  // A chapter that comes before samples and seeds are taught asks for the run to be left out.
-  if (new URLSearchParams(location.search).get("run") === "hidden") $("run").hidden = true;
+  // What the chapter around the page has not taught yet comes out, and so does a resample with
+  // nothing to change or no toolkit to do it with.
+  if (UNTAUGHT) for (const el of document.querySelectorAll("[data-once-taught]")) el.remove();
+  if (!CAN_RESAMPLE) for (const el of document.querySelectorAll("[data-resample]")) el.remove();
+  $("stale-text").textContent = say("stale");
+  $("reset").textContent = say("reset");
   if (window.self !== window.top) {
     // The chapter floats its Expand button over this panel's top right corner, so the header
     // keeps a space clear for it. On a phone the title wrapped under the button without it.
@@ -505,6 +529,7 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
         body.style.maxHeight = open ? "100vh" : "0";
         section.toggleAttribute("data-collapsed", !open);
       };
+      panels[button] = show;
       show(toggle.getAttribute("aria-expanded") === "true");
       toggle.addEventListener("click", () => show(toggle.getAttribute("aria-expanded") !== "true"));
     }

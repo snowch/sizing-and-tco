@@ -89,7 +89,8 @@ much data you hold. Start with the first one:
 ```{iframe} /models/web_service_demand_inputs_single-reference.html
 :width: 100%
 
-Interactive viewer with one input. Click on the node to see its provenance. Drag the slider to change the value, then click Run to recompute (or it happens automatically on the page).
+One input. Click the node to see where its value came from. Open *Inputs* and drag the slider,
+and the graph recomputes as you drag.
 ```
 
 Blue means you choose it — this is an input. The slider appears because the node declares a range. Click on a node to see where it came from and what it is measured in.
@@ -199,21 +200,18 @@ Drag a slider. Everything downstream changes instantly—watch which nodes move 
 
 ### The demand side, complete
 
-Here it is all together, running: this repository's toolkit, not a copy. Press **Run**, then
-change a number and watch the outputs move. Drag *annual growth factor* and observe how
-*peak request rate at horizon* and *records held at horizon* change. Try changing `stored_data`'s
-formula to multiply the request rate by a plain number: the toolkit refuses. The node holds
-terabytes, and a rate times a plain number is still a rate. The formula is wrong, not imprecise.
-
-```{iframe} /playground/what-a-workload-is/
-:width: 100%
-The file above, running. The first press fetches a Python runtime; after that a check takes milliseconds.
-```
+Here it is all together. Drag *annual growth factor* and watch *peak request rate at horizon*
+and *records held at horizon* move with it.
 
 ```{iframe} /models/web_service_demand-reference.html
 :width: 100%
 An interactive reference of the eight-node demand model, ready to explore.
 ```
+
+The toolkit also checks the file before it works anything out. Change `stored_data`'s formula to
+multiply the request rate by a plain number and it refuses: the node holds terabytes, and a rate
+times a plain number is still a rate. The formula is wrong, not imprecise. Problem 2.4 has you
+write a mistake of that kind and watch it caught.
 
 ### The demand and the decisions
 
@@ -249,10 +247,10 @@ what that difference is worth.
 
 ### What the file computes, and what kind of model it is
 
-You have run it already. Press **Run** and [`sizing`](#appendix-a-dsl-reference), the toolkit,
-reads the file, checks that every formula produces the unit its node declares, and works each
-node out from the ones it depends on. That is all running a model is, and the numbers it has
-just shown you are the next table:
+You have seen it run already: every number on the graph above came from running this file.
+[`sizing`](#appendix-a-dsl-reference), the toolkit, reads the file, checks that every formula
+produces the unit its node declares, and works each node out from the ones it depends on. That is
+all running a model is, and its numbers are the next table:
 
 ```{include} _generated/what-a-workload-is-stage.md
 ```
