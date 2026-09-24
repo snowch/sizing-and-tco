@@ -6,6 +6,10 @@ short_title: "ch09 Capacity"
 (capacity)=
 # ch09 · Capacity
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 How far is what you buy from what you can use?

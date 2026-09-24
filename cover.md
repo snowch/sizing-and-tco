@@ -11,7 +11,7 @@ numbering: false
 ## Sizing and TCO
 
 :::{note}
-**DRAFT** — This book is still being written.
+**DRAFT** — The preface and chapter 1 are complete. Chapters 2–23 are in draft: content is written, polish and final review pending.
 :::
 
 ### How to size a system, cost it, and know how much to trust the answer.

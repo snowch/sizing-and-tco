@@ -6,6 +6,10 @@ short_title: "ch23 What the model got wrong"
 (what-the-model-got-wrong)=
 # ch23 · What the model got wrong
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 The design failed. Can the model say why, and what can it never say?

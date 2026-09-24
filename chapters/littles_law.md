@@ -6,6 +6,10 @@ short_title: "ch05 Little's law"
 (littles-law)=
 # ch05 · Little's law
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 What can you infer about a system from the one relationship that is always true, and what can you

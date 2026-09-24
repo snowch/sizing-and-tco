@@ -6,6 +6,10 @@ short_title: "ch12 The sizing model"
 (the-sizing-model)=
 # ch12 · The sizing model
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 What does the whole chain produce, and how much of it would you defend?

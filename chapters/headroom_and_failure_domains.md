@@ -6,6 +6,10 @@ short_title: "ch11 Headroom and failure domains"
 (headroom-and-failure-domains)=
 # ch11 · Headroom and failure domains
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 Why is headroom a rule rather than a number?

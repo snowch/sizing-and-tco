@@ -6,6 +6,10 @@ short_title: "ch08 Regime changes"
 (regime-changes)=
 # ch08 · Regime changes
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 Which ceilings can a chain of multiplications not model at all?

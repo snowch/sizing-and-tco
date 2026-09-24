@@ -6,6 +6,10 @@ short_title: "ch14 Correlation and convergence"
 (correlation-and-convergence)=
 # ch14 · Correlation and convergence
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 [ch13](#monte-carlo) produced an interval, and it rested on two things nobody checked: that every

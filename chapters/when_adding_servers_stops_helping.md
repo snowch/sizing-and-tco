@@ -6,6 +6,10 @@ short_title: "ch07 When adding servers stops helping"
 (when-adding-servers-stops-helping)=
 # ch07 · When adding servers stops helping
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 How far does a system scale, and how would you find out from the three measurements you have?

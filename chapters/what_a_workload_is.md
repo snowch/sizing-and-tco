@@ -6,6 +6,10 @@ short_title: "ch02 What a workload is"
 (what-a-workload-is)=
 # ch02 · What a workload is
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 Which quantities actually size a system, and which only look as though they do?

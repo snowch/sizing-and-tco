@@ -6,6 +6,10 @@ short_title: "ch18 The five-year model"
 (the-five-year-model)=
 # ch18 · The five-year model
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 How does a cost model consume a sizing model's output without swallowing its uncertainty?

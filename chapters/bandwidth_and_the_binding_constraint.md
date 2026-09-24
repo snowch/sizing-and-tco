@@ -6,6 +6,10 @@ short_title: "ch10 Three chains, and the binding constraint"
 (bandwidth-and-the-binding-constraint)=
 # ch10 · Three chains, and the binding constraint
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 When three independent chains each demand a different size, which one are you buying?

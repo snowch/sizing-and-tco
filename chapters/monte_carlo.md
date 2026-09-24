@@ -6,6 +6,10 @@ short_title: "ch13 Monte Carlo"
 (monte-carlo)=
 # ch13 · Monte Carlo
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 The sizing model has produced a host count. How sure are we?

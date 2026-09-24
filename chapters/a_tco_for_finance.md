@@ -6,6 +6,10 @@ short_title: "ch21 A TCO for a finance audience"
 (a-tco-for-finance)=
 # ch21 · A TCO for a finance audience
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 How do you present an interval to somebody who has asked you for a number?

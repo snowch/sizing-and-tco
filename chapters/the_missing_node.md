@@ -6,6 +6,10 @@ short_title: "ch20 The missing node"
 (the-missing-node)=
 # ch20 · The missing node
 
+:::{note}
+**Draft.** This chapter is written and complete. It is undergoing final review and polish.
+:::
+
 ## The question
 
 How do you find the error that no amount of sampling can see?
