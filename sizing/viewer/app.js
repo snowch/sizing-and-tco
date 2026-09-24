@@ -532,6 +532,9 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
         window.parent.postMessage({ sizing: height }, "*");
       };
       if (toggleControls && controlsContent) {
+        // Initialize maxHeight based on initial aria-expanded state
+        controlsContent.style.maxHeight = toggleControls.getAttribute("aria-expanded") === "true" ? "100vh" : "0";
+
         toggleControls.addEventListener("click", () => {
           const isExpanded = toggleControls.getAttribute("aria-expanded") === "true";
           toggleControls.setAttribute("aria-expanded", String(!isExpanded));
@@ -541,6 +544,9 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
         });
       }
       if (toggleDetail && detailContent) {
+        // Initialize maxHeight based on initial aria-expanded state
+        detailContent.style.maxHeight = toggleDetail.getAttribute("aria-expanded") === "true" ? "100vh" : "0";
+
         toggleDetail.addEventListener("click", () => {
           const isExpanded = toggleDetail.getAttribute("aria-expanded") === "true";
           toggleDetail.setAttribute("aria-expanded", String(!isExpanded));
