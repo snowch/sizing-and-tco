@@ -661,8 +661,10 @@ async function check(problem) {
     pyodide.globals.set("_test", problem.dataset.test);
     pyodide.globals.set("_files", JSON.stringify(assembleFiles()));
     show(problem, JSON.parse(await pyodide.runPythonAsync("grade(_stubs, _test, files=_files)")));
+    box.scrollIntoView({ behavior: "smooth", block: "nearest" });
   } catch (error) {
     box.textContent = "Python did not start: " + error;
+    box.scrollIntoView({ behavior: "smooth", block: "nearest" });
   } finally {
     for (const b of buttons) b.disabled = false;
   }
