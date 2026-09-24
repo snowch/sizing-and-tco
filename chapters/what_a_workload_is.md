@@ -87,6 +87,8 @@ much data you hold. Here are those two quantities as the first nodes:
 Interactive viewer: the first two quantities. Drag the sliders to see how peak rate and stored data move independently.
 ```
 
+**What you are looking at.** This is a graph: blue circles (nodes) are quantities. Edges connect them where one depends on another. Right now there are no edges because these two are independent — neither depends on the other. Each blue node is an input: a number you choose or measure. The sliders below let you drag them.
+
 Four lines in each are what this book cares about. The rest are convenience. `kind` and `unit`
 let the toolkit tell a level from a rate. `value` is the number a spreadsheet would have held on
 its own. `provenance` is the line a cell has nowhere to put. A number with no source is a
@@ -118,6 +120,8 @@ Here are the three more quantities:
 Interactive viewer: all five inputs. Notice that no derived quantities exist yet — the model shows only what you choose or define.
 ```
 
+**Still only inputs.** All five nodes are still blue, still independent. Dragging any slider does not change the others. The model has no arithmetic yet; it only holds the five choices you made. That changes next.
+
 `annual_growth` is what it says. `horizon` is your purchase cycle — the refresh window you are
 sizing for. `one_year` is not a choice. It is here because growth compounds exponentially, and an
 exponent must be a pure number.
@@ -144,6 +148,8 @@ from a formula applied to the five you gave:
 :width: 100%
 Interactive viewer: the first derived node. Drag the horizon slider and watch horizon_periods compute instantly. Click horizon_periods to see its formula.
 ```
+
+**Your first derived node.** Now one node is grey: `horizon_periods`. It is not a choice—the toolkit computes it from the blue ones. Drag the horizon slider and watch it change instantly. Click the grey node to see its formula: `horizon / one_year`. That is the arithmetic the toolkit ran to produce it. If you had typed the formula wrong, the toolkit would reject it because the unit would not match. A spreadsheet would just give you a number and say nothing.
 
 `kind: derived` means this quantity is not stated — it is computed. The toolkit reads the formula,
 checks that it produces the unit the node declares, works it out, and stores the result. This is
@@ -172,19 +178,9 @@ number of years that have passed).
 That completes the demand side. You have written eight quantities: four you choose or measure,
 one you define (one_year), three the toolkit computes (horizon_periods, and the two projections).
 
-### How to read the model: the interactive viewer
+### The graph, running
 
-The toolkit's interactive viewer lets you explore a model instead of reading it as prose. Understanding what you are looking at turns a visualization from decoration into instruction.
-
-A model is a graph: nodes are quantities, and edges are dependencies. Each node is one colour if it is an input (blue—you choose or measure it), another if it is derived (grey—the toolkit computes it from the others).
-
-A slider appears below each input node. Drag it to change the value. Everything downstream changes instantly. Drag *annual growth factor* and watch *peak request rate at horizon* and *records held at horizon* move together: they depend on it. Drag *horizon* and watch *horizon_periods* move first (it divides horizon by one_year), then the two outputs move (they use horizon_periods in their formulas). The viewer shows which changes feed where.
-
-Click on any node to see its formula. A derived node shows the arithmetic that produces it. An input node shows its provenance: what the number represents and where it came from.
-
-The colours and dependencies are the first read. Drag a slider and watch what changes. Click a node that moved and see why. Every quantity on this page has a unit, and the toolkit checks that every formula produces the unit its node declares. A quantity with the wrong unit will be rejected, not silently accepted like a spreadsheet would.
-
-Now run the model below. Press **Run** on first load, then change a number and watch the outputs move.
+Drag a slider. Everything downstream changes instantly—watch which nodes move when you change each one. That shows you the dependencies. Click a derived node and read its formula. Click an input node and see where it came from. The colours and arrows are the language. The sliders and clicks are how you read it.
 
 ### The demand side, complete
 
