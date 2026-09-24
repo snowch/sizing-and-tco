@@ -494,7 +494,6 @@ if (TOOLKIT) $("resample").addEventListener("click", resample);
   const graphOnly = new URLSearchParams(location.search).get("graphOnly") === "true";
   // Auto-apply graph-only mode for progressive viewer stages in ch02
   const progressiveStages = [
-    "demand_inputs_single",
     "demand_inputs_initial",
     "demand_inputs_all",
     "demand_horizon_exponent"
