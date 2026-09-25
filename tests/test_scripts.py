@@ -1003,7 +1003,7 @@ def test_a_choice_is_marked_as_one_and_a_year_in_seconds_is_not():
     # And the classification says what a reader would say.
     web = next(m for m in discover() if m.name == "web_service")
     assert web.nodes["hosts"].decided == "you", "the fleet is the decision the book is about"
-    assert web.nodes["stored_data_t0"].decided == "world", (
+    assert web.nodes["stored_data_t0"].decided == "outside", (
         "nobody decides how much their users uploaded"
     )
     assert web.nodes["seconds_per_year"].decided == "definition"

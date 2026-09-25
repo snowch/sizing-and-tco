@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "acfb84d3a067c33f",
+  "code_fingerprint": "14ad8a55b1b86384",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/02-demand_inputs_initial/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-25T19:02:26+00:00",
-  "git_revision": "9ddca9d",
+  "generated_at": "2026-09-25T20:25:19+00:00",
+  "git_revision": "e90b952",
   "kind": "model",
   "name": "web_service_demand_inputs_initial-reference",
   "produced_by": {
@@ -40,11 +40,11 @@
     "currency": "USD",
     "description": "The web service model as it stands at the end of ch02.",
     "factors": {},
-    "generated_at": "2026-09-25T19:02:26+00:00",
+    "generated_at": "2026-09-25T20:25:19+00:00",
     "model": "web_service_demand_inputs_initial",
     "nodes": {
       "peak_request_rate_t0": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -64,7 +64,7 @@
         "unit": "request/second"
       },
       "stored_data_t0": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": null,
         "kind": "input",

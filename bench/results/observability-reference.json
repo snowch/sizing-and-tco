@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "121de46d35dbf398",
+  "code_fingerprint": "31b4abf5fdc40f7b",
   "code_sources": [
     "bench/run_models.py",
     "models/observability/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-25T19:02:12+00:00",
-  "git_revision": "9ddca9d",
+  "generated_at": "2026-09-25T20:25:06+00:00",
+  "git_revision": "e90b952",
   "kind": "model",
   "name": "observability-reference",
   "produced_by": {
@@ -98,7 +98,7 @@
       "traces_ingest": 1e-06,
       "traces_stored": 0.0864
     },
-    "generated_at": "2026-09-25T19:02:12+00:00",
+    "generated_at": "2026-09-25T20:25:05+00:00",
     "model": "observability",
     "nodes": {
       "active_series": {
@@ -296,7 +296,7 @@
         "unit": "series"
       },
       "annual_growth": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -464,7 +464,7 @@
         "unit": "dimensionless"
       },
       "base_metrics_per_host": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -518,7 +518,7 @@
         "unit": "MB/s/core"
       },
       "collector_throughput_quoted": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -755,7 +755,7 @@
         "unit": "dimensionless"
       },
       "hosts": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -1508,7 +1508,7 @@
         "unit": "dimensionless"
       },
       "label_values_accidental": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -1676,7 +1676,7 @@
         "unit": "dimensionless"
       },
       "label_values_endpoint": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -1845,7 +1845,7 @@
         "unit": "dimensionless"
       },
       "label_values_status": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -2014,7 +2014,7 @@
         "unit": "dimensionless"
       },
       "lines_per_request": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -3567,7 +3567,7 @@
         "unit": "dimensionless"
       },
       "queries_per_second": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -3783,7 +3783,7 @@
         "unit": "node"
       },
       "query_scan_rate_quoted": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -4372,7 +4372,7 @@
         "unit": "dimensionless"
       },
       "request_rate": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -4766,7 +4766,7 @@
         "unit": "series/query"
       },
       "series_per_query_base": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -4998,7 +4998,7 @@
         "unit": "span/request"
       },
       "storage_price": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {

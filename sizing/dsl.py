@@ -104,10 +104,10 @@ class Node:
 #: split a claim the model makes rather than an inference from how finished the file is.
 #:
 #: ``you`` is a choice somebody made and can change: the fleet, the horizon, a headroom margin.
-#: ``world`` is an observation, whether or not it has been given a shape yet: the busy hour, the
-#: records held, a price. ``definition`` is an identity nobody chooses and the world does not
+#: ``outside`` is outside your control, an observation, whether or not it has been given a shape
+#: yet: the busy hour, the records held, a price. ``definition`` is an identity nobody chooses and the world does not
 #: vary -- a year in seconds, one host, one request.
-DECIDED_BY = ("you", "world", "definition")
+DECIDED_BY = ("you", "outside", "definition")
 
 
 @dataclass(frozen=True)

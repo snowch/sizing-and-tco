@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "91d271a19c34ba02",
+  "code_fingerprint": "6fce08a1650f2922",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-25T19:02:23+00:00",
-  "git_revision": "9ddca9d",
+  "generated_at": "2026-09-25T20:25:16+00:00",
+  "git_revision": "e90b952",
   "kind": "model",
   "name": "web_service-sized_for_growth",
   "produced_by": {
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-25T19:02:22+00:00",
+    "generated_at": "2026-09-25T20:25:15+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {
@@ -714,7 +714,7 @@
         "unit": "USD/year"
       },
       "annual_growth": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -2727,7 +2727,7 @@
         "unit": "request"
       },
       "contention": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -3478,7 +3478,7 @@
         "unit": "USD/TB/month"
       },
       "crosstalk": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -4048,7 +4048,7 @@
         "unit": "dimensionless"
       },
       "electricity_price": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -4755,7 +4755,7 @@
         "unit": "TB"
       },
       "fully_loaded_salary": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -5355,7 +5355,7 @@
         "unit": "dimensionless"
       },
       "host_power": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -5524,7 +5524,7 @@
         "unit": "W/host"
       },
       "host_price": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -6516,7 +6516,7 @@
         "unit": "host"
       },
       "hot_fraction": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -6879,7 +6879,7 @@
         "unit": "request"
       },
       "index_overhead": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -7075,7 +7075,7 @@
         "unit": "TB"
       },
       "licence_per_core": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -7243,7 +7243,7 @@
         "unit": "USD/core/year"
       },
       "licence_per_host": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -7979,7 +7979,7 @@
         "unit": "USD"
       },
       "network_price_per_host": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -8386,7 +8386,7 @@
         "unit": "dimensionless"
       },
       "os_reserve": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -8942,7 +8942,7 @@
         "unit": "request/second"
       },
       "peak_request_rate_t0": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -9115,7 +9115,7 @@
         "unit": "request/second"
       },
       "peak_to_mean": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -9288,7 +9288,7 @@
         "unit": "dimensionless"
       },
       "pue": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -11147,7 +11147,7 @@
         "unit": "second/year"
       },
       "service_demand": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -11678,7 +11678,7 @@
         "unit": "request/second/host"
       },
       "staff_fte": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -12031,7 +12031,7 @@
         "unit": "TB"
       },
       "stored_data_t0": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": null,
         "kind": "input",
@@ -12051,7 +12051,7 @@
         "unit": "TB"
       },
       "support_rate": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {

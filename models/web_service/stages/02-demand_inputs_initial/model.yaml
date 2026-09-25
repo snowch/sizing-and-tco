@@ -12,7 +12,7 @@ description: The web service model as it stands at the end of ch02.
 nodes:
   peak_request_rate_t0:
     kind: input
-    decided: world
+    decided: outside
     unit: request/second
     label: peak request rate, day one
     value: 8000
@@ -25,7 +25,7 @@ nodes:
     range: [500, 40000]
   stored_data_t0:
     kind: input
-    decided: world
+    decided: outside
     unit: TB
     value: 15
     label: records held, day one

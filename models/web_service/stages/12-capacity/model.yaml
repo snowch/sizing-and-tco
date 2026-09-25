@@ -12,7 +12,7 @@ description: The web service model as it stands at the end of ch09.
 nodes:
   peak_request_rate_t0:
     kind: input
-    decided: world
+    decided: outside
     unit: request/second
     label: peak request rate, day one
     distribution:
@@ -29,7 +29,7 @@ nodes:
     range: [500, 40000]
   stored_data_t0:
     kind: input
-    decided: world
+    decided: outside
     unit: TB
     value: 15
     label: records held, day one
@@ -48,7 +48,7 @@ nodes:
     range: [1, 200]
   annual_growth:
     kind: input
-    decided: world
+    decided: outside
     unit: dimensionless
     label: annual growth factor
     distribution:
@@ -126,7 +126,7 @@ nodes:
     range: [8, 1024]
   os_reserve:
     kind: input
-    decided: world
+    decided: outside
     unit: dimensionless
     distribution:
       triangular:
@@ -154,7 +154,7 @@ nodes:
     formula: ram_per_host * (1 - os_reserve)
   peak_to_mean:
     kind: input
-    decided: world
+    decided: outside
     unit: dimensionless
     label: peak-to-mean ratio
     distribution:
@@ -176,7 +176,7 @@ nodes:
     formula: peak_request_rate / peak_to_mean
   service_demand:
     kind: input
-    decided: world
+    decided: outside
     unit: second * core / request
     label: CPU time per request
     note: >-
@@ -392,7 +392,7 @@ nodes:
     formula: cores_per_host / service_demand
   contention:
     kind: input
-    decided: world
+    decided: outside
     unit: dimensionless
     label: contention
     note: >-
@@ -415,7 +415,7 @@ nodes:
         measured
   crosstalk:
     kind: input
-    decided: world
+    decided: outside
     unit: dimensionless
     label: crosstalk
     note: >-
@@ -512,7 +512,7 @@ nodes:
       is the one that is about the system you own (ch07).
   hot_fraction:
     kind: input
-    decided: world
+    decided: outside
     unit: dimensionless
     label: share of records touched in a busy hour
     distribution:
@@ -586,7 +586,7 @@ nodes:
     range: [1, 4]
   index_overhead:
     kind: input
-    decided: world
+    decided: outside
     unit: dimensionless
     distribution:
       triangular:

@@ -804,7 +804,7 @@ def workload_table(name: str) -> str:
     quote among the decisions while the viewer on the same page, reading the file, did not.
     """
     payload = load_result(name)["summary"]
-    groups: dict[str, list[str]] = {"world": [], "you": [], "definition": []}
+    groups: dict[str, list[str]] = {"outside": [], "you": [], "definition": []}
     for node_name in payload["order"]:
         node = payload["nodes"][node_name]
         if node["kind"] != "input":
@@ -821,7 +821,7 @@ def workload_table(name: str) -> str:
     rows = [
         *header,
         "| **Outside your control** | | | |",
-        *(groups["world"] or empty),
+        *(groups["outside"] or empty),
         "| **What you decide** | | | |",
         *(groups["you"] or empty),
     ]

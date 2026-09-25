@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "f44d83880b8cee57",
+  "code_fingerprint": "2873e420043ea6b4",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/13-binding/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-25T19:02:34+00:00",
-  "git_revision": "9ddca9d",
+  "generated_at": "2026-09-25T20:25:27+00:00",
+  "git_revision": "e90b952",
   "kind": "model",
   "name": "web_service_binding-reference",
   "produced_by": {
@@ -95,7 +95,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-25T19:02:33+00:00",
+    "generated_at": "2026-09-25T20:25:27+00:00",
     "model": "web_service_binding",
     "nodes": {
       "achievable_throughput": {
@@ -338,7 +338,7 @@
         "unit": "request/second"
       },
       "annual_growth": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -1065,7 +1065,7 @@
         "unit": "request"
       },
       "contention": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -1458,7 +1458,7 @@
         "unit": "core/host"
       },
       "crosstalk": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -3257,7 +3257,7 @@
         "unit": "host"
       },
       "hot_fraction": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -3604,7 +3604,7 @@
         "unit": "request"
       },
       "index_overhead": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -4386,7 +4386,7 @@
         "unit": "dimensionless"
       },
       "os_reserve": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -4942,7 +4942,7 @@
         "unit": "request/second"
       },
       "peak_request_rate_t0": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -5115,7 +5115,7 @@
         "unit": "request/second"
       },
       "peak_to_mean": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -6774,7 +6774,7 @@
         "unit": "dimensionless"
       },
       "service_demand": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -7489,7 +7489,7 @@
         "unit": "TB"
       },
       "stored_data_t0": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": null,
         "kind": "input",

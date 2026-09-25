@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "7e3578f3e150d77b",
+  "code_fingerprint": "68afd39d046dbaa4",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/07-uncertainty/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-25T19:02:28+00:00",
-  "git_revision": "9ddca9d",
+  "generated_at": "2026-09-25T20:25:21+00:00",
+  "git_revision": "e90b952",
   "kind": "model",
   "name": "web_service_uncertainty-reference",
   "produced_by": {
@@ -46,11 +46,11 @@
       "ram_for_service": 0.001073741824,
       "stored_data": 1.0
     },
-    "generated_at": "2026-09-25T19:02:28+00:00",
+    "generated_at": "2026-09-25T20:25:21+00:00",
     "model": "web_service_uncertainty",
     "nodes": {
       "annual_growth": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -459,7 +459,7 @@
         "unit": "year"
       },
       "os_reserve": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -816,7 +816,7 @@
         "unit": "request/second"
       },
       "peak_request_rate_t0": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -989,7 +989,7 @@
         "unit": "request/second"
       },
       "peak_to_mean": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -1549,7 +1549,7 @@
         "unit": "TB"
       },
       "stored_data_t0": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": null,
         "kind": "input",

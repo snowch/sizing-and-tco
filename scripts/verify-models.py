@@ -81,7 +81,7 @@ def check_model(model: Model, problems: list[str]) -> None:
                 problems.append(
                     f"{where}: input {name!r} declares decided {node.decided!r}; expected one of "
                     f"{', '.join(DECIDED_BY)}. `you` is a choice somebody could make "
-                    f"differently, `world` is an observation whether or not it has a shape yet, "
+                    f"differently, `outside` is an observation whether or not it has a shape yet, "
                     f"and `definition` is an identity like a year in seconds."
                 )
             provenance = node.provenance

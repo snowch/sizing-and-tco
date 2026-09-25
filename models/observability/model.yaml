@@ -23,7 +23,7 @@ nodes:
 
   hosts:
     kind: input
-    decided: world
+    decided: outside
     unit: host
     value: 1200
     note: >-
@@ -34,7 +34,7 @@ nodes:
 
   request_rate:
     kind: input
-    decided: world
+    decided: outside
     unit: request/second
     distribution: {triangular: {minimum: 8000.0, likely: 25000.0, maximum: 90000.0}}
     provenance:
@@ -47,7 +47,7 @@ nodes:
 
   annual_growth:
     kind: input
-    decided: world
+    decided: outside
     unit: dimensionless
     distribution: {lognormal: {p10: 1.15, p90: 1.70}}
     provenance:
@@ -87,7 +87,7 @@ nodes:
 
   label_values_endpoint:
     kind: input
-    decided: world
+    decided: outside
     unit: dimensionless
     distribution: {triangular: {minimum: 2.0, likely: 6.0, maximum: 20.0}}
     provenance:
@@ -98,7 +98,7 @@ nodes:
 
   label_values_status:
     kind: input
-    decided: world
+    decided: outside
     unit: dimensionless
     distribution: {triangular: {minimum: 2.0, likely: 3.0, maximum: 6.0}}
     provenance:
@@ -109,7 +109,7 @@ nodes:
 
   label_values_accidental:
     kind: input
-    decided: world
+    decided: outside
     unit: dimensionless
     label: accidental label values
     note: >-
@@ -140,7 +140,7 @@ nodes:
 
   base_metrics_per_host:
     kind: input
-    decided: world
+    decided: outside
     unit: series/host
     value: 60
     label: metric names per host
@@ -207,7 +207,7 @@ nodes:
 
   lines_per_request:
     kind: input
-    decided: world
+    decided: outside
     unit: line/request
     distribution: {triangular: {minimum: 3.0, likely: 9.0, maximum: 30.0}}
     provenance:
@@ -335,7 +335,7 @@ nodes:
 
   collector_throughput_quoted:
     kind: input
-    decided: world
+    decided: outside
     unit: MB/s/core
     value: 6
     note: >-
@@ -437,7 +437,7 @@ nodes:
 
   queries_per_second:
     kind: input
-    decided: world
+    decided: outside
     unit: query/second
     distribution: {triangular: {minimum: 2.0, likely: 12.0, maximum: 60.0}}
     provenance:
@@ -447,7 +447,7 @@ nodes:
 
   series_per_query_base:
     kind: input
-    decided: world
+    decided: outside
     unit: series/query
     label: series per query, before labels
     distribution: {triangular: {minimum: 40.0, likely: 300.0, maximum: 2000.0}}
@@ -483,7 +483,7 @@ nodes:
 
   query_scan_rate_quoted:
     kind: input
-    decided: world
+    decided: outside
     unit: series/second/node
     value: 90000
     note: >-
@@ -513,7 +513,7 @@ nodes:
 
   storage_price:
     kind: input
-    decided: world
+    decided: outside
     unit: USD/TB/month
     distribution: {lognormal: {p10: 9.0, p90: 24.0}}
     provenance:

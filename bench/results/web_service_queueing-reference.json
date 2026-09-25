@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "2fb4a6e1705d61ee",
+  "code_fingerprint": "df0a82ad466a788f",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/09-queueing/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-25T19:02:29+00:00",
-  "git_revision": "9ddca9d",
+  "generated_at": "2026-09-25T20:25:23+00:00",
+  "git_revision": "e90b952",
   "kind": "model",
   "name": "web_service_queueing-reference",
   "produced_by": {
@@ -65,11 +65,11 @@
       "utilisation": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-25T19:02:29+00:00",
+    "generated_at": "2026-09-25T20:25:23+00:00",
     "model": "web_service_queueing",
     "nodes": {
       "annual_growth": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "lognormal": {
@@ -1274,7 +1274,7 @@
         "unit": "year"
       },
       "os_reserve": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -1631,7 +1631,7 @@
         "unit": "request/second"
       },
       "peak_request_rate_t0": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -1804,7 +1804,7 @@
         "unit": "request/second"
       },
       "peak_to_mean": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -2560,7 +2560,7 @@
         "unit": "second"
       },
       "service_demand": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": {
           "triangular": {
@@ -3101,7 +3101,7 @@
         "unit": "TB"
       },
       "stored_data_t0": {
-        "decided": "world",
+        "decided": "outside",
         "depends_on": [],
         "distribution": null,
         "kind": "input",

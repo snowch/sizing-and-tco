@@ -374,7 +374,7 @@ def test_a_world_input_with_no_band_says_why_it_has_none():
     """
     for model in discover():
         for name, node in sorted(model.nodes.items()):
-            if not isinstance(node, Input) or node.decided != "world":
+            if not isinstance(node, Input) or node.decided != "outside":
                 continue
             if node.distribution is not None:
                 continue
