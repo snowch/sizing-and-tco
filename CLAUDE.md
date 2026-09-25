@@ -224,6 +224,16 @@ multiplication.` in ch05 is good writing: short, direct, and the device is doing
 standing in for it. Banning the phrasings would flatten those too. Read the sentence and ask
 whether the reader has to decode it.
 
+**Haiku drafts the prose; you check it.** Reader-facing prose goes to a Haiku subagent to draft
+before it lands: a new paragraph, a rewording, a provenance `source`, a viewer label. Give it the
+text, what the text has to say, and STYLE.md. Haiku writes plainer sentences than a model that
+has the whole repository in its head. It also drops facts and gets them wrong, so never paste its
+draft in unread. Check every claim against the model file or the code it describes. Put back any
+reason or qualifier it cut, and run the draft through the invariants and STYLE.md's closing
+passes. The first set of Haiku drafts said a slider came from "a spread" when it comes from a
+declared range, and dropped the reason an input is one number. That is why the check is not
+optional.
+
 ## Things that will break the build
 
 - **Editing `sizing/mc.py`, `sizing/evaluate.py`, `sizing/units.py` or `sizing/dsl.py`.** They are
