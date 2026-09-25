@@ -101,7 +101,10 @@ One input. Click the node to see where its value came from. Open *Inputs* and dr
 and the graph recomputes as you drag.
 ```
 
-Blue means you choose it — this is an input. The slider appears because the node declares a range. Click on a node to see where it came from and what it is measured in.
+Blue means input: a number the model is given rather than works out. You do not choose this one —
+the busy hour is the world's — so the node has no bar down its edge; an input you do choose, like
+the horizon later in this chapter, has one. The slider is there because the node declares a range.
+Click the node and Details shows that the busy-hour figure is an assumption, and why.
 
 Now add the second one:
 
@@ -144,7 +147,8 @@ Here are three more quantities:
 Interactive viewer: all five inputs. Notice that no derived quantities exist yet — the model shows only what you choose or define.
 ```
 
-**Five choices the model needs.** All five nodes are blue — inputs. Dragging any slider does not change the others. The model has no arithmetic yet; it only holds the five decisions you made.
+**Five inputs, and no arithmetic yet.** All five nodes are blue: numbers the model is given. Dragging
+any slider leaves the others alone, because nothing is worked out from anything yet.
 
 `annual_growth` is what it says. `horizon` is your purchase cycle — the refresh window you are
 sizing for. `one_year` is not a choice. It is here because growth compounds exponentially, and an
@@ -173,7 +177,9 @@ from a formula applied to the five you gave:
 Interactive viewer: the first derived node. Drag the horizon slider and watch horizon_periods compute instantly. Click horizon_periods to see its formula.
 ```
 
-**Grey means derived.** One node is now grey: `horizon_periods`. The toolkit computes it from a formula applied to the blue nodes. Drag the horizon slider and it changes instantly. Click the grey node to see the formula: `horizon / one_year`. The toolkit checked that the unit was correct before accepting it. A spreadsheet would just give you a number and say nothing.
+**Hollow means derived.** One node is now an outline with nothing inside: `horizon_periods`. The
+toolkit works it out from a formula applied to the blue nodes. Drag the horizon slider and it
+changes instantly. Click it to see the formula: `horizon / one_year`. The toolkit checked that the unit was correct before accepting it. A spreadsheet would just give you a number and say nothing.
 
 `kind: derived` means this quantity is not stated — it is computed. The toolkit reads the formula,
 checks that it produces the unit the node declares, works it out, and stores the result. This is
@@ -235,23 +241,19 @@ the first thing to do to any model, including this one:
 ```{include} _generated/what-a-workload-is-service.md
 ```
 
-Every quantity is filed under *what you decide*, and one of them is the growth rate. Nobody
-decides a growth rate.
+Three quantities are the world's: the busy hour, the data you hold, and how fast both grow. One is
+yours: the horizon, which is when you plan to buy again. A year is a year whoever asks, so it is
+true by definition. The file says which is which on every input, in its `decided:` line, and the
+build refuses a file that leaves one out.
 
-The table is not wrong about the model. The model is wrong, and the table shows you the only
-signal it has: whether the file gives the quantity a shape instead of a single number. A shape says
-*the world settles this one, and here is how much it varies*. One number says *I chose this*.
-Nothing in the file has a shape yet, so everything reads as a choice.
-[ch04](#peak-mean-and-growth) gives the growth rate one, and this table splits in two for the
-first time.
+Now look at the world's half. Every quantity in it is a single number, and none of them is yours to
+set. Nobody decides a growth rate, yet the file states one as flatly as the horizon beside it.
+**An input you gave a single value to, and cannot control, is an assumption you have stopped
+noticing.** [ch04](#peak-mean-and-growth) replaces the growth rate's single number with a spread:
+how low and how high the world might settle it.
 
-That is worth more here than a correct table would have been, because the failure is the useful
-one. **An input you gave a single value to, and cannot control, is an assumption you have stopped
-noticing.** A model that files its inputs this way finds them by construction. The
-busy hour on day one is sitting in the same list, and that one is not a decision either.
-
-Once the table does separate, the half worth arguing about is *what you decide*, because it is the
-half anybody can change. Most sizing conversations are spent on the other one.
+The half worth arguing about is *what you decide*, because it is the half anybody can change. Most
+sizing conversations are spent on the other one.
 
 The *Claim* column asks something else: how much the person who wrote each number down was
 claiming. **●** means traceable to a measurement or a definition. **◐** means supplied by whoever
@@ -280,26 +282,26 @@ The toolkit has already decided what kind of model this is, too:
 ```
 
 The last row is not a label anybody typed. The loader works it out from what is in the file.
-Nothing here has a measured constant or a declared limit in it, so what you have is a **cost
-model**: a structure nobody doubts, with uncertain numbers in it. It does not stay one. What
+Nothing here has a measured constant or a declared limit in it, so what you have is a
+**definitional model**: a structure nobody doubts, with uncertain numbers in it. It does not stay one. What
 changes it is something added to the file, not a chapter announcing it. That is why
 [ch01](#point-estimates)'s second problem is to find the stage where it happens.
 
 ### The same split, on a model that is finished
 
-Here is the table doing what it is for. This is a different system: an observability platform,
-carrying metrics, logs and traces. Every input in its model has been given either a shape or a
-value, so both lists are populated:
+Here is the same table for a finished model of a different system: an observability platform,
+carrying metrics, logs and traces:
 
 ```{include} _generated/what-a-workload-is-observability.md
 ```
 
 % word-ok: a scrape interval is a length of time and a sampling rate is a trace setting
-Read the decisions. Scrape interval, retention, sampling rate, how many log lines you keep: those
-are the four knobs an observability platform gives you.
+Read the decisions. Four of them are the knobs an observability platform gives you: scrape
+interval, retention, sampling rate, and how many log lines you keep. The rest are the fleet you buy
+to run it.
 [Appendix F](#appendix-f-observability-model) shows what turning all of them down buys.
 
-Then read the demand, and notice what is *not* among the decisions: the number of label values.
+Then read the world's half, and notice what is *not* among the decisions: the number of label values.
 It dominates the model, and no knob on the platform reaches it. Turn all four of them down and
 the label count sits exactly where it was. The only lever is the code that emits the labels, and
 that belongs to whoever wrote the application rather than to whoever runs the platform — which is

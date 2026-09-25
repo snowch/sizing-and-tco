@@ -25,21 +25,21 @@ certain_until:
     stage: uncertainty
     value: 1.3
     source: >-
-      ch02 - one growth rate, chosen rather than measured. ch04 gives it a shape, because
-      a single number cannot say how sure anybody is of it.
+      One growth rate, chosen rather than measured. One number cannot say how sure anybody is
+      of it, so ch04 replaces it with a spread.
   peak_request_rate_t0:
     stage: uncertainty
     value: 8000
     source: >-
-      ch02 - the busy hour, as one number. ch04 gives it a shape, because an
-      engineer who gives you this figure is giving you a range and rounding it.
+      One number for now. Whoever quotes you the busy hour is picturing a spread of values and
+      rounding it to one; ch04 puts the spread back.
   os_reserve:
     stage: uncertainty
     value: 0.1
     source: >-
-      ch03 - the share of memory the kernel, the agents and the page cache floor keep before the
-      service sees any, as one number. ch04 gives it a shape, because it differs from host to
-      host and nobody has measured it on these.
+      The share of memory the kernel, the agents and the page cache floor keep before the
+      service sees any, as one number for now. It differs from host to host and nobody has
+      measured it on these, so ch04 replaces it with a spread.
 
 stages:
   - stage: demand_inputs_single

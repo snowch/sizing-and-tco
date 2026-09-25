@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "8024a0ec2371a4a4",
+  "code_fingerprint": "967e6c2d785eea36",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/06-provenance/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-24T21:17:51+00:00",
-  "git_revision": "6df525c",
+  "generated_at": "2026-09-25T17:02:16+00:00",
+  "git_revision": "3ddd8ba",
   "kind": "model",
   "name": "web_service_provenance-reference",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -45,7 +45,7 @@
       "ram_for_service": 0.001073741824,
       "stored_data": 1.0
     },
-    "generated_at": "2026-09-24T21:17:51+00:00",
+    "generated_at": "2026-09-25T17:02:16+00:00",
     "model": "web_service_provenance",
     "nodes": {
       "annual_growth": {
@@ -59,7 +59,7 @@
         "point": 1.3,
         "provenance": {
           "kind": "assumption",
-          "source": "ch02 - one growth rate, chosen rather than measured. ch04 gives it a shape, because a single number cannot say how sure anybody is of it."
+          "source": "One growth rate, chosen rather than measured. One number cannot say how sure anybody is of it, so ch04 replaces it with a spread."
         },
         "row": 1,
         "slider": {
@@ -142,7 +142,7 @@
         "point": 0.1,
         "provenance": {
           "kind": "assumption",
-          "source": "ch03 - the share of memory the kernel, the agents and the page cache floor keep before the service sees any, as one number. ch04 gives it a shape, because it differs from host to host and nobody has measured it on these."
+          "source": "The share of memory the kernel, the agents and the page cache floor keep before the service sees any, as one number for now. It differs from host to host and nobody has measured it on these, so ch04 replaces it with a spread."
         },
         "row": 2,
         "slider": {
@@ -199,7 +199,7 @@
         "point": 8000.0,
         "provenance": {
           "kind": "assumption",
-          "source": "ch02 - the busy hour, as one number. ch04 gives it a shape, because an engineer who gives you this figure is giving you a range and rounding it."
+          "source": "One number for now. Whoever quotes you the busy hour is picturing a spread of values and rounding it to one; ch04 puts the spread back."
         },
         "row": 0,
         "slider": {

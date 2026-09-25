@@ -19,9 +19,9 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        ch02 - the busy hour, as one number. ch04 gives it a shape,
-        because an engineer who gives you this figure is giving
-        you a range and rounding it.
+        One number for now. Whoever quotes you the busy hour is
+        picturing a spread of values and rounding it to one; ch04
+        puts the spread back.
     range: [500, 40000]
   stored_data_t0:
     kind: input

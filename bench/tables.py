@@ -798,37 +798,37 @@ def workload_table(name: str) -> str:
     what the world is doing to you; the rest describe what you have decided to do about it. A
     table that mixes them is how a sizing conversation ends up arguing about a growth rate as
     though it were a choice.
+
+    Every input says which it is, in its own `decided:` line, and the table files it there. It
+    used to guess from whether the input had a shape, which put the busy hour and a vendor's
+    quote among the decisions while the viewer on the same page, reading the file, did not.
     """
     payload = load_result(name)["summary"]
-    demand, choices = [], []
+    groups: dict[str, list[str]] = {"world": [], "you": [], "definition": []}
     for node_name in payload["order"]:
         node = payload["nodes"][node_name]
         if node["kind"] != "input":
             continue
-        row = (
+        groups[node["decided"]].append(
             f"| {node['label']} | {fmt(node.get('point'), node['unit'])} "
             f"| {unit_label(node['unit'])} | {PROVENANCE_MARK.get(node['provenance']['kind'], '?')} |"
         )
-        # A quantity with a distribution is something the world decides; a stated value with a
-        # slider is something you do. It is a heuristic, and it is right far more often than the
-        # alternative of not distinguishing them at all.
-        (demand if node.get("distribution") else choices).append(row)
     # The last column carries the provenance mark, and carried no heading at all until a
     # reader arriving cold asked what the three symbols were.
     header = ["| Quantity | At the reference point | Unit | Claim |", "|---|---:|---|---|"]
-    # An empty half is a fact about the model, not a broken table. It happens in ch02, where
-    # nothing has been given a shape yet and the heuristic above therefore files every input as
-    # a decision — which is wrong, and is the reason ch04 exists.
+    # An empty half is a fact about the model, not a broken table.
     empty = ["| *none* | | | |"]
-    return "\n".join(
-        [
-            *header,
-            "| **What the world does** | | | |",
-            *(demand or empty),
-            "| **What you decide** | | | |",
-            *(choices or empty),
-        ]
-    )
+    rows = [
+        *header,
+        "| **What the world does** | | | |",
+        *(groups["world"] or empty),
+        "| **What you decide** | | | |",
+        *(groups["you"] or empty),
+    ]
+    # A year is a year whoever asks. Nobody decides it, and it is not the world's doing either.
+    if groups["definition"]:
+        rows += ["| **True by definition** | | | |", *groups["definition"]]
+    return "\n".join(rows)
 
 
 def cost_split_table(name: str) -> str:

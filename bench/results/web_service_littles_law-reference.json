@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-24T21:17:52+00:00",
-  "git_revision": "6df525c",
+  "generated_at": "2026-09-25T17:02:17+00:00",
+  "git_revision": "3ddd8ba",
   "kind": "model",
   "name": "web_service_littles_law-reference",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -58,7 +58,7 @@
       "stored_data": 1.0,
       "utilisation": 1.0
     },
-    "generated_at": "2026-09-24T21:17:52+00:00",
+    "generated_at": "2026-09-25T17:02:17+00:00",
     "model": "web_service_littles_law",
     "nodes": {
       "annual_growth": {

@@ -124,17 +124,17 @@ The toolkit's interactive viewers appear throughout the book. Each feature is in
 
 | Feature | Introduced | What it does |
 |---------|------------|--------------|
-| **Nodes and edges** | [ch02](#what-a-workload-is) | Circles (nodes) are quantities. Lines (edges) show dependencies. Blue = input (you choose), grey = derived (toolkit computes). |
-| **Sliders** | [ch02](#what-a-workload-is) | Appear below each input node. Drag to change the value. Everything downstream updates instantly. |
-| **Click to see formula** | [ch02](#what-a-workload-is) | Click any node. Derived nodes show their arithmetic. Input nodes show their source. |
+| **Nodes and edges** | [ch02](#what-a-workload-is) | Boxes are quantities; lines show what feeds what. Blue is an input, a number the model is given, and a bar down its left edge marks one you choose. Hollow grey is derived: the toolkit works it out. |
+| **Sliders** | [ch02](#what-a-workload-is) | Open *Inputs* under the graph: one slider for each input that declares a range. Drag it and everything downstream updates as you drag. |
+| **Click a node** | [ch02](#what-a-workload-is) | Opens *Details*: a derived node's formula, an input's value and source, and under *In the file* the node's own lines in the model file. |
 | **Unit checking** | [ch02](#what-a-workload-is) | The toolkit validates every formula. A quantity with the wrong unit is rejected, not silently accepted like a spreadsheet. |
 | **Provenance detail** | [ch03](#where-the-numbers-come-from) | Click an input node to see where it came from: measurement (●), vendor claim (◐), or assumption (○). |
-| **Measured constants** | [ch06](#queueing-and-the-knee) | Some inputs are measured on a specific version of specific software. Nodes that carry them are marked. Upgrade the version and the constant may be wrong. |
-| **Ceiling nodes** | [ch06](#queueing-and-the-knee) | Grey nodes that represent regime changes (queueing knee, memory limit, etc.). A chain of multiplications cannot model these. The model refuses to run without declaring headroom below them. |
-| **Run button** | [ch02](#what-a-workload-is) | Press to execute the model. The toolkit checks the file, computes every node, and shows results. |
+| **Measured constants** | [ch09](#capacity) | Amber nodes: numbers measured on a named implementation. The file holds no number for one, only the name of the stamped result it comes from. |
+| **Ceiling nodes** | [ch06](#queueing-and-the-knee) | Red nodes: limits past which the model changes regime, such as the queueing knee. A chain of multiplications cannot model these, and the build refuses one that declares no headroom below it. |
+| **Model file** | [ch02](#what-a-workload-is) | On a wide screen, press *Expand* and choose *Model file* to read the whole file, with the node you picked marked. |
 | **Problem Check** | Throughout | Embedded under chapter problems. Runs your solution against the toolkit's test suite. Passes only when solved. |
 
-The colour language is consistent across all viewers: blue for input, grey for derived. The same interactions (drag, click, run) work everywhere. Once you understand the pattern in one chapter, you can read any model in the book.
+The colours mean the same in every viewer: blue for an input, hollow grey for derived, amber for a measured constant, red for a ceiling. The same interactions (drag, click, expand) work everywhere. Once you understand the pattern in one chapter, you can read any model in the book.
 
 ## What this cannot tell you
 

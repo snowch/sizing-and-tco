@@ -3,12 +3,12 @@
 | Quantity | At the reference point | Unit | Claim |
 |---|---:|---|---|
 | **What the world does** | | | |
-| *none* | | | |
-| **What you decide** | | | |
 | annual growth factor | 1.30 |  | ○ |
-| horizon | 5.00 | year | ○ |
-| one year | 1.00 | year | ● |
 | peak request rate, day one | 8,000 | request/second | ○ |
 | records held, day one | 15.0 | TB | ○ |
+| **What you decide** | | | |
+| horizon | 5.00 | year | ○ |
+| **True by definition** | | | |
+| one year | 1.00 | year | ● |
 
 *Source — [`web_service_demand-reference`](/models/web_service_demand-reference.html) · every input on a slider*

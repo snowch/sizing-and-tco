@@ -4,31 +4,32 @@
 |---|---:|---|---|
 | **What the world does** | | | |
 | annual growth | 1.40 |  | ○ |
+| metric names per host | 60.0 | series/host | ○ |
+| collector throughput quoted | 6.00 | MB/s/core | ◐ |
+| hosts | 1,200 | host | ○ |
 | accidental label values | 2.45 |  | ○ |
 | label values endpoint | 8.78 |  | ○ |
 | label values status | 3.55 |  | ○ |
 | lines per request | 13.2 | line/request | ○ |
 | queries per second | 22.7 | query/second | ○ |
+| query scan rate quoted | 90,000 | series/second/node | ◐ |
 | request rate | 38,376 | request/second | ○ |
 | series per query, before labels | 709 | series/query | ○ |
 | storage price | $14.70 | USD / TB / month | ○ |
 | **What you decide** | | | |
-| metric names per host | 60.0 | series/host | ○ |
 | collector cores | 16 | core | ○ |
-| collector throughput quoted | 6.00 | MB/s/core | ◐ |
 | horizon | 3.00 | year | ○ |
-| hosts | 1,200 | host | ○ |
 | fraction of log lines kept | 1.00 |  | ○ |
 | logs retention | 30.0 | day | ○ |
 | metrics retention | 400 | day | ○ |
-| one sample per series | 1.00 | sample/series | ● |
-| one year | 1.00 | year | ● |
 | query nodes | 24 | node | ○ |
-| query scan rate quoted | 90,000 | series/second/node | ◐ |
 | scrape interval | 30.0 | second | ○ |
 | store nodes | 12 | node | ○ |
 | trace sampling rate | 0.0500 |  | ○ |
 | traces retention | 14.0 | day | ○ |
 | usable tb per node | 40.0 | TB/node | ○ |
+| **True by definition** | | | |
+| one sample per series | 1.00 | sample/series | ● |
+| one year | 1.00 | year | ● |
 
 *Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***

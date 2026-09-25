@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "7e0ea10c688ac376",
+  "code_fingerprint": "a4f527540f4a1438",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/02-demand_inputs_initial/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-24T21:17:50+00:00",
-  "git_revision": "6df525c",
+  "generated_at": "2026-09-25T17:02:15+00:00",
+  "git_revision": "3ddd8ba",
   "kind": "model",
   "name": "web_service_demand_inputs_initial-reference",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -40,7 +40,7 @@
     "currency": "USD",
     "description": "The web service model as it stands at the end of ch02.",
     "factors": {},
-    "generated_at": "2026-09-24T21:17:50+00:00",
+    "generated_at": "2026-09-25T17:02:15+00:00",
     "model": "web_service_demand_inputs_initial",
     "nodes": {
       "peak_request_rate_t0": {
@@ -54,7 +54,7 @@
         "point": 8000.0,
         "provenance": {
           "kind": "assumption",
-          "source": "ch02 - the busy hour, as one number. ch04 gives it a shape, because an engineer who gives you this figure is giving you a range and rounding it."
+          "source": "One number for now. Whoever quotes you the busy hour is picturing a spread of values and rounding it to one; ch04 puts the spread back."
         },
         "row": 0,
         "slider": {

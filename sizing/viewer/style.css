@@ -3,10 +3,13 @@
 :root {
   color-scheme: light dark;
   --ink: #1f2933; --muted: #52606d; --line: #cbd2d9; --bg: #ffffff; --panel: #f5f7fa;
-  --input: #dbe7f3; --input-edge: #4a7ba7;
-  --derived: #eceff1; --derived-edge: #90a4ae;
-  --measured: #fde8c8; --measured-edge: #c8791a;
-  --ceiling: #f8d3d0; --ceiling-edge: #b3413a;
+  /* Node kinds. The three coloured edges are one categorical set, validated all-pairs in both
+     modes (the dataviz validator); derived is the neutral one and is hollow, so it differs from
+     an input by fill as well as colour -- the pale blue and pale grey it had read as the same. */
+  --input: #e1edfb; --input-edge: #2a78d6;
+  --derived: #ffffff; --derived-edge: #90a4ae;
+  --measured: #fdf0cc; --measured-edge: #eda100;
+  --ceiling: #fbdedd; --ceiling-edge: #e34948;
   --ok: #2d7a31; --warn: #9b5e14; --over: #b3413a;
   --accent: #1a73e8; --accent-deep: #1660c4; --on-accent: #ffffff;
   --good: #eef6ee; --good-edge: #b7d8b7; --bad: #fdecea; --bad-edge: #f5b5ae;
@@ -25,10 +28,10 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --ink: #dde4e8; --muted: #9db0ba; --line: #3d4b53; --bg: #151c20; --panel: #1b2429;
-    --input: #22384a; --input-edge: #5b8fb9;
-    --derived: #232d33; --derived-edge: #6c828d;
-    --measured: #3a2c15; --measured-edge: #d9922c;
-    --ceiling: #3a1f1d; --ceiling-edge: #cf5a52;
+    --input: #1b2e45; --input-edge: #3987e5;
+    --derived: #151c20; --derived-edge: #6c828d;
+    --measured: #33280f; --measured-edge: #c98500;
+    --ceiling: #3a1c24; --ceiling-edge: #e0506e;
     --ok: #51a055; --warn: #d9922c; --over: #d46c65;
     --accent: #7fb2dd; --accent-deep: #9cc6eb; --on-accent: #10171b;
     --good: #1c2a1d; --good-edge: #2f5a32; --bad: #2e1a19; --bad-edge: #6b3330;
