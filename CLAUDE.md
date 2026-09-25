@@ -225,14 +225,21 @@ standing in for it. Banning the phrasings would flatten those too. Read the sent
 whether the reader has to decode it.
 
 **Haiku drafts the prose; you check it.** Reader-facing prose goes to a Haiku subagent to draft
-before it lands: a new paragraph, a rewording, a provenance `source`, a viewer label. Give it the
-text, what the text has to say, and STYLE.md. Haiku writes plainer sentences than a model that
-has the whole repository in its head. It also drops facts and gets them wrong, so never paste its
-draft in unread. Check every claim against the model file or the code it describes. Put back any
-reason or qualifier it cut, and run the draft through the invariants and STYLE.md's closing
-passes. The first set of Haiku drafts said a slider came from "a spread" when it comes from a
-declared range, and dropped the reason an input is one number. That is why the check is not
-optional.
+before it lands: a new paragraph, a rewording, a provenance `source`, a viewer label. Haiku
+writes shorter, plainer sentences than a model that has the whole repository in its head. It also
+drops facts and gets them wrong. So the work splits three ways:
+
+1. **You write the brief as a list of facts**, not as prose: what the text must say, each point
+   checked against the model file or the code. Add STYLE.md. A prose brief gets its wording copied.
+2. **Haiku writes the sentences.**
+3. **You check the facts, and nothing else.** Where a fact is missing, add the fewest words that
+   carry it. Do not rewrite Haiku's sentences. If a draft is wrong, send it back with a note
+   rather than fixing it yourself. Then run STYLE.md's closing passes over what will land.
+
+The first Haiku drafts said a slider came from "a spread" when it comes from a declared range,
+and dropped the reason an input is one number. Merging them by rewriting put back the facts and,
+with them, the padding the draft had cut: "a busy-hour figure somebody quotes you is really a
+spread" broke rules 19 and 21 in one clause.
 
 ## Things that will break the build
 
