@@ -1,9 +1,9 @@
-"""One theme across four documents, and a reader who may disagree with their machine.
+"""One theme across three documents, and a reader who may disagree with their machine.
 
-A chapter is one page, but a chapter with a model in it is four: the page, the model viewer, the
-futures widget and the playground each render in their own frame, with their own stylesheet and
-their own `:root`. Nothing is shared between them but the colours, and until now the only thing
-keeping the four in step was that all four asked the operating system the same question.
+A chapter is one page, but a chapter with a model in it is three: the page, the model viewer and
+the futures widget each render in their own frame, with their own stylesheet and their own
+`:root`. Nothing is shared between them but the colours, and until now the only thing keeping the
+three in step was that all three asked the operating system the same question.
 
 A button breaks that. A reader on a dark machine who presses it for the light book moves the page
 and leaves the frames behind, so the chapter comes out light with dark panels cut into it. The

@@ -159,3 +159,28 @@ html.embedded #controls[data-collapsed] #controls-content,
 html.embedded #detail[data-collapsed] #detail-content {
   max-height: 0;
 }
+
+/* The graph or the whole model file, in the graph's place. Only where the page is wide, which is
+   what Expand gives a chapter's embed on a desktop: narrower, the switch is hidden and the graph
+   shows whatever was chosen, because a file wrapped at a phone's width is not readable. */
+/* Pinned to the top of the pane, so the way back to the graph stays in reach once the file has
+   scrolled to the picked node. */
+.views { display: none; gap: 6px; margin: -14px 0 10px; padding: 10px 0 6px; position: sticky;
+         top: -14px; background: var(--bg); z-index: 1; }
+.views button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+#file-view { display: none; margin: 0; font: 12px/1.45 ui-monospace, "SF Mono", Menlo, monospace;
+             white-space: pre; overflow: auto; }
+#file-view mark { background: var(--row-focused); color: inherit; }
+@media (min-width: 1101px) {
+  .views { display: flex; }
+  #canvas.showing-file #graph-view { display: none; }
+  #canvas.showing-file #file-view { display: block; }
+}
+/* A node's own lines, under Details. Closed until asked for: a long note would otherwise say
+   itself twice, once as prose and once in the file. */
+.in-file { margin: 12px 0 4px; }
+.in-file summary { cursor: pointer; font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+                   color: var(--muted); font-weight: 600; }
+.in-file pre { margin: 6px 0 0; padding: 6px 8px; font: 11.5px/1.45 ui-monospace, "SF Mono", Menlo, monospace;
+               white-space: pre; overflow-x: auto; background: var(--bg); border: 1px solid var(--line);
+               border-radius: 3px; }

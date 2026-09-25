@@ -108,13 +108,9 @@ growth rate from [ch04](#peak-mean-and-growth), not anything in this chapter's c
 arithmetic is the well-understood part of the problem. What it is applied to is not.
 
 The measured constant is in the file the same way a ceiling is, and the toolkit reads its stamp
-rather than its number:
-
-```{iframe} /playground/capacity/
-:width: 100%
-The chain above, as the file holds it. The measured constant's entry holds no number, only the
-name of the stamped result its number comes from, which is more than a spreadsheet cell can say.
-```
+rather than its number. Click *record compression ratio* in the graph above and open *In the
+file* under Details: its entry holds no number, only the name of the stamped result its number
+comes from, which is more than a spreadsheet cell can say.
 
 ## What this cannot tell you
 

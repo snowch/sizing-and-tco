@@ -116,8 +116,8 @@ def test_a_bar_of_the_pile_covers_a_whole_number_of_the_answer(slug):
 def test_every_futures_page_is_embedded_by_a_chapter():
     """A `/futures/...` URL nothing builds is a hole in a page; a page nothing embeds is ballast.
 
-    The same two-way check ``test_scripts.py`` makes for the playgrounds, for the same reason:
-    the two lists are maintained in different files and drift silently.
+    Checked both ways because the two lists are maintained in different files and drift
+    silently.
     """
     embedded = {
         match

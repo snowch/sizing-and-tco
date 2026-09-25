@@ -150,17 +150,6 @@ echo "== the one-future-at-a-time page assembles =="
 python3 scripts/build-futures.py --out _build/static/futures > /dev/null
 echo "  OK"
 
-echo "== the playground assembles =="
-# What CI can check is that the page builds and that the fixtures it holds itself to still have
-# the verdicts this build computes. Whether Python starts is a question about a reader's browser,
-# and the page answers that one itself, in front of them.
-#
-# Into the site's own tree, where deploy.yml puts it, so the link check below covers the
-# `/playground/...` URLs the chapters embed. It used to build into a directory of its own, which
-# meant nothing checked that any of those URLs resolved.
-python3 scripts/build-playground.py --out _build/static/playground > /dev/null
-echo "  OK"
-
 rm -f "$log"
 
 if [ "$myst_built" = 1 ]; then
@@ -208,7 +197,7 @@ python3 scripts/check-built-links.py _build/based/book /book
 echo "  OK"
 
 echo "== the book installs for offline use =="
-# After every page, viewer and playground is in the tree, because the worker lists them all and
+# After every page and viewer is in the tree, because the worker lists them all and
 # a list that names a file the build did not produce fails the install in the reader's browser.
 python3 scripts/build-offline.py --inject _build/static --base /
 fi

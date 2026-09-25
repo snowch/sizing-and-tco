@@ -100,10 +100,8 @@ fleet* and watch every ceiling's verdict at once. That is the decision this chap
 The sizing model, complete. Nothing arrives in this chapter: it is every earlier one, together.
 ```
 
-```{iframe} /playground/the-sizing-model/
-:width: 100%
-The file behind the graph above. It is the file ch02 started, eleven chapters on.
-```
+Press **Expand** on the graph and choose **Model file** to read the file behind it: the one ch02
+started, eleven chapters on.
 
 ### So what is the answer?
 

@@ -90,15 +90,6 @@ jobs:
       - name: Build the one-future-at-a-time page
         run: python3 scripts/build-futures.py --out _build/html/futures
 
-      # One page per chapter that builds the model, embedded in that chapter with `{iframe}`.
-      # Nothing boots until a reader presses Run, so a chapter page costs no more than before.
-      # Verified in Chromium against the real CDN before it was wired up here: Pyodide boots in
-      # about five seconds, micropip resolves Pint and PyYAML from PyPI, and the page's own
-      # fixtures agree with the verdicts this build computed for them. It disables its own
-      # button and says so when Python does not start.
-      - name: Build the model playgrounds
-        run: python3 scripts/build-playground.py --out _build/html/playground
-
       # The renderer sets a favicon and nothing else. A manifest and an apple-touch-icon are what
       # a phone reads when somebody saves the page to a home screen, and they have to be at the
       # site root with a link in every page's head — so this copies them in and adds the links.
@@ -107,7 +98,7 @@ jobs:
           BASE_URL: ${{ steps.pages.outputs.base_path == '/' && '' || steps.pages.outputs.base_path }}
         run: python3 scripts/build-icons.py --inject _build/html --base "${BASE_URL:-}/"
 
-      # After every page, viewer and playground is in place and the icons are in, because the
+      # After every page and viewer is in place and the icons are in, because the
       # worker lists all of them: on the first visit a browser fetches the list and keeps it, and
       # from then on the book opens with no network.
       - name: Make the book installable for offline use
@@ -115,7 +106,7 @@ jobs:
           BASE_URL: ${{ steps.pages.outputs.base_path == '/' && '' || steps.pages.outputs.base_path }}
         run: python3 scripts/build-offline.py --inject _build/html --base "${BASE_URL:-}/"
 
-      # After every model page and playground is in place and the icons have given their links
+      # After every model page is in place and the icons have given their links
       # the base path, so links into them are checked against files that exist at the address a
       # reader will ask for. ci-check.sh runs the same check at the site root; only here is the
       # site assembled under the base path it is served from, and a root-relative link that

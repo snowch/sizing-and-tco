@@ -121,8 +121,8 @@ where a second quote arrives and needs them.
 
 ```{iframe} /models/web_service-reference.html
 :width: 100%
-The finished model. Click *five-year total cost of ownership* to see how much of the graph feeds
-it, and how much does not.
+The finished model. Click *five-year total cost of ownership*, then *Show only what feeds it*, to
+see how much of the graph feeds it and how much does not.
 ```
 
 ## What this cannot tell you

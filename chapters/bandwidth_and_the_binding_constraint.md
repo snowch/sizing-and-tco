@@ -51,12 +51,9 @@ They share the workload and nothing else.
 
 Three spreads, three different shapes, and a great deal of overlap. None of them is the answer.
 
-All three chains are in one file, and it is short enough to read in a sitting:
-
-```{iframe} /playground/bandwidth-and-the-binding-constraint/
-:width: 100%
-Two more chains, added. Three nodes now ask for a host count and a fourth takes the largest.
-```
+All three chains are in one file, and it is short enough to read in a sitting: press **Expand**
+on the graph below and choose **Model file**. Two more chains are in it now. Three nodes ask for a
+host count, and a fourth takes the largest.
 
 ### Buy the largest, not the average, the usual winner or the sum
 

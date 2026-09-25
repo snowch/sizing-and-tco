@@ -105,13 +105,10 @@ def shipped() -> dict[str, str]:
         "the page": load("build-site").CSS,
         "the model viewer": both_ways((viewer / "style.css").read_text()),
         "the futures widget": both_ways((viewer / "futures.css").read_text()),
-        "the playground": both_ways(load("build-playground").CSS),
     }
 
 
-@pytest.mark.parametrize(
-    "which", ["the page", "the model viewer", "the futures widget", "the playground"]
-)
+@pytest.mark.parametrize("which", ["the page", "the model viewer", "the futures widget"])
 def test_a_dark_block_that_cannot_be_overruled_fails_the_build(which):
     """Nothing goes dark for the machine that does not also go dark for the reader who asked.
 

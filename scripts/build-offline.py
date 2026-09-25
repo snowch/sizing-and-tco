@@ -5,12 +5,12 @@
 
 The book is a set of static pages with the interactive models inlined into them, so it has
 nothing a server has to do -- but a browser only knows to keep it if something asks. This writes
-``sw.js`` at the site root with a list of every page, model viewer, playground, problem set, the
+``sw.js`` at the site root with a list of every page, model viewer, problem set, the
 search index and the icons, and adds one line to every page's head that registers it. On the
 first visit the worker fetches the whole list; after that every page opens with the network off,
 and a new deploy is picked up the next time a page is opened online.
 
-The Python runtime the playground, the viewer's Resample and a problem's Check fetch is not in
+The Python runtime the viewer's Resample and a problem's Check fetch is not in
 the list. Ten megabytes that most readers never press the button for is not something to make
 every visitor pay; instead the worker keeps whatever the runtime and its wheels were fetched from
 the first time a reader does press it, so that from then on those work offline too. A reader who
@@ -44,7 +44,6 @@ PRECACHED = (
     "*.html",
     "models/*.html",
     "futures/*.html",
-    "playground/*/index.html",
     "problems/*.json",
 )
 PRECACHED_FILES = (

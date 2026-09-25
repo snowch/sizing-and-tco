@@ -76,6 +76,11 @@ PAGE = """<!doctype html>
     </div>
   </section>
   <section id="canvas">
+    <div id="views" class="views">
+      <button id="view-graph" type="button" aria-pressed="true">Graph</button>
+      <button id="view-file" type="button" aria-pressed="false">Model file</button>
+    </div>
+    <div id="graph-view">
     <p class="note narrow-note" id="narrow-note"></p>
     <div class="legend">
       <span><i style="background:var(--input);border:1px solid var(--input-edge)"></i>input</span>
@@ -87,6 +92,8 @@ PAGE = """<!doctype html>
     </div>
     <p class="note" id="focus-note"></p>
     <svg id="graph" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <pre id="file-view"></pre>
   </section>
   <section id="detail">
     <h2><button id="toggle-detail" class="toggle-panel" aria-expanded="false">▶</button> Details</h2>

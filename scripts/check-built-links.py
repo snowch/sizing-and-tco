@@ -4,7 +4,7 @@
     python3 scripts/check-built-links.py _build/html "$BASE_URL"
 
 A broken link to a page is caught by ``myst build --strict``, because MyST resolves
-cross-references. A broken link to a *file* is not: an interactive model page or a playground
+cross-references. A broken link to a *file* is not: an interactive model page
 that was never copied into place resolves perfectly as markup and 404s for the reader. That is
 the failure this catches, and it can only be caught after the site has been assembled.
 

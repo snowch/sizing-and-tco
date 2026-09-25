@@ -197,41 +197,61 @@ function drawGraph(values, blocked) {
   $("graph").setAttribute("height", h);
   $("graph").innerHTML = edges.join("") + boxes.join("");
   for (const g of $("graph").querySelectorAll(".node")) {
+    // A click picks a node to read about. It does not cut the graph down: that is a choice of
+    // its own, one link under the graph, because a reader told to click a node to see where it
+    // came from did not expect the rest of the model to vanish.
     g.addEventListener("click", () => {
       const name = g.dataset.node;
-      selected = name;
-      focus = focus === name ? null : name;
-      reveal();
+      selected = selected === name ? null : name;
+      if (selected) reveal();
       render();
     });
     g.addEventListener("mouseenter", () => hot(g.dataset.node, true));
-    g.addEventListener("mouseleave", () => hot(g.dataset.node, false));
+    g.addEventListener("mouseleave", () => { hot(g.dataset.node, false); lit(); });
   }
+  lit();
 }
 
-// The line under the graph: what is shown, and the two ways out of it.
+// The picked node keeps its own lines lit, so it stays findable once the pointer moves on.
+function lit() {
+  if (selected && $("graph").querySelector(`.node[data-node="${selected}"]`)) hot(selected, true);
+}
+
+// The line above the graph: what is picked, what is shown, and the ways in and out of each.
 function focusNote() {
   const note = $("focus-note");
-  if (!focus) {
-    note.innerHTML = "Click a node to show only what feeds it. Rest the pointer on one to light its own lines.";
-    return;
+  const link = (id, text) => `<button class="link" id="${id}">${text}</button>`;
+  const feeds = (name) => PAYLOAD.nodes[name].depends_on.length > 0;
+  const fed = (name) => childrenOf()[name].length > 0;
+  if (focus) {
+    const count = related(focus).size - 1;
+    const label = `<strong>${PAYLOAD.nodes[focus].label}</strong>`;
+    const nodes = `${count} node${count === 1 ? "" : "s"}`;
+    const other = direction === "down" ? feeds(focus) : fed(focus);
+    note.innerHTML =
+      (direction === "down" ? `Showing the ${nodes} that ${label} feeds. ` : `Showing the ${nodes} that feed ${label}. `) +
+      (other ? link("flip", direction === "down" ? "Show what feeds it" : "Show what it feeds") + " · " : "") +
+      link("everything", "Show everything");
+  } else if (selected) {
+    const offers = [];
+    if (feeds(selected)) offers.push(link("upstream", "Show only what feeds it"));
+    if (fed(selected)) offers.push(link("downstream", "Show only what it feeds"));
+    note.innerHTML = `<strong>${PAYLOAD.nodes[selected].label}</strong> is picked. ` + offers.join(" · ");
+  } else {
+    note.innerHTML = "Click a node to read about it under Details. Rest the pointer on one to light its own lines.";
   }
-  const count = related(focus).size - 1;
-  const label = `<strong>${PAYLOAD.nodes[focus].label}</strong>`;
-  const nodes = `${count} node${count === 1 ? "" : "s"}`;
-  note.innerHTML =
-    (direction === "down" ? `Showing the ${nodes} that ${label} feeds. ` : `Showing the ${nodes} that feed ${label}. `) +
-    `<button class="link" id="flip">${direction === "down" ? "Show what feeds it" : "Show what it feeds"}</button>` +
-    ` \u00b7 <button class="link" id="everything">Show everything</button>`;
-  $("flip").addEventListener("click", () => { direction = direction === "down" ? "up" : "down"; render(); });
-  $("everything").addEventListener("click", () => { focus = null; render(); });
+  const on = (id, act) => { if ($(id)) $(id).addEventListener("click", () => { act(); render(); }); };
+  on("flip", () => { direction = direction === "down" ? "up" : "down"; });
+  on("everything", () => { focus = null; });
+  on("upstream", () => { focus = selected; direction = "up"; });
+  on("downstream", () => { focus = selected; direction = "down"; });
 }
 
-// Go to a node from anywhere it is named: select it and cut the graph down to what feeds it.
+// Go to a node from anywhere it is named: pick it, and bring it back into view if a cut-down
+// graph had left it out.
 function goTo(name) {
   selected = name;
-  focus = name;
-  direction = "up";
+  if (focus && !related(focus).has(name)) focus = null;
   reveal();
   render();
 }
@@ -277,9 +297,9 @@ function outputsTable(values, blocked) {
   const rows = PAYLOAD.outputs.map((name) => {
     const node = PAYLOAD.nodes[name];
     const inert = reach && name !== touched && !reach.has(name);
-    const classes = [focus === name ? "focused" : "", inert ? "inert" : ""].filter(Boolean);
+    const classes = [selected === name ? "focused" : "", inert ? "inert" : ""].filter(Boolean);
     const open = `<tr data-node="${name}"${classes.length ? ` class="${classes.join(" ")}"` : ""}`
-      + ` title="Show what feeds ${name}">`;
+      + ` title="Read about ${name} under Details">`;
     if (blocked.has(name)) return `${open}<td>${node.label}</td><td class="n">not measured</td></tr>`;
     const ceiling = node.kind === "ceiling" ? ceilingState(PAYLOAD, name, values) : null;
     const cell = ceiling
@@ -318,6 +338,47 @@ function histogram(node) {
     `<div class="note">${fmt(edges[0], node.unit)} to ${fmt(edges[edges.length - 1], node.unit)}</div>`;
 }
 
+/* -- the file ------------------------------------------------------------------- */
+
+//: The model file this page was built from, as the chapter quotes it: the stage's own file for a
+//: stage, so the lines shown are the lines the chapter is about.
+const FILE = TOOLKIT ? TOOLKIT.model.split("\n") : null;
+//: Whether the reader has opened "In the file" under Details, kept across redraws.
+let inFileOpen = false;
+//: The node the file view last showed: it is redrawn when the pick changes, not on every slider
+//: move, so the file does not jump under a reader who is reading it.
+let fileAt;
+
+const esc = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+// A node's lines in the file: its key, two spaces in under `nodes:`, and everything indented
+// further below it. [first, last) as line numbers, or null.
+function nodeLines(name) {
+  if (!FILE) return null;
+  const top = FILE.indexOf("nodes:");
+  const first = FILE.findIndex((line, i) => i > top && line === `  ${name}:`);
+  if (top < 0 || first < 0) return null;
+  let last = first + 1;
+  while (last < FILE.length && (FILE[last].trim() === "" || FILE[last].startsWith("    "))) last += 1;
+  while (FILE[last - 1].trim() === "") last -= 1;
+  return [first, last];
+}
+
+// The whole file, with the picked node's lines marked so the view can scroll to them.
+function drawFile() {
+  fileAt = selected;
+  const span = selected ? nodeLines(selected) : null;
+  const text = (from, to) => esc(FILE.slice(from, to).join("\n"));
+  $("file-view").innerHTML = span
+    ? text(0, span[0]) + "\n" + `<mark id="file-node">${text(span[0], span[1])}</mark>` + "\n" + text(span[1])
+    : text(0);
+  // Scroll the pane, not the page: scrollIntoView would move the chapter around an embed too.
+  if (span) {
+    const pane = $("canvas"), mark = $("file-node").getBoundingClientRect();
+    pane.scrollTop += mark.top - pane.getBoundingClientRect().top - (pane.clientHeight - mark.height) / 2;
+  }
+}
+
 function detail(values, blocked) {
   const name = selected;
   if (!name) {
@@ -331,6 +392,11 @@ function detail(values, blocked) {
   } else {
     parts.push(`<table><tr><td>Value here</td><td class="n">${fmt(values[name], node.unit)}</td></tr>` +
       (node.point !== undefined ? `<tr><td>${say("book_value")}</td><td class="n">${fmt(node.point, node.unit)}</td></tr>` : "") + `</table>`);
+  }
+  const span = nodeLines(name);
+  if (span) {
+    parts.push(`<details class="in-file"${inFileOpen ? " open" : ""}><summary>In the file</summary>` +
+      `<pre>${esc(FILE.slice(span[0], span[1]).join("\n"))}</pre></details>`);
   }
   if (node.formula) parts.push(`<h2>Formula</h2><p><code>${node.formula}</code></p>`);
   const fed = childrenOf()[name];
@@ -375,6 +441,8 @@ function detail(values, blocked) {
   }
   if (node.note) parts.push(`<h2>Note</h2><p class="note">${node.note}</p>`);
   $("detail-body").innerHTML = parts.join("");
+  const inFile = $("detail-body").querySelector(".in-file");
+  if (inFile) inFile.addEventListener("toggle", () => { inFileOpen = inFile.open; });
   for (const link of $("detail-body").querySelectorAll("[data-goto]")) {
     link.addEventListener("click", () => goTo(link.dataset.goto));
   }
@@ -407,6 +475,7 @@ function render() {
   focusNote();
   outputsTable(values, blocked);
   detail(values, blocked);
+  if (FILE && $("canvas").classList.contains("showing-file") && fileAt !== selected) drawFile();
 }
 
 $("reset").addEventListener("click", () => {
@@ -512,6 +581,21 @@ if (CAN_RESAMPLE) $("resample").addEventListener("click", resample);
   if (UNTAUGHT) for (const el of document.querySelectorAll("[data-once-taught]")) el.remove();
   if (!CAN_RESAMPLE) for (const el of document.querySelectorAll("[data-resample]")) el.remove();
   $("stale-text").textContent = say("stale");
+  // The whole file, beside the graph where there is room for both: shown only when the page is
+  // wide, which is what Expand gives a chapter's embed on a desktop. style.css hides the switch
+  // below that, and shows the graph whatever was chosen.
+  if (FILE) {
+    const view = (file) => {
+      $("canvas").classList.toggle("showing-file", file);
+      $("view-graph").setAttribute("aria-pressed", String(!file));
+      $("view-file").setAttribute("aria-pressed", String(file));
+      if (file) drawFile();
+    };
+    $("view-graph").addEventListener("click", () => view(false));
+    $("view-file").addEventListener("click", () => view(true));
+  } else {
+    $("views").remove();
+  }
   $("reset").textContent = say("reset");
   if (window.self !== window.top) {
     // The chapter floats its Expand button over this panel's top right corner, so the header
@@ -536,8 +620,13 @@ if (CAN_RESAMPLE) $("resample").addEventListener("click", resample);
     // The chapter sizes the frame to whatever this page reports. Not scrollHeight: that is never
     // less than the frame's current height, so a frame that grew when a panel opened would never
     // shrink when it closed. The observer fires through a panel's transition and on a resize.
+    // Wide, the three columns take their height from the frame and scroll inside it, so a height
+    // reported from here would come straight back as the next one and the frame would never
+    // settle. There the chapter's stylesheet decides, and null says so.
+    const wide = matchMedia("(min-width: 1101px)");
     new ResizeObserver(() => {
-      window.parent.postMessage({ sizing: Math.ceil(document.body.getBoundingClientRect().height) }, "*");
+      const height = Math.ceil(document.body.getBoundingClientRect().height);
+      window.parent.postMessage({ sizing: wide.matches ? null : height }, "*");
     }).observe(document.body);
   } else {
     note.textContent = "This graph wants a wider screen \u2014 a tablet held sideways, or larger. " +

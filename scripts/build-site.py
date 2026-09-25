@@ -819,14 +819,17 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   // Handle resize messages from embedded iframes
   addEventListener("message", (e) => {
-    if (e.data && typeof e.data.sizing === "number" && e.source) {
+    if (e.data && "sizing" in e.data && e.source) {
       const frame = Array.from(document.querySelectorAll("iframe")).find(f => f.contentWindow === e.source);
-      // The frame is border-box, so its own border comes on top of the content it reports.
-      if (frame) frame.style.height = e.data.sizing + frame.offsetHeight - frame.clientHeight + "px";
+      if (!frame) return;
+      // A height is the content's, and the frame is border-box, so its own border goes on top.
+      // null hands the height back to this page's stylesheet.
+      frame.style.height = typeof e.data.sizing === "number"
+        ? e.data.sizing + frame.offsetHeight - frame.clientHeight + "px" : "";
     }
   });
   // A model: the button is in the page already, drawn beside the frame it belongs to.
-  for (const frame of document.querySelectorAll("iframe.viewer, iframe.playground, iframe.futures")) {
+  for (const frame of document.querySelectorAll("iframe.viewer, iframe.futures")) {
     const figure = frame.closest("figure");
     const button = figure && figure.querySelector(".expand");
     if (!button) continue;
