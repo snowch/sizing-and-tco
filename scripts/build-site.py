@@ -800,11 +800,18 @@ document.addEventListener("DOMContentLoaded", () => {
     button.querySelector("span").textContent = text;
     button.setAttribute("aria-expanded", String(open));
   };
+  // A model in the box is told when it has the window, because only then should it take its
+  // height from the frame: embedded, it sizes itself to what it shows and reports that.
+  const tell = (box, expanded) => {
+    const frame = box.querySelector("iframe");
+    if (frame && frame.contentWindow) frame.contentWindow.postMessage({ expanded }, "*");
+  };
   const close = () => {
     const open = document.querySelector(".expanded");
     if (!open) return;
     const button = open.querySelector(".expand");
     open.classList.remove("expanded");
+    tell(open, false);
     root.classList.remove("model-open");
     label(button, "Expand", false);
     // It left the flow while it was open, so the page under it moved. Put the reader back
@@ -830,6 +837,7 @@ document.addEventListener("DOMContentLoaded", () => {
       scrolled = window.scrollY;
       box.classList.add("expanded");
       root.classList.add("model-open");
+      tell(box, true);
       label(button, "Close", true);
     });
   };

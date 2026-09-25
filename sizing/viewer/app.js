@@ -374,7 +374,10 @@ function drawFile() {
     : text(0);
   // Scroll the pane, not the page: scrollIntoView would move the chapter around an embed too.
   if (span) {
-    const pane = $("canvas"), mark = $("file-node").getBoundingClientRect();
+    // Whichever of the two scrolls: the file itself where it is capped, the pane where it is not.
+    const view = $("file-view");
+    const pane = view.scrollHeight > view.clientHeight ? view : $("canvas");
+    const mark = $("file-node").getBoundingClientRect();
     pane.scrollTop += mark.top - pane.getBoundingClientRect().top - (pane.clientHeight - mark.height) / 2;
   }
 }
@@ -620,14 +623,22 @@ if (CAN_RESAMPLE) $("resample").addEventListener("click", resample);
     // The chapter sizes the frame to whatever this page reports. Not scrollHeight: that is never
     // less than the frame's current height, so a frame that grew when a panel opened would never
     // shrink when it closed. The observer fires through a panel's transition and on a resize.
-    // Wide, the three columns take their height from the frame and scroll inside it, so a height
-    // reported from here would come straight back as the next one and the frame would never
-    // settle. There the chapter's stylesheet decides, and null says so.
-    const wide = matchMedia("(min-width: 1101px)");
-    new ResizeObserver(() => {
+    // Embedded, every layout sizes itself to what it shows (style.css), so the height reported
+    // here does not depend on the frame and cannot come back as the next one. Expanded to the
+    // window, the three columns take the window's height and scroll on their own, and the
+    // chapter's stylesheet decides the frame; null says so.
+    const report = () => {
+      const expanded = document.documentElement.classList.contains("expanded");
       const height = Math.ceil(document.body.getBoundingClientRect().height);
-      window.parent.postMessage({ sizing: wide.matches ? null : height }, "*");
-    }).observe(document.body);
+      window.parent.postMessage({ sizing: expanded ? null : height }, "*");
+    };
+    addEventListener("message", (e) => {
+      if (e.source === window.parent && e.data && typeof e.data.expanded === "boolean") {
+        document.documentElement.classList.toggle("expanded", e.data.expanded);
+        report();
+      }
+    });
+    new ResizeObserver(report).observe(document.body);
   } else {
     note.textContent = "This graph wants a wider screen \u2014 a tablet held sideways, or larger. " +
       "The sliders below still work here.";

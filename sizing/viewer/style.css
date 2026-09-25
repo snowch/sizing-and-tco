@@ -184,3 +184,10 @@ html.embedded #detail[data-collapsed] #detail-content {
 .in-file pre { margin: 6px 0 0; padding: 6px 8px; font: 11.5px/1.45 ui-monospace, "SF Mono", Menlo, monospace;
                white-space: pre; overflow-x: auto; background: var(--bg); border: 1px solid var(--line);
                border-radius: 3px; }
+
+/* Embedded and not expanded, the page is as tall as what it shows, in every layout: the chapter
+   sizes the frame to it, so a panel opened grows the box and one closed shrinks it. The window-
+   height layout with columns that scroll on their own is for the page alone and for Expand.
+   The whole file is the one thing that would make the box absurd, so it scrolls in place. */
+html.embedded:not(.expanded) main { height: auto; }
+html.embedded:not(.expanded) #file-view { max-height: 36rem; }
