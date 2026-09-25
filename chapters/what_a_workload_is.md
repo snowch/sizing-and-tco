@@ -137,8 +137,7 @@ spreadsheet would have held. `provenance` records where the value came from and 
 it is. A source is optional and unchecked in a spreadsheet, but here the build refuses an input without
 one, and you can read it in the viewer's Details panel. A
 number without provenance is a rumour.
-[ch03](#where-the-numbers-come-from) shows the three source kinds, what each lets a reviewer do, and
-how to turn an assumption into a measurement.
+[ch03](#where-the-numbers-come-from) explains the three kinds of source.
 
 Three lines are optional: `label`, `note` and `range`. `label` reads better in a table than
 `stored_data_t0` does. `note` answers what a reader of the file would otherwise have to ask you; the
@@ -263,8 +262,7 @@ not change it; measuring it narrows it.
 
 The *Claim* column shows how much the person who wrote each number down was claiming. **●** means
 traceable to a measurement or a definition. **◐** means supplied by the vendor selling it. **○**
-means an assumption. [ch03](#where-the-numbers-come-from) shows what each level lets a reviewer do
-with the number, and how to turn an assumption into a measurement.
+means an assumption.
 
 ### What the file computes, and what kind of model it is
 
