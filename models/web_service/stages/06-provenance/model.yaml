@@ -19,8 +19,8 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        One number for now. Whoever quotes you the busy hour is
-        picturing a spread of values and rounding it to one; ch04
+        One number for now. A busy-hour figure somebody quotes
+        you is really a spread of values rounded to one, so ch04
         puts the spread back.
     range: [500, 40000]
   stored_data_t0:
@@ -51,9 +51,8 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        One growth rate, chosen rather than measured. One number
-        cannot say how sure anybody is of it, so ch04 replaces
-        it with a spread.
+        Chosen, not measured. One number cannot say how sure you
+        are of it, so ch04 replaces it with a spread.
     range: [1.0, 2.0]
   horizon:
     kind: input
@@ -113,9 +112,9 @@ nodes:
       kind: assumption
       source: >-
         The share of memory the kernel, the agents and the page
-        cache floor keep before the service sees any, as one number
-        for now. It differs from host to host and nobody has measured
-        it on these, so ch04 replaces it with a spread.
+        cache floor keep before the service sees any. One number
+        for now: it differs from host to host and has not been
+        measured on these hosts, so ch04 replaces it with a spread.
     range: [0.0, 0.4]
   ram_for_service:
     kind: derived

@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "802304c262dfdb9a",
+  "code_fingerprint": "8a41589b1a393193",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/04-demand_horizon_exponent/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-25T17:02:15+00:00",
-  "git_revision": "3ddd8ba",
+  "generated_at": "2026-09-25T17:28:19+00:00",
+  "git_revision": "eaa8d70",
   "kind": "model",
   "name": "web_service_demand_horizon_exponent-reference",
   "produced_by": {
@@ -42,7 +42,7 @@
     "factors": {
       "horizon_periods": 1.0
     },
-    "generated_at": "2026-09-25T17:02:15+00:00",
+    "generated_at": "2026-09-25T17:28:19+00:00",
     "model": "web_service_demand_horizon_exponent",
     "nodes": {
       "annual_growth": {
@@ -56,7 +56,7 @@
         "point": 1.3,
         "provenance": {
           "kind": "assumption",
-          "source": "One growth rate, chosen rather than measured. One number cannot say how sure anybody is of it, so ch04 replaces it with a spread."
+          "source": "Chosen, not measured. One number cannot say how sure you are of it, so ch04 replaces it with a spread."
         },
         "row": 0,
         "slider": {
@@ -139,7 +139,7 @@
         "point": 8000.0,
         "provenance": {
           "kind": "assumption",
-          "source": "One number for now. Whoever quotes you the busy hour is picturing a spread of values and rounding it to one; ch04 puts the spread back."
+          "source": "One number for now. A busy-hour figure somebody quotes you is really a spread of values rounded to one, so ch04 puts the spread back."
         },
         "row": 3,
         "slider": {

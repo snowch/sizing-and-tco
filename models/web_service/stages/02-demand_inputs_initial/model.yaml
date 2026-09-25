@@ -19,8 +19,8 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        One number for now. Whoever quotes you the busy hour is
-        picturing a spread of values and rounding it to one; ch04
+        One number for now. A busy-hour figure somebody quotes
+        you is really a spread of values rounded to one, so ch04
         puts the spread back.
     range: [500, 40000]
   stored_data_t0:

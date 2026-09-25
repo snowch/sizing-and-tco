@@ -101,10 +101,10 @@ One input. Click the node to see where its value came from. Open *Inputs* and dr
 and the graph recomputes as you drag.
 ```
 
-Blue means input: a number the model is given rather than works out. You do not choose this one —
-the busy hour is the world's — so the node has no bar down its edge; an input you do choose, like
-the horizon later in this chapter, has one. The slider is there because the node declares a range.
-Click the node and Details shows that the busy-hour figure is an assumption, and why.
+Blue means input: a number the model is given rather than works out. The world sets the busy hour,
+not you, so this node has no bar down its left edge. An input you do choose, like the horizon later
+in this chapter, has one. The slider appears because the node declares a range. Click the node and
+Details shows that the busy-hour figure is an assumption, and why.
 
 Now add the second one:
 
