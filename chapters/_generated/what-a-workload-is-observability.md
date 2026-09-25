@@ -2,7 +2,7 @@
 
 | Quantity | At the reference point | Unit | Claim |
 |---|---:|---|---|
-| **What the world does** | | | |
+| **Outside your control** | | | |
 | annual growth | 1.40 |  | ○ |
 | metric names per host | 60.0 | series/host | ○ |
 | collector throughput quoted | 6.00 | MB/s/core | ◐ |

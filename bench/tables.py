@@ -820,7 +820,7 @@ def workload_table(name: str) -> str:
     empty = ["| *none* | | | |"]
     rows = [
         *header,
-        "| **What the world does** | | | |",
+        "| **Outside your control** | | | |",
         *(groups["world"] or empty),
         "| **What you decide** | | | |",
         *(groups["you"] or empty),

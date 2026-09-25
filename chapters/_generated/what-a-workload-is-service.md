@@ -2,7 +2,7 @@
 
 | Quantity | At the reference point | Unit | Claim |
 |---|---:|---|---|
-| **What the world does** | | | |
+| **Outside your control** | | | |
 | annual growth factor | 1.30 |  | ○ |
 | peak request rate, day one | 8,000 | request/second | ○ |
 | records held, day one | 15.0 | TB | ○ |
