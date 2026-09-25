@@ -1051,10 +1051,17 @@ CSS = """
      `100vw` counts a classic scrollbar the layout does not have.
 
      The chapter list takes four fifths of what is going, because it is the one that wraps;
-     the outline wanted 4px more than its 14rem and gets 16. */
+     the outline wanted 4px more than its 14rem and gets 16.
+
+     Past that the reading column is at its full width and has no use for another pixel, so a
+     second ramp gives the rails the rest before the margins get any. The outline takes most of
+     it: since it lists every subsection its entries are the longest on the page, and at 240px
+     a heading of ten words wrapped onto four lines beside a band of empty margin. */
   --rails: clamp(0rem, (100vw - 91rem) * 0.8, 5rem);
-  /* Capped in px, and the cap is what each rail reaches today at default text on the widest
-     window -- 17rem + 5rem*0.8 and 14rem + 5rem*0.2. So nothing moves for a reader on browser
+  --spare: clamp(0rem, 100vw - 97.25rem, 7.5rem);
+  /* Capped in px, and the cap is what each rail reaches at default text on the widest window
+     -- 17rem + 5rem*0.8 + 7.5rem*0.2 and 14rem + 5rem*0.2 + 7.5rem*0.8, which are 360px and
+     336px. So nothing moves for a reader on browser
      defaults at any width, and the cap bites only when the reader's own text is larger.
 
      It has to bite, because `rem` means two things here. In these declarations it is the
@@ -1063,8 +1070,8 @@ CSS = """
      there was room for both rails at 1152px and then drew them half as wide again: 744px of a
      1440px window, the chapter down to 696px, the code down to 65 of its 100 columns, and an
      embedded model at 581px against the 860px its own layout needs. */
-  --nav: min(calc(17rem + var(--rails) * 0.8), 336px);
-  --toc: min(calc(14rem + var(--rails) * 0.2), 240px);
+  --nav: min(calc(17rem + var(--rails) * 0.8 + var(--spare) * 0.2), 360px);
+  --toc: min(calc(14rem + var(--rails) * 0.2 + var(--spare) * 0.8), 336px);
   --top: 3.1rem;
   --chrome: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --text: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
@@ -1100,6 +1107,7 @@ html { scroll-behavior: smooth; }
    fixed rather than following the reader's text. */
 @property --prose { syntax: "<length>"; inherits: true; initial-value: 738px; }
 @property --rails { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --spare { syntax: "<length>"; inherits: true; initial-value: 0px; }
 @property --nav { syntax: "<length>"; inherits: true; initial-value: 272px; }
 @property --toc { syntax: "<length>"; inherits: true; initial-value: 224px; }
 
@@ -1258,13 +1266,15 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
 .nav ul, .toc ul { list-style: none; margin: 0; padding: 0; }
 .nav a, .toc a { display: block; text-decoration: none; color: var(--muted);
                  border-radius: 4px; }
-.nav a { padding: .28rem .5rem .28rem .7rem; border-left: 2px solid transparent;
-         margin-left: -.2rem; }
+/* A hanging indent: an entry that wraps keeps its second line in from its first, so it reads as
+   one entry and not two. */
+.nav a { padding: .28rem .5rem .28rem calc(.7rem + .9em); text-indent: -.9em;
+         border-left: 2px solid transparent; margin-left: -.2rem; }
 .nav a:hover, .toc a:hover { color: var(--ink); background: var(--panel); }
 .nav a.here { color: var(--accent); font-weight: 600; border-left-color: var(--accent);
               background: var(--wash); }
-.toc a { padding: .26rem .45rem; }
-.toc .d3 a { padding-left: 1.2rem; font-size: 13.5px; }
+.toc a { padding: .26rem .45rem .26rem calc(.45rem + .9em); text-indent: -.9em; }
+.toc .d3 a { padding-left: calc(1.2rem + .9em); font-size: 13.5px; }
 
 /* Prose */
 /* Centred, because the slack has to go somewhere and all of it on the right reads as a mistake.

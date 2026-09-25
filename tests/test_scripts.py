@@ -856,6 +856,11 @@ def test_the_rails_take_the_room_as_it_appears():
     is shown at all the spec fixes it at 16px whatever the reader has done. At 24px text the
     layout showed both rails and drew them half as wide again -- 744px of a 1440px window, the
     chapter down to 696px, the code to 65 of its 100 columns, the model to 581px and stacked.
+
+    A second ramp follows the first. Once the first is spent the reading column is at its full
+    width, and every further pixel went to the margins while the outline, listing every
+    subsection, wrapped a ten-word heading onto four lines at 240px. The second ramp hands the
+    rails that room first, and is held to the same arithmetic.
     """
     css = site().CSS
     # The shape is fixed; the numbers in it are free to move, and the arithmetic below is what
@@ -879,31 +884,41 @@ def test_the_rails_take_the_room_as_it_appears():
     )
     assert ramp, "the ramp is a clamp of the window less a start, with a slope and a cap"
 
+    spare = re.search(r"--spare: clamp\(0rem, 100vw - ([\d.]+)rem, ([\d.]+)rem\)", css)
+    assert spare, "the second ramp is a clamp of the window less where the first one ends"
+    first_ends = float(ramp[1]) + float(ramp[3]) / float(ramp[2])
+    assert abs(float(spare[1]) - first_ends) < 1e-6, (
+        "the second ramp starts where the first is spent: earlier and the two take the same "
+        "pixels twice, later and the margins get some first"
+    )
     rails = {}
     for rail in ("nav", "toc"):
         got = re.search(
-            rf"--{rail}: min\(calc\(([\d.]+)rem \+ var\(--rails\) \* ([\d.]+)\), "
-            rf"([\d.]+)px\)",
+            rf"--{rail}: min\(calc\(([\d.]+)rem \+ var\(--rails\) \* ([\d.]+) "
+            rf"\+ var\(--spare\) \* ([\d.]+)\), ([\d.]+)px\)",
             css,
         )
-        assert got, f"--{rail} is its own width plus a share of the ramp, capped in px"
-        rails[rail] = (float(got[1]), float(got[2]), float(got[3]))
-    assert abs(sum(share for _, share, _ in rails.values()) - 1) < 1e-9, (
-        "the two shares are the whole of the ramp, or the cap does not mean what it says"
-    )
+        assert got, f"--{rail} is its own width plus a share of each ramp, capped in px"
+        rails[rail] = tuple(float(got[i]) for i in range(1, 5))
+    for ramp_share, name in ((1, "first"), (2, "second")):
+        assert abs(sum(r[ramp_share] for r in rails.values()) - 1) < 1e-9, (
+            f"the two shares are the whole of the {name} ramp, or the cap does not mean what it "
+            "says"
+        )
     # Each cap is that rail at its widest on browser defaults, so a reader who has changed
-    # nothing sees exactly what they saw before, at every window width.
-    for rail, (base, share, cap) in rails.items():
-        widest = base * 16 + float(ramp[3]) * 16 * share
+    # nothing never has the cap cut a ramp short.
+    for rail, (base, share, extra, cap) in rails.items():
+        widest = base * 16 + float(ramp[3]) * 16 * share + float(spare[2]) * 16 * extra
         assert abs(cap - widest) < 0.5, (
             f"--{rail} is capped at {cap:.0f}px but reaches {widest:.0f}px on browser defaults, "
             f"so the cap changes the page for a reader who never asked for anything"
         )
 
     def width(rail, rem, window):
-        base, share, cap = rails[rail]
+        base, share, extra, cap = rails[rail]
         taken = min(float(ramp[3]) * rem, max(0.0, window - float(ramp[1]) * rem)) * share
-        return min(base * rem + taken, cap)
+        more = min(float(spare[2]) * rem, max(0.0, window - float(spare[1]) * rem)) * extra
+        return min(base * rem + taken + more, cap)
 
     needs, column = 861, float(re.search(r"calc\((\d+)rem \+ 5rem\)", css)[1]) * 16
     shell = float(re.search(r"\.shell \{[^}]*max-width: ([\d.]+)rem", css, re.S)[1]) * 16
