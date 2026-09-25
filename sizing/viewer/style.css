@@ -191,3 +191,14 @@ html.embedded #detail[data-collapsed] #detail-content {
    The whole file is the one thing that would make the box absurd, so it scrolls in place. */
 html.embedded:not(.expanded) main { height: auto; }
 html.embedded:not(.expanded) #file-view { max-height: 36rem; }
+/* And stacked, at every width: the graph across the whole box, then Details, where a node picked
+   in the graph is shown, then Inputs, each a full-width panel that grows as far as it needs.
+   Three columns side by side is the layout for a whole window, which is what Expand gives. */
+html.embedded:not(.expanded) main { grid-template-columns: 1fr; grid-template-rows: none; }
+html.embedded:not(.expanded) :is(#controls, #canvas, #detail) { grid-column: 1; grid-row: auto; }
+html.embedded:not(.expanded) #canvas { order: -2; }
+html.embedded:not(.expanded) #detail { order: -1; border-left: 0; border-top: 1px solid var(--line); }
+html.embedded:not(.expanded) #controls { border-right: 0; border-top: 1px solid var(--line); }
+/* A full-width panel still reads at a line's width: a label and its value a thousand pixels apart
+   are hard to pair, and a band stretched that far says nothing more. */
+html.embedded:not(.expanded) :is(#detail-body, #controls-content) { max-width: 42rem; }
