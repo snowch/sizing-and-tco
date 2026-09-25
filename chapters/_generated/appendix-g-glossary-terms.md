@@ -6,6 +6,7 @@
 | **conditional model** | [ch01](#point-estimates) | a model with a measured constant or a ceiling in it, which must keep headroom below each ceiling | every input can be right and the answer still wrong |
 | **distribution** | [ch13](#monte-carlo) | the bag of values an uncertain quantity could take | a range of plausible values |
 | **flow** | [ch02](#what-a-workload-is) | a rate — requests per second, bytes per second, dollars per year | something that arrives |
+| **duration** | [ch02](#what-a-workload-is) | a length of time — a horizon, a retention period, the time one request spends in the system | how long |
 | **sample** | [ch13](#monte-carlo) | one value drawn from that bag | one guess |
 | **percentile** | [ch13](#monte-carlo) | the value a given fraction of the bag is below | the value nine tenths are under |
 | **interval** | [ch13](#monte-carlo) | the gap between two percentiles | how wide the answer is |

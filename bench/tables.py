@@ -1153,6 +1153,11 @@ GLOSSARY: dict[str, tuple[str, str, str]] = {
         "a rate — requests per second, bytes per second, dollars per year",
         "something that arrives",
     ),
+    "duration": (
+        "what_a_workload_is",
+        "a length of time — a horizon, a retention period, the time one request spends in the system",
+        "how long",
+    ),
     "sample": ("monte_carlo", "one value drawn from that bag", "one guess"),
     "percentile": (
         "monte_carlo",

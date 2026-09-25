@@ -24,7 +24,7 @@ will have a file that runs.
 
 ## The material
 
-### Three kinds of quantity, and two of them get confused
+### Four kinds of quantity, and two of them get confused
 
 :::{div}
 :class: definition
@@ -44,14 +44,22 @@ right now. You *can* run out of one, and that is usually what a ceiling is about
 :::{div}
 :class: definition
 
+**A duration** is a length of time. A horizon, a retention period, the time one request spends in
+the system. It is what turns one of the first two into the other: a flow kept up for a duration is
+a stock, and a stock used up over a duration is a flow.
+:::
+
+:::{div}
+:class: definition
+
 **Everything else is a ratio, a pure number or a price.** A replication factor, a compression ratio,
 a cost per terabyte. These have no time in them at all. They are the constants of a **sizing
 chain**: the string of multiplications that runs from a workload to a number of machines.
 ::::
 
 The unit tells you which is which. That is why the toolkit can check it, and why every node in
-this book declares one. A flow has time in its denominator. A stock does not. A duration has time
-in its numerator, and is none of the three.
+this book declares one. A flow has time in its denominator, a duration has it in its numerator,
+and a stock and a ratio have none.
 
 The commonest error in sizing turns a flow into a stock by multiplying it by a plain number
 instead of by an amount of time. Requests a second times five is still requests a second: five
