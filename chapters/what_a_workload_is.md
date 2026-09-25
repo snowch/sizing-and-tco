@@ -103,8 +103,9 @@ and the graph recomputes as you drag.
 
 Blue means input: a number the model is given rather than works out. The world sets the busy hour,
 not you, so this node has no bar down its left edge. An input you do choose, like the horizon later
-in this chapter, has one. The slider appears because the node declares a range. Click the node and
-Details shows that the busy-hour figure is an assumption, and why.
+in this chapter, has one. Open the Inputs box to see the slider: it exists because this node
+declares the `range` quoted above. Click the node and Details shows that the busy-hour figure is an
+assumption, and why.
 
 Now add the second one:
 
