@@ -808,9 +808,9 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     # column's width is read rather than written: what this is checking is that all four states
     # use the same one, and pinning the number here means a change to it fails four tests that
     # have nothing to say about it.
-    wide = re.search(r"calc\((\d+)rem \+ 5rem\)", css)
+    wide = re.search(r"calc\(var\(--u\) \* (\d+) \+ var\(--u\) \* 5\)", css)
     assert wide, "the middle column is the widest thing a chapter holds, plus its gutter"
-    column = f"minmax(0, calc({wide.group(1)}rem + 5rem))"
+    column = f"minmax(0, calc(var(--u) * {wide.group(1)} + var(--u) * 5))"
     for selector in (
         f"html.nav-closed .shell {{ grid-template-columns: {column} var(--toc); }}",
         f"grid-template-columns: var(--nav) {column}; }}",
@@ -865,7 +865,11 @@ def test_the_rails_take_the_room_as_it_appears():
     css = site().CSS
     # The shape is fixed; the numbers in it are free to move, and the arithmetic below is what
     # says whether they may. Pinning both here would mean only the shape was ever checked.
-    assert "--rails: clamp(0rem, (100vw" in css, (
+    assert "--u: max(1rem, 16px);" in css, (
+        "the page's widths follow a reader's text up but never down: the prose is in px, so a "
+        "rail in rem shrank around a chapter that did not"
+    )
+    assert "--rails: clamp(0px, (100vw" in css, (
         "the rails take nothing under a start width and never more than a cap"
     )
     assert "--nav: min(calc(" in css and "var(--rails)" in css, "the chapter list takes a share"
@@ -873,18 +877,22 @@ def test_the_rails_take_the_room_as_it_appears():
     assert "@media (min-width: 96rem)" not in css, (
         "the step this replaced skipped every window between 1440 and 1536"
     )
-    assert "max-width: 126rem;" in css, (
+    assert "max-width: calc(var(--u) * 126);" in css, (
         "the shell's own cap is what hands the rails their room rather than a margin"
     )
     assert "grid-template-columns: 17rem" not in css and "5rem)) 14rem" not in css, (
         "every grid rule reads the variables, or widening one rail moves only some of them"
     )
     ramp = re.search(
-        r"--rails: clamp\(0rem, \(100vw - ([\d.]+)rem\) \* ([\d.]+), ([\d.]+)rem\)", css
+        r"--rails: clamp\(0px, \(100vw - var\(--u\) \* ([\d.]+)\) \* ([\d.]+), "
+        r"var\(--u\) \* ([\d.]+)\)",
+        css,
     )
     assert ramp, "the ramp is a clamp of the window less a start, with a slope and a cap"
 
-    spare = re.search(r"--spare: clamp\(0rem, 100vw - ([\d.]+)rem, ([\d.]+)rem\)", css)
+    spare = re.search(
+        r"--spare: clamp\(0px, 100vw - var\(--u\) \* ([\d.]+), var\(--u\) \* ([\d.]+)\)", css
+    )
     assert spare, "the second ramp is a clamp of the window less where the first one ends"
     first_ends = float(ramp[1]) + float(ramp[3]) / float(ramp[2])
     assert abs(float(spare[1]) - first_ends) < 1e-6, (
@@ -894,7 +902,7 @@ def test_the_rails_take_the_room_as_it_appears():
     rails = {}
     for rail in ("nav", "toc"):
         got = re.search(
-            rf"--{rail}: min\(calc\(([\d.]+)rem \+ var\(--rails\) \* ([\d.]+) "
+            rf"--{rail}: min\(calc\(var\(--u\) \* ([\d.]+) \+ var\(--rails\) \* ([\d.]+) "
             rf"\+ var\(--spare\) \* ([\d.]+)\), ([\d.]+)px\)",
             css,
         )
@@ -914,24 +922,33 @@ def test_the_rails_take_the_room_as_it_appears():
             f"so the cap changes the page for a reader who never asked for anything"
         )
 
-    def width(rail, rem, window):
+    def width(rail, u, window):
         base, share, extra, cap = rails[rail]
-        taken = min(float(ramp[3]) * rem, max(0.0, window - float(ramp[1]) * rem)) * share
-        more = min(float(spare[2]) * rem, max(0.0, window - float(spare[1]) * rem)) * extra
-        return min(base * rem + taken + more, cap)
+        taken = min(float(ramp[3]) * u, max(0.0, window - float(ramp[1]) * u)) * share
+        more = min(float(spare[2]) * u, max(0.0, window - float(spare[1]) * u)) * extra
+        return min(base * u + taken + more, cap)
 
-    needs, column = 861, float(re.search(r"calc\((\d+)rem \+ 5rem\)", css)[1]) * 16
-    shell = float(re.search(r"\.shell \{[^}]*max-width: ([\d.]+)rem", css, re.S)[1]) * 16
-    # Every text size a reader might be on, not just the one the browser ships with.
-    for rem in (16, 18, 20, 24, 28, 32):
+    needs = 861
+    column = float(re.search(r"calc\(var\(--u\) \* (\d+) \+ var\(--u\) \* 5\)", css)[1])
+    shell = float(
+        re.search(r"\.shell \{[^}]*max-width: calc\(var\(--u\) \* ([\d.]+)\)", css, re.S)[1]
+    )
+    # Every text size a reader might be on, not just the one the browser ships with -- smaller as
+    # well as larger. The layout unit is the reader's text, never under 16px.
+    for rem in (10, 12, 14, 16, 18, 20, 24, 28, 32):
+        u = max(rem, 16)
         padding = min(max(rem, 0.04 * 1440), 2.6 * rem) * 2
         for window in range(1400, 2400, 4):
-            nav, toc = width("nav", rem, window), width("toc", rem, window)
+            nav, toc = width("nav", u, window), width("toc", u, window)
+            if rem < 16:
+                assert (nav, toc) == (width("nav", 16, window), width("toc", 16, window)), (
+                    f"at {rem}px text the rails are not what they are at 16px"
+                )
             # The outline gives way when the chapter cannot have what a model needs; the page
             # measures that for itself, because a media query cannot see the reader's text.
             if window - nav - toc - padding < needs:
                 toc = 0
-            model = min(min(window, shell) - nav - toc - padding, column)
+            model = min(min(window, shell * u) - nav - toc - padding, column * u)
             assert model >= needs or window - nav - padding < needs, (
                 f"{window}px at {rem}px text: the chapter gets {model:.0f}px and a model's "
                 f"layout needs {needs}px, with the outline already away"
@@ -1053,7 +1070,7 @@ def test_a_chapter_is_two_widths_on_one_middle():
     # model viewer is a separate document with its own breakpoint, and the two drifting apart is
     # invisible here: the chapter would simply stop showing the detail panel beside the graph.
     rem = 16
-    tier = float(re.search(r"max\((\d+(?:\.\d+)?)rem,", cap).group(1)) * rem
+    tier = float(re.search(r"max\(var\(--u\) \* (\d+(?:\.\d+)?),", cap).group(1)) * rem
     viewer = (ROOT / "sizing" / "viewer" / "style.css").read_text()
     panel = float(re.search(r"@media \(max-width: (\d+)px\)", viewer).group(1))
     assert tier > panel, (
@@ -1276,9 +1293,12 @@ def test_the_three_columns_sit_together():
     adrift rather than as one.
     """
     css = site().CSS
-    wide = re.search(r"calc\((\d+)rem \+ 5rem\)", css)
+    wide = re.search(r"calc\(var\(--u\) \* (\d+) \+ var\(--u\) \* 5\)", css)
     assert wide, "the middle column is the widest thing a chapter holds, plus its gutter"
-    assert f"grid-template-columns: var(--nav) minmax(0, calc({wide.group(1)}rem + 5rem));" in css
+    assert (
+        f"grid-template-columns: var(--nav) minmax(0, calc(var(--u) * {wide.group(1)} + var(--u) * 5));"
+        in css
+    )
     assert "justify-content: center;" in css
     assert "minmax(0, 1fr)" not in css.split("@media (min-width: 58rem)")[1], (
         "above the first breakpoint no column is a fraction of the window any more"

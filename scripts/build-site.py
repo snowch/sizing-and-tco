@@ -1057,8 +1057,16 @@ CSS = """
      second ramp gives the rails the rest before the margins get any. The outline takes most of
      it: since it lists every subsection its entries are the longest on the page, and at 240px
      a heading of ten words wrapped onto four lines beside a band of empty margin. */
-  --rails: clamp(0rem, (100vw - 91rem) * 0.8, 5rem);
-  --spare: clamp(0rem, 100vw - 97.25rem, 7.5rem);
+  /* The unit the page's widths are laid out in: the reader's text size, but never less than
+     16px. `rem` alone follows a reader's browser font setting down as well as up, while the
+     prose is set in px and does not, so a Firefox set to 10px text drew both rails, the middle
+     column and the page's own cap at ten sixteenths of their size around a chapter that had not
+     moved -- 225px and 210px rails wrapping half their entries beside 500px of empty margin,
+     and a 720px cap under a model that needs 861px. Larger text still widens the layout, which
+     is what the caps below are for. */
+  --u: max(1rem, 16px);
+  --rails: clamp(0px, (100vw - var(--u) * 91) * 0.8, var(--u) * 5);
+  --spare: clamp(0px, 100vw - var(--u) * 97.25, var(--u) * 7.5);
   /* Capped in px, and the cap is what each rail reaches at default text on the widest window
      -- 17rem + 5rem*0.8 + 7.5rem*0.2 and 14rem + 5rem*0.2 + 7.5rem*0.8, which are 360px and
      336px. So nothing moves for a reader on browser
@@ -1070,8 +1078,8 @@ CSS = """
      there was room for both rails at 1152px and then drew them half as wide again: 744px of a
      1440px window, the chapter down to 696px, the code down to 65 of its 100 columns, and an
      embedded model at 581px against the 860px its own layout needs. */
-  --nav: min(calc(17rem + var(--rails) * 0.8 + var(--spare) * 0.2), 360px);
-  --toc: min(calc(14rem + var(--rails) * 0.2 + var(--spare) * 0.8), 336px);
+  --nav: min(calc(var(--u) * 17 + var(--rails) * 0.8 + var(--spare) * 0.2), 360px);
+  --toc: min(calc(var(--u) * 14 + var(--rails) * 0.2 + var(--spare) * 0.8), 336px);
   --top: 3.1rem;
   --chrome: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --text: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
@@ -1218,7 +1226,7 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
        font-weight: 600; }
 
 /* Frame */
-.shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 126rem;
+.shell { display: grid; grid-template-columns: minmax(0, 1fr); max-width: calc(var(--u) * 126);
          margin-inline: auto; }
 /* Hidden until there is room, and declared before the rules that show them so that those win
    by order rather than by !important. Below the first breakpoint the chapter list opens over
@@ -1232,24 +1240,24 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
   /* The middle column is the widest thing a chapter holds -- a model at 84rem -- and the group
      of columns is what centres. `1fr` instead would make it whatever the window has left, which
      is a column sized by the screen rather than by the book. */
-  .shell { grid-template-columns: var(--nav) minmax(0, calc(72rem + 5rem));
+  .shell { grid-template-columns: var(--nav) minmax(0, calc(var(--u) * 72 + var(--u) * 5));
            justify-content: center; }
   .nav { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
-  html.nav-closed .shell { grid-template-columns: minmax(0, calc(72rem + 5rem)); }
+  html.nav-closed .shell { grid-template-columns: minmax(0, calc(var(--u) * 72 + var(--u) * 5)); }
   html.nav-closed .nav { display: none; }
 }
 /* Two rails, and a reader reading a wide graph wants neither. Each has a button of its own, so
    the chapter takes back 272px, 224px, or both -- and with both away the shell's own cap goes
    too, because at that point the reader has asked for the window. */
 @media (min-width: 72rem) {
-  .shell { grid-template-columns: var(--nav) minmax(0, calc(72rem + 5rem)) var(--toc); }
-  html.nav-closed .shell { grid-template-columns: minmax(0, calc(72rem + 5rem)) var(--toc); }
+  .shell { grid-template-columns: var(--nav) minmax(0, calc(var(--u) * 72 + var(--u) * 5)) var(--toc); }
+  html.nav-closed .shell { grid-template-columns: minmax(0, calc(var(--u) * 72 + var(--u) * 5)) var(--toc); }
   html.toc-closed .shell, html.toc-cramped .shell {
-    grid-template-columns: var(--nav) minmax(0, calc(72rem + 5rem)); }
+    grid-template-columns: var(--nav) minmax(0, calc(var(--u) * 72 + var(--u) * 5)); }
   html.nav-closed.toc-closed .shell, html.nav-closed.toc-cramped .shell {
-    grid-template-columns: minmax(0, calc(72rem + 5rem)); max-width: none; }
+    grid-template-columns: minmax(0, calc(var(--u) * 72 + var(--u) * 5)); max-width: none; }
   .toc { display: block; position: sticky; top: var(--top);
          max-height: calc(100vh - var(--top)); overflow-y: auto;
          overscroll-behavior: contain; }
@@ -1323,7 +1331,7 @@ main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;
      ever an exception for being *wider*. */
   #main > :is(figure:has(> iframe), table,
               pre, .editable-block, .problem, figure:has(> pre)) {
-    max-width: min(100%, max(72rem, var(--prose))); }
+    max-width: min(100%, max(var(--u) * 72, var(--prose))); }
   #main > figure > figcaption { margin-inline: auto; }
 }
 main :is(h1, h2, h3, h4) { font-family: var(--chrome); letter-spacing: -.012em;
