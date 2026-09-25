@@ -19,9 +19,9 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        One number for now. A busy-hour figure somebody quotes
-        you is really a spread of values rounded to one, so ch04
-        puts the spread back.
+        This figure comes from the forecaster, who holds a spread
+        of plausible busy-hour rates and rounds it to one. ch04
+        replaces the one number with the spread.
     range: [500, 40000]
   stored_data_t0:
     kind: input

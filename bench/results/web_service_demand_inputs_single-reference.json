@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "f4811034dce8a57d",
+  "code_fingerprint": "ef97db3b80563dba",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/01-demand_inputs_single/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-25T17:28:18+00:00",
-  "git_revision": "eaa8d70",
+  "generated_at": "2026-09-25T19:02:26+00:00",
+  "git_revision": "9ddca9d",
   "kind": "model",
   "name": "web_service_demand_inputs_single-reference",
   "produced_by": {
@@ -40,7 +40,7 @@
     "currency": "USD",
     "description": "The web service model as it stands at the end of ch02.",
     "factors": {},
-    "generated_at": "2026-09-25T17:28:18+00:00",
+    "generated_at": "2026-09-25T19:02:26+00:00",
     "model": "web_service_demand_inputs_single",
     "nodes": {
       "peak_request_rate_t0": {
@@ -54,7 +54,7 @@
         "point": 8000.0,
         "provenance": {
           "kind": "assumption",
-          "source": "One number for now. A busy-hour figure somebody quotes you is really a spread of values rounded to one, so ch04 puts the spread back."
+          "source": "This figure comes from the forecaster, who holds a spread of plausible busy-hour rates and rounds it to one. ch04 replaces the one number with the spread."
         },
         "row": 0,
         "slider": {

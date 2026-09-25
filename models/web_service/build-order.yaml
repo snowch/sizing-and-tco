@@ -31,8 +31,8 @@ certain_until:
     stage: uncertainty
     value: 8000
     source: >-
-      One number for now. A busy-hour figure somebody quotes you is really a spread of values
-      rounded to one, so ch04 puts the spread back.
+      This figure comes from the forecaster, who holds a spread of plausible busy-hour rates
+      and rounds it to one. ch04 replaces the one number with the spread.
   os_reserve:
     stage: uncertainty
     value: 0.1

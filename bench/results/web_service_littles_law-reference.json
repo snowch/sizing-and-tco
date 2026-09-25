@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-25T17:28:20+00:00",
-  "git_revision": "eaa8d70",
+  "generated_at": "2026-09-25T19:02:29+00:00",
+  "git_revision": "9ddca9d",
   "kind": "model",
   "name": "web_service_littles_law-reference",
   "produced_by": {
@@ -58,7 +58,7 @@
       "stored_data": 1.0,
       "utilisation": 1.0
     },
-    "generated_at": "2026-09-25T17:28:20+00:00",
+    "generated_at": "2026-09-25T19:02:29+00:00",
     "model": "web_service_littles_law",
     "nodes": {
       "annual_growth": {
