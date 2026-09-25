@@ -965,10 +965,13 @@ def test_the_model_panel_says_how_far_a_slider_reaches():
     """
     app = (ROOT / "sizing" / "viewer" / "app.js").read_text()
     assert "const reach = descendants(name);" in app, "the forward closure, not one hop"
-    assert "PAYLOAD.outputs.filter((o) => o !== name && reach.has(o))" in app
-    assert "PAYLOAD.outputs.filter((o) => o !== name && !reach.has(o))" in app, (
+    assert "const moves = worked.filter((o) => reach.has(o));" in app
+    assert "const stuck = worked.filter((o) => !reach.has(o));" in app, (
         "naming what it cannot move is the half that answers the question"
     )
+    # Over worked-out outputs only. Another input listed as "cannot move" was the whole section on
+    # a model with no arithmetic yet, and told the reader nothing.
+    assert "PAYLOAD.nodes[o].depends_on.length" in app
     assert "Cannot move:" in app
     # And the same reach, while a slider is held, over the outputs table.
     assert "const reach = touched ? descendants(touched) : null;" in app

@@ -410,9 +410,13 @@ function detail(values, blocked) {
   // recommends without ever reaching what the fleet costs, because the fleet is a decision and
   // the cost is of the fleet decided on. Naming the outputs it cannot move is the point: a
   // short list of what it does move reads as a summary, not as a dead end.
+  // Only worked-out outputs count. An output that is itself an input moves with its own slider
+  // and nothing else, so listing it as "cannot move" tells the reader nothing, and on a model
+  // with no arithmetic yet it was the whole section.
   const reach = descendants(name);
-  const moves = PAYLOAD.outputs.filter((o) => o !== name && reach.has(o));
-  const stuck = PAYLOAD.outputs.filter((o) => o !== name && !reach.has(o));
+  const worked = PAYLOAD.outputs.filter((o) => o !== name && PAYLOAD.nodes[o].depends_on.length);
+  const moves = worked.filter((o) => reach.has(o));
+  const stuck = worked.filter((o) => !reach.has(o));
   if (moves.length || stuck.length) {
     parts.push(`<h2>Reaches</h2>`
       + `<p class="note">Moves <strong>${moves.length} of ${moves.length + stuck.length}</strong>`

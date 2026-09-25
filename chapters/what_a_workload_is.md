@@ -109,26 +109,36 @@ assumption, and why.
 
 Now add the second one:
 
+```{literalinclude} ../models/web_service/stages/02-demand_inputs_initial/model.yaml
+:language: yaml
+:start-at: stored_data_t0:
+:end-at: range: [1, 200]
+```
+
 ```{iframe} /models/web_service_demand_inputs_initial-reference.html
 :width: 100%
 
-Interactive viewer: the first two quantities. Drag the sliders to see how peak rate and stored data move independently.
+Interactive viewer: two independent inputs. Drag a slider to change its number only.
 ```
 
-**These two are independent.** Neither depends on the other, so there are no edges between them. Dragging either one leaves the other alone.
+**These two are independent.** When you drag one slider, only that node's number changes. Its row
+in the Outputs list updates; the other node's row is greyed out because it does not move. No edges
+connect these nodes yet. Once you add arithmetic later in this chapter, dragging one input will
+move others.
 
-Four lines in each are what this book cares about. The rest are convenience. `kind` and `unit`
-let the toolkit tell a level from a rate. `value` is the number a spreadsheet would have held on
-its own. `provenance` is the line a cell has nowhere to put. A number with no source is a
-rumour, so the field is mandatory from the first node. [ch03](#where-the-numbers-come-from) is
-about what that costs and what it buys.
+Four lines in each node matter most: `kind`, `unit`, `value` and `provenance`. `kind` and `unit`
+let the toolkit tell a level from a rate. `value` is the number a spreadsheet would have held.
+`provenance` records where the value came from and what kind of source it is. A spreadsheet cell
+has no place for provenance, but you can read it in the quoted file above and in the viewer's
+Details panel. A number without provenance is a rumour, so you must provide it from the first
+node. [ch03](#where-the-numbers-come-from) shows the three source kinds, what each lets a reviewer
+do, and how to turn an assumption into a measurement.
 
-`label`, `note` and `range` are neither. A label reads better in a table than `stored_data_t0`
-does. A note is for whatever a reader of this file would otherwise have to ask you about, and the
-one above says why that quantity is a single number when the one before it is not. A range is how
-far a slider may drag the value on the interactive version of this model. All three are optional.
-[Appendix A](#appendix-a-dsl-reference) lists everything a node may carry, which is longer than
-what a node needs.
+Three lines are optional: `label`, `note` and `range`. `label` reads better in a table than
+`stored_data_t0` does. `note` answers questions you might have when reading the file. The note on
+`stored_data_t0` above explains why it is a single number when the busy hour will not be. `range`
+sets how far the slider can drag the value. [Appendix A](#appendix-a-dsl-reference) lists
+everything a node may carry.
 
 ### Adding growth and time
 
