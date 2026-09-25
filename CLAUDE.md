@@ -227,14 +227,21 @@ whether the reader has to decode it.
 **Haiku drafts the prose; you check it.** Reader-facing prose goes to a Haiku subagent to draft
 before it lands: a new paragraph, a rewording, a provenance `source`, a viewer label. Haiku
 writes shorter, plainer sentences than a model that has the whole repository in its head. It also
-drops facts and gets them wrong. So the work splits three ways:
+drops facts and gets them wrong. So the work splits four ways:
 
 1. **You write the brief as a list of facts**, not as prose: what the text must say, each point
-   checked against the model file or the code. Add STYLE.md. A prose brief gets its wording copied.
-2. **Haiku writes the sentences.**
+   checked against the model file or the code *before* the brief goes out. Haiku copies a wrong
+   fact faithfully, and in the ch02 review three of the errors that reached a draft were the
+   brief's. Add STYLE.md. A prose brief gets its wording copied.
+2. **Haiku writes the sentences, a section at a time.** Briefed sentence by sentence, nobody writes
+   the joins, and the page repeats itself where two drafts meet: the ch02 review briefed
+   thirty-five fragments and got the same point three times running.
 3. **You check the facts, and nothing else.** Where a fact is missing, add the fewest words that
    carry it. Do not rewrite Haiku's sentences. If a draft is wrong, send it back with a note
-   rather than fixing it yourself. Then run STYLE.md's closing passes over what will land.
+   rather than fixing it yourself.
+4. **Then read the whole page, start to finish.** This is STYLE.md's second pass, and it is where
+   repeats and broken joins show. Cutting a repeat is yours to do; a join that needs new words
+   goes back to Haiku.
 
 The first Haiku drafts said a slider came from "a spread" when it comes from a declared range,
 and dropped the reason an input is one number. Merging them by rewriting put back the facts and,

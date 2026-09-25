@@ -15,7 +15,7 @@ short_title: "ch02 What a workload is"
 Which quantities size a system, and which only look as though they do?
 
 The people who own the service tell you what it has to do. Before you can multiply any of it into a
-number of machines, you write each quantity down with a unit, so a rate cannot be read as a level.
+number of machines, you write each quantity down with a unit.
 The first distinction is between a rate and a level. That matters because sizing the storage for
 data you keep for a retention period from the rate it arrives, without multiplying by the period,
 gives you the wrong answer.
@@ -70,11 +70,9 @@ times as many of them, arriving just as fast, and not one of them stored anywher
 second times five *seconds* is requests, which is a thing you can hold. The plain number changes
 how much; only the duration changes what kind.
 
-If you size storage for data you keep for a retention period by multiplying the arrival rate by a
-plain number, the result is a rate, not an amount of storage. The answer is the wrong kind of
-quantity, not an imprecise one. A spreadsheet shows the same digits either way and cannot tell you
+A spreadsheet shows the same digits either way and cannot tell you
 which kind they are. The toolkit refuses a formula whose units do not produce the node's declared
-unit. Problem 2.2 asks you to avoid exactly this error. [Appendix D](#appendix-d-units) shows how
+unit. Problem 2.2 asks you to avoid this error. [Appendix D](#appendix-d-units) shows how
 units combine and cancel, on a page of examples the toolkit works out itself.
 
 ### Writing down the first quantities
@@ -83,8 +81,9 @@ A model is a file of named quantities, each with a unit and a source. A spreadsh
 value and nothing else. It does not hold the fact that the value was measured last March against
 version 2.4 of something. It does not say that the value is a vendor's claim nobody has checked,
 or that it was agreed in a meeting by people who have since left. Those facts live in the head of
-whoever built the sheet, and they leave when that person does. A cell has no unit. The spreadsheet accepts `=B4*C7` for any two cells. Multiply a count of hosts by
-a request rate and you get a number; nothing tells you it is neither bytes nor requests.
+whoever built the sheet, and they leave when that person does. A cell has no unit. The
+spreadsheet accepts `=B4*C7` for any two cells. Multiply a count of hosts by a request rate and you
+get a number; nothing tells you it is neither bytes nor requests.
 
 The model is one text file in YAML. A change to it shows up line by line, and you can review it
 like code. This chapter adds a few nodes at a time, each when you have learned what it needs.
@@ -102,8 +101,7 @@ the first one:
 ```{iframe} /models/web_service_demand_inputs_single-reference.html
 :width: 100%
 
-The viewer shows one input node. Click it to see where its value came from. Open *Inputs* and drag
-the slider to change the node's number. There is nothing else in the model yet for it to move.
+One input: the busy-hour request rate.
 ```
 
 Blue means input: a number the model is given rather than works out. How many requests arrive in
@@ -131,7 +129,7 @@ in the Outputs list updates; the other node's row is greyed out because it does 
 connect these nodes yet. Once you add arithmetic later in this chapter, dragging one input will
 move others.
 
-These lines appear in the file quoted above each viewer. Four matter most: `kind`, `unit`, `value`
+Look at the lines in the two files quoted above. Four matter most: `kind`, `unit`, `value`
 and `provenance`. `kind` says what sort of node it is: `input` is a number the model is given.
 `unit` lets the toolkit tell a level from a rate and check every formula. `value` is the number a
 spreadsheet would have held. `provenance` records where the value came from and what kind of source
@@ -148,8 +146,7 @@ everything a node may carry.
 
 ### Adding growth and time
 
-The two inputs describe the workload today, on day one, and they are estimates, not measurements.
-You buy hardware to last years. Both the request rate and the data held grow. The model needs to
+The two inputs describe the workload today, on day one. You buy hardware to last years. Both the request rate and the data held grow. The model needs to
 know how fast they grow, and how long you are buying for.
 
 Here are three more quantities:
@@ -162,7 +159,7 @@ Here are three more quantities:
 
 ```{iframe} /models/web_service_demand_inputs_all-reference.html
 :width: 100%
-Five inputs, and no node is worked out from others yet. Three are outside your control, one you choose (the horizon, with the bar down its edge), and one is true by definition: one year.
+Five inputs, and none worked out from another yet.
 ```
 
 **Five inputs, and no arithmetic yet.** All five nodes are blue: numbers the model is given. Dragging
@@ -173,8 +170,7 @@ any slider leaves the others alone, because nothing is worked out from anything 
 `one_year` is a year; you do not choose it, it is true by definition. It is there because growth
 compounds, so the horizon becomes an exponent, and an exponent must be a pure number.
 
-`horizon / one_year` divides the duration by a year and leaves a pure number of years. The horizon
-is a duration: it has time in it. An exponent must be a pure number with no unit. A spreadsheet
+`horizon / one_year` divides the duration by a year and leaves a pure number of years. A spreadsheet
 holds the horizon as a bare number, which works until a colleague types the horizon in months into
 the same cell. Growth then compounds over twelve times as many periods, and nothing warns you. The
 toolkit converts months to years before dividing, so the answer stays right.
@@ -192,13 +188,12 @@ two of them, the horizon and one year:
 
 ```{iframe} /models/web_service_demand_horizon_exponent-reference.html
 :width: 100%
-Interactive viewer: the first derived node. Drag the horizon slider and watch horizon_periods compute instantly. Click horizon_periods to see its formula.
+The first derived node.
 ```
 
 **Hollow means derived.** `horizon_periods` is an outline because the toolkit works it out from the
 formula `horizon / one_year`. The `kind: derived` line says its value is not stated, only computed.
-Dividing a duration by a duration gives a pure number, the exponent for growth, and the toolkit
-checked the unit before accepting the formula. Drag the horizon slider and `horizon_periods` changes
+The toolkit checked that the formula gives a pure number before accepting it. Drag the horizon slider and `horizon_periods` changes
 with it. Click the node to see the formula in Details.
 
 ### Growing the demand to the horizon
@@ -216,7 +211,7 @@ to the end of the purchase cycle. That takes two more derived quantities:
 multiply the day-one value by the growth factor raised to `horizon_periods`, the number of years
 from day one to the horizon.
 
-That completes the demand side. You have eight quantities: three outside your control (busy-hour
+You now have eight quantities: three outside your control (busy-hour
 rate, data held, growth factor), one you choose (horizon), one true by definition (`one_year`), and
 three the toolkit computes (`horizon_periods`, `peak_request_rate`, `stored_data`).
 
@@ -251,10 +246,9 @@ have decided. Separate them first, in any model, including this one:
 ```{include} _generated/what-a-workload-is-service.md
 ```
 
-Three quantities are outside your control: the busy hour, the data you hold, and how fast both
-grow. One is yours: the horizon, when you plan to buy again. One is true by definition: a year is a
-year whoever asks. The file marks each input's group on its `decided:` line, and the build refuses a
-file that leaves one out.
+The table groups the inputs as the file does, on each input's `decided:` line, and the build
+refuses a file that leaves one out. A year is true by definition because it is a year whoever
+asks.
 
 Look at the "Outside your control" group. Each is a single number you cannot change. You do not
 decide a growth rate, yet the file states one as flatly as the horizon. **An input you gave a single
@@ -283,8 +277,7 @@ running a model means. The table that follows shows what it produced:
 The table shows the request rate and data held at the horizon, worked out from five inputs and a
 growth formula. The arithmetic is right, and you should not act on it, for the reason
 [ch01](#point-estimates) gave: every input was a single figure, and none is known that precisely.
-Now the inputs are in a file you can open and change. [ch04](#peak-mean-and-growth) takes the first
-of those single figures apart and replaces it with a spread.
+Now the inputs are in a file you can open and change.
 
 The toolkit has already decided what kind of model this is, too:
 
@@ -294,8 +287,7 @@ The toolkit has already decided what kind of model this is, too:
 No one typed the last row of the table: the loader works it out from the kinds of node in the
 file. The file has no measured constant and no declared limit, so what you have is a **definitional
 model**: a structure no one doubts, with uncertain numbers in it. It stops being one when a later
-chapter adds a measured node or a ceiling to the file. The file decides the change, not a chapter's
-heading. [ch01](#point-estimates)'s problem 1.3 asks you to name those nodes in three model
+chapter adds a measured node or a ceiling to the file. [ch01](#point-estimates)'s problem 1.3 asks you to name those nodes in three model
 descriptions.
 
 ### The same split, on a model that is finished
