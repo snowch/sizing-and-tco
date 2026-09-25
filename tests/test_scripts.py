@@ -21,6 +21,7 @@ from pathlib import Path
 import pytest
 
 from bench import render as renderer
+from bench.outline import CHAPTER_SHAPE, CHAPTERS
 from bench.stamp import ROOT, shown
 
 #: Scripts that take an output directory and are given a relative one by a workflow. Each one
@@ -1267,3 +1268,28 @@ def test_the_three_columns_sit_together():
     assert "minmax(0, 1fr)" not in css.split("@media (min-width: 58rem)")[1], (
         "above the first breakpoint no column is a fraction of the window any more"
     )
+
+
+def test_the_contents_list_holds_every_section_and_what_is_in_it():
+    """The sidebar on the right is a chapter's six sections and the subsections inside each.
+
+    It kept fixed heading depths that were one level too shallow for how MyST numbers a
+    chapter, so every subsection in the book was missing from it and a chapter as long as ch02
+    showed six entries. The introduction, which has no title heading, lost its first section.
+    """
+    index = renderer.parsed_pages()
+    if not index:
+        pytest.skip("no parsed content; run `myst build` first")
+    build = site()
+    for chapter in CHAPTERS:
+        items = build.contents_of(index[chapter.path])
+        sections = [i["text"] for i in items if i["depth"] == 2]
+        within = [i["text"] for i in items if i["depth"] == 3]
+        written = re.findall(r"(?m)^### (.+)$", (ROOT / chapter.path).read_text())
+        assert sections == list(CHAPTER_SHAPE), f"{chapter.label}: {sections}"
+        assert len(within) == len(written), (
+            f"{chapter.label} has {len(written)} subsections and its contents list shows "
+            f"{len(within)}"
+        )
+    first = re.search(r"(?m)^## (.+)$", (ROOT / "index.md").read_text()).group(1)
+    assert build.contents_of(index["index.md"])[0]["text"] == first.strip()

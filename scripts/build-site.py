@@ -308,20 +308,36 @@ def builds_on(source: str) -> str:
 
 
 def contents_of(page: dict) -> list[dict]:
-    """The headings on one page, for the sidebar on the right.
+    """The headings on one page, for the sidebar on the right: its sections and what is in them.
+
+    The levels come from the page rather than from fixed depths. MyST puts a chapter's title at
+    depth 2, its six sections at 3 and their subsections at 4, and this used to keep 2 and 3 --
+    so the title went, the sections stayed, and every subsection in the book was missing. The
+    introduction has no title heading at all, and lost its first section instead.
 
     The anchor comes from the renderer that writes the heading, not from a second slug function
     that agrees with it most of the time. The two did disagree: one collapsed a run of
     punctuation and the other did not, so every heading with a comma or a dash in it had a
     contents entry pointing at an id that was never written.
     """
-    out = []
+    headings = []
     for node in walk(page.get("mdast", page)):
-        if node.get("type") == "heading" and node.get("depth") in (2, 3):
+        if node.get("type") == "heading":
             text = "".join(t.get("value", "") for t in walk(node) if t.get("type") == "text")
             if text:
-                out.append({"depth": node["depth"], "text": text, "id": renderer.heading_id(node)})
-    return out
+                headings.append(
+                    {"depth": node["depth"], "text": text, "id": renderer.heading_id(node)}
+                )
+    if not headings:
+        return []
+    top = min(h["depth"] for h in headings)
+    # A title is a page's one heading at its shallowest level, and it comes first. It is the page's
+    # name, not a place in it, so the sections start one level down.
+    titled = headings[0]["depth"] == top and sum(h["depth"] == top for h in headings) == 1
+    first = top + 1 if titled else top
+    return [
+        {**h, "depth": 2 + h["depth"] - first} for h in headings if first <= h["depth"] <= first + 1
+    ]
 
 
 def walk(node):
@@ -1588,8 +1604,9 @@ def nav_html(here: str) -> str:
 
 
 def toc_html(page: dict) -> str:
-    items = contents_of(page)[1:]  # the first heading is the page's own title
-    if not items:
+    items = contents_of(page)
+    # One entry is not a way round a page. The landing page has a single heading, its tagline.
+    if len(items) < 2:
         return ""
     body = "".join(
         f'<li class="d{item["depth"]}"><a href="#{item["id"]}">{html.escape(item["text"])}</a></li>'
