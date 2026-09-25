@@ -77,13 +77,14 @@ units combine and cancel, on a page of examples the toolkit works out itself.
 
 ### Writing down the first quantities
 
-A model is a file of named quantities, each with a unit and a source. A spreadsheet cell holds a
-value and nothing else. It does not hold the fact that the value was measured last March against
-version 2.4 of something. It does not say that the value is a vendor's claim nobody has checked,
-or that it was agreed in a meeting by people who have since left. Those facts live in the head of
-whoever built the sheet, and they leave when that person does. A cell has no unit. The
-spreadsheet accepts `=B4*C7` for any two cells. Multiply a count of hosts by a request rate and you
-get a number; nothing tells you it is neither bytes nor requests.
+A model is a file of named quantities, each with a unit and a source. A spreadsheet can hold both:
+a source in a comment or column, a unit in a header or cell format. But nothing forces you to fill
+them in, and nothing checks that you have. Without a required place, facts stay in the head of
+whoever built the sheet and leave with that person. The facts lost include where a value came
+from, what version of what you measured it against, whether it is a vendor's claim, or whether it
+was agreed by people who have since left. When `=B4*C7` multiplies a count of hosts by a request
+rate, formulas ignore units and do not track sources. You get a number; nothing tells you it is
+neither bytes nor requests, and nothing tells you which inputs were guesses.
 
 The model is one text file in YAML. A change to it shows up line by line, and you can review it
 like code. This chapter adds a few nodes at a time, each when you have learned what it needs.
@@ -133,8 +134,9 @@ Look at the lines in the two files quoted above. Four matter most: `kind`, `unit
 and `provenance`. `kind` says what sort of node it is: `input` is a number the model is given.
 `unit` lets the toolkit tell a level from a rate and check every formula. `value` is the number a
 spreadsheet would have held. `provenance` records where the value came from and what kind of source
-it is. A spreadsheet cell has no place for it, but you can read it in the viewer's Details panel. A
-number without provenance is a rumour, so every node must have it from the first.
+it is. A source is optional and unchecked in a spreadsheet, but here the build refuses an input without
+one, and you can read it in the viewer's Details panel. A
+number without provenance is a rumour.
 [ch03](#where-the-numbers-come-from) shows the three source kinds, what each lets a reviewer do, and
 how to turn an assumption into a measurement.
 
@@ -142,7 +144,7 @@ Three lines are optional: `label`, `note` and `range`. `label` reads better in a
 `stored_data_t0` does. `note` answers what a reader of the file would otherwise have to ask you; the
 note on `stored_data_t0` explains why it stays a single number when the busy-hour figure will not.
 `range` sets how far the slider can drag the value. [Appendix A](#appendix-a-dsl-reference) lists
-everything a node may carry.
+every line a node can have.
 
 ### Adding growth and time
 
@@ -368,8 +370,9 @@ range this book reports too narrow ([ch14](#correlation-and-convergence)).
 - **The commonest sizing error turns a flow into a stock by multiplying it by a plain number.** A
   rate times a number is still a rate. Only a duration makes it an amount, and the toolkit refuses
   the other.
-- **A model is a file of named quantities, each with a unit and a source.** A spreadsheet cell holds
-  a value and nothing about it. The file holds where the value came from and what it is measured in.
+- **A model is a file of named quantities, each with a unit and a source.** A spreadsheet can hold
+  both, but does not require either and does not check them. The file requires both on every input,
+  and the toolkit checks every formula against the units.
 - **Growth compounds, so the horizon has to become a pure number.** Dividing the duration by a
   declared year is what turns it into an exponent, and a spreadsheet does that silently until
   a colleague types months.
