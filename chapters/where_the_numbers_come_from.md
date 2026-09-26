@@ -23,21 +23,33 @@ Once they are all cells in the same column, none. That is the problem.
 
 Every input in this book declares which of three things it is.
 
+:::{div}
+:class: definition
+
 **`fact`**: traceable to something: a stamped measurement, an invoice, or a published
 specification. A stamped measurement is a result file in `bench/results/`. It records the figure,
 the unit, what produced it (the body of data and the software, or the machine), and a fingerprint
 of the code that created it. The build refuses a `fact` whose source cites nothing. An assumption
 dressed as a `fact` is worse than one labelled as an assumption, because the label hides the doubt
 a reviewer would otherwise challenge.
+:::
+
+:::{div}
+:class: definition
 
 **`vendor_claim`**: stated by the vendor selling it. Often true, and never checked here. It carries
 its mark in the tables on this page (the ◐ symbol), and when you click a node in a model, its
 Provenance line names it a vendor claim. It is never quietly promoted to a `fact`. Once a quoted
 throughput becomes "the throughput" in your head, the model holds a fact it never earned.
+:::
+
+:::{div}
+:class: definition
 
 **`assumption`**: a decision this model makes. Naming it as one is what lets a reviewer argue with
 it. An assumption nobody can find is not a weaker claim than a measurement. It is a stronger one,
 because nothing can dislodge it.
+:::
 
 ### A vendor's specification
 
