@@ -24,16 +24,24 @@ is also about the count past which each new machine takes capacity away.
 
 Machines do not add up, and there are two separate reasons.
 
+:::{div}
+:class: definition
+
 **Contention.** Some fraction of the work cannot be done in parallel: a lock, a single writer, a
 shared queue, a coordinator. That fraction takes a fixed share of every machine you add, so the cost
 grows with the *count* of machines and the curve flattens. This is the well-known one of the two
 costs: Amdahl's argument @amdahl1967validity. With contention alone, throughput approaches a limit
 as machines are added and never reaches it, so the curve never turns down.
+:::
+
+:::{div}
+:class: definition
 
 **Crosstalk.** Machines have to agree with each other. Every new one has to be told about all the
 others, so the cost grows with the number of *pairs*, not the number of machines. Ten machines
 make forty-five pairs. Twenty make a hundred and ninety. Doubling the fleet did not double the
 agreeing; it roughly quadrupled it.
+:::
 
 Crosstalk does something contention never does. Contention flattens the curve. Crosstalk **turns
 it over**. Past some count, the next machine costs more in agreement than it brings in work, and

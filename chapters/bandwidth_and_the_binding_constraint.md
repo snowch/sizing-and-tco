@@ -76,6 +76,13 @@ is the answer.
 The count that satisfies all three is the largest of them, and problem 10.1 is that one function
 call. There are three wrong answers, and each fails in its own way.
 
+:::{div}
+:class: definition
+
+**Binding constraint.** The constraint in your model that decides the answer: the chain asking for the most hosts, because every
+other constraint must also be satisfied. Which constraint binds can shift as your assumptions change.
+:::
+
 **The average.** It is never below all three chains, because it is at least the smallest. But it
 falls short of the largest chain whenever the three differ, in almost every future, and which chain
 is the largest changes from one future to the next.
@@ -99,6 +106,13 @@ is close behind. The disk chain, the one [ch09](#capacity) spent a chapter on, w
 the three rows after the tie. Size on any one chain alone, even the usual winner, and the fleet is
 too small more often than not. *Wins most often* is a fact about a three-way race. *Too small* is a
 fact about losing to any one of the other chains.
+
+:::{div}
+:class: definition
+
+**Median.** The middle answer: put every outcome in order and take the one in the middle; half the
+outcomes come in above it.
+:::
 
 In each future, the gap is the difference between what the winning chain asks for and the runner-up;
 the row "Median gap between the winner and the runner-up" is the middle of those gaps. Set the

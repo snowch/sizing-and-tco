@@ -31,7 +31,13 @@ high draw of one is as likely to meet a low draw as a high one. Across many draw
 cancel. If the two tend to move together, that cancellation does not happen, and drawing them
 independently makes the model's interval narrower than the evidence supports.
 
-Two inputs that move together are **correlated**, and how strongly is their **correlation**. A
+:::{div}
+:class: definition
+
+Two inputs that move together are **correlated**, and how strongly is their **correlation**.
+:::
+
+A
 model file declares each pair in a `correlations:` block: the two inputs, the rank correlation
 `rho`, and a `because` that says why.
 
@@ -113,9 +119,13 @@ Now the second thing [ch13](#monte-carlo) assumed: that its sample count was eno
 test is to run the model at rising sample counts and watch the interval narrow. That experiment does
 not work.
 
+:::{div}
+:class: definition
+
 **The interval does not narrow.** Its width is set by how uncertain the model's inputs are. More
 draws do not shrink it. They **converge** on it: the answer settles towards the width the inputs
 imply.
+:::
 
 What more draws buy is knowing more precisely where that interval is. Two runs of the same model
 with different random seeds give slightly different answers. The **run-to-run spread** is how far

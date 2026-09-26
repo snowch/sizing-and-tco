@@ -157,8 +157,12 @@ The method transfers. The number does not.
 
 ### Four targets, and who can check each
 
+:::{div}
+:class: definition
+
 Every stamped result declares a **target**: what it was taken against. The target decides who can
 check the result.
+:::
 
 | Target | What it is | Who can check it |
 |---|---|---|
@@ -242,8 +246,15 @@ of the shards' figures, with the standard error of that mean beside it.
 
 The table walks one constant through: bytes per compressed log line. It shows the mean over the
 shards, the standard error of that mean, the spread between shards, and the lowest and highest
-shard. The spread between shards is how far a typical shard's figure sits from the mean. The
-standard error is that spread divided by the square root of the number of shards. You can check it
+shard.
+
+:::{div}
+:class: definition
+
+The spread between shards is how far a typical shard's figure sits from the mean. The **standard error** is that spread divided by the square root of the number of shards.
+:::
+
+You can check it
 against the table. The standard error is smaller than the spread because it is about the mean, and
 a mean of several shards moves less than any one shard does.
 

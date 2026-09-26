@@ -69,11 +69,23 @@ Here they are, in its words:
 
 Most headroom is judgement. One piece of it is arithmetic.
 
+:::{div}
+:class: definition
+
 A fleet that has to survive losing hosts needs somewhere for their share of the requests to go. That
 capacity is the **failure reserve**. It has to be there beforehand. A fleet that finds it needs a
-failure reserve during a loss is already past its queueing margin. A **failure domain** is the set
+failure reserve during a loss is already past its queueing margin.
+:::
+
+:::{div}
+:class: definition
+
+A **failure domain** is the set
 of hosts one fault takes out together. One host is the smallest. Hosts that share a rack, a switch
-or a power feed make a larger one. The reserve has to cover the failure domain you plan to survive.
+or a power feed make a larger one.
+:::
+
+The reserve has to cover the failure domain you plan to survive.
 This chapter's arithmetic, and the model's ceiling below, take it to be one host.
 
 Problem 11.1 asks for one number: the share of the fleet's capacity that has to be kept free to

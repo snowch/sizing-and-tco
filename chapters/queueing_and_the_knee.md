@@ -83,8 +83,13 @@ same shape once each fills its axes.
 A stretch near idle, drawn alone, is almost a straight line. So where a knee appears depends on
 where the axis was stopped. There is nothing in the curve itself to find.
 
+:::{div}
+:class: definition
+
 What people point at when they say "the knee" is the place where the slope first exceeded what
 they were willing to put up with. That is a statement about the person, not about the queue.
+:::
+
 Problem 6.2 measures how much that person matters. Invert the formula, ask where requests take
 twice as long, then ask where they take ten times as long, and watch the answer travel across
 most of the useful range of a system.

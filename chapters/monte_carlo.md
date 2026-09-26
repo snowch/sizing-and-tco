@@ -73,8 +73,14 @@ inputs that vary on their own.
 That is Monte Carlo. Everything else is bookkeeping: how to fill each bag and how to read the bag of
 answers.
 
+:::{div}
+:class: definition
+
 Two words: the bag of plausible values for an input is its **distribution**, and one value drawn
-from the bag is a **sample**. The bag of answers is the output's distribution. Two more words arrive
+from the bag is a **sample**. The bag of answers is the output's distribution.
+:::
+
+Two more words arrive
 later in this chapter, each where the method needs them.
 
 ### Where the bag comes from
@@ -85,7 +91,13 @@ Every shape can be described by one function that answers one question: given a 
 zero and one, what value is that fraction of the bag below? Give it one half and it returns the
 middle value. Give it nine tenths and it returns the value nine tenths of the bag is below.
 
-The value it returns is a **percentile**: the value a given fraction of the bag is below. So the
+:::{div}
+:class: definition
+
+The value it returns is a **percentile**: the value a given fraction of the bag is below.
+:::
+
+So the
 function turns a fraction into a percentile. The book calls it the shape's **percentile function**.
 In the code it is called `ppf`.
 
@@ -224,11 +236,15 @@ click along the chain towards the output until the bar charts stop being narrow.
 :width: 100%
 ```
 
+:::{div}
+:class: definition
+
 An **interval** is the gap between two percentiles. This book reports the gap between the 5th and
 the 95th percentile, and calls it the 90% interval. On the charts they are the dashed lines *p5* and
 *p95*. The book does not call it a confidence interval. That phrase means something precise to a
 statistician and something vaguer to most readers. What is meant here is the plain reading: the
 model put nine tenths of its belief in this range.
+:::
 
 Why two percentiles rather than the smallest and the largest answer in the bag: the ends are
 properties of how many answers you collected, not of the model. Collect ten times as many and the

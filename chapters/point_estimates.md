@@ -34,7 +34,11 @@ The two ends are far apart. The point estimate sits much nearer the smallest ans
 
 ### A point estimate is not wrong. It is silent.
 
+:::{div}
+:class: definition
+
 A **point estimate** is the number you get when you pick one value for every input (typically the middle of a range) and do the arithmetic once. It is what a spreadsheet gives. It is what sizing conversations are about.
+:::
 
 To size a fleet for a web service you need:
 
@@ -96,6 +100,20 @@ A number is a measured constant because of where it came from, not because of wh
 *Ceilings.* A queue where the hosts are busy all the time and work arrives faster than it can be done; below that, response time climbs faster with every step of load. A host failing at the busy hour, so its load lands on survivors that are already busy. A working set outgrowing memory. These are regime changes, and **a chain of multiplications cannot model a regime change.** It carries on past the limit as if nothing happened, and reports a system running at several times its own limit.
 
 Every input can be right and the answer still wrong. So a conditional model must declare the headroom (the margin below each ceiling) it will not cross. The toolkit enforces this: you cannot build one without these declarations.
+:::
+
+:::{div}
+:class: definition
+
+**Ceiling.** A limit past which the system behaves by different rules, while the arithmetic that models it
+carries on unchanged. The numbers in your model stop corresponding to what actually happens.
+:::
+
+:::{div}
+:class: definition
+
+**Headroom.** A margin you keep below a ceiling, expressed as a share of that limit. You state it together
+with your reasoning: why that much, and not less. The model will not build without it.
 :::
 
 The toolkit works out which kind a model is from what is in it: one measured constant or one ceiling makes it conditional, and nobody declares this by hand. The names say what a model contains, not what it is for. A model that works out how many hosts to buy can still be definitional, and the web service model is, until [ch06](#queueing-and-the-knee) adds its first ceiling. When this book says *sizing model* or *cost model* it means what those words mean at work: the model that produces a host count, and the model that turns it into money. Problem 1.3 gives you three model descriptions to sort by kind.

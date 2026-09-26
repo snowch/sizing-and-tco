@@ -29,9 +29,13 @@ or a divisor; [ch04](#peak-mean-and-growth) shows that growth alone is raised to
 to one input moves the answer by the same proportion at any size: double a multiplier and the answer
 doubles, double a divisor and it halves.
 
+:::{div}
+:class: definition
+
 A product covers an enormous amount of the world, which is why the technique works. It cannot
 express a **regime change**: a point at which the system stops obeying one rule and starts obeying
 another.
+:::
 
 Problem 8.1 fits a straight line to a queue, using only the loads a healthy system has run at.
 Those points are the dots on the left half of the figure below. They are rows of

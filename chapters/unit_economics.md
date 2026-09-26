@@ -23,6 +23,14 @@ anyway.
 
 ### Two divisions: a quantity and a period
 
+:::{div}
+:class: definition
+
+**Unit economics.** Working out what something costs you per unit, where the denominator is counted over a stated
+period: cost per terabyte-month, cost per million requests. The quantity must be one you can defend and
+measure consistently.
+:::
+
 A unit cost is a total divided by a quantity. This fleet produces two unit costs from the same
 money, and the trap sits in a different place in each.
 

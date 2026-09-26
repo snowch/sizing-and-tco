@@ -28,10 +28,14 @@ Demand has a shape. It is low overnight, high in the afternoon, and different ag
 in November. Sizing for the average means sizing for a level that demand passes through twice a
 day.
 
-The number that sizes you is the busy hour. Or the busy minute, or the busy Tuesday, depending on
+:::{div}
+:class: definition
+
+The number that sizes you is the **busy hour**. Or the busy minute, or the busy Tuesday, depending on
 how long your system takes to fail and how long your users will wait for it to recover. Which of
 those to use is yours to decide, from your traffic and your tolerance, and the model cannot make
 the choice for you.
+:::
 
 Problem 4.1 asks you to turn a day's profile and the day's total into the rate in the busiest
 hour. The peak-to-mean ratio, the busy hour divided by the daily mean, is a property of the
@@ -65,12 +69,26 @@ mean. So the model carries both.
 
 Growth moves the busy-hour rate at the horizon more than any other input.
 
-This is the book's first tornado, so here is how to make one. Take one input and hold every other
+This is the book's first tornado, so here is how to make one.
+
+:::{div}
+:class: definition
+
+Take one input and hold every other
 still at its middle value. Swing that input from the low end of its band to the high end, and record
 how far the answer moves. That distance is its **swing**. Do it for every input and sort the bars
-longest first. They form a funnel, which is where **tornado** gets its name. A **future** is one of
+longest first. They form a funnel, which is where **tornado** gets its name.
+:::
+
+:::{div}
+:class: definition
+
+A **future** is one of
 many runs of the model's arithmetic, with every uncertain input set to one of its possible values,
-picked at random. The table shows the busy-hour rate at the horizon with each input at its low
+picked at random.
+:::
+
+The table shows the busy-hour rate at the horizon with each input at its low
 end, where only one future in ten falls below, and its high end, where only one in ten comes in above.
 Inputs that do not feed the busy-hour rate, such as the peak-to-mean ratio, leave it unchanged.
 

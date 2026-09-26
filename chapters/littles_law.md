@@ -24,8 +24,14 @@ works.
 
 ### The law
 
-Residence time is the time a request spends in the system, from arriving to leaving, including
-any time it waits in a queue. The law states that the number of requests in a system equals the
+:::{div}
+:class: definition
+
+**Residence time** is the time a request spends in the system, from arriving to leaving, including
+any time it waits in a queue.
+:::
+
+The law states that the number of requests in a system equals the
 rate they arrive at, times their residence time. The block below is the law as a node in the
 model file.
 
@@ -65,8 +71,14 @@ the workload.
 :end-before: hosts:
 ```
 
-Service demand is the processor time one request costs, in core-seconds, not how long the request
-takes. It belongs to one build of the software on one kind of machine. Nobody has measured it here:
+:::{div}
+:class: definition
+
+**Service demand** is the processor time one request costs, in core-seconds, not how long the request
+takes. It belongs to one build of the software on one kind of machine.
+:::
+
+Nobody has measured service demand here:
 no reference machine is declared. Held as an unmeasured constant, it would have no value, nor would
 the cores busy, the utilisation, the requests in flight, and later the waiting time or the host
 count the model recommends. So the file declares it an **assumption** instead. This is not the
@@ -86,9 +98,13 @@ demand would make it conditional. The file reads as definitional only because of
 :end-before: in_flight_unqueued:
 ```
 
-Divide the core out of service demand and you have the service time: how long one request takes
+:::{div}
+:class: definition
+
+Divide the core out of service demand and you have the **service time**: how long one request takes
 when it waits for nothing, in seconds. It is `service_seconds`, the time the law in the section
 above used.
+:::
 
 ```{literalinclude} ../models/web_service/stages/08-littles_law/model.yaml
 :language: yaml
@@ -115,8 +131,13 @@ processors the fleet has and you have how busy it is:
 :end-before: service_seconds:
 ```
 
-Utilisation is the cores busy divided by the cores the fleet has. It is the number
-[ch06](#queueing-and-the-knee) turns into a waiting time. A utilisation above one needs no ceiling
+:::{div}
+:class: definition
+
+**Utilisation** is the cores busy divided by the cores the fleet has.
+:::
+
+Utilisation is the number [ch06](#queueing-and-the-knee) turns into a waiting time. A utilisation above one needs no ceiling
 to judge: the busy hour needs more cores than the fleet has, and the fleet cannot keep up. What
 this file cannot yet say is how close to one is too close — that takes a ceiling with a margin
 below it.
