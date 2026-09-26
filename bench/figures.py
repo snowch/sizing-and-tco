@@ -24,6 +24,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from bench import diagrams, tables
+from bench.outline import label_of
+from bench.stamp import rig_declaration
 
 
 @dataclass(frozen=True)
@@ -85,6 +87,13 @@ class Diagram:
 
 #: The reference machine runs the `rig` measurements, and nobody has one attached to CI.
 RIG = "take it on the reference machine (`make measure-rig`) and commit the result"
+#: Whether a reference machine is declared is a fact about the repository, so it is read from the
+#: repository rather than written into a page, where it would go stale the day one is declared.
+NO_RIG = "" if rig_declaration() else " DRAFT-PENDING 05a"
+
+#: Appendix A's graph, described. The chapter's label is derived, as every chNN the renderer
+#: prints is: typed into the alt text, it would go stale the first time a chapter moved.
+APPENDIX_A_GRAPH_ALT = "DRAFT-PENDING 30d {chapter}"
 
 FIGURES: dict[str, Table | Diagram] = {
     # -- ch01 Point estimates -----------------------------------------------------------------
@@ -99,6 +108,13 @@ FIGURES: dict[str, Table | Diagram] = {
         result="web_service-reference",
         args=("hosts_recommended", "tco"),
         source_note="the finished model, which ch02 starts building from nothing",
+    ),
+    # The taxi example, one input moved at a time and then all of them, so that "together is
+    # wider than any one alone" is on the page and problem 1.2 can ask how. Computed from the
+    # file the problem's test reads, rather than typed into the page and the test separately.
+    "point-estimates-commute": Table(
+        render=tables.commute_table,
+        computed_from="`tests/point_estimates/fixtures/commute.yaml` DRAFT-PENDING 02i",
     ),
     # -- ch13 Monte Carlo -------------------------------------------------------------------------
     "monte-carlo-outputs": Table(render=tables.outputs_table, result="web_service-reference"),
@@ -115,16 +131,13 @@ FIGURES: dict[str, Table | Diagram] = {
         alt="The five-year total as a distribution, with the point estimate marked on it",
     ),
     "monte-carlo-ceilings": Table(render=tables.ceilings_table, result="web_service-reference"),
+    # Withdrawn from the page: byte for byte ch12's `the-sizing-model-resized`, which already
+    # makes its argument. Kept declared only until the page stops including it; then this entry
+    # goes and render-figures.py deletes the fragment as an orphan.
     "monte-carlo-ceilings-resized": Table(
         render=tables.ceilings_table, result="web_service-sized_for_growth"
     ),
     "monte-carlo-provenance": Table(render=tables.provenance_table, result="web_service-reference"),
-    "monte-carlo-graph": Diagram(
-        draw=diagrams.dependency_graph,
-        result="web_service-reference",
-        args=("tco",),
-        alt="The sub-graph that feeds the five-year total",
-    ),
     # -- ch14 Correlation and convergence ---------------------------------------------------------
     "correlation-and-convergence-table": Table(
         render=tables.convergence_table, result="convergence-tco"
@@ -152,19 +165,50 @@ FIGURES: dict[str, Table | Diagram] = {
         computed_from="`models/web_service/model.yaml` and its build order",
     ),
     "appendix-e-web-service-model-outputs": Table(
-        render=tables.outputs_table, result="web_service-reference"
+        render=tables.outputs_table,
+        result="web_service-reference",
+        # Every output but `utilisation`: the ceiling on it prints the same numbers a row later.
+        args=(
+            "hosts_recommended",
+            "hosts",
+            "tco",
+            "cost_per_million_requests",
+            "cost_per_stored_tb_month",
+            "capex",
+            "annual_opex",
+            "annual_energy",
+            "queueing_headroom",
+            "failure_headroom",
+            "cache_fill",
+            "disk_fill",
+            "scaling_loss",
+            "coordination_headroom",
+            "residence_time",
+            "waiting_time",
+            "concurrency",
+            "in_flight_unqueued",
+            "optimism",
+            "headroom_to_peak",
+        ),
     ),
     "appendix-e-web-service-model-ceilings": Table(
         render=tables.ceilings_table, result="web_service-reference"
     ),
     "appendix-e-web-service-model-measured": Table(
-        render=tables.measured_table, result="web_service-reference"
+        render=tables.measured_table,
+        result="web_service-reference",
+        # The line under the table names the corpus and links the stamp that lists its
+        # conditions, rather than the model run, which says nothing about either.
+        conditions_from="records-compression",
     ),
     "appendix-e-web-service-model-provenance": Table(
         render=tables.provenance_table, result="web_service-reference"
     ),
     "appendix-e-web-service-model-tornado": Table(
-        render=tables.tornado_table, result="web_service-reference", args=("tco",)
+        # Nine rows, as many as the chart above it draws bars.
+        render=tables.tornado_table,
+        result="web_service-reference",
+        args=("tco", 9),
     ),
     "appendix-e-web-service-model-tornado-chart": Diagram(
         draw=diagrams.tornado_chart,
@@ -185,11 +229,6 @@ FIGURES: dict[str, Table | Diagram] = {
         also=("web_service-sized_for_growth",),
     ),
     # -- appendix F: the observability model ----------------------------------------------
-    "appendix-f-observability-model-graph": Diagram(
-        draw=diagrams.dependency_graph,
-        result="observability-reference",
-        alt="The observability model as a dependency graph, with the unmeasured chain marked",
-    ),
     "appendix-f-observability-model-formulas": Table(
         render=tables.formulas_table,
         args=("observability",),
@@ -197,6 +236,18 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     "appendix-f-observability-model-outputs": Table(
         render=tables.outputs_table, result="observability-reference"
+    ),
+    # The factors beside the product, so the page shows how much wider a product is rather than
+    # asserting it.
+    "appendix-f-observability-model-spread": Table(
+        render=tables.spread_table,
+        result="observability-reference",
+        args=(
+            "label_values_endpoint",
+            "label_values_status",
+            "label_values_accidental",
+            "label_cardinality",
+        ),
     ),
     "appendix-f-observability-model-unmeasured": Table(
         render=tables.not_yet_measured, result="observability-reference"
@@ -210,8 +261,12 @@ FIGURES: dict[str, Table | Diagram] = {
     "appendix-f-observability-model-provenance": Table(
         render=tables.provenance_table, result="observability-reference"
     ),
+    # The inputs that move active series, and one row counting those that do not, as the chart
+    # beside it draws them.
     "appendix-f-observability-model-tornado": Table(
-        render=tables.tornado_table, result="observability-reference", args=("active_series",)
+        render=tables.tornado_of_what_reaches,
+        result="observability-reference",
+        args=("active_series",),
     ),
     "appendix-f-observability-model-tornado-chart": Diagram(
         draw=diagrams.tornado_chart,
@@ -266,11 +321,34 @@ FIGURES: dict[str, Table | Diagram] = {
     "where-the-numbers-come-from-service-provenance": Table(
         render=tables.provenance_table, result="web_service_provenance-reference"
     ),
+    # The facts and the vendor's claims, not every input: the page uses the tally and the
+    # claims, and the assumptions' sources are written for later chapters. Appendix F has the
+    # whole census.
     "where-the-numbers-come-from-provenance": Table(
-        render=tables.provenance_table, result="observability-reference"
+        render=tables.provenance_table,
+        result="observability-reference",
+        args=("fact", "vendor_claim"),
     ),
+    # Withdrawn from the page (it repeated the constants table a screen earlier). Kept declared
+    # only until the page stops including it; then this entry goes and render-figures.py deletes
+    # the fragment as an orphan.
     "where-the-numbers-come-from-measured": Table(
         render=tables.measured_table, result="observability-reference"
+    ),
+    # The quote and the measurement side by side, which Appendix F says is ch03's point.
+    "where-the-numbers-come-from-claim-and-measurement": Table(
+        render=tables.claim_beside_measurement,
+        result="observability-reference",
+        args=(
+            "collector_throughput_quoted",
+            "collector_throughput_measured",
+            "quoted_pipeline_capacity",
+            "measured_pipeline_capacity",
+        ),
+    ),
+    # One constant with its shards, so the standard error on this page is worked, not asserted.
+    "where-the-numbers-come-from-one-constant": Table(
+        render=tables.constant_table, result="logs-line-bytes"
     ),
     "where-the-numbers-come-from-unmeasured": Table(
         render=tables.not_yet_measured, result="observability-reference"
@@ -278,27 +356,43 @@ FIGURES: dict[str, Table | Diagram] = {
     "where-the-numbers-come-from-rig": Table(
         render=tables.constant_table,
         result="collector-throughput-per-core",
-        pending=f"Collector throughput per core is a timing: {RIG}.",
+        pending=f"Collector throughput per core is a timing: {RIG}.{NO_RIG}",
     ),
     # -- ch04 Peak, mean and growth ---------------------------------------------------------------
+    # This page's own output, from this page's own model: the one embedded lower on the page,
+    # so the Source link and the viewer agree. Not the finished model's host count, whose
+    # ordering is what problem 19.1 asks the reader to build.
     "peak-mean-and-growth-tornado": Table(
-        render=tables.tornado_table, result="web_service-reference", args=("hosts_recommended",)
+        render=tables.tornado_in_plain_words,
+        result="web_service_uncertainty-reference",
+        args=("peak_request_rate",),
     ),
     "peak-mean-and-growth-chart": Diagram(
         draw=diagrams.tornado_chart,
-        result="web_service-reference",
-        args=("hosts_recommended",),
-        alt="Which input moves the recommended host count most",
-    ),
-    "peak-mean-and-growth-demand": Diagram(
-        draw=diagrams.distribution,
         result="web_service_uncertainty-reference",
         args=("peak_request_rate",),
-        alt="The busy-hour request rate at the horizon, as a distribution",
+        alt="DRAFT-PENDING 06c",
+    ),
+    "peak-mean-and-growth-demand": Diagram(
+        draw=diagrams.distribution_in_plain_words,
+        result="web_service_uncertainty-reference",
+        args=("peak_request_rate",),
+        alt="DRAFT-PENDING 07f",
     ),
     # -- ch05 Little's law ------------------------------------------------------------------------
     "littles-law-outputs": Table(
         render=tables.outputs_table, result="web_service_littles_law-reference"
+    ),
+    # How often the bought fleet cannot keep up, as the bound the stamped quantiles make exact:
+    # a share the model produced may not be typed into the page, in digits or in words.
+    "littles-law-over-capacity": Table(
+        render=tables.share_past,
+        result="web_service_littles_law-reference",
+        args=(
+            "utilisation",
+            1.0,
+            "DRAFT-PENDING 08b",
+        ),
     ),
     "littles-law-in-flight": Diagram(
         draw=diagrams.distribution,
@@ -309,7 +403,7 @@ FIGURES: dict[str, Table | Diagram] = {
     "littles-law-graph": Diagram(
         draw=diagrams.dependency_graph,
         result="web_service_littles_law-reference",
-        args=("in_flight_unqueued",),
+        args=("in_flight_unqueued", True),
         alt="The sub-graph that produces the number of requests in flight",
     ),
     # -- ch06 Queueing and the knee ---------------------------------------------------------------
@@ -317,6 +411,11 @@ FIGURES: dict[str, Table | Diagram] = {
         draw=diagrams.queueing_curve,
         result="queueing-curve",
         alt="Residence time against utilisation: flat, and then vertical",
+    ),
+    "queueing-and-the-knee-zoom": Diagram(
+        draw=diagrams.queueing_zoom,
+        result="queueing-curve",
+        alt="DRAFT-PENDING 10e",
     ),
     "queueing-and-the-knee-table": Table(render=tables.queueing_table, result="queueing-curve"),
     "queueing-and-the-knee-ceilings": Table(
@@ -331,13 +430,40 @@ FIGURES: dict[str, Table | Diagram] = {
     "when-adding-servers-stops-helping-table": Table(
         render=tables.scaling_table, result="scaling-curve"
     ),
+    # The rows the page argues from, in its order: the two that double by definition, the
+    # throughput that does not, the efficiency, the two utilisations, the queueing time computed
+    # from the optimistic one, and the peak, which no budget moves.
     "when-adding-servers-stops-helping-scenarios": Table(
-        render=tables.scenario_comparison,
+        render=tables.scenario_ratios,
         result="web_service-reference",
-        args=("web_service-twice_the_hosts",),
+        args=(
+            "web_service-twice_the_hosts",
+            "hosts",
+            "linear_throughput",
+            "achievable_throughput",
+            "scaling_efficiency",
+            "utilisation",
+            "utilisation_including_coordination",
+            "waiting_time",
+            "peak_hosts",
+        ),
         also=("web_service-twice_the_hosts",),
     ),
+    # ch06's ceilings table, once per scenario, on the three ceilings this page is about.
+    "when-adding-servers-stops-helping-ceilings-reference": Table(
+        render=tables.ceilings_table,
+        result="web_service-reference",
+        args=("queueing_headroom", "coordination_headroom", "scaling_loss"),
+    ),
+    "when-adding-servers-stops-helping-ceilings-doubled": Table(
+        render=tables.ceilings_table,
+        result="web_service-twice_the_hosts",
+        args=("queueing_headroom", "coordination_headroom", "scaling_loss"),
+    ),
     # -- ch08 Regime changes ----------------------------------------------------------------------
+    # Withdrawn from the page, with the tornado below: its point is carried by the band table in
+    # plain words. Both stay declared only until the page stops including them; then the entries
+    # go and render-figures.py deletes the two files as orphans.
     "regime-changes-cardinality": Diagram(
         draw=diagrams.distribution,
         result="observability-reference",
@@ -347,27 +473,59 @@ FIGURES: dict[str, Table | Diagram] = {
     "regime-changes-knee": Diagram(
         draw=diagrams.queueing_curve,
         result="queueing-curve",
-        alt="The queueing knee, as a regime change a multiplication cannot express",
+        alt="DRAFT-PENDING 12e",
     ),
+    # The running example's ceilings as this chapter leaves it, not the observability model's:
+    # the page's viewer shows this model, and the working set row is the ceiling ch08 adds.
     "regime-changes-ceilings": Table(
-        render=tables.ceilings_table, result="observability-reference"
+        render=tables.ceilings_table, result="web_service_regime-reference"
     ),
     "regime-changes-tornado": Table(
         render=tables.tornado_table, result="observability-reference", args=("active_series",)
     ),
+    # Three uncertain counts and their product, each with its band, so the page can show that
+    # the product is wider than any of them rather than say so.
+    "regime-changes-label-bands": Table(
+        render=tables.bands_in_plain_words,
+        result="observability-reference",
+        args=(
+            "label_values_endpoint",
+            "label_values_status",
+            "label_values_accidental",
+            "label_cardinality",
+        ),
+    ),
     # -- ch09 Capacity ----------------------------------------------------------------------------
+    # The chain alone, packed into the columns it needs, so its labels can be read: drawn with
+    # the whole stage faded behind it, the canvas was three times as wide and the text a third
+    # the size.
     "capacity-graph": Diagram(
         draw=diagrams.dependency_graph,
         result="web_service_capacity-reference",
-        args=("hosts_for_storage",),
-        alt="The chain from what you need to store to how many hosts you must buy",
+        args=("hosts_for_storage", True),
+        alt="DRAFT-PENDING 13a",
     ),
-    # Three rows, not the stage's twenty: the chain this chapter follows, what it asks for, and
-    # the ceiling it ends in. Everything else in the stage is an earlier chapter's subject.
+    # Two rows: the chain this chapter follows and what it asks for. Its ceiling is in
+    # capacity-disk-fill, in the form ch06 taught, because a fill with no limit beside it cannot
+    # be read. Everything else in the stage is an earlier chapter's subject.
     "capacity-outputs": Table(
         render=tables.outputs_table,
         result="web_service_capacity-reference",
-        args=("raw_data", "hosts_for_storage", "disk_fill"),
+        args=("raw_data", "hosts_for_storage"),
+    ),
+    # The chain's ceiling: one row of ch06's table, with its limit, verdict and breach shares.
+    "capacity-disk-fill": Table(
+        render=tables.ceilings_table,
+        result="web_service_capacity-reference",
+        args=("disk_fill",),
+    ),
+    # Which term's uncertainty moves the disk: the chain's three uncertain inputs. Replication
+    # and the disk margin are decisions with one value, so no tornado can show them, which is
+    # the page's point. In ch04's plain words for the two ends, because ch13 names a percentile.
+    "capacity-tornado": Table(
+        render=tables.tornado_in_plain_words,
+        result="web_service_capacity-reference",
+        args=("raw_data", 3),
     ),
     "capacity-measured": Table(
         render=tables.measured_table, result="web_service_capacity-reference"
@@ -375,6 +533,19 @@ FIGURES: dict[str, Table | Diagram] = {
     # -- ch10 Bandwidth and the binding constraint ------------------------------------------------
     "bandwidth-and-the-binding-constraint-table": Table(
         render=tables.binding_table, result="binding-constraint"
+    ),
+    # What each chain asks for with every input at its point estimate. The three are close, which
+    # is why the answer changes hands so easily across the futures, and it is what the slider
+    # exercise starts from.
+    "bandwidth-and-the-binding-constraint-point": Table(
+        render=tables.stage_outputs,
+        result="web_service_binding-reference",
+        args=("hosts_for_requests", "hosts_for_memory", "hosts_for_storage", "hosts_recommended"),
+    ),
+    # The shortfall of a fleet sized on the usual winner, as a median and as an average over
+    # every future. The median over the short futures alone is problem 10.2's, and is not here.
+    "bandwidth-and-the-binding-constraint-shortfall": Table(
+        render=tables.binding_shortfall_table, result="binding-constraint"
     ),
     "bandwidth-and-the-binding-constraint-requests": Diagram(
         draw=diagrams.distribution,
@@ -429,18 +600,31 @@ FIGURES: dict[str, Table | Diagram] = {
     "the-sizing-model-resized": Table(
         render=tables.ceilings_table, result="web_service-sized_for_growth"
     ),
+    # The growth fleet's size, which the resized ceilings below it are for. The same two rows as
+    # the first outputs table, so the reader sets recommended against bought twice.
+    "the-sizing-model-growth-fleet": Table(
+        render=tables.outputs_table,
+        result="web_service-sized_for_growth",
+        args=("hosts_recommended", "hosts"),
+    ),
+    # Where the point estimate sits against the middle answer, which the prose reads off it. In
+    # plain words, because the page comes before ch13.
     "the-sizing-model-hosts": Diagram(
-        draw=diagrams.distribution,
+        draw=diagrams.distribution_against_the_middle,
         result="web_service_sizing-reference",
         args=("hosts_recommended",),
-        alt="The recommended host count, as a distribution",
+        alt="DRAFT-PENDING 16b",
     ),
     # -- ch15 Capex, opex and where the total stops -----------------------------------------------
     "capex-opex-and-lifecycle-split": Table(
         render=tables.cost_split_table, result="web_service-reference"
     ),
+    # The capital, the yearly running cost Problem 15.1 needs, and the total whose interval the
+    # split table does not give. Not the model's every output: ch13 and Appendix E carry those.
     "capex-opex-and-lifecycle-outputs": Table(
-        render=tables.outputs_table, result="web_service-reference"
+        render=tables.outputs_table,
+        result="web_service-reference",
+        args=("capex", "annual_opex", "tco"),
     ),
     "capex-opex-and-lifecycle-tornado": Table(
         render=tables.tornado_table, result="web_service-reference", args=("annual_opex",)
@@ -453,14 +637,43 @@ FIGURES: dict[str, Table | Diagram] = {
         "the power axis and there is nothing across the cost axis",
     ),
     "power-first-scenarios": Table(
-        render=tables.scenario_comparison,
+        # The rows the page argues from, in its order: what demand asks for and what power
+        # allows; the money, which falls with the fleet; the energy, in its unit; and the
+        # response time, which does not fall. Not the model's every output: the ceilings table
+        # below carries the ceilings, and a second copy of them here was read by nobody.
+        render=tables.scenario_ratios,
         result="web_service-reference",
-        args=("web_service-power_first",),
+        args=(
+            "web_service-power_first",
+            "hosts_recommended",
+            "hosts",
+            "capex",
+            "annual_opex",
+            "tco",
+            "cost_per_million_requests",
+            "annual_energy",
+            "residence_time",
+        ),
         also=("web_service-power_first",),
     ),
     "power-first-ceilings": Table(render=tables.ceilings_table, result="web_service-power_first"),
+    "power-first-breaches": Table(
+        # The three ceilings the power-first fleet is over, and how often the reference fleet
+        # already broke them: a breach rate beside the one it came from. In ceilings_table's
+        # order (by node name), so the two tables read down the same way.
+        render=tables.breach_comparison,
+        result="web_service-reference",
+        args=("web_service-power_first", "cache_fill", "coordination_headroom", "disk_fill"),
+        also=("web_service-power_first",),
+    ),
     "power-first-tornado": Table(
-        render=tables.tornado_table, result="web_service-reference", args=("annual_energy",)
+        # Two rows because two inputs are all that can move the kilowatt-hours: the formula is
+        # hosts x host power x PUE x hours, the host count is a decision with no range, and the
+        # hours are a definition. The six zero rows below them were the page's point made by
+        # absence, and read as a table nobody chose.
+        render=tables.tornado_table,
+        result="web_service-reference",
+        args=("annual_energy", 2),
     ),
     # -- ch17 Unit economics ----------------------------------------------------------------------
     "unit-economics-distribution": Diagram(
@@ -474,11 +687,22 @@ FIGURES: dict[str, Table | Diagram] = {
         result="web_service-reference",
         args=("cost_per_million_requests",),
     ),
+    # Withdrawn from the page: no sentence used it, and at the page's width its labels were under
+    # five pixels. The model page shows the same sub-graph on a click. Kept declared only until
+    # the page stops including it; then this entry goes and render-figures.py deletes the file.
     "unit-economics-graph": Diagram(
         draw=diagrams.dependency_graph,
         result="web_service-reference",
         args=("cost_per_million_requests",),
         alt="Everything that feeds the unit cost, including its denominator",
+    ),
+    # How far the model's straight-line average overstates a compounding holding, across the
+    # growth factor's declared band. A view of the model file, like the formula sheet: the model
+    # keeps the straight line, and this is what that costs the unit cost.
+    "unit-economics-straight-line": Table(
+        render=tables.straight_line_overstatement,
+        args=("web_service",),
+        computed_from="`models/web_service/model.yaml` DRAFT-PENDING 20i",
     ),
     "unit-economics-per-stored": Diagram(
         draw=diagrams.distribution,
@@ -495,6 +719,24 @@ FIGURES: dict[str, Table | Diagram] = {
         "observability model's assumed storage price, on one logarithmic axis, with the "
         "single number that would cross between them",
     ),
+    # The seam's two ends in one table: the price one model computes, the price the other
+    # assumes, and what the assumed one buys. Both results, so the Source line names both.
+    "the-five-year-model-seam-ends": Table(
+        render=tables.seam_table,
+        result="observability-reference",
+        args=("web_service-reference",),
+        also=("web_service-reference",),
+    ),
+    # What growth, swung on its own, does to each side of the seam: it pushes them apart.
+    "the-five-year-model-seam-growth": Table(
+        render=tables.seam_growth_table,
+        result="observability-reference",
+        args=("web_service-reference",),
+        also=("web_service-reference",),
+    ),
+    # Withdrawn from the page, replaced by the seam's two ends above. Both stay declared only
+    # until the page stops including them; then the entries go and render-figures.py deletes
+    # the two fragments as orphans.
     "the-five-year-model-service": Table(
         render=tables.outputs_table, result="web_service-reference"
     ),
@@ -518,8 +760,12 @@ FIGURES: dict[str, Table | Diagram] = {
         alt="Which input moves the retention store most",
     ),
     "which-input-is-the-answer-residence": Table(
-        render=tables.tornado_table, result="web_service-reference", args=("residence_time",)
+        render=tables.tornado_of_what_moves,
+        result="web_service-reference",
+        args=("residence_time", tables.RESIDENCE_HEADING),
     ),
+    # ch14's table, byte for byte. It goes (ch19 F3) in the same commit as the page's {include}
+    # of it: deleting this first fails the orphan check in tests/test_figures.py.
     "which-input-is-the-answer-correlation": Table(
         render=tables.correlation_table, result="correlation-effect"
     ),
@@ -553,11 +799,20 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     # -- ch20 The missing node --------------------------------------------------------------------
     "the-missing-node-outputs": Table(
-        render=tables.outputs_table, result="observability-reference"
+        render=tables.outputs_table,
+        result="observability-reference",
+        args=("metrics_ingest", "logs_ingest", "traces_ingest", "known_ingest"),
     ),
     "the-missing-node-unmeasured": Table(
         render=tables.not_yet_measured, result="observability-reference"
     ),
+    # ch20's hard case: the problem 20.3 model file, missing a line and with no node to say so,
+    # beside the invented invoice it cannot reach. Stamped by bench/run_missing_node.py.
+    "the-missing-node-fixture": Table(
+        render=tables.fixture_against_invoice, result="the-missing-node-fixture"
+    ),
+    # Cut (ch20 F3): 58 nodes, unreadable at any width, and the prose never points at it. It goes
+    # in the same commit as the page's {image} of it, which the orphan check otherwise fails.
     "the-missing-node-graph": Diagram(
         draw=diagrams.dependency_graph,
         result="observability-reference",
@@ -565,23 +820,27 @@ FIGURES: dict[str, Table | Diagram] = {
         alt="What feeds the ingest total, and what is missing from it",
     ),
     # -- ch21 A TCO for a finance audience --------------------------------------------------------
+    # Chosen for this page: what each design buys, costs and risks. The full comparison, every
+    # output and every ceiling, is Appendix E's.
     "a-tco-for-finance-scenarios": Table(
-        render=tables.scenario_comparison,
+        render=tables.scenario_decision,
         result="web_service-reference",
         args=("web_service-sized_for_growth",),
         also=("web_service-sized_for_growth",),
     ),
+    # The median marked, because the page offers it as the first number to choose.
     "a-tco-for-finance-distribution": Diagram(
-        draw=diagrams.distribution,
+        draw=diagrams.distribution_with_median,
         result="web_service-reference",
         args=("tco",),
-        alt="The five-year total as a distribution, with the point estimate on it",
+        alt="DRAFT-PENDING 27g",
     ),
     "a-tco-for-finance-ceilings": Table(
         render=tables.ceilings_table, result="web_service-reference"
     ),
+    # The vendor claims, which are what this page's reader asks about; the rest are counted.
     "a-tco-for-finance-provenance": Table(
-        render=tables.provenance_table, result="web_service-reference"
+        render=tables.provenance_table, result="web_service-reference", args=("vendor_claim",)
     ),
     # -- ch22 Comparing two TCOs ------------------------------------------------------------------
     # Every table here was chosen for this page. The two quote results exist and have viewers,
@@ -599,6 +858,7 @@ FIGURES: dict[str, Table | Diagram] = {
         alt="The difference between the two five-year totals, future by future, with the tie "
         "marked and the share of futures either side of it",
     ),
+    "comparing-two-tcos-totals": Table(render=tables.comparison_totals, result="comparison"),
     "comparing-two-tcos-paired": Table(render=tables.comparison_paired, result="comparison"),
     "comparing-two-tcos-ceilings": Table(
         render=tables.comparison_ceilings,
@@ -616,13 +876,20 @@ FIGURES: dict[str, Table | Diagram] = {
         "do not move it at all",
     ),
     # -- appendices ------------------------------------------------------------------------------------
+    # The web service model: every model file the page quotes is that one.
     "appendix-a-dsl-reference-kinds": Table(
-        render=tables.node_kinds_table, result="observability-reference"
+        render=tables.node_kinds_table, result="web_service-reference"
     ),
+    "appendix-a-dsl-reference-shapes": Table(
+        render=tables.distribution_keys,
+        computed_from="DRAFT-PENDING 30c",
+    ),
+    # Three columns, drawn compact so a phone shows its labels at a size they can be read at.
     "appendix-a-dsl-reference-graph": Diagram(
         draw=diagrams.dependency_graph,
         result="web_service_demand-reference",
-        alt="The smallest model in the book, as a graph",
+        args=(None, False, True),
+        alt=APPENDIX_A_GRAPH_ALT.format(chapter=label_of("what_a_workload_is")),
     ),
     "appendix-b-monte-carlo-module-convergence": Table(
         render=tables.convergence_table, result="convergence-tco"
@@ -650,6 +917,12 @@ FIGURES: dict[str, Table | Diagram] = {
     "appendix-g-glossary-terms": Table(
         render=tables.glossary_table,
         computed_from="`bench/outline.py` and `bench/tables.py`",
+    ),
+    # The four targets, read from the dict the stamp checks against: a table wraps on a phone,
+    # where the dict quoted as code ran off the edge.
+    "appendix-g-glossary-targets": Table(
+        render=tables.targets_table,
+        computed_from="`bench/stamp.py`",
     ),
 }
 

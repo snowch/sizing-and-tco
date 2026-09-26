@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "d6d594f5b16b490c",
+  "code_fingerprint": "f8fcf5c7fda73474",
   "code_sources": [
     "bench/run_curves.py"
   ],
@@ -7,8 +7,8 @@
     "the_largest_of_three": "the recommended count is the largest of three uncertain numbers, and the largest of three sits above where any one of them usually does. Sizing on the chain that wins most often is still sizing on one chain, and the other two are larger whenever it loses",
     "three_chains_only": "this model has three. A real service has more - a database's connection limit, a cache's eviction rate, the network between them - and each one is another chance for the answer to be set by something nobody was watching"
   },
-  "generated_at": "2026-09-26T18:38:19+00:00",
-  "git_revision": "7a2f2fd",
+  "generated_at": "2026-09-26T20:00:09+00:00",
+  "git_revision": "24211b2",
   "kind": "measurement",
   "name": "binding-constraint",
   "produced_by": {
@@ -38,6 +38,12 @@
     "short_if_memory": 0.55902,
     "short_if_requests": 0.62028,
     "short_if_storage": 0.79242,
+    "shortfall_mean_all_if_memory": 17.20787,
+    "shortfall_mean_all_if_requests": 20.06801,
+    "shortfall_mean_all_if_storage": 27.32038,
+    "shortfall_median_all_if_memory": 4.0,
+    "shortfall_median_all_if_requests": 7.0,
+    "shortfall_median_all_if_storage": 15.0,
     "storage_binds": 0.18766,
     "tied": 0.02750000000000008
   },
@@ -54,6 +60,12 @@
     "short_if_memory": "dimensionless",
     "short_if_requests": "dimensionless",
     "short_if_storage": "dimensionless",
+    "shortfall_mean_all_if_memory": "host",
+    "shortfall_mean_all_if_requests": "host",
+    "shortfall_mean_all_if_storage": "host",
+    "shortfall_median_all_if_memory": "host",
+    "shortfall_median_all_if_requests": "host",
+    "shortfall_median_all_if_storage": "host",
     "storage_binds": "dimensionless",
     "tied": "dimensionless"
   }

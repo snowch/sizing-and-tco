@@ -2,13 +2,13 @@
 
 | | Input | Provenance | Source |
 |---|---|---|---|
-| ○ | annual growth factor | assumption | Chosen, not measured. One number cannot say how sure you are of it, so ch04 replaces it with a spread. |
-| ○ | horizon | assumption | the refresh cycle this fleet is bought against |
-| ● | one year | fact | definition |
-| ○ | os reserve | assumption | The share of memory the kernel, the agents and the page cache floor keep before the service sees any. One number for now: it differs from host to host and has not been measured on these hosts, so ch04 replaces it with a spread. |
-| ○ | peak request rate, day one | assumption | This figure comes from the forecaster, who holds a spread of plausible busy-hour rates and rounds it to one. ch04 replaces the one number with the spread. |
-| ◐ | ram per host | vendor claim | spec sheet: the modules fitted. The sheet says 64 GB and means GiB — appendix D — and the operating system will report less than either, which is os_reserve's job |
-| ○ | records held, day one | assumption | stated workload (ch02) — what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression |
+| ○ | annual growth factor<br>`annual_growth` | assumption | Chosen, not measured. One number cannot say how sure you are of it, so ch04 replaces it with a spread. |
+| ○ | horizon<br>`horizon` | assumption | the refresh cycle this fleet is bought against |
+| ● | one year<br>`one_year` | fact | definition |
+| ○ | os reserve<br>`os_reserve` | assumption | The share of memory the kernel, the agents and the page cache floor keep before the service sees any. One number for now: it differs from host to host and has not been measured on these hosts, so ch04 replaces it with a spread. |
+| ○ | peak request rate, day one<br>`peak_request_rate_t0` | assumption | This figure comes from the forecaster, who holds a spread of plausible busy-hour rates and rounds it to one. ch04 replaces the one number with the spread. |
+| ◐ | ram per host<br>`ram_per_host` | vendor claim | spec sheet: the modules fitted. The sheet says 64 GB and means GiB — appendix D — and the operating system will report less than either, which is os_reserve's job |
+| ○ | records held, day one<br>`stored_data_t0` | assumption | stated workload (ch02) — what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression |
 | | **7 inputs** | | **1 fact, 1 vendor claim, 5 assumption** |
 
 *Source — [`web_service_provenance-reference`](/models/web_service_provenance-reference.html) · every input on a slider*

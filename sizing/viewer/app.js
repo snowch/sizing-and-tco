@@ -186,7 +186,7 @@ function drawGraph(values, blocked) {
       `<rect x="${x}" y="${y}" width="${BOX.w}" height="${BOX.h}" rx="3" fill="${fill}" stroke="${edge}" stroke-width="${selected === name ? 2.2 : 1.2}"${dash}/>` +
       // A bar down the left edge, which composes with the fill (kind) and the dash (measured
       // or not) rather than competing with either for the same channel.
-      (isDecision(node) ? `<rect x="${x}" y="${y + 3}" width="3" height="${BOX.h - 6}" rx="1.5" fill="${edge}"/>` : "") +
+      (isDecision(node) ? `<rect x="${x}" y="${y + 3}" width="3" height="${BOX.h - 6}" rx="1.5" fill="var(--decided)"/>` : "") +
       // A vendor's claim carries the tables' half-filled mark, so it is told apart here too
       // (invariant 4): by fill it is an input like any other.
       (node.provenance && node.provenance.kind === "vendor_claim" ? vendorMark(x + BOX.w - 9, y + 9) : "") +

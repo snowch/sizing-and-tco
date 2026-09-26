@@ -7,25 +7,13 @@ ch19 ranks the inputs with a tornado, and a tornado answers *which input should 
 first*. It does not answer the question that follows, which is the one somebody has to approve:
 **and what would that buy?** A ranking is not a quantity. This is the quantity.
 
-The experiment is the simplest thing that means anything. Take one uncertain input, pin it at its
-median — pretend somebody went and measured it, perfectly — and re-sample the whole model. The
-interval that comes back is what the model would say if that one thing were known. The difference
-between it and the interval you have now is the *most* that measuring that input could be worth,
-because no real measurement is perfect.
-
-An upper bound is the right shape of answer here. A real measurement leaves a standard error
-behind, and how big that error would be is not knowable before doing the work — so a figure that
-claimed to predict it would be inventing the number this book refuses to invent. What can be
-computed is the ceiling: measure this thing as well as it can possibly be measured, and the
-interval still does not close by more than this. If the ceiling is small, the measurement is not
-worth commissioning whatever its standard error turns out to be. That is a decision somebody can
-take from this table and cannot take from a tornado.
+DRAFT-PENDING 23a
 
 Two further things fall out of running it, and both are worth more than the headline:
 
-**The reductions do not add up.** Pin every uncertain input one at a time, total what each one
-removed, and the total is not a hundred per cent — it is nowhere near it. Uncertainty in a chain
-of multiplications is not a pie that can be divided between the inputs, and a sensitivity figure
+**The reductions do not add up.** Pin every uncertain input at its median, one at a time, total
+what each one removed, and the total is not a hundred per cent — it is nowhere near it.
+Uncertainty in a chain of multiplications is not a pie that can be divided between the inputs, and a sensitivity figure
 that invites that reading is inviting a mistake (ch19).
 
 **Knowing everything is not the same as knowing anything.** The last row pins every uncertain
@@ -43,7 +31,7 @@ from dataclasses import replace
 from bench.stamp import build_result, load_result, numeric_differences, result_exists
 from sizing import mc
 from sizing.dsl import Input, Measured, Model, Scenario, load_model, load_scenario
-from sizing.evaluate import evaluate, point_value_of_input, sampled_inputs
+from sizing.evaluate import evaluate, point_value_of_input, sampled_inputs, swing_of
 
 SOURCES = ["bench/run_information.py"]
 
@@ -94,6 +82,16 @@ def without_uncertainty(model: Model, scenario: Scenario, names: tuple[str, ...]
     return replace(model, nodes=nodes, correlations=correlations)
 
 
+def pinned_at(scenario: Scenario, name: str, value: float) -> Scenario:
+    """The same scenario with one input or measured constant held at ``value``.
+
+    A scenario override is how a reader pins a slider. ``evaluate`` neither draws an overridden
+    node nor keeps a correlation that names it, so this is the same act as ``without_uncertainty``
+    at any value rather than only at the median.
+    """
+    return replace(scenario, overrides={**scenario.overrides, name: value})
+
+
 def _half_width(model: Model, scenario: Scenario, output: str) -> float:
     """The interval's half-width, or zero when nothing upstream of the output varies any more.
 
@@ -120,6 +118,10 @@ def value_of_information(write: bool = True) -> dict:
         ]
         for name in uncertain:
             known = _half_width(without_uncertainty(model, scenario, (name,)), scenario, output)
+            low_end, high_end = (
+                _half_width(model, pinned_at(scenario, name, value), output)
+                for value in swing_of(model, name)  # type: ignore[union-attr]
+            )
             rows.append(
                 {
                     "model": model.name,
@@ -129,10 +131,15 @@ def value_of_information(write: bool = True) -> dict:
                     "kind": model.nodes[name].kind,
                     "half_width": baseline,
                     "if_known": known,
-                    # The most that measuring this one thing could remove, as a fraction of the
-                    # interval there is now. Not what a measurement will buy — what the best
-                    # imaginable one could.
+                    "if_known_low": low_end,
+                    "if_known_high": high_end,
+                    # The share of today's interval that knowing this input exactly removes, if
+                    # the knowledge lands at its median, at the low end of its band, or at the
+                    # high end. None of the three is the most a measurement could remove: an input
+                    # that multiplies others, found high, can leave the interval wider (ch19).
                     "removed": 1.0 - known / baseline if baseline else 0.0,
+                    "removed_low": 1.0 - low_end / baseline if baseline else 0.0,
+                    "removed_high": 1.0 - high_end / baseline if baseline else 0.0,
                 }
             )
         mine = [row for row in rows if row["model"] == model.name and row["output"] == output]
@@ -147,7 +154,7 @@ def value_of_information(write: bool = True) -> dict:
                 "inputs": len(uncertain),
                 # Each input pinned alone, totalled. If uncertainty were a pie this would come to
                 # one; it does not, and the gap is the interaction a one-at-a-time figure cannot
-                # show (ch19, problem 18.1).
+                # show (ch19). The median column only.
                 "sum_of_removals": sum(row["removed"] for row in mine),
                 # Everything pinned at once. A model with nothing uncertain in it is arithmetic.
                 "all_known": everything,
@@ -159,7 +166,8 @@ def value_of_information(write: bool = True) -> dict:
         target="model",
         kind="measurement",
         produced_by={
-            "method": "each uncertain input pinned at its median in turn, and the model resampled",
+            "method": "each uncertain input pinned in turn at the low end of its band, at its "
+            "median and at the high end of its band, and the model resampled",
             "model": " and ".join(sorted({row["model"] for row in rows})),
             "scenario": "reference",
             "seed": load_scenario("models/web_service/scenarios/reference.yaml").seed,
@@ -169,15 +177,15 @@ def value_of_information(write: bool = True) -> dict:
         units={
             "rows": "dimensionless",
             "rows[0].removed": "dimensionless",
+            "rows[0].removed_low": "dimensionless",
+            "rows[0].removed_high": "dimensionless",
             "totals": "dimensionless",
             "totals[0].sum_of_removals": "dimensionless",
         },
         conditions={
-            "this_is_an_upper_bound": "each figure is what knowing the input *exactly* would "
-            "remove. A real measurement leaves a standard error behind and removes less, by an "
-            "amount nobody can know before doing the work",
-            "removals_do_not_add": "the sum of the individual removals is not one. Uncertainty in "
-            "a chain of multiplications is not a quantity that divides between the inputs, and a "
+            "where_the_measurement_lands": "DRAFT-PENDING 23b",
+            "removals_do_not_add": "the sum of the individual removals at the median is not one. "
+            "Uncertainty in a chain of multiplications is not a quantity that divides between the inputs, and a "
             "figure read that way is read wrongly (ch19)",
             "what_it_cannot_say": "whether the input can be measured at all. The web service's "
             "total rests on how many people it takes and what a licence costs, which are decided "

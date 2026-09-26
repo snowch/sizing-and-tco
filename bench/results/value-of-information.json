@@ -1,19 +1,19 @@
 {
-  "code_fingerprint": "6f7a65bb5098a0a0",
+  "code_fingerprint": "b225d7ab240d2bdc",
   "code_sources": [
     "bench/run_information.py"
   ],
   "conditions": {
-    "removals_do_not_add": "the sum of the individual removals is not one. Uncertainty in a chain of multiplications is not a quantity that divides between the inputs, and a figure read that way is read wrongly (ch19)",
-    "this_is_an_upper_bound": "each figure is what knowing the input *exactly* would remove. A real measurement leaves a standard error behind and removes less, by an amount nobody can know before doing the work",
-    "what_it_cannot_say": "whether the input can be measured at all. The web service's total rests on how many people it takes and what a licence costs, which are decided and negotiated rather than measured; its host count and the observability model's store both rest on a growth rate, which belongs to no target. The honest response to those is to decide them rather than to commission a measurement (ch04)"
+    "removals_do_not_add": "the sum of the individual removals at the median is not one. Uncertainty in a chain of multiplications is not a quantity that divides between the inputs, and a figure read that way is read wrongly (ch19)",
+    "what_it_cannot_say": "whether the input can be measured at all. The web service's total rests on how many people it takes and what a licence costs, which are decided and negotiated rather than measured; its host count and the observability model's store both rest on a growth rate, which belongs to no target. The honest response to those is to decide them rather than to commission a measurement (ch04)",
+    "where_the_measurement_lands": "DRAFT-PENDING 23b"
   },
-  "generated_at": "2026-09-21T03:07:05+00:00",
-  "git_revision": "2110500",
+  "generated_at": "2026-09-26T20:19:58+00:00",
+  "git_revision": "24211b2",
   "kind": "measurement",
   "name": "value-of-information",
   "produced_by": {
-    "method": "each uncertain input pinned at its median in turn, and the model resampled",
+    "method": "each uncertain input pinned in turn at the low end of its band, at its median and at the high end of its band, and the model resampled",
     "model": "observability and web_service",
     "scenario": "reference",
     "seed": 20260916,
@@ -21,7 +21,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -32,242 +32,338 @@
       {
         "half_width": 707747.0574413185,
         "if_known": 701571.0585213344,
+        "if_known_high": 702420.8346077488,
+        "if_known_low": 700827.4099684036,
         "input": "electricity_price",
         "kind": "input",
         "label": "electricity price",
         "model": "web_service",
         "output": "tco",
-        "removed": 0.008726279897668388
+        "removed": 0.008726279897668388,
+        "removed_high": 0.007525602229736417,
+        "removed_low": 0.009777006347339912
       },
       {
         "half_width": 707747.0574413185,
         "if_known": 628255.1474141384,
+        "if_known_high": 704052.2298446676,
+        "if_known_low": 579492.5596622479,
         "input": "fully_loaded_salary",
         "kind": "input",
         "label": "fully loaded salary",
         "model": "web_service",
         "output": "tco",
-        "removed": 0.11231683578390717
+        "removed": 0.11231683578390717,
+        "removed_high": 0.005220548157428784,
+        "removed_low": 0.18121516215516675
       },
       {
         "half_width": 707747.0574413185,
         "if_known": 706330.1760601028,
+        "if_known_high": 708452.5406886868,
+        "if_known_low": 704253.0509815962,
         "input": "host_power",
         "kind": "input",
         "label": "host power",
         "model": "web_service",
         "output": "tco",
-        "removed": 0.0020019601160026212
+        "removed": 0.0020019601160026212,
+        "removed_high": -0.0009968013853971502,
+        "removed_low": 0.004936801111337763
       },
       {
         "half_width": 707747.0574413185,
         "if_known": 629575.8028167789,
+        "if_known_high": 634882.2304700142,
+        "if_known_low": 626191.175301008,
         "input": "host_price",
         "kind": "input",
         "label": "host price",
         "model": "web_service",
         "output": "tco",
-        "removed": 0.11045083664091537
+        "removed": 0.11045083664091537,
+        "removed_high": 0.102953203697842,
+        "removed_low": 0.11523309250504732
       },
       {
         "half_width": 707747.0574413185,
         "if_known": 601676.2639037613,
+        "if_known_high": 601676.2639037613,
+        "if_known_low": 601676.2639037613,
         "input": "licence_per_core",
         "kind": "input",
         "label": "licence per core",
         "model": "web_service",
         "output": "tco",
-        "removed": 0.1498710484520127
+        "removed": 0.1498710484520127,
+        "removed_high": 0.1498710484520127,
+        "removed_low": 0.1498710484520127
       },
       {
         "half_width": 707747.0574413185,
         "if_known": 695045.9035019975,
+        "if_known_high": 695869.0186193009,
+        "if_known_low": 694414.3856528441,
         "input": "network_price_per_host",
         "kind": "input",
         "label": "network price per host",
         "model": "web_service",
         "output": "tco",
-        "removed": 0.01794589437819616
+        "removed": 0.01794589437819616,
+        "removed_high": 0.01678288690448204,
+        "removed_low": 0.01883818752518074
       },
       {
         "half_width": 707747.0574413185,
         "if_known": 707319.9929903694,
+        "if_known_high": 709096.2605908577,
+        "if_known_low": 705648.1163390039,
         "input": "pue",
         "kind": "input",
         "label": "PUE",
         "model": "web_service",
         "output": "tco",
-        "removed": 0.0006034139548287687
+        "removed": 0.0006034139548287687,
+        "removed_high": -0.0019063352300141556,
+        "removed_low": 0.002965665600790812
       },
       {
         "half_width": 707747.0574413185,
         "if_known": 576897.2196540008,
+        "if_known_high": 650824.4024820996,
+        "if_known_low": 534484.7851319021,
         "input": "staff_fte",
         "kind": "input",
         "label": "engineers, full-time equivalent",
         "model": "web_service",
         "output": "tco",
-        "removed": 0.18488220673127542
+        "removed": 0.18488220673127542,
+        "removed_high": 0.08042796414443387,
+        "removed_low": 0.2448081846299759
       },
       {
         "half_width": 707747.0574413185,
         "if_known": 701473.7045262605,
+        "if_known_high": 717118.9755146564,
+        "if_known_low": 690071.2991377849,
         "input": "support_rate",
         "kind": "input",
         "label": "support rate",
         "model": "web_service",
         "output": "tco",
-        "removed": 0.00886383468373253
+        "removed": 0.00886383468373253,
+        "removed_high": -0.013241903268689903,
+        "removed_low": 0.02497468285835891
       },
       {
         "half_width": 105.0,
         "if_known": 29.5,
+        "if_known_high": 71.5,
+        "if_known_low": 12.0,
         "input": "annual_growth",
         "kind": "input",
         "label": "annual growth factor",
         "model": "web_service",
         "output": "hosts_recommended",
-        "removed": 0.719047619047619
+        "removed": 0.719047619047619,
+        "removed_high": 0.319047619047619,
+        "removed_low": 0.8857142857142857
       },
       {
         "half_width": 105.0,
         "if_known": 94.5,
+        "if_known_high": 125.0,
+        "if_known_low": 92.0,
         "input": "hot_fraction",
         "kind": "input",
         "label": "share of records touched in a busy hour",
         "model": "web_service",
         "output": "hosts_recommended",
-        "removed": 0.09999999999999998
+        "removed": 0.09999999999999998,
+        "removed_high": -0.19047619047619047,
+        "removed_low": 0.12380952380952381
       },
       {
         "half_width": 105.0,
         "if_known": 104.5,
+        "if_known_high": 105.0,
+        "if_known_low": 104.0,
         "input": "index_overhead",
         "kind": "input",
         "label": "index overhead",
         "model": "web_service",
         "output": "hosts_recommended",
-        "removed": 0.004761904761904745
+        "removed": 0.004761904761904745,
+        "removed_high": 0.0,
+        "removed_low": 0.00952380952380949
       },
       {
         "half_width": 105.0,
         "if_known": 104.52499999999418,
+        "if_known_high": 106.5,
+        "if_known_low": 103.0,
         "input": "os_reserve",
         "kind": "input",
         "label": "os reserve",
         "model": "web_service",
         "output": "hosts_recommended",
-        "removed": 0.004523809523864997
+        "removed": 0.004523809523864997,
+        "removed_high": -0.014285714285714235,
+        "removed_low": 0.01904761904761909
       },
       {
         "half_width": 105.0,
         "if_known": 94.5,
+        "if_known_high": 119.0,
+        "if_known_low": 91.5,
         "input": "peak_request_rate_t0",
         "kind": "input",
         "label": "peak request rate, day one",
         "model": "web_service",
         "output": "hosts_recommended",
-        "removed": 0.09999999999999998
+        "removed": 0.09999999999999998,
+        "removed_high": -0.1333333333333333,
+        "removed_low": 0.12857142857142856
       },
       {
         "half_width": 105.0,
         "if_known": 105.5,
+        "if_known_high": 105.5,
+        "if_known_low": 105.5,
         "input": "record_compression",
         "kind": "measured",
         "label": "record compression ratio",
         "model": "web_service",
         "output": "hosts_recommended",
-        "removed": -0.004761904761904745
+        "removed": -0.004761904761904745,
+        "removed_high": -0.004761904761904745,
+        "removed_low": -0.004761904761904745
       },
       {
         "half_width": 105.0,
         "if_known": 98.5,
+        "if_known_high": 112.5,
+        "if_known_low": 93.0,
         "input": "service_demand",
         "kind": "input",
         "label": "CPU time per request",
         "model": "web_service",
         "output": "hosts_recommended",
-        "removed": 0.06190476190476191
+        "removed": 0.06190476190476191,
+        "removed_high": -0.0714285714285714,
+        "removed_low": 0.11428571428571432
       },
       {
         "half_width": 613.2306438445196,
         "if_known": 345.9655263101045,
+        "if_known_high": 621.8124986524568,
+        "if_known_low": 192.48912759781302,
         "input": "annual_growth",
         "kind": "input",
         "label": "annual growth",
         "model": "observability",
         "output": "known_stored",
-        "removed": 0.43583131439559686
+        "removed": 0.43583131439559686,
+        "removed_high": -0.013994497656110383,
+        "removed_low": 0.6861064763641895
       },
       {
         "half_width": 613.2306438445196,
         "if_known": 346.25738730881744,
+        "if_known_high": 623.4065065102776,
+        "if_known_low": 249.19901124529534,
         "input": "label_values_accidental",
         "kind": "input",
         "label": "accidental label values",
         "model": "observability",
         "output": "known_stored",
-        "removed": 0.4353553743856795
+        "removed": 0.4353553743856795,
+        "removed_high": -0.016593858718414012,
+        "removed_low": 0.5936292262190374
       },
       {
         "half_width": 613.2306438445196,
         "if_known": 561.0554945368825,
+        "if_known_high": 858.2147620919593,
+        "if_known_low": 375.7059250244943,
         "input": "label_values_endpoint",
         "kind": "input",
         "label": "label values endpoint",
         "model": "observability",
         "output": "known_stored",
-        "removed": 0.08508242344272954
+        "removed": 0.08508242344272954,
+        "removed_high": -0.39949751485275375,
+        "removed_low": 0.38733341395158327
       },
       {
         "half_width": 613.2306438445196,
         "if_known": 591.3594723496316,
+        "if_known_high": 763.9355283934672,
+        "if_known_low": 477.405246426157,
         "input": "label_values_status",
         "kind": "input",
         "label": "label values status",
         "model": "observability",
         "output": "known_stored",
-        "removed": 0.03566549016169729
+        "removed": 0.03566549016169729,
+        "removed_high": -0.24575563217802565,
+        "removed_low": 0.22149153631141782
       },
       {
         "half_width": 613.2306438445196,
         "if_known": 580.9637629920312,
+        "if_known_high": 656.5890789160235,
+        "if_known_low": 537.9439447600664,
         "input": "lines_per_request",
         "kind": "input",
         "label": "lines per request",
         "model": "observability",
         "output": "known_stored",
-        "removed": 0.052617854597412195
+        "removed": 0.052617854597412195,
+        "removed_high": -0.07070493868290306,
+        "removed_low": 0.12277060815561858
       },
       {
         "half_width": 613.2306438445196,
         "if_known": 613.2181383594974,
+        "if_known_high": 613.232831618945,
+        "if_known_low": 613.1974663313607,
         "input": "logs_line_bytes",
         "kind": "measured",
         "label": "bytes per log line, compressed",
         "model": "observability",
         "output": "known_stored",
-        "removed": 2.039279208843059e-05
+        "removed": 2.039279208843059e-05,
+        "removed_high": -3.567620841193886e-06,
+        "removed_low": 5.410282981110903e-05
       },
       {
         "half_width": 613.2306438445196,
         "if_known": 613.1857527601885,
+        "if_known_high": 613.2557670644884,
+        "if_known_low": 613.1173665861327,
         "input": "metrics_sample_bytes",
         "kind": "measured",
         "label": "bytes per sample, compressed",
         "model": "observability",
         "output": "known_stored",
-        "removed": 7.320424179990681e-05
+        "removed": 7.320424179990681e-05,
+        "removed_high": -4.096863100522263e-05,
+        "removed_low": 0.00018472210990105875
       },
       {
         "half_width": 613.2306438445196,
         "if_known": 580.5180485102281,
+        "if_known_high": 660.1658366001252,
+        "if_known_low": 534.644857524896,
         "input": "request_rate",
         "kind": "input",
         "label": "request rate",
         "model": "observability",
         "output": "known_stored",
-        "removed": 0.053344684683737875
+        "removed": 0.053344684683737875,
+        "removed_high": -0.07653758537139521,
+        "removed_low": 0.12815045547454484
       }
     ],
     "totals": [
@@ -304,6 +400,8 @@
   "units": {
     "rows": "dimensionless",
     "rows[0].removed": "dimensionless",
+    "rows[0].removed_high": "dimensionless",
+    "rows[0].removed_low": "dimensionless",
     "totals": "dimensionless",
     "totals[0].sum_of_removals": "dimensionless"
   }

@@ -29,11 +29,15 @@ fact about the figure, not a filing detail (invariant 3). And what a measured co
 
 from __future__ import annotations
 
+import inspect
 import math
 import re
 from collections import Counter
 
-from bench.stamp import load_result
+import yaml
+
+from bench.stamp import ROOT, load_result
+from sizing import mc
 from sizing.dsl import PROVENANCE_MEANING, discover
 from sizing.units import parse as parse_unit
 
@@ -105,8 +109,37 @@ def unit_label(unit: str) -> str:
         "GB/s": "GB/s",
         "kWh/year": "kWh / year",
         "1/year": "per year",
+        "second * core / request": "DRAFT-PENDING 29a",
     }
     return pretty.get(unit, unit)
+
+
+def _with_unit(label: str, unit: str) -> str:
+    """A column heading that says what its figures are in, where the cells do not.
+
+    Money carries its own mark in every cell, a count says what it counts in its label, and a
+    label that already names its unit (*active series*, in series) does not need it twice. What
+    is left is a column of large figures with nothing to say whether they are kilowatt-hours a
+    year or dollars, which is how ch16's energy table was read.
+    """
+    shown = unit_label(unit)
+    if (
+        not shown
+        or unit in ("node", "drive", "core", "host")
+        or shown in label
+        or "[currency]" in str(parse_unit(unit).dimensionality)
+    ):
+        return label
+    return f"{label} ({shown})"
+
+
+def _value_with_unit(value: float, unit: str) -> str:
+    """A value with its unit after it, unless `fmt` has already marked it as money."""
+    shown = fmt(value, unit)
+    label = unit_label(unit)
+    if not label or "[currency]" in str(parse_unit(unit).dimensionality):
+        return shown
+    return f"{shown} {label}"
 
 
 def _interval(summary: dict | None) -> str:
@@ -286,18 +319,71 @@ def outputs_in_plain_words(name: str, *only: str) -> str:
     return outputs_table(name, *only, spread="Smallest and largest answer", ends=("min", "max"))
 
 
-def stage_outputs(name: str) -> str:
+#: ch01's taxi example, which problem 1.2's test reads too.
+COMMUTE = ROOT / "tests" / "point_estimates" / "fixtures" / "commute.yaml"
+#: The commute table's words: the first column's heading, its first and last rows, the suffix on
+#: a row where one input moves alone, and the last column's heading.
+COMMUTE_WORDS = {
+    "moves": "DRAFT-PENDING 02a",
+    "nothing": "DRAFT-PENDING 02b",
+    "alone": "DRAFT-PENDING 02c {name}",
+    "everything": "DRAFT-PENDING 02d",
+    "total": "DRAFT-PENDING 02e",
+}
+
+
+def commute_table(_name: None = None) -> str:
+    """ch01's taxi example: a year's fares with each input moved alone, then all of them at once.
+
+    Rendered from the file problem 1.2 is graded against, so the page and the test cannot
+    disagree about the example. There is no column of multiples: working those out from the
+    fares is the problem.
+    """
+    raw = yaml.safe_load(COMMUTE.read_text())
+    names = list(raw)
+    usual = {name: float(raw[name]["usual"]) for name in names}
+    most = {name: float(raw[name]["most"]) for name in names}
+    cases = [(COMMUTE_WORDS["nothing"], usual)]
+    cases += [
+        (COMMUTE_WORDS["alone"].format(name=name.capitalize()), {**usual, name: most[name]})
+        for name in names
+    ]
+    cases.append((COMMUTE_WORDS["everything"], most))
+
+    def shown_as(name: str, value: float) -> str:
+        return f"£{value:,.2f}" if raw[name].get("pounds") else f"{value:,.0f}"
+
+    rows = [
+        f"| {COMMUTE_WORDS['moves']} | "
+        + " | ".join(raw[name]["label"].capitalize() for name in names)
+        + f" | {COMMUTE_WORDS['total']} |",
+        "|---|" + "---:|" * (len(names) + 1),
+    ]
+    for label, values in cases:
+        cells = " | ".join(shown_as(name, values[name]) for name in names)
+        rows.append(f"| {label} | {cells} | £{math.prod(values.values()):,.0f} |")
+    return "\n".join(rows)
+
+
+def stage_outputs(name: str, *only: str) -> str:
     """What the model says while the book is still building it.
 
     One column, not two. `outputs_table` puts a 90% interval beside every point estimate, and
     that column is ch13's: a reader in ch02 has not been told what an interval is, and a header
     naming one would be the book teaching a term by using it. The chapters that build the model
     show what it computes; the chapter that teaches sampling adds the second column.
+
+    ``only`` names the outputs to show, in order, as in `outputs_table`, and a name the model
+    does not declare raises.
     """
     payload = load_result(name)["summary"]
     labels = row_labels(payload)
+    shown = only or tuple(payload["outputs"])
+    unknown = [output for output in shown if output not in payload["outputs"]]
+    if unknown:
+        raise KeyError(f"{name} has no output(s) {unknown}; it declares {payload['outputs']}")
     rows = ["| Output | What the model says | Unit |", "|---|---:|---|"]
-    for output in payload["outputs"]:
+    for output in shown:
         node = payload["nodes"][output]
         value = (
             "*not yet measured*" if node.get("blocked_by") else fmt(node.get("point"), node["unit"])
@@ -324,11 +410,16 @@ def stage_shape(name: str) -> str:
     return "\n".join(rows)
 
 
-def ceilings_table(name: str) -> str:
+def ceilings_table(name: str, *only: str) -> str:
     """Every declared ceiling, where the plan sits against it, and how often it breaks.
 
     The last column is the one this book exists for. A sizing answer is not a number; it is a
     number together with how much of the model's own uncertainty puts it over the edge.
+
+    ``only`` names the ceilings to show, in the order to show them, for a page whose argument is
+    about some of them. Without it the table is every declared ceiling, sorted by name. A named
+    ceiling the model does not declare raises, so a rename fails the build rather than silently
+    dropping a row from a page that talks about it.
     """
     payload = load_result(name)["summary"]
     # Every *declared* ceiling, not only the ones that could be computed. A ceiling whose
@@ -342,12 +433,16 @@ def ceilings_table(name: str) -> str:
     }
     if not declared:
         return "*This model declares no ceilings. It is a definitional model: see ch01.*"
+    unknown = [node_name for node_name in only if node_name not in declared]
+    if unknown:
+        raise KeyError(f"{name} declares no ceiling(s) {unknown}; it declares {sorted(declared)}")
+    shown = [(node_name, declared[node_name]) for node_name in only] or sorted(declared.items())
     rows = [
         "| Ceiling | At the plan | Headroom | Allowed | Limit | Verdict "
         "| Over allowed | Over limit |",
         "|---|---:|---:|---:|---:|---|---:|---:|",
     ]
-    for _node_name, node in sorted(declared.items()):
+    for _node_name, node in shown:
         label = node["label"]
         ceiling = node.get("ceiling")
         if not ceiling:
@@ -358,6 +453,73 @@ def ceilings_table(name: str) -> str:
             f"| {ceiling['allowed']:.2f} | {ceiling['limit']:.2f} "
             f"| {VERDICT_MARK[ceiling['verdict']]} "
             f"| {ceiling.get('p_over_allowed', 0):.0%} | {ceiling.get('p_over_limit', 0):.0%} |"
+        )
+    return "\n".join(rows)
+
+
+#: The band table's headings, in the model viewer's plain words for the two ends.
+BANDS_HEADER = (
+    "| DRAFT-PENDING 12a | DRAFT-PENDING 12b | DRAFT-PENDING 12c | DRAFT-PENDING 12d |",
+    "|---|---:|---:|---:|",
+)
+
+
+def bands_in_plain_words(name: str, *nodes: str) -> str:
+    """Each named quantity's band across the futures, and its top divided by its bottom.
+
+    For a page before ch13, in the model viewer's plain words: the band runs from the value one
+    future in twenty comes in under to the one that one future in twenty comes in over. The last
+    column is the band's width as a ratio, because a ratio is what multiplying compounds: a
+    product's band can be set against its inputs' bands on that scale and on no other.
+
+    ``nodes`` names the rows, in order. A node with one value in every future has no band, and
+    raises rather than printing a row of equal ends.
+    """
+    payload = load_result(name)["summary"]
+    unknown = [node_name for node_name in nodes if node_name not in payload["nodes"]]
+    if not nodes or unknown:
+        raise KeyError(f"{name}: name the rows to show; unknown: {unknown}")
+    rows = list(BANDS_HEADER)
+    for node_name in nodes:
+        node = payload["nodes"][node_name]
+        summary = node.get("summary")
+        if not summary:
+            raise KeyError(f"{name}: {node_name} has one value in every future, so no band")
+        low, high = summary["p5"], summary["p95"]
+        rows.append(
+            f"| {node['label']} | {fmt(low, node['unit'])} | {fmt(high, node['unit'])} "
+            f"| {high / low:.1f}x |"
+        )
+    return "\n".join(rows)
+
+
+#: The spread table's three headings: the quantity, its 90% interval, and the top over the bottom.
+SPREAD_HEADINGS = ("DRAFT-PENDING 32a", "DRAFT-PENDING 32b", "DRAFT-PENDING 32c")
+
+
+def spread_table(name: str, *nodes: str) -> str:
+    """How wide each named quantity is: its 90% interval, and the top of it over the bottom.
+
+    For the factors of a product and the product itself, on a page after ch13 (the plain-words
+    form is :func:`bands_in_plain_words`). The question a reader brings is whether the product is
+    wider than its factors and by how much, and a ratio answers it on any scale: factors
+    multiply, so their spreads compare by division. A node the result does not have, or one with
+    no sampled range, raises rather than printing a row with nothing in it.
+    """
+    payload = load_result(name)["summary"]
+    unknown = [node_name for node_name in nodes if node_name not in payload["nodes"]]
+    if not nodes or unknown:
+        raise KeyError(f"{name}: name the rows to show; unknown: {unknown}")
+    rows = ["| " + " | ".join(SPREAD_HEADINGS) + " |", "|---|---:|---:|"]
+    for node_name in nodes:
+        node = payload["nodes"][node_name]
+        summary = node.get("summary")
+        if node.get("blocked_by") or not summary:
+            raise KeyError(f"{name}: {node_name} has no sampled range")
+        low, high = summary["p5"], summary["p95"]
+        rows.append(
+            f"| {_named(node, node_name)} | {fmt(low, node['unit'])} to {fmt(high, node['unit'])} "
+            f"| {high / low:.1f}x |"
         )
     return "\n".join(rows)
 
@@ -390,12 +552,33 @@ def margins_table(name: str) -> str:
     return "\n".join(rows)
 
 
-def provenance_table(name: str) -> str:
+def _named(node: dict, node_name: str) -> str:
+    """A node's label with its identifier under it, in one cell.
+
+    Formulas and problems refer to a node by its identifier and the tables show its label; a
+    reader matching one to the other needs both, and a column of its own would widen every
+    table that has them on a phone.
+    """
+    return f"{node['label']}<br>`{node_name}`"
+
+
+#: The line standing in for the rows of one provenance kind a page leaves out.
+OMITTED = "*DRAFT-PENDING 04a {count}*"
+
+
+def provenance_table(name: str, *kinds: str) -> str:
     """Every input, by how much somebody is claiming when they wrote it down.
 
     The count at the bottom is the honest summary of any model: this many of the numbers are
     traceable, this many are somebody's sales material, and this many were decided in a meeting.
+
+    ``kinds`` names the provenance kinds to list, for a page that has earned those rows and not
+    the rest. The rows it leaves out are counted in one line, and the tally still counts every
+    input, so a shorter table cannot make a model look better sourced than it is.
     """
+    unknown = [kind for kind in kinds if kind not in PROVENANCE_MEANING]
+    if unknown:
+        raise KeyError(f"no provenance kind(s) {unknown}; there are {list(PROVENANCE_MEANING)}")
     payload = load_result(name)["summary"]
     counts: dict[str, int] = {}
     rows = ["| | Input | Provenance | Source |", "|---|---|---|---|"]
@@ -405,11 +588,19 @@ def provenance_table(name: str) -> str:
             continue
         kind = node["provenance"]["kind"]
         counts[kind] = counts.get(kind, 0) + 1
+        if kinds and kind not in kinds:
+            continue
         source = node["provenance"]["source"].replace("\n", " ").strip()
         rows.append(
-            f"| {PROVENANCE_MARK.get(kind, '?')} | {node['label']} | {kind.replace('_', ' ')} "
-            f"| {source} |"
+            f"| {PROVENANCE_MARK.get(kind, '?')} | {_named(node, node_name)} "
+            f"| {kind.replace('_', ' ')} | {source} |"
         )
+    for kind in PROVENANCE_MEANING:
+        if kinds and kind not in kinds and counts.get(kind):
+            rows.append(
+                f"| {PROVENANCE_MARK[kind]} | {OMITTED.format(count=counts[kind])} "
+                f"| {kind.replace('_', ' ')} | |"
+            )
     total = sum(counts.values())
     tally = ", ".join(
         f"{counts.get(kind, 0)} {kind.replace('_', ' ')}" for kind in PROVENANCE_MEANING
@@ -432,31 +623,96 @@ def measured_table(name: str) -> str:
         "| Constant | Value | Standard error | Unit | Measured against |",
         "|---|---:|---:|---|---|",
     ]
-    for _node_name, node in sorted(measured.items()):
+    for node_name, node in sorted(measured.items()):
         found = node.get("measured")
         if not found:
             rows.append(
-                f"| {node['label']} | *not yet measured* | — | {unit_label(node['unit'])} "
+                f"| {_named(node, node_name)} | *not yet measured* | — "
+                f"| {unit_label(node['unit'])} "
                 f"| `bench/results/{node['result']}.json` does not exist |"
             )
             continue
         rows.append(
-            f"| {node['label']} | {fmt(found['value'], node['unit'])} "
+            f"| {_named(node, node_name)} | {fmt(found['value'], node['unit'])} "
             f"| ± {fmt(found['sd'], node['unit'])} | {unit_label(node['unit'])} "
             f"| {found['stack']} |"
         )
     return "\n".join(rows)
 
 
-def tornado_table(name: str, output: str, limit: int = 8) -> str:
-    """Which input moves one output most, when swung on its own across its middle 80%."""
+#: The claim-beside-measurement table's headings, and what its last column says of a measured
+#: constant: what took it, or that its result does not exist yet.
+CLAIM_HEADER = (
+    "| | DRAFT-PENDING 03a | DRAFT-PENDING 03b | Unit | DRAFT-PENDING 03c |",
+    "|---|---|---:|---|---|",
+)
+CLAIM_MEASURED = "DRAFT-PENDING 03d {stack}"
+CLAIM_UNMEASURED = "DRAFT-PENDING 03e `bench/results/{result}.json`"
+
+
+def claim_beside_measurement(name: str, *nodes: str) -> str:
+    """One quantity as a vendor quoted it and as it was measured, and what each lets the model
+    compute.
+
+    The page names the rows, in its order. A node the model cannot compute is shown as *not yet
+    measured*, never filled in, so the row that rests on a claim and the row that waits for a
+    measurement sit side by side. A named node the model does not have raises, so a rename fails
+    the build rather than dropping a row from a page that talks about it.
+    """
     payload = load_result(name)["summary"]
-    bars = payload["tornado"].get(output, [])[:limit]
+    unknown = [node_name for node_name in nodes if node_name not in payload["nodes"]]
+    if not nodes or unknown:
+        raise KeyError(f"{name}: name the rows to show; unknown: {unknown}")
+    rows = list(CLAIM_HEADER)
+    for node_name in nodes:
+        node = payload["nodes"][node_name]
+        mark = ""
+        if node["kind"] == "input":
+            kind = node["provenance"]["kind"]
+            mark, origin = PROVENANCE_MARK[kind], kind.replace("_", " ")
+        elif node["kind"] == "measured":
+            found = node.get("measured")
+            origin = (
+                CLAIM_MEASURED.format(stack=found["stack"])
+                if found
+                else CLAIM_UNMEASURED.format(result=node["result"])
+            )
+        else:
+            origin = f"`{node['formula']}`"
+        value = (
+            "*not yet measured*" if node.get("blocked_by") else fmt(node.get("point"), node["unit"])
+        )
+        rows.append(
+            f"| {mark} | {node['label']} | {value} | {unit_label(node['unit'])} | {origin} |"
+        )
+    return "\n".join(rows)
+
+
+def tornado_table(
+    name: str,
+    output: str,
+    limit: int = 8,
+    ends: tuple[str, str] = ("at its p10", "at its p90"),
+    moving_only: bool = False,
+    heading: str | None = None,
+    count_still: bool = False,
+) -> str:
+    """Which input moves one output most, when swung on its own across its middle 80%.
+
+    ``moving_only`` drops the inputs whose swing is zero before ``limit`` applies; with
+    ``count_still`` as well, one last row counts them, as the tornado chart does. ``heading``
+    replaces the output's label, with its unit, over the third column.
+    """
+    payload = load_result(name)["summary"]
+    declared = payload["tornado"].get(output, [])
+    bars = [bar for bar in declared if bar["span"] > 0] if moving_only else declared
+    bars = bars[:limit]
     if not bars:
         return f"*No uncertain input feeds `{output}`.*"
     unit = payload["nodes"][output]["unit"]
+    title = heading or _with_unit(payload["nodes"][output]["label"], unit)
     rows = [
-        f"| Input | Kind | {payload['nodes'][output]['label']} at its p10 | at its p90 | Swing |",
+        f"| Input | Kind | {title} {ends[0]} | {ends[1]} | Swing |",
         "|---|---|---:|---:|---:|",
     ]
     for bar in bars:
@@ -464,19 +720,182 @@ def tornado_table(name: str, output: str, limit: int = 8) -> str:
             f"| {bar['label']} | {bar['kind']} | {fmt(bar['low'], unit)} "
             f"| {fmt(bar['high'], unit)} | {fmt(bar['span'], unit)} |"
         )
+    still = sum(1 for bar in declared if bar["span"] <= 0)
+    if moving_only and count_still and still:
+        rows.append(f"| {STILL_ROW.format(count=still)} | | | | 0 |")
     return "\n".join(rows)
 
 
+#: The row that counts the inputs a tornado table leaves out because they do not move the output.
+STILL_ROW = "*DRAFT-PENDING 32d {count}*"
+
+
+def tornado_of_what_reaches(name: str, output: str) -> str:
+    """The tornado table with the same bars the chart beside it draws, and the rest counted.
+
+    For an output some inputs cannot reach. Appendix F's table printed the first eight of twelve
+    bars, four of them zero and chosen by sort order, beside a chart that drew the four that move
+    it and said how many do not.
+    """
+    return tornado_table(name, output, moving_only=True, count_still=True)
+
+
+#: The straight-line table's headings, and the name of each row's point in the growth band.
+STRAIGHT_LINE_HEADINGS = (
+    "DRAFT-PENDING 20a",
+    "DRAFT-PENDING 20b",
+    "DRAFT-PENDING 20c",
+    "DRAFT-PENDING 20d",
+    "DRAFT-PENDING 20e",
+)
+STRAIGHT_LINE_POINTS = ("DRAFT-PENDING 20f", "DRAFT-PENDING 20g", "DRAFT-PENDING 20h")
+
+
+def straight_line_overstatement(_name: str | None, model_name: str) -> str:
+    """How far a straight line from day one to the horizon overstates a compounding holding (ch17).
+
+    A holding that compounds at a steady factor ``g`` a year for ``n`` years sits at ``g ** t``
+    times day one's in year ``t``. Its average over the horizon is ``(g ** n - 1) / ln(g ** n)``
+    times day one's; the straight line between the two ends averages ``(1 + g ** n) / 2``. The
+    rows are the model's own growth band: its declared p10 and p90, and the median between them,
+    which for a lognormal is their geometric mean. Every holding is a multiple of day one's, so
+    the table holds for any starting size, and for the request rate, which grows by the same
+    factor.
+
+    It reads the declared band, not a slider, so the zero-over-zero case that keeps the exact
+    average out of the model (a factor of one) cannot reach it: the declared p10 is above one.
+    """
+    from bench.stages import model_path
+    from sizing.dsl import load_model
+
+    model = load_model(model_path(model_name))
+    growth = model.nodes["annual_growth"].distribution["lognormal"]
+    horizon = model.nodes["horizon"]
+    if horizon.unit != "year":
+        raise ValueError(f"{model_name}: the horizon is in {horizon.unit}, not years")
+    low, high = growth["p10"], growth["p90"]
+    rows = [
+        "| " + " | ".join(STRAIGHT_LINE_HEADINGS) + " |",
+        "|---|---:|---:|---:|---:|",
+    ]
+    factors = (low, math.sqrt(low * high), high)
+    for where, factor in zip(STRAIGHT_LINE_POINTS, factors, strict=True):
+        end = factor**horizon.value
+        line = (1 + end) / 2
+        curve = (end - 1) / math.log(end)
+        rows.append(
+            f"| {where}, {fmt(factor)} | x{fmt(end)} | x{fmt(line)} | x{fmt(curve)} "
+            f"| {line / curve - 1:.0%} |"
+        )
+    return "\n".join(rows)
+
+
+#: Where the tornado swung each input, in words a page before ch13 has defined beside the table.
+PLAIN_ENDS = ("DRAFT-PENDING 06a", "DRAFT-PENDING 06b")
+
+
+def tornado_in_plain_words(name: str, output: str, limit: int = 8) -> str:
+    """The tornado table for a chapter that comes before ch13 names a percentile.
+
+    Same rows. The two middle columns say where the input was set in words ch04 defines beside
+    the table: its low end, which one future in ten comes in under, and its high end, which one
+    in ten comes in over. ``limit`` caps the rows, as in :func:`tornado_table`.
+    """
+    return tornado_table(name, output, limit, ends=PLAIN_ENDS)
+
+
+#: ch19's residence table: the heading over its third column, with the unit a duration's cells
+#: do not carry.
+RESIDENCE_HEADING = "DRAFT-PENDING 25a"
+
+
+def tornado_of_what_moves(name: str, output: str, heading: str) -> str:
+    """A tornado table of only the inputs that move the output, under a heading that has its unit.
+
+    For an output few inputs reach. Padded to eight rows with inputs whose swing is zero, ch19's
+    residence table listed five that do not move it, beside prose saying nothing else does.
+    """
+    return tornado_table(name, output, moving_only=True, heading=heading)
+
+
+#: The five quantiles a stamped summary keeps, with the share of futures below each, and that
+#: share in words. A result holds no draws, so these points are all a page can say from it.
+_QUANTILES = (("p5", 0.05), ("p25", 0.25), ("p50", 0.5), ("p75", 0.75), ("p95", 0.95))
+SHARE_WORDS = {
+    0.05: "DRAFT-PENDING 08h-1",
+    0.25: "DRAFT-PENDING 08h-2",
+    0.5: "DRAFT-PENDING 08h-3",
+    0.75: "DRAFT-PENDING 08h-4",
+    0.95: "DRAFT-PENDING 08h-5",
+}
+#: The share-past table's column heading, and how its one cell reads at each kind of bound.
+SHARE_HEADER = "DRAFT-PENDING 08a"
+SHARE_EVERY = "DRAFT-PENDING 08c"
+SHARE_NONE = "DRAFT-PENDING 08d"
+SHARE_AT_MOST = "DRAFT-PENDING 08e {high}"
+SHARE_MORE_THAN = "DRAFT-PENDING 08f {low}"
+SHARE_BETWEEN = "DRAFT-PENDING 08g {low} {high}"
+
+
+def share_past(name: str, node: str, threshold: float, what: str) -> str:
+    """How often a node ends up past a threshold, as a bound the stamped quantiles make exact.
+
+    The result keeps a summary, not the draws, so the share cannot be counted here. It can be
+    bounded: if the 75th percentile is above the threshold, more than a quarter of the futures
+    are; if the median is not, no more than half are. That bound is exact, it is read from the
+    stamp, and it moves when the model does, which a share typed into the prose would not.
+    """
+    summary = load_result(name)["summary"]["nodes"][node]["summary"]
+    if summary["min"] > threshold:
+        share = SHARE_EVERY
+    elif summary["max"] <= threshold:
+        share = SHARE_NONE
+    else:
+        above = [q for key, q in _QUANTILES if summary[key] > threshold]
+        not_above = [q for key, q in _QUANTILES if summary[key] <= threshold]
+        low = SHARE_WORDS[round(1 - min(above), 2)] if above else None
+        high = SHARE_WORDS[round(1 - max(not_above), 2)] if not_above else None
+        if low is None:
+            share = SHARE_AT_MOST.format(high=high)
+        elif high is None:
+            share = SHARE_MORE_THAN.format(low=low)
+        else:
+            share = SHARE_BETWEEN.format(low=low, high=high)
+    return "\n".join([f"| | {SHARE_HEADER} |", "|---|---|", f"| {what} | {share} |"])
+
+
+#: The value-of-information table's headings, and its two closing rows.
+INFORMATION_HEADINGS = (
+    "DRAFT-PENDING 24a",
+    "DRAFT-PENDING 24b",
+    "DRAFT-PENDING 24c",
+    "DRAFT-PENDING 24d",
+)
+INFORMATION_EVERYTHING = "DRAFT-PENDING 24e"
+INFORMATION_TOTAL = ("DRAFT-PENDING 24f {total}", "DRAFT-PENDING 24g")
+
+
+def _share_removed(value: float) -> str:
+    """A share of the interval removed, where a removal a hair below zero prints as 0%, not -0%.
+
+    Rounded before it is formatted; a negative share keeps a true minus sign, because it means
+    the interval came back wider.
+    """
+    return f"{round(value, 2) + 0.0:.0%}".replace("-", "\u2212")
+
+
 def value_of_information_table(name: str, model: str, output: str) -> str:
-    """What knowing one input exactly would do to the interval, per input.
+    """What knowing one input exactly would do to the interval, by where the knowledge landed.
 
-    The column that matters is the last one, and it is a *ceiling*: no real measurement is
-    perfect, so nothing anybody can go and do buys more than this. A small number in it is the
-    useful case — it says a measurement is not worth commissioning however well it goes.
+    A perfect measurement can come back anywhere in the input's band, and where it lands decides
+    what it removes. So each input is pinned three times: at the two ends the tornado swings it
+    between, and at its median. A negative share means the interval came back wider: an input that
+    multiplies others, found high, scales up their spread. No column is the most a measurement
+    could remove.
 
-    The total row is the one to read twice. The individual figures do not add to a hundred per
-    cent and are not shares of anything; a chain of multiplications does not divide its
-    uncertainty between its inputs (ch19).
+    The middle column's total is printed because it is not a hundred per cent. The rows are not
+    shares of anything; a chain of multiplications does not divide its uncertainty between its
+    inputs (ch19).
     """
     payload = load_result(name)["summary"]
     rows = [row for row in payload["rows"] if row["model"] == model and row["output"] == output]
@@ -485,20 +904,17 @@ def value_of_information_table(name: str, model: str, output: str) -> str:
     )
     if not rows or totals is None:
         return f"*Nothing uncertain feeds `{output}` in `{model}`.*"
-    unit = _output_unit(model, output)
-    out = [
-        "| If this were known exactly | Kind | The interval would be | Most it could remove |",
-        "|---|---|---:|---:|",
-    ]
+    everything = 1.0 - totals["all_known"] / totals["half_width"] if totals["half_width"] else 1.0
+    out = ["| " + " | ".join(INFORMATION_HEADINGS) + " |", "|---|---:|---:|---:|"]
     for row in sorted(rows, key=lambda r: -r["removed"]):
         out.append(
-            f"| {row['label']} | {row['kind']} | {fmt(row['if_known'], unit)} "
-            f"| {row['removed']:.0%} |"
+            f"| {row['label']} | {_share_removed(row['removed_low'])} "
+            f"| {_share_removed(row['removed'])} | {_share_removed(row['removed_high'])} |"
         )
-    out.append(f"| **every one of them** | | **{fmt(totals['all_known'], unit)}** | **100%** |")
+    out.append(f"| **{INFORMATION_EVERYTHING}** | | **{_share_removed(everything)}** | |")
+    total, shares = INFORMATION_TOTAL
     out.append(
-        f"| | | *now: {fmt(totals['half_width'], unit)}* "
-        f"| *the rows above total {totals['sum_of_removals']:.0%}, which is not how this works* |"
+        f"| | | *{total.format(total=_share_removed(totals['sum_of_removals']))}* | *{shares}* |"
     )
     return "\n".join(out)
 
@@ -518,8 +934,11 @@ def postmortem_table(name: str, which: str) -> str:
     ]
     for row in payload["rows"]:
         unit = _output_unit(payload["model"], row["input"])
+        # The unit beside the name, as the book's other input tables give it: "9,905" on its own
+        # is a count of nothing. In the cell rather than a column, to keep the table narrow.
         rows.append(
-            f"| {row['label']} | {fmt(row['overall'], unit)} | {fmt(row['in_failures'], unit)} "
+            f"| {_with_unit(row['label'], unit)} | {fmt(row['overall'], unit)} "
+            f"| {fmt(row['in_failures'], unit)} "
             f"| {'none' if abs(row['shift']) < 0.005 else format(row['shift'], '+.0%')} "
             f"| {row['extreme_in_failures']:.0%} of them |"
         )
@@ -529,6 +948,43 @@ def postmortem_table(name: str, which: str) -> str:
         f"| | *something was beyond its p90 in {payload['something_extreme_share']:.0%} of them, "
         f"against {payload['something_extreme_everywhere']:.0%} of futures generally* |"
     )
+    return "\n".join(rows)
+
+
+#: ch20's hard case: the table's heading and its rows, in order. ``{problem}`` is the problem's
+#: number, derived from the outline so that inserting a chapter cannot leave it stale.
+FIXTURE_HEADING = "DRAFT-PENDING 26a {problem}"
+FIXTURE_ROWS = (
+    "DRAFT-PENDING 26b-1",
+    "DRAFT-PENDING 26b-2",
+    "DRAFT-PENDING 26b-3",
+    "DRAFT-PENDING 26b-4",
+    "DRAFT-PENDING 26b-5",
+)
+FIXTURE_RANGE = "{low} to {high}"
+
+
+def fixture_against_invoice(name: str) -> str:
+    """ch20's hard case: a model file missing one cost line, beside the figure it cannot reach.
+
+    The rows are the ones the argument needs and no others: what kind of model it is by ch01's
+    test, what it says, and how much of what it says reaches the invoice. The invoice is
+    invented for the problem, and the row says so where a reader sees it.
+    """
+    from bench.outline import label_of
+
+    summary = load_result(name)["summary"]
+    unit = "USD/month"
+    problem = f"{int(label_of('the_missing_node').removeprefix('ch'))}.3"
+    values = (
+        summary["classification"],
+        fmt(summary["point"], unit),
+        FIXTURE_RANGE.format(low=fmt(summary["p5"], unit), high=fmt(summary["p95"], unit)),
+        fmt(summary["invoice_average"], unit),
+        f"{summary['share_at_or_above_invoice']:.0%}",
+    )
+    rows = [f"| {FIXTURE_HEADING.format(problem=problem)} | |", "|---|---:|"]
+    rows += [f"| {label} | {value} |" for label, value in zip(FIXTURE_ROWS, values, strict=True)]
     return "\n".join(rows)
 
 
@@ -593,20 +1049,38 @@ def not_yet_measured(name: str) -> str:
 # -- ch14's two experiments ---------------------------------------------------------------
 
 
+#: The convergence table's headings; ``{runs}`` is the number of runs at each sample count.
+CONVERGENCE_HEADINGS = (
+    "Samples",
+    "90% interval half-width",
+    "DRAFT-PENDING 17a {runs}",
+    "DRAFT-PENDING 17b",
+)
+
+
 def convergence_table(name: str) -> str:
     """Two columns that behave differently, which is the whole of the figure.
 
-    The interval settles. The spread between runs falls. A reader who has only ever been told
+    The interval settles. The run-to-run spread falls. A reader who has only ever been told
     "use ten thousand samples" has generally conflated the two, and conflating them is what makes
     "how many samples is enough" feel like a matter of taste rather than a calculation.
+
+    The run count is read from the result, because ch14's problem 14.1 and Appendix B both send
+    the reader to this heading for it.
     """
     summary = load_result(name)["summary"]
+    points = summary["convergence"]
+    runs = {point["replicates"] for point in points}
+    if len(runs) != 1:
+        raise ValueError(f"{name}: every sample count should have the same number of runs")
+    (count,) = runs
+    headings = [heading.format(runs=count) for heading in CONVERGENCE_HEADINGS]
     rows = [
-        "| Samples | 90% interval half-width | Spread of p95 between runs | Ratio to the row above |",
+        "| " + " | ".join(headings) + " |",
         "|---:|---:|---:|---:|",
     ]
     previous = None
-    for point in summary["convergence"]:
+    for point in points:
         ratio = "—" if previous is None else f"{previous / point['p95_spread']:.2f}×"
         previous = point["p95_spread"]
         rows.append(
@@ -621,17 +1095,29 @@ def convergence_table(name: str) -> str:
     return "\n".join(rows)
 
 
+#: The correlation-effect table's two half-width columns.
+CORRELATION_HEADINGS = (
+    "DRAFT-PENDING 18a",
+    "DRAFT-PENDING 18b",
+)
+
+
 def correlation_table(name: str) -> str:
-    """What declaring that two inputs move together was worth, per output."""
+    """What declaring that two inputs move together was worth, per output.
+
+    Both columns are the half-width of the 90% interval, in the output's own unit, and are named
+    as the convergence table names it: one quantity, one name, on every page that shows it.
+    """
     rows_in = load_result(name)["summary"]["rows"]
     rows = [
-        "| Model | Output | Interval as declared | Assuming independence | Difference |",
+        f"| Model | Output | {CORRELATION_HEADINGS[0]} | {CORRELATION_HEADINGS[1]} | Difference |",
         "|---|---|---:|---:|---:|",
     ]
     for row in rows_in:
+        unit = row.get("unit", "dimensionless")
         rows.append(
-            f"| `{row['model']}` | {row['output']} | {row['declared']:,.4g} "
-            f"| {row['independent']:,.4g} | {row['change']:+.1%} |"
+            f"| `{row['model']}` | {row['output']} | {_value_with_unit(row['declared'], unit)} "
+            f"| {_value_with_unit(row['independent'], unit)} | {row['change']:+.1%} |"
         )
     return "\n".join(rows)
 
@@ -675,6 +1161,129 @@ def scenario_comparison(name: str, other: str) -> str:
             f"| {ours.get('p_over_limit', float('nan')):.0%} "
             f"| {theirs.get('p_over_limit', float('nan')):.0%} |"
         )
+    return "\n".join(rows)
+
+
+#: The ratio table's first and last column headings.
+RATIO_HEADINGS = ("DRAFT-PENDING 11a", "DRAFT-PENDING 11b")
+
+
+def scenario_ratios(name: str, other: str, *only: str) -> str:
+    """Two scenarios of one model, on rows somebody chose, with the second divided by the first.
+
+    ``scenario_comparison`` prints every declared output, which is right for a page comparing two
+    whole designs and wrong for a page making one argument about them. This prints the rows the
+    page argues from, in the order it argues, and may name any node the two results carry, not
+    only a declared output: ch07's argument is about throughput and efficiency, which the model
+    computes and does not publish.
+
+    The last column is the second scenario's point value divided by the first's. It is there so
+    the page can say "read the ratio" instead of spelling a figure as a word, which is how a claim
+    goes stale without a check noticing. Point values only: a ratio of two ranges is not a range.
+    """
+    left, right = load_result(name)["summary"], load_result(other)["summary"]
+    unknown = [n for n in only if n not in left["nodes"] or n not in right["nodes"]]
+    if not only or unknown:
+        raise KeyError(f"{name} / {other}: name the rows to show; unknown: {unknown}")
+    rows = [
+        f"| {RATIO_HEADINGS[0]} | {left['scenario']['title']} | {right['scenario']['title']} "
+        f"| {RATIO_HEADINGS[1]} |",
+        "|---|---:|---:|---:|",
+    ]
+    for node_name in only:
+        ours, theirs = left["nodes"][node_name], right["nodes"][node_name]
+        unit = ours["unit"]
+        label = _with_unit(ours.get("label") or node_name, unit)
+        if ours.get("blocked_by") or theirs.get("blocked_by"):
+            rows.append(f"| {label} | *not yet measured* | *not yet measured* | — |")
+            continue
+        a, b = ours.get("point"), theirs.get("point")
+        ratio = f"{b / a:.2f}" if a else "—"
+        rows.append(f"| {label} | {fmt(a, unit)} | {fmt(b, unit)} | {ratio} |")
+    return "\n".join(rows)
+
+
+#: The breach table's first column heading.
+BREACH_HEADING = "DRAFT-PENDING 19a"
+
+
+def breach_comparison(name: str, other: str, *only: str) -> str:
+    """How often each named ceiling is over its limit, in two scenarios of one model.
+
+    ``scenario_comparison`` ends with these rows for every ceiling. A page that argues from a few
+    of them names them here: one scenario's rate is a position, and beside the other's it is a
+    change. A named node that is not a ceiling in both results raises, so a renamed ceiling fails
+    the build rather than dropping a row the prose points at.
+    """
+    left, right = load_result(name)["summary"], load_result(other)["summary"]
+
+    def ceiling(payload: dict, node_name: str) -> dict | None:
+        return (payload["nodes"].get(node_name) or {}).get("ceiling")
+
+    unknown = [n for n in only if not ceiling(left, n) or not ceiling(right, n)]
+    if not only or unknown:
+        raise KeyError(f"{name} / {other}: name the ceilings to show; not in both: {unknown}")
+    rows = [
+        f"| {BREACH_HEADING} | {left['scenario']['title']} | {right['scenario']['title']} |",
+        "|---|---:|---:|",
+    ]
+    for node_name in only:
+        rows.append(
+            f"| {left['nodes'][node_name]['label']} "
+            f"| {ceiling(left, node_name)['p_over_limit']:.0%} "
+            f"| {ceiling(right, node_name)['p_over_limit']:.0%} |"
+        )
+    return "\n".join(rows)
+
+
+#: The rows a decision between two designs needs, and no others (ch21): what is bought, what
+#: it costs and when it is paid, the total three ways, and how often the busy hour breaks it.
+#: Each is (node, what to read from it, its label). "point" is the value with every input at its
+#: point estimate; "cell" is that value with the 90% interval under it; a percentile key reads
+#: the node's summary; "over" is how often the ceiling on that node crosses its limit, and its
+#: row takes the ceiling's own label, as the full comparison labels it.
+DECISION_ROWS = (
+    ("hosts", "point", "DRAFT-PENDING 27a"),
+    ("capex", "cell", "DRAFT-PENDING 27b"),
+    ("annual_opex", "cell", "DRAFT-PENDING 27c"),
+    ("tco", "point", "DRAFT-PENDING 27d"),
+    ("tco", "p50", "DRAFT-PENDING 27e"),
+    ("tco", "p95", "DRAFT-PENDING 27f"),
+    ("queueing_headroom", "over", None),
+)
+DECISION_OVER = "*{label}* — over its limit"
+
+
+def scenario_decision(name: str, other: str) -> str:
+    """Two designs, with only the rows a decision between them needs (ch21).
+
+    :func:`scenario_comparison` prints every output and every ceiling. That is the right table for
+    the appendix that documents the model and the wrong one to hand to the person who signs, and
+    two of its rows are one figure under two names. This one says what each design buys, what it
+    costs, and how often the busy hour is more than it can serve. A named node the model does not
+    have raises, so a rename fails the build rather than dropping a row.
+    """
+    runs = [load_result(one)["summary"] for one in (name, other)]
+    rows = [
+        f"| | {runs[0]['scenario']['title']} | {runs[1]['scenario']['title']} |",
+        "|---|---:|---:|",
+    ]
+    for node_name, read, label in DECISION_ROWS:
+        cells = []
+        for run in runs:
+            node = run["nodes"][node_name]
+            if node.get("blocked_by"):
+                cells.append("*not yet measured*")
+            elif read == "cell":
+                cells.append(_cell(node))
+            elif read == "point":
+                cells.append(fmt(node.get("point"), node["unit"]))
+            elif read == "over":
+                cells.append(f"{node['ceiling']['p_over_limit']:.0%}")
+            else:
+                cells.append(fmt(node["summary"][read], node["unit"]))
+        shown = label or DECISION_OVER.format(label=runs[0]["nodes"][node_name]["label"])
+        rows.append(f"| {shown} | {' | '.join(cells)} |")
     return "\n".join(rows)
 
 
@@ -777,31 +1386,71 @@ def scaling_table(name: str) -> str:
     return "\n".join(out)
 
 
+#: How the binding table writes a share of the model's futures, and its row for the gap that
+#: one future in twenty exceeds.
+BINDING_SHARE = "{:.0%} DRAFT-PENDING 14a"
+BINDING_P95_GAP = "DRAFT-PENDING 14b"
+
+
 def binding_table(name: str) -> str:
     """Which of three chains decides the answer, and how often.
 
     The last row is the one to read against the three above it. Each chain's median is a
-    perfectly good number; the answer is the largest of the three in every draw, and the largest
-    of three uncertain numbers sits well above where any one of them usually does.
+    perfectly good number; the answer is the largest of the three in every future, and the
+    largest of three uncertain numbers sits well above where any one of them usually does.
     """
     s = load_result(name)["summary"]
+    share = BINDING_SHARE
     return "\n".join(
         [
             "| | |",
             "|---|---:|",
-            f"| The request rate decides the host count | {s['requests_binds']:.0%} of samples |",
-            f"| The working set decides it | {s['memory_binds']:.0%} of samples |",
-            f"| The data on disk decides it | {s['storage_binds']:.0%} of samples |",
-            f"| Two chains ask for the same count | {s['tied']:.0%} of samples |",
-            f"| Sized on the request chain alone, too small | {s['short_if_requests']:.0%} of samples |",
-            f"| Sized on the memory chain alone, too small | {s['short_if_memory']:.0%} of samples |",
-            f"| Sized on the disk chain alone, too small | {s['short_if_storage']:.0%} of samples |",
+            f"| The request rate decides the host count | {share.format(s['requests_binds'])} |",
+            f"| The working set decides it | {share.format(s['memory_binds'])} |",
+            f"| The data on disk decides it | {share.format(s['storage_binds'])} |",
+            f"| Two chains ask for the same count | {share.format(s['tied'])} |",
+            f"| Sized on the request chain alone, too small "
+            f"| {share.format(s['short_if_requests'])} |",
+            f"| Sized on the memory chain alone, too small | {share.format(s['short_if_memory'])} |",
+            f"| Sized on the disk chain alone, too small | {share.format(s['short_if_storage'])} |",
             f"| Median gap between the winner and the runner-up | {s['median_gap']:,.0f} hosts |",
-            f"| Gap at the 95th percentile | {s['p95_gap']:,.0f} hosts |",
+            f"| {BINDING_P95_GAP} | {s['p95_gap']:,.0f} hosts |",
             f"| Median of the request chain alone | {s['median_requests_hosts']:,.0f} hosts |",
             f"| Median of the memory chain alone | {s['median_memory_hosts']:,.0f} hosts |",
             f"| Median of the disk chain alone | {s['median_storage_hosts']:,.0f} hosts |",
             f"| Median of the largest of the three | {s['median_largest']:,.0f} hosts |",
+        ]
+    )
+
+
+#: How the binding-constraint sweep names each chain, and how the page names it.
+CHAIN_WORDS = {"requests": "request", "memory": "memory", "storage": "disk"}
+#: The shortfall table's two row labels; ``{chain}`` is the page's name for the usual winner.
+SHORTFALL_MEDIAN = "DRAFT-PENDING 15a {chain}"
+SHORTFALL_MEAN = "DRAFT-PENDING 15b {chain}"
+
+
+def binding_shortfall_table(name: str) -> str:
+    """How far short a fleet sized on the usual winner falls, counted over every future.
+
+    The median of that is small, because every future the chosen chain won adds a zero. The
+    average is not, because a few futures where a neglected chain wins by a lot pull it up. The
+    page shows both so that "the shortfall looks small" names the summary that makes it look
+    small. The median over the short futures alone is problem 10.2's answer, and it is not here.
+
+    The usual winner is read from the sweep rather than named here, as problem 10.2 reads it.
+    """
+    s = load_result(name)["summary"]
+    winner = max(CHAIN_WORDS, key=lambda chain: s[f"{chain}_binds"])
+    chain = CHAIN_WORDS[winner]
+    return "\n".join(
+        [
+            "| | |",
+            "|---|---:|",
+            f"| {SHORTFALL_MEDIAN.format(chain=chain)} "
+            f"| {s[f'shortfall_median_all_if_{winner}']:,.0f} hosts |",
+            f"| {SHORTFALL_MEAN.format(chain=chain)} "
+            f"| {s[f'shortfall_mean_all_if_{winner}']:,.0f} hosts |",
         ]
     )
 
@@ -884,6 +1533,71 @@ def cost_split_table(name: str) -> str:
     return "\n".join(rows)
 
 
+#: The seam tables' headings, and the words after each end's label: which side computed the
+#: price and which assumed it.
+SEAM_HEADINGS = ("DRAFT-PENDING 21a-1", "DRAFT-PENDING 21a-2", "DRAFT-PENDING 21a-3")
+SEAM_GROWTH_HEADINGS = ("DRAFT-PENDING 21a-1", "DRAFT-PENDING 21e-1", "DRAFT-PENDING 21e-2")
+SEAM_SIDES = ("DRAFT-PENDING 21b-1", "DRAFT-PENDING 21b-2")
+SEAM_COMPUTED = "DRAFT-PENDING 21c"
+SEAM_ASSUMED = "DRAFT-PENDING 21d"
+
+
+def seam_table(name: str, other: str) -> str:
+    """The two ends of a seam, and nothing else: one price computed, one assumed, and what it buys.
+
+    ``name`` is the downstream result (the observability model), ``other`` the upstream one (the
+    web service). The median, not the point estimate, because the median is what crosses a seam
+    in practice and what the figure below it marks. The unit is the second column so that it is
+    the last one a narrow screen hides rather than the first.
+    """
+    down, up = load_result(name)["summary"]["nodes"], load_result(other)["summary"]["nodes"]
+    rows = ["| | " + " | ".join(SEAM_HEADINGS) + " |", "|---|---|---:|---:|"]
+
+    def line(nodes: dict, key: str, how: str = "") -> str:
+        node = nodes[key]
+        summary, unit = node["summary"], node["unit"]
+        label = f"{node['label']}, {how}" if how else node["label"]
+        return (
+            f"| {label} | {unit_label(unit)} | {fmt(summary['p50'], unit)} "
+            f"| {fmt(summary['p5'], unit)} to {fmt(summary['p95'], unit)} |"
+        )
+
+    rows += [
+        f"| **{SEAM_SIDES[0]}** | | | |",
+        line(up, "cost_per_stored_tb_month", SEAM_COMPUTED),
+        f"| **{SEAM_SIDES[1]}** | | | |",
+        line(down, "storage_price", SEAM_ASSUMED),
+        line(down, "known_stored"),
+        line(down, "known_storage_cost"),
+    ]
+    return "\n".join(rows)
+
+
+def seam_growth_table(name: str, other: str) -> str:
+    """What one input, growth, does to each side of a seam when it is swung on its own.
+
+    Read from each result's own swing of its growth factor between its p10 and its p90, every
+    other input held at its point estimate: the same numbers ch19's tornado draws, one row of
+    each. ``name`` is the downstream result, ``other`` the upstream one. If growth ever stops
+    feeding either output, this raises: the page's claim would then be false.
+    """
+    rows = ["| | " + " | ".join(SEAM_GROWTH_HEADINGS) + " |", "|---|---|---:|---:|"]
+    for result, heading, output in (
+        (other, SEAM_SIDES[0], "cost_per_stored_tb_month"),
+        (name, SEAM_SIDES[1], "known_stored"),
+    ):
+        payload = load_result(result)["summary"]
+        bar = next(b for b in payload["tornado"][output] if b["node"] == "annual_growth")
+        node = payload["nodes"][output]
+        rows += [
+            f"| **{heading}**: {bar['label']} | | {fmt(bar['low_input'])} "
+            f"| {fmt(bar['high_input'])} |",
+            f"| {node['label']} | {unit_label(node['unit'])} | {fmt(bar['low'], node['unit'])} "
+            f"| {fmt(bar['high'], node['unit'])} |",
+        ]
+    return "\n".join(rows)
+
+
 def node_kinds_table(name: str) -> str:
     """What a model is made of, counted.
 
@@ -919,6 +1633,23 @@ def node_kinds_table(name: str) -> str:
 
 
 # -- appendices ----------------------------------------------------------------------------
+
+
+#: The shapes table's two headings.
+SHAPE_HEADINGS = ("DRAFT-PENDING 30a", "DRAFT-PENDING 30b")
+
+
+def distribution_keys(_name: str = "") -> str:
+    """Each shape a model file may declare, and the keys it writes under it.
+
+    Read from the percentile functions themselves: `sizing.mc.sample` passes a distribution's
+    keys to its function by name, so a function's parameters are exactly what a file may write.
+    """
+    rows = ["| " + " | ".join(SHAPE_HEADINGS) + " |", "|---|---|"]
+    for shape, percentile in mc.SHAPES.items():
+        keys = [name for name in inspect.signature(percentile).parameters if name != "u"]
+        rows.append(f"| `{shape}` | " + ", ".join(f"`{key}`" for key in keys) + " |")
+    return "\n".join(rows)
 
 
 #: How units combine: what is multiplied or divided, the unit the answer is read in, and what
@@ -1280,6 +2011,25 @@ def glossary_table(_name: str = "") -> str:
     return "\n".join(rows)
 
 
+#: The targets table's two headings.
+TARGETS_HEADINGS = ("DRAFT-PENDING 22a", "DRAFT-PENDING 22b")
+
+
+def targets_table(_name: str = "") -> str:
+    """The four targets a stamped result can declare, and what each one means.
+
+    Rendered from ``bench.stamp.TARGET_MEANING``, the source of truth, so the glossary cannot
+    say something the stamp no longer does. A table rather than the dict quoted as code: on a
+    phone a code block runs off the edge, and this is the only place the four are defined in one
+    list.
+    """
+    from bench.stamp import TARGET_MEANING
+
+    rows = [f"| {TARGETS_HEADINGS[0]} | {TARGETS_HEADINGS[1]} |", "|---|---|"]
+    rows += [f"| `{target}` | {meaning} |" for target, meaning in TARGET_MEANING.items()]
+    return "\n".join(rows)
+
+
 def formulas_table(_name: str | None, model_name: str) -> str:
     """Every formula in a model, in the file's order, with the chapter that introduced it.
 
@@ -1311,7 +2061,10 @@ def formulas_table(_name: str | None, model_name: str) -> str:
                 formula += f", keeping `{node.headroom_text}` below it"
         else:
             continue
-        row = f"| {node.display} (`{name}`) | {formula} | {unit_label(node.unit)} |"
+        # A ceiling is named as the graph names its box. It borrows the label of the quantity it
+        # watches, so without the prefix two rows read the same and a box in the graph has no row.
+        shown = f"limit on {node.display}" if isinstance(node, Ceiling) else node.display
+        row = f"| {shown} (`{name}`) | {formula} | {unit_label(node.unit)} |"
         if staged:
             chapter = BY_SLUG.get(introduced.get(name, ""))
             row += f" [{chapter.label}](#{chapter.anchor}) |" if chapter else " |"
@@ -1415,6 +2168,28 @@ def comparison_lines(name: str) -> str:
     return "\n".join(rows)
 
 
+#: The totals table's headings, and its two rows.
+TOTALS_HEADINGS = ("DRAFT-PENDING 28a", "DRAFT-PENDING 28b", "DRAFT-PENDING 28c")
+TOTALS_ROWS = (("incumbent", "DRAFT-PENDING 28d"), ("challenger", "DRAFT-PENDING 28e"))
+
+
+def comparison_totals(name: str) -> str:
+    """The two five-year totals, each on its own: the point and the middle nine in ten.
+
+    The two intervals nearly coincide, which is what the paired difference below them is set
+    against: two totals this wide, and a difference a fraction of either (ch22).
+    """
+    designs = load_result(name)["summary"]["designs"]
+    rows = ["| " + " | ".join(TOTALS_HEADINGS) + " |", "|---|---:|---:|"]
+    for key, label in TOTALS_ROWS:
+        total = designs[key]["tco"]
+        rows.append(
+            f"| {label} | {_money(total['point'])} "
+            f"| {_money(total['p5'])} to {_money(total['p95'])} |"
+        )
+    return "\n".join(rows)
+
+
 def comparison_paired(name: str) -> str:
     """The difference between the two totals, four ways, only one of which is honest.
 
@@ -1465,9 +2240,22 @@ def comparison_ceilings(name: str) -> str:
     return "\n".join(rows)
 
 
+#: What the break-even table says of a line the challenger's side carries that is not the
+#: vendor's, and of a shared input's tie against the values the model drew for it.
+ASSUMED_WHOSE = "DRAFT-PENDING 28f"
+ASSUMED_VERDICT = "DRAFT-PENDING 28g {change}"
+TIE_IN_DRAWS = "DRAFT-PENDING 28h"
+TIE_BELOW_DRAWS = "DRAFT-PENDING 28i"
+TIE_ABOVE_DRAWS = "DRAFT-PENDING 28j"
+
+
 def comparison_break_even(name: str) -> str:
     """Where the two totals tie, input by input, and whether that value is one to worry about."""
-    rows_in = load_result(name)["summary"]["break_even"]
+    summary = load_result(name)["summary"]
+    rows_in = summary["break_even"]
+    # Whose each line is comes from the challenger's quote, where the mark is: two of the lines a
+    # break-even moves on the challenger's side are not the vendor's (the move, the host count).
+    kinds = {row["input"]: row["provenance"] for row in summary["designs"]["challenger"]["quote"]}
     rows = [
         "| Input | Whose | As quoted, or at the point | The totals tie at | Verdict |",
         "|---|---|---:|---:|---|",
@@ -1483,16 +2271,26 @@ def comparison_break_even(name: str) -> str:
                 verdict = (
                     f"{row['from_quote']:+.1%} of an engineer's time, on the challenger's side"
                 )
+            elif row["whose"] == "challenger" and kinds.get(row["input"]) == "assumption":
+                verdict = ASSUMED_VERDICT.format(change=f"{row['from_quote']:+.1%}")
             elif row["whose"] == "challenger":
                 verdict = f"{row['from_quote']:+.1%} on the quote"
             elif row["in_swing"]:
                 verdict = "inside the middle eighty per cent of what it could be"
+            elif row.get("in_draws"):
+                verdict = TIE_IN_DRAWS
+            elif row.get("drawn_low") is not None and row["ties_at"] < row["drawn_low"]:
+                verdict = TIE_BELOW_DRAWS
+            elif row.get("drawn_high") is not None and row["ties_at"] > row["drawn_high"]:
+                verdict = TIE_ABOVE_DRAWS
             elif row["in_range"]:
                 verdict = "outside the middle eighty per cent, inside the range the model admits"
             else:
                 verdict = "outside the range the model admits"
         if row["input"] == "staff_fte":
             whose = "a claim about your people"
+        elif row["whose"] == "challenger" and kinds.get(row["input"]) == "assumption":
+            whose = ASSUMED_WHOSE
         elif row["whose"] == "challenger":
             whose = "the challenger's quote"
         else:

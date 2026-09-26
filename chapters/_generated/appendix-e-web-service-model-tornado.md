@@ -10,5 +10,6 @@
 | electricity price | input | $1,951,956 | $2,080,874 | $128,918 |
 | network price per host | input | $1,969,541 | $2,046,600 | $77,059 |
 | host power | input | $1,979,689 | $2,028,960 | $49,271 |
+| PUE | input | $1,987,942 | $2,020,882 | $32,940 |
 
 *Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*

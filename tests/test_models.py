@@ -251,11 +251,13 @@ def test_pinning_every_uncertain_input_leaves_no_interval():
     )
 
 
-def test_knowing_one_input_never_widens_the_interval():
-    """Removing uncertainty cannot add any, and the bound has to be a bound.
+def test_knowing_one_input_at_its_median_never_widens_the_total():
+    """Pinned at its median, no input widens the five-year total's interval.
 
-    Sampling noise means the two runs are not exactly ordered, so this allows the noise ch14
-    measures and nothing beyond it.
+    A claim about the middle of each band and about a total that is close to a sum. Pinned at the
+    high end of its band, an input that multiplies others can widen an interval, and ch19's
+    host-count table shows it. Sampling noise means the two runs are not exactly ordered, so this
+    allows the noise ch14 measures and nothing beyond it.
     """
     from bench.run_information import without_uncertainty
     from sizing import mc
@@ -269,8 +271,38 @@ def test_knowing_one_input_never_widens_the_interval():
             continue
         thinner = without_uncertainty(model, scenario, (name,))
         assert mc.half_width(evaluate(thinner, scenario).samples["tco"]) <= baseline * 1.01, (
-            f"knowing {name!r} exactly widened the interval, which is not a thing that can happen"
+            f"knowing {name!r} at its median widened the five-year total's interval by more than "
+            "sampling noise"
         )
+
+
+def _information(model: str, output: str) -> dict[str, dict]:
+    rows = load_result("value-of-information")["summary"]["rows"]
+    return {row["input"]: row for row in rows if row["model"] == model and row["output"] == output}
+
+
+def test_a_perfect_measurement_found_high_can_widen_the_host_count():
+    """ch19 names three inputs that, found at the high end of their band, leave the host count's
+    interval wider than it is now. If the stamped table stops showing that, the page is wrong."""
+    rows = _information("web_service", "hosts_recommended")
+    for name in ("peak_request_rate_t0", "hot_fraction", "service_demand"):
+        assert rows[name]["removed_high"] < -0.05, name
+
+
+def test_licence_per_core_removes_the_same_wherever_it_lands():
+    """ch19's example of an input that is only added: where the knowledge lands does not matter."""
+    row = _information("web_service", "tco")["licence_per_core"]
+    assert row["removed_low"] == pytest.approx(row["removed"], abs=0.01)
+    assert row["removed_high"] == pytest.approx(row["removed"], abs=0.01)
+
+
+def test_the_measured_constants_buy_nothing_wherever_they_land():
+    """ch19: pin a measured constant at either end of its band or its middle, and nothing moves."""
+    for model, output in (("web_service", "hosts_recommended"), ("observability", "known_stored")):
+        for name, row in _information(model, output).items():
+            if row["kind"] == "measured":
+                for key in ("removed_low", "removed", "removed_high"):
+                    assert abs(row[key]) < 0.01, (name, key)
 
 
 def test_a_three_way_max_leaves_its_third_argument_alone(tmp_path):
@@ -424,3 +456,23 @@ def test_what_the_fleet_costs_does_not_depend_on_what_it_holds():
         "the total would now follow the data, which means the fleet is being derived rather "
         "than decided -- the distinction `hosts` exists to make"
     )
+
+
+def test_the_two_stretches_of_the_knee_figure_are_the_same_curve():
+    """ch06 says the two panels of its second figure are one shape. They are only if the idle
+    share shrinks by the same factor across each, and the sweep has matching points in both."""
+    import numpy as np
+
+    summary = load_result("queueing-curve")["summary"]
+    smooth = summary["smooth"]
+    (a0, a1), (b0, b1) = summary["zoom"]
+    assert (1 - a0) / (1 - a1) == pytest.approx((1 - b0) / (1 - b1))
+
+    def shape(start, stop):
+        rows = [r for r in smooth if start - 1e-9 <= r["utilisation"] <= stop + 1e-9]
+        u = np.array([r["utilisation"] for r in rows])
+        v = np.array([r["inflation"] for r in rows])
+        return (u - start) / (stop - start), (v - v[0]) / (v[-1] - v[0])
+
+    (ua, va), (ub, vb) = shape(a0, a1), shape(b0, b1)
+    assert np.interp(ub, ua, va) == pytest.approx(vb, abs=1e-3)

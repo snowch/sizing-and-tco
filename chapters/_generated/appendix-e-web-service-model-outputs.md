@@ -16,7 +16,6 @@
 | disk fill at horizon | 0.670 | 0.213 to 2.12 |  |
 | fraction of the fleet doing nothing useful | 0.321 | 0.213 to 0.457 |  |
 | utilisation, counting coordination | 0.948 | 0.233 to 3.81 |  |
-| utilisation | 0.644 | 0.156 to 2.48 |  |
 | residence time | 0.0367 | 0.0128 to 0.857 | second |
 | time spent queueing | 0.0236 | 0.0021 to 0.839 | second |
 | requests in the system | 1,562 | 160 to 107,336 | request |

@@ -3,9 +3,9 @@
     python3 -m bench.run_postmortem            # run it and write the result
     python3 -m bench.run_postmortem --check    # re-run and fail if a published figure moved
 
-ch12 bought a fleet and ch13 reported how often it goes over the queueing knee at the busy hour,
-across the futures the model thinks are plausible. This runner asks the question somebody asks
-three years later, when one of those futures has happened:
+ch12 bought a fleet and ch13 reported how often the busy hour takes it over its queueing limit,
+across the futures the model thinks are plausible. This runner asks the question that follows at
+the model's horizon, when one of those futures has happened:
 
     **what went wrong, and could the model have told us?**
 
@@ -34,7 +34,7 @@ correlate with failure, and it will do so with a straight face.
 
 So the runner also does the experiment on a model that is *known* to be missing a term — the
 observability model's ingest total, which excludes traces because nobody has measured spans per
-request (ch20) — and records that the attribution confidently blames the inputs that are present.
+request (ch20) — and records that the attribution blames the inputs that are present.
 That is the honest bottom of the technique, and a post-mortem that does not know about it is a
 procedure for generating a culprit.
 """

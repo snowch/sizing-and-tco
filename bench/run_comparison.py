@@ -30,11 +30,11 @@ its figure, and the two totals contain the same lines.
 ## What would flip it
 
 The break-even table asks, for each line a quote could argue about: at what value would the two
-totals tie at the point estimate? And, for the inputs both designs share: is there any value in
-the range the model admits at which the ordering reverses? An input whose break-even lies outside
-that range cannot flip the comparison, and an input that dominates every other tornado in this
-book -- growth -- does not move the difference at all, because both fleets were bought before the
-growth arrived.
+totals tie at the point estimate? And, for the inputs both designs share: is there any value
+among those the model draws for it at which the ordering reverses? An input whose break-even lies
+below or above every value the model draws cannot flip the comparison. Growth does not move the
+difference at all: the host count is a decision each quote pins, so growth reaches neither total
+(ch19), and nothing downstream of the fleet can separate them.
 
 ## What it cannot see
 
@@ -279,7 +279,11 @@ def _tie_point(
     return at, tie, float(np.sign(slope))
 
 
-def break_evens(model: Model, incumbent: Scenario, challenger: Scenario) -> list[dict]:
+def break_evens(
+    model: Model, incumbent: Scenario, challenger: Scenario, drawn: dict[str, np.ndarray]
+) -> list[dict]:
+    """Where the totals tie, input by input. ``drawn`` is the shared inputs' sampled values, so
+    a tie can be set against every value the model drew for that input, not only its slider."""
     rows = []
     for name, whose in BREAK_EVENS:
         node = model.nodes[name]
@@ -287,6 +291,10 @@ def break_evens(model: Model, incumbent: Scenario, challenger: Scenario) -> list
         at, tie, direction = _tie_point(model, incumbent, challenger, name, whose)
         low, high = node.slider or (None, None)
         swing = swing_of(model, name) if whose == "shared" else None
+        values = drawn.get(name) if whose == "shared" else None
+        lowest, highest = (
+            (float(values.min()), float(values.max())) if values is not None else (None, None)
+        )
         rows.append(
             {
                 "input": name,
@@ -303,6 +311,12 @@ def break_evens(model: Model, incumbent: Scenario, challenger: Scenario) -> list
                 "from_quote": (tie - at) / at if tie is not None and at else None,
                 "in_range": tie is not None and low is not None and low <= tie <= high,
                 "in_swing": tie is not None and swing is not None and swing[0] <= tie <= swing[1],
+                # And inside the values the model drew for it. A tie inside the slider's range
+                # can still lie below the smallest value any future drew, which is a different
+                # claim: the model does not think that value plausible at all.
+                "in_draws": tie is not None and lowest is not None and lowest <= tie <= highest,
+                "drawn_low": lowest,
+                "drawn_high": highest,
                 "range_low": low,
                 "range_high": high,
                 "swing_low": swing[0] if swing else None,
@@ -357,7 +371,7 @@ def comparison(write: bool = True) -> dict:
         "challenger": design_summary(model, challenger, b),
     }
     lines = lines_of(model, incumbent, challenger)
-    evens = break_evens(model, incumbent, challenger)
+    evens = break_evens(model, incumbent, challenger, a.samples)
     bars = tornado_of_difference(model, incumbent, challenger)
 
     units: dict[str, str] = {

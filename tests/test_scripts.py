@@ -1465,3 +1465,29 @@ def test_the_review_lists_its_pages_without_a_browser():
         text=True,
     )
     assert unknown.returncode == 2 and "no-such-page" in unknown.stderr
+
+
+def test_a_drawing_shrunk_below_its_own_width_can_be_opened_at_it():
+    """A figure's text is sized for the width it was drawn at, and the column shrinks it.
+
+    On a phone a chart's labels came out at half their size, and a whole model's graph was
+    unreadable at every width. The drawing keeps the column's width in the page and gets the
+    same control a cut-off table gets, which opens it at the size it was drawn for.
+    """
+    build_site = site()
+    script = build_site.EXPAND
+    assert 'document.querySelectorAll("#main > .drawing")' in script
+    assert "svg.width.baseVal.value" in script, (
+        "a drawing never overflows its column; it has to be asked how wide it was drawn"
+    )
+    from bench.diagrams import TEXT
+
+    assert f"< natural * {9 / TEXT:g}" in script, (
+        "the control appears where the smallest text drops under nine pixels, which depends on "
+        "the smallest size a figure draws"
+    )
+    css = build_site.CSS
+    assert "html.model-open #main .expanded > .drawing > svg { max-width: none; }" in css
+    import inspect
+
+    assert 'class="drawing"' in inspect.getsource(renderer._image)

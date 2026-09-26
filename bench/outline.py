@@ -389,7 +389,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[5],
         "How do you find the error that no amount of sampling can see?",
         owes="The observability model's incomplete ingest total, and what it costs to believe it.",
-        consumes=("observability-reference",),
+        consumes=("observability-reference", "the-missing-node-fixture"),
         needs=("correlation_and_convergence", "which_input_is_the_answer"),
     ),
     Chapter(

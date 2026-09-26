@@ -1,6 +1,6 @@
 scenario: reference
 title: Reference (exercise fixture)
 because: "The fixture for problem 20.3. Nothing here is a measurement."
-samples: 40000
-seed: 4801
+samples: 100000
+seed: 20260916
 overrides: {}

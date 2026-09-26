@@ -925,6 +925,27 @@ document.addEventListener("DOMContentLoaded", () => {
     block.querySelector(".editable-bar").appendChild(button);
     wire(block, button);
   }
+  // A drawing is inlined at its own width and shrunk to the column, and its text shrinks with
+  // it: at a phone's width a chart's labels drop to half the size they were drawn at, and a
+  // model's whole graph is unreadable at any width. Open, it is drawn at the size it was made
+  // for, and the box scrolls. Only where the shrinking costs something: the smallest text a
+  // figure draws is ten units (`bench.diagrams.TEXT`), so a drawing kept to nine tenths of its
+  // width or more still reads at nine pixels, and a control on it would be noise.
+  const shrunk = (el) => {
+    const svg = el.querySelector("svg");
+    const natural = svg && svg.width.baseVal.value;
+    return !!natural && svg.getBoundingClientRect().width < natural * 0.9;
+  };
+  for (const el of document.querySelectorAll("#main > .drawing")) {
+    if (!shrunk(el)) continue;
+    const box = document.createElement("div");
+    box.className = "wide-block";
+    el.replaceWith(box);
+    const button = control();
+    box.appendChild(button);
+    box.appendChild(el);
+    wire(box, button);
+  }
   for (const el of document.querySelectorAll("#main > pre, #main > table, #main table")) {
     if (!squeezed(el)) continue;
     const box = document.createElement("div");
@@ -1524,6 +1545,9 @@ html.model-open #main .expanded > :is(iframe, pre, table) { flex: 1 1 auto; heig
 /* Expanded, the table is as wide as its content, so the box is what scrolls. Left a scroll box
    of its own, with nothing to scroll and `overscroll-behavior-x: contain`, the table kept a
    swipe that started on it: on a phone the columns past the edge could not be reached. */
+/* A drawing opens at the width it was drawn at, which is what its text was sized for. */
+html.model-open #main .expanded > .drawing { flex: none; width: max-content; margin: auto; }
+html.model-open #main .expanded > .drawing > svg { max-width: none; }
 html.model-open #main .expanded > table { width: max-content; overflow: visible;
           overscroll-behavior: auto; }
 /* Pinned to the window rather than to the box, which is now a scrolling one: laid out in the
