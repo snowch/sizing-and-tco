@@ -2,32 +2,32 @@
 
 | | Input | Provenance | Source |
 |---|---|---|---|
-| ○ | annual growth | assumption | ch04 — telemetry grows faster than the traffic it describes, because teams add instrumentation as well as load. Lognormal like any growth rate — it compounds and cannot go negative — and wider than the web service's for the same reason its median is higher |
-| ○ | metric names per host | assumption | distinct metric names exposed per host, before labels |
-| ○ | collector cores | assumption | the sizing decision for the ingest tier |
-| ◐ | collector throughput quoted | vendor claim | throughput per core as documented by the collector. Unverified here, and marked as a claim in every figure it appears in |
-| ○ | horizon | assumption | the planning horizon for this platform |
-| ○ | hosts | assumption | stated estate size (ch02) |
-| ○ | accidental label values | assumption | ch08 — the cardinality explosion, as a distribution rather than as a warning. Lognormal because this one has no ceiling: a label carrying a user id multiplies the series count by a number nobody chose, and a triangular would assert a maximum that does not exist |
-| ○ | label values endpoint | assumption | distinct routes appearing as a label value. Triangular because somebody could go and count them this afternoon; the maximum is the routes that exist today, and a new service adds to it |
-| ○ | label values status | assumption | distinct status classes kept as a label. Triangular, and the one input in this model whose bounds are genuinely hard: a request cannot carry a status the code does not emit |
-| ○ | lines per request | assumption | application log lines emitted per request served. Triangular, from reading a sample of the logs — and the maximum is the part to distrust, because a debug flag left on in production is outside it |
-| ○ | fraction of log lines kept | assumption | a control knob (ch12): drop and aggregation rules |
-| ○ | logs retention | assumption | a control knob (ch12) |
-| ○ | metrics retention | assumption | a control knob (ch12) |
-| ● | one sample per series | fact | definition |
-| ● | one year | fact | definition |
-| ○ | queries per second | assumption | dashboards, alert rules and people, at the busy hour. Triangular because two of those three are countable and the third is not |
-| ○ | query nodes | assumption | the sizing decision for the query tier |
-| ◐ | query scan rate quoted | vendor claim | series scanned per second per query node, quoted |
-| ○ | request rate | assumption | ch03 — the busy hour across the estate, not the daily mean. Triangular: a minimum, a likely and a maximum is the whole of what a dashboard gives you, and the maximum is the busiest hour anybody has looked at rather than the busiest one there will be |
-| ○ | scrape interval | assumption | a control knob (ch12): doubling it halves the metrics chain and loses resolution that cannot be recovered afterwards |
-| ○ | series per query, before labels | assumption | how many distinct metric-name-and-host combinations one dashboard panel or alert rule covers, before any label expansion. Triangular, and wide: dashboards differ from each other more than anything else in this model does |
-| ○ | storage price | assumption | all-in cost of a usable TB-month on this tier. Lognormal because it is a price — and carried across by hand from whichever storage tier's unit economics somebody had to hand, rather than by sampling, which is the seam ch18 is about |
-| ○ | store nodes | assumption | the sizing decision for the retention tier |
-| ○ | trace sampling rate | assumption | a control knob (ch12), and the one with the widest range: head sampling at 1% and at 100% are two different platforms |
-| ○ | traces retention | assumption | a control knob (ch12) |
-| ○ | usable tb per node | assumption | usable capacity per storage node after replication |
+| ○ | annual growth<br>`annual_growth` | assumption | ch04 — telemetry grows faster than the traffic it describes, because teams add instrumentation as well as load. Lognormal like any growth rate — it compounds and cannot go negative — and wider than the web service's for the same reason its median is higher |
+| ○ | metric names per host<br>`base_metrics_per_host` | assumption | distinct metric names exposed per host, before labels |
+| ○ | collector cores<br>`collector_cores` | assumption | the sizing decision for the ingest tier |
+| ◐ | collector throughput quoted<br>`collector_throughput_quoted` | vendor claim | throughput per core as documented by the collector. Unverified here, and marked as a claim in every figure it appears in |
+| ○ | horizon<br>`horizon` | assumption | the planning horizon for this platform |
+| ○ | hosts<br>`hosts` | assumption | the estate's host count as stated by its operators |
+| ○ | extra accidental label values<br>`label_values_accidental_extra` | assumption | ch08 — the cardinality explosion, as a band rather than as a warning. Lognormal because this one has no ceiling: a label carrying a user id multiplies the series count by a number nobody chose, and a triangular would assert a maximum that does not exist. Counted from the second value, so the factor it feeds is never below one. |
+| ○ | label values endpoint<br>`label_values_endpoint` | assumption | distinct routes appearing as a label value. Triangular because the routes can be counted, so the range is known; the maximum is the routes that exist today, and a new service adds to it |
+| ○ | label values status<br>`label_values_status` | assumption | distinct status classes kept as a label. Triangular, and its bounds are firm unlike those of any other input in the model, because a request cannot carry a status the code does not emit |
+| ○ | lines per request<br>`lines_per_request` | assumption | application log lines emitted per request served. Triangular, from reading a sample of the logs — and the maximum is the part to distrust, because a debug flag left on in production is outside it |
+| ○ | fraction of log lines kept<br>`log_keep_rate` | assumption | a control knob: drop and aggregation rules |
+| ○ | logs retention<br>`logs_retention` | assumption | a control knob |
+| ○ | metrics retention<br>`metrics_retention` | assumption | a control knob |
+| ● | one sample per series<br>`one_sample_per_series` | fact | definition |
+| ● | one year<br>`one_year` | fact | definition |
+| ○ | queries per second<br>`queries_per_second` | assumption | dashboards, alert rules and people, at the busy hour. Triangular because two of those three are countable and the third is not |
+| ○ | query nodes<br>`query_nodes` | assumption | the sizing decision for the query tier |
+| ◐ | query scan rate quoted<br>`query_scan_rate_quoted` | vendor claim | series scanned per second per query node, quoted |
+| ○ | request rate<br>`request_rate` | assumption | ch04 — the busy hour across the estate, not the daily mean. Triangular, because a dashboard gives a lowest, a typical and a highest value and nothing more. The maximum is the busiest hour on record, not the busiest there will be |
+| ○ | scrape interval<br>`scrape_interval` | assumption | a control knob: doubling it halves the metrics chain and loses resolution that cannot be recovered afterwards |
+| ○ | series per query, before labels<br>`series_per_query_base` | assumption | how many distinct metric-name-and-host combinations one dashboard panel or alert rule covers, before any label expansion. Triangular, and wide: dashboards differ from each other more than anything else in this model does |
+| ○ | storage price<br>`storage_price` | assumption | all-in cost of a usable TB-month on this tier. Lognormal because it is a price, and a price cannot go below zero. It was copied by hand from another model's unit economics, as a range, rather than passed across with that model's own spread. That seam between two models is ch18's subject |
+| ○ | store nodes<br>`store_nodes` | assumption | the sizing decision for the retention tier |
+| ○ | trace sampling rate<br>`trace_keep_rate` | assumption | a control knob, and the one with the widest range: head sampling at 1% and at 100% are two different platforms |
+| ○ | traces retention<br>`traces_retention` | assumption | a control knob |
+| ○ | usable tb per node<br>`usable_tb_per_node` | assumption | usable capacity per storage node after replication |
 | | **26 inputs** | | **2 fact, 2 vendor claim, 22 assumption** |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***

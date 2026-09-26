@@ -83,10 +83,12 @@ def test_it_finds_the_same_inputs(swings, output_at, published):
 def test_every_span_matches(swings, output_at, published):
     mine = dict(tornado(swings, output_at))
     for bar in published:
-        assert mine[bar["node"]] == pytest.approx(bar["span"], rel=1e-6), (
-            f"{bar['node']}: the book makes it {bar['span']:,.0f} and you make "
-            f"{mine[bar['node']]:,.0f}. Hold the input at each end of its band in turn, with "
-            "nothing else held, and take the distance between the two outputs."
+        yours = mine[bar["node"]]
+        assert yours == pytest.approx(bar["span"], rel=1e-6), (
+            f"{bar['node']}: you make it {yours:,.0f}, "
+            f"{'longer' if yours > bar['span'] else 'shorter'} than the book's bar. Hold the input "
+            "at each end of its band in turn, with nothing else held, and take the distance "
+            "between the two outputs. The point estimate is not one of the ends."
         )
 
 
@@ -94,7 +96,8 @@ def test_every_span_matches(swings, output_at, published):
 def test_it_is_sorted_longest_first(swings, output_at):
     spans = [span for _, span in tornado(swings, output_at)]
     assert spans == sorted(spans, reverse=True), (
-        "the ordering is the useful part - it answers 'what should I measure first'"
+        "the bars go longest first: sort by span, largest at the top. The order is what answers "
+        "'what should I measure first'."
     )
 
 

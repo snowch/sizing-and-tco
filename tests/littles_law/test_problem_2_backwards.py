@@ -23,6 +23,13 @@ def evaluated():
     )
 
 
+#: What both plain-number checks in test_it_works_on_numbers_somebody_could_actually_have say.
+ON_PLAIN_NUMBERS = (
+    "Your function should give the residence time that the in-flight count and arrival rate imply; "
+    "you can check your answer by running it forwards through the law again."
+)
+
+
 @pytest.mark.problem
 def test_the_round_trip_returns_what_it_started_with(evaluated):
     recovered = residence_from_observation(
@@ -37,8 +44,8 @@ def test_the_round_trip_returns_what_it_started_with(evaluated):
 @pytest.mark.problem
 def test_it_works_on_numbers_somebody_could_actually_have():
     """A connection gauge and a request counter, which is all anybody needs."""
-    assert residence_from_observation(90.0, 4500.0) == pytest.approx(0.02)
-    assert residence_from_observation(1.0, 1.0) == pytest.approx(1.0)
+    assert residence_from_observation(90.0, 4500.0) == pytest.approx(0.02), ON_PLAIN_NUMBERS
+    assert residence_from_observation(1.0, 1.0) == pytest.approx(1.0), ON_PLAIN_NUMBERS
 
 
 @pytest.mark.problem

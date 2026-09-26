@@ -1,0 +1,87 @@
+# Problem 1.3's Model C, written as a model file. An exercise fixture: Model A, plus Little's law
+# and the two limits the chapter describes. Nothing in it is measured.
+model: problem_1_3_c
+title: Model C (exercise fixture)
+
+nodes:
+  peak_rate:
+    kind: input
+    unit: request/second
+    label: peak requests per second
+    distribution: {triangular: {minimum: 3000.0, likely: 8000.0, maximum: 20000.0}}
+    provenance: {kind: assumption, source: "exercise fixture: a forecast"}
+
+  processor_time:
+    kind: input
+    unit: second * core / request
+    label: processor time per request
+    distribution: {triangular: {minimum: 0.0003, likely: 0.0005, maximum: 0.0009}}
+    provenance: {kind: assumption, source: "exercise fixture: an estimate nobody has measured"}
+
+  time_per_request:
+    kind: input
+    unit: second
+    label: time each request spends in the service
+    distribution: {triangular: {minimum: 0.002, likely: 0.005, maximum: 0.02}}
+    provenance: {kind: assumption, source: "exercise fixture"}
+
+  busy_cores:
+    kind: derived
+    unit: core
+    label: cores busy at the peak
+    formula: peak_rate * processor_time
+
+  in_flight:
+    kind: derived
+    unit: request
+    label: requests in flight (Little's law)
+    formula: peak_rate * time_per_request
+
+  cores_bought:
+    kind: input
+    unit: core
+    label: cores bought
+    value: 8
+    provenance: {kind: assumption, source: "exercise fixture"}
+
+  cores_per_host:
+    kind: input
+    unit: core
+    label: cores per host
+    value: 8
+    provenance: {kind: assumption, source: "exercise fixture"}
+
+  busy_share:
+    kind: derived
+    unit: dimensionless
+    label: share of the time the cores are busy
+    formula: busy_cores / cores_bought
+
+  queueing_knee:
+    kind: ceiling
+    unit: dimensionless
+    label: share of the time the cores are busy
+    of: busy_share
+    limit: 1
+    headroom: 0.25
+    because: "Response time climbs steeply once the cores are busy more than three-quarters of the time."
+
+  cores_that_scale:
+    kind: input
+    unit: core
+    label: cores one host can use before they contend
+    value: 32
+    provenance: {kind: assumption, source: "exercise fixture"}
+
+  core_contention:
+    kind: ceiling
+    unit: dimensionless
+    label: cores on one host, against the most that scale
+    of: cores_per_host / cores_that_scale
+    limit: 1
+    headroom: 0.1
+    because: "Beyond this a host gains less from each core it adds, because the cores contend."
+
+outputs:
+  - busy_cores
+  - in_flight

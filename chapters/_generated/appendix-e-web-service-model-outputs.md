@@ -4,7 +4,7 @@
 |---|---:|---:|---|
 | hosts the model recommends | 54 | 20 to 230 | host |
 | hosts in the fleet | 54 | *fixed* | host |
-| five-year total cost of ownership | $2,002,083 | $1,508,230 to $2,923,724 | USD |
+| total cost of ownership | $2,002,083 | $1,508,230 to $2,923,724 | USD |
 | cost per million requests | $1.82 | $0.55 to $5.98 | USD/megarequest |
 | cost per stored TB per month | $839.64 | $305.33 to $2,108 | USD / TB / month |
 | capex | $421,214 | $272,130 to $658,773 | USD |
@@ -16,7 +16,6 @@
 | disk fill at horizon | 0.670 | 0.213 to 2.12 |  |
 | fraction of the fleet doing nothing useful | 0.321 | 0.213 to 0.457 |  |
 | utilisation, counting coordination | 0.948 | 0.233 to 3.81 |  |
-| utilisation | 0.644 | 0.156 to 2.48 |  |
 | residence time | 0.0367 | 0.0128 to 0.857 | second |
 | time spent queueing | 0.0236 | 0.0021 to 0.839 | second |
 | requests in the system | 1,562 | 160 to 107,336 | request |
@@ -24,4 +23,4 @@
 | how much the queueing view understated it | 1.47 | 1.27 to 1.84 |  |
 | fraction of the peak already built | 0.328 | 0.186 to 0.584 |  |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

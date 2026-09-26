@@ -52,6 +52,7 @@ models:  ## Evaluate and sample every model, and stamp what each one said
 	$(PYTHON) -m bench.run_models
 	$(PYTHON) -m bench.run_uncertainty
 	$(PYTHON) -m bench.run_curves
+	$(PYTHON) -m bench.run_missing_node
 	@echo
 	@echo "Now re-render and commit:"
 	@echo "  $(PYTHON) scripts/render-figures.py && git add bench/results chapters/_generated chapters/_figures"
@@ -67,6 +68,10 @@ comparison:  ## Subtract two quotes for one workload, future by future (ch22)
 .PHONY: postmortem
 postmortem:  ## Attribute the running example's own failures (ch23)
 	$(PYTHON) -m bench.run_postmortem
+
+.PHONY: missing-node
+missing-node:  ## The problem 20.3 model file beside the invoice it cannot reach (ch20)
+	$(PYTHON) -m bench.run_missing_node
 
 .PHONY: verify
 verify:  ## Units, provenance, ceilings and shape, for every model
@@ -100,6 +105,12 @@ book:  ## Build the site and serve it at localhost:3000 (re-run to pick up an ed
 	@echo '  An edit needs "make book" again; the whole build takes about three seconds.'
 	@echo
 	@cd _build/html && $(PYTHON) -m http.server 3000
+
+.PHONY: review
+review:  ## Walk every published page in a browser at five widths, press everything, and report
+	@echo '  ARGS passes options, for instance ARGS="--base http://localhost:3000/ --only point-estimates".'
+	@echo '  The report is the mechanical half of a review, and says at its top what it cannot see.'
+	$(PYTHON) scripts/review-pages.py $(ARGS)
 
 .PHONY: chapter
 chapter:  ## Regenerate any missing chapter stubs (never touches written prose)

@@ -1,10 +1,8 @@
 # Problem 14.2 - one entry for a model's `correlations:` block, in the file's own form.
 #
-# The test starts from the web service model with every correlation taken out, adds this entry,
-# and checks three things: the interval on capital widens, neither price's own distribution
-# moves, and the rank correlation that comes out is the one declared here. Two fields are empty.
-# Declare a rank correlation of at least a half, since the section says why a weak one barely
-# shows, and say why the two move together: the chapter calls the reason the required column.
+# Two fields are empty. `rho` is the rank correlation between the two prices, above
+# zero and below one. `because` says why they move together. The build refuses a
+# correlation without a reason.
 - a: host_price
   b: network_price_per_host
   rho:

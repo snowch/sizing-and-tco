@@ -44,11 +44,11 @@ from sizing.dsl import (  # noqa: F401
     Scenario,
     load_scenario,
 )
-from sizing.units import UNITS, compatible, dimensionality
+from sizing.units import UNITS, compatible, described
 from sizing.units import parse as parse_unit
 
 #: The percentiles a tornado swings an input between. Wide enough to matter, narrow enough that
-#: the input is still plausibly there — ch18 argues about the choice, which is a real argument.
+#: the input is still plausibly there.
 TORNADO_LOW, TORNADO_HIGH = 0.1, 0.9
 
 
@@ -153,17 +153,18 @@ UNIT_FUNCTIONS = {
 def plausible_magnitudes(model: Model) -> dict[str, float]:
     """A realistic number for every node, to do the dimensional pass with.
 
-    Not cosmetic. Checking units by evaluating each formula at magnitude 1 looks reasonable and
-    is wrong in a way this model caught immediately: ``node_raw_capacity * (1 - capacity_headroom)``
-    becomes a division by zero, and the unit checker reports a dimensional error in a formula
-    whose dimensions are fine. The arithmetic has to be done on numbers that are not all the
-    same number.
+    Not cosmetic. Pint finds a formula's unit by doing its arithmetic, so every node needs a
+    number. The number one for every node looks reasonable and is wrong. The web service model's
+    ``hosts_for_storage`` is ``ceil(raw_data / (disk_per_host * (1 - disk_margin)))``. With every
+    node at one, ``1 - disk_margin`` is zero, the divisor is zero, and the check reports a unit
+    error in a formula whose units are fine. So the arithmetic has to be done on numbers that are
+    not all the same number.
 
-    So each node gets its real value where one can be computed — that is what the numbers *are*,
-    and they can never be degenerate in a way the model itself is not. A node downstream of a
-    constant nobody has measured gets 1.0, and if that makes its formula undefined it is retried
-    at a value that cancels nothing. A node that still cannot be evaluated is reported by
-    :func:`check_units` for what it is, rather than as a units problem it is not.
+    So each node gets its real value where one can be worked out, and those numbers cannot be
+    degenerate in a way the model itself is not. Measured constants with no value and inputs with
+    no point value each get 1.0, and a formula downstream is worked out from that 1.0. If working
+    out a formula fails, the node is given a value that cancels nothing. If a node still cannot be
+    evaluated, :func:`check_units` reports it for what it is, not as a units problem.
     """
     magnitudes: dict[str, float] = {}
     for name in model.order:
@@ -180,7 +181,8 @@ def plausible_magnitudes(model: Model) -> dict[str, float]:
                 magnitudes[name] = float(_walk(node.of, magnitudes, SCALAR_FUNCTIONS))
         except Exception:
             # 0.37 rather than 1.0 or 0: it cancels nothing, it keeps `1 - x` positive, and it
-            # leaves a logarithm defined. Only reached downstream of an unmeasured constant.
+            # leaves a logarithm defined. Reached when a node's formula cannot be evaluated on the
+            # numbers above it, such as the 1.0 given to an unmeasured constant.
             magnitudes[name] = 0.37
     return magnitudes
 
@@ -243,9 +245,9 @@ def check_units(model: Model) -> tuple[list[str], dict[str, float]]:
             produced_unit = str(_units_of(produced))
             if not compatible(produced_unit, wanted):
                 problems.append(
-                    f"{model.name}: node {name!r}{suffix} declares {wanted!r} "
-                    f"[{dimensionality(wanted)}] but `{text}` produces {produced_unit!r} "
-                    f"[{dimensionality(produced_unit)}]"
+                    f"{model.name}: node {name!r}{suffix} declares {wanted!r}, "
+                    f"{described(wanted)}, but `{text}` produces {produced_unit!r}, "
+                    f"{described(produced_unit)}"
                 )
                 continue
             factor = float(UNITS.Quantity(1.0, produced_unit).to(wanted).magnitude)
@@ -580,7 +582,7 @@ def swing_of(model: Model, name: str) -> tuple[float, float] | None:
 def tornado(model: Model, scenario: Scenario, output: str) -> list[dict]:
     """How far one output moves when each uncertain input is swung on its own.
 
-    One at a time, everything else held at its point value. That is a real limitation and ch18
+    One at a time, everything else held at its point value. That is a real limitation and ch19
     names it: an input whose effect only shows up in combination with another gets a short bar
     here and can still be the thing that sinks you. A tornado says which input is worth going and
     *measuring*; the sampled interval says what the model currently believes.

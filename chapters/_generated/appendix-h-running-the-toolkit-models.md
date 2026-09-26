@@ -8,4 +8,4 @@
 | `ceiling` | 6 | a limit, a declared headroom, and a reason |
 | | | **classified as a conditional model** — it has measured constants or ceilings in it, so sampling the inputs is not sufficient on its own |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

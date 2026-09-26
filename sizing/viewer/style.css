@@ -17,6 +17,9 @@
   --ok-wash: #e6f4e7; --warn-wash: #fdf0dc; --over-wash: #fbe3e1;
   --stale-wash: #fdf6ea; --blocked-wash: #fdeeed;
   --hist: #9fc0dd;
+  /* The bar on an input somebody chose: one colour whatever the box's border, as in the book's
+     static graphs (bench.diagrams.DECIDED_BAR and its dark counterpart). */
+  --decided: #455a64;
 }
 /* A status colour is also the text of its badge, so each one has to clear 4.5:1 against
  * its own wash as well as the page: `ok` on `ok-wash`, `warn` on `warn-wash`, `over` on
@@ -39,6 +42,7 @@
     --ok-wash: #1c2a1d; --warn-wash: #2e2515; --over-wash: #2e1a19;
     --stale-wash: #2a2317; --blocked-wash: #2e1c1b;
     --hist: #4d7ea8;
+    --decided: #b3c1c9;
   }
 }
 * { box-sizing: border-box; }
@@ -124,7 +128,10 @@ code { font: 12px/1.4 ui-monospace, "SF Mono", Menlo, monospace; background: var
 /* A shadow, not a border: the swatch's inline border would override a border-left, and did,
    so the key showed "you decide" identical to "input". Inset, it sits inside the outline the way
    the graph's bar does. */
-.legend i.decision { box-shadow: inset 3px 0 0 var(--input-edge); }
+.legend i.decision { box-shadow: inset 3px 0 0 var(--decided); }
+/* The tables' ◐ for a vendor's claim: a ring, its left half filled. */
+.legend i.vendor { width: 9px; height: 9px; border-radius: 50%; border: 1.2px solid var(--ink);
+                   background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
 
 /* -- resampling ------------------------------------------------------------------ */
 button.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); margin: 8px 0 4px; display: block; }

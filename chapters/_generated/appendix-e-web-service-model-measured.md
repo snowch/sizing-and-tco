@@ -2,6 +2,6 @@
 
 | Constant | Value | Standard error | Unit | Measured against |
 |---|---:|---:|---|---|
-| record compression ratio | 3.58 | ± 0.0009 |  | python zlib (DEFLATE level 6) |
+| record compression ratio<br>`record_compression` | 3.58 | ± 0.0009 |  | python zlib (DEFLATE level 6) |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`records-compression`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/records-compression.json) · `bench.measure.application_records` — JSON user profiles, orders and events in a 20/50/30 mixture, 128-bit identifiers, seeds 0-7 · python zlib (DEFLATE level 6)*

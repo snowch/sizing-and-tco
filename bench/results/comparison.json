@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "19a6cf0c20fa2bba",
+  "code_fingerprint": "22947435308f062c",
   "code_sources": [
     "bench/run_comparison.py"
   ],
@@ -10,8 +10,8 @@
     "shared_futures": "both scenarios pin the same inputs and share a seed, so every input neither quote fixes is drawn once and reaches both designs. The runner checks the shared columns are identical before subtracting",
     "the_move_is_an_estimate": "migration_cost on the challenger's side is the team's own figure, marked as an assumption; the incumbent's is a declared zero"
   },
-  "generated_at": "2026-09-21T02:56:43+00:00",
-  "git_revision": "2110500",
+  "generated_at": "2026-09-26T21:36:54+00:00",
+  "git_revision": "39f1b8b",
   "kind": "measurement",
   "name": "comparison",
   "produced_by": {
@@ -24,7 +24,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -34,7 +34,10 @@
     "break_even": [
       {
         "at": 250000.0,
+        "drawn_high": null,
+        "drawn_low": null,
         "from_quote": 0.04288881762768421,
+        "in_draws": false,
         "in_range": true,
         "in_swing": false,
         "input": "migration_cost",
@@ -50,7 +53,10 @@
       },
       {
         "at": 26000.0,
+        "drawn_high": null,
+        "drawn_low": null,
         "from_quote": 0.0178524881900118,
+        "in_draws": false,
         "in_range": false,
         "in_swing": false,
         "input": "host_price",
@@ -66,7 +72,10 @@
       },
       {
         "at": 2600.0,
+        "drawn_high": null,
+        "drawn_low": null,
         "from_quote": 0.05891321102703877,
+        "in_draws": false,
         "in_range": true,
         "in_swing": false,
         "input": "licence_per_host",
@@ -82,7 +91,10 @@
       },
       {
         "at": 14.0,
+        "drawn_high": null,
+        "drawn_low": null,
         "from_quote": 0.012016385051041618,
+        "in_draws": false,
         "in_range": true,
         "in_swing": false,
         "input": "hosts",
@@ -98,7 +110,10 @@
       },
       {
         "at": 1.1339745962155614,
+        "drawn_high": null,
+        "drawn_low": null,
         "from_quote": 0.01262828942112898,
+        "in_draws": false,
         "in_range": false,
         "in_swing": false,
         "input": "staff_fte",
@@ -114,7 +129,10 @@
       },
       {
         "at": 0.13360389215887386,
+        "drawn_high": 0.5398766225835808,
+        "drawn_low": 0.029906038084558925,
         "from_quote": -0.1873084341611693,
+        "in_draws": true,
         "in_range": true,
         "in_swing": true,
         "input": "electricity_price",
@@ -130,7 +148,10 @@
       },
       {
         "at": 1.4035898384862247,
+        "drawn_high": 1.7493045520150798,
+        "drawn_low": 1.152021629024572,
         "from_quote": -0.18730843416117113,
+        "in_draws": false,
         "in_range": true,
         "in_swing": false,
         "input": "pue",
@@ -146,7 +167,10 @@
       },
       {
         "at": 1261.9168480353142,
+        "drawn_high": 2196.6213547108855,
+        "drawn_low": 604.591537357549,
         "from_quote": -0.13541313362136784,
+        "in_draws": true,
         "in_range": false,
         "in_swing": true,
         "input": "network_price_per_host",
@@ -162,7 +186,10 @@
       },
       {
         "at": 1.338656042454521,
+        "drawn_high": 2.44161464415631,
+        "drawn_low": 0.696133279098424,
         "from_quote": null,
+        "in_draws": false,
         "in_range": false,
         "in_swing": false,
         "input": "annual_growth",

@@ -2,9 +2,9 @@
 
 | Ceiling | At the plan | Headroom | Allowed | Limit | Verdict | Over allowed | Over limit |
 |---|---:|---:|---:|---:|---|---:|---:|
-| ingest utilisation, measured | *not yet measured* |  |  |  |  |  |  |
-| query path utilisation | 0.57 | 40% | 0.60 | 1.00 | ok | 43% | 28% |
-| ingest utilisation, quoted | 0.51 | 40% | 0.60 | 1.00 | ok | 44% | 21% |
-| retention store fill | 0.58 | 30% | 0.70 | 1.00 | ok | 45% | 30% |
+| working set against memory | 0.75 | 25% | 0.75 | 1.00 | ok | 49% | 35% |
+| utilisation, counting coordination | 0.95 | 30% | 0.70 | 1.00 | into the margin | 64% | 48% |
+| utilisation at the busy hour | 0.64 | 30% | 0.70 | 1.00 | ok | 46% | 29% |
+| fraction of the fleet doing nothing useful | 0.32 | 50% | 0.50 | 1.00 | ok | 1% | 0% |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`web_service_regime-reference`](/models/web_service_regime-reference.html) · the model to explore; each input with a range has a slider*

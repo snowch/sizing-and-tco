@@ -2,10 +2,10 @@
 
 | Node kind | Count | What it carries |
 |---|---:|---|
-| `input` | 26 | a value or a distribution, a provenance kind and a source |
-| `derived` | 23 | a formula, whose declared unit is checked against what it produces |
-| `measured` | 5 | a stamped result, a standard error, and the implementation it belongs to |
-| `ceiling` | 4 | a limit, a declared headroom, and a reason |
+| `input` | 37 | a value or a distribution, a provenance kind and a source |
+| `derived` | 51 | a formula, whose declared unit is checked against what it produces |
+| `measured` | 1 | a stamped result, a standard error, and the implementation it belongs to |
+| `ceiling` | 6 | a limit, a declared headroom, and a reason |
 | | | **classified as a conditional model** — it has measured constants or ceilings in it, so sampling the inputs is not sufficient on its own |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

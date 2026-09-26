@@ -48,7 +48,10 @@ def test_it_typechecks(written):
 @pytest.mark.problem
 def test_it_evaluates(written):
     values = point(load_model(written))
-    assert len(values) == 2 and all(isinstance(v, float) for v in values.values())
+    assert len(values) == 2 and all(isinstance(v, float) for v in values.values()), (
+        "The model must evaluate to exactly two numbers (one input, one derived node), not more or "
+        "fewer."
+    )
 
 
 @pytest.mark.problem

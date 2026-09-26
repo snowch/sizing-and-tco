@@ -14,4 +14,4 @@
 | one-off cost of moving to this design | ○ $0, declared | ○ $250,000 |
 | | ● traceable to a stamped measurement, an invoice or a published specification · ◐ stated by someone selling it; plausible, unverified, and never promoted · ○ a decision this model makes, which a reviewer may disagree with | |
 
-*Source — [`comparison`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/comparison.json) and [`web_service-incumbent`](/models/web_service-incumbent.html) and [`web_service-challenger`](/models/web_service-challenger.html) · sizing.evaluate*
+*Source — [`comparison`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/comparison.json) and [`web_service-incumbent`](/models/web_service-incumbent.html) and [`web_service-challenger`](/models/web_service-challenger.html) · `sizing.evaluate`*

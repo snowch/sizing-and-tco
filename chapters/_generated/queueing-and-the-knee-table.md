@@ -17,4 +17,4 @@
 | 95% | 248.4 ms | 261.4 ms | 16,416 | 20.0x |
 | 97% | 422.7 ms | 435.7 ms | 27,936 | 33.3x |
 
-*Source — [`queueing-curve`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/queueing-curve.json) · sizing.evaluate*
+*Source — [`queueing-curve`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/queueing-curve.json) · `sizing.evaluate`*

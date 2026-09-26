@@ -2,18 +2,18 @@
 
 | | |
 |---|---:|
-| The request rate decides the host count | 36% of samples |
-| The working set decides it | 42% of samples |
-| The data on disk decides it | 19% of samples |
-| Two chains ask for the same count | 3% of samples |
-| Sized on the request chain alone, too small | 62% of samples |
-| Sized on the memory chain alone, too small | 56% of samples |
-| Sized on the disk chain alone, too small | 79% of samples |
+| The request rate decides the host count | 36% of futures |
+| The working set decides it | 42% of futures |
+| The data on disk decides it | 19% of futures |
+| Two chains ask for the same count | 3% of futures |
+| Sized on the request chain alone, too small | 62% of futures |
+| Sized on the memory chain alone, too small | 56% of futures |
+| Sized on the disk chain alone, too small | 79% of futures |
 | Median gap between the winner and the runner-up | 14 hosts |
-| Gap at the 95th percentile | 81 hosts |
+| Gap exceeded in one future in twenty | 81 hosts |
 | Median of the request chain alone | 50 hosts |
 | Median of the memory chain alone | 53 hosts |
 | Median of the disk chain alone | 49 hosts |
 | Median of the largest of the three | 68 hosts |
 
-*Source — [`binding-constraint`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/binding-constraint.json) · sizing.evaluate*
+*Source — [`binding-constraint`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/binding-constraint.json) · `sizing.evaluate`*

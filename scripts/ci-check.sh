@@ -10,6 +10,7 @@
 # rather than a preview of one that could only be built by a runner with a template registry in
 # reach. What it cannot check is what only a reader's browser can answer: whether Python starts
 # in their tab, and what a page looks like.
+# `make review` asks a browser those questions, outside CI because it needs the network.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -108,8 +109,8 @@ echo "== the sampler still behaves the way ch13 says it does =="
 python3 -m bench.run_uncertainty --check
 
 echo "== what a measurement would buy is still what the book says it would =="
-# ch18's ceiling on every measurement anybody could commission. Re-derived rather than trusted,
-# for the same reason as everything else here: it is a claim about what this book's models say.
+# ch19: what knowing each input exactly would remove, at three places in its band. Re-derived
+# rather than trusted: it is a claim about what this book's models say.
 python3 -m bench.run_information --check
 
 echo "== the two quotes still differ by what the book says they differ by =="
@@ -119,8 +120,13 @@ python3 -m bench.run_comparison --check
 
 echo "== the post-mortem still attributes what the book says it attributes =="
 # ch23, and the half of it that matters: the same method on a model with a known hole in it,
-# which has to keep confidently blaming the inputs that are present.
+# which has to keep blaming the inputs that are present.
 python3 -m bench.run_postmortem --check
+
+echo "== the problem 20.3 model still misses the invoice the way ch20 says =="
+# ch20's hard case, re-derived rather than trusted: the exercise file's interval beside the
+# invented invoice average read from the test that grades against it.
+python3 -m bench.run_missing_node --check
 
 echo "== the curves Part II argues about still have the shape it claims =="
 # A shape asserted in prose is a claim; a shape swept out of the model the chapter is about is

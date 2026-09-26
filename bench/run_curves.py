@@ -15,6 +15,7 @@ through a surface, and the surface is not flat.
 from __future__ import annotations
 
 import argparse
+import math
 import sys
 from dataclasses import replace
 
@@ -33,6 +34,17 @@ REFERENCE = "models/web_service/scenarios/reference.yaml"
 #: is the last tenth of it, and an evenly spaced sweep spends most of its points on the flat part
 #: where nothing happens.
 UTILISATIONS = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.93, 0.95, 0.97)
+
+#: The same sweep, dense, for drawing. A line through fourteen points has corners the formula
+#: does not have, and ch06 says the curve has none. Stops at the table's last row, below the
+#: model's cap, so the clamp never enters it; starts one step above idle, because the full model
+#: divides by the request rate downstream and cannot be evaluated at none.
+SMOOTH = tuple(round(0.005 * i, 3) for i in range(1, 195))
+
+#: The two stretches ch06 draws side by side. Across each, the idle share of the fleet shrinks by
+#: the same factor, which is the one sense in which this curve looks the same at every scale; the
+#: chapter's second figure shows it, and tests/test_models.py holds the two to one shape.
+ZOOM = ((0.2, 0.8), (0.8, 0.95))
 
 #: Host counts for the scaling sweep, well past the peak so that the turn is visible rather than
 #: inferred. A curve cut off before it turns over is a curve that looks like it never does.
@@ -89,6 +101,21 @@ def queueing_curve(write: bool = True) -> dict:
                 "inflation": values["residence_time"] / values["service_seconds"],
             }
         )
+    # The same sweep, dense, keeping only what the drawing needs.
+    smooth = []
+    for target in SMOOTH:
+        arrivals = target * cores / per_request
+        forced = replace(
+            scenario, overrides={**scenario.overrides, "peak_request_rate_t0": arrivals / growth}
+        )
+        values = point(model, forced, factors)
+        smooth.append(
+            {
+                "utilisation": values["utilisation"],
+                "inflation": values["residence_time"] / values["service_seconds"],
+            }
+        )
+    assert math.isclose((1 - ZOOM[0][0]) / (1 - ZOOM[0][1]), (1 - ZOOM[1][0]) / (1 - ZOOM[1][1]))
     return build_result(
         "queueing-curve",
         target="model",
@@ -100,7 +127,15 @@ def queueing_curve(write: bool = True) -> dict:
             "else held still",
             "stack": "sizing.evaluate",
         },
-        summary={"curve": rows, "utilisations": list(UTILISATIONS)},
+        summary={
+            "curve": rows,
+            "utilisations": list(UTILISATIONS),
+            "smooth": smooth,
+            "zoom": [list(stretch) for stretch in ZOOM],
+            # The input the utilisation ceiling takes its headroom from, at the reference point:
+            # the figure's dashed line is the ceilings table's *Allowed*, and moves with it.
+            "queueing_margin": base["queueing_margin"],
+        },
         units={
             "curve": "second",
             "curve[0].utilisation": "dimensionless",
@@ -108,6 +143,9 @@ def queueing_curve(write: bool = True) -> dict:
             "curve[0].concurrency": "request",
             "curve[0].inflation": "dimensionless",
             "utilisations": "dimensionless",
+            "smooth": "dimensionless",
+            "zoom": "dimensionless",
+            "queueing_margin": "dimensionless",
         },
         conditions={
             "one_slice": "the request rate moves and nothing else does. A service whose demand "
@@ -115,6 +153,9 @@ def queueing_curve(write: bool = True) -> dict:
             "than this one",
             "the_cap": "the model clamps utilisation before it divides by zero; past that point "
             "the formula has stopped describing a queue",
+            "one_server": "the formula is the result for one server with one queue, applied to "
+            "the whole fleet. Many cores sharing one stream of requests wait less than this at the "
+            "same utilisation",
         },
         code_sources=SOURCES,
         write=write,
@@ -136,7 +177,7 @@ def scaling_curve(write: bool = True) -> dict:
                 "achievable_throughput": values["achievable_throughput"],
                 "linear_throughput": values["linear_throughput"],
                 "scaling_efficiency": values["scaling_efficiency"],
-                # What the last batch of machines actually bought, per machine.
+                # The fleet's throughput per machine: an average, not what the last machine added.
                 "throughput_per_host": values["achievable_throughput"] / count,
             }
         )
@@ -181,10 +222,10 @@ def scaling_curve(write: bool = True) -> dict:
 def binding_constraint(write: bool = True) -> dict:
     """How often each of the web service's three chains decides the answer.
 
-    ch10's whole subject, as a count rather than a claim. Three independent chains each produce
-    a host count and you buy the largest, so across the model's uncertainty the answer is
-    sometimes set by the request rate, sometimes by the working set and sometimes by the data on
-    disk - and an average of the three would satisfy none of them.
+    ch10's whole subject, as a count rather than a claim. Three chains each produce a host count
+    and you buy the largest, so across the model's uncertainty the answer is sometimes set by the
+    request rate, sometimes by the working set and sometimes by the data on disk - and an average
+    of the three falls short of the largest whenever the three differ.
     """
     model = load_model(WEB_SERVICE)
     evaluation = evaluate(model, load_scenario(REFERENCE))
@@ -203,6 +244,13 @@ def binding_constraint(write: bool = True) -> dict:
     # And the other way round: size on one chain alone, and how often is the fleet too small.
     short = {
         name: float(np.mean(np.delete(stacked, index, axis=0).max(axis=0) > drawn))
+        for index, (name, drawn) in enumerate(chains.items())
+    }
+    # How far short, counted over every future, zeros included. ch10 shows the median and the
+    # average of these for the usual winner, to say which summary makes a shortfall look small.
+    # The median over the short futures alone is problem 10.2's answer and is never stamped.
+    shortfall = {
+        name: np.clip(np.delete(stacked, index, axis=0).max(axis=0) - drawn, 0.0, None)
         for index, (name, drawn) in enumerate(chains.items())
     }
     ordered = np.sort(stacked, axis=0)
@@ -225,6 +273,12 @@ def binding_constraint(write: bool = True) -> dict:
             "short_if_requests": short["requests"],
             "short_if_memory": short["memory"],
             "short_if_storage": short["storage"],
+            "shortfall_median_all_if_requests": float(np.median(shortfall["requests"])),
+            "shortfall_median_all_if_memory": float(np.median(shortfall["memory"])),
+            "shortfall_median_all_if_storage": float(np.median(shortfall["storage"])),
+            "shortfall_mean_all_if_requests": float(np.mean(shortfall["requests"])),
+            "shortfall_mean_all_if_memory": float(np.mean(shortfall["memory"])),
+            "shortfall_mean_all_if_storage": float(np.mean(shortfall["storage"])),
             "median_gap": float(np.median(gap)),
             "p95_gap": float(np.percentile(gap, 95)),
             # How wrong you would be to size on any one chain and forget the others - and how
@@ -243,6 +297,12 @@ def binding_constraint(write: bool = True) -> dict:
             "short_if_requests": "dimensionless",
             "short_if_memory": "dimensionless",
             "short_if_storage": "dimensionless",
+            "shortfall_median_all_if_requests": "host",
+            "shortfall_median_all_if_memory": "host",
+            "shortfall_median_all_if_storage": "host",
+            "shortfall_mean_all_if_requests": "host",
+            "shortfall_mean_all_if_memory": "host",
+            "shortfall_mean_all_if_storage": "host",
             "median_gap": "host",
             "p95_gap": "host",
             "median_requests_hosts": "host",

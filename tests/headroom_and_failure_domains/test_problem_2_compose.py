@@ -23,40 +23,59 @@ def expected(margins: list[float]) -> float:
     return 1.0 - math.prod(1.0 - m for m in margins)
 
 
+def agrees(got: float, want: float) -> bool:
+    """Compared outside the assertion, so a failure never prints the value the test wanted."""
+    return math.isclose(got, want, rel_tol=1e-12, abs_tol=1e-12)
+
+
+#: What both checks in test_it_never_leaves_a_negative_system say.
+LESS_THAN_THE_WHOLE = (
+    "Three margins together keep less than the whole system free, not equal to or more than it."
+)
+
+
 @pytest.mark.problem
 @pytest.mark.parametrize("margins", CASES)
 def test_they_compose_multiplicatively(margins):
-    assert compose(margins) == pytest.approx(expected(margins), rel=1e-12), (
-        "each margin takes its share of what the previous one left, not of the original"
+    got, kept_free = compose(margins), expected(margins)
+    right = agrees(got, kept_free)
+    what_is_left = agrees(got, 1.0 - kept_free)
+    assert right or not what_is_left, (
+        "that is the share of the system still working. compose() returns the other share: "
+        "the part the margins keep free between them."
     )
+    assert right, "each margin takes its share of what the previous one left, not of the original"
 
 
 @pytest.mark.problem
 def test_no_margins_is_no_margin():
-    assert compose([]) == pytest.approx(0.0)
+    assert compose([]) == pytest.approx(0.0), "With no margins, no capacity is kept free."
 
 
 @pytest.mark.problem
 def test_it_never_leaves_a_negative_system():
     """Adding three margins of ninety per cent would. That is the clue the problem mentions."""
-    assert compose([0.3, 0.3, 0.3]) < 1.0
-    assert compose([0.9, 0.9, 0.9]) < 1.0
+    assert compose([0.3, 0.3, 0.3]) < 1.0, LESS_THAN_THE_WHOLE
+    assert compose([0.9, 0.9, 0.9]) < 1.0, LESS_THAN_THE_WHOLE
 
 
 @pytest.mark.problem
 def test_the_composed_margin_is_less_than_the_sum():
-    """For small margins, which is the case everybody is actually in."""
+    """Adding over-reserves, even for the small margins a sizing meeting grants."""
     margins = [0.25, 0.30, 0.20]
-    assert compose(margins) < sum(margins)
+    assert compose(margins) < sum(margins), (
+        "Three margins compose to less than their sum, not equal to or more."
+    )
 
 
 @pytest.mark.problem
 def test_three_reasonable_requests_take_most_of_the_system():
-    """The point of the problem, and the reason a sizing meeting ends where it does."""
+    """Composed correctly, three modest margins still keep more than half the fleet free."""
     left = 1.0 - compose([0.25, 0.30, 0.20])
     assert left < 0.45, (
-        f"three separately reasonable margins leave {left:.0%} of the fleet doing the work it "
-        "was bought for. Each request was defensible; nobody in the room multiplied them."
+        f"your compose() leaves {left:.0%} of the fleet working after these three margins. "
+        "Taken one after another, each from what the last one left, three separately "
+        "reasonable margins leave less than half the fleet doing the work it was bought for."
     )
 
 

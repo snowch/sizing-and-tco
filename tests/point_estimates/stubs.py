@@ -1,6 +1,8 @@
 """Chapter 1's problems. Edit this file; the tests beside it say whether you are right.
 
-The first three are about what a point estimate hides: how far one input can move, how far six move the answer together, and which kind of model you hold. None needs a sampler yet.
+The first three are about what a point estimate hides: how far one input can move, how the
+inputs of the taxi commute move the answer together, and which kind of model you hold. None
+needs anything beyond arithmetic.
 
 The fourth has no test. It is about a system you run, and there is no oracle for that.
 """
@@ -24,12 +26,21 @@ def spread_of_each(bands: dict[str, tuple[float, float]]) -> dict[str, float]:
     raise NotImplementedError("problem 1.1")
 
 
-def spread_on_paper() -> float:
-    """Problem 1.2 - how uncertain are they together?
+def spread_together(alone: dict[str, float]) -> float:
+    """Problem 1.2 - how wide are they together?
 
-    Look at the taxi table in the chapter: run 1 costs £3,125, run 4 costs £7,800.
+    ``alone`` maps each input of the taxi commute that moves to how many times the year's fares
+    grow when that input alone goes from its usual value to its most; the names are the table's:
+    ``'days'``, ``'minutes'``, ``'fare'``::
 
-    Return the ratio: run 4 cost divided by run 1 cost.
+        alone = {
+            'days': ...,
+            'minutes': ...,
+        }
+
+    Return how many times the year's fares grow when every input in ``alone`` goes to its most at
+    the same time. The test asks with all three inputs and with each pair, so work the rule out
+    from the fares in the chapter's table.
     """
     raise NotImplementedError("problem 1.2")
 

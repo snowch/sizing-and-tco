@@ -32,7 +32,13 @@ def test_the_inverse_round_trips(tolerance):
 
 @pytest.mark.problem
 def test_tolerating_nothing_means_an_idle_system():
-    assert knee_at(1.0) == pytest.approx(0.0)
+    utilisation = knee_at(1.0)
+    assert utilisation == pytest.approx(0.0), (
+        f"a tolerance of 1x means a request takes no longer than it would on an idle system, and "
+        f"you returned {utilisation}. Check two things: that you return the share of time the "
+        "system is busy, not idle, and that the tolerance multiplies the whole time in the "
+        "system, waiting included."
+    )
 
 
 @pytest.mark.problem
@@ -43,12 +49,16 @@ def test_the_knee_moves_a_long_way_for_a_small_change_in_taste():
     making the same kind of decision and will size the same system very differently. There is no
     knee in the curve; there is only where each of them stopped being willing.
     """
-    tolerant = knee_at(10.0)
-    strict = knee_at(2.0)
-    assert tolerant > strict
+    strict, tolerant = knee_at(2.0), knee_at(10.0)
+    for tolerance, utilisation in ((2.0, strict), (10.0, tolerant)):
+        assert inflation_at(utilisation) == pytest.approx(tolerance, rel=1e-9), (
+            f"knee_at({tolerance}) does not round-trip yet, so the gap between a strict engineer "
+            "and a tolerant one means nothing. Get test_the_inverse_round_trips passing first."
+        )
+    assert tolerant > strict, "a more tolerant engineer accepts a busier system, not a quieter one"
     assert tolerant - strict > 0.35, (
-        f"between a 2x tolerance ({strict:.2f}) and a 10x one ({tolerant:.2f}) lies most of the "
-        "useful range of a system. That gap is a decision, and it is the whole of ch11."
+        "between a 2x tolerance and a 10x one lies most of the useful range of a system. That gap "
+        "is a decision, and ch11 is where it gets made."
     )
 
 

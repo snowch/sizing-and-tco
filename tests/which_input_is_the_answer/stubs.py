@@ -46,16 +46,20 @@ def interaction_gap(
     and record that.
 
     Return the difference between the change when both move and the sum of the two individual
-    changes, as a fraction of the sum.
+    changes, as a fraction of the sum of the two individual changes. Dividing by the sum of the
+    separate changes, not by the joint change, shows how far the tornado's bars, added up, miss
+    the joint move.
 
-    Zero means the two inputs do not interact and the tornado's bars can be added up. Anything
+    Zero means the two inputs do not interact here and the tornado's bars can be added up. Anything
     else means they do, and a chart of one-at-a-time swings is understating - or overstating -
     what happens when the world moves two things at once.
 
-    The test names the two pairs: one that meets in a product on the way to the raw data, and
-    one that meets in a sum on the way to the annual running cost. A model built out of
-    multiplications will always show some of this, because a product is not additive in its
-    factors - which is the point, and is why a tornado is a guide to what to measure rather than
-    a decomposition of the answer.
+    When you swing one input alone, the other is not included in the dictionary you pass to
+    ``output_at``, so it is held at its point value.
+
+    The test names the two pairs: one that meets in a product on the way to the raw data, and one
+    that meets in a sum on the way to the annual running cost. Where two inputs meet in a product,
+    a gap usually shows, because a product is not additive in its factors - which is the point, and
+    is why a tornado is a guide to what to measure rather than a decomposition of the answer.
     """
     raise NotImplementedError("problem 19.2")

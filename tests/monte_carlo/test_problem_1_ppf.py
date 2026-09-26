@@ -1,7 +1,7 @@
 """Problem 13.1 — add a distribution.
 
 Graded against the shape's own density, integrated numerically at test time: the area under it
-from the minimum up to each value the reader returns has to be the percentile they were given. No
+from the minimum up to each value the reader returns has to be the fraction they were given. No
 formula for the answer appears here, and a percentile function of the wrong shape fails however
 well behaved it is.
 """
@@ -33,16 +33,17 @@ def area_up_to(values: np.ndarray, minimum: float, maximum: float) -> np.ndarray
 
 @pytest.mark.problem
 @pytest.mark.parametrize(("minimum", "maximum"), CASES)
-def test_the_area_under_the_density_is_the_percentile(minimum, maximum):
+def test_the_area_under_the_density_is_the_fraction(minimum, maximum):
     u = np.linspace(0.01, 0.99, 99)
     values = np.asarray(log_uniform_ppf(u, minimum, maximum), dtype=float)
     assert np.all(values > 0), "the shape lives on positive values only"
     areas = area_up_to(values, minimum, maximum)
     worst = float(np.max(np.abs(areas - u)))
     assert worst < 2e-3, (
-        f"the area under the density up to your values misses the percentile by up to {worst:.3f}. "
+        f"the area under the density up to your values misses the fraction by up to {worst:.3f}. "
         "The shape is right when the area from the minimum to the value you return is the "
-        "percentile you were asked for, and this one's area is a logarithm."
+        "fraction you were given. This one's area is a logarithm, and over the whole range "
+        "it has to come to one."
     )
 
 
@@ -61,7 +62,7 @@ def test_it_stays_inside_its_bounds(minimum, maximum):
 def test_it_is_monotonic(minimum, maximum):
     values = np.asarray(log_uniform_ppf(np.linspace(0.001, 0.999, 4000), minimum, maximum))
     assert np.all(np.diff(values) >= -1e-9), (
-        "a higher percentile cannot give a lower value. If this fails, the function is not a "
+        "a larger fraction cannot give a smaller value. If this fails, the function is not a "
         "percentile function at all, whatever else it is doing right."
     )
 

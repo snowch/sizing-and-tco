@@ -1,14 +1,15 @@
 {
-  "code_fingerprint": "d6d594f5b16b490c",
+  "code_fingerprint": "b036c265c851085b",
   "code_sources": [
     "bench/run_curves.py"
   ],
   "conditions": {
+    "one_server": "the formula is the result for one server with one queue, applied to the whole fleet. Many cores sharing one stream of requests wait less than this at the same utilisation",
     "one_slice": "the request rate moves and nothing else does. A service whose demand per request also rises with load - which is most of them - is on a steeper curve than this one",
     "the_cap": "the model clamps utilisation before it divides by zero; past that point the formula has stopped describing a queue"
   },
-  "generated_at": "2026-09-25T20:26:06+00:00",
-  "git_revision": "e90b952",
+  "generated_at": "2026-09-26T21:36:58+00:00",
+  "git_revision": "39f1b8b",
   "kind": "measurement",
   "name": "queueing-curve",
   "produced_by": {
@@ -20,7 +21,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -141,6 +142,785 @@
         "waiting_time": 0.4226547622210899
       }
     ],
+    "queueing_margin": 0.3,
+    "smooth": [
+      {
+        "inflation": 1.0050251256281408,
+        "utilisation": 0.005
+      },
+      {
+        "inflation": 1.0101010101010102,
+        "utilisation": 0.01
+      },
+      {
+        "inflation": 1.015228426395939,
+        "utilisation": 0.015
+      },
+      {
+        "inflation": 1.0204081632653061,
+        "utilisation": 0.02
+      },
+      {
+        "inflation": 1.0256410256410255,
+        "utilisation": 0.025
+      },
+      {
+        "inflation": 1.0309278350515465,
+        "utilisation": 0.03
+      },
+      {
+        "inflation": 1.0362694300518136,
+        "utilisation": 0.034999999999999996
+      },
+      {
+        "inflation": 1.0416666666666667,
+        "utilisation": 0.04
+      },
+      {
+        "inflation": 1.0471204188481675,
+        "utilisation": 0.04499999999999999
+      },
+      {
+        "inflation": 1.0526315789473686,
+        "utilisation": 0.05
+      },
+      {
+        "inflation": 1.0582010582010581,
+        "utilisation": 0.055
+      },
+      {
+        "inflation": 1.0638297872340425,
+        "utilisation": 0.06
+      },
+      {
+        "inflation": 1.0695187165775402,
+        "utilisation": 0.065
+      },
+      {
+        "inflation": 1.075268817204301,
+        "utilisation": 0.06999999999999999
+      },
+      {
+        "inflation": 1.0810810810810811,
+        "utilisation": 0.07500000000000001
+      },
+      {
+        "inflation": 1.0869565217391304,
+        "utilisation": 0.08
+      },
+      {
+        "inflation": 1.0928961748633879,
+        "utilisation": 0.08500000000000002
+      },
+      {
+        "inflation": 1.098901098901099,
+        "utilisation": 0.08999999999999998
+      },
+      {
+        "inflation": 1.1049723756906078,
+        "utilisation": 0.095
+      },
+      {
+        "inflation": 1.1111111111111112,
+        "utilisation": 0.1
+      },
+      {
+        "inflation": 1.1173184357541899,
+        "utilisation": 0.105
+      },
+      {
+        "inflation": 1.1235955056179776,
+        "utilisation": 0.11
+      },
+      {
+        "inflation": 1.1299435028248588,
+        "utilisation": 0.115
+      },
+      {
+        "inflation": 1.1363636363636365,
+        "utilisation": 0.12
+      },
+      {
+        "inflation": 1.1428571428571428,
+        "utilisation": 0.125
+      },
+      {
+        "inflation": 1.149425287356322,
+        "utilisation": 0.13
+      },
+      {
+        "inflation": 1.1560693641618498,
+        "utilisation": 0.135
+      },
+      {
+        "inflation": 1.1627906976744187,
+        "utilisation": 0.13999999999999999
+      },
+      {
+        "inflation": 1.1695906432748537,
+        "utilisation": 0.145
+      },
+      {
+        "inflation": 1.1764705882352942,
+        "utilisation": 0.15000000000000002
+      },
+      {
+        "inflation": 1.183431952662722,
+        "utilisation": 0.155
+      },
+      {
+        "inflation": 1.1904761904761905,
+        "utilisation": 0.16
+      },
+      {
+        "inflation": 1.1976047904191618,
+        "utilisation": 0.165
+      },
+      {
+        "inflation": 1.2048192771084338,
+        "utilisation": 0.17000000000000004
+      },
+      {
+        "inflation": 1.2121212121212122,
+        "utilisation": 0.175
+      },
+      {
+        "inflation": 1.219512195121951,
+        "utilisation": 0.17999999999999997
+      },
+      {
+        "inflation": 1.226993865030675,
+        "utilisation": 0.185
+      },
+      {
+        "inflation": 1.2345679012345678,
+        "utilisation": 0.19
+      },
+      {
+        "inflation": 1.2422360248447206,
+        "utilisation": 0.19500000000000003
+      },
+      {
+        "inflation": 1.2499999999999998,
+        "utilisation": 0.2
+      },
+      {
+        "inflation": 1.2578616352201257,
+        "utilisation": 0.20499999999999996
+      },
+      {
+        "inflation": 1.2658227848101264,
+        "utilisation": 0.21
+      },
+      {
+        "inflation": 1.2738853503184713,
+        "utilisation": 0.215
+      },
+      {
+        "inflation": 1.282051282051282,
+        "utilisation": 0.22
+      },
+      {
+        "inflation": 1.2903225806451613,
+        "utilisation": 0.225
+      },
+      {
+        "inflation": 1.2987012987012987,
+        "utilisation": 0.23
+      },
+      {
+        "inflation": 1.30718954248366,
+        "utilisation": 0.235
+      },
+      {
+        "inflation": 1.3157894736842104,
+        "utilisation": 0.24
+      },
+      {
+        "inflation": 1.324503311258278,
+        "utilisation": 0.245
+      },
+      {
+        "inflation": 1.3333333333333335,
+        "utilisation": 0.25
+      },
+      {
+        "inflation": 1.3422818791946307,
+        "utilisation": 0.25499999999999995
+      },
+      {
+        "inflation": 1.3513513513513513,
+        "utilisation": 0.26
+      },
+      {
+        "inflation": 1.3605442176870748,
+        "utilisation": 0.265
+      },
+      {
+        "inflation": 1.36986301369863,
+        "utilisation": 0.27
+      },
+      {
+        "inflation": 1.3793103448275863,
+        "utilisation": 0.275
+      },
+      {
+        "inflation": 1.388888888888889,
+        "utilisation": 0.27999999999999997
+      },
+      {
+        "inflation": 1.3986013986013985,
+        "utilisation": 0.2849999999999999
+      },
+      {
+        "inflation": 1.4084507042253522,
+        "utilisation": 0.29
+      },
+      {
+        "inflation": 1.4184397163120566,
+        "utilisation": 0.295
+      },
+      {
+        "inflation": 1.4285714285714286,
+        "utilisation": 0.30000000000000004
+      },
+      {
+        "inflation": 1.438848920863309,
+        "utilisation": 0.305
+      },
+      {
+        "inflation": 1.4492753623188408,
+        "utilisation": 0.31
+      },
+      {
+        "inflation": 1.45985401459854,
+        "utilisation": 0.315
+      },
+      {
+        "inflation": 1.4705882352941178,
+        "utilisation": 0.32
+      },
+      {
+        "inflation": 1.4814814814814812,
+        "utilisation": 0.325
+      },
+      {
+        "inflation": 1.492537313432836,
+        "utilisation": 0.33
+      },
+      {
+        "inflation": 1.5037593984962405,
+        "utilisation": 0.3349999999999999
+      },
+      {
+        "inflation": 1.5151515151515154,
+        "utilisation": 0.3400000000000001
+      },
+      {
+        "inflation": 1.5267175572519083,
+        "utilisation": 0.345
+      },
+      {
+        "inflation": 1.5384615384615383,
+        "utilisation": 0.35
+      },
+      {
+        "inflation": 1.5503875968992247,
+        "utilisation": 0.355
+      },
+      {
+        "inflation": 1.5624999999999998,
+        "utilisation": 0.35999999999999993
+      },
+      {
+        "inflation": 1.5748031496062993,
+        "utilisation": 0.365
+      },
+      {
+        "inflation": 1.5873015873015874,
+        "utilisation": 0.37
+      },
+      {
+        "inflation": 1.6,
+        "utilisation": 0.375
+      },
+      {
+        "inflation": 1.6129032258064517,
+        "utilisation": 0.38
+      },
+      {
+        "inflation": 1.6260162601626018,
+        "utilisation": 0.385
+      },
+      {
+        "inflation": 1.6393442622950825,
+        "utilisation": 0.39000000000000007
+      },
+      {
+        "inflation": 1.6528925619834711,
+        "utilisation": 0.395
+      },
+      {
+        "inflation": 1.6666666666666667,
+        "utilisation": 0.4
+      },
+      {
+        "inflation": 1.680672268907563,
+        "utilisation": 0.405
+      },
+      {
+        "inflation": 1.6949152542372878,
+        "utilisation": 0.4099999999999999
+      },
+      {
+        "inflation": 1.7094017094017095,
+        "utilisation": 0.415
+      },
+      {
+        "inflation": 1.7241379310344827,
+        "utilisation": 0.42
+      },
+      {
+        "inflation": 1.7391304347826089,
+        "utilisation": 0.425
+      },
+      {
+        "inflation": 1.7543859649122806,
+        "utilisation": 0.43
+      },
+      {
+        "inflation": 1.7699115044247788,
+        "utilisation": 0.435
+      },
+      {
+        "inflation": 1.7857142857142856,
+        "utilisation": 0.44
+      },
+      {
+        "inflation": 1.801801801801802,
+        "utilisation": 0.445
+      },
+      {
+        "inflation": 1.818181818181818,
+        "utilisation": 0.45
+      },
+      {
+        "inflation": 1.8348623853211012,
+        "utilisation": 0.455
+      },
+      {
+        "inflation": 1.8518518518518516,
+        "utilisation": 0.46
+      },
+      {
+        "inflation": 1.869158878504673,
+        "utilisation": 0.4650000000000001
+      },
+      {
+        "inflation": 1.8867924528301887,
+        "utilisation": 0.47
+      },
+      {
+        "inflation": 1.9047619047619047,
+        "utilisation": 0.475
+      },
+      {
+        "inflation": 1.9230769230769231,
+        "utilisation": 0.48
+      },
+      {
+        "inflation": 1.9417475728155336,
+        "utilisation": 0.48499999999999993
+      },
+      {
+        "inflation": 1.9607843137254903,
+        "utilisation": 0.49
+      },
+      {
+        "inflation": 1.9801980198019802,
+        "utilisation": 0.495
+      },
+      {
+        "inflation": 2.0,
+        "utilisation": 0.5
+      },
+      {
+        "inflation": 2.0202020202020203,
+        "utilisation": 0.505
+      },
+      {
+        "inflation": 2.040816326530612,
+        "utilisation": 0.5099999999999999
+      },
+      {
+        "inflation": 2.061855670103093,
+        "utilisation": 0.515
+      },
+      {
+        "inflation": 2.0833333333333335,
+        "utilisation": 0.52
+      },
+      {
+        "inflation": 2.105263157894737,
+        "utilisation": 0.525
+      },
+      {
+        "inflation": 2.127659574468085,
+        "utilisation": 0.53
+      },
+      {
+        "inflation": 2.1505376344086025,
+        "utilisation": 0.535
+      },
+      {
+        "inflation": 2.173913043478261,
+        "utilisation": 0.54
+      },
+      {
+        "inflation": 2.197802197802198,
+        "utilisation": 0.545
+      },
+      {
+        "inflation": 2.2222222222222228,
+        "utilisation": 0.55
+      },
+      {
+        "inflation": 2.2471910112359557,
+        "utilisation": 0.5550000000000002
+      },
+      {
+        "inflation": 2.2727272727272725,
+        "utilisation": 0.5599999999999999
+      },
+      {
+        "inflation": 2.298850574712644,
+        "utilisation": 0.5650000000000001
+      },
+      {
+        "inflation": 2.3255813953488365,
+        "utilisation": 0.5699999999999998
+      },
+      {
+        "inflation": 2.352941176470588,
+        "utilisation": 0.575
+      },
+      {
+        "inflation": 2.3809523809523805,
+        "utilisation": 0.58
+      },
+      {
+        "inflation": 2.4096385542168672,
+        "utilisation": 0.585
+      },
+      {
+        "inflation": 2.439024390243902,
+        "utilisation": 0.59
+      },
+      {
+        "inflation": 2.469135802469135,
+        "utilisation": 0.5949999999999999
+      },
+      {
+        "inflation": 2.500000000000001,
+        "utilisation": 0.6000000000000001
+      },
+      {
+        "inflation": 2.531645569620253,
+        "utilisation": 0.605
+      },
+      {
+        "inflation": 2.564102564102564,
+        "utilisation": 0.61
+      },
+      {
+        "inflation": 2.5974025974025974,
+        "utilisation": 0.615
+      },
+      {
+        "inflation": 2.631578947368421,
+        "utilisation": 0.62
+      },
+      {
+        "inflation": 2.666666666666667,
+        "utilisation": 0.625
+      },
+      {
+        "inflation": 2.7027027027027026,
+        "utilisation": 0.63
+      },
+      {
+        "inflation": 2.7397260273972597,
+        "utilisation": 0.6349999999999999
+      },
+      {
+        "inflation": 2.777777777777778,
+        "utilisation": 0.64
+      },
+      {
+        "inflation": 2.8169014084507045,
+        "utilisation": 0.645
+      },
+      {
+        "inflation": 2.857142857142857,
+        "utilisation": 0.65
+      },
+      {
+        "inflation": 2.898550724637682,
+        "utilisation": 0.6550000000000001
+      },
+      {
+        "inflation": 2.9411764705882355,
+        "utilisation": 0.66
+      },
+      {
+        "inflation": 2.985074626865672,
+        "utilisation": 0.665
+      },
+      {
+        "inflation": 3.030303030303029,
+        "utilisation": 0.6699999999999998
+      },
+      {
+        "inflation": 3.076923076923077,
+        "utilisation": 0.675
+      },
+      {
+        "inflation": 3.1250000000000018,
+        "utilisation": 0.6800000000000002
+      },
+      {
+        "inflation": 3.1746031746031753,
+        "utilisation": 0.685
+      },
+      {
+        "inflation": 3.225806451612903,
+        "utilisation": 0.69
+      },
+      {
+        "inflation": 3.2786885245901622,
+        "utilisation": 0.6949999999999998
+      },
+      {
+        "inflation": 3.333333333333333,
+        "utilisation": 0.7
+      },
+      {
+        "inflation": 3.3898305084745757,
+        "utilisation": 0.705
+      },
+      {
+        "inflation": 3.4482758620689653,
+        "utilisation": 0.71
+      },
+      {
+        "inflation": 3.508771929824561,
+        "utilisation": 0.715
+      },
+      {
+        "inflation": 3.5714285714285694,
+        "utilisation": 0.7199999999999999
+      },
+      {
+        "inflation": 3.636363636363636,
+        "utilisation": 0.725
+      },
+      {
+        "inflation": 3.7037037037037033,
+        "utilisation": 0.73
+      },
+      {
+        "inflation": 3.7735849056603774,
+        "utilisation": 0.735
+      },
+      {
+        "inflation": 3.8461538461538463,
+        "utilisation": 0.74
+      },
+      {
+        "inflation": 3.9215686274509807,
+        "utilisation": 0.745
+      },
+      {
+        "inflation": 4.0,
+        "utilisation": 0.75
+      },
+      {
+        "inflation": 4.081632653061225,
+        "utilisation": 0.755
+      },
+      {
+        "inflation": 4.166666666666667,
+        "utilisation": 0.76
+      },
+      {
+        "inflation": 4.25531914893617,
+        "utilisation": 0.765
+      },
+      {
+        "inflation": 4.347826086956522,
+        "utilisation": 0.77
+      },
+      {
+        "inflation": 4.4444444444444455,
+        "utilisation": 0.775
+      },
+      {
+        "inflation": 4.5454545454545485,
+        "utilisation": 0.7800000000000001
+      },
+      {
+        "inflation": 4.651162790697676,
+        "utilisation": 0.785
+      },
+      {
+        "inflation": 4.761904761904763,
+        "utilisation": 0.79
+      },
+      {
+        "inflation": 4.878048780487806,
+        "utilisation": 0.795
+      },
+      {
+        "inflation": 5.000000000000002,
+        "utilisation": 0.8
+      },
+      {
+        "inflation": 5.128205128205132,
+        "utilisation": 0.8050000000000002
+      },
+      {
+        "inflation": 5.263157894736843,
+        "utilisation": 0.81
+      },
+      {
+        "inflation": 5.405405405405404,
+        "utilisation": 0.815
+      },
+      {
+        "inflation": 5.555555555555551,
+        "utilisation": 0.8199999999999998
+      },
+      {
+        "inflation": 5.7142857142857135,
+        "utilisation": 0.825
+      },
+      {
+        "inflation": 5.882352941176469,
+        "utilisation": 0.83
+      },
+      {
+        "inflation": 6.06060606060606,
+        "utilisation": 0.835
+      },
+      {
+        "inflation": 6.249999999999999,
+        "utilisation": 0.84
+      },
+      {
+        "inflation": 6.451612903225796,
+        "utilisation": 0.8449999999999998
+      },
+      {
+        "inflation": 6.666666666666666,
+        "utilisation": 0.85
+      },
+      {
+        "inflation": 6.896551724137931,
+        "utilisation": 0.855
+      },
+      {
+        "inflation": 7.142857142857142,
+        "utilisation": 0.86
+      },
+      {
+        "inflation": 7.4074074074074066,
+        "utilisation": 0.865
+      },
+      {
+        "inflation": 7.6923076923076925,
+        "utilisation": 0.87
+      },
+      {
+        "inflation": 8.0,
+        "utilisation": 0.875
+      },
+      {
+        "inflation": 8.333333333333334,
+        "utilisation": 0.88
+      },
+      {
+        "inflation": 8.695652173913045,
+        "utilisation": 0.885
+      },
+      {
+        "inflation": 9.090909090909092,
+        "utilisation": 0.89
+      },
+      {
+        "inflation": 9.523809523809526,
+        "utilisation": 0.895
+      },
+      {
+        "inflation": 10.000000000000004,
+        "utilisation": 0.9
+      },
+      {
+        "inflation": 10.5263157894737,
+        "utilisation": 0.9050000000000001
+      },
+      {
+        "inflation": 11.111111111111114,
+        "utilisation": 0.91
+      },
+      {
+        "inflation": 11.764705882352947,
+        "utilisation": 0.915
+      },
+      {
+        "inflation": 12.500000000000007,
+        "utilisation": 0.92
+      },
+      {
+        "inflation": 13.333333333333343,
+        "utilisation": 0.925
+      },
+      {
+        "inflation": 14.285714285714318,
+        "utilisation": 0.9300000000000002
+      },
+      {
+        "inflation": 15.384615384615397,
+        "utilisation": 0.935
+      },
+      {
+        "inflation": 16.66666666666665,
+        "utilisation": 0.94
+      },
+      {
+        "inflation": 18.18181818181813,
+        "utilisation": 0.9449999999999998
+      },
+      {
+        "inflation": 19.99999999999998,
+        "utilisation": 0.95
+      },
+      {
+        "inflation": 22.222222222222204,
+        "utilisation": 0.955
+      },
+      {
+        "inflation": 24.99999999999998,
+        "utilisation": 0.96
+      },
+      {
+        "inflation": 28.571428571428548,
+        "utilisation": 0.965
+      },
+      {
+        "inflation": 33.33333333333318,
+        "utilisation": 0.9699999999999999
+      }
+    ],
     "utilisations": [
       0.1,
       0.2,
@@ -156,6 +936,16 @@
       0.93,
       0.95,
       0.97
+    ],
+    "zoom": [
+      [
+        0.2,
+        0.8
+      ],
+      [
+        0.8,
+        0.95
+      ]
     ]
   },
   "target": "model",
@@ -165,6 +955,9 @@
     "curve[0].concurrency": "request",
     "curve[0].inflation": "dimensionless",
     "curve[0].utilisation": "dimensionless",
-    "utilisations": "dimensionless"
+    "queueing_margin": "dimensionless",
+    "smooth": "dimensionless",
+    "utilisations": "dimensionless",
+    "zoom": "dimensionless"
   }
 }

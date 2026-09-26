@@ -23,9 +23,9 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        ch04 — the busy hour, not the daily mean. Triangular because
-        this is an engineer's min/likely/max and pretending to
-        more shape than that would be invention.
+        ch04 — the busy hour, not the daily mean. Triangular,
+        because this is an engineer's lowest, most likely and
+        highest values; claiming more precision would be invention.
     range: [500, 40000]
   stored_data_t0:
     kind: input
@@ -42,9 +42,10 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        stated workload (ch02) — what the service holds today:
+        The service owners estimate what the service holds today:
         its database and the objects users have uploaded, before
-        replication, indexes or compression
+        replication, indexes or compression. It has not been counted
+        yet, and counting it would turn the estimate into a fact.
     range: [1, 200]
   annual_growth:
     kind: input
@@ -58,10 +59,11 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        ch04 — lognormal because growth compounds and cannot be
-        negative. The p10/p90 say: surprised below 12% a year,
-        surprised above 60%. One factor for requests and for records,
-        because users drive both.
+        ch04 — lognormal because growth compounds and the factor
+        cannot be zero or less. One future in ten grows by less
+        than 12% a year, and one in ten by more than 60%; outside
+        that range you would be surprised. One factor for requests
+        and for records, because users drive both.
     range: [1.0, 2.0]
   horizon:
     kind: input

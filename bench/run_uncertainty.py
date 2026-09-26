@@ -192,6 +192,11 @@ def correlation_effect(write: bool = True) -> dict:
                 {
                     "model": model.name,
                     "output": output,
+                    # The half-widths are in the output's own unit. Without it the table printed
+                    # a five-year cost and a host count in the same e-notation, and a reader could
+                    # not tell the column held the quantity the convergence table calls a
+                    # half-width.
+                    "unit": str(model.nodes[output].unit),
                     "declared": declared,
                     "independent": assumed,
                     "change": declared / assumed - 1.0,
@@ -209,7 +214,14 @@ def correlation_effect(write: bool = True) -> dict:
             "stack": "sizing.mc — Iman-Conover rank correlation",
         },
         summary={"rows": rows},
-        units={"rows": "dimensionless"},
+        units={
+            "rows": "dimensionless",
+            **{
+                f"rows[{i}].{column}": row["unit"]
+                for i, row in enumerate(rows)
+                for column in ("declared", "independent")
+            },
+        },
         conditions={
             "what_widening_means": "assuming independence is not neutral. It is a claim, and "
             "where it is wrong it makes the interval narrower than the evidence supports — "

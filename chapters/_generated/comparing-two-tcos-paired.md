@@ -9,4 +9,4 @@
 | Futures in which the challenger is cheaper | 69% |
 | Futures in which the incumbent is cheaper | 31% |
 
-*Source — [`comparison`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/comparison.json) · sizing.evaluate*
+*Source — [`comparison`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/comparison.json) · `sizing.evaluate`*

@@ -104,6 +104,24 @@ JS_TEMPLATES = (
     ]
     + [("bench/theme.py", name) for name in ("_PARENT", "FRAME")]
     + [("bench/reading.py", "_PARENT")]
+    + [
+        ("scripts/review-pages.py", name)
+        for name in (
+            "LAYOUT",
+            "NAMES",
+            "CONTRAST",
+            "POINTER",
+            "ICON_FONT",
+            "LINKS",
+            "VIEWER_LAYOUT",
+            "VIEWER_PRESS",
+            "FUTURES_PRESS",
+            "UNDER",
+            "EXPAND_HOLDS",
+            "PROBLEM_LABEL",
+            "TYPE_IN",
+        )
+    ]
 )
 
 
@@ -243,6 +261,27 @@ def test_a_glossary_term_links_to_its_entry_only_after_its_chapter():
     assert not [n for n in build_site.walk(glossary) if n.get("type") == "link"]
 
 
+def test_a_glossary_link_skips_tables_and_a_block_marked_word_ok():
+    """The linker reads the prose the vocabulary test reads. A table is data, and `% word-ok:`
+    says the block after it uses a word in another sense, a scrape's samples, so neither gets a
+    link. The next mention in prose does."""
+    build_site = site()
+    cell = {"type": "tableCell", "children": [{"type": "text", "value": "bytes per sample"}]}
+    page = {
+        "type": "root",
+        "children": [
+            {"type": "table", "children": [{"type": "tableRow", "children": [cell]}]},
+            {"type": "comment", "value": "word-ok: a sample here is one reading a scrape takes"},
+            _page_with("how many samples a series produces per scrape")["children"][0],
+            _page_with("a hundred thousand samples")["children"][0],
+        ],
+    }
+    build_site.link_terms("appendices/appendix_d_units.md", page)
+    links = [n for n in build_site.walk(page) if n.get("type") == "link"]
+    assert [link["children"][0]["value"] for link in links] == ["samples"]
+    assert links[0] is page["children"][3]["children"][1]
+
+
 def test_a_provenance_mark_is_drawn_not_typeset():
     """Each of the three marks renders as a span the stylesheet draws, with the glyph kept."""
     from bench import render as renderer
@@ -264,9 +303,18 @@ def test_the_takeaways_box_is_drawn_like_a_definition_box_with_its_own_icon():
     assert ".takeaways {" in css or ".takeaways," in css, (
         "the takeaways box is not drawn like a definition"
     )
-    icon = re.search(r"\.takeaways::before \{ content: '([a-z_]+)'; \}", css)
-    assert icon, "the takeaways box has no icon"
-    assert icon[1] != "menu_book", "the takeaways box borrows the definition box's icon"
+    icons = dict(
+        re.findall(
+            r"\.(definition|takeaways|example|admonition\.note) \{ --icon: (url\([^)]*\)); \}", css
+        )
+    )
+    assert "takeaways" in icons, "the takeaways box has no icon"
+    assert icons["takeaways"] != icons.get("definition"), (
+        "the takeaways box borrows the definition box's icon"
+    )
+    assert "font-family: 'Material" not in css and "fonts.googleapis" not in css, (
+        "a box icon is a web font again: offline, the box shows the icon's name in its place"
+    )
 
 
 def test_a_term_link_carries_its_meaning_and_the_glossary_rows_carry_ids():
@@ -300,6 +348,27 @@ def test_the_foot_of_a_page_points_at_its_neighbours_in_the_reading_order():
             assert f'class="next" href="{hrefs[at + 1]}"' in foot, href
         else:
             assert 'class="next"' not in foot, f"{href} is the last page and offers a next"
+
+
+def test_a_cross_reference_lands_on_the_page_it_names():
+    """MyST names the first page in the contents `index`, and this build publishes the cover as
+    index.html and the preface as preface.html. Keyed by published name, ch22's link to the
+    introduction opened the cover."""
+    build = site()
+    index = build.renderer.parsed_pages()
+    if not index:
+        pytest.skip("no parsed content; run `myst build` first")
+    order = [s for s in build.renderer.page_order() if s in index]
+    build.renderer.PAGES = build.page_names(index, order)
+    try:
+        for at, source in enumerate(order):
+            url = "/" if at == 0 else f"/{index[source]['slug']}"
+            assert build.renderer._published(url) == build.href_for(source), (
+                f"a link to {source} opens {build.renderer._published(url)}; "
+                "renderer.PAGES must be keyed by MyST's slug"
+            )
+    finally:
+        build.renderer.PAGES = {}
 
 
 def viewers():
@@ -501,7 +570,7 @@ def test_the_pages_that_run_the_toolkit_share_one_runtime_and_one_boot():
         assert "from sizing.playground.toolkit import" in text, f"{builder} does not import toolkit"
     # The call itself: in the chapter page's template, and in the viewer's own app. A chapter
     # page goes through the shared start, because its Checks are one runtime.
-    for caller in ("scripts/build-site.py", "sizing/viewer/app.js"):
+    for caller in ("scripts/build-site.py", "sizing/viewer/app.js", "sizing/viewer/checker.html"):
         assert re.search(r"\b(bootToolkit|shareToolkit)\(", (ROOT / caller).read_text()), (
             f"{caller} does not call bootToolkit"
         )
@@ -734,6 +803,65 @@ def counting() -> str:
     runner = site().PROBLEMS
     start = runner.index("function score(tests) {")
     return runner[start : runner.index("\n}\n", start) + 3]
+
+
+def splicing() -> str:
+    runner = site().PROBLEMS
+    start = runner.index("function splice(whole, pieces) {")
+    return runner[start : runner.index("\n}\n", start) + 3]
+
+
+@pytest.mark.node
+def test_one_function_under_two_problems_is_spliced_once(tmp_path):
+    """ch12 shows `hosts_for_risk` under 12.1 and again under 12.2, one range of the file twice.
+
+    Splicing both boxes cut the file at offsets the first splice had already moved: an answer
+    shorter than the stub left a stray tail and a SyntaxError in a line the reader never wrote,
+    and a longer one was overwritten by the untouched copy, so the tests ran the stub.
+    """
+    if shutil.which("node") is None:
+        pytest.skip("no node")
+    whole = "head\ndef f():\n    raise NotImplementedError\n\ndef g():\n    pass\ntail\n"
+    start = whole.index("def f")
+    end = whole.index("\n\ndef g")  # a range stops before its newline, as a piece's does
+    later = whole.index("def g")
+    cases = {
+        name: [
+            {"start": start, "end": end, "text": answer},
+            {"start": start, "end": end, "text": answer},
+            {
+                "start": later,
+                "end": later + len("def g():\n    pass"),
+                "text": "def g():\n    return 1\n",
+            },
+        ]
+        for name, answer in {
+            "shorter": "def f():\n    return 1\n",
+            "longer": "def f():\n    x = 1\n    y = 2\n    return x + y\n",
+        }.items()
+    }
+    harness = """
+    const [whole, cases] = JSON.parse(process.argv[2]);
+    const out = {};
+    for (const [name, pieces] of Object.entries(cases)) out[name] = splice(whole, pieces);
+    console.log(JSON.stringify(out));
+    """
+    script = tmp_path / "splice.mjs"
+    script.write_text(splicing() + textwrap.dedent(harness))
+    run = subprocess.run(
+        ["node", str(script), json.dumps([whole, cases])],
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert run.returncode == 0, run.stderr[-2000:]
+    got = json.loads(run.stdout)
+    for name, pieces in cases.items():
+        # A box's text ends in the newline the browser adds, and the splice drops it.
+        expected = whole[:start] + pieces[0]["text"].rstrip("\n") + whole[end:]
+        expected = expected.replace("def g():\n    pass", pieces[2]["text"].rstrip("\n"))
+        assert got[name] == expected, f"{name}: the reader's answer did not reach the file intact"
+        compile(got[name].replace("head\n", "").replace("tail\n", ""), name, "exec")
 
 
 @pytest.mark.node
@@ -1331,3 +1459,77 @@ def test_the_contents_list_holds_every_section_and_what_is_in_it():
         )
     first = re.search(r"(?m)^## (.+)$", (ROOT / "index.md").read_text()).group(1)
     assert build.contents_of(index["index.md"])[0]["text"] == first.strip()
+
+
+def review_pages():
+    """``scripts/review-pages.py``, imported, without the browser it drives."""
+    from importlib import util
+
+    spec = util.spec_from_file_location("review_pages", ROOT / "scripts" / "review-pages.py")
+    module = util.module_from_spec(spec)
+    sys.modules[spec.name] = module  # its dataclasses look their module up while they are built
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_review_walks_every_page_a_reader_can_open():
+    """A review that skipped a page would report it clean, which is worse than not reviewing it.
+
+    The walk is ``myst.yml``'s table of contents, so a page added there is reviewed without
+    anybody remembering to add it; this holds the walk to the book's own list of what it has.
+    """
+    from bench.outline import APPENDICES, PART_PAGES
+
+    walked = review_pages().pages()
+    sources = {source for source, _ in walked}
+    book = {"index.md", "cover.md", *(c.path for c in CHAPTERS)}
+    book |= {a.path for a in APPENDICES} | {p.path for p in PART_PAGES}
+    assert book <= sources, f"never reviewed: {sorted(book - sources)}"
+    names = [name for _, name in walked]
+    assert len(names) == len(set(names)), "two pages publish under one name"
+
+
+def test_the_review_lists_its_pages_without_a_browser():
+    """CI installs no browser, so everything short of the walk works without Playwright."""
+    listed = subprocess.run(
+        [sys.executable, "scripts/review-pages.py", "--list", "--only", "point-estimates"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert listed.returncode == 0, listed.stderr[-600:]
+    assert listed.stdout.split() == ["point-estimates.html", "chapters/point_estimates.md"]
+
+    unknown = subprocess.run(
+        [sys.executable, "scripts/review-pages.py", "--list", "--only", "no-such-page"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert unknown.returncode == 2 and "no-such-page" in unknown.stderr
+
+
+def test_a_drawing_shrunk_below_its_own_width_can_be_opened_at_it():
+    """A figure's text is sized for the width it was drawn at, and the column shrinks it.
+
+    On a phone a chart's labels came out at half their size, and a whole model's graph was
+    unreadable at every width. The drawing keeps the column's width in the page and gets the
+    same control a cut-off table gets, which opens it at the size it was drawn for.
+    """
+    build_site = site()
+    script = build_site.EXPAND
+    assert 'document.querySelectorAll("#main > .drawing")' in script
+    assert "svg.width.baseVal.value" in script, (
+        "a drawing never overflows its column; it has to be asked how wide it was drawn"
+    )
+    from bench.diagrams import TEXT
+
+    assert f"< natural * {9 / TEXT:g}" in script, (
+        "the control appears where the smallest text drops under nine pixels, which depends on "
+        "the smallest size a figure draws"
+    )
+    css = build_site.CSS
+    assert "html.model-open #main .expanded > .drawing > svg { max-width: none; }" in css
+    import inspect
+
+    assert 'class="drawing"' in inspect.getsource(renderer._image)

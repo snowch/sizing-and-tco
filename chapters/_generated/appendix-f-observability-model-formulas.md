@@ -4,6 +4,7 @@
 |---|---|---|
 | horizon periods (`horizon_periods`) | `horizon / one_year` |  |
 | growth factor (`growth_factor`) | `annual_growth ** horizon_periods` |  |
+| accidental label values (`label_values_accidental`) | `1 + label_values_accidental_extra` |  |
 | label cardinality (`label_cardinality`) | `label_values_endpoint * label_values_status * label_values_accidental` |  |
 | active series (`active_series`) | `hosts * base_metrics_per_host * label_cardinality * growth_factor` | series |
 | sample rate (`sample_rate`) | `one_sample_per_series / scrape_interval` | sample/series/second |
@@ -19,15 +20,15 @@
 | total ingest (`total_ingest`) | `metrics_ingest + logs_ingest + traces_ingest` | MB/s |
 | quoted pipeline capacity (`quoted_pipeline_capacity`) | `collector_cores * collector_throughput_quoted` | MB/s |
 | measured pipeline capacity (`measured_pipeline_capacity`) | `collector_cores * collector_throughput_measured` | MB/s |
-| ingest utilisation, quoted (`quoted_pipeline_utilisation`) | `known_ingest / quoted_pipeline_capacity` against a limit of `1`, keeping `0.4` below it |  |
-| ingest utilisation, measured (`pipeline_utilisation`) | `total_ingest / measured_pipeline_capacity` against a limit of `1`, keeping `0.4` below it |  |
+| limit on ingest utilisation, quoted (`quoted_pipeline_utilisation`) | `known_ingest / quoted_pipeline_capacity` against a limit of `1`, keeping `0.4` below it |  |
+| limit on ingest utilisation, measured (`pipeline_utilisation`) | `total_ingest / measured_pipeline_capacity` against a limit of `1`, keeping `0.4` below it |  |
 | installed usable (`installed_usable`) | `store_nodes * usable_tb_per_node` | TB |
 | stored, metrics and logs only (`known_stored`) | `metrics_stored + logs_stored` | TB |
-| retention store fill (`store_fill`) | `known_stored / installed_usable` against a limit of `1`, keeping `0.3` below it |  |
+| limit on retention store fill (`store_fill`) | `known_stored / installed_usable` against a limit of `1`, keeping `0.3` below it |  |
 | series per query (`series_per_query`) | `series_per_query_base * label_cardinality` | series/query |
 | query series rate (`query_series_rate`) | `queries_per_second * series_per_query` | series/second |
 | query capacity (`query_capacity`) | `query_nodes * query_scan_rate_quoted` | series/second |
-| query path utilisation (`query_utilisation`) | `query_series_rate / query_capacity` against a limit of `1`, keeping `0.4` below it |  |
+| limit on query path utilisation (`query_utilisation`) | `query_series_rate / query_capacity` against a limit of `1`, keeping `0.4` below it |  |
 | retention cost, metrics and logs only (`known_storage_cost`) | `known_stored * storage_price` | USD/month |
 
 *Source — `models/observability/model.yaml`*

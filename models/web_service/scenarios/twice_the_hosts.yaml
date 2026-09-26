@@ -1,9 +1,10 @@
 scenario: twice_the_hosts
 title: Twice the hosts
 because: >-
-  The same workload on twice the fleet. Here so that ch06 and ch07 can be read against each
-  other: doubling the hosts halves the utilisation and does far less than halve the residence
-  time, and it does not double the throughput either.
+  The same workload on twice the fleet. Here so that ch06 and ch07 can be read against each other:
+  doubling the hosts halves the utilisation, and the residence time nearly halves but cannot fall
+  further than half because the time each request spends being served does not change. The time
+  spent queueing falls by more than half, and the throughput the fleet can achieve does not double.
 samples: 100000
 seed: 20260916
 overrides:

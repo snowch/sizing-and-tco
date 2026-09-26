@@ -48,16 +48,20 @@ PINS = {
         "headroom_to_peak": (0.32846489726073863, 0.18552259764577544, 0.5839492207928927),
     },
     "observability-reference": {
-        "metrics_ingest": (4.691199947653698, 0.7087674746854326, 29.10375682615168),
+        "metrics_ingest": (4.690525675732987, 1.0281030534303035, 30.03000207689474),
         "logs_ingest": (44.67582461292441, 9.662904248123636, 164.16836699415467),
-        "known_ingest": (49.36702456057811, 12.455331200106434, 182.09640536115296),
-        "known_stored": (277.9276075876119, 74.61499109864353, 1301.0762787876827),
-        "active_series": (15019917.210191535, 2269388.9349276964, 93180409.27366705),
-        "label_cardinality": (76.31587707750207, 17.926983727788215, 300.4866647992642),
-        "known_storage_cost": (4084.6849441327413, 957.4699566381062, 21788.208342526315),
-        "store_fill": (0.579015849140858, 0.155447898122174, 2.710575580807672),
-        "quoted_pipeline_utilisation": (0.5142398391726887, 0.129743033334442, 1.8968375558453434),
-        "query_utilisation": (0.5686076313785159, 0.05914481544577415, 3.3746456809609255),
+        "known_ingest": (49.366350288657394, 12.754666869809254, 183.2348626083403),
+        "known_stored": (277.9043047500321, 86.01529418301705, 1330.4260841749765),
+        "active_series": (15017758.379073862, 3291520.3972351565, 96141600.67321894),
+        "label_cardinality": (76.30490810291307, 25.345525343894938, 309.3147038660808),
+        "known_storage_cost": (4084.342463762965, 1093.769977167327, 22248.388204028983),
+        "store_fill": (0.5789673015625669, 0.17919852954795218, 2.7717210086978676),
+        "quoted_pipeline_utilisation": (
+            0.5142328155068479,
+            0.13286111322717972,
+            1.9086964855035449,
+        ),
+        "query_utilisation": (0.5685259047064452, 0.07473488302392478, 3.435641712050884),
     },
 }
 
@@ -251,11 +255,13 @@ def test_pinning_every_uncertain_input_leaves_no_interval():
     )
 
 
-def test_knowing_one_input_never_widens_the_interval():
-    """Removing uncertainty cannot add any, and the bound has to be a bound.
+def test_knowing_one_input_at_its_median_never_widens_the_total():
+    """Pinned at its median, no input widens the five-year total's interval.
 
-    Sampling noise means the two runs are not exactly ordered, so this allows the noise ch14
-    measures and nothing beyond it.
+    A claim about the middle of each band and about a total that is close to a sum. Pinned at the
+    high end of its band, an input that multiplies others can widen an interval, and ch19's
+    host-count table shows it. Sampling noise means the two runs are not exactly ordered, so this
+    allows the noise ch14 measures and nothing beyond it.
     """
     from bench.run_information import without_uncertainty
     from sizing import mc
@@ -269,8 +275,38 @@ def test_knowing_one_input_never_widens_the_interval():
             continue
         thinner = without_uncertainty(model, scenario, (name,))
         assert mc.half_width(evaluate(thinner, scenario).samples["tco"]) <= baseline * 1.01, (
-            f"knowing {name!r} exactly widened the interval, which is not a thing that can happen"
+            f"knowing {name!r} at its median widened the five-year total's interval by more than "
+            "sampling noise"
         )
+
+
+def _information(model: str, output: str) -> dict[str, dict]:
+    rows = load_result("value-of-information")["summary"]["rows"]
+    return {row["input"]: row for row in rows if row["model"] == model and row["output"] == output}
+
+
+def test_a_perfect_measurement_found_high_can_widen_the_host_count():
+    """ch19 names three inputs that, found at the high end of their band, leave the host count's
+    interval wider than it is now. If the stamped table stops showing that, the page is wrong."""
+    rows = _information("web_service", "hosts_recommended")
+    for name in ("peak_request_rate_t0", "hot_fraction", "service_demand"):
+        assert rows[name]["removed_high"] < -0.05, name
+
+
+def test_licence_per_core_removes_the_same_wherever_it_lands():
+    """ch19's example of an input that is only added: where the knowledge lands does not matter."""
+    row = _information("web_service", "tco")["licence_per_core"]
+    assert row["removed_low"] == pytest.approx(row["removed"], abs=0.01)
+    assert row["removed_high"] == pytest.approx(row["removed"], abs=0.01)
+
+
+def test_the_measured_constants_buy_nothing_wherever_they_land():
+    """ch19: pin a measured constant at either end of its band or its middle, and nothing moves."""
+    for model, output in (("web_service", "hosts_recommended"), ("observability", "known_stored")):
+        for name, row in _information(model, output).items():
+            if row["kind"] == "measured":
+                for key in ("removed_low", "removed", "removed_high"):
+                    assert abs(row[key]) < 0.01, (name, key)
 
 
 def test_a_three_way_max_leaves_its_third_argument_alone(tmp_path):
@@ -424,3 +460,75 @@ def test_what_the_fleet_costs_does_not_depend_on_what_it_holds():
         "the total would now follow the data, which means the fleet is being derived rather "
         "than decided -- the distinction `hosts` exists to make"
     )
+
+
+def test_the_two_stretches_of_the_knee_figure_are_the_same_curve():
+    """ch06 says the two panels of its second figure are one shape. They are only if the idle
+    share shrinks by the same factor across each, and the sweep has matching points in both."""
+    import numpy as np
+
+    summary = load_result("queueing-curve")["summary"]
+    smooth = summary["smooth"]
+    (a0, a1), (b0, b1) = summary["zoom"]
+    assert (1 - a0) / (1 - a1) == pytest.approx((1 - b0) / (1 - b1))
+
+    def shape(start, stop):
+        rows = [r for r in smooth if start - 1e-9 <= r["utilisation"] <= stop + 1e-9]
+        u = np.array([r["utilisation"] for r in rows])
+        v = np.array([r["inflation"] for r in rows])
+        return (u - start) / (stop - start), (v - v[0]) / (v[-1] - v[0])
+
+    (ua, va), (ub, vb) = shape(a0, a1), shape(b0, b1)
+    assert np.interp(ub, ua, va) == pytest.approx(vb, abs=1e-3)
+
+
+# -- what the build refuses -------------------------------------------------------------------
+
+
+def _verify_models():
+    """`scripts/verify-models.py` is a script, not a module, and its name has a dash in it."""
+    from importlib import util
+    from pathlib import Path
+
+    spec = util.spec_from_file_location(
+        "verify_models", Path(__file__).resolve().parent.parent / "scripts/verify-models.py"
+    )
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_a_correlation_with_no_reason_does_not_build():
+    """ch14 calls a correlation's `because` the required column; the build is what requires it."""
+    from dataclasses import replace
+
+    model = MODELS["web_service"]
+    assert model.correlations, "the web service model declares the correlations this relies on"
+    unexplained = [{**pair, "because": None} for pair in model.correlations]
+    problems: list[str] = []
+    _verify_models().check_model(replace(model, correlations=tuple(unexplained)), problems)
+    refused = [p for p in problems if "correlation between" in p]
+    assert len(refused) == len(unexplained), problems
+
+
+def test_a_node_with_a_blank_unit_does_not_load(tmp_path):
+    """A blank unit could mean a pure ratio or an undecided one. It used to arrive as the unit
+    "None", and the error named a word the reader never typed."""
+    from sizing.dsl import ModelError, load_model
+
+    (tmp_path / "model.yaml").write_text(
+        """
+model: blank
+nodes:
+  per_host:
+    kind: input
+    decided: you
+    unit:
+    value: 3
+    provenance: {kind: assumption, source: test}
+outputs: [per_host]
+"""
+    )
+    with pytest.raises(ModelError, match="'per_host' declares no unit") as refused:
+        load_model(tmp_path / "model.yaml")
+    assert "None" not in str(refused.value)

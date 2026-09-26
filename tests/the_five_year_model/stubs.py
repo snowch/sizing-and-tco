@@ -31,7 +31,7 @@ def joined_interval(
 
     The test computes both intervals itself from the same two arrays and grades yours against
     them, so there is nothing to look up and nothing to approximate; ``sizing.mc.interval`` is
-    the book's definition of a 90% interval. Predict the direction before you run it.
+    the book's definition of a 90% interval.
 
     The join is arithmetic on two arrays, outside ``sizing.evaluate``, and that is not an
     accident of the exercise. The DSL has no node kind for "a distribution that came from another

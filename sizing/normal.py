@@ -6,11 +6,11 @@ the sampler is three lines of algebra; this is a rational approximation, and pre
 by burying it among the others would misrepresent what the reader is looking at.
 
 Why it is here at all. :mod:`sizing.mc` samples every distribution by inverse transform — draw a
-percentile uniformly, ask the distribution what value sits at it — so the normal and the
-lognormal both need :math:`\\Phi^{-1}`, and so does the rank-correlation step. The standard
-library has an exact-enough scalar version in ``statistics.NormalDist().inv_cdf``, but it is
-scalar: at the sample counts ch14 uses to demonstrate convergence it costs seconds per run, which
-is enough to make the experiment tedious and therefore not run.
+fraction between 0 and 1 uniformly, ask the distribution what value sits at it — so the normal
+and the lognormal both need :math:`\\Phi^{-1}`, and so does the rank-correlation step. The
+standard library has an exact-enough scalar version in ``statistics.NormalDist().inv_cdf``, but it
+is scalar: at the sample counts ch14 uses to demonstrate convergence it costs seconds per run,
+which is enough to make the experiment tedious and therefore not run.
 
 So the approximation is used for speed and the standard library is used as the oracle:
 ``tests/test_mc.py`` checks the two agree to nine figures across the whole range, including the
@@ -76,10 +76,11 @@ def normal_ppf(u: np.ndarray | float) -> np.ndarray:
     ``normal_ppf(0.5)`` is 0, ``normal_ppf(0.9)`` is about 1.28, and ``normal_ppf(0.975)`` is the
     1.96 that turns up in every textbook margin of error.
 
-    Raises on 0 and 1 rather than returning an infinity. Both are real bugs when they happen — a
-    uniform draw is never exactly 0 or 1 under numpy's generator, so an endpoint here means a
-    percentile was computed rather than drawn, and silently returning an infinity would put it in
-    a sum and turn a whole model's output into ``nan`` several steps later.
+    Raises on 0 and 1 rather than returning an infinity. numpy's generator draws from 0 up to but
+    not including 1, so a draw of exactly 0 is possible, though vanishingly rare, and would raise
+    here. An endpoint arriving here almost always means a percentile was computed rather than
+    drawn: a real bug. Returning an infinity silently would turn the model's output into ``nan``
+    several steps later.
     """
     u = np.asarray(u, dtype=float)
     if np.any((u <= 0.0) | (u >= 1.0)):

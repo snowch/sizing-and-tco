@@ -11,4 +11,4 @@
 | People | $849,062 | $849,062 | none |
 | **Five-year total** | $2,002,083 | $1,991,361 | **−$10,722** |
 
-*Source — [`comparison`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/comparison.json) · sizing.evaluate*
+*Source — [`comparison`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/comparison.json) · `sizing.evaluate`*

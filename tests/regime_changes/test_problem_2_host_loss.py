@@ -56,20 +56,41 @@ def survivors_of(values: dict[str, float], hosts: int) -> tuple[float, float]:
     return after_a_host_loss(values["utilisation"], hosts, values["service_seconds"])
 
 
+def agrees(yours: float, expected: float) -> bool:
+    """Whether two numbers agree, as a plain yes or no.
+
+    An `assert` on `pytest.approx` prints both numbers when it fails, and the second is the
+    answer. Deciding first and asserting on the decision keeps the answer out of the message.
+    """
+    return math.isclose(float(yours), float(expected), rel_tol=1e-9)
+
+
+#: What a wrong utilisation for the survivors is told, wherever it is checked.
+SHARE = (
+    "the survivors' utilisation does not match the model's. The lost host's share of the work "
+    "lands on the hosts that are left"
+)
+
+#: What a wrong residence time is told, once the utilisation is right.
+DIVISION = (
+    "the survivors' utilisation is right, and the residence time is not ch06's division at that "
+    "utilisation: the service time divided by what is left of the fleet"
+)
+
+
 @pytest.mark.problem
 def test_it_agrees_with_the_model_at_the_point(values):
     utilisation, after = survivors_of(values, int(values["hosts"]))
-    assert utilisation == pytest.approx(values["utilisation_after_failure"], rel=1e-9), (
-        "the survivors' utilisation is the model's own `utilisation_after_failure` node: the lost "
-        "host's share of the work lands on the hosts that are left"
-    )
-    assert after == pytest.approx(residence(values, values["utilisation_after_failure"]), rel=1e-9)
+    right_share = agrees(utilisation, values["utilisation_after_failure"])
+    assert right_share, SHARE
+    right_time = agrees(after, residence(values, values["utilisation_after_failure"]))
+    assert right_time, DIVISION
 
 
 @pytest.mark.problem
 def test_the_residence_time_rises_by_more_than_the_utilisation_did(values):
-    """The regime change: the survivors' utilisation is arithmetic, and what it does to the
-    residence time is not."""
+    """A chain of multiplications would move the residence time by the utilisation's factor.
+    ch06's division does not, and the reader is asked to predict which way before running this."""
     utilisation, after = survivors_of(values, int(values["hosts"]))
     rise_in_utilisation = utilisation / values["utilisation"]
     rise_in_residence = after / residence(values, values["utilisation"])
@@ -88,8 +109,10 @@ def test_a_smaller_fleet_at_the_same_utilisation(model, values, hosts):
     survivors = at_fleet(model, values, hosts)["utilisation_after_failure"]
     if survivors < 1:
         utilisation, after = survivors_of(values, hosts)
-        assert utilisation == pytest.approx(survivors, rel=1e-9)
-        assert after == pytest.approx(residence(values, survivors), rel=1e-9)
+        right_share = agrees(utilisation, survivors)
+        assert right_share, f"with {hosts} hosts, {SHARE}"
+        right_time = agrees(after, residence(values, survivors))
+        assert right_time, f"with {hosts} hosts, {DIVISION}"
         return
     try:
         _, after = survivors_of(values, hosts)
@@ -98,9 +121,9 @@ def test_a_smaller_fleet_at_the_same_utilisation(model, values, hosts):
     except Exception:  # raising is one of the two answers the problem accepts past one
         return
     assert not math.isfinite(after), (
-        f"with {hosts} hosts the survivors are at {survivors:.2f} of capacity, past one, and the "
-        f"residence time came back as {after}. There is nothing left to divide by: return "
-        "something that is not finite, or raise."
+        f"with {hosts} hosts the survivors are past one, and the residence time came back as "
+        f"{after}. There is nothing left to divide by: return something that is not finite, or "
+        "raise."
     )
 
 

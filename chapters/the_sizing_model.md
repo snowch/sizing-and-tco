@@ -19,14 +19,16 @@ This chapter puts them together, arrives at a number, and then makes the number 
 
 ## The material
 
-### The whole model in one graph
+### What the host count is built from
 
 ```{image} _figures/the-sizing-model-graph.svg
 :alt: Everything that feeds the recommended host count
 :width: 100%
 ```
 
-Every node in that sub-graph has appeared in a chapter:
+The figure draws the whole model, but colours only the boxes that feed *hosts the model
+recommends*. Every other box is pale grey, and every coloured box has appeared in an earlier
+chapter:
 
 - the workload on the left ([ch02](#what-a-workload-is));
 - the growth term ([ch04](#peak-mean-and-growth));
@@ -36,10 +38,15 @@ Every node in that sub-graph has appeared in a chapter:
 - a margin per chain, declared where its ceiling was; and
 - the largest of the three at the end ([ch10](#bandwidth-and-the-binding-constraint)).
 
-Follow it left to right and there is nothing surprising in it. Sizing models are not clever. They
-are a dozen multiplications anybody could check, and the difficulty has never been the arithmetic.
-[Appendix E](#appendix-e-web-service-model) lists every one of them, with the chapter that added
-it.
+The pale boxes include every ceiling, the queue, ch07's coordination terms and *hosts in the
+fleet* itself. From the ceilings the recommended count takes only the three margins, one per chain.
+The coloured part is about a dozen multiplications you could check by hand. The difficulty has
+never been the arithmetic. The boxes are too small to read at this width.
+
+To read them, use the live model further down this page: click *hosts the model recommends*, then
+choose *Show only what feeds it* above the graph, and it redraws to show only those boxes.
+[Appendix E](#appendix-e-web-service-model) lists every formula in the model, with the chapter that
+added it.
 
 ### What the model recommends
 
@@ -54,13 +61,16 @@ rows below are the chains it was the largest of.
 ### The number looks at itself
 
 ```{image} _figures/the-sizing-model-hosts.svg
-:alt: The recommended host count, as a distribution
+:alt: The recommended host count across the model's futures, with the point estimate and the middle answer marked
 :width: 100%
 ```
 
-The red line is where the point estimate falls. Everything else is the same model, the same chains
-and the same margins, with the inputs allowed to be as uncertain as the people who wrote them
-down are. Notice where the line sits: below the middle of the bars.
+The red line marks where the point estimate falls. Everything else shows the same model, the same
+chains and the same margins, with the inputs allowed to be as uncertain as those who wrote them
+down. The figure also has a solid dark line labelled *median* — the middle answer, with half the
+model's answers below it and half above. The red line sits to its left. More of the model's
+answers are above the point estimate than below it, so more of them need a bigger fleet than the
+one the point estimate recommends.
 
 At the point estimate each chain hands over its own middle, and the model takes the largest of the
 three. Let the inputs move, and the model comes back with a smaller fleet only when *all three*
@@ -74,57 +84,91 @@ And here is what that fleet does against the ceilings the last six chapters decl
 ```{include} _generated/the-sizing-model-ceilings.md
 ```
 
-At the point estimate, every ceiling but one is comfortable. Of course they are. The fleet was
-sized from those point estimates against those chains, so it satisfies them by construction. The
-one that is not comfortable is the one no chain was sized against:
-[ch07](#when-adding-servers-stops-helping)'s utilisation counting coordination. The request chain
-ignores it, because the chain divides by the fleet's processors as if each worked alone. The fleet
-is inside that margin before a single input has moved. A model that reported only the verdict
-column would be marking its own homework, and this one has marked it wrong in one place already.
+At the point estimate, five of the six ceiling verdicts read *ok*. *Utilisation, counting
+coordination* reads *into the margin*. The three chains were each sized against one ceiling: the
+request chain against *utilisation at the busy hour*, the memory chain against *working set against
+memory*, and the disk chain against *disk fill at horizon*. Each chain divides by that ceiling's
+margin. The fleet is at least as large as every chain's count, so at the point estimate those three
+ceilings cannot be past their allowed lines. They pass by construction. The memory chain set the
+fleet: *hosts for memory* equals *hosts in the fleet* in the outputs table. So *working set against
+memory* sits level with its allowed line. It passes with nothing to spare.
 
-The last two columns ask a different question. Read the *utilisation at the busy hour* row. Buy
-the fleet the arithmetic recommends, and across everything this model thinks could happen, it is
-over the knee at the busy hour in a substantial share of the futures. The working set has
-outgrown memory in more of them still. The last column says how often, and it is not an
-extreme-scenario number.
+No chain was sized against the other three ceilings: *utilisation, counting coordination*,
+*utilisation with one host down* and *fraction of the fleet doing nothing useful*. Two of those
+three pass at the point estimate, and not by construction. *Utilisation with one host down* passes
+because the memory chain bought more hosts than the request chain asked for. The request chain's
+formula makes no allowance for a lost host. *Fraction of the fleet doing nothing useful* passes at
+this fleet size, and no chain would notice if it did not. The coordination ceiling fails before any
+input has moved. The request chain divides the busy cores by the fleet's cores as if each host
+worked alone. [ch07](#when-adding-servers-stops-helping) showed that hosts spend part of their
+capacity on each other. Counting that, the same fleet is busier than the chain assumed, and it sits
+inside the margin. A model that reported only the verdict column would be marking its own homework,
+and this one has already marked it wrong in one place.
 
-Nothing went wrong to produce that. Every input was defensible and every multiplication was
-correct. The result is a fleet that stands a real chance of not lasting its horizon under the
-knee. **That is what sizing from point estimates does.**
+The last two columns count the futures the model draws, not the point estimate. Read the *Over
+limit* column on the *utilisation at the busy hour* row. It is the share of futures in which the
+fleet the arithmetic recommends is past its limit at the busy hour: the busy hour needs more cores
+than the fleet has. The *working set against memory* row is past its limit in more futures still.
+Past that limit the working set no longer fits in memory. That share is not an extreme case. It
+comes from the inputs as they were written down.
 
-Here is all of Part III in one graph, with a slider on every input. Drag *hosts in the
-fleet* and watch every ceiling's verdict at once. That is the decision this chapter is about.
+Nothing went wrong to produce that share. Every input was defensible and every multiplication was
+correct. The result is a fleet that, in a real share of futures, cannot carry its busy hour by the
+end of its horizon. **That is what sizing from point estimates does.**
+
+The live model below is all of Part III in one graph, with a slider on every input. Open **Inputs**.
+The sliders are inside it, and *hosts in the fleet* is one of them. Below the sliders is
+**Outputs**, and it holds the six ceilings. Each ceiling's value in **Outputs** is coloured by its
+verdict: green for *ok*, amber for *into the margin*, red for *over*. Drag *hosts in the fleet* and
+watch the colours change. Choosing that number is the decision this chapter is about.
 
 ```{iframe} /models/web_service_sizing-reference.html
 :width: 100%
 The sizing model, complete. Nothing arrives in this chapter: it is every earlier one, together.
 ```
 
-Press **Expand** on the graph and choose **Model file** to read the file behind it: the one ch02
-started, eleven chapters on.
+Press **Expand** on the graph and choose **Model file** to read the file behind it. It is the file
+ch02 started, with every chapter since added to it.
 
 ### So what is the answer?
 
 There is not one. Part III has been building to that.
 
 A sizing model does not produce a number. It produces a *relationship between a number and a
-risk*, and somebody has to choose a point on it. Problem 12.1 is that choice made explicitly: pick
-a breach probability you are willing to be accountable for, and ask the model what it costs in
-machines.
+risk*, and the person who signs for the fleet has to choose a point on it. Problem 12.1 is that
+choice made explicit: pick a breach probability you are willing to be accountable for, and ask the
+model what it costs in machines.
 
 That is a different conversation from "how many hosts do we need", and a better one, because it
-is answerable. Here is one other point on that curve: the same model, the same ceilings, with a
-fleet bought for the growth case rather than the expected one:
+is answerable. Here is a second fleet to set beside the first: the same model and the same
+ceilings, with a bigger fleet bought. The bigger fleet is the one the model recommends when growth
+comes in at the top of the band its source gives, with every other input at its point estimate.
+The top of the band is the rate the source says would surprise you, and the form
+[ch04](#peak-mean-and-growth) taught shows what that rate means. The first table gives its size
+beside what the model recommends at the point estimate, which has not changed.
+
+```{include} _generated/the-sizing-model-growth-fleet.md
+```
 
 ```{include} _generated/the-sizing-model-resized.md
 ```
 
-Every figure in the last two columns falls, most of them to a few per cent. The one that falls
-least is the coordination ceiling, because more hosts spend more of themselves on each other.
-That is [ch07](#when-adding-servers-stops-helping)'s argument, arriving in a sizing table. What
-the bigger fleet costs is [ch21](#a-tco-for-finance)'s table rather than this one. But the pair,
-*what it costs* beside *how often it breaks*, is the only form in which this decision can be
-handed to somebody.
+Compare the last two columns with the first ceilings table. Five of the six rows fall in both
+columns. Of those five, *utilisation, counting coordination* falls least. One row rises: *fraction
+of the fleet doing nothing useful* is past its allowed line in more futures than before, and its
+verdict at the point estimate turns from *ok* to *into the margin*. No future reaches its limit,
+where the whole fleet would be doing nothing useful, and none can.
+
+Both rows have the same reason: [ch07](#when-adding-servers-stops-helping)'s coordination costs.
+Hosts spend part of their capacity coordinating with each other. That cost grows with the number of
+pairs of hosts rather than with the number of hosts. So each host added brings less capacity than
+the one before. The coordination row falls least for that reason, and the share of the fleet doing
+nothing useful rises.
+
+The bigger fleet does not remove risk. It moves it: away from the busy hour and the memory, and
+into the ceiling whose only job is to protect the budget. What the bigger fleet costs is
+[ch21](#a-tco-for-finance)'s table, not this one. The pair, *what it costs* beside *how often it
+breaks*, is the only form in which this decision can be handed to the person who takes it.
 
 Problem 12.2 is the shape of the trade, counted in hosts, because hosts are all Part III has.
 Removing risk costs machines, and not at a steady rate: the last few percentage points cost more
@@ -140,10 +184,12 @@ spreadsheet hides. It has a provenance and a source like any other. Sizing produ
 downstream, every dollar, every watt and every ceiling, follows from what they chose, not from
 what the model would recommend in hindsight.
 
-Deriving it instead would make the ceilings tautologies. A fleet sized to sit under the knee sits
-under it in every future, and the model would cheerfully report no chance at all of queueing.
-Keeping it an input lets the ceilings ask the only question worth asking: *given what we bought,
-how often does the world break it?*
+Suppose the fleet were derived instead: the model's recommendation, worked out afresh in every
+future. Then in every future the fleet would be at least as large as each chain's count, so the
+three ceilings the chains were sized against would sit at or under their allowed lines in every
+future. Those ceilings would report that the fleet never crosses its allowed line. That would be
+true by definition, and it would say nothing about the world. Keeping the fleet an input lets the
+ceilings ask what a buyer needs to know: *given what we bought, how often does the world break it?*
 
 ## What this cannot tell you
 
@@ -152,42 +198,48 @@ inputs are worth. A missing chain, a database's connection limit, a cache's evic
 network between the hosts, is invisible from inside. Nothing in the output distinguishes a model
 that is complete from one that is not. That is [ch20 · The missing node](#the-missing-node).
 
-**Whether the ceilings are where they were declared.** All six were declared by somebody with a reason
-([ch11](#headroom-and-failure-domains)). The probabilities in the last two columns are exact
-statements about where the model's own answers fall relative to lines that are judgements.
+**Whether the ceilings are in the right place.** Each of the six ceilings has a limit and a margin
+that a person declared with a reason, and [ch11](#headroom-and-failure-domains) is where those
+margins were chosen. The last two columns say where the model's own answers fall against
+those lines. They cannot say whether the lines are in the right place: the lines are judgements.
 
 **Where the uncertainty comes from.** The range is wide, and this chapter has not said which
-input makes it wide. That is the only actionable question about a wide range, and
-[ch19](#which-input-is-the-answer) answers it. The answer will not surprise you if you read
+input makes it wide. [ch19](#which-input-is-the-answer) answers which input the answer rests on,
+and what measuring it would buy. The answer will not surprise you if you read
 [ch04 · Peak, mean and growth](#peak-mean-and-growth).
 
 **What any of it costs.** Part III has sized a fleet and said nothing about money. Part V is
-cost, and it comes after sizing because it consumes sizing's output, including, if anybody is
-careful, its uncertainty.
+cost, and it comes after sizing because it consumes sizing's output. Sizing's uncertainty reaches
+the cost only if you carry the host count across with its range of futures, not as one number.
 
-**How any of these numbers were produced.** The last two columns of every ceiling table have been
-appearing since [ch06](#queueing-and-the-knee) without explanation. [ch13](#monte-carlo) is the
-explanation, and it is next because this is the chapter where a number appeared that you cannot
-defend.
+**How any of these numbers were produced.** The last two columns of every ceilings table have
+appeared since [ch06](#queueing-and-the-knee). ch06 said what they mean. No page has yet said how
+they were computed. [ch13](#monte-carlo) computes them.
 
 ## Key takeaways
 
 :::{div}
 :class: takeaways
 
-- **A sizing model is a dozen multiplications anybody could check.** The difficulty has never been
-  the arithmetic.
+- **A sizing model is about a dozen multiplications you could check by hand.** The difficulty has
+  never been the arithmetic.
 - **The spreadsheet's answer is not merely uncertain. It is low.** The largest of three uncertain
   counts is usually larger than the largest of their three point estimates.
-- **A fleet sized from point estimates satisfies its ceilings by construction, and still breaks.**
-  Across the futures the model thinks plausible it is over the knee at the busy hour in a
-  substantial share of them, with nothing having gone wrong.
-- **A sizing model produces a relationship between a number and a risk, not a number.** Somebody has
-  to pick a point on it, and the only form the choice can be handed over in is *what it costs*
-  beside *how often it breaks*.
+- **A fleet sized from point estimates passes the three ceilings its chains were sized against, and
+  still breaks.** It passes those three by construction — no chain looks at the other three, and one
+  of those, *utilisation, counting coordination*, is already into the margin before any input moves.
+  Across the futures the model draws, the fleet is past its limit at the busy hour in a real share
+  of them, with nothing having gone wrong.
+- **A sizing model produces a relationship between a number and a risk, not a number.** The person
+  who signs for the fleet chooses a point on it. That choice can be handed over in only one form:
+  *what it costs* beside *how often it breaks*.
+- **A bigger fleet moves risk rather than removing it.** A fleet bought when growth is at the top
+  of the band its source gives is past its limits at the busy hour and in memory in far fewer
+  futures. The same fleet pushes the share of it doing nothing useful into that ceiling's margin,
+  because each added host brings less capacity than the last, and that ceiling protects the budget.
 - **The fleet is an input, because the decision is.** Keeping the host count an input lets the
-  ceilings ask the only question worth asking: given what was bought, how often does the world
-  break it?
+  ceilings ask what a buyer needs to know: given what was bought, how often does the world break
+  it?
 :::
 
 ## Problems
@@ -195,19 +247,36 @@ defend.
 Three, in `tests/the_sizing_model/`. The first two have tests. The last does not, and says why.
 
 **12.1 — Size to a risk, not to a point estimate.**
-Find the smallest fleet whose queueing ceiling is breached in at most some fraction of futures.
-Bisect rather than step, and turn the number of draws down while searching. A search nobody runs
-twice is a search nobody runs.
+Find the smallest number of hosts for which the *utilisation at the busy hour* row in the ceilings
+table is past its limit in at most the target share of futures. That share is the *Over limit*
+column on that row. `risk_at(hosts)` asks the model for that share, with that many hosts in the
+fleet, over the full number of draws. `risk_at(hosts, samples=n)` does the same over `n` draws
+instead.
+
+More hosts never raise that share, so a bisection finds the answer in a few calls. Stepping one host
+at a time takes far more. Use fewer draws while you search and the full number for the final answer.
+Comparing candidates needs much less precision than reporting one. The model draws the same futures
+every time, so a fleet always gets the same share at the full number. The tests hold the answer to
+the target exactly, at the full number of draws: one host too small and you miss the target; one
+host too large and you have not found the smallest. The Check under this problem runs the model
+several times in your browser. It is slow. Wait for it. A search nobody runs twice is a search
+nobody runs.
 
 ```bash
 python3 -m pytest tests/the_sizing_model/test_problem_1_risk.py -m problem
 ```
 
 **12.2 — What a percentage point of risk costs, in hosts.**
-Count the hosts between the fleets two risk targets need, then look at the shape as the target
-tightens. The last few points cost more machines than the ones before them, and knowing how many
-is the difference between an argument and a preference. Part III has no prices, so the answer is
-a count of hosts; [ch21](#a-tco-for-finance) prices the same pair.
+Count the hosts between the fleets two risk targets need, then look at how that count changes as the
+target tightens. Your `cost_of_certainty` function must size both fleets by calling your
+`hosts_for_risk` from 12.1, using the same `risk_at` both times. A search of its own can land on
+different fleets, and the Check fails it. The sign matters: moving to a smaller risk costs hosts, so
+the answer is positive; moving the other way gives them back, so the answer is negative. The Check
+runs your 12.1 function as well. It is shown again above the Check. It is the same function as the
+one under 12.1: an edit to either copy is an edit to both. So 12.2 cannot pass until
+`hosts_for_risk` works. The last few points of risk cost more machines than the ones before them.
+Knowing how many is the difference between an argument and a preference. Part III has no prices, so
+the answer is a count of hosts. [ch21](#a-tco-for-finance) prices the same pair of fleets.
 
 ```bash
 python3 -m pytest tests/the_sizing_model/test_problem_2_cost_of_certainty.py -m problem
@@ -220,23 +289,34 @@ Take the quantities from your workload and assemble them into a chain that ends 
 machines. Not in a file, unless you want to; on paper is fine. The point is to get from what
 arrives to what you buy without skipping a step.
 
-Then find the two things that make it a conditional model rather than a definitional one: a constant somebody
-measured on a particular version of a particular piece of software, and a limit your system runs
-into. Mark each one.
+Mark what makes the chain a conditional model rather than a definitional one. There are two kinds of
+thing to look for: a constant measured on a particular version of a particular piece of software,
+and a limit your system runs into. Either kind alone makes the chain conditional. Mark every one you
+find, of either kind.
 
-Then turn to the fleet you have, rather than the one the chain recommends. Which of its limits
-gives first as the load grows, how often would you expect that to happen over the horizon, and
-who accepted that? This chapter's argument is that somebody did, whether or not they knew it.
+Now take the fleet you have, not the one the chain recommends. Which of its limits gives first as
+the load grows? Which input would have to come in where for that limit to give way? Would that value
+surprise you, in the sense ch04 used — is it inside or outside the band you would write as
+*surprised below this, surprised above that*? Who accepted that risk? This chapter argues that
+someone did, whether or not they knew it.
 
-A good answer reaches a number, has at least one mark on it, and names the risk the bought fleet
-accepts and the person who accepted it. A chain with no marks is a definitional model. Either your system
-genuinely has no measured constants and no ceilings, which is rare, or you have not found them
-yet, which is the more likely reading and the more expensive one. A risk nobody accepted is the
-commoner finding, and it is the one to take to whoever signs for the fleet.
+A good answer reaches a count of machines and has at least one mark on the chain. It names the limit
+that gives first, the input and the value that would make it give, and says whether that value is
+inside your surprise band. It names the person who accepted the risk.
+
+A chain with no marks is a definitional model. Either your system has no measured constants and no
+limits, or you have not found them yet. Look again before you accept the first.
+
+How often the limit would give way, as a share of futures, needs the method of
+[ch13](#monte-carlo). Here the surprise band is enough.
+
+The answer is wrong if, as the load grows, a different limit gives first. It is also wrong if the
+person you named says they never saw the risk. Then nobody accepted it. Take the answer to whoever
+signs for the fleet.
 
 ## Where to go next
 
-[ch13](#monte-carlo) is where the last two columns came from. It sits here rather than at the
+[ch13](#monte-carlo) draws the futures for the last two columns. It sits here rather than at the
 front of the book for the reason this chapter has just demonstrated: the method is no use to you
 until you have a number you cannot defend, and can feel that you cannot defend it.
 

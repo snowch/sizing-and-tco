@@ -12,6 +12,11 @@ import pytest
 from bench.stamp import load_result
 from tests.regime_changes.stubs import straight_line_forecast
 
+#: Evenly spaced loads on the busy side, where the test asks whether the forecast bends. A
+#: straight line's steps between them are all the same size; anything that curves has steps that
+#: differ.
+EVENLY_SPACED = (0.6, 0.7, 0.8, 0.9)
+
 
 @pytest.fixture(scope="module")
 def curve():
@@ -26,15 +31,39 @@ def known(curve):
     ]
 
 
+def bends(values: np.ndarray) -> bool:
+    """Whether a run of values at evenly spaced loads curves, rather than climbing in equal steps.
+
+    Written without fitting anything, so that the method the problem asks for is not in the file
+    it ships with.
+    """
+    steps = np.diff(values)
+    return bool(np.ptp(steps) > 1e-6 * max(float(np.abs(steps).max()), 1e-12))
+
+
 @pytest.mark.problem
 def test_the_line_fits_where_it_was_fitted(known):
     """It has to be a good line, or the problem is about a bad fit rather than about regimes."""
     at = np.array([u for u, _ in known])
     predicted = np.asarray(straight_line_forecast(known, at), dtype=float)
     actual = np.array([r for _, r in known])
-    assert np.allclose(predicted, actual, rtol=0.12), (
+    fits = bool(np.allclose(predicted, actual, rtol=0.12))
+    assert fits, (
         "the fit is poor even on its own data; this problem is about extrapolation, not about "
         "fitting"
+    )
+
+
+@pytest.mark.problem
+def test_it_is_a_straight_line(known):
+    """The problem asks what a chain of multiplications predicts, and that is a straight line."""
+    predicted = np.asarray(straight_line_forecast(known, np.array(EVENLY_SPACED)), dtype=float)
+    bent = bends(predicted)
+    assert not bent, (
+        "your forecast bends: at evenly spaced loads it does not climb in equal steps, so it is "
+        "not a straight line. If you fitted ch06's division, you have the right model, and it "
+        "follows the curve; that is ch06's lesson, not a mistake. This problem asks what a "
+        "straight line, the shape a chain of multiplications gives, predicts out there."
     )
 
 
@@ -44,10 +73,11 @@ def test_it_is_wrong_by_a_multiple_further_out(curve, known):
     at = np.array([row["utilisation"] for row in far])
     predicted = np.asarray(straight_line_forecast(known, at), dtype=float)
     actual = np.array([row["residence_time"] for row in far])
-    ratios = actual / predicted
-    assert ratios.min() > 2.0, (
-        f"the straight line should understate the busy end by a multiple, and it is only off by "
-        f"{ratios.min():.2f}x. Check that you fitted on `known` and did not peek at the far end."
+    wrong_by_a_multiple = bool((actual / predicted).min() > 2.0)
+    assert wrong_by_a_multiple, (
+        "a straight line through the points in `known` falls short of the busy end by a "
+        "multiple, and this forecast does not. If the straight-line test above fails too, start "
+        "there. If it passes, check that your line is fitted to `known` and to nothing else."
     )
 
 
@@ -56,9 +86,11 @@ def test_the_error_grows_with_load(curve, known):
     at = np.array([row["utilisation"] for row in curve if row["utilisation"] >= 0.6])
     actual = np.array([row["residence_time"] for row in curve if row["utilisation"] >= 0.6])
     ratios = actual / np.asarray(straight_line_forecast(known, at), dtype=float)
-    assert np.all(np.diff(ratios) > 0), (
-        "a linear extrapolation into a non-linear regime gets steadily worse, never better. If "
-        "yours improves somewhere, the fit is picking up curvature it should not have seen."
+    widening = bool(np.all(np.diff(ratios) > 0))
+    assert widening, (
+        "the curve pulls further ahead of a straight line with every step of load. Here the gap "
+        "stops widening somewhere, which only a forecast that bends with the curve can do: see "
+        "the straight-line test above."
     )
 
 
@@ -76,3 +108,16 @@ def test_the_low_end_really_does_look_linear(known):
     slopes = np.diff(residences) / np.diff(utilisations)
     assert np.all(slopes[1:] / slopes[:-1] < 1.5), "the low end should look nearly straight"
     assert residences[-1] < 2.0 * residences[0], "the low end should rise gently"
+
+
+def test_the_straight_line_check_tells_a_line_from_the_curve(curve):
+    """Scaffolding: the bend check can fail. The published curve, read at the same evenly spaced
+    loads, bends; the same loads drawn as a straight line do not. Without this, the straight-line
+    test could pass a forecast that follows the curve."""
+    at_the_loads = {round(row["utilisation"], 6): row["residence_time"] for row in curve}
+    missing = [u for u in EVENLY_SPACED if u not in at_the_loads]
+    assert not missing, f"the published curve has no row at {missing}; the check reads it there"
+    assert bends(np.array([at_the_loads[u] for u in EVENLY_SPACED])), (
+        "the curve should bend at these loads"
+    )
+    assert not bends(np.array(EVENLY_SPACED)), "a straight run of values should not count as bent"

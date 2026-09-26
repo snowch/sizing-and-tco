@@ -44,7 +44,7 @@ from bench.reading import BUTTON as TEXT_BUTTON  # noqa: E402
 from bench.reading import PARENT as TEXT_PARENT  # noqa: E402
 from bench.stamp import shown  # noqa: E402
 from bench.tables import GLOSSARY  # noqa: E402
-from bench.theme import BUTTON, PARENT, both_ways  # noqa: E402
+from bench.theme import BUTTON, FRAME, PARENT, both_ways  # noqa: E402
 from sizing.playground.toolkit import (  # noqa: E402
     BOOT,
     PYODIDE,
@@ -191,10 +191,27 @@ def href_for(source: str) -> str:
     return f"{stem.replace('_', '-')}.html"
 
 
-#: Node types whose text is never a glossary link: code, headings, and text that is already a
-#: link or a title.
+def page_names(index: dict[str, dict], sources: list[str]) -> dict[str, str]:
+    """Where a cross-reference lands: MyST's slug for each page, mapped to where it is published.
+
+    A link's URL ends in the slug MyST gave the page, not in the name this build publishes it
+    under, and for two pages those differ. MyST calls the first page in the table of contents
+    `index`, and this build publishes the cover as index.html and the preface as preface.html.
+    Keyed by the published name, a link to the preface opened the cover.
+    """
+    return {
+        str(index[s].get("slug") or Path(href_for(s)).stem): href_for(s)
+        for s in sources
+        if s in index
+    }
+
+
+#: Node types whose text is never a glossary link: code, headings, text that is already a link
+#: or a title, and tables. A table is data, not prose, and the vocabulary test skips it for the
+#: same reason: its cells use words in the senses a model needs (bytes per sample, a trace
+#: sample rate), and a column heading is no place to send a reader away.
 UNLINKED = frozenset(
-    {"inlineCode", "code", "link", "crossReference", "heading", "admonitionTitle", "image"}
+    {"inlineCode", "code", "link", "crossReference", "heading", "admonitionTitle", "image", "table"}
 )
 
 
@@ -240,13 +257,21 @@ def _link_in(node, pattern: re.Pattern, linkable: dict[str, str], done: set[str]
     children = node.get("children")
     if not isinstance(children, list):
         return
-    out = []
+    out, exempt = [], False
     for child in children:
-        if isinstance(child, dict) and child.get("type") == "text":
+        if exempt:
+            # `% word-ok:` says the block after it uses a word in another sense, a scrape's
+            # samples or a scrape interval, so a link to the glossary's meaning would be wrong.
+            # The block keeps its words as they are, and the next mention gets the link.
+            out.append(child)
+            exempt = False
+        elif isinstance(child, dict) and child.get("type") == "text":
             out.extend(_split_text(child, pattern, linkable, done))
         else:
             _link_in(child, pattern, linkable, done)
             out.append(child)
+        if isinstance(child, dict) and child.get("type") == "comment":
+            exempt = str(child.get("value", "")).strip().startswith("word-ok:")
     node["children"] = out
 
 
@@ -428,13 +453,32 @@ let ready = null;
 // The stubs file the tests import from: the file as the chapter ships it, with each piece the
 // reader has typed into spliced back into the range it came from. Later ranges first, so earlier
 // offsets stay valid. The same splice the model's Run does.
+//
+// One function can sit under two problems, when both grade it: ch12's 12.2 calls 12.1's answer.
+// Those boxes are one range of the file shown twice, so the file takes that range once. Splicing
+// both corrupted it: the second splice cut at offsets the first had already moved, leaving a
+// SyntaxError in a line the reader never wrote, or the untouched copy over the reader's edit.
+function splice(whole, pieces) {
+  const once = new Map();
+  for (const p of pieces) once.set(p.start + ":" + p.end, p);
+  let out = whole;
+  for (const p of [...once.values()].sort((a, b) => b.start - a.start)) {
+    out = out.slice(0, p.start) + p.text.replace(/\n$/, "") + out.slice(p.end);
+  }
+  return out;
+}
+
 function assembleStubs() {
   const pieces = [...document.querySelectorAll("pre.stub")]
-    .map((el) => ({start: +el.dataset.start, end: +el.dataset.end, text: el.innerText}))
-    .sort((a, b) => b.start - a.start);
-  let out = SPEC.whole;
-  for (const p of pieces) out = out.slice(0, p.start) + p.text.replace(/\n$/, "") + out.slice(p.end);
-  return out;
+    .map((el) => ({start: +el.dataset.start, end: +el.dataset.end, text: el.innerText}));
+  return splice(SPEC.whole, pieces);
+}
+
+// The other boxes showing the same range, which keep what the reader types in this one, so the
+// two copies on the page never disagree about what the file holds.
+function twins(pre) {
+  return [...document.querySelectorAll("pre.stub")].filter((other) => other !== pre
+    && other.dataset.start === pre.dataset.start && other.dataset.end === pre.dataset.end);
 }
 
 // The files a reader edits whole, a model fragment or a fixture, as the grader writes them:
@@ -540,11 +584,19 @@ async function check(problem) {
 
 for (const problem of document.querySelectorAll(".problem")) {
   for (const pre of problem.querySelectorAll("pre.stub, pre.stub-file")) {
-    const block = pre.closest(".editable-block");
-    pre.addEventListener("input", () => {
+    const edited = (box) => {
+      const block = box.closest(".editable-block");
       block.classList.add("changed");
       block.querySelector(".hint").textContent = "edited";
-    }, {once: true});
+    };
+    pre.addEventListener("input", () => {
+      edited(pre);
+      if (!pre.classList.contains("stub")) return;
+      for (const twin of twins(pre)) {
+        twin.textContent = pre.innerText;
+        edited(twin);
+      }
+    });
   }
   for (const button of problem.querySelectorAll(".check-here")) {
     button.addEventListener("click", () => check(problem));
@@ -853,6 +905,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   // Handle resize messages from embedded iframes
   addEventListener("message", (e) => {
+    // A model that has the keyboard hears Escape itself and asks for the box to close.
+    if (e.data && e.data.close === true && e.source) {
+      const frame = Array.from(document.querySelectorAll("iframe")).find(f => f.contentWindow === e.source);
+      if (frame && frame.closest(".expanded")) close();
+      return;
+    }
     if (e.data && "sizing" in e.data && e.source) {
       const frame = Array.from(document.querySelectorAll("iframe")).find(f => f.contentWindow === e.source);
       if (!frame) return;
@@ -891,6 +949,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const button = control();
     block.querySelector(".editable-bar").appendChild(button);
     wire(block, button);
+  }
+  // A drawing is inlined at its own width and shrunk to the column, and its text shrinks with
+  // it: at a phone's width a chart's labels drop to half the size they were drawn at, and a
+  // model's whole graph is unreadable at any width. Open, it is drawn at the size it was made
+  // for, and the box scrolls. Only where the shrinking costs something: the smallest text a
+  // figure draws is ten units (`bench.diagrams.TEXT`), so a drawing kept to nine tenths of its
+  // width or more still reads at nine pixels, and a control on it would be noise.
+  const shrunk = (el) => {
+    const svg = el.querySelector("svg");
+    const natural = svg && svg.width.baseVal.value;
+    return !!natural && svg.getBoundingClientRect().width < natural * 0.9;
+  };
+  for (const el of document.querySelectorAll("#main > .drawing")) {
+    if (!shrunk(el)) continue;
+    const box = document.createElement("div");
+    box.className = "wide-block";
+    el.replaceWith(box);
+    const button = control();
+    box.appendChild(button);
+    box.appendChild(el);
+    wire(box, button);
   }
   for (const el of document.querySelectorAll("#main > pre, #main > table, #main table")) {
     if (!squeezed(el)) continue;
@@ -1013,7 +1092,7 @@ PAGE = """<!doctype html>
 <a class="skip" href="#main">Skip to the chapter</a>
 <header class="top">
   <a class="brand" href="index.html">Sizing and TCO</a>
-  <button id="find-open" class="find" type="button" hidden>Search <kbd>/</kbd></button>
+  <button id="find-open" class="find" type="button" hidden aria-label="Search the book"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="6.8" cy="6.8" r="4.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.3 10.3 14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span>Search</span> <kbd>/</kbd></button>
   <button id="offline" class="offline" type="button" hidden data-state=""
           title="Fetch the Python runtime now, so the models run with no network"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 1.5v8.5m0 0L4.8 6.8M8 10l3.2-3.2M2 11.5v2.5h12v-2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Keep offline</span></button>
   {text_button}
@@ -1042,8 +1121,6 @@ PAGE = """<!doctype html>
 """
 
 CSS = """
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
 /* The figures in this book are drawn by `bench/diagrams.py`: blue-grey, with four accents that
    each mean something. The page borrows that palette so a diagram sits on the page rather than
    on top of it. Prose is a serif and every piece of furniture is a sans, which is what keeps a
@@ -1059,6 +1136,7 @@ CSS = """
   --bg: #fdfdfc; --panel: #f2f6f7; --code: #f0f4f6; --raise: rgba(38,50,56,.06);
   --accent: #35648f; --on-accent: #ffffff; --wash: rgba(53,100,143,.09);
   --warn: #c8791a; --stop: #b3413a; --go: #2e7d32;
+  --shade: rgba(38,50,56,.22);
   --measure: 36rem;
   /* The two rails, which grow with the window rather than stepping at one width. A chapter
      list that wraps 16 of its 39 entries is hard to scan, and the room to fix it appears
@@ -1110,6 +1188,7 @@ CSS = """
     --bg: #14191c; --panel: #1b2327; --code: #1b2327; --raise: rgba(0,0,0,.4);
     --accent: #7fb2dd; --on-accent: #10171b; --wash: rgba(127,178,221,.14);
     --warn: #e0a34e; --stop: #e8756c; --go: #81c784;
+    --shade: rgba(0,0,0,.55);
   }
 }
 
@@ -1161,7 +1240,17 @@ a.xref:hover { text-decoration: underline; }
        background: color-mix(in srgb, var(--bg) 97%, transparent);
        backdrop-filter: saturate(1.6) blur(8px); }
 .brand { font-family: var(--chrome); font-weight: 600; font-size: 15px; letter-spacing: -.01em;
-         text-decoration: none; color: var(--ink); }
+         text-decoration: none; color: var(--ink); line-height: 1.1; min-width: 0; }
+/* The controls keep their size and the title takes what is left. Shrinking all of them together
+   squeezed the title to three lines taller than the bar, and still pushed the menu button past
+   the right edge of a 320px screen, so every page scrolled sideways. */
+.top > :not(.brand) { flex-shrink: 0; }
+@media (max-width: 26rem) {
+  .top { gap: 6px; padding: 0 .75rem; }
+  .brand { font-size: 14px; }
+  .find :is(kbd, span) { display: none; }   /* the icon says it; a phone has no key to press */
+  .find { padding: .45rem .5rem; }
+}
 /* Three controls in the header are written `hidden` and revealed by the script that makes them
    work. Saying so in the markup was not enough: `display` on a class beats the browser's own
    rule for the attribute, so all three showed with scripts off and did nothing when pressed. */
@@ -1390,6 +1479,22 @@ th, td { text-align: left; padding: .42rem .7rem; border-bottom: 1px solid var(-
 th { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
      color: var(--faint); border-bottom: 1px solid var(--rule); padding-bottom: .3rem; }
 tr:last-child td { border-bottom: 1px solid var(--rule); }
+/* A table or a code block wider than the screen scrolls sideways, and on a phone nothing said
+   so: ch02's Claim column, the one its prose sends the reader to, sat out of sight with no sign
+   it was there. A shade at each edge that has more beyond it says so, and goes when the reader
+   reaches the end. The covers scroll with the content and the shades do not, which is the whole
+   mechanism; `--behind` is whatever colour the box sits on. */
+table, pre:not(.editable) {
+  --behind: var(--bg);
+  background:
+    linear-gradient(to right, var(--behind) 30%, transparent) left / 2.2rem 100% no-repeat local,
+    linear-gradient(to left, var(--behind) 30%, transparent) right / 2.2rem 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, var(--shade), transparent) left / .8rem 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--shade), transparent) right / .8rem 100% no-repeat scroll,
+    var(--behind);
+}
+pre:not(.editable) { --behind: var(--code); }
+.admonition table { --behind: var(--panel); }
 
 /* Pictures */
 figure { margin: 1.8rem 0; }
@@ -1403,8 +1508,17 @@ figure img { background: #fff; border-radius: 4px; }
 .admonition-title { font: 600 13px/1.4 var(--chrome); letter-spacing: .04em;
                     text-transform: uppercase; color: var(--muted); margin: 0 0 .4rem; }
 .admonition.note { border-left-color: var(--accent); position: relative; padding-left: 3.2rem; }
-.admonition.note::before { content: 'info'; font-family: 'Material Icons'; font-size: 1.5rem;
-                           position: absolute; left: .8rem; top: .8rem; color: var(--accent); }
+/* The box icons are drawn here, as masks painted in the accent. They were a web font's
+   ligatures, and wherever the font did not arrive -- offline, which this site promises to work,
+   or behind a filter -- the box showed the ligature's name, "info", in large blue type. */
+:is(.admonition.note, .definition, .takeaways, .example)::before {
+  content: ""; position: absolute; left: .8rem; top: .85rem; width: 1.45rem; height: 1.45rem;
+  background: var(--accent); -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat; }
+.admonition.note { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='black' stroke-width='2'/%3E%3Crect x='11' y='10' width='2' height='7' fill='black'/%3E%3Crect x='11' y='6.5' width='2' height='2' fill='black'/%3E%3C/svg%3E"); }
+.definition { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 5.5c3-1.2 6-1 9 1 3-2 6-2.2 9-1v13.5c-3-1.2-6-1-9 1-3-2-6-2.2-9-1z' fill='none' stroke='black' stroke-width='1.8' stroke-linejoin='round'/%3E%3Cpath d='M12 6.5v13.5' stroke='black' stroke-width='1.8'/%3E%3C/svg%3E"); }
+.takeaways { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.5 18h5M10.5 21h3M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.example { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='black' stroke-width='1.8'/%3E%3Cpath d='M15.8 8.2 13.5 13.5 8.2 15.8l2.3-5.3z' fill='black'/%3E%3C/svg%3E"); }
 .admonition.tip { border-left-color: var(--go); }
 .admonition.important { border-left-color: var(--stop); }
 
@@ -1414,10 +1528,6 @@ figure img { background: #fff; border-radius: 4px; }
 .definition, .takeaways, .example { background: var(--panel); border: 1px solid var(--edge);
               border-left: 3px solid var(--accent); border-radius: 6px; padding: .8rem 1rem;
               margin: 1.5rem 0; font-size: .98em; position: relative; padding-left: 3.2rem; }
-.definition::before, .takeaways::before, .example::before { content: 'menu_book'; font-family: 'Material Icons';
-              font-size: 1.5rem; position: absolute; left: .8rem; top: .8rem; color: var(--accent); }
-.takeaways::before { content: 'lightbulb'; }
-.example::before { content: 'explore'; }
 .definition > :first-child, .takeaways > :first-child, .example > :first-child { margin-top: 0; }
 .definition > :last-child, .takeaways > :last-child, .example > :last-child { margin-bottom: 0; }
 
@@ -1460,6 +1570,9 @@ html.model-open #main .expanded > :is(iframe, pre, table) { flex: 1 1 auto; heig
 /* Expanded, the table is as wide as its content, so the box is what scrolls. Left a scroll box
    of its own, with nothing to scroll and `overscroll-behavior-x: contain`, the table kept a
    swipe that started on it: on a phone the columns past the edge could not be reached. */
+/* A drawing opens at the width it was drawn at, which is what its text was sized for. */
+html.model-open #main .expanded > .drawing { flex: none; width: max-content; margin: auto; }
+html.model-open #main .expanded > .drawing > svg { max-width: none; }
 html.model-open #main .expanded > table { width: max-content; overflow: visible;
           overscroll-behavior: auto; }
 /* Pinned to the window rather than to the box, which is now a scrolling one: laid out in the
@@ -1528,6 +1641,10 @@ html.model-open #main .expanded > iframe { height: auto !important; }
 pre.editable { margin: 0; border: 0; border-radius: 0; background: var(--bg);
                caret-color: var(--accent); white-space: pre; overflow-x: auto; }
 pre.editable:focus { outline: none; }
+/* A problem's instructions are its stub's docstring, in lines wider than a phone and wider than
+   a tablet's column. Scrolled, they were read a line at a time sideways; wrapped, they are read.
+   Wrapping is display only: the text the Check sends keeps its own line breaks. */
+.problem pre.editable { white-space: pre-wrap; overflow-wrap: anywhere; overflow-x: visible; }
 
 /* Buttons */
 button { font: 14px/1 var(--chrome); cursor: pointer; border-radius: 5px;
@@ -1778,6 +1895,48 @@ def crawlables(out: Path, pages: list[str]) -> None:
     (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {site}/sitemap.xml\n")
 
 
+#: The files Appendix H's checker lays out beside the toolkit: the verifier the build runs, and
+#: what it imports from the harness. The same three harness files a problem that runs the
+#: verifier ships, for the same reason (sizing/playground/toolkit.py, ``problem_files``).
+CHECKER_FILES = (
+    "scripts/verify-models.py",
+    "bench/__init__.py",
+    "bench/stamp.py",
+    "bench/measure.py",
+)
+
+
+def checker_page() -> str:
+    """Appendix H's model checker: a pasted file, checked by the toolkit in the reader's tab.
+
+    It carries the toolkit, the verifier, and every stamped measurement a model file can name,
+    so a measured constant reads the value the desk reads rather than showing as not yet
+    measured. The model results stay behind: a model file cannot name one.
+    """
+    measurements = {
+        path.name: path.read_text()
+        for path in sorted((ROOT / "bench" / "results").glob("*.json"))
+        if json.loads(path.read_text()).get("target") in ("corpus", "rig", "estate")
+    }
+    toolkit = {
+        "pyodide": PYODIDE,
+        "modules": sources(),
+        "results": measurements,
+        "wheels": wheels(),
+        "files": {name: (ROOT / name).read_text() for name in CHECKER_FILES},
+    }
+    viewer = ROOT / "sizing" / "viewer"
+    return (
+        (viewer / "checker.html")
+        .read_text()
+        .replace("__CSS__", both_ways((viewer / "checker.css").read_text()))
+        .replace("__FRAME__", FRAME)
+        .replace("__BOOT__", BOOT)
+        # Inside a <script> element, "</" would end it early; JSON allows the escape.
+        .replace("__TOOLKIT__", json.dumps(toolkit).replace("</", "<\\/"))
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
@@ -1801,18 +1960,15 @@ def main() -> int:
 
     # What each page is called here, so a cross-reference resolves to this build rather than to
     # the themed site it was parsed for.
-    renderer.PAGES = {Path(href_for(s)).stem: href_for(s) for s in wanted}
+    renderer.PAGES = page_names(index, wanted)
 
     args.out.mkdir(parents=True, exist_ok=True)
     favicon = ROOT / "public" / "favicon.svg"
     if favicon.exists():
         (args.out / "favicon.svg").write_text(favicon.read_text())
-    # Copy the custom model viewer to the models directory so the appendix can link to it
-    custom_viewer = ROOT / "public" / "custom-model-viewer.html"
-    if custom_viewer.exists():
-        models_dir = args.out / "models"
-        models_dir.mkdir(parents=True, exist_ok=True)
-        (models_dir / "custom-model-viewer.html").write_text(custom_viewer.read_text())
+    # Appendix H's model checker, which the appendix embeds from /models/.
+    (args.out / "models").mkdir(parents=True, exist_ok=True)
+    (args.out / "models" / "custom-model-viewer.html").write_text(checker_page())
     # The index is taken from every page before any page is rendered: rendering promotes the
     # headings, and the index reads the depths MyST wrote.
     records: list[dict] = []

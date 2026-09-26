@@ -27,6 +27,17 @@ OUTPUT = "annual_staff_cost"
 #: by about a per cent between seeds and an interval's ends by a little more; this is a few times
 #: that, so a correct answer passes on any seed and a wrong shape does not.
 TOLERANCE = 0.04
+#: Two inputs drawn from separate random fractions have a rank correlation within a few
+#: hundredths of zero at this count: one over the square root of the count is about 0.0045, and
+#: this is four times that. Two drawn from the same fractions have a rank correlation of one.
+TOGETHER = 0.02
+
+
+def rank_correlation(a: np.ndarray, b: np.ndarray) -> float:
+    """How far two columns rise and fall together, by rank, so that the shapes do not matter."""
+    ranks_a = np.argsort(np.argsort(np.asarray(a, dtype=float)))
+    ranks_b = np.argsort(np.argsort(np.asarray(b, dtype=float)))
+    return float(np.corrcoef(ranks_a, ranks_b)[0, 1])
 
 
 @pytest.fixture(scope="module")
@@ -64,14 +75,26 @@ def test_the_percentiles_match_what_the_model_declares(declared, percentile):
 
 
 @pytest.mark.problem
+def test_each_input_has_its_own_draw(declared):
+    drawn = sample_two_inputs(declared, seed=11, samples=SAMPLES)
+    together = rank_correlation(drawn[WANTED[0]], drawn[WANTED[1]])
+    assert abs(together) < TOGETHER, (
+        f"{WANTED[0]} and {WANTED[1]} rise and fall together in your draws. The model declares "
+        "them independent, so each needs its own random fractions. Drawing both from the same "
+        "fractions pairs the high values of one with the high values of the other."
+    )
+
+
+@pytest.mark.problem
 @pytest.mark.parametrize("end", ["p5", "p95"])
 def test_the_cost_interval_is_the_one_the_book_publishes(declared, published, end):
     drawn = sample_two_inputs(declared, seed=11, samples=SAMPLES)
     got = float(np.percentile(np.asarray(drawn[OUTPUT], dtype=float), float(end[1:])))
     assert abs(got - published[end]) < TOLERANCE * published[end], (
         f"the book publishes a {end} of {published[end]:,.0f} for the annual staff cost and your "
-        f"draws give {got:,.0f}. The formula is the model's own; check the two shapes before the "
-        "arithmetic, and the triangular's two branches before the lognormal."
+        f"draws give {got:,.0f}. If both inputs pass their own checks, look at how you combined "
+        "them: the formula is the one quoted under the problem, worked draw by draw, and each "
+        "input needs its own random fractions."
     )
 
 
@@ -105,3 +128,19 @@ def test_the_cost_is_still_the_product_of_the_two_and_nothing_else_moves_them():
     assert model.nodes[OUTPUT].depends_on() == set(WANTED)
     for correlation in model.correlations:
         assert not {correlation["a"], correlation["b"]} & set(WANTED), correlation
+
+
+def test_the_together_check_tells_shared_fractions_from_separate_ones(declared):
+    """Scaffolding: the threshold passes two inputs drawn from separate fractions on several
+    seeds, and fails the same two drawn from one set of fractions, so it catches the mistake it
+    names and nothing else."""
+    for seed in (11, 12, 13):
+        generator = np.random.default_rng(seed)
+        separate = [mc.sample(declared[name], SAMPLES, generator) for name in WANTED]
+        assert abs(rank_correlation(*separate)) < TOGETHER, seed
+    shared = np.random.default_rng(11).random(SAMPLES)
+    one = [
+        mc.SHAPES[shape](shared, **parameters)
+        for shape, parameters in (mc.one_shape(declared[name]) for name in WANTED)
+    ]
+    assert rank_correlation(*one) > 0.9

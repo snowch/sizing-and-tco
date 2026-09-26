@@ -2,10 +2,10 @@
 
 | Constant | Value | Standard error | Unit | Measured against |
 |---|---:|---:|---|---|
-| collector throughput per core, measured | *not yet measured* | — | MB/s/core | `bench/results/collector-throughput-per-core.json` does not exist |
-| bytes per log line, compressed | 32.4 | ± 0.0044 | bytes / line | python zlib (DEFLATE level 6) |
-| bytes per sample, compressed | 9.37 | ± 0.0009 | bytes / sample | this repository's encoder, not any product's |
-| spans per request | *not yet measured* | — | span/request | `bench/results/traces-spans-per-request.json` does not exist |
-| bytes per span, compressed | 73.6 | ± 0.0173 | bytes / span | python zlib (DEFLATE level 6) |
+| collector throughput per core, measured<br>`collector_throughput_measured` | *not yet measured* | — | MB/s/core | `bench/results/collector-throughput-per-core.json` does not exist |
+| bytes per log line, compressed<br>`logs_line_bytes` | 32.4 | ± 0.0044 | bytes / line | python zlib (DEFLATE level 6) |
+| bytes per sample, compressed<br>`metrics_sample_bytes` | 9.37 | ± 0.0009 | bytes / sample | this repository's encoder, not any product's |
+| spans per request<br>`spans_per_request` | *not yet measured* | — | span/request | `bench/results/traces-spans-per-request.json` does not exist |
+| bytes per span, compressed<br>`traces_span_bytes` | 73.6 | ± 0.0173 | bytes / span | python zlib (DEFLATE level 6) |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***

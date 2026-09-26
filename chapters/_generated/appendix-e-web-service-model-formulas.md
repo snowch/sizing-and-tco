@@ -16,32 +16,32 @@
 | residence time (`residence_time`) | `service_seconds / (1 - effective_utilisation)` | second | [ch06](#queueing-and-the-knee) |
 | time spent queueing (`waiting_time`) | `residence_time - service_seconds` | second | [ch06](#queueing-and-the-knee) |
 | requests in the system (`concurrency`) | `peak_request_rate * residence_time` | request | [ch06](#queueing-and-the-knee) |
-| utilisation at the busy hour (`queueing_headroom`) | `utilisation` against a limit of `1`, keeping `queueing_margin` below it |  | [ch06](#queueing-and-the-knee) |
+| limit on utilisation at the busy hour (`queueing_headroom`) | `utilisation` against a limit of `1`, keeping `queueing_margin` below it |  | [ch06](#queueing-and-the-knee) |
 | host count (`host_count`) | `hosts / one_host` |  | [ch07](#when-adding-servers-stops-helping) |
 | throughput of one host alone (`single_host_throughput`) | `cores_per_host / service_demand` | request/second/host | [ch07](#when-adding-servers-stops-helping) |
 | throughput if scaling were free (`linear_throughput`) | `hosts * single_host_throughput` | request/second | [ch07](#when-adding-servers-stops-helping) |
-| throughput the fleet can actually reach (`achievable_throughput`) | `linear_throughput / (1 + contention * (host_count - 1) + crosstalk * host_count * (host_count - 1))` | request/second | [ch07](#when-adding-servers-stops-helping) |
+| achievable throughput (`achievable_throughput`) | `linear_throughput / (1 + contention * (host_count - 1) + crosstalk * host_count * (host_count - 1))` | request/second | [ch07](#when-adding-servers-stops-helping) |
 | scaling efficiency (`scaling_efficiency`) | `achievable_throughput / linear_throughput` |  | [ch07](#when-adding-servers-stops-helping) |
-| fraction of the fleet doing nothing useful (`scaling_loss`) | `1 - scaling_efficiency` against a limit of `1`, keeping `0.5` below it |  | [ch07](#when-adding-servers-stops-helping) |
+| limit on fraction of the fleet doing nothing useful (`scaling_loss`) | `1 - scaling_efficiency` against a limit of `1`, keeping `0.5` below it |  | [ch07](#when-adding-servers-stops-helping) |
 | where adding hosts stops helping (`peak_hosts`) | `one_host * sqrt((1 - contention) / crosstalk)` | host | [ch07](#when-adding-servers-stops-helping) |
 | fraction of the peak already built (`headroom_to_peak`) | `host_count / (peak_hosts / one_host)` |  | [ch07](#when-adding-servers-stops-helping) |
 | utilisation, counting coordination (`utilisation_including_coordination`) | `peak_request_rate / achievable_throughput` |  | [ch07](#when-adding-servers-stops-helping) |
 | how much the queueing view understated it (`optimism`) | `utilisation_including_coordination / utilisation` |  | [ch07](#when-adding-servers-stops-helping) |
-| utilisation, counting coordination (`coordination_headroom`) | `utilisation_including_coordination` against a limit of `1`, keeping `queueing_margin` below it |  | [ch07](#when-adding-servers-stops-helping) |
+| limit on utilisation, counting coordination (`coordination_headroom`) | `utilisation_including_coordination` against a limit of `1`, keeping `queueing_margin` below it |  | [ch07](#when-adding-servers-stops-helping) |
 | working set at horizon (`working_set`) | `stored_data * hot_fraction` | TB | [ch08](#regime-changes) |
 | memory the service can use, whole fleet (`fleet_ram`) | `hosts * ram_for_service` | TB | [ch08](#regime-changes) |
-| working set against memory (`cache_fill`) | `working_set / fleet_ram` against a limit of `1`, keeping `cache_margin` below it |  | [ch08](#regime-changes) |
+| limit on working set against memory (`cache_fill`) | `working_set / fleet_ram` against a limit of `1`, keeping `cache_margin` below it |  | [ch08](#regime-changes) |
 | raw bytes per stored byte (`raw_per_stored`) | `replication_factor * index_overhead / record_compression` |  | [ch09](#capacity) |
 | raw disk needed at horizon (`raw_data`) | `stored_data * raw_per_stored` | TB | [ch09](#capacity) |
 | hosts for storage (`hosts_for_storage`) | `ceil(raw_data / (disk_per_host * (1 - disk_margin)))` | host | [ch09](#capacity) |
 | installed disk (`installed_disk`) | `hosts * disk_per_host` | TB | [ch09](#capacity) |
-| disk fill at horizon (`disk_fill`) | `raw_data / installed_disk` against a limit of `1`, keeping `disk_margin` below it |  | [ch09](#capacity) |
+| limit on disk fill at horizon (`disk_fill`) | `raw_data / installed_disk` against a limit of `1`, keeping `disk_margin` below it |  | [ch09](#capacity) |
 | hosts for requests (`hosts_for_requests`) | `ceil(busy_cores / (cores_per_host * (1 - queueing_margin)))` | host | [ch10](#bandwidth-and-the-binding-constraint) |
 | hosts for memory (`hosts_for_memory`) | `ceil(working_set / (ram_for_service * (1 - cache_margin)))` | host | [ch10](#bandwidth-and-the-binding-constraint) |
 | hosts the model recommends (`hosts_recommended`) | `max(hosts_for_requests, hosts_for_memory, hosts_for_storage)` | host | [ch10](#bandwidth-and-the-binding-constraint) |
-| hosts left when one dies (`hosts_after_failure`) | `hosts - one_host` | host | [ch11](#headroom-and-failure-domains) |
-| utilisation with one host down (`utilisation_after_failure`) | `busy_cores / (hosts_after_failure * cores_per_host)` |  | [ch11](#headroom-and-failure-domains) |
-| utilisation with one host down (`failure_headroom`) | `utilisation_after_failure` against a limit of `1`, keeping `queueing_margin` below it |  | [ch11](#headroom-and-failure-domains) |
+| hosts after one is lost (`hosts_after_failure`) | `hosts - one_host` | host | [ch11](#headroom-and-failure-domains) |
+| survivors' utilisation (`utilisation_after_failure`) | `busy_cores / (hosts_after_failure * cores_per_host)` |  | [ch11](#headroom-and-failure-domains) |
+| limit on utilisation with one host down (`failure_headroom`) | `utilisation_after_failure` against a limit of `1`, keeping `queueing_margin` below it |  | [ch11](#headroom-and-failure-domains) |
 | host capex (`host_capex`) | `hosts * host_price` | USD | [ch18](#the-five-year-model) |
 | network capex (`network_capex`) | `hosts * network_price_per_host` | USD | [ch18](#the-five-year-model) |
 | capex (`capex`) | `host_capex + network_capex` | USD | [ch18](#the-five-year-model) |
@@ -53,7 +53,7 @@
 | annual staff cost (`annual_staff_cost`) | `staff_fte * fully_loaded_salary` | USD / year | [ch18](#the-five-year-model) |
 | annual opex (`annual_opex`) | `annual_energy_cost + annual_licences + annual_support + annual_staff_cost` | USD / year | [ch18](#the-five-year-model) |
 | lifecycle opex (`lifecycle_opex`) | `annual_opex * horizon` | USD | [ch18](#the-five-year-model) |
-| five-year total cost of ownership (`tco`) | `capex + lifecycle_opex + migration_cost` | USD | [ch18](#the-five-year-model) |
+| total cost of ownership (`tco`) | `capex + lifecycle_opex + migration_cost` | USD | [ch18](#the-five-year-model) |
 | mean request rate over the horizon (`average_request_rate`) | `(peak_request_rate_t0 / peak_to_mean + mean_request_rate) / 2` | request/second | [ch18](#the-five-year-model) |
 | requests over horizon (`requests_over_horizon`) | `average_request_rate * seconds_per_year * horizon` | request | [ch18](#the-five-year-model) |
 | cost per million requests (`cost_per_million_requests`) | `tco / requests_over_horizon` | USD/megarequest | [ch18](#the-five-year-model) |

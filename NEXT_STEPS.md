@@ -36,10 +36,10 @@ page. What is left is the work a first draft leaves:
   difference or a comparison in different units of one dimension, and a rounding over a number
   not yet in the node's unit, are refused with the repair named. Converting per operand instead
   would let `USD/year + USD/month` through as arithmetic; nobody has needed it yet.
-- **Sensitivity beyond one-at-a-time, properly.** `bench/run_information.py` bounds what each
-  input is worth on its own, which is most of what ch19 needed. A variance-based decomposition
-  over the samples already drawn would answer the interaction question the tornado cannot, and is
-  still not much code.
+- **Sensitivity beyond one-at-a-time, properly.** `bench/run_information.py` measures what
+  knowing each input would remove, at three places in its band, which is most of what ch19
+  needed. A variance-based decomposition over the samples already drawn would answer the
+  interaction question the tornado cannot, and is still not much code.
 - **A scenario that replaces a distribution.** A scenario can pin an input at a value and cannot
   give it a different shape, so ch22 holds both quotes exactly. A price band per quote would need
   an override that carries a distribution, and the paired subtraction would then need the shared

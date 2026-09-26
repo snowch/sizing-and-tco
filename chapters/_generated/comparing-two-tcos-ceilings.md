@@ -9,4 +9,4 @@
 | utilisation at the busy hour | 30% over its limit<br>*46% past the allowed line* | 28% over its limit<br>*44% past the allowed line* |
 | fraction of the fleet doing nothing useful | 0% over its limit<br>*1% past the allowed line* | 0% over its limit<br>*0% past the allowed line* |
 
-*Source — [`comparison`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/comparison.json) and [`web_service-incumbent`](/models/web_service-incumbent.html) and [`web_service-challenger`](/models/web_service-challenger.html) · sizing.evaluate*
+*Source — [`comparison`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/comparison.json) and [`web_service-incumbent`](/models/web_service-incumbent.html) and [`web_service-challenger`](/models/web_service-challenger.html) · `sizing.evaluate`*

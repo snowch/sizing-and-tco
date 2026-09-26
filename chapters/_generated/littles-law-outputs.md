@@ -9,4 +9,4 @@
 | cores busy at the busy hour | 556 | 134 to 2,147 | core |
 | requests in flight, if none waited | 556 | 134 to 2,147 | request |
 
-*Source — [`web_service_littles_law-reference`](/models/web_service_littles_law-reference.html) · every input on a slider*
+*Source — [`web_service_littles_law-reference`](/models/web_service_littles_law-reference.html) · the model to explore; each input with a range has a slider*

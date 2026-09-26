@@ -25,14 +25,14 @@ certain_until:
     stage: uncertainty
     value: 1.3
     source: >-
-      Chosen, not measured. One number cannot say how sure you are of it, so ch04 replaces it
-      with a spread.
+      Not measured. The service owners estimate how fast demand grows each year. One number
+      cannot say how sure they are of it, so ch04 replaces it with a spread.
   peak_request_rate_t0:
     stage: uncertainty
     value: 8000
     source: >-
-      This figure comes from the forecaster, who holds a spread of plausible busy-hour rates
-      and rounds it to one. ch04 replaces the one number with the spread.
+      The service owners estimate the request rate in the busy hour. They have a spread of
+      plausible rates in mind and round it to one number; ch04 replaces it with the spread.
   os_reserve:
     stage: uncertainty
     value: 0.1
