@@ -19,8 +19,9 @@ that ties for first cannot be measured at all.
 
 **[ch20 · The missing node](#the-missing-node)** is the error no technique in this book can rank,
 because it is not in the list. A model can be wrong about a number or wrong about its shape.
-Everything in Parts IV and VI is about the first. The second is where the machinery stops helping
-and starts flattering.
+Everything in Part IV and [ch19](#which-input-is-the-answer) is about the first kind of error; this
+chapter is about the second. Around a model of the wrong shape, the machinery does worse than miss
+the error: it produces an interval settled around the wrong answer, and the settling looks rigorous.
 
 The order matters. A reader who does [ch19](#which-input-is-the-answer) without
 [ch20](#the-missing-node) has learned to optimise a list without asking whether the list is

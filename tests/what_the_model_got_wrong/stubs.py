@@ -1,7 +1,9 @@
 """Chapter 23's problems. Edit this file; the tests beside it say whether you are right.
 
-The design failed. Both problems are about what the model can say afterwards — and the second is
-about the thing it says with complete confidence and no basis whatsoever.
+The design failed. Both problems are about what the model can say afterwards, about the web
+service's failures. The first ranks the inputs by how far each one moved in the failures. The
+second counts the failures in which nothing was extreme, and holds that count against its base
+rate: how often something is extreme when nothing has failed.
 """
 
 from __future__ import annotations
@@ -31,21 +33,29 @@ def attribute(draws: dict[str, np.ndarray], failed: np.ndarray) -> list[tuple[st
     raise NotImplementedError("problem 23.1")
 
 
-def was_anything_extreme(
+def share_with_nothing_extreme(
     draws: dict[str, np.ndarray], failed: np.ndarray, percentile: float = 90.0
 ) -> float:
     """Problem 23.2 - how often the story afterwards is allowed to be about one dramatic thing.
 
-    Same arguments. Return the fraction of the failing samples in which *no* input was beyond its
-    own ``percentile``, taken across all the draws and not the failing ones alone — that is, the
-    share of failures for which there is no culprit to point at,
-    because everything involved was merely somewhat above average.
+    Same arguments as ``attribute``. Return the fraction of the failing samples in which *no*
+    input was above its own ``percentile``, taken across all the draws and not the failing ones
+    alone. The name says what it returns: the share in which nothing was extreme, not the share in
+    which something was. The attribution table prints the other one.
 
-    Predict the answer before you run it, for the web service, and write your prediction in a
-    comment. Most people predict something small.
+    Only the upper end counts. A value is extreme when it is above the percentile; a value below
+    the 10th percentile does not count, however unusual. This differs from problem 23.1, where a
+    low shift counted as much as a high one.
 
-    The number this returns is the one that makes a post-mortem honest. A failure in which nothing
-    was extreme is a failure of the *design* rather than of the world: the margin was too thin to
-    absorb an ordinary week. That is a much less satisfying story and a much more useful one.
+    These are the failures with no culprit to point at, because every input involved was merely
+    somewhat above average. Before you run the tests: one test passes you eight inputs drawn with
+    no connection to which samples failed. Work out on paper what share of failures it should
+    return, from one fact: each input is above its own 90th percentile in one future in ten,
+    independently of the others. Write your working in a comment below. The test holds your
+    function to that arithmetic, so a pass means your function and your working agree.
+
+    Why the figure matters: a failure in which nothing was extreme is a failure of the *design*
+    rather than of the world. The margin was too thin to absorb an ordinary week, and you fix that
+    by changing the margin, not by blaming an input.
     """
     raise NotImplementedError("problem 23.2")

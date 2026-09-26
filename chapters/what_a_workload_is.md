@@ -282,12 +282,15 @@ which says how the value is known. The Claim column's symbol comes from this lin
 marks a vendor's claim, and ○ marks an assumption.
 
 :::{important}
-A value you cannot control, such as growth rate, looks as settled as a decision you made, such as
-the horizon. The file marks the difference: each input's `provenance` says whether it is a `fact`,
-a `vendor_claim`, or an `assumption`; its `source` explains why; and the ○ symbol in the Claim
-column marks each `assumption`. Treat the ○ rows outside your control as things to go and measure.
-Measuring narrows how far off the value could be; arguing about it does not. Only decisions are
-yours to change.
+A value you cannot control, such as the growth rate, looks as settled as a decision you made, such
+as the horizon. Two lines answer two different questions: `decided` says who settles the number;
+`provenance` says how well it is known. They are independent. In the table above, annual growth
+factor and horizon sit in different groups, and both carry ○.
+
+A ○ under *Outside your control* is a number to go and measure. Here all three are. Measuring
+narrows how far off the value could be; arguing about it does not. The horizon's ○ is settled by
+deciding, not by measuring: its source says it is the refresh cycle the fleet is bought against.
+Only decisions are yours to change.
 :::
 
 ### What the file computes, and what kind of model it is
@@ -313,8 +316,8 @@ The toolkit has already decided what kind of model this is, too:
 No one typed the last row of the table: the loader works it out from the kinds of node in the
 file. The file has no measured constant and no declared limit, so what you have is a **definitional
 model**: a structure no one doubts, with uncertain numbers in it. It stops being one when a later
-chapter adds a measured node or a ceiling to the file. [ch01](#point-estimates)'s problem 1.3 asks you to name those nodes in three model
-descriptions.
+chapter adds a measured node or a ceiling to the file. [ch01](#point-estimates)'s problem 1.3 gives
+you three model descriptions and asks which kind each one is.
 
 ### The same split, on a model that is finished
 
@@ -416,9 +419,11 @@ range this book reports too narrow ([ch14](#correlation-and-convergence)).
 Five, in `tests/what_a_workload_is/`. The first four have tests. The last does not, and says why.
 
 **2.1 — Levels and rates.**
-Classify every node in the observability model as a stock, a flow or neither, by reading what it
-means. The test classifies the same nodes by their declared units. Where your reading and the
-model's units disagree, one of them is wrong. Finding out which is the exercise.
+Classify every node in the observability model as a stock, a flow or neither, by reading what each
+means: its label, its note, or its name. The test classifies each node by the rule under *Four
+kinds of quantity*, using its declared unit. Every unit in this model typechecks, so where your
+answer and a unit disagree, your reading missed something the unit records. Find what it missed
+before you change your answer. A failed Check lists the nodes that disagree, each with its unit.
 
 ```bash
 python3 -m pytest tests/what_a_workload_is/test_problem_1_stocks_and_flows.py -m problem
@@ -441,9 +446,10 @@ python3 -m pytest tests/what_a_workload_is/test_problem_2_daily_volume.py -m pro
 **2.3 — The smallest model that builds.**
 Write a model file of your own with one input and one derived node. It must pass the loader, the
 unit check, and every rule the build applies to a model. [Appendix A](#appendix-a-dsl-reference)
-lists the keys a file needs, under *The file*, and the rules, under *What the build checks*: read
-them before you start, because the refusals are the point. At a desk, the same rules appear at the
-top of `scripts/verify-models.py`.
+lists the keys a file needs, under *The file*; the lines a node can have, under *The four node
+kinds*; and the rules the build applies, under *What the build checks*. Read them before you
+start: the refusals are the point. At a desk, the same rules appear at the top of
+`scripts/verify-models.py`.
 
 ```bash
 python3 -m pytest tests/what_a_workload_is/test_problem_3_smallest.py -m problem

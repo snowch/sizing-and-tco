@@ -11,30 +11,43 @@ short_title: "Appendix B · sizing/mc.py"
 
 | | |
 |---|---|
-| **Purpose** | `sizing/mc.py`, quoted in order, with the reasoning for each piece |
+| **Purpose** | `sizing/mc.py` and `sizing/normal.py`, in the order the files are written and the order a run calls them |
 | **Source** | `sizing/mc.py`, `sizing/normal.py` |
 :::
 
-[ch13](#monte-carlo) and [ch14](#correlation-and-convergence) quote pieces of this module where
-they need them. This page is all of it, in the order it is written, for a reader who wants to
-see that there is nothing else in it.
+This page quotes the files in the order they are written: `sizing/mc.py` from its opening
+docstring onwards (omitting only the title line and imports), then `sizing/normal.py` from its
+first constant to its end. The point is to show there is nothing else in either.
 
-There is no simulation framework underneath this and no statistics package beside it. numpy for
-arrays, one rational approximation for the inverse normal, and nothing else. The reason is not
-minimalism: a reader who cannot see the sampler cannot check the interval, and an interval nobody
-can check is decoration.
+A run calls the pieces in a different order:
 
-## The one idea
+1. `rng`, once, seeded from the scenario.
+2. For each uncertain input the scenario has not pinned: `sample` with its declared distribution,
+   or for a measured constant, `normal_ppf_scaled` with its measured value and standard error.
+3. If the model declares correlations between inputs that were drawn: `correlation_matrix`, then
+   `correlate`, once, over all the drawn inputs together.
+4. The model's formulas, applied to whole columns of draws at once. (This step is not in
+   `sizing/mc.py`.)
+5. `summarise` and `histogram`, for every node whose value varies.
+
+The function that makes these calls is `evaluate` in `sizing/evaluate.py`.
+
+```{include} ../sizing/mc.py
+:start-after: Monte Carlo, from first principles.
+:end-before: """
+```
+
+Each uncertain input in the model file declares which shape it follows, written alongside its
+provenance kind and source ([ch03](#where-the-numbers-come-from)). A reviewer can then see the
+choice and argue with it, where a fitting function would leave the decision undeclared.
+
+## Two constants
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
-:start-at: ## One idea
-:end-before: ## What is deliberately absent
+:start-at: #: The percentile the
+:end-before: def rng(seed: int)
 ```
-
-Each distribution needs exactly one function: the value at a given percentile. Sampling it is
-drawing percentiles at random and looking the values up. Everything below is arrangement around
-that.
 
 ## The seed
 
@@ -44,13 +57,19 @@ that.
 :end-before: # -- percentile functions
 ```
 
-Every stamped result computed from a model records the seed that produced it, and
-`bench/stamp.py` refuses one that does not. An unseeded run is a measurement nobody can repeat,
-and this repository refuses those everywhere else. Where an experiment uses many seeds, as the
-convergence table on this page does with one per replicate, the result records the seed they are
-all derived from, and the rule that derives them.
+The enforcement happens outside this function: `bench/stamp.py` refuses to stamp any model result
+that does not record its seed. When an experiment uses many seeds, the result records the base
+seed and the rule that derives them. The convergence table under *Reading the answer* is an
+example: it runs the model many times at each sample count, each time with its own seed, and its
+result records the base seed and the rule.
 
 ## The four percentile functions
+
+```{literalinclude} ../sizing/mc.py
+:language: python
+:start-at: # -- percentile functions
+:end-before: def uniform_ppf
+```
 
 ### Uniform
 
@@ -68,11 +87,6 @@ all derived from, and the rule that derives them.
 :end-before: def lognormal_ppf
 ```
 
-Two branches meeting at the mode. Below it the area under the triangle grows as the square of the
-distance from the minimum, so inverting it is a square root; above it, the same thing from the
-other end. That derivation is all there is to adding a distribution to this book, and problem
-13.1 asks for it again for a shape that is not here.
-
 ### Lognormal
 
 ```{literalinclude} ../sizing/mc.py
@@ -81,32 +95,28 @@ other end. That derivation is all there is to adding a distribution to this book
 :end-before: def normal_ppf_scaled
 ```
 
-Parameterised by two percentiles, not by the mean and standard deviation of the logarithm. Nobody
-has an intuition for the mean of a logarithm. Everybody has one for percentiles: *I would be
-surprised if it were under this, or over that* is a sentence a person can say about a price.
-
 ### Normal
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
 :start-at: def normal_ppf_scaled
-:end-before: SHAPES: dict[str, Callable
+:end-before: #: The distributions a model file may declare
 ```
-
-One job in this book: the measurement error of a `measured` node. It is the wrong default for a
-price, because it will happily go negative.
 
 ## The registry
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
-:start-at: SHAPES: dict[str, Callable[..., np.ndarray]] = {
+:start-at: #: The distributions a model file may declare
 :end-before: def sample(
 ```
 
-No registration machinery and no plugin system. Four shapes cover every input in both reference
-models, and a fifth should have to argue for itself
-([Appendix C](#appendix-c-distributions)).
+`sample` looks up shapes in `SHAPES`, but it is not the only function that does. The module in
+`sizing/evaluate.py` uses the same percentile functions for the point estimate of each input (its
+median value) and for each input's swing in the tornado, the chart that ranks inputs by how far
+each moves the output. So sampling, point estimation, and the tornado all reach shapes through this
+single table. [Appendix C](#appendix-c-distributions) covers when each shape suits an input and how
+each misleads.
 
 ## Drawing
 
@@ -128,7 +138,7 @@ Two lines, and they are the two lines of the entire subject.
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
-:start-at: def correlation_matrix
+:start-at: # -- inputs that move together
 :end-before: def rank_to_score_correlation
 ```
 
@@ -150,17 +160,25 @@ before the sort rather than an apology in the documentation after it.
 :end-before: # -- reading the answer
 ```
 
-Iman–Conover @imanconover1982, which is short enough to read: build a reference sample with the
-correlation you want, rank it, and shuffle each input column into the same rank order. Every
-column keeps its own distribution exactly, because every value that was drawn is still there, and
-only the *pairing* between columns changes. That is why it works on all four shapes without
-knowing anything about them.
+The method of Iman and Conover @imanconover1982 works in three steps:
+
+1. Build a reference set with one column of normal scores per input, each shuffled independently
+   using the run's generator, so the stamped seed reproduces it.
+2. Apply the wanted score correlations using two Cholesky factors—a standard way to give a set of
+   columns a chosen correlation—calculated from both the correlation the shuffled set has and the
+   correlation wanted.
+3. Reorder each input's draws to match its shaped column: largest draw where the largest score is,
+   and so on down.
+
+Where a set of declared correlations cannot all hold together, step 2 fails with an error
+directing you to look for a triangle of strong correlations that conflict. The model does not run
+with a revised set.
 
 ## Reading the answer
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
-:start-at: PERCENTILES = (5, 25, 50, 75, 95)
+:start-at: # -- reading the answer
 :end-before: def interval
 ```
 
@@ -176,17 +194,28 @@ knowing anything about them.
 :end-before: #: Above this ratio
 ```
 
-The arithmetic of "enough", both ways round: the width you have at the draws you took, and the
-draws you need for the width you want. People usually settle this with a habit. The arithmetic is
-unforgiving — a factor of ten less wobble costs a hundred times the samples.
+The `half_width` measures one run's answer width. The run-to-run spread measures how far the answer
+lands from one run to the next when only the seed changes. `samples_needed` takes the run-to-run
+spread and returns how many draws make it no more than a target; given a `half_width`, it returns a
+count that means nothing, because the half-width does not fall as draws grow. The law is that ten
+times smaller spread costs a hundred times the draws. The table below measures this on the web
+service model's five-year total: the model run many times at each sample count, each with its own
+seed, and a column heading says how many runs.
 
 ```{include} ../chapters/_generated/appendix-b-monte-carlo-module-convergence.md
 ```
 
-Two columns, two behaviours, and confusing them is the most common misunderstanding in the
-subject. The interval **settles** — it is a property of how uncertain the model's inputs are, and
-more samples converge on it rather than shrinking it. The run-to-run spread **falls**, at close to
-the square root of ten per decade, because that is a property of how hard you looked.
+The interval **settles**; the run-to-run spread **falls**. The half-width barely moves from the row
+for a thousand samples down. It comes from how uncertain the model's inputs are, and more draws
+converge on it rather than shrinking it. The run-to-run spread keeps falling from row to row.
+
+The last row shows how much it fell per tenfold step from a thousand samples up, and sets this
+against the square root of ten, which is what the law predicts. The single-row falls wander above
+and below that line. Each spread in the table is estimated from a limited number of runs, so it
+carries its own noise; read the last row, not any single row, to see the trend. The figure measured
+is the 95th percentile, a tail number that follows the law but more slowly than the mean does.
+`tests/test_mc.py` holds the mean to the law closely and the 95th percentile only loosely for that
+reason. So read the last row as a comparison with the law, not as a test it failed.
 
 ```{image} ../chapters/_figures/correlation-and-convergence-curve.svg
 :alt: The interval half-width and the run-to-run spread, against sample count
@@ -200,44 +229,31 @@ the square root of ten per decade, because that is a property of how hard you lo
 :start-at: #: Above this ratio
 ```
 
-Counts and edges rather than the draws: a few dozen numbers a node instead of a hundred thousand.
-That is cheap enough for the interactive page to let a reader click **any** node and see its
-distribution, not only the outputs. Watching a narrow input turn into a wide output three steps
-down the chain is the fastest way to understand a sizing model, and it costs almost nothing to
-ship.
+Every node whose value varies ships its distribution as a count per bin and the bin edges, computed
+by calling `histogram` with its default `bins`. The model viewer that the chapters embed uses these
+to draw whichever node you click, whether input, intermediate step or output, in its details panel.
 
 The bins are equal in width unless the quantity spans orders of magnitude, in which case they are
-equal in *ratio* and the payload says so. A queue near saturation does this: half the draws land
-in the first equal-width bin and the picture becomes a spike beside an empty page. The figure
-reads that flag and labels its axis accordingly; [ch05](#littles-law)'s concurrency figure is one
-that does.
-
-## What is deliberately absent
-
-```{literalinclude} ../sizing/mc.py
-:language: python
-:start-at: ## What is deliberately absent
-:end-before: """
-```
-
-Variance reduction, quasi-random sequences and importance sampling all narrow an interval for the
-same number of draws, and all of them make the interval harder to explain to the person who has to
-sign for the money. This book's bottleneck was never compute.
-
-Fitting is absent for a different reason. A function that reads your data and tells you which
-shape it is produces a model whose central assumption nobody ever wrote down. Choosing a shape is
-an editorial act with provenance attached ([ch03](#where-the-numbers-come-from)), and it belongs
-in the model file where a reviewer can argue with it.
+equal in *ratio* and `spacing` says which. To see a ratio-spaced histogram, open the model in
+[ch06](#queueing-and-the-knee) and click *requests in the system*, which is a queue near saturation.
+The viewer labels such histograms to show the bars are equal in ratio. The book's static figures
+read `spacing` too, and draw a logarithmic axis when it says so.
 
 ## The inverse normal
 
-Two of the four shapes need the inverse normal CDF, and there is no closed form.
-`sizing/normal.py` is Acklam's rational approximation @acklam2003inverse, implemented here and
-checked against Python's own `statistics.NormalDist` across the range:
+Everything in `sizing/mc.py` that needs the normal distribution's percentile function calls
+`normal_ppf` from `sizing/normal.py`: the lognormal and normal shapes, the normal scores in
+`correlate`, and the constant `Z90`. There is no closed form for it. `sizing/normal.py` implements
+Acklam's rational approximation @acklam2003inverse: two rational functions, one for the middle and
+one for the tails, switching at `_TAIL`; the coefficients are Acklam's and the code is this
+repository's. Python's standard library includes `statistics.NormalDist().inv_cdf`, which is
+accurate but takes one number at a time, whereas the sampler works on arrays, so the approximation
+is used instead. `tests/test_mc.py` uses the standard library as its reference, checking they agree
+across the range, both tails included:
 
 ```{literalinclude} ../sizing/normal.py
 :language: python
-:start-at: def normal_ppf
+:start-at: #: Where the central rational approximation stops
 ```
 
 ## Running it

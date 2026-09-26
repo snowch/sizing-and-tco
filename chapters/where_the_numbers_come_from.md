@@ -41,10 +41,13 @@ because nothing can dislodge it.
 
 ### The first number somebody else supplied
 
-Every quantity in [ch02](#what-a-workload-is)'s file came from you or from the application: how
-many requests arrive, how much is held, how fast both grow, how long the fleet has to last. The
-next one does not. How much memory a host carries is decided by whoever sells it. This is the
-form that takes:
+Every input in [ch02](#what-a-workload-is)'s file was either outside your control (how many
+requests arrive, how much is held, how fast both grow) or decided by you (how long the fleet has to
+last). The next input, `ram_per_host`, is how much memory each host carries. You choose which
+memory modules to fit, so its file says `decided: you`. What the number means is not yours to
+decide: it comes off the vendor's spec sheet, so its provenance is `vendor_claim`. These two lines
+answer different questions. `decided:` records who chooses the value; `provenance` records who
+stands behind the number and how much they are claiming. The form that takes is:
 
 ```{literalinclude} ../models/web_service/stages/06-provenance/model.yaml
 :language: yaml
@@ -53,14 +56,16 @@ form that takes:
 ```
 
 The source has two clauses. The second, *the sheet says gigabytes and means gibibytes*, names the
-gap between what a spec sheet writes and what it counts. It is only the first of two gaps between
-the number on the sheet and the memory a service gets ([Appendix D](#appendix-d-units)). Writing
-that down is the discipline: the claim is recorded as a claim, and what is doubtful about it is
-recorded beside it.
+gap between what a spec sheet writes and what it counts. [Appendix D](#appendix-d-units) covers
+that decimal-against-binary gap. There is a second gap: the operating system keeps some memory for
+itself before the service sees any. The next input, `os_reserve`, carries it, and Appendix D does
+not cover this one. Writing both down is the discipline: the claim is recorded as a claim, and what
+is doubtful about it is recorded beside it.
 
-It takes one more quantity to reach the first node in the model that is about hardware rather
-than data: the share of that memory the operating system keeps for itself, an assumption in the
-plainest sense of the word.
+`os_reserve` is an `assumption`: one number for the share of memory the kernel, the agents and the
+page cache floor keep. With `os_reserve`, the model reaches its first node about hardware rather
+than data: `ram_for_service`, the memory the service can use per host, which is `ram_per_host`
+times one minus `os_reserve`. The form that takes is:
 
 ```{literalinclude} ../models/web_service/stages/06-provenance/model.yaml
 :language: yaml
@@ -138,18 +143,23 @@ wrong by an amount this page does not measure.
 
 The method transfers. The number does not.
 
-### Four targets, and only two of them are yours to take
+### Four targets, and who can check each
+
+Every stamped result declares a **target**: what it was taken against. The target decides who can
+check the result.
 
 | Target | What it is | Who can check it |
 |---|---|---|
-| `corpus` | a codec or an encoder over a declared body of data | anybody with the repository |
-| `model` | a model file evaluated and sampled | anybody with the repository |
-| `rig` | a throughput or a latency, on the declared reference machine | whoever has that machine |
-| `estate` | an observation of a system somebody runs | **nobody** |
+| `corpus` | a codec or an encoder over a declared body of data | you, with the repository |
+| `model` | a model file evaluated in this repository | you, with the repository |
+| `rig` | a throughput or a latency, on the reference machine | whoever has that machine |
+| `estate` | an observation of a running system | **nobody** |
 
-The first two are cheap, and the book is full of them. The third is refused on any machine that
-is not the declared one, because a throughput measured on whatever machine was free is
-indistinguishable from a real one once it is a number in a table.
+A corpus result may carry no rate and no duration. CI re-derives every one on every push. A model
+result is evidence about what the book's own models say, and about nothing else. The toolkit
+refuses a rig measurement on any machine but the reference one: a throughput measured on whatever
+machine was free is indistinguishable from a real one once it is a number in a table. The *Target*
+column of the constants table above shows each measured constant's target.
 
 ### The target that cannot be checked, only disclosed
 
@@ -210,18 +220,25 @@ accident.
 
 ### What a measurement is worth
 
-One measurement is a number. It says nothing about how far it would move if you did it again. So
-every constant in this book is measured over several independently generated shards, and reported
-as a mean with the standard error of that mean beside it.
+One measurement is a number. It says nothing about how far it would move if you took it again. So
+every constant in this book is measured over several shards: independently generated pieces of its
+corpus, each from its own starting number, which the result records. The result reports the mean
+of the shards' figures, with the standard error of that mean beside it.
 
-That standard error becomes the measured node's uncertainty, and [ch13](#monte-carlo) propagates
-it through the model like any other. A constant stamped without one is claiming to have been
-measured exactly, and the toolkit says so.
+The table walks one constant through: bytes per compressed log line. It shows the mean over the
+shards, the standard error of that mean, the spread between shards, and the lowest and highest
+shard. The spread between shards is how far a typical shard's figure sits from the mean. The
+standard error is that spread divided by the square root of the number of shards. You can check it
+against the table. The standard error is smaller than the spread because it is about the mean, and
+a mean of several shards moves less than any one shard does.
 
-A standard error also tells you what more measuring would buy, which is usually less than people
-expect. It falls as one over the square root of the count, so halving it costs four times the
-work. Problem 3.2 is that arithmetic. Do it *before* agreeing to a measurement campaign rather
-than during one.
+That standard error becomes the measured node's uncertainty, and [ch13](#monte-carlo) carries it
+through the model like any other. The build refuses a measured constant whose standard error is
+zero: zero claims it was measured exactly.
+
+A standard error also tells you what more measuring would buy. It falls as one over the square
+root of the count, so halving it takes four times as many shards. Problem 3.2 is that arithmetic.
+Do it before agreeing to a measurement campaign, not during one.
 
 ## What this cannot tell you
 
@@ -255,9 +272,10 @@ A model can be all assumptions, all sourced, all defensible-sounding, and comple
   decision a reviewer can argue with.
 - **A measured constant belongs to some data and some software at some version.** The method
   transfers. The number does not.
-- **Four targets, and nobody can check the fourth.** Corpus and model results can be re-derived by
-  anybody with the repository, a rig timing needs the declared machine, and an observation of a
-  running system is somebody's word with a disclosure attached.
+- **Four targets, and nobody can check the fourth.** You can re-derive a `corpus` or a `model`
+  result with the repository. A `rig` timing can be taken only on the reference machine a file
+  declares, and the toolkit refuses it anywhere else. An `estate` observation of a running system
+  is someone's word, with a disclosure attached: what system, over what window, when.
 - **A constant nobody has measured has no value, and nor does anything downstream of it.** No
   placeholder, no estimate, no number borrowed from a different stack.
 - **One measurement says nothing about its own wobble.** A constant is measured over several shards,
@@ -313,8 +331,8 @@ you can show.
 
 ## Where to go next
 
-[ch04](#peak-mean-and-growth) is about the input that moves the answer most in this book and is
-the hardest to measure: a growth rate is a claim about the future, and no amount of provenance
-discipline turns one into a measurement.
+[ch04](#peak-mean-and-growth) is about growth: the input that moves the web service's busy-hour
+demand at the horizon more than any other input. Growth cannot be measured at all: a growth rate is
+a claim about the future, and no amount of provenance discipline turns one into a measurement.
 
 [ch13](#monte-carlo) is what to do with a standard error once you have one.

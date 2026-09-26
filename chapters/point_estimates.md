@@ -17,7 +17,7 @@ None of those is a single number. Traffic has grown at a different rate each yea
 Two things are hidden in that one number.
 
 1. **The ranges you threw away.** Each input's middle value went into the arithmetic as if it were known exactly. The answer has no trace of the range each input came from.
-2. **A structural flaw.** A chain of multiplications cannot see the queueing knee: the point where spare capacity runs out and response time climbs steeply. Measuring the inputs better will never find this error.
+2. **A structural flaw.** A chain of multiplications cannot see what a queue does as the hosts get busier. Response time climbs faster with every step of load, and once the hosts are busy all the time, work arrives faster than they can do it. Measuring the inputs better will never find this error.
 
 The table below shows the first of these for the book's own web service model, in its finished form. It has two rows: the hosts the model recommends, and the five-year total cost of ownership.
 
@@ -85,7 +85,7 @@ If yes, you have a definitional model. If no, you have a conditional one.
 :::{div}
 :class: definition
 
-**Definitional model.** A model built only from relationships that hold by definition: watts times hours times price, requests times bytes per request, capital plus running cost. If every input is right, the answer is right. All of its doubt is in its inputs, so running the arithmetic over their ranges shows you all of it.
+**Definitional model.** A model built only from relationships that hold by definition: watts times hours times price, requests times bytes per request, capital plus running cost. If every input is right, the answer is right. For the terms the model has, all the doubt is in the inputs. Running the arithmetic over their ranges shows all of that doubt, and nothing about a term the model does not have.
 :::
 
 :::{div}
@@ -97,7 +97,7 @@ If yes, you have a definitional model. If no, you have a conditional one.
 
 A number is a measured constant because of where it came from, not because of what it measures. Processor time per request is a measured constant when somebody measured it on one implementation at one version, and the model records it as that measurement. When you estimated it or chose it, it is an ordinary uncertain input with a range, and on its own it leaves the model definitional.
 
-*Ceilings.* The queueing knee, where response time climbs steeply while there is still spare capacity. A host failing at the busy hour, so its load lands on survivors that are already busy. A working set outgrowing memory. These are regime changes, and **a chain of multiplications cannot model a regime change.** It carries on past the limit as if nothing happened, and reports a system running at several times its own limit.
+*Ceilings.* A queue where the hosts are busy all the time and work arrives faster than it can be done; below that, response time climbs faster with every step of load. A host failing at the busy hour, so its load lands on survivors that are already busy. A working set outgrowing memory. These are regime changes, and **a chain of multiplications cannot model a regime change.** It carries on past the limit as if nothing happened, and reports a system running at several times its own limit.
 
 Every input can be right and the answer still wrong. So a conditional model must declare the headroom—the margin below each ceiling—it will not cross. The toolkit enforces this: you cannot build one without these declarations.
 :::
@@ -126,9 +126,9 @@ The toolkit works out which kind a model is from what is in it: one measured con
 - **A range reports only the doubt you wrote down.** An error in the model's shape is invisible
   to any amount of varying the inputs.
 - **One question sorts every model.** Is the answer guaranteed to be right if every input is right?
-  If yes, the model is definitional and all its doubt is in its inputs. If no, it is conditional:
-  it rests on measured constants or ceilings, and must say how much room it keeps below each
-  limit.
+  If yes, the model is definitional: for the terms it has, all its doubt is in the inputs. If no,
+  it is conditional: it rests on measured constants or ceilings, and must say how much room it
+  keeps below each limit.
 - **The kind is read from the file, never declared.** A measured constant or a declared limit makes
   a model conditional, and the toolkit works that out from what is in the model.
 :::
@@ -143,7 +143,7 @@ Four in `tests/point_estimates/`. The first three have tests: run with `python3 
 python3 -m pytest tests/point_estimates/test_problem_1_each_input.py -m problem
 ```
 
-**1.2 — How wide are they together?** Look at the taxi table: its rows move one input at a time to its most, then all three at once. For each row, work out how many times the usual commute's fares that row costs. The test gives you those multiples for the inputs moved alone, and asks for the multiples when several of them move together: all three and each pair. What you return is a rule that works for any set of them, not a number read off the last row. This is why a point estimate cannot be defended by pointing at how carefully each input was chosen.
+**1.2 — How wide are they together?** Look at the taxi table: its rows move one input at a time to its most, then all three at once. For each row, work out how many times the usual commute's fares that row costs. The test gives you those multiples for the inputs moved alone, and asks for the multiples when several of them move together: all three and each pair. What you return is a rule that works for any set of them, not a number read off the last row. Several inputs moved together raise the fares further than any one of them moved alone. That is why a point estimate cannot be defended by pointing at how carefully each input was chosen.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_2_together.py -m problem

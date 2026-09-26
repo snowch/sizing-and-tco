@@ -14,8 +14,10 @@ short_title: "ch23 What the model got wrong"
 
 The design failed. Can the model say why, and what can it never say?
 
-Every chapter so far has ended before anything happened. This one is three years later. It is
-the only chapter in the book where the model is the defendant.
+Every chapter so far has ended before anything happened. This chapter is set at the model's
+horizon — the end of the refresh cycle the fleet was bought against. By then the busy hour has
+grown for the whole horizon, and the fleet either carries it or does not. It is the only chapter
+in the book where the model is the defendant.
 
 :::{important} Nothing here is an observation
 No system was watched and no invoice was read. What follows is the model's *own* futures,
@@ -35,9 +37,14 @@ point estimates recommended, and the same model reported this about it:
 ```{include} _generated/what-the-model-got-wrong-ceilings.md
 ```
 
-The last column said it would be over the knee at the busy hour in a substantial share of the
-futures the model thought plausible, and that the working set would outgrow memory in more of
-them still. Nobody was misled. Nothing was hidden. The figures were on a page.
+The *Over limit* column shows *utilisation at the busy hour* went over its limit in a substantial
+share of the futures the model thought plausible. Its limit is one, every core busy, in the
+*Limit* column, not the *Allowed* one. Its *Verdict* is ok; the plan sat inside the margin at the
+point estimate, so these are failures the point estimate did not show. The row *utilisation,
+counting coordination* had a larger *Over limit* share, but its *Verdict* was already 'into the
+margin'. Other ceilings had their own *Over limit* shares; the working set outgrew memory in more
+futures than the busy hour went over its limit. Nobody was misled. Nothing was hidden. The
+figures were on a page.
 
 That is the first finding of most post-mortems worth doing: **the failure was forecast, in
 writing, by the people it later surprised.** What went wrong was not the model. A percentage in a
@@ -54,10 +61,12 @@ been doing in them.
 ```{include} _generated/what-the-model-got-wrong-attribution.md
 ```
 
-Read the *Shift* column. All three inputs sit higher in the failures than they do generally, and
-none of them by much. The busy hour on day one is the furthest from its usual self, growth next,
-the cost of a request last. Nothing is exactly where it always is, because the three meet in one
-multiplication, and any of them can carry the product over the knee.
+Read the *Shift* column. All three inputs sit higher in the failures than they do across all the
+futures, and none by much. The peak request rate on day one moved furthest from its usual self,
+annual growth next, the CPU time per request last. Utilisation at the busy hour is the day-one
+peak, grown to the horizon, times the CPU time each request costs, over a fixed number of cores.
+None sits where it usually does, because the three meet in one multiplication, and any of them
+being a little high can carry that product over its limit.
 
 Now read it against [ch04](#peak-mean-and-growth)'s tornado and
 [ch19](#which-input-is-the-answer)'s value-of-information table. Both put growth first and
@@ -68,18 +77,17 @@ did more, because the horizon raises it to a power. So these are three different
 with the model's shape beside it. Otherwise it ranks the inputs by how they were written down
 rather than by what they do.
 
-### There was no smoking gun
+### Many failures had no culprit
 
-Now the last column, which is the finding.
+An input is *extreme* here when it came out above its own ninetieth percentile, worked out across
+all the futures. Only the upper end counts: an unusually low value is not extreme here. In plain
+words, it is the kind of value you would call unusual afterwards.
 
-An input is *extreme* here when it came out beyond its own ninetieth percentile: the kind of
-value somebody would describe afterwards as unusual. Something was extreme in most of the futures
-where this fleet went over the knee, and the base rate says that is real. The failures contain an
-unusual input far more often than futures at large do.
-
-That is not the finding, though. Turn the number round. In a large minority of the failures,
-**nothing was extreme**. The busy hour was a little above its usual. Growth was a little above
-average. A request took a little longer. That was enough.
+In a large minority of the failures, **nothing was extreme**. The busy hour was a little above its
+usual. Growth was a little above average. A request took a little longer. That was enough to take
+utilisation at the busy hour over its limit. Read the bold **3 inputs** row at the foot of the
+attribution table, in the *Extreme in* column. That cell gives the share of failures in which
+something was extreme; the failures with nothing extreme are the rest.
 
 This is the sentence a post-mortem culture is worst at accepting, because it is nobody's fault
 and it makes a poor slide:
@@ -87,16 +95,22 @@ and it makes a poor slide:
 > Some of the failures have a story. A large share of them do not: nothing remarkable happened,
 > something unremarkable did, and there was no margin for unremarkable.
 
-That is an argument about [ch11](#headroom-and-failure-domains), not about the world. It is the
-kind of conclusion that only exists if somebody looked. The story that gets told instead is
-always about the one dramatic thing, because a dramatic thing can be pointed at.
+A failure with nothing extreme in it is a finding about
+[the margin](#headroom-and-failure-domains) the fleet was sized with, not about anything that
+happened: an ordinary busy hour was more than that margin could absorb. The account a team tells
+afterwards tends to be about one dramatic thing, because a dramatic thing can be pointed at. This
+finding only turns up if you look for it.
 
-One caution about that column, because it is the sort of statistic that goes wrong quietly. The
-share of failures containing something extreme only means anything against the share of *all*
-futures containing something extreme, which the table also gives. A model with enough uncertain
-inputs has one of them beyond its own p90 more often than not, whether or not anything failed. A
-post-mortem that reports "something was unusual" without its base rate has discovered how many
-inputs the model has.
+In most of the failures, something was extreme. That share means something only beside a second
+figure, which the same cell gives: the share of *all* futures, failed or not, in which something
+was extreme. Call this the **base rate** — how often something is extreme when nothing has
+failed. Against its base rate the finding holds: the failures contain an extreme input far more
+often than futures at large.
+
+Every input is above its own ninetieth percentile in one future in ten, by definition. The more
+uncertain inputs a model has, the more often at least one of them is extreme in any future,
+whether or not it failed. A post-mortem that reports "something was unusual" without its base
+rate has discovered how many inputs the model has.
 
 ### The same method, on a model with a hole in it
 
@@ -122,14 +136,23 @@ and it will not decline to answer.
 
 ### The loop this closes
 
-The book has been going round the same circle since [ch03](#where-the-numbers-come-from). This
-is the first chapter where it closes:
+This chapter closes a cycle the book teaches. Here is the cycle, named in full for the first time:
 
 > **model → measure → predict → build → observe → compare → update**
 
-Parts I to V do the first four. [ch19](#which-input-is-the-answer) is about doing the second one
-better, and about knowing whether it is worth it. This chapter is *compare*. The step after it,
-*update*, is the only one that makes the next model better than this one.
+- *Model*: Parts I to III built the web service model — the demand in Part I, the ceilings in
+  Part II, the sizing in Part III.
+- *Measure*: Part I said where each number may come from, and
+  [ch19](#which-input-is-the-answer) said which input to go and measure, and whether measuring it
+  pays.
+- *Predict*: Part IV turned the model into a range of futures instead of one number, Part V
+  priced it over the horizon, and Part VII put the prediction in front of the people who pay for
+  it.
+- *Build* and *observe*: no part of the book does these; you do.
+- *Compare*: this chapter, which compares the model with its own futures, not with a system that
+  ran.
+- *Update*: the step after compare, and the only one that makes the next model better than this
+  one; it is yours.
 
 *Compare* needs a prediction recorded before the fact, with its interval, its inputs, its date
 and a hash of the code that produced it. That requirement is unglamorous, and it is why this
@@ -137,6 +160,21 @@ repository is shaped the way it is. A forecast reconstructed from memory afterwa
 evidence, because memory adjusts, and the adjustment always runs in the direction that makes the
 present bearable. Every stamped result in this book exists so that somebody who was not there can
 make the comparison without taking anybody's word for it.
+
+### How big, how much, and how wrong
+
+The [preface](#preface) posed one question: **How big, how much, and how wrong could I be?**
+
+**How big**: Part III answered it with a chain of multiplications and a number you could put on a
+purchase order. **How much**: Part V answered it over a horizon, split between the invoice that
+gets a meeting and the one that does not. **How wrong could I be**: the book answered it in two
+steps. First by sampling what was written down in Part IV. Then, in [ch20](#the-missing-node) and
+in the section on a model with a hole in it earlier on this page, by showing the part of the
+answer that sampling cannot reach.
+
+A model can tell you how wrong its inputs might be. Nothing in it can tell you that the model is
+the wrong shape, and a method that claimed otherwise would be the most dangerous thing in this
+book.
 
 ## What this cannot tell you
 
@@ -174,16 +212,20 @@ the system afterwards, and a book can do neither for you.
 - **What broke it, what moves the answer and what is worth measuring are three different
   questions.** Attribution ranks inputs by how far they moved, and has to be read with the model's
   shape beside it.
-- **Most failures have no smoking gun.** In a large minority of them nothing was extreme. Several
-  inputs were a little above usual, and there was no margin for unremarkable.
-- **A post-mortem inside a model is a post-mortem of that model.** It will confidently name the
-  guiltiest-looking of the things you thought of, and never the chain that is missing.
+- **Many failures had no culprit.** In a large minority of them nothing was extreme. Several
+  inputs were a little above usual, and there was no margin for unremarkable. In most failures
+  something was extreme, and that share means something only beside its base rate — how often
+  something is extreme in any future, whether or not it failed.
+- **A post-mortem inside a model is a post-mortem of that model.** It ranks the inputs the model
+  has without hesitating, and never names the chain that is missing.
 :::
 
 ## Problems
 
-Three, in `tests/what_the_model_got_wrong/`. The first two have tests, one for each half of the
-chapter. Predict the second before you run it. The last has no test, and says why.
+Three, in `tests/what_the_model_got_wrong/`. The first two have tests, and both work on the web
+service's failures, not on the model with a hole in it. 23.1 ranks the inputs the way the
+attribution table does; 23.2 counts the failures in which nothing was extreme. The last has no
+test, and says why.
 
 **23.1 — Attribute the failure.**
 Given the draws and which of them failed, rank the inputs by how far each one had to be from its
@@ -195,9 +237,21 @@ python3 -m pytest tests/what_the_model_got_wrong/test_problem_1_attribute.py -m 
 ```
 
 **23.2 — How often is there a culprit?**
-Work out the share of failures in which nothing was beyond its own ninetieth percentile. Write
-your prediction in a comment first. Then do it again with eight inputs that have nothing to do
-with the failure, and watch the same statistic find a villain anyway.
+Work out the share of failures in which no input was above its own ninetieth percentile. Each
+input's percentile comes from all the draws, not from the failing ones alone. Only the upper end
+counts: a value is extreme when it is above the percentile; a value below the tenth percentile is
+not extreme here, however unusual. This differs from 23.1, where a low shift counted as much as a
+high one. The function returns the share in which *nothing* was extreme. The attribution table
+prints the other share: the failures in which something was.
+
+The tests build their own cases. One case has eight inputs drawn with no connection to which
+futures failed. Before you run the tests, work out on paper what share of failures that
+eight-input case should give. You need one fact: each input is above its own ninetieth percentile
+in one future in ten, independently of the others and of the failure. Write your working in a
+comment in the stub. The test holds your function to that arithmetic, so a pass means your
+function and your working agree. Since the eight inputs have nothing to do with the failure,
+whatever share of failures has something extreme in it is the base rate. A last test runs your
+function on the web service's own futures and holds it to the figure the build publishes.
 
 ```bash
 python3 -m pytest tests/what_the_model_got_wrong/test_problem_2_extreme.py -m problem
@@ -205,8 +259,8 @@ python3 -m pytest tests/what_the_model_got_wrong/test_problem_2_extreme.py -m pr
 
 **23.3 — A post-mortem on one of yours.** No test: it is your history, and nobody else has it.
 
-Find an estimate you or your team made that turned out badly: a fleet that hit its knee early, a
-budget that overran, a tier that needed replacing sooner than planned. Reconstruct what was
+Find an estimate you or your team made that turned out badly: a fleet that went over its limit
+early, a budget that overran, a tier that needed replacing sooner than planned. Reconstruct what was
 assumed at the time, not what is known now.
 
 Then apply this chapter's question. Was the cause an input that moved, or a structure that was
@@ -221,21 +275,12 @@ entry in the list, and the one most often rewritten into a lesson nobody learned
 
 ## Where to go next
 
-[ch20](#the-missing-node) is the limitation this chapter keeps running into. It is worth
-re-reading now rather than before: the argument lands differently once you have watched an
-attribution name three innocent inputs without hesitating.
+[ch20](#the-missing-node) is the limitation this chapter keeps running into. Re-read it now
+rather than before, because its argument reads differently once you have seen an attribution rank
+the inputs a model has without hesitating and say nothing about the one it lacks.
 
 [ch03](#where-the-numbers-come-from) is the target a real post-mortem belongs to, and the rules
 that make somebody's observation of their own system worth anything to anybody else.
 
-[Appendix E](#appendix-e-web-service-model) is the model this chapter convicted, in full.
-
-And the question the book opened with, which is worth answering out loud now that there are
-twenty-three chapters behind it. **How big** it answered in Part III, with a chain of
-multiplications and a number you could put on a purchase order. **How much** it answered in Part
-V, over a horizon, split between the invoice that gets a meeting and the one that does not. **How
-wrong could I be** it answered in the only way anything can: by sampling what was written down,
-and then, in [ch20](#the-missing-node) and in the second half of this chapter, by showing you the
-part of the answer that sampling cannot reach. A model can tell you how wrong its inputs might
-be. Nothing in it can tell you that the model is the wrong shape, and a method that claimed
-otherwise would be the most dangerous thing in this book.
+[Appendix E](#appendix-e-web-service-model) is the web service model in full, the model this
+chapter's post-mortem ran on.

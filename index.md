@@ -10,13 +10,13 @@ short_title: Preface
 
 ## What this book is about
 
-Somebody asks how big the system needs to be. How many machines, how much storage, and how much
-it will cost to run for the next three years. They are going to spend real money on whatever you
-tell them.
+Someone asks how big the system needs to be. How many machines, how much storage, and what it
+will cost to run for as long as they keep it. They will spend real money on whatever you tell
+them.
 
 **How big, how much, and how wrong could I be?**
 
-The first two questions are arithmetic.
+The first question, how big, is sizing; the second, how much, is total cost of ownership.
 
 :::{div}
 :class: definition
@@ -32,12 +32,16 @@ stops coping.
 is not the same as what it costs to buy.
 :::
 
-Anybody can do the arithmetic for both.
+Most of the work in both is multiplication and addition: a request rate times the work each
+request needs, a number of hosts times a price, a yearly cost times the years. One part of sizing
+is not multiplication: finding where the hardware stops coping. As a machine gets busier, response
+time climbs steeply well before the machine is fully busy. A chain of multiplications cannot show
+that climb.
 
 ## The question this book answers
 
-Understanding how trustworthy your answer is: the hardest and most important question in sizing and
-TCO. Almost nobody is taught it. This book teaches you.
+The third question is how far you can trust your answer: how wrong it could be. This book teaches
+you to answer it.
 
 To answer it you need to know:
 
@@ -45,16 +49,9 @@ To answer it you need to know:
 - how far the answer moves when that input moves; and
 - what it would cost to find out.
 
-[ch01](#point-estimates) starts there. It shows you what a single number leaves out.
+[ch19](#which-input-is-the-answer) answers all three.
 
-## How the model works
-
-Two models carry the book. Both are written so that the structure is the point and the numbers are
-yours to replace:
-
-- a web service and its data, on a fleet of Linux hosts. It is sized and costed end to end, and
-  how it behaves under load is not a chain of multiplications at all; and
-- an observability platform, which has a hole in it where a measurement should be.
+## How the models work
 
 :::{div}
 :class: definition
@@ -62,34 +59,49 @@ yours to replace:
 **Model** — a YAML file containing numbers with their units and sources, plus formulas connecting them.
 :::
 
-We build it this way so you can reason about your system: which numbers matter, how they connect,
-what happens when they change. Each number has a name, a unit, and a note saying where its value
-came from. Each computed number has a formula that refers to the others by name. You can read a
-whole model in one sitting.
+Each number in a model file has a name, a unit, and a note saying where its value came from. Each
+computed number has a formula that refers to the other numbers by name. A model file is written
+this way so you can see which numbers matter and how they connect. You can then see what happens
+to the answer when one of them changes.
 
-The web service model grows through the book. [ch02 · What a workload is](#what-a-workload-is) writes the
-first nodes: what arrives and what accumulates. Later chapters add pieces: where each number came
-from, what the hardware can hold, where it stops coping, what it costs.
-[ch12 · The sizing model](#the-sizing-model) produces a host count.
-[ch18 · The five-year model](#the-five-year-model) produces a cost.
+Two models run through the book. In both, the structure is what the book teaches, and the numbers
+are yours to replace.
 
-Every figure in this book is computed from that file as it stands at that point.
+- The first is a web service and its data, on a fleet of Linux hosts. It is sized and costed end
+  to end. How it behaves under load is not a chain of multiplications at all.
+- The second is an observability platform, which has a hole in it where a measurement should be.
+
+The web service model grows through the book. [ch02 · What a workload is](#what-a-workload-is)
+writes its first numbers: what arrives (the busy-hour request rate) and what accumulates (the
+records held). Later chapters add where each number came from, what the hardware can hold, where
+it stops coping, and what it costs. [ch12 · The sizing model](#the-sizing-model) produces a host
+count. [ch18 · The five-year model](#the-five-year-model) produces a cost.
+
+Each chapter that adds to the web service model shows it as it stands at the end of that chapter,
+in a viewer where you can drag its inputs. Some pages show the finished model before the book has
+built it. ch01 does this to demonstrate what the whole model produces. Every figure is produced by
+the build from the repository's files. The build fails when a figure no longer matches the code
+that made it.
 
 ## Why a file, and not a spreadsheet
 
 A spreadsheet cell holds a value and nothing about it. It doesn't tell you the unit, where it came from, or how certain it is. Everything this book does depends on those three things being written down beside the number.
 
-The toolkit enforces what spreadsheets cannot:
+For unit, source, and certainty, a spreadsheet lets knowledge slip away where a model file keeps
+it.
 
-- Units on every formula
-- Provenance (fact, claim, assumption)
-- Measurement status
-- Limits with headroom
-- Dependency tracking
-
-A spreadsheet loses all of this on the first copy. The structured format also makes models intelligible to LLMs and other tools. A spreadsheet hides provenance, ranges, units, and measurement status inside human knowledge. A YAML file makes all of it explicit and machine-readable, so an LLM can reason about the model instead of just copying numbers.
-
-[ch02](#what-a-workload-is) writes the first nodes.
+- **Unit.** A spreadsheet multiplies a rate by a plain number and produces identical digits
+  regardless of whether the result is a rate or an amount. The toolkit enforces units on every
+  formula and refuses any that do not match the declared unit: requests per second times seconds
+  gives requests, but requests per second times a plain number stays requests per second.
+- **Source.** A spreadsheet has no required place to write where a number came from, so that
+  knowledge stays with whoever built the sheet. The model file requires every input to declare its
+  kind (fact, vendor's claim, or assumption) and its source; the build refuses any without both,
+  and a fact must cite something.
+- **Certainty.** A cell holds one number however unsure you are of it. The model file input can
+  express uncertainty: a low value you would be surprised to see it fall below and a high value
+  you would be surprised to see it rise above. A number nobody has measured is left empty, and so
+  is everything computed from it — the page prints "not yet measured" instead of a guess.
 
 ## Who this book is for
 
@@ -109,10 +121,9 @@ answer looks like, and what would show that yours is wrong.
 
 ## What you need
 
-To read the book and run its models: nothing. The book is a website, and the models are things
-you drag. The prose reads on any screen. The models want a tablet held sideways or larger.
-
-All models and code run in your browser.
+You install nothing to read the book or run its models. The book is a website where the models
+are things you drag and run in your browser. The prose reads on any screen, but the models need a
+tablet held sideways or a larger screen.
 
 The problems run in the page. Under each one that has a test sits the code it grades, yours to
 edit. **Check** runs the tests in your browser. Nothing leaves your machine.
@@ -133,5 +144,7 @@ Nothing in this book needs a datacentre, a cloud account, or a licence.
 
 ## Where to start
 
-[ch01](#point-estimates) shows what a single number leaves out. Read it first. Everything after
-it is an answer to that.
+Read [ch01](#point-estimates) first to see what a single number leaves out. The chapter draws the
+line the rest of the book is built on: between a model that is right whenever every input is
+right, and a model that can be wrong even then, because it rests on a number someone measured on
+one system, or because it runs into a limit.

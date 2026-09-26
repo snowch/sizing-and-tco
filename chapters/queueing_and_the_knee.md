@@ -54,18 +54,29 @@ queueing margin), shown in the ceilings table below as *Allowed*.
 ```{include} _generated/queueing-and-the-knee-table.md
 ```
 
-Read down the last column. For most of the range, "busier" costs almost nothing. Then, over the
-last stretch, it costs everything. A system that has been comfortable for two years, at a load
-creeping up the whole time, does not degrade gradually. It degrades all at once, on the Tuesday
-the load crosses a threshold nobody had computed.
+Read down the *Slower than idle by* column. It shows the time in the system divided by the time
+the same request takes on an idle fleet. Each step of load costs more than the step before it, and
+the steps grow faster the busier the fleet is. A system whose load creeps up for two years gets
+slower every month, and each month by more than the month before. No single month crosses a
+threshold, because the formula has none. Nothing fails and nothing alerts; the requests get slower.
 
 ### There is no knee
 
 The word is in this chapter's title, and there is no such point on the curve.
 
-Look at the curve again. It is smooth. It has no corner, no inflection, no special point. It is
-the same shape at every scale, and if you plot any portion of it stretched to fill the axes you
-get the same picture back. There is nothing in it to find.
+The curve has no corner and no inflection. Its slope rises smoothly at every utilisation. The
+figure above does show a bend near its right-hand end. It sits there because that is where the
+drawing stops: the curve ends at the table's last row and the vertical axis is scaled to that row.
+
+The figure below shows two stretches of the same curve. Each is stretched to fill its own axes,
+and the tick labels say where each stretch starts and ends. The two drawings are the same curve;
+the bend sits in the same place in each frame, but at a different utilisation in each. Across each
+stretch the idle share of the fleet shrinks by the same factor, and the panel titles give the idle
+share at each end. Two stretches over which the idle share shrinks by the same factor have the
+same shape once each fills its axes.
+
+A stretch near idle, drawn alone, is almost a straight line. So where a knee appears depends on
+where the axis was stopped. There is nothing in the curve itself to find.
 
 What people point at when they say "the knee" is the place where the slope first exceeded what
 they were willing to put up with. That is a statement about the person, not about the queue.
@@ -81,12 +92,18 @@ So this book does not have a knee rule. It has a **declared margin, with a reaso
 ```{include} _generated/queueing-and-the-knee-ceilings.md
 ```
 
+This ceiling makes the web service model a conditional model in [ch01](#point-estimates)'s sense.
+Until this chapter it was a definitional one. The viewer's header below now says *conditional
+model*.
+
 This is the first ceilings table in the book, and every later chapter prints one, so read the
 columns once.
 
 - *At the plan* is where the design sits at the point estimate.
 - *Limit* is where the quantity stops meaning anything: a full disk, a saturated device.
-- *Headroom* is the margin you declared, and *Allowed* is the limit less that margin.
+- *Headroom* is the margin you declared, a share of the limit shown as a percentage in the table.
+  *Allowed* is the limit less that share of it. For this ceiling the limit is one, so *Allowed* is
+  one less the margin.
 - The *verdict* judges the point estimate alone: `ok` under the allowed line, **over** past the
   limit, and *into the margin* between the two, where the design is spending the reserve that was
   declared to protect it.
@@ -203,8 +220,10 @@ alone the real curve is steeper, by an amount this chapter cannot say.
   would put up with, which is a fact about the person.
 - **So the book declares a margin with a reason instead of a knee rule.** A ceiling records where
   the quantity stops meaning anything, how much room is kept below that, and why.
-- **The verdict judges one future. The last two columns judge them all.** A design can read *ok* at
-  the point estimate and still be over the limit in a good share of its futures.
+- **The verdict judges one future. *Over allowed* and *Over limit* judge them all.** The verdict is
+  the point estimate alone. *Over allowed* and *Over limit* are each a share of the futures — the
+  futures past the allowed line and the futures past the limit. A design can read `ok` at the point
+  estimate and still be over the limit in a good share of its futures.
 - **Crossing a queueing ceiling fires no alarm.** Nothing fails and no one is paged. Every request
   gets slower, by more with each step of load. The way back is shedding load or adding machines.
 - **The drawn curve is not a bound on yours.** It is the one-server result: a fleet of many cores

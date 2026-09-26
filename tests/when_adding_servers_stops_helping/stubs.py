@@ -18,18 +18,21 @@ def throughput(
     work that cannot be done in parallel. ``crosstalk`` is the cost of machines having to agree
     with each other. Return the throughput of ``hosts`` machines.
 
-    Two terms in the denominator and they behave differently, which is the whole of the chapter:
+    The denominator has two terms and they behave differently:
 
     * contention costs a fixed share of every machine you add - it grows with the *count*, and it
       flattens the curve;
     * crosstalk is machines coordinating with each other, so it grows with the number of *pairs* -
       and it is what makes the curve turn over and come back down.
 
-    With crosstalk at zero you have Amdahl's ceiling: the curve flattens and stays flat. With both
-    at zero you have the straight line nobody has ever measured.
+    The tests check each one's behaviour on its own: contention alone must flatten the curve,
+    and with crosstalk added the curve turns over, so the two cannot stand in for each other.
 
-    The test checks it against the sweep the book publishes, so it has to be the model's formula
-    and not one that happens to be close near the middle.
+    With crosstalk at zero the curve approaches a limit and never falls: Amdahl's limit. With
+    both at zero you have the straight line nobody has ever measured.
+
+    The test checks it against the sweep the book publishes, at every host count, so it has to
+    be the model's formula and not one that is close near the middle.
     """
     raise NotImplementedError("problem 7.1")
 

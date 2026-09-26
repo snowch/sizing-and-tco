@@ -32,20 +32,17 @@ def concurrency(
 def residence_from_observation(
     in_flight: float | np.ndarray, arrival_rate: float | np.ndarray
 ) -> float | np.ndarray:
-    """Problem 5.2 - the law backwards, which is how it is actually used.
+    """Problem 5.2 - the law backwards, which is how it is used.
 
-    You almost never know residence time. You know how many requests are in flight, because a
-    connection count or a thread-pool gauge is trivial to expose, and you know the arrival rate,
-    because everybody counts requests.
+    Your application's timer does not measure residence time. You know how many requests are in
+    flight, because a connection count or a thread-pool gauge is easy to expose, and you know the
+    arrival rate, because every system counts requests. Return the residence time those two
+    imply, in seconds.
 
-    Return the residence time those two imply, in seconds.
+    The answer includes every queue the request sat in on the way, which the application's own
+    timer does not see.
 
-    This is the useful direction and it is why the law is worth knowing. A latency you cannot
-    measure directly falls out of two numbers you already have - and it is the *true* latency,
-    including every queue the request sat in on the way, which is generally not what an
-    application's own timer reports.
-
-    Then decide what to return when nothing is arriving. With no arrivals there is no residence
-    time to infer: raise, or return an infinity, but not a number somebody could put in a slide.
+    Then check what it returns when nothing is arriving: with no arrivals there is no residence
+    time to infer. Raise, or return an infinity, but not a number somebody could put in a slide.
     """
     raise NotImplementedError("problem 5.2")

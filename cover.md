@@ -5,17 +5,14 @@ numbering: false
 ---
 
 (cover)=
+*How to size a system, cost it, and know how much to trust the answer.*
 
-# 
-
-## Sizing and TCO
+A self-study text and toolkit for capacity planning, sizing, and total cost of ownership, built around one question: how big, how much, and how wrong could I be? Every number cites its source, and every model is a file the build re-runs. [Start with the Preface](#preface) to learn how to read the book, how the problems are checked in the page, and how to keep it for offline reading.
 
 :::{note}
-**DRAFT** — The preface and chapter 1 are complete. Chapters 2–23 are in draft: content drafted, polish and final review pending.
+Chapters in draft include a note at their top. Their numbers come from the build and are checked the same way as on every other page. What may still change is the wording.
 :::
 
-### How to size a system, cost it, and know how much to trust the answer.
-
-![Capacity scaling visualization showing growth over time with ceiling limit](/public/cover-hero.svg)
+![Demand growing across three time periods, approaching a dashed ceiling line.](/public/cover-hero.svg)
 
 By Chris Snow

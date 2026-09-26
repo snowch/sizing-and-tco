@@ -23,7 +23,8 @@ import re
 
 import pytest
 
-from bench.outline import APPENDICES, CHAPTERS
+from bench.outline import CHAPTERS
+from bench.render import page_order
 from bench.stamp import ROOT, shown
 from bench.tables import GLOSSARY
 
@@ -46,6 +47,19 @@ STEMS = {
 }
 FORMS = {term: re.compile(rf"\b{stem}\w*", re.I) for term, stem in STEMS.items()}
 
+#: A chapter's full title, as the text of a link to that chapter, is its name and not a use of
+#: the words in it: ``[ch14 · Correlation and convergence](#correlation-and-convergence)`` on the
+#: page in front of ch13. The reader sees the same name in the table of contents on every page,
+#: and `tests/test_book.py` already holds the text to the outline's title, so only that exact
+#: form is a name. ``[ch14](#correlation-and-convergence)`` followed by "correlation" is still a use.
+TITLED = {c.anchor: f"{c.label} · {c.title}" for c in CHAPTERS}
+LINK = re.compile(r"\[([^\]]*)\]\(#([^)]*)\)")
+
+
+def unnamed(line: str) -> str:
+    """The line with every chapter link that carries its own full title taken out."""
+    return LINK.sub(lambda m: " " if TITLED.get(m.group(2)) == m.group(1) else m.group(0), line)
+
 
 def home() -> dict[str, str]:
     """Which chapter teaches each word, read from the glossary rather than restated."""
@@ -55,12 +69,14 @@ def home() -> dict[str, str]:
 
 
 def reading_order() -> list:
-    """Every page a reader passes through, in the order they pass through it."""
-    return [
-        ROOT / "index.md",
-        *[ROOT / c.path for c in CHAPTERS],
-        *[ROOT / a.path for a in APPENDICES],
-    ]
+    """Every page a reader passes through, in the order they pass through it.
+
+    ``myst.yml``'s table of contents, so the part pages come where a reader meets them. The list
+    used to be the preface, the chapters and the appendices, and the part pages between them went
+    unread: Part IV said "samples" and "interval" on the page that introduces the chapter which
+    teaches them.
+    """
+    return [ROOT / source for source in page_order()]
 
 
 def position() -> dict[str, int]:
@@ -90,6 +106,7 @@ def prose_lines(path):
 
     Fenced code, tables, directive options and the book's own generated captions are not prose,
     and a link slug like `#correlation-and-convergence` is a target rather than a word.
+    A chapter's own full title, linked to that chapter, is a name rather than a use (see `TITLED`).
     """
     fenced = False
     for n, line in enumerate(path.read_text().splitlines(), start=1):
@@ -99,7 +116,7 @@ def prose_lines(path):
             continue
         if fenced or stripped.startswith(("|", ":", "%", "<!--", "---", "*Source")):
             continue
-        yield n, re.sub(r"\(#[^)]*\)|`[^`]*`", " ", line)
+        yield n, re.sub(r"\(#[^)]*\)|`[^`]*`", " ", unnamed(line))
 
 
 @pytest.mark.parametrize("term", RATIONED)
@@ -130,4 +147,18 @@ def test_a_rationed_word_waits_for_the_chapter_that_teaches_it(term):
         + "\n  ".join(early)
         + "\nSay the plain thing instead, or, where this is a different sense of the word "
         "— a scrape interval, bytes per sample — put `% word-ok: <reason>` on the line before."
+    )
+
+
+def test_a_chapter_title_in_its_own_link_is_a_name(tmp_path):
+    """The exemption above covers the exact title in a link to that chapter, and nothing else."""
+    page = tmp_path / "page.md"
+    page.write_text(
+        "[ch14 · Correlation and convergence](#correlation-and-convergence) is next.\n"
+        "[ch14](#correlation-and-convergence) is about correlation.\n"
+        "[ch14 · Correlations](#correlation-and-convergence) is a paraphrase.\n"
+    )
+    hits = [bool(FORMS["correlation"].search(line)) for _, line in prose_lines(page)]
+    assert hits == [False, True, True], (
+        "only a chapter's own full title, linked to that chapter, is a name rather than a use"
     )

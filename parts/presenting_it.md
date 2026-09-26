@@ -8,8 +8,9 @@ short_title: "Part VII — Presenting an interval"
 
 > How do you hand an interval to somebody who asked for a number?
 
-Two chapters. The first decides whether everything before it was worth the effort. A model nobody
-acts on has the same value as a model that was never built.
+The book now has an interval on the total cost and knows which input it rests on. This part hands
+that interval to the person who asked for a number, starting with one design's total and then
+comparing two designs.
 
 **[ch21 · A TCO for a finance audience](#a-tco-for-finance)** is the twenty minutes in which the
 work is used or ignored: what to put in front of the person whose decision it is, why a decision

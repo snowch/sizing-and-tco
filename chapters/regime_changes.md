@@ -33,11 +33,15 @@ A product covers an enormous amount of the world, which is why the technique wor
 express a **regime change**: a point at which the system stops obeying one rule and starts obeying
 another.
 
-Problem 8.1 puts a straight line through a system that has a regime change in it. Fit the line to
-the loads the system has run at, which for a healthy system means nothing above half.
-Then extrapolate to the loads you are planning for. The fit is excellent where it was made. Out
-where it matters, it is not wrong by a percentage. It is wrong by a multiple, and the multiple
-grows.
+Problem 8.1 fits a straight line to a queue, using only the loads a healthy system has run at.
+Those points are the dots on the left half of the figure below. They are rows of
+[ch06](#queueing-and-the-knee)'s queueing table, and the curve is that chapter's division drawn
+smooth. Extrapolate the line to the loads you are planning for, near full utilisation. The fit is
+excellent where it was made. At the busy end it is not wrong by a percentage. It is wrong by a
+multiple, and the multiple grows with load. The dashed line marks
+[ch06](#queueing-and-the-knee)'s allowed line for the queueing margin, the same value as the
+*Allowed* column of the *utilisation at the busy hour* row in this page's ceilings table, further
+down.
 
 ```{image} _figures/regime-changes-knee.svg
 :alt: Residence time against utilisation: one division, rising slowly while much of the fleet is idle and steeply as it nears full
@@ -46,21 +50,28 @@ grows.
 
 The healthy points fit a straight line well and [ch06](#queueing-and-the-knee)'s division equally
 well, so the data cannot tell them apart. A straight line fitted there is wrong at the busy end, not
-because of how you fit it but because of its shape. [ch06](#queueing-and-the-knee)'s division fitted
-to the same points follows the curve all the way to the busy end, because the curve was drawn from
-it; on a real system, only as far as [ch06](#queueing-and-the-knee)'s assumptions hold. What tells a
-line from the division is knowing the mechanism, not collecting more healthy data. A straight line
-predicts confidently despite being wrong, because the data it fits to is clean.
+because of how you fit it but because of its shape. The division fitted to the same points follows the curve all the way to the
+busy end, because the curve was drawn from it; on a real system, only as far as its assumptions
+hold. What tells a line from the division is knowing the mechanism, not collecting more healthy
+data. A straight line predicts confidently despite being wrong, because the data it fits to is
+clean.
 
 ### Three regime changes
 
-**The queueing knee.** [ch06](#queueing-and-the-knee). Response time is work divided by what is
-left of the system, so it goes from flat to vertical with no warning in between. A multiplicative
-model of latency says load times some constant, and that constant does not exist.
+**A queue at full utilisation.** Utilisation is how busy the fleet is: the work arriving each
+second against the work its cores can do in a second. Below one, [ch06](#queueing-and-the-knee)'s
+division holds and the wait grows faster with each step of load. The division has no special
+point. At one and past it, work arrives faster than the cores can do it. So
+[ch05](#littles-law)'s condition, as much going out as coming in, no longer holds, and the queue
+grows for as long as the overload lasts. The division has nothing left to divide by. That is the
+regime change. A chain of multiplications has no term for the faster growth near one and nothing
+for past one. [ch06](#queueing-and-the-knee)'s ceiling keeps utilisation well below one because
+the cost is paid in latency by every request. Where that becomes too much is your tolerance, not a
+point on the curve.
 
 **A host lost at the busy hour.** One host goes; its work lands on the survivors and utilisation
 rises in one step, with nothing else changed. The survivors' utilisation is one line of arithmetic,
-and so is the residence time [ch06](#queueing-and-the-knee) gives them—problem 8.2 asks you to
+and so is the residence time [ch06](#queueing-and-the-knee) gives them. Problem 8.2 asks you to
 predict whether it rises by the same factor as utilisation. For a small enough fleet or busy enough
 one, that one step takes survivors past one, the regime change above, reached at once instead of by
 growth. There the division has no answer. [ch11](#headroom-and-failure-domains) audits this with a
@@ -70,7 +81,7 @@ ceiling of its own, on the survivors' utilisation; it is not in this chapter's m
 records held times the share touched. The fleet has a fixed memory to hold it. While the working set
 fits in that memory, every record the busy hour reads can stay in memory. Past that point, some must
 go to disk. A model with an average cost per read describes only the mix at the one ratio it was
-calibrated for—it describes neither side.
+calibrated for. It describes neither side.
 
 The working set is the regime change this chapter adds to the running example. The model now
 includes three things: the share of the records a busy hour touches, the memory the fleet has for
@@ -84,21 +95,26 @@ exceeds it.
 ```
 
 The model assumes a request's time is set by its CPU time per request, [ch05](#littles-law)'s
-service demand, whatever its share of reads from memory—it has no term for disk waits. This chapter
+service demand, whatever its share of reads from memory. It has no term for disk waits. This chapter
 states that assumption, which did not start here; `cache_fill`'s reason says the same. Past the
 ceiling, requests wait for disk reads, and every chain using the service time understates it by an
 amount the model cannot compute.
 
+The viewer shows the graph as this chapter leaves it. Open *Inputs* to reach the sliders and,
+under them, *Outputs*. Drag *share of records touched in a busy hour*. The last row of *Outputs* is
+the ceiling, *working set against memory*. Its badge turns amber past the allowed line and red past
+the limit.
+
 ```{iframe} /models/web_service_regime-reference.html
 :width: 100%
-The graph as ch08 leaves it. Drag *share of records touched in a busy hour* and watch the working
-set cross the memory the fleet has.
+Click the last *Outputs* row to open *Details*, which shows the ceiling's limit, headroom, allowed
+value and its reason.
 ```
 
 ### What the three have in common
 
-Each of the three ceilings—utilisation, the survivors' utilisation, and the working set against
-memory—is a ratio of demand to capacity, with its limit at one, and each is a **threshold with
+Each of the three ceilings is a ratio of demand to capacity, with its limit at one: utilisation,
+the survivors' utilisation, and the working set against memory. Each is a **threshold with
 different physics on either side**. In each case a chain of multiplications computes the ratio
 perfectly well: the model is not wrong about the numbers. It is wrong about what those numbers
 *mean* past one.
@@ -113,9 +129,10 @@ away from it, and reports how much of the model's own uncertainty falls on the w
 The table shows the running example's ceilings: [ch06](#queueing-and-the-knee)'s *utilisation at the
 busy hour*, [ch07](#when-adding-servers-stops-helping)'s two, and this chapter's *working set
 against memory*. The host-loss ceiling arrives with [ch11](#headroom-and-failure-domains).
+
 [ch06](#queueing-and-the-knee) defined the last two columns: *Over allowed* is the share of the
 model's futures past the margin, and *Over limit* is the share past the limit, where the model has
-stopped applying. Look at the *working set against memory* row—its verdict is *ok*, and its *Over
+stopped applying. Look at the *working set against memory* row. Its verdict is *ok*, and its *Over
 limit* is the share of futures in which the working set does not fit in memory. Neither column says
 how busy the system will be; each says how much of what the model thinks could happen lands past a
 line.
@@ -125,10 +142,11 @@ line.
 A label is a tag on a metric such as the endpoint or the status code. Each distinct value multiplies
 the number of series that carry it: add many values and the count is multiplied, not incremented.
 The observability platform, in [Appendix F](#appendix-f-observability-model) and met in ch02, counts
-label cardinality as three numbers multiplied—distinct endpoint values, status values, and
+label cardinality as three numbers multiplied: distinct endpoint values, status values, and
 accidental label values from the labels nobody planned. A chain of multiplications expresses this
-correctly—there is no point where the rule changes—so label cardinality is not a regime change; the
-table below shows each count's band.
+correctly. There is no point where the rule changes, so label cardinality is not a regime change.
+
+The table below shows each count's band.
 
 ```{image} _figures/regime-changes-cardinality.svg
 :alt: Label cardinality as a distribution — a product of uncertain counts
@@ -141,7 +159,8 @@ table below shows each count's band.
 The product's band is wider than any one count's band but narrower than the three widths multiplied,
 because the counts are independent in the model and rarely reach their extremes together.
 Uncertainty compounds when quantities multiply, which [ch01](#point-estimates)'s problem 1.2
-measured.
+measured. The structure of this count is not in doubt, only its inputs are, so running its inputs
+over their ranges shows all of the count's doubt.
 
 ### When ranges are enough
 
@@ -160,7 +179,7 @@ uncertainty you can quantify from a model whose *applicability* you have to boun
 
 ## What this cannot tell you
 
-**Where your thresholds are.** Each ceiling puts its limit at one—the point at which the ratio says
+**Where your thresholds are.** Each ceiling puts its limit at one: the point at which the ratio says
 the thing is full. That limit is a definition; the margins below are decisions. Whether your system
 changes behaviour before one is something the model does not know: for example, whether reads start
 going to disk before the working set outgrows memory. None of the margins was measured, and
@@ -216,7 +235,7 @@ Fit a straight line to the healthy points, nothing above half utilisation, and e
 towards full utilisation. The test checks four things: the line fits the points it was fitted to,
 what you return is a straight line, it falls short at the busy end by a multiple, and the gap widens
 with load. A forecast that bends with the curve, such as the queueing model's division, would fail
-the straight-line check—but that is the right model, and this problem asks what the wrong one
+the straight-line check. But that is the right model, and this problem asks what the wrong one
 predicts.
 
 ```bash

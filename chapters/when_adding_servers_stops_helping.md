@@ -62,7 +62,7 @@ climbing slowly, and then the real curve stops climbing.
 ```
 
 The Throughput column rises to the row marked **peak**, then falls in every row after it. Past the
-peak, the next machine contributes less than nothing—the machines added took away more throughput
+peak, the next machine contributes less than nothing. The machines added took away more throughput
 than they brought. The Per host column is the fleet's throughput divided by its host count: the
 average over every machine in the fleet, not what the last machine alone added. Per host falls in
 every row but never goes below zero, even past the peak, so the drop shows in the Throughput column
@@ -70,9 +70,9 @@ instead.
 
 The last row gives the peak twice: one figure from sweeping the host count through the table and
 taking the largest throughput, and another from the two coefficients alone. The two are computed
-independently, and they agree to within the spacing of the sweep—the swept peak can only land on a
-row of the table. The closed form in problem 7.3 lets you find the peak from the two coefficients
-alone, without sweeping through the curve.
+independently, and they agree to within the spacing of the sweep. The swept peak can only land on a
+row of the table. The closed form in problem 7.3 lets you find the peak without sweeping through
+the curve.
 
 ### The utilisation you were quoted was optimistic
 
@@ -110,9 +110,9 @@ efficiency—that throughput divided by the straight line—falls: its *Ratio* i
 from [ch06](#queueing-and-the-knee), which does not count coordination. *Utilisation, counting
 coordination* falls by much less than half, as it divides the arriving work by what the fleet
 actually delivers, which rose by less than double. Time spent queueing falls by more than half
-because the calculation uses the optimistic *utilisation* and [ch06](#queueing-and-the-knee)'s
-non-linear division, which works in your favour in this direction. *Where adding hosts stops
-helping* does not move, as it depends on the two coefficients, not on fleet size.
+because the calculation uses the optimistic *utilisation* and ch06's non-linear division, which
+works in your favour in this direction. *Where adding hosts stops helping* does not move, as it
+depends on the two coefficients, not on fleet size.
 
 The next two tables show ch06's ceilings table for the fleet as it stands and for twice the hosts.
 They hold the ceiling ch06 introduced and the two this chapter adds. For both utilisation ceilings,
@@ -157,9 +157,11 @@ provenance says so.
 ## What this cannot tell you
 
 **Where your peak is.** The coefficients here are assumptions, and the peak follows from them.
-The model's own range on the peak spans more than a factor of three. Fitting the coefficients
-from three measurements gives numbers with the same problem and a false air of precision. What
-transfers is that a peak exists, and that it is a property of the software.
+The size of the fleet does not move the peak. The doubling table showed *where adding hosts stops
+helping* unchanged when the hosts doubled. Drag *crosstalk* in the graph above and watch *where
+adding hosts stops helping* move. Fitting the coefficients from three measurements gives numbers
+with the same problem and a false air of precision. What transfers is that a peak exists, and that
+it is a property of the software.
 
 **Whether the coefficients are stable.** Coefficients fitted from measurements describe one kind of
 work over a narrow range of fleet sizes. The three points are at different counts, but they sit
@@ -195,8 +197,10 @@ step, the curve above describes a queue in front of the real problem.
   curve over.
 - **Past the peak, the next machine takes capacity away.** Each machine adds less throughput than
   the one before it. After the peak, the next machine adds less than nothing and the total falls.
-- **Doubling the fleet fixes latency and buys little capacity.** Utilisation halves, queueing time
-  falls to about a quarter, and throughput rises by a fraction. Those are different purchases.
+- **Doubling the fleet cuts queueing time and buys little capacity.** Throughput rises by much less
+  than double, and efficiency falls. Time spent queueing falls by more than half, but the model
+  computes it from the utilisation that ignores coordination, so that gain is the optimistic one.
+  Those are different purchases.
 - **The utilisation a queueing view quotes is optimistic.** Some of every machine's capacity is
   spent on the others, so the honest figure divides by what the fleet can deliver.
 - **The shape of the curve is the claim. The position of the peak is a guess.** Three measurements
@@ -211,7 +215,8 @@ and says why.
 
 **7.1 — Write the law.**
 Two terms in the denominator, behaving differently. The tests check that contention alone flattens
-the curve and that crosstalk alone turns it over, so the two cannot stand in for each other.
+the curve and that with crosstalk added the curve turns over, so the two cannot stand in for each
+other.
 
 ```bash
 python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_1_law.py -m problem

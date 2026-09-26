@@ -60,10 +60,11 @@ Growth moves the busy-hour rate at the horizon more than any other input.
 This is the book's first tornado, so here is how to make one. Take one input and hold every other
 still at its middle value. Swing that input from the low end of its band to the high end, and record
 how far the answer moves. That distance is its **swing**. Do it for every input and sort the bars
-longest first. They form a funnel, which is where **tornado** gets its name. The table shows the
-busy-hour rate at the horizon with each input at its low end—where only one future in ten falls
-below—and its high end, where only one in ten comes in above. Inputs that do not feed the busy-hour
-rate, such as the peak-to-mean ratio, leave it unchanged.
+longest first. They form a funnel, which is where **tornado** gets its name. A **future** is one of
+many runs of the model's arithmetic, with every uncertain input set to one of its possible values,
+picked at random. The table shows the busy-hour rate at the horizon with each input at its low
+end—where only one future in ten falls below—and its high end, where only one in ten comes in above.
+Inputs that do not feed the busy-hour rate, such as the peak-to-mean ratio, leave it unchanged.
 
 ```{image} _figures/peak-mean-and-growth-chart.svg
 :alt: Which input moves the busy-hour rate at the horizon most

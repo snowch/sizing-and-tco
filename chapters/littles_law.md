@@ -171,8 +171,11 @@ nothing is steady, and in those futures, the count of requests in flight describ
 Look at the shape rather than at the numbers. The width is not Little's law's doing. One
 multiplication passes an ordinary spread straight through, and a product of two narrow things
 would be narrow. The width comes from what is being multiplied: a busy hour five years out, which
-[ch04](#peak-mean-and-growth) gave a band, and a time per request nobody has measured on this
-software. The graph shows where each of them came from:
+[ch04](#peak-mean-and-growth) gave a wide band, and a service demand nobody has measured on this
+software. The model also declares that a busier service is slower per request: the day-one
+busy-hour rate and the service demand tend to be high together. That widens the product further,
+because high rates meet high costs more often than chance would pair them. The graph shows where
+each of them came from:
 
 ```{image} _figures/littles-law-graph.svg
 :alt: The sub-graph that produces the number of requests in flight
@@ -264,8 +267,10 @@ python3 -m pytest tests/littles_law/test_problem_1_the_law.py -m problem
 
 **5.2 — The law backwards.**
 Infer residence time from in-flight requests and arrival rate, the two things every system
-already exposes. Then decide what to return when nothing is arriving. That decision is a
-judgement, not arithmetic.
+already exposes. Then check what your function returns when nothing is arriving. With nothing
+arriving there is no residence time to infer. Plain division already refuses: Python raises an
+error when a float is divided by zero, and numpy returns an infinity. The test accepts either. The
+test fails a function that turns that case into a finite number.
 
 ```bash
 python3 -m pytest tests/littles_law/test_problem_2_backwards.py -m problem

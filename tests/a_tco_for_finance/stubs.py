@@ -9,35 +9,56 @@ from __future__ import annotations
 def decision_table(summaries: dict[str, dict]) -> list[dict]:
     """Problem 21.1 - two designs, priced, with their risk.
 
-    ``summaries`` holds the stamped result of each of the chapter's two designs, keyed by scenario
-    name. Both are scenarios of the web service model: ``reference`` buys what the model
-    recommends at the point estimate, and ``sized_for_growth`` buys the same fleet sized for the
-    growth we might get rather than the growth we expect.
+    ``summaries`` holds the stamped result of each of the chapter's two designs,
+    keyed by scenario name. Both are scenarios of the web service model:
+    ``reference`` buys the fleet the model recommends with every input at its
+    point estimate, and ``sized_for_growth`` buys the fleet the model recommends
+    when the annual growth factor is at its 90th percentile, with every other
+    input at its point estimate.
 
-    A summary is the build's record of one run, as data. ``summary["nodes"]`` has an entry per
-    node of the model, and the figures the table needs live at:
+    A summary is the build's record of one run, as data.
+    ``summary["nodes"]`` has an entry per node of the model. The figures the
+    table needs live at:
 
-    ``nodes["hosts"]["point"]``                                 hosts purchased
-    ``nodes["tco"]["summary"]["p50"]`` and ``["p95"]``          the five-year total's median and
-                                                                its 95th percentile
-    ``nodes["queueing_headroom"]["ceiling"]["p_over_limit"]``   how often the queueing ceiling
-                                                                is breached
+    ``nodes["hosts"]["point"]``
+      hosts purchased
 
-    Return a list of rows, one for each design. Each row is a dictionary with exactly these keys:
+    ``nodes["tco"]["summary"]["p50"]``
+      the five-year total's median
 
-    ``"scenario"``     the scenario's name
-    ``"hosts"``        hosts purchased
-    ``"tco_p50"``      the median five-year total
-    ``"tco_p95"``      the 95th percentile of it
-    ``"p_over_the_knee"``  how often the queueing ceiling is breached
+    ``nodes["tco"]["summary"]["p95"]``
+      its 95th percentile
 
-    Build it from the stamped results rather than by re-running anything, so that the table
-    somebody is shown is the table the build produced.
+    ``nodes["queueing_headroom"]["ceiling"]["p_over_limit"]``
+      the share of futures in which the busy hour is over its limit
 
-    Then read it as the person on the other side of the table will. They have one question - what
-    am I buying and what am I buying it *instead of* - and every column is there to answer it or it
-    should not be there. A handful of columns is not a constraint; it is what fits in somebody's
-    head while they decide.
+    Return a list of rows, one for each design. Each row is a dictionary with
+    exactly these keys:
+
+    ``"scenario"``
+      the scenario's name
+
+    ``"hosts"``
+      hosts purchased
+
+    ``"tco_p50"``
+      the median five-year total
+
+    ``"tco_p95"``
+      its 95th percentile
+
+    ``"p_over_the_knee"``
+      the share of futures in which the busy hour is over its limit, between 0 and 1
+
+    Build it from the stamped results rather than by re-running anything, so
+    the table the person who signs is shown is the table the build produced.
+    Figures copied from the chapter's tables are rounded and will not match.
+
+    The columns are fixed. Each is there because it answers the one question
+    the person who signs has: what am I buying, and what am I buying it
+    *instead of*? Hosts say what; the two totals say what it costs, in the
+    middle and near the top; the last column says what the extra money buys.
+    When the test passes, read the table as that person will.
     """
     raise NotImplementedError("problem 21.1")
 

@@ -49,50 +49,52 @@ Which number you pick is a decision. You can defend any of these three out loud:
 when they say "the estimate". It is also the number that will be wrong half the time in the
 direction that hurts.
 
-**A high percentile.** The figure you would be comfortable committing to. Useful when overrunning
-is expensive and underspending is not. Its failure mode is quiet. You will be held to it, the
-money will be allocated, and when the cost lands lower nobody will thank you for the accuracy.
+**A high percentile.** The figure you would be comfortable committing to. Choose this when
+overrunning is expensive and underspending is not.
 
-**A round number above the median.** Not as unprincipled as it sounds. Rounding to a precision
-the model can support is more honest than quoting a figure to the dollar.
-[ch14](#correlation-and-convergence) gives the arithmetic for what precision that is: the
-run-to-run wobble has to be below the digit you are prepared to defend.
+**A round number above the median.** Round up rather than to the nearest step, and you buy some
+cover against the futures that cost more without committing to a high percentile. Rounding also
+matches what you can claim: a figure to the dollar claims precision the model does not have. The
+precision the model can support is set by how wide its interval is, not by how many digits the
+arithmetic prints. [ch14](#correlation-and-convergence)'s run-to-run wobble sets a second limit: it
+must be below the last digit you quote.
 
-Here is the shape all three are chosen from. It is the same picture [ch01](#point-estimates)
-opened with, now as something to pick a number off rather than something to be alarmed by:
+Here is the distribution you choose from. It shows the five-year total for the reference design over
+the model's sampled futures, as it did in [ch13](#monte-carlo).
 
 ```{image} _figures/a-tco-for-finance-distribution.svg
-:alt: The five-year total for the reference design, with the point estimate marked on it
+:alt: The five-year total for the reference design, with the point estimate and the median marked on it
 :width: 100%
 ```
 
-The red line is the point estimate, and it is not the middle. Whichever of the three you choose,
-choose it off that chart and say which one it was.
+The red line is the point estimate, and it is not the middle. The chart marks the point estimate,
+the median (the dark dashed line), and the ends of the 90% interval; the subtitle gives the median
+and the interval's ends as figures. Pick any of the three choices off the chart, and say which one
+it was.
 
-The number must not arrive without the sentence. The sentence is all of the engineering
-position, and there is only room for one. So it has to name something specific: a percentile, an
-omission, an assumption the total rests on. "There is some uncertainty" names nothing, and it
-will be heard as "no".
-
-Problem 21.2 is that pair, and it is graded on the sentence.
+The number must not arrive without the sentence. The sentence carries the engineering position, and
+there is room for one. So it names something specific: which percentile the number is, a cost the
+total leaves out, or an input the total rests on—the growth rate, a vendor's price. "There is some
+uncertainty" names nothing, and the person who signs hears it as "no". Problem 21.2 asks for that
+pair: the number, taken from the chart, and the sentence that names what it leaves out.
 
 ### A decision, not an interval
 
-The single most effective change to a sizing document is this. Stop presenting one design with an
-interval. Start presenting two designs with a price.
+Present two designs with a price, not one design with an interval.
 
 ```{include} _generated/a-tco-for-finance-scenarios.md
 ```
 
-The table has two columns. The left one buys what the model recommends at the point estimate. The
-right one buys the same fleet sized for the growth we might get rather than the growth we expect.
-That is the decision of [ch11](#headroom-and-failure-domains), taken deliberately instead of by
-default.
+The table has two columns, one per design. The left column buys what the model recommends with every
+input at its point estimate. The right column buys what the model recommends when the annual growth
+factor reaches its 90th percentile—growth that one future in ten exceeds. Every other input stays at
+its point estimate. This is the bigger fleet [ch12](#the-sizing-model) set against the ceilings, now
+with a price attached, chosen deliberately instead of by default.
 
-Read across the rows and the conversation changes shape. The question is no longer "is this
-estimate right", which nobody in the room can answer. It is "is the difference between these two
-columns worth the difference in the last two rows". That is the sort of question the people
-being asked are good at.
+Read the rows across both columns and the question changes. It is no longer "is this estimate
+right", which no one at the table can answer. It becomes "is the extra money in the right column
+worth the fall in the busy-hour row". The person who signs can answer that question without knowing
+anything about queues. It asks what extra spending buys, in terms of something that goes wrong.
 
 **An interval is a statement about the world. A decision table is a statement about what you can
 buy.** Only the second can be acted on by someone who cannot change the world but can sign for
@@ -100,58 +102,65 @@ the extra machines.
 
 ### Pricing a risk
 
-Lead with the last two rows of that table, because they are the only ones with a consequence in
-them.
+Lead with the decision table's busy-hour row, the only one that says what goes wrong in terms you
+can picture. The table below is a different one: every ceiling the model watches, for the reference
+design alone.
 
 ```{include} _generated/a-tco-for-finance-ceilings.md
 ```
 
-*Over limit* is how often, across the sampled futures, the fleet is asked to do something it
-cannot. The busy-hour row is a plain English sentence: this is how often we buy the fleet and it
-cannot serve the busy hour we said it would.
+*Over limit* is the share of the sampled futures in which the fleet is asked to do more than it can.
+For the busy-hour row, the limit is the fleet fully busy: over it, the busy hour brings more
+requests than the fleet can serve. *Verdict* judges only one value: the one in *At the plan* against
+the margin. A row can say *ok* while its *Over limit* column is large. The plan passes at its point
+estimate; it fails in a share of the futures.
 
-That sentence is worth more than any amount of argument about the growth rate. Nobody in the room
-has an opinion about a lognormal. Everybody in the room has an opinion about the service being
-slow on its busiest day.
+The busy-hour row is this in plain English: this is how often you buy this fleet and it cannot serve
+the busy hour it was bought for. That sentence persuades where argument about the growth rate does
+not. No one at the table has an opinion about a lognormal. Everyone there has one about the service
+being slow on its busiest day.
 
-The second scenario reduces that number, and the table says by how much and what it costs. Put
-the two together and you have the only sentence in the document that is a recommendation: *this
-much additional capital buys this much less chance of that happening*. If
-the answer is obviously yes, the meeting is over. If it is obviously no, the meeting is also
-over, and you have the decision in writing rather than in somebody's memory.
+The right-hand design is over its busy-hour limit in far fewer futures. The decision table shows by
+how much and what it costs. Put the two together and you have the one sentence in the document that
+is a recommendation: *this much additional capital buys this much less chance of that happening*. If
+the answer is plainly yes, the meeting is over. If it is plainly no, the meeting is also over, and
+the decision is in writing rather than in someone's memory.
 
 ### Where each number came from
 
-Then comes the appendix nobody asks for until they do.
+Last in the hand-over comes where each input came from. It goes with the one page described in *What
+to hand over*, as an attachment.
 
 ```{include} _generated/a-tco-for-finance-provenance.md
 ```
 
-The table carries three marks. The one that matters in this room is *vendor claim*: a number
-supplied by the party being paid. It may well be right. It has not been checked here, and it is
-coloured differently in every figure in this book for that reason
-([ch03](#where-the-numbers-come-from)). The finance audience is entitled to know which of the inputs
-to a capital request came from the supplier.
+Every input carries one of three marks: fact (●), vendor claim (◐) or assumption (○). The table
+lists the vendor claims and counts the other two kinds; its last line counts every input by kind. A
+vendor claim is a number supplied by the party being paid. It may be right. It has not been checked
+here, and the book marks it so you can tell it from a checked figure
+([ch03](#where-the-numbers-come-from)). Finance is entitled to know which inputs to a capital
+request came from the supplier, which is why the table lists those.
 
-Handing this over unprompted makes the rest of the document more believable, and little else
-does. A model that volunteers which of its inputs are guesses is not a model trying to win an
-argument.
+Handing this over before anyone asks makes the rest of the document easier to believe. A model that
+says which of its inputs are guesses is not trying to win an argument. The full list, every input
+with its mark and source, is in [Appendix E](#appendix-e-web-service-model), under *Where the inputs
+came from*.
 
 ### Three ways to lose the room
 
-**Presenting the interval instead of the decision.** "Somewhere between these two figures" with
-no recommendation is not caution. It is a refusal to do the last part of the job. The person
-across the table is being asked to absorb uncertainty that you understand and they do not.
+Each way of losing the room is something defensible handed over without its sentence.
+
+**Presenting the interval instead of the decision.** "Somewhere between these two figures" with no
+recommendation is not caution. It refuses the last part of the job, and asks the person across the
+table to absorb an uncertainty you understand and they do not.
 
 **Presenting a high percentile as the cost.** It gets approved, the money is set aside, and the
-actual spend comes in well under. That looks like success exactly once. The second time, the
-number is discounted before you have finished saying it, and the discount is applied by somebody
-who does not know which parts of it were conservative.
+spend comes in well under. That looks like success once. The next time, finance trusts your figure
+less before you have finished giving it. They mark down the whole figure, because they cannot tell
+which parts of it were cautious.
 
-**Presenting the median as though it were the plan.** The first two fail in how they look. This
-one fails in what happens: half the futures cost more, and nothing has been said about them.
-
-Each of the three is a way of not saying the sentence.
+**Presenting the median as though it were the plan.** The first two fail in how they look. This one
+fails in what happens: half the futures cost more, and nothing has been said about them.
 
 ### What to hand over
 
@@ -170,13 +179,13 @@ years have not already been added together.
 
 ## What this cannot tell you
 
-**What running out is worth.** Every figure in the decision table is a cost of *building*. There
-is no term anywhere in this model for what happens when the queueing ceiling is breached: the
-busy hour spent turning users away, the emergency purchase at list price, the quarter spent on
-it, the conversation with whoever was promised the service. The right-hand column's extra
-capital buys a reduction in that risk. The model prices the capital precisely and the risk not at
-all. Anybody who says the extra machines are not worth it is making a claim about a number this
-book has not measured.
+**What running out is worth.** Every figure in the decision table is a cost of *building* the fleet.
+The model has no term for what happens when the busy hour goes over its limit: the busy hour spent
+turning users away, the emergency purchase at list price, the quarter spent recovering, the
+conversation with whoever was promised the service. The right-hand column's extra capital buys a
+smaller chance of that. The model prices the capital, with an interval around it, and the risk not
+at all. Anyone who says the extra machines are not worth it is making a claim about a cost this
+model does not contain.
 
 **Your organisation's appetite for it.** How much should a real chance of the busiest hour going
 over the knee cost to avoid? That is not an engineering quantity, and there is no defensible way
@@ -189,11 +198,16 @@ design that spends capital up front and one that spends it over time, and the tw
 differ in that way. The model hands over the shape of the spend so that somebody can
 apply theirs. It does not pretend the undiscounted total is the answer.
 
-**Whether the structure is complete.** [ch20](#the-missing-node) is the standing limitation, and
-it does not stop applying because the audience has changed. The decision table is a comparison
-between two designs inside one model, and both columns inherit whatever that model is missing.
-The comparison is more robust than either total, because a missing cost line that scales with
-host count hurts both columns. But "more robust" is not "unaffected".
+**Whether the structure is complete.** [ch20](#the-missing-node) is the standing limitation, and it
+does not stop applying because the audience has changed. The decision table is a comparison between
+two designs inside one model, and both columns inherit whatever that model is missing. The
+comparison is safe only from omissions that cost the same in both: they add the same amount to each
+column and cancel when you subtract. The staff cost is one already in the model: it does not depend
+on the number of hosts. Most of the model's cost lines grow with the fleet: host prices, network,
+licences, support and energy. A missing line of that kind would cost the right-hand column, which
+has more hosts, more than the left. Leaving out a cost that grows with the fleet makes the bigger
+fleet look cheaper, against the smaller one, than it is. The gap between the columns is understated,
+not protected.
 
 **Whether it worked.** There is no measurement in this repository of whether a document shaped
 like this gets a better decision than one shaped some other way. This chapter is the one place in
@@ -212,8 +226,10 @@ the book arguing from experience rather than from a stamped result.
 - **Present two designs with a price, not one design with an interval.** The question becomes
   whether the difference between the columns is worth the difference in how often each one breaks,
   and that is a question the room can answer.
-- **Lead with the rows that have a consequence in them.** How often the fleet cannot serve the busy
-  hour it was bought for is a sentence everybody in the room has an opinion about.
+- **Lead with how often each design fails at the busy hour.** "This is how often you buy this fleet
+  and it cannot serve the busy hour it was bought for" is a sentence the person who signs can
+  weigh, because they have an opinion about the service being slow on its busiest day, and none
+  about a growth distribution.
 - **Volunteer where every number came from.** A model that says which of its inputs are the
   supplier's is not a model trying to win an argument, and it is believed more for it.
 :::
@@ -243,17 +259,17 @@ python3 -m pytest tests/a_tco_for_finance/test_problem_2_one_number.py -m proble
 
 **21.3 — Write the page, and hand it over.** No test: a page is graded by the person it is for.
 
-Write the one-page version for your own system and give it to whoever signs for it. A
-recommendation, what it rests on, what would change it, and the cost of being wrong in each
-direction.
+Write the one-page version *What to hand over* describes, for your own system, and give it to
+whoever signs for it. The model prices what overbuying costs: the difference between the columns. It
+does not price running short. If you put a cost on running short, that figure is your estimate: it
+goes on the page marked as an assumption, with its source, like any input in the provenance table.
 
-Then do the part that is not writing: watch what they ask. The question they ask first is the
-thing your page failed to answer, and it is almost never the one you expected to spend a page on.
+Then do the part that is not writing: watch what they ask. The question they ask first is the thing
+your page failed to answer.
 
-A good answer is one page and gets a decision. If it gets a request for more detail, the detail
-they asked for belongs on the page and something currently on it does not. This book has no
-measurement of whether a document like this works, which is why the only test available is
-handing it to somebody.
+A good answer is one page and gets a decision. If it gets a request for more detail, the detail they
+asked for belongs on the page and something now on it does not. This book has no measurement of
+whether a document like this works, so the only test is handing it to the person it is for.
 
 ## Where to go next
 
@@ -261,8 +277,8 @@ handing it to somebody.
 rather than two sizes of one fleet, the difference between them is what somebody is deciding, and
 it has an interval of its own.
 
-[ch23](#what-the-model-got-wrong) is what happens afterwards: three years later, when one of the
-futures in that table turned out to be the one you got.
+[ch23](#what-the-model-got-wrong) is what happens afterwards: at the model's horizon, when one of
+the futures in that table turned out to be the one you got.
 
 What remains after it is reference material:
 [Appendix A](#appendix-a-dsl-reference) for the model file format in full,
