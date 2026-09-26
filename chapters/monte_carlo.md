@@ -312,9 +312,16 @@ reason to start allowing it here.
 ## What this cannot tell you
 
 **Whether the model has the right shape.** Everything above takes the model's structure as given and
-asks what the inputs are worth. If a cost line is missing, if a ceiling was never declared, or if
+asks what the inputs are worth.
+
+:::{div}
+:class: definition
+
+If a cost line is missing, if a ceiling was never declared, or if
 two quantities were multiplied that should have been added, sampling carries the mistake through
-every sample and reports a confident interval around the wrong answer. That is *structural error*.
+every sample and reports a confident interval around the wrong answer. That is **structural error**.
+:::
+
 No technique in this chapter can see it, and it is the subject of
 [ch20 · The missing node](#the-missing-node).
 

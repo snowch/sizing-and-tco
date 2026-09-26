@@ -202,6 +202,25 @@ that, and ch19 names variance decomposition to warn a reader off reading a torna
 named in order to be rejected is not vocabulary creep; it is the fence around the vocabulary. The
 rule used to read "and that is the list", which would have forbidden all three.
 
+**A term the book teaches is defined in a box.** Every term in the glossary (`GLOSSARY` in
+`bench/tables.py`) is defined in its home chapter inside a definition box:
+
+```
+:::{div}
+:class: definition
+
+**Term.** What it means, in a sentence or two.
+:::
+```
+
+Put the box where the definition falls, with the term in bold. If the defining sentence shares a
+paragraph with other points, move it into the box and let the paragraph carry on after it; a
+pronoun that loses its noun gets the noun back. A reader looking up a word scans for the box, not for
+the paragraph that happens to say it. `tests/test_book.py` fails a glossary term with no box in its
+home chapter. Before that test, six terms were boxed and five were defined nowhere in the chapter the
+glossary sent the reader to. Box the terms the book teaches, not every word it glosses in passing:
+boxes that mark everything mark nothing.
+
 **Say the thing. Do not perform it.** "Direct" above was not specific enough to hold, and the
 prose drifted into three habits that make a reader extract the point instead of receiving it. The
 test for any sentence: *does this state the point, or make the reader work it out?*

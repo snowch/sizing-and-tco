@@ -735,3 +735,26 @@ def test_appendix_a_lists_every_key_the_loader_reads():
         f"Appendix A lists {stale} in the first column of a key table, and the loader does not "
         "read it. Remove the row, or check `sizing/dsl.py` for a renamed key."
     )
+
+
+def test_every_glossary_term_is_defined_in_a_box_in_its_home_chapter():
+    """A term the glossary says a chapter introduces is defined there, in a definition box.
+
+    A reader looking for what a word means scans for the box, not for the paragraph that happens
+    to say it. Before this test, six terms were boxed and twenty-six were defined in passing, five
+    of them nowhere in the chapter the glossary sent the reader to. The match is on each word's
+    stem, so a box defining "converge" answers for "convergence".
+    """
+    from bench.tables import GLOSSARY
+
+    box = re.compile(r":::\{div\}\n:class: definition\n(.*?)\n:::", re.S)
+    missing = []
+    for term, (home, *_) in GLOSSARY.items():
+        text = (ROOT / "chapters" / f"{home}.md").read_text()
+        stems = [word[: max(4, len(word) - 3)].lower() for word in term.split()]
+        if not any(all(stem in body.lower() for stem in stems) for body in box.findall(text)):
+            missing.append(f"{term} ({home})")
+    assert not missing, (
+        "defined in no definition box in its home chapter: " + ", ".join(missing)
+        + ". Put the sentence that says what it means in a :::{div} with :class: definition."
+    )

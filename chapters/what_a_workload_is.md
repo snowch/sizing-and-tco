@@ -157,9 +157,15 @@ Look at the two nodes quoted above. Five lines in each matter most: `kind`, `dec
 given. `decided` says who settles the number—`outside` for your users or the world, `you` for your
 choice, `definition` for things true whoever asks; both nodes here are `outside`. `unit` lets the
 toolkit tell a level from a rate and check every formula. `value` is the number a spreadsheet would
-have held. `provenance` records where the value came from and which of three kinds of source it is:
+have held.
+
+:::{div}
+:class: definition
+
+**`provenance`** records where the value came from and which of three kinds of source it is:
 `fact`, `vendor_claim` or `assumption`; both nodes here are `assumption`, the service owners'
 estimates.
+:::
 
 The bar on an input marked `you` comes from the `decided` field. In a spreadsheet a source is
 optional and nobody checks it, but here the build refuses an input without a `decided` line or a
