@@ -233,8 +233,8 @@ rest. Click a node and open *In the file* under Details to see its lines. On a s
 for the graph and both panels side by side, press **Expand** and choose **Model file** to read the
 whole file, with the node you clicked marked.
 
-The toolkit also checks the file before it works anything out. Change `stored_data`'s formula to
-multiply the request rate by a plain number and it refuses: the node holds terabytes, and a rate
+The toolkit also checks the file before it works anything out. If you changed `stored_data`'s
+formula to multiply the request rate by a plain number, it would refuse: the node holds terabytes, and a rate
 times a plain number is still a rate. The formula is wrong, not imprecise. Problem 2.4 has you
 write a mistake of that kind and watch it caught.
 
