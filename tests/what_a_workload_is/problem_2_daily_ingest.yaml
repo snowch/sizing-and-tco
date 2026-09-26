@@ -1,0 +1,15 @@
+# Problem 2.2 - the telemetry that arrives in one day, metrics and logs only, in TB.
+# The test adds every node in this file to the observability model, under nodes:, and adds
+# daily_ingest to the outputs.
+# known_ingest is already in the model: metrics and logs arriving together, MB/s. Traces are
+# left out because spans per request has not been measured, so the traces chain has no value.
+# daily_ingest's formula is empty. Write it, and change nothing else about it.
+# A rate times a plain number is still a rate. The formula needs a node that carries a length
+# of time.
+# Declare any node the formula needs above daily_ingest with kind, decided, unit, value and
+# provenance. Use a name the model does not already have.
+daily_ingest:
+  kind: derived
+  label: telemetry arriving in one day, metrics and logs only
+  unit: TB
+  formula:

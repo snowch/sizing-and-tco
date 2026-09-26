@@ -1,8 +1,10 @@
 """Problem 14.2 — correlate two inputs without disturbing their distributions.
 
 The reader's artefact is one entry for the model's ``correlations:`` block, in the file's own
-form. Two assertions matter, and the second is the one that separates the right method from the
-obvious one: the interval widens, and neither input's own distribution moves.
+form. Five marked tests: the entry names the pair with a rank correlation above zero and below one;
+the half-width on capital widens; neither price's distribution moves; the measured rank correlation
+is the declared one; and the entry says why. The third is the one that separates reordering from
+the obvious method of adjusting the values.
 """
 
 from __future__ import annotations
@@ -22,8 +24,10 @@ A, B, OUTPUT = "host_price", "network_price_per_host", "capex"
 FRAGMENT = "tests/correlation_and_convergence/problem_2_correlation.yaml"
 #: The file the page shows under the problem, editable, and writes back before grading.
 EDITABLE = (FRAGMENT,)
-#: The weakest correlation the problem accepts: the section says why a weak one barely shows.
-AT_LEAST = 0.5
+#: How much wider the half-width on capital must get. Reordering alone, with no correlation to
+#: speak of, moves it by a small fraction of this, so a coefficient that clears it reached the
+#: sampler, and one that does not is too small to tell apart from the reshuffle.
+MARGIN = 1.02
 
 
 def declared() -> list[dict]:
@@ -57,13 +61,13 @@ def rho_declared() -> float:
 
 
 @pytest.mark.problem
-def test_the_entry_names_the_pair_and_a_strong_enough_rho():
+def test_the_entry_names_the_pair_and_a_rho():
     assert any({e.get("a"), e.get("b")} == {A, B} for e in declared()), (
         f"the entry correlates {A} with {B}"
     )
-    assert AT_LEAST <= rho_declared() < 1.0, (
-        "a rank correlation of at least a half, and below one: the section says why a weak one "
-        "barely shows, and one is not a correlation but a copy"
+    assert 0.0 < rho_declared() < 1.0, (
+        "`rho` is a rank correlation above zero and below one: two prices that rise together "
+        "have a positive one, and one is not a correlation but a copy"
     )
 
 
@@ -71,10 +75,33 @@ def test_the_entry_names_the_pair_and_a_strong_enough_rho():
 def test_the_interval_widens(model, correlated, scenario):
     before = mc.half_width(evaluate(model, scenario).samples[OUTPUT])
     after = mc.half_width(evaluate(correlated, scenario).samples[OUTPUT])
-    assert after > before * 1.02, (
-        f"the half-width went from {before:,.0f} to {after:,.0f}. Two prices that move together "
-        "cannot cancel each other out, so the interval on their sum has to get wider — if it did "
-        "not, the correlation did not reach the sampler."
+    assert after > before * MARGIN, (
+        f"the half-width on {OUTPUT} went from {before:,.0f} to {after:,.0f}, not wide enough to "
+        "tell from reordering alone. Two prices that move together cannot cancel each other out, "
+        "so their sum should spread wider. Either the entry did not reach the sampler, or its "
+        "`rho` is too small to show."
+    )
+
+
+def test_the_margin_can_be_passed_and_failed(model, scenario):
+    """Scaffolding: the book's own model declares this pair, and with that entry the half-width
+    clears the margin. With a coefficient of zero the draws are not reordered at all, so the
+    half-width does not move and the margin cannot be cleared by accident."""
+    book = next(
+        e
+        for e in load_model("models/web_service/model.yaml").correlations
+        if {e["a"], e["b"]} == {A, B}
+    )
+    before = mc.half_width(evaluate(model, scenario).samples[OUTPUT])
+
+    def with_entry(entry: dict) -> float:
+        return mc.half_width(
+            evaluate(replace(model, correlations=(entry,)), scenario).samples[OUTPUT]
+        )
+
+    assert with_entry(book) > before * MARGIN, "the book's own declared pair must pass the margin"
+    assert with_entry({**book, "rho": 0.0}) == pytest.approx(before), (
+        "a coefficient of zero must leave the half-width where it was"
     )
 
 
@@ -88,9 +115,8 @@ def test_the_marginals_do_not_move(model, correlated, scenario):
             now = float(np.percentile(together[name], percentile))
             assert abs(now - was) < 0.02 * abs(was), (
                 f"{name}: its p{percentile} moved from {was:.4g} to {now:.4g}. Correlating should "
-                "only change which draws line up with which — if a marginal moved, the values "
-                "were adjusted rather than reordered, and you have overwritten the distribution "
-                "the model chose."
+                "only change which draws line up with which. If a price's own distribution moved, "
+                "the values were adjusted rather than reordered."
             )
 
 
@@ -111,7 +137,8 @@ def test_the_correlation_says_why():
     """The chapter calls the reason required: a coefficient with nothing attached is the section's
     own example of a number nobody can argue with."""
     entry = next(e for e in declared() if {e.get("a"), e.get("b")} == {A, B})
-    assert str(entry.get("because") or "").strip(), (
+    reason = str(entry.get("because") or "").strip()
+    assert reason, (
         "say why these two move together, in the entry's `because`. The chapter calls the reason "
         "the required column."
     )

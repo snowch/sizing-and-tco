@@ -475,9 +475,12 @@ def test_no_literalinclude_uses_line_numbers(path):
     )
 
 
-#: One ``{literalinclude}``: the file it quotes, and the text anchors it quotes it between.
+#: One ``{literalinclude}`` or ``{include}``: the file it quotes, and the text anchors it quotes
+#: it between. Appendix B includes a module docstring as prose, anchored on its title line, and a
+#: reworded title would move that quote as silently as a renamed function.
 QUOTE = re.compile(
-    r"```\{literalinclude\}\s*(?P<target>\S+)\n(?P<options>(?::[a-z-]+:.*\n)*)", re.MULTILINE
+    r"```\{(?:literal)?include\}\s*(?P<target>\S+)\n(?P<options>(?::[a-z-]+:.*\n)*)",
+    re.MULTILINE,
 )
 
 
@@ -698,3 +701,37 @@ def test_the_style_checklist_runs_every_style_rule():
     # And the two passes stay two, because collapsing them is how the slow half went missing.
     for pass_name in ("First pass: the sentences", "Second pass: the idea"):
         assert pass_name in style, f"STYLE.md declares its {pass_name!r}"
+
+
+def test_appendix_a_lists_every_key_the_loader_reads():
+    """Appendix A's key tables and the loader agree, in both directions.
+
+    A reader writes a model from that page, and the loader ignores a key it does not know. A key
+    the page leaves out is one nobody can find; a key the page lists that the loader no longer
+    reads is a line that loads and does nothing.
+    """
+    import inspect
+
+    from sizing import dsl
+
+    source = "".join(
+        inspect.getsource(reader) for reader in (dsl.load_model, dsl._node_from, dsl.load_scenario)
+    )
+    read = set(re.findall(r'(?:\.get\(|_require\(\w+, |_text\(\w+, |\[)"(\w+)"', source))
+
+    page = (ROOT / "appendices" / "appendix_a_dsl_reference.md").read_text()
+    documented: set[str] = set()
+    for line in page.splitlines():
+        if line.startswith("| `"):
+            documented |= set(re.findall(r"`(\w+)`", line.split("|")[1]))
+
+    missing = sorted(read - documented)
+    stale = sorted(documented - read)
+    assert not missing, (
+        f"The loader reads {missing}, and Appendix A's key tables have no row for it. Add one to "
+        "the table for the file, a node or a scenario."
+    )
+    assert not stale, (
+        f"Appendix A lists {stale} in the first column of a key table, and the loader does not "
+        "read it. Remove the row, or check `sizing/dsl.py` for a renamed key."
+    )

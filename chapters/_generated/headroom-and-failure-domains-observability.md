@@ -3,8 +3,8 @@
 | Ceiling | At the plan | Headroom | Allowed | Limit | Verdict | Over allowed | Over limit |
 |---|---:|---:|---:|---:|---|---:|---:|
 | ingest utilisation, measured | *not yet measured* |  |  |  |  |  |  |
-| query path utilisation | 0.57 | 40% | 0.60 | 1.00 | ok | 43% | 28% |
-| ingest utilisation, quoted | 0.51 | 40% | 0.60 | 1.00 | ok | 44% | 21% |
-| retention store fill | 0.58 | 30% | 0.70 | 1.00 | ok | 45% | 30% |
+| query path utilisation | 0.57 | 40% | 0.60 | 1.00 | ok | 46% | 29% |
+| ingest utilisation, quoted | 0.51 | 40% | 0.60 | 1.00 | ok | 44% | 22% |
+| retention store fill | 0.58 | 30% | 0.70 | 1.00 | ok | 46% | 30% |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***

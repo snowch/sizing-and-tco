@@ -11,4 +11,4 @@
 | host price | input | $1.66 | $2.05 | $0.39 |
 | support rate | input | $1.77 | $1.89 | $0.12 |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

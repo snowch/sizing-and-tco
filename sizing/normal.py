@@ -6,11 +6,11 @@ the sampler is three lines of algebra; this is a rational approximation, and pre
 by burying it among the others would misrepresent what the reader is looking at.
 
 Why it is here at all. :mod:`sizing.mc` samples every distribution by inverse transform — draw a
-percentile uniformly, ask the distribution what value sits at it — so the normal and the
-lognormal both need :math:`\\Phi^{-1}`, and so does the rank-correlation step. The standard
-library has an exact-enough scalar version in ``statistics.NormalDist().inv_cdf``, but it is
-scalar: at the sample counts ch14 uses to demonstrate convergence it costs seconds per run, which
-is enough to make the experiment tedious and therefore not run.
+fraction between 0 and 1 uniformly, ask the distribution what value sits at it — so the normal
+and the lognormal both need :math:`\\Phi^{-1}`, and so does the rank-correlation step. The
+standard library has an exact-enough scalar version in ``statistics.NormalDist().inv_cdf``, but it
+is scalar: at the sample counts ch14 uses to demonstrate convergence it costs seconds per run,
+which is enough to make the experiment tedious and therefore not run.
 
 So the approximation is used for speed and the standard library is used as the oracle:
 ``tests/test_mc.py`` checks the two agree to nine figures across the whole range, including the

@@ -9,4 +9,4 @@
 | utilisation at the busy hour | 0.27 | 30% | 0.70 | 1.00 | ok | 12% | 5% |
 | fraction of the fleet doing nothing useful | 0.60 | 50% | 0.50 | 1.00 | into the margin | 90% | 0% |
 
-*Source — [`web_service-sized_for_growth`](/models/web_service-sized_for_growth.html) · every input on a slider*
+*Source — [`web_service-sized_for_growth`](/models/web_service-sized_for_growth.html) · the model to explore; each input with a range has a slider*

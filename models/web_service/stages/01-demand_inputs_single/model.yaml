@@ -19,9 +19,9 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        This figure comes from the forecaster, who holds a spread
-        of plausible busy-hour rates and rounds it to one. ch04
-        replaces the one number with the spread.
+        The service owners estimate the request rate in the busy
+        hour. They have a spread of plausible rates in mind and
+        round it to one number; ch04 replaces it with the spread.
     range: [500, 40000]
 outputs: [peak_request_rate_t0]
 correlations: []

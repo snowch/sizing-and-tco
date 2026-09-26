@@ -19,12 +19,30 @@ def values():
     )
 
 
+def _hint(mine: float, published: float, months: float) -> str:
+    """Where to look, from how far out the reader is. Never what the answer is."""
+    ratio = mine / published
+    if ratio == pytest.approx(MONTHS_PER_YEAR, rel=1e-3) or ratio == pytest.approx(
+        1 / MONTHS_PER_YEAR, rel=1e-3
+    ):
+        return "You are out by twelve, so one of you is working in years."
+    if ratio == pytest.approx(months, rel=1e-3):
+        return (
+            "You are out by the number of months in the horizon: you have a cost per terabyte "
+            "over the whole period. Divide by the months as well."
+        )
+    return (
+        "Get the three cases you can check in your head right first: they are a test of their own."
+    )
+
+
 @pytest.mark.problem
 def test_it_agrees_with_the_model(values):
-    mine = unit_cost(values["tco"], values["average_stored"], values["horizon"] * MONTHS_PER_YEAR)
-    assert mine == pytest.approx(values["cost_per_stored_tb_month"], rel=1e-6), (
-        f"the model publishes {values['cost_per_stored_tb_month']:.4f} and you make {mine:.4f}. "
-        "If you are out by twelve, one of you is working in years."
+    months = values["horizon"] * MONTHS_PER_YEAR
+    mine = unit_cost(values["tco"], values["average_stored"], months)
+    published = values["cost_per_stored_tb_month"]
+    assert mine == pytest.approx(published, rel=1e-6), (
+        "your cost per terabyte per month is not the model's. " + _hint(mine, published, months)
     )
 
 
@@ -41,7 +59,7 @@ def test_a_year_and_a_month_differ_by_twelve():
     per_month = unit_cost(6000.0, 100.0, 60.0)
     per_year = unit_cost(6000.0, 100.0, 5.0)
     assert per_year == pytest.approx(12 * per_month), (
-        "the same total over the same capacity, quoted per year and per month, differs by twelve "
+        "the same total over the same holding, quoted per year and per month, differs by twelve, "
         "and both figures look equally authoritative"
     )
 
@@ -52,3 +70,11 @@ def test_the_model_declares_the_period_in_its_unit(values):
 
     node = load_model("models/web_service/model.yaml").nodes["cost_per_stored_tb_month"]
     assert "month" in node.unit, node.unit
+
+
+def test_the_hints_cannot_both_fire(values):
+    """Scaffolding: out by twelve and out by the horizon's months are different mistakes here."""
+    months = values["horizon"] * MONTHS_PER_YEAR
+    assert months != pytest.approx(MONTHS_PER_YEAR, rel=1e-2), (
+        "a one-year horizon makes the two hints in _hint the same; the problem needs another"
+    )

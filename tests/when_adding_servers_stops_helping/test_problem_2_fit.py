@@ -1,7 +1,7 @@
-"""Problems 7.2 and 7.3 - fitting the coefficients, and finding the peak they imply.
+"""Problem 7.2 - fitting the law's three numbers from three measurements.
 
-Graded by round trip: the test generates measurements from known coefficients, hands them over,
-and checks what comes back reproduces them. Nothing is stored and the coefficients change between
+Graded by round trip: the test makes measurements from known coefficients, hands them over, and
+checks that what comes back reproduces them. Nothing is stored and the coefficients change between
 cases, so there is nothing to pattern-match.
 """
 
@@ -11,14 +11,17 @@ import math
 
 import pytest
 
-from bench.stamp import load_result
-from tests.when_adding_servers_stops_helping.stubs import fit, peak_hosts
+from tests.when_adding_servers_stops_helping.stubs import fit
 
+#: One host's throughput, contention and crosstalk. Problem 7.3's test uses the same three fleets.
 CASES = {
     "a fleet like the book's": (1220.0, 0.005, 3.7e-5),
     "heavily serialised": (400.0, 0.12, 1e-4),
     "chatty": (80.0, 0.004, 2e-3),
 }
+
+#: Host counts you could plausibly have measured at: one machine on a bench, and two fleets.
+COUNTS = (1, 8, 40)
 
 
 def known_throughput(hosts: float, one_host: float, contention: float, crosstalk: float) -> float:
@@ -26,60 +29,54 @@ def known_throughput(hosts: float, one_host: float, contention: float, crosstalk
     return hosts * one_host / (1 + contention * (hosts - 1) + crosstalk * hosts * (hosts - 1))
 
 
+def measurements(name: str) -> list[tuple[float, float]]:
+    return [(float(n), known_throughput(float(n), *CASES[name])) for n in COUNTS]
+
+
+def close(got: float, want: float, rel: float) -> bool:
+    return math.isfinite(got) and math.isclose(got, want, rel_tol=rel)
+
+
 @pytest.mark.problem
 @pytest.mark.parametrize("name", sorted(CASES))
 def test_the_fit_recovers_the_coefficients(name):
-    one_host, contention, crosstalk = CASES[name]
-    # Three measurements, at counts somebody could plausibly have run.
-    measurements = [
-        (float(n), known_throughput(float(n), one_host, contention, crosstalk)) for n in (1, 8, 40)
-    ]
-    got = fit(measurements)
-    assert got[0] == pytest.approx(one_host, rel=1e-6), f"{name}: one_host"
-    assert got[1] == pytest.approx(contention, rel=1e-4), f"{name}: contention"
-    assert got[2] == pytest.approx(crosstalk, rel=1e-4), f"{name}: crosstalk"
-
-
-@pytest.mark.problem
-@pytest.mark.parametrize("name", sorted(CASES))
-def test_the_peak_matches_where_the_curve_actually_turns(name):
-    _, contention, crosstalk = CASES[name]
-    predicted = peak_hosts(contention, crosstalk)
-    # Search for the real peak, so the closed form is checked against the thing it describes.
-    counts = range(1, 4000)
-    swept = max(counts, key=lambda n: known_throughput(float(n), 1.0, contention, crosstalk))
-    assert abs(predicted - swept) <= 1.0, (
-        f"{name}: the closed form says {predicted:.1f} and sweeping finds {swept}"
+    one_host_only = (
+        "If you divided by hosts - 1, the one-host measurement makes that 0 / 0. Use it for "
+        "one_host only, and take contention and crosstalk from the other two."
     )
-
-
-@pytest.mark.problem
-def test_without_coordination_there_is_no_peak():
     try:
-        answer = peak_hosts(0.05, 0.0)
-    except (ZeroDivisionError, ValueError):
-        return
-    assert not math.isfinite(answer), (
-        "with no coordination cost the curve never turns over. The honest answer is that there is "
-        "no peak: raise, or return an infinity, not a large number that looks like one."
-    )
+        got = [float(value) for value in fit(measurements(name))]
+    except ZeroDivisionError:
+        pytest.fail(f"{name}: your fit divided by zero. {one_host_only}", pytrace=False)
+    if any(math.isnan(value) for value in got):
+        pytest.fail(f"{name}: your fit returned nan. {one_host_only}", pytrace=False)
+    if not close(got[0], CASES[name][0], 1e-6):
+        pytest.fail(
+            f"{name}: one_host is wrong. One measurement is at a single host, which has nobody "
+            "to contend or coordinate with.",
+            pytrace=False,
+        )
+    for index, coefficient in ((1, "contention"), (2, "crosstalk")):
+        if not close(got[index], CASES[name][index], 1e-4):
+            pytest.fail(
+                f"{name}: one_host is right and {coefficient} is not, so the slip is in the "
+                "rearrangement. Check which way up it is: the law's denominator is the straight "
+                "line divided by the measured throughput, not the other way round. Then check "
+                "that contention goes with hosts - 1 and crosstalk with hosts * (hosts - 1).",
+                pytrace=False,
+            )
 
 
-def test_the_books_own_fleet_agrees_with_its_published_peak():
-    """Scaffolding: the chapter says the swept peak and the predicted one agree, and this holds
-    the two stamped figures to that. Nothing of the reader's is in it."""
-    summary = load_result("scaling-curve")["summary"]
-    predicted = summary["predicted_peak"]
-    assert abs(predicted - summary["peak_at_hosts"]) / summary["peak_at_hosts"] < 0.05, (
-        "the peak the book sweeps for and the peak its coefficients predict are computed "
-        "independently and have to agree"
-    )
+def test_three_different_counts_pin_the_answer_down():
+    """Scaffolding: three different counts, one of them a single host, and every measurement
+    falls short of the straight line by a different amount, so none of them repeats another."""
+    assert len(set(COUNTS)) == 3 and 1 in COUNTS
+    for name, (one_host, _, _) in CASES.items():
+        shortfalls = {rate / (hosts * one_host) for hosts, rate in measurements(name)}
+        assert len(shortfalls) == 3, name
 
 
-def test_the_three_cases_have_three_different_peaks():
-    """Scaffolding: the problem is not one case repeated."""
-    peaks = [
-        max(range(1, 4000), key=lambda n: known_throughput(float(n), 1.0, c, x))
-        for _, c, x in CASES.values()
-    ]
-    assert len(set(peaks)) == 3, peaks
+def test_the_cases_are_not_one_case_repeated():
+    """Scaffolding: every one of the three numbers differs from case to case."""
+    for index in range(3):
+        assert len({case[index] for case in CASES.values()}) == len(CASES)

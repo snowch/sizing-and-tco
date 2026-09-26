@@ -6,4 +6,4 @@
 | peak request rate, day one | input | 0.0212 | 0.654 | 0.632 |
 | CPU time per request | input | 0.0205 | 0.101 | 0.0805 |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

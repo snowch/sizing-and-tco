@@ -8,4 +8,4 @@
 | hosts for memory | 54 | 14 to 194 | host |
 | hosts for storage | 49 | 16 to 153 | host |
 
-*Source — [`web_service_sizing-reference`](/models/web_service_sizing-reference.html) · every input on a slider*
+*Source — [`web_service_sizing-reference`](/models/web_service_sizing-reference.html) · the model to explore; each input with a range has a slider*

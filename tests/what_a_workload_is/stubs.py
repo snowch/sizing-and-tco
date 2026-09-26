@@ -1,8 +1,9 @@
 """Chapter 2's problems. Edit this file; the tests beside it say whether you are right.
 
-The first two are about telling three kinds of quantity apart, which sounds like pedantry until
-the first time somebody sizes a retention store from a rate. The other two are about the file
-itself: the smallest one the build will accept, and one that loads and is still wrong.
+Problem 2.1 is about telling a stock from a flow by what a quantity means, and checking that
+against the unit the model declares. Problems 2.3 and 2.4 are about the file itself: the smallest
+one the build will accept, and one that loads and is still wrong. Problem 2.2 is not here: you
+edit ``problem_2_daily_ingest.yaml``, a fragment of the model file, beside this one.
 """
 
 from __future__ import annotations
@@ -16,48 +17,28 @@ def stocks_and_flows(nodes: dict[str, str]) -> dict[str, str]:
     dictionary mapping every one of those names to one of three strings:
 
     ``"stock"``
-        A level. How much there is, right now. Storage held, series alive, requests in flight.
+        A level: how much of some thing there is now. Its unit names the thing: hosts,
+        storage held, series alive, requests in flight.
     ``"flow"``
-        A rate. How much per unit of time. Bytes ingested per second, requests arriving per
-        second, dollars per year.
+        A rate: how much per unit of time. Bytes ingested per second, requests arriving per
+        second, dollars per month.
     ``"neither"``
-        A pure number, a ratio, a price per unit of something that is not time, a duration.
+        A duration, a ratio, a price per something that is not time, or a pure number,
+        including a count that multiplies something else, such as the values a label takes.
 
-    Classify by **meaning**, from the name and the words beside it. The test classifies by
-    **dimension**, from the unit the model declares - a flow has time in its denominator, a stock
-    does not, and a duration has time in its numerator. If your reading of what a quantity *is*
-    and the unit somebody declared for it disagree, one of the two is wrong, and finding out which
-    is the exercise.
+    Classify by meaning, from the name and the words beside it. The test classifies by
+    dimension, from the unit the model declares, by the rule under *Four kinds of quantity* on
+    the chapter page. A flow has time in its denominator. A stock's unit names an amount of
+    some thing with no *per*. A duration has time in its numerator and nothing else. Anything
+    else is neither. Every unit in this model typechecks, so where your reading of what a
+    quantity is and the unit the model declared for it disagree, your reading missed something
+    the unit records. A failed Check lists the nodes that disagree, each with its unit.
 
-    Why it matters: a stock and a flow are added, compared and budgeted differently, and the two
-    commonest sizing errors in this book's experience are multiplying a flow by nothing and
-    calling it a stock, and sizing a store from a peak rate that only holds for an hour.
+    Why it matters: a stock and a flow are added, compared and budgeted differently. Two
+    errors come from confusing them: multiplying a flow by a plain number and calling it a
+    stock, and sizing a store from a peak rate that holds for only an hour.
     """
     raise NotImplementedError("problem 2.1")
-
-
-def daily_volume(model_text: str) -> str:
-    """Problem 2.2 - turn a rate into a volume, and make the build agree.
-
-    The observability model knows how many bytes a second arrive. Nobody reasons in bytes a
-    second; people reason in "how much a day", because that is what a retention conversation is
-    about and what an invoice is denominated in.
-
-    ``model_text`` is the observability model file, as written. Return the same text with one
-    more node in it, called ``daily_ingest``, giving the bytes that arrive in a day across
-    metrics and logs together. Declare it in ``TB`` - terabytes a day, with the day already
-    divided out, which is the form somebody can act on.
-
-    You will need a node carrying a duration before the multiplication means anything, as
-    ``one_year`` and ``one_sample_per_series`` do elsewhere in this book. That is not a
-    workaround: a rate times a pure number is still a rate, and the only thing that turns one
-    into a volume is multiplying by an amount of time.
-
-    The test writes what you return to a file and loads it as the build would. It checks the
-    unit typechecks, and that the answer is the ingest rate multiplied by a day - derived from
-    the model's own numbers at test time, so there is nothing to look up.
-    """
-    raise NotImplementedError("problem 2.2")
 
 
 def smallest_model_that_builds() -> str:
@@ -71,9 +52,10 @@ def smallest_model_that_builds() -> str:
     * passes ``sizing.evaluate.check_units`` with no problems;
     * passes every rule in ``scripts/verify-models.py`` that applies to it.
 
-    That last clause is the problem. Read the eight rules at the top of that script before
-    writing anything: an input with no provenance source, or a node that feeds no output, will be
-    refused, and the refusal is the thing you are here to meet.
+    That last clause is the problem. The rules are listed in Appendix A of the book, under
+    "What the build checks", and at the top of ``scripts/verify-models.py``. Read them before
+    writing anything. An input with no ``decided`` line or no provenance source, or a node that
+    feeds no output, is refused, and the refusal is what you are here to meet.
 
     Return the YAML as a string. The test writes it to a file and loads it exactly as the build
     would.

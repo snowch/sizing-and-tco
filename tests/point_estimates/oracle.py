@@ -1,17 +1,32 @@
-"""What the chapter's first two problems are graded against: the model's own bands, and itself.
+"""What the chapter's problems are graded against: the model's own bands, the commute in the
+taxi example, and the toolkit's own reading of three model files.
 
-Both problems ask for a ratio out of the same six inputs, so the way those six are found lives
-here rather than in either test file. Nothing in this module is a stub. The reader is handed its
-output, not its source, and can ignore it.
+Nothing in this module is a stub. The reader is handed its output, not its source, and can
+ignore it.
 """
 
 from __future__ import annotations
+
+import math
+from pathlib import Path
+
+import yaml
 
 from sizing.dsl import Scenario, load_model
 from sizing.evaluate import point
 
 MODEL = "models/web_service/model.yaml"
 TOTAL = "hosts_recommended"
+
+#: The taxi example's three inputs. The table on the page is rendered from the same file.
+COMMUTE = "tests/point_estimates/fixtures/commute.yaml"
+
+#: Problem 1.3's three descriptions, each written as a model file, in the order the page gives them.
+DESCRIBED = (
+    "tests/point_estimates/fixtures/model_a.yaml",
+    "tests/point_estimates/fixtures/model_b.yaml",
+    "tests/point_estimates/fixtures/model_c.yaml",
+)
 
 
 def the_model():
@@ -27,8 +42,7 @@ def ends(model) -> dict[str, tuple[float, float]]:
     """The bottom and top of each band that can move the host count, however the file writes it.
 
     The file bands eighteen inputs. Twelve of them are on the cost side and cannot reach a host
-    count at all, so holding them at their extremes does nothing: the ratio these problems ask
-    for is the same number to the last digit with them and without them. Handing a reader
+    count at all, so holding them at their extremes does nothing to it. Handing a reader
     eighteen entries after a chapter that discussed six, twelve of which are inert, cost the
     chapter a paragraph explaining that they were harmless -- which is a problem apologising for
     its own scope.
@@ -49,18 +63,25 @@ def ends(model) -> dict[str, tuple[float, float]]:
     return out
 
 
-def on_paper(model) -> float:
-    """Every input at the bottom of its band, then every input at the top, and the ratio."""
-    bands = ends(model)
-    low = total_with(model, {name: bottom for name, (bottom, _top) in bands.items()})
-    high = total_with(model, {name: top for name, (_bottom, top) in bands.items()})
-    return high / low
+def commute() -> dict[str, tuple[float, float]]:
+    """Each input of the taxi commute: its usual value, and the most it could be."""
+    raw = yaml.safe_load(Path(COMMUTE).read_text())
+    return {name: (float(entry["usual"]), float(entry["most"])) for name, entry in raw.items()}
 
 
-def each_alone(model) -> dict[str, float]:
-    """What one input can do to the host count on its own, across its band."""
-    out = {}
-    for name, (bottom, top) in ends(model).items():
-        low, high = total_with(model, {name: bottom}), total_with(model, {name: top})
-        out[name] = max(low, high) / min(low, high)
-    return out
+def cost_of_commute(values: dict[str, float]) -> float:
+    """A year's fares: days, times minutes a day, times the fare a minute."""
+    return math.prod(values.values())
+
+
+def rise(moving: tuple[str, ...]) -> float:
+    """How many times the year's cost grows when these inputs, and no others, go to their most."""
+    inputs = commute()
+    usual = {name: low for name, (low, _high) in inputs.items()}
+    moved = {**usual, **{name: inputs[name][1] for name in moving}}
+    return cost_of_commute(moved) / cost_of_commute(usual)
+
+
+def kinds() -> list[str]:
+    """What the toolkit calls each of problem 1.3's models, read from the files."""
+    return [load_model(path).classification for path in DESCRIBED]

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import math
+
 import pytest
 
 from sizing.dsl import load_model
@@ -18,10 +20,20 @@ def expected(hosts: int, losses: int) -> float:
     return losses / hosts
 
 
+def agrees(got: float, want: float) -> bool:
+    """Compared outside the assertion, so a failure never prints the value the test wanted."""
+    return math.isclose(got, want, rel_tol=1e-9, abs_tol=1e-12)
+
+
 @pytest.mark.problem
 @pytest.mark.parametrize(("hosts", "losses"), CASES)
 def test_it_is_the_share_that_goes_away(hosts, losses):
-    assert failure_reserve(hosts, losses) == pytest.approx(expected(hosts, losses), rel=1e-9)
+    got = failure_reserve(hosts, losses)
+    right = agrees(got, expected(hosts, losses))
+    assert right, (
+        f"failure_reserve({hosts}, {losses}) returned {got:.3g}. It should be the share of the "
+        "fleet's capacity that goes away with the lost hosts."
+    )
 
 
 @pytest.mark.problem
@@ -31,21 +43,23 @@ def test_it_agrees_with_the_models_own_two_utilisations():
     values = point(load_model(MODEL))
     lost = values["hosts"] - values["hosts_after_failure"]
     from_the_model = 1.0 - values["utilisation"] / values["utilisation_after_failure"]
-    assert failure_reserve(int(values["hosts"]), int(lost)) == pytest.approx(
-        from_the_model, rel=1e-9
+    right = agrees(failure_reserve(int(values["hosts"]), int(lost)), from_the_model)
+    assert right, (
+        "the web service model's utilisation before and after losing a host implies a different "
+        "share from the one your function returns. The load a loss adds to the survivors is the "
+        "capacity it took away."
     )
 
 
 @pytest.mark.problem
 def test_a_small_cluster_pays_a_large_margin():
-    """The argument for large failure domains that nobody makes."""
+    """The capacity argument for larger pools: as a share, a small fleet pays far more."""
     small = failure_reserve(5, 1)
     large = failure_reserve(500, 1)
     assert small > 20 * large, (
-        f"one machine in five costs {small:.0%} of the fleet and one in five hundred costs "
-        f"{large:.1%}. Per machine, a small fleet is enormously more expensive to make "
-        "survivable - which is a capacity argument for consolidation and is not the argument "
-        "people usually give."
+        f"your function says one machine in five costs {small:.0%} of the fleet and one in five "
+        f"hundred costs {large:.1%}. Each fleet keeps one machine free, but as a share of the "
+        "fleet the small one pays far more. Check which share your function returns."
     )
 
 

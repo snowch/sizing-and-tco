@@ -40,11 +40,13 @@ Both are scenarios of the running example, and both hold every line of the quote
 ```{include} _generated/comparing-two-tcos-quotes.md
 ```
 
-Read the marks first. Almost every line on both sides is a vendor's claim, whichever vendor it
-is. The model gave the host price a band because nobody had quoted one
-([ch03](#where-the-numbers-come-from)). A quote is a number, so the band goes and the number
-stays. What is left uncertain is what no quote fixes: the workload, its growth, the electricity,
-the people.
+Read the marks in the quotes table first. Almost every line on both sides is marked as a
+vendor's claim, whichever vendor it is. The three kinds of claim are the ones
+[ch03](#where-the-numbers-come-from) introduced. Everywhere else in the book the model gives the
+host price a wide band, because a host is a configuration rather than a commodity. A quote names
+one configuration and one price for it. So the band goes and the quoted number stays: every line
+of each quote is pinned. What is left uncertain is what no quote fixes: the workload, its growth,
+the electricity, the people.
 
 Two lines are not the vendor's. The host count is the model's own sizing rule, applied to each
 host at the point estimate, so both designs are sized to the same margins by the same rule
@@ -59,23 +61,17 @@ this one, and the file is where the reasons for its numbers live.
 :start-at: scenario:
 ```
 
-And here it is running. Drag *hosts in the fleet* up by one and watch the five-year total pass
-the incumbent's.
-
-```{iframe} /models/web_service-challenger.html
-:width: 100%
-The challenger's quote, with every input on a slider. The incumbent's is linked under every
-table on this page.
-```
-
 ### Every line on both sides
 
-The challenger licenses per host. The incumbent's quote has no such line, and until this chapter
-the model had no such node. A line that one side does not have is a cost that side never pays,
-and a comparison with a line missing from one column is won by omission.
+The challenger licenses per host. The incumbent's quote has no such line. A line that one side
+does not have is a cost that side never pays, and a comparison with a line missing from one
+column is won by omission.
 
-So the model carries two lines it did not need before, and both are zero on the incumbent's
-side. The zero is declared, with a source, rather than left out:
+You have met both lines before. The full web service model carries a per-host licence and a
+one-off cost of moving, and [ch21](#a-tco-for-finance)'s provenance table lists both, with their
+sources. On the single design earlier chapters priced, both lines were zero and moved nothing.
+This chapter is the first in which either carries a figure. On the incumbent's side both are
+still zero. The zero is declared, with a source, rather than left out:
 
 ```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
@@ -83,8 +79,7 @@ side. The zero is declared, with a source, rather than left out:
 :end-before: annual_licences:
 ```
 
-The second is the cost of the move. It is the line an incumbent's comparison never shows and a
-challenger's never includes:
+The second line is the cost of the move. Neither side's own figures carry it:
 
 ```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
@@ -98,9 +93,12 @@ by line:
 ```{include} _generated/comparing-two-tcos-lines.md
 ```
 
-Read down the last column. The challenger wins on licences, on energy and on network, and loses
-on the move. The hosts cost about the same in total, because fewer of them cost more each.
-Support is a share of capital on both quotes and the capital is about equal, so it barely moves.
+Read down the last column of the lines table. The challenger wins on licences, on energy and on
+network, and loses on the move. The hosts cost about the same in total, because fewer of them
+cost more each. Support is a share of capital on both quotes, and the challenger's rate is
+higher. Yet the challenger's capital, hosts plus network, is lower than the incumbent's, mostly
+because its *Network* line is much smaller. A higher rate on less capital leaves the *Support*
+line barely changed.
 
 The largest line in either total is people, and it does not appear in the difference at all.
 Both designs are run by the same engineers at the same cost, so the line is the same on both
@@ -111,9 +109,25 @@ only where they are added up.
 The last row is the whole comparison at the point estimate. The challenger is cheaper, by a
 sliver of either total. That is the number a spreadsheet stops at.
 
+The challenger's quote runs below as a model you can change. Drag *hosts in the fleet* up by one
+host and watch the five-year total pass the incumbent's figure in the last row of the lines table
+above.
+
+```{iframe} /models/web_service-challenger.html
+:width: 100%
+The challenger's quote, running. An input has a slider when the model file gives it a range:
+*hosts in the fleet*, *licence per host* and *one-off cost of moving to this design* among them.
+The other quoted prices, including host price and support rate, are pinned by the scenario and
+have no slider. Each line's Details show the note and source from the model file, written for
+the design the plan was built on. The challenger's own reasons are in its scenario file, quoted
+in the previous section. The incumbent's quote has a model of its own, linked under the quotes
+table and the ceilings table.
+```
+
 ### Subtract futures, not intervals
 
-Both totals have intervals, and the two intervals are nearly the same interval.
+Each total has an interval of its own. The totals table below shows both: each five-year total
+at the point estimate and as a middle nine in ten. The two intervals are nearly the same.
 
 That is not a coincidence. Most of what either total is uncertain about is shared. The
 electricity price, the building's overhead, what an engineer costs and how many are needed are
@@ -122,9 +136,10 @@ electricity price comes out high, it comes out high for both fleets. When an eng
 both totals rise together.
 
 So the difference between the totals is far less uncertain than either total. The toolkit takes
-it the only honest way: the same future, both fleets, subtract. Both scenarios pin the same
-inputs and share a seed, so every input neither quote fixes is drawn once and reaches both
-designs, and the toolkit checks that before it subtracts anything.
+it one future at a time: the same future, both fleets, subtract. Both scenarios pin the same
+inputs and share a seed. So every input neither quote fixes is drawn once, and the same draw
+reaches both designs. Before it subtracts anything, the toolkit checks that each shared input
+came out identical on both sides, and it refuses to subtract if one did not.
 
 ```{image} _figures/comparing-two-tcos-difference.svg
 :alt: The difference between the two five-year totals, future by future, with the tie marked and the share of futures either side of it
@@ -133,8 +148,9 @@ designs, and the toolkit checks that before it subtracts anything.
 
 The interval on the difference is a fraction of the interval on either total. The challenger is
 cheaper in most of the futures the model thinks plausible, and dearer in a large minority of
-them. Both of those are the answer. A comparison that reports only the first is the one the
-challenger would show you. A comparison that reports neither is the one a spreadsheet shows you.
+them. Both of those shares are the answer. A comparison that reports only the share in which the
+challenger wins is the one the challenger's vendor would show you. A spreadsheet reports neither
+share. It shows one difference, at the point estimate: the first row of the table below.
 
 ```{include} _generated/comparing-two-tcos-paired.md
 ```
@@ -167,13 +183,18 @@ the same margins, so both are over the knee at the busy hour in about the same s
 A comparison that sized one design to the daily mean and the other to the busy hour would show a
 cheaper fleet that copes less often, and would not say so.
 
-Two rows differ, in opposite directions. The challenger's hosts spend less of their capacity
-agreeing with each other, because there are fewer of them
-([ch07](#when-adding-servers-stops-helping)), so it is over the coordination ceiling less often.
-And losing one host of a small fleet costs more of the fleet than losing one of a large one, so
-the challenger is over the one-host-down ceiling slightly more often
-([ch11](#headroom-and-failure-domains)). Neither shows up in the money. Both are part of what
-is being bought.
+One row differs clearly: *utilisation, counting coordination*. The challenger is over that
+ceiling much less often, because it has fewer hosts and they spend less of their capacity
+agreeing with each other ([ch07](#when-adding-servers-stops-helping)).
+
+A mechanism pulls the other way on *utilisation with one host down*: losing one host of a small
+fleet removes a larger share of the fleet than losing one host of a large fleet
+([ch11](#headroom-and-failure-domains)). On this pair the effect is small. The row barely
+differs, by less than the working-set and busy-hour rows that the paragraph above calls about
+equal. The challenger's fleet starts with more cores in total than the incumbent's, so after
+losing its larger share it is left with about as many cores as the incumbent. You can check this
+from the quotes table: cores per host times hosts in the fleet. Neither difference shows up in
+the money. Both are part of what is being bought.
 
 ### What would flip it
 
@@ -184,12 +205,16 @@ at which the two totals tie, with everything else at its point estimate.
 ```{include} _generated/comparing-two-tcos-break-even.md
 ```
 
-Read the challenger's lines first. Every one of them ties within a few per cent of the quote.
-The move can cost a little more than the team estimated, the host price and the licence can each
-rise a little, and the fleet can grow by less than one host before the ordering reverses. Carry
-that last row into the meeting. How many hosts a workload needs on hardware nobody has run it on
-is the kind of number [ch03](#where-the-numbers-come-from) says to distrust, and this comparison
-turns on a fraction of one.
+Read the first four rows first: the lines on the challenger's side. Each ties within a few per
+cent of the figure the comparison uses. Two of the four are the vendor's quote: the host price
+and the licence per host. Two are assumptions: the cost of the move is the team's estimate, and
+the host count is the model's sizing rule. The *Whose* column marks which. The move can cost a
+little more than the team estimated, the host price and the licence can each rise a little, and
+the fleet can grow by less than one host before the ordering reverses. Take the *hosts in the
+fleet* row into the meeting. The challenger's host count comes from the sizing rule applied to
+two things: its spec sheet, and the CPU time per request. The CPU time per request belongs on a
+rig, and it has not been measured on either design's hosts
+([ch03](#where-the-numbers-come-from)). The comparison turns on a fraction of one host.
 
 The row about people is a different kind of claim. Both quotes hold the engineers equal, because
 a vendor's figure for how many people *you* will need is a claim about your organisation and
@@ -200,22 +225,28 @@ turns on a headcount the vendor supplied has a thumb on the scale, and this mode
 take that number from a quote.
 
 The shared inputs are next. Cheaper electricity favours the incumbent, because the challenger's
-advantage on energy shrinks with the price, and the tie sits inside the middle eighty per cent
-of what the price could be. So does the tie on the network price. The building's overhead would
-have to be better than the model thinks plausible before it flipped anything. And growth cannot
-flip it at all. Both fleets were bought before the growth arrived, so the input that dominates
-every other tornado in this book does not move the difference by a dollar.
+advantage on energy shrinks with the price. The tie sits inside the middle eighty per cent of
+what the price could be. The tie on the network price per host is inside its middle eighty per
+cent too. The building's overhead, the PUE, would have to be better than every value the model
+draws for it before it flipped anything. Growth cannot flip the comparison at all, because it
+reaches neither total. The host count is a decision each quote pins, and the cost chain starts
+there, so nothing upstream of the fleet reaches the money. [ch19](#which-input-is-the-answer)
+found the same thing for the five-year total: growth is not on its tornado at all. Growth still
+moves how often each fleet copes, which is the ceilings table's business.
 
 ```{image} _figures/comparing-two-tcos-tornado.svg
 :alt: Which shared input moves the difference between the two totals, and how many do not move it at all
 :width: 100%
 ```
 
-The chart is a few bars and a count. Everything the two designs pay alike has a bar of no length,
-and that includes the growth, the busy hour, the salary and the head count. The comparison is
-sensitive to the two prices that scale with the host count and to almost nothing else. That is what
-a comparison between two quotes for one workload is usually sensitive to, and it is rarely what the
-argument in the room is about.
+The chart has three bars and a count of inputs with no bar. The three bars are the shared inputs
+that reach the lines the quotes differ on: the network price per host, charged per host; the
+electricity price and the PUE, which together set the energy line. Growth, the busy hour and the CPU
+time per request reach neither total because the fleet is pinned, as the paragraph above explains.
+The lines the quotes argue about (host price, licences, support rate) are pinned by the quotes and
+have no bar on this chart; the break-even table shows where they appear. The salary and the head
+count reach both totals equally through the people line, which cancels. So on this pair the
+difference is sensitive to the quoted lines and to three shared inputs, and to nothing else.
 
 Problem 22.2 finds one of those break-evens by hand.
 
@@ -231,14 +262,14 @@ when the item is missing.
 | The same horizon and the same refresh convention on both sides | [ch15](#capex-opex-and-lifecycle) | a three-year quote against a five-year one |
 | Every line on both sides, with a declared zero where a quote has no such line | this chapter | hardware only on one side, fully loaded on the other |
 | Whose number each line is, marked on both sides, the presenter's own included | [ch03](#where-the-numbers-come-from) | list price for the other side, the negotiated price for yours |
-| The cost of the move, on the side that has to move | this chapter | the incumbent never shows it; the challenger never includes it |
+| The cost of the move, on the side that has to move | this chapter | the challenger's vendor does not quote it, because the buyer pays for it; a plan built on the incumbent has nothing to move |
 | The difference as an interval over shared futures, and the share of futures in which it flips | this chapter | two intervals side by side, which say nothing, or one number, which says too much |
 | Each design's ceilings, as how often it fails to cope | [ch11](#headroom-and-failure-domains), [ch21](#a-tco-for-finance) | cheaper because it copes less often |
 | The break-evens, and whether each lies inside a range anybody would defend | this chapter, [ch19](#which-input-is-the-answer) | a comparison that turns on an input nobody measured |
 | The people line held equal unless there is evidence, and marked as a claim if not | this chapter | a headcount the vendor supplied |
 | Unit costs on the same denominator and the same period | [ch17](#unit-economics) | per terabyte-month against per terabyte-year, the busy hour against the mean |
 | What was left out, named | [ch20](#the-missing-node) | a line neither total has, which favours whichever side it would have hurt |
-| Cash by year, undiscounted, so that finance can apply its own rate | [ch15](#capex-opex-and-lifecycle), [ch21](#a-tco-for-finance) | a discount rate chosen to flatter the side that spends later |
+| Capital, yearly running cost, one-off move cost and horizon, undiscounted, to let finance place them in years and apply its own rate | [ch15](#capex-opex-and-lifecycle), [ch21](#a-tco-for-finance) | a discount rate chosen to flatter the side that spends later |
 | A file that re-runs, so the reader can change an input and watch | [the introduction](#preface) | a bar chart, with nothing in it to change |
 
 Check the first item twice. Two quotes that were sized differently are not two
@@ -252,8 +283,9 @@ both sides, and a discount that is the same percentage on both is not the same m
 the two capital lines differ.
 
 **What the move will cost.** The migration line is the team's estimate, marked as an
-assumption, and it is the kind of number that is usually low. The break-even says how wrong it
-can be before the ordering flips. Nothing here says how wrong it is.
+assumption. No quote, invoice or measurement stands behind it, and nothing in the model checks
+it. The break-even says how wrong it can be before the ordering flips. Nothing here says how
+wrong it is.
 
 **Anything about performance.** Both quotes share one CPU time per request, because it is the
 same software on different hosts. A quote for a different platform would carry a different
@@ -274,9 +306,11 @@ lose that ([ch18](#the-five-year-model)), and the interval on their difference c
 wide as the independent one above.
 
 **Which side you are on.** A comparison built by the party that wins it is still a comparison,
-and the checklist above is the same whoever built it. What the checklist cannot supply is the
-number a prospect is entitled to and rarely gets: the share of futures in which the presenter's
-own design loses.
+and the checklist above is the same whoever built it. What the checklist cannot supply is one
+number: the share of futures in which the presenter's own design loses. That share is how often
+the choice turns out wrong, which is the risk the buyer takes on. Only a model of both designs
+over shared futures produces it, so the presenter has to run one and show the result. A
+checklist held against a finished document cannot.
 
 ## Key takeaways
 
@@ -293,9 +327,10 @@ own design loses.
 - **A total is the price of a fleet that works.** Two fleets that cope different amounts of the time
   are not the same purchase at two prices, so the comparison carries the ceilings as well as the
   money.
-- **Find what would flip it.** The break-evens say how far each line and each shared input can move
-  before the ordering reverses. Usually that is a few per cent on the prices that scale with the
-  host count, and nothing on the inputs the argument in the room is about.
+- **Find what would flip it.** The break-evens say how far each line and each shared input can
+  move before the ordering reverses. On this pair, each line on the challenger's side ties
+  within a few per cent of the figure the comparison uses. Growth and the people line move
+  nothing: growth reaches neither total, and the people line is the same on both sides.
 - **A comparison somebody else built arrives with one column already won.** The checklist says what
   it has to show, and the item to check twice is whether both designs were sized by the same rule to
   the same margins.
@@ -308,8 +343,16 @@ Three, in `tests/comparing_two_tcos/`. The first two have tests. The last does n
 **22.1 — Subtract futures, not intervals.**
 The test evaluates both quotes on the same draws and hands you the two five-year totals, one
 entry per future. Subtract them sample by sample. Return the interval on the difference and the
-share of futures in which the challenger is cheaper. The test can tell whether you subtracted two
-independent draws instead, because that answer is several times wider.
+share of futures in which the challenger is cheaper. The test runs your function twice: once on
+every future, whose answer the paired table above prints, and once on a subset of the same
+futures, whose answer the page does not print. So a figure copied from the table does not pass.
+
+When an answer is wrong, the test names the mistake:
+
+- two independent draws subtracted (much wider);
+- the opposite ends of the two intervals (much wider);
+- one total's percentile minus the other's, each on its own (narrower);
+- the subtraction the wrong way round (incumbent minus challenger).
 
 ```bash
 python3 -m pytest tests/comparing_two_tcos/test_problem_1_paired_difference.py -m problem
@@ -335,10 +378,12 @@ against the checklist above. Write down which items it has and which it lacks. T
 one that matters most and see what it does to the ordering: put the missing line on the side
 that lacked it, size both designs by the same rule, or hold the people line equal.
 
-A good answer names the items the comparison failed and says what the difference did once the
-worst of them was fixed. It would be falsified by a comparison that passed every item and whose
-ordering survived every repair. That happens, and then you know the comparison was sound. If the
-ordering flipped on the first repair, you have found what the comparison was for.
+A good answer names the items the comparison failed, says which repair you judged to matter most
+and why, and says what the difference did once that repair was made. That judgement is falsified
+if a repair you ranked lower moves the difference more than the one you chose, or flips the
+ordering when yours did not. You find out by making the next repair too. A comparison that passes
+every item, or whose ordering survives every repair, is a sound comparison. The answer should say
+so. If the ordering flipped on the first repair, you have found what the comparison was for.
 
 ## Where to go next
 

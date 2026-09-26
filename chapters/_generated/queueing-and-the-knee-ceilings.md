@@ -4,4 +4,4 @@
 |---|---:|---:|---:|---:|---|---:|---:|
 | utilisation at the busy hour | 0.64 | 30% | 0.70 | 1.00 | ok | 46% | 30% |
 
-*Source — [`web_service_queueing-reference`](/models/web_service_queueing-reference.html) · every input on a slider*
+*Source — [`web_service_queueing-reference`](/models/web_service_queueing-reference.html) · the model to explore; each input with a range has a slider*

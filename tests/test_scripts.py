@@ -261,6 +261,27 @@ def test_a_glossary_term_links_to_its_entry_only_after_its_chapter():
     assert not [n for n in build_site.walk(glossary) if n.get("type") == "link"]
 
 
+def test_a_glossary_link_skips_tables_and_a_block_marked_word_ok():
+    """The linker reads the prose the vocabulary test reads. A table is data, and `% word-ok:`
+    says the block after it uses a word in another sense, a scrape's samples, so neither gets a
+    link. The next mention in prose does."""
+    build_site = site()
+    cell = {"type": "tableCell", "children": [{"type": "text", "value": "bytes per sample"}]}
+    page = {
+        "type": "root",
+        "children": [
+            {"type": "table", "children": [{"type": "tableRow", "children": [cell]}]},
+            {"type": "comment", "value": "word-ok: a sample here is one reading a scrape takes"},
+            _page_with("how many samples a series produces per scrape")["children"][0],
+            _page_with("a hundred thousand samples")["children"][0],
+        ],
+    }
+    build_site.link_terms("appendices/appendix_d_units.md", page)
+    links = [n for n in build_site.walk(page) if n.get("type") == "link"]
+    assert [link["children"][0]["value"] for link in links] == ["samples"]
+    assert links[0] is page["children"][3]["children"][1]
+
+
 def test_a_provenance_mark_is_drawn_not_typeset():
     """Each of the three marks renders as a span the stylesheet draws, with the glyph kept."""
     from bench import render as renderer
@@ -327,6 +348,27 @@ def test_the_foot_of_a_page_points_at_its_neighbours_in_the_reading_order():
             assert f'class="next" href="{hrefs[at + 1]}"' in foot, href
         else:
             assert 'class="next"' not in foot, f"{href} is the last page and offers a next"
+
+
+def test_a_cross_reference_lands_on_the_page_it_names():
+    """MyST names the first page in the contents `index`, and this build publishes the cover as
+    index.html and the preface as preface.html. Keyed by published name, ch22's link to the
+    introduction opened the cover."""
+    build = site()
+    index = build.renderer.parsed_pages()
+    if not index:
+        pytest.skip("no parsed content; run `myst build` first")
+    order = [s for s in build.renderer.page_order() if s in index]
+    build.renderer.PAGES = build.page_names(index, order)
+    try:
+        for at, source in enumerate(order):
+            url = "/" if at == 0 else f"/{index[source]['slug']}"
+            assert build.renderer._published(url) == build.href_for(source), (
+                f"a link to {source} opens {build.renderer._published(url)}; "
+                "renderer.PAGES must be keyed by MyST's slug"
+            )
+    finally:
+        build.renderer.PAGES = {}
 
 
 def viewers():
@@ -528,7 +570,7 @@ def test_the_pages_that_run_the_toolkit_share_one_runtime_and_one_boot():
         assert "from sizing.playground.toolkit import" in text, f"{builder} does not import toolkit"
     # The call itself: in the chapter page's template, and in the viewer's own app. A chapter
     # page goes through the shared start, because its Checks are one runtime.
-    for caller in ("scripts/build-site.py", "sizing/viewer/app.js"):
+    for caller in ("scripts/build-site.py", "sizing/viewer/app.js", "sizing/viewer/checker.html"):
         assert re.search(r"\b(bootToolkit|shareToolkit)\(", (ROOT / caller).read_text()), (
             f"{caller} does not call bootToolkit"
         )

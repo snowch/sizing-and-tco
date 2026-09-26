@@ -5,4 +5,4 @@
 | host power | input | 172,746 | 246,502 | 73,756 |
 | PUE | input | 185,101 | 234,411 | 49,310 |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

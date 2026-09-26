@@ -56,12 +56,20 @@ def answer(fleet):
 
 
 @pytest.mark.problem
-def test_it_is_a_positive_amount_of_money(answer):
-    assert isinstance(answer, int | float) and answer > 0
+def test_it_is_a_positive_amount_of_money(answer, fleet):
+    assert isinstance(answer, int | float), (
+        f"return one number, the cost of the move in dollars; you returned {type(answer).__name__}"
+    )
+    assert answer > 0, (
+        f"with the incumbent on {fleet} hosts you returned {answer:,.0f}. The answer is the whole "
+        "one-off cost of moving at which the two totals tie, not how far that is from the "
+        "team's estimate, so it is a positive number of dollars."
+    )
 
 
 @pytest.mark.problem
 def test_the_totals_tie_there(answer, fleet):
+    assert isinstance(answer, int | float), "return one number, the cost of the move in dollars"
     gap = difference_at(fleet, answer)
     assert abs(gap) < TOLERANCE, (
         f"with the incumbent on {fleet} hosts and the move costing {answer:,.0f}, the challenger "

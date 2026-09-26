@@ -30,10 +30,14 @@ def paired_difference(incumbent: np.ndarray, challenger: np.ndarray) -> dict:
 
     A negative difference is the challenger being cheaper.
 
-    If your interval comes out several times wider than the book's, you have subtracted two
-    independent draws - the electricity price from one future against the price from another -
-    or the ends of the two intervals, and thrown away the fact that both designs live in the same
-    world. The test says so.
+    The test calls your function twice: on every future, and on a subset of the same futures,
+    whose answer the chapter does not print. An interval much wider than it should be means two
+    independent draws were subtracted - the electricity price from one future against the price
+    from another - or the opposite ends of the two intervals. Both throw away the fact that both
+    designs live in the same world. An interval narrower than it should be can mean one total's
+    percentile minus the other's, each taken on its own. That is not a percentile of the
+    difference. The test names each of these mistakes when it sees one, and it names a
+    subtraction made the wrong way round.
     """
     raise NotImplementedError("problem 22.1")
 

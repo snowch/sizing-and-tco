@@ -1,4 +1,4 @@
-"""Problem 15.2 - a refresh cycle, and the convention nobody writes down.
+"""Problem 15.2 - a refresh cycle, and the refresh at the end of the horizon.
 
 The test checks consistency rather than a particular convention, because which one is right is a
 modelling choice and the chapter says so.
@@ -12,20 +12,34 @@ from tests.capex_opex_and_lifecycle.stubs import lifecycle_total
 
 CAPEX, OPEX = 1_000_000.0, 300_000.0
 
+#: What tests 1 to 3 check, said without the answer: the purchases are whole, and the first one
+#: is at the start. The boundary is left to the two tests below.
+WHOLE_PURCHASES = (
+    "count whole purchases: one at the start, and one more at each refresh partway through the "
+    "horizon. Each purchase is the whole capital cost, not a share of it spread over the years "
+    "the fleet is used."
+)
+
 
 @pytest.mark.problem
 def test_no_refresh_inside_the_horizon_is_one_purchase():
-    assert lifecycle_total(CAPEX, OPEX, 3.0, 5.0) == pytest.approx(CAPEX + 3 * OPEX)
+    assert lifecycle_total(CAPEX, OPEX, 3.0, 5.0) == pytest.approx(CAPEX + 3 * OPEX), (
+        WHOLE_PURCHASES
+    )
 
 
 @pytest.mark.problem
 def test_a_refresh_partway_through_is_two():
-    assert lifecycle_total(CAPEX, OPEX, 7.0, 4.0) == pytest.approx(2 * CAPEX + 7 * OPEX)
+    assert lifecycle_total(CAPEX, OPEX, 7.0, 4.0) == pytest.approx(2 * CAPEX + 7 * OPEX), (
+        WHOLE_PURCHASES
+    )
 
 
 @pytest.mark.problem
 def test_two_refreshes_are_three_purchases():
-    assert lifecycle_total(CAPEX, OPEX, 11.0, 4.0) == pytest.approx(3 * CAPEX + 11 * OPEX)
+    assert lifecycle_total(CAPEX, OPEX, 11.0, 4.0) == pytest.approx(3 * CAPEX + 11 * OPEX), (
+        WHOLE_PURCHASES
+    )
 
 
 @pytest.mark.problem

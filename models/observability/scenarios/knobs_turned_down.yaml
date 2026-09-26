@@ -1,10 +1,10 @@
 scenario: knobs_turned_down
 title: The four knobs, turned down
 because: >-
-  The same estate with every control knob moved: 60-second scrapes, 90-day metric retention, a
-  tenth of the log lines kept, and 1% trace sampling. Here so that ch12 can put a number on what
-  each knob buys — and so the reader can see that the knobs do not touch cardinality at all,
-  which is the input that dominates everything.
+  The same estate with one knob of each kind turned down: the scrape interval, metrics retention,
+  the share of log lines kept, and the trace sampling rate. Appendix F sets this scenario beside the
+  reference scenario to show what the knobs buy. None of the four knobs touches label cardinality,
+  so the active series count and the query path do not move.
 samples: 100000
 seed: 20260916
 overrides:

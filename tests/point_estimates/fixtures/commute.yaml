@@ -7,15 +7,15 @@
 # test (tests/point_estimates/oracle.py::commute). One file, so the page and the test cannot
 # disagree about the example.
 days:
-  label: DRAFT-PENDING 02f
+  label: days a year
   usual: 250
   most: 260
 minutes:
-  label: DRAFT-PENDING 02g
+  label: minutes a day
   usual: 25
   most: 40
 fare:
-  label: DRAFT-PENDING 02h
+  label: fare a minute
   pounds: true
   usual: 0.50
   most: 0.75

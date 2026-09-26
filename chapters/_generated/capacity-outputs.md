@@ -5,4 +5,4 @@
 | raw disk needed at horizon | 72.4 | 22.9 to 229 | TB |
 | hosts for storage | 49 | 16 to 153 | host |
 
-*Source — [`web_service_capacity-reference`](/models/web_service_capacity-reference.html) · every input on a slider*
+*Source — [`web_service_capacity-reference`](/models/web_service_capacity-reference.html) · the model to explore; each input with a range has a slider*

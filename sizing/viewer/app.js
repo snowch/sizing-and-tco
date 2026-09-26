@@ -360,7 +360,7 @@ function neighbours(names) {
 
 function histogram(node) {
   if (!node.histogram) return "";
-  const { counts, edges } = node.histogram;
+  const { counts, edges, spacing } = node.histogram;
   const tallest = Math.max(...counts) || 1;
   const bars = counts
     .map((c, i) => {
@@ -371,7 +371,8 @@ function histogram(node) {
     })
     .join("");
   return `<svg class="hist" preserveAspectRatio="none" viewBox="0 0 100 100">${bars}</svg>` +
-    `<div class="note">${fmt(edges[0], node.unit)} to ${fmt(edges[edges.length - 1], node.unit)}</div>`;
+    `<div class="note">${fmt(edges[0], node.unit)} to ${fmt(edges[edges.length - 1], node.unit)}` +
+    `${spacing === "log" ? say("log_bins") : ""}</div>`;
 }
 
 /* -- the file ------------------------------------------------------------------- */

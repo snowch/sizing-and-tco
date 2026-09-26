@@ -1,17 +1,17 @@
 {
-  "code_fingerprint": "e08fbd954e7a4c8d",
+  "code_fingerprint": "7d2ff90384f79f4a",
   "code_sources": [
     "bench/measure.py",
     "bench/run_corpus.py"
   ],
   "conditions": {
-    "measured_as_one_stream": "a database compresses page by page and sees less cross-record redundancy than a stream does, so this ratio is a ceiling on what a store achieves rather than an estimate of it",
-    "the_mixture_is_an_assumption": "the proportions and the schemas were chosen, not observed; they are the first thing to change and the largest source of error here",
+    "measured_as_one_stream": "a database compresses page by page and sees less cross-record redundancy than a stream does, so this ratio is an upper bound on what a store achieves rather than an estimate of it",
+    "the_mixture_is_an_assumption": "the proportions and the schemas were chosen, not observed; they are the first thing to change; nothing in this repository measures how far a different mixture moves the ratio",
     "to_use_it": "re-run bench.measure.application_records against a sample of your own records, or replace the generator with one that reads them",
     "what_this_is_about": "this corpus and this codec, and nothing else"
   },
-  "generated_at": "2026-09-19T12:34:06+00:00",
-  "git_revision": "c264eea",
+  "generated_at": "2026-09-26T19:30:36+00:00",
+  "git_revision": "24211b2",
   "kind": "measurement",
   "name": "records-compression",
   "produced_by": {
@@ -22,7 +22,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
