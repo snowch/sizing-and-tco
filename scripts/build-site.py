@@ -1457,7 +1457,11 @@ html.model-open #main .expanded { position: fixed; inset: 0; z-index: 40; margin
 html.model-open #main .expanded > :is(iframe, pre, table) { flex: 1 1 auto; height: auto;
           max-height: none; max-width: none; width: auto; border: 0; border-radius: 0;
           overflow: auto; }
-html.model-open #main .expanded > table { width: max-content; }
+/* Expanded, the table is as wide as its content, so the box is what scrolls. Left a scroll box
+   of its own, with nothing to scroll and `overscroll-behavior-x: contain`, the table kept a
+   swipe that started on it: on a phone the columns past the edge could not be reached. */
+html.model-open #main .expanded > table { width: max-content; overflow: visible;
+          overscroll-behavior: auto; }
 /* Pinned to the window rather than to the box, which is now a scrolling one: laid out in the
    flow it sits at the right-hand edge of the *content*, so on a table wider than the screen the
    way out scrolled away with the columns the reader went looking for.
