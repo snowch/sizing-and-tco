@@ -951,7 +951,11 @@ class Reviewer:
             editable.evaluate(TYPE_IN, stub)
 
     def press_check(self, tab, problem) -> tuple[str, str]:
-        problem.query_selector(".check-here").click()
+        button = problem.query_selector(".check-here")
+        try:
+            button.click(timeout=5000)
+        except Exception:  # the page is still scrolling to the last verdict; press it in place
+            button.evaluate("(b) => b.click()")
         verdicts = problem.query_selector(".verdicts")
         deadline = time.monotonic() + self.args.check_timeout
         text = ""
