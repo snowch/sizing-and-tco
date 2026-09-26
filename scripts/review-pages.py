@@ -80,9 +80,6 @@ SEVERITY = {
     "look": "a person should judge whether it matters",
 }
 
-#: Text a reader should never see where a number belongs.
-BROKEN_VALUE = re.compile(r"\bNaN\b|\bInfinity\b|\bundefined\b|\[object Object\]")
-
 #: The verdicts a problem's Check can end on. Anything else is still running.
 VERDICT = re.compile(r"Solved\.|\d+ of \d+ tests? pass|could not start|did not start")
 
@@ -351,6 +348,9 @@ VIEWER_LAYOUT = r"""() => {
 
 VIEWER_PRESS = r"""() => {
   const bad = /\bNaN\b|\bInfinity\b|\bundefined\b|\[object Object\]/;
+  // Only where a value is shown. A note may say "infinity" on purpose, to explain a clamp.
+  const shown = (root) => [...root.querySelectorAll("td, svg text, [id^='v-'], .state, .badge, .banner")]
+    .map((e) => e.textContent).join("\n");
   const $ = (id) => document.getElementById(id);
   const problems = [];
   for (const id of ["toggle-controls", "toggle-detail"]) {
@@ -362,7 +362,7 @@ VIEWER_PRESS = r"""() => {
     for (const v of [input.min, input.max]) {
       input.value = v;
       input.dispatchEvent(new Event("input", { bubbles: true }));
-      const m = bad.exec(document.body.innerText);
+      const m = bad.exec(shown(document));
       if (m) problems.push(`${input.id.replace(/^s-/, "")} at ${v} shows "${m[0]}"`);
       const note = [...document.querySelectorAll("#outputs .note")].some((p) => p.textContent.startsWith("Greyed rows"));
       if (note && !document.querySelector("#outputs tr.inert")) emptyGrey = true;
@@ -373,7 +373,7 @@ VIEWER_PRESS = r"""() => {
   for (const g of document.querySelectorAll("g.node")) {
     g.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     const body = ($("detail-body") || document.body).innerText.trim();
-    const m = bad.exec(body);
+    const m = bad.exec(shown($("detail-body") || document.body));
     if (m) problems.push(`Details for ${g.dataset.node} shows "${m[0]}"`);
     details.push(`### ${g.dataset.node}\n\n${body}\n`);
   }
@@ -384,13 +384,15 @@ VIEWER_PRESS = r"""() => {
 
 FUTURES_PRESS = r"""async () => {
   const bad = /\bNaN\b|\bInfinity\b|\bundefined\b|\[object Object\]/;
+  const shown = () => [...document.querySelectorAll("svg text, [id^='v-'], .value, .ends, td")]
+    .map((e) => e.textContent).join("\n");
   const problems = [];
   for (const id of ["one", "many", "again", "one"]) {
     const b = document.getElementById(id);
     if (!b) { problems.push(`no #${id} button`); continue; }
     b.click();
     await new Promise((r) => setTimeout(r, 1500));
-    const m = bad.exec(document.body.innerText);
+    const m = bad.exec(shown());
     if (m) problems.push(`after pressing #${id} the page shows "${m[0]}"`);
   }
   return problems;
