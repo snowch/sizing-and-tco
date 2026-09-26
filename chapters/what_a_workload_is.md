@@ -257,9 +257,9 @@ how high growth might turn out.
 
 :::{important}
 When you assign a value to what you cannot control (growth rate, request rate), it looks as settled
-as a decision you made. Nothing marks it as provisional, so your team stops questioning it. Only
-decisions are yours to change. Measuring what you cannot control narrows it; arguing about it does
-not.
+as a decision you made. Nothing marks it as provisional, so your team stops questioning it.
+Measuring what you cannot control narrows it; arguing about it does not. Only decisions are yours
+to change.
 :::
 
 ### What the file computes, and what kind of model it is
