@@ -257,8 +257,10 @@ value to, and cannot control, is an assumption you have stopped noticing.**
 [ch04](#peak-mean-and-growth) replaces that single number with a spread: how low and how high growth
 might turn out.
 
+:::{important}
 The decisions are the only inputs you can change. Arguing over a number outside your control does
 not change it; measuring it narrows it.
+:::
 
 ### What the file computes, and what kind of model it is
 
