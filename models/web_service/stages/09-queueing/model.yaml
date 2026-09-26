@@ -23,9 +23,9 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        ch04 — the busy hour, not the daily mean. Triangular because
-        this is an engineer's min/likely/max and pretending to
-        more shape than that would be invention.
+        ch04 — the busy hour, not the daily mean. Triangular,
+        because this is an engineer's lowest, most likely and
+        highest values; claiming more precision would be invention.
     range: [500, 40000]
   stored_data_t0:
     kind: input
@@ -42,9 +42,10 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        stated workload (ch02) — what the service holds today:
+        The service owners estimate what the service holds today:
         its database and the objects users have uploaded, before
-        replication, indexes or compression
+        replication, indexes or compression. It has not been counted
+        yet, and counting it would turn the estimate into a fact.
     range: [1, 200]
   annual_growth:
     kind: input
@@ -58,10 +59,11 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        ch04 — lognormal because growth compounds and cannot be
-        negative. The p10/p90 say: surprised below 12% a year,
-        surprised above 60%. One factor for requests and for records,
-        because users drive both.
+        ch04 — lognormal because growth compounds and the factor
+        cannot be zero or less. One future in ten grows by less
+        than 12% a year, and one in ten by more than 60%; outside
+        that range you would be surprised. One factor for requests
+        and for records, because users drive both.
     range: [1.0, 2.0]
   horizon:
     kind: input
@@ -110,7 +112,7 @@ nodes:
       source: >-
         spec sheet: physical cores. A hyperthread is not a core,
         and a sheet that counts threads doubles this number without
-        doubling the work a host does (ch07)
+        doubling the work a host does
     range: [4, 128]
   ram_per_host:
     kind: input
@@ -199,12 +201,15 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        held as an assumption because no reference machine is
-        declared in rig/machine.yml; `make measure-rig` on a declared
-        machine replaces this node with a measured one. Triangular
-        *because* it has not been measured: once it is, the shape
-        becomes a normal around the measurement, which is a change
-        of claim and not only of numbers (ch13)
+        The lowest, likeliest and highest values are this book's
+        own choice for the running example: not measured on any
+        machine, not taken from any product. It is held as an
+        assumption because no reference machine is declared in
+        `rig/machine.yml`; `make measure-rig` on a declared machine
+        replaces it with a measured one. It is triangular, with
+        three values, because it has not been measured. Once it
+        is, it becomes a normal spread around the measurement,
+        which is a change of claim and not only of numbers (ch13).
     range: [0.002, 0.05]
   hosts:
     kind: input
@@ -222,20 +227,21 @@ nodes:
       of the number chosen here and not of the number the model
       would recommend in hindsight.
 
-      Deriving it instead would make the ceilings below tautologies:
-      a fleet sized to sit under the knee sits under it in every
-      future, and the model would cheerfully report a zero per
-      cent chance of queueing. Making it an input is what lets
-      the ceilings ask the only question worth asking — *given
-      what we actually bought, how often does the world break
-      it?*
+      Suppose the fleet were worked out afresh in each future,
+      from that future's own inputs; it would sit inside every
+      margin it was sized against, in every future. The ceilings
+      that check those margins would then report no chance of
+      crossing them, which is true by definition but tells you
+      nothing. Holding the fleet as an input, one number the team
+      decided, lets the ceilings ask: given what was bought, how
+      often do the futures cross the line?
     provenance:
       kind: assumption
       source: >-
-        the sizing decision, taken the way it is usually taken:
-        hosts_recommended evaluated at every input's point estimate.
-        Change this number and watch the ceilings move — that
-        is the exercise of ch12
+        The sizing decision, taken the usual way: the host count
+        the model recommends (from ch10), worked out with every
+        input at its point estimate. Change this number and watch
+        the ceilings move; that is ch12's exercise.
     range: [4, 200]
   one_core:
     kind: input
@@ -286,8 +292,8 @@ nodes:
     note: >-
       Little's law with the residence time equal to the service
       time: the fewest requests that can be in the system at this
-      arrival rate. ch06 replaces the service time with what a
-      request actually waits, and this number goes up.
+      arrival rate. ch06 uses the residence time instead, which
+      adds the time a request waits, and this number goes up.
     formula: peak_request_rate * service_seconds
   utilisation_cap:
     kind: input
@@ -315,10 +321,14 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        ch06 — how far under the knee the fleet is sized to run
-        at the busy hour. Declared once, here, and used by the
-        sizing chain and by the ceiling that checks it, so the
-        two cannot drift apart
+        ch06 — the share of the fleet kept idle at the busy hour.
+        The ceiling lets utilisation go up to one minus this margin,
+        and no further. Declared once, it is used by the ceiling
+        that checks utilisation at the busy hour (ch06), the ceiling
+        on utilisation counting coordination (ch07), the chain
+        that sizes the fleet for requests (from ch10) and the
+        ceiling with one host lost (ch11), so they cannot drift
+        apart.
     range: [0.0, 0.6]
   effective_utilisation:
     kind: derived
@@ -329,11 +339,11 @@ nodes:
     unit: second
     label: residence time
     note: >-
-      Service time divided by the fraction of the fleet that is
-      idle. That single division is ch06's whole subject: it is
-      nearly flat while there is slack and nearly vertical when
-      there is not, and nothing about the arithmetic warns you
-      which side you are on.
+      Service time divided by the share of the fleet that is idle.
+      That is the formula for one server with one queue, applied
+      here to the whole fleet; a fleet of many cores sharing one
+      stream of requests waits less than this at the same utilisation
+      (ch06).
     formula: service_seconds / (1 - effective_utilisation)
   waiting_time:
     kind: derived
@@ -345,12 +355,12 @@ nodes:
     unit: request
     label: requests in the system
     note: >-
-      Little's law, and the only relationship in Part II that
-      is always true: the number of requests in a system is the
-      rate they arrive at times how long each one stays. No pattern
-      of arrivals assumed, no queue discipline assumed, nothing
-      assumed except that the system is in a steady state. ch05
-      is about what that buys and what it does not.
+      Little's law: the number of requests in a system is the
+      rate they arrive at times how long each one stays. It assumes
+      no pattern of arrivals and no order in which requests are
+      served. It holds while the system is in a steady state:
+      as many requests leaving as arriving. ch05 is about what
+      that buys and what it does not.
     formula: peak_request_rate * residence_time
   queueing_headroom:
     kind: ceiling

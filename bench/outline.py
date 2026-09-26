@@ -233,8 +233,8 @@ CHAPTERS: tuple[Chapter, ...] = (
         "littles_law",
         "Little's law",
         PARTS[1],
-        "What can you infer about a system from the one relationship that is always true, and "
-        "what can you not?",
+        "What can you infer from the law when the system is steady, with as many requests leaving "
+        "as arriving, and what can you not?",
         owes="Requests in flight at the busy hour, derived from the rate and the time each one takes.",
         needs=("peak_mean_and_growth",),
     ),
@@ -265,10 +265,11 @@ CHAPTERS: tuple[Chapter, ...] = (
         "regime_changes",
         "Regime changes",
         PARTS[1],
-        "Which ceilings can a chain of multiplications not model at all?",
-        owes="The cardinality explosion, as a distribution rather than a warning.",
-        consumes=("observability-reference",),
-        needs=("point_estimates", "queueing_and_the_knee"),
+        "When does a chain of multiplications stop describing a system?",
+        owes="Three regime changes, each with the ceiling that watches it, and a wide product "
+        "told apart from a threshold.",
+        consumes=("web_service_regime-reference", "queueing-curve", "observability-reference"),
+        needs=("point_estimates", "littles_law", "queueing_and_the_knee"),
     ),
     Chapter(
         9,
@@ -285,8 +286,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "bandwidth_and_the_binding_constraint",
         "Three chains, and the binding constraint",
         PARTS[2],
-        "When three independent chains each demand a different size, which one are you actually "
-        "buying?",
+        "When three chains each demand a different size, which one are you buying?",
         owes="How often each of the three chains binds across the web service's uncertainty.",
         consumes=("web_service_binding-reference", "binding-constraint"),
         needs=("capacity", "queueing_and_the_knee"),
@@ -366,7 +366,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "the_five_year_model",
         "The five-year model",
         PARTS[4],
-        "How does a cost model consume a sizing model's output without swallowing its uncertainty?",
+        "How does one model use a figure another model computed, without losing its uncertainty?",
         owes="Both models joined at the unit price, end to end.",
         consumes=("web_service-reference", "observability-reference"),
         needs=("capex_opex_and_lifecycle", "unit_economics"),

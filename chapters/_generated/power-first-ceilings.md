@@ -9,4 +9,4 @@
 | utilisation at the busy hour | 0.97 | 30% | 0.70 | 1.00 | into the margin | 64% | 48% |
 | fraction of the fleet doing nothing useful | 0.22 | 50% | 0.50 | 1.00 | ok | 0% | 0% |
 
-*Source — [`web_service-power_first`](/models/web_service-power_first.html) · every input on a slider*
+*Source — [`web_service-power_first`](/models/web_service-power_first.html) · the model to explore; each input with a range has a slider*

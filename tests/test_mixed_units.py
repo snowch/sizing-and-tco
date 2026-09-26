@@ -132,3 +132,34 @@ def test_the_books_own_models_pass_the_rule():
     for path in ("models/web_service/model.yaml", "models/observability/model.yaml"):
         problems, _ = check_units(load_model(path))
         assert not problems, problems
+
+
+def test_a_pure_number_is_not_an_amount_of_data(tmp_path):
+    """Bits carry no dimension in Pint, so a plain number converted to ``TB`` was scaled by
+    1.25e-13 in silence, and a ceiling with a bare limit compared against almost nothing."""
+    model = model_with(
+        tmp_path,
+        """
+        ratio:
+          kind: input
+          unit: dimensionless
+          value: 3
+          provenance: {kind: assumption, source: test}
+        held:
+          kind: derived
+          unit: TB
+          formula: ratio * 2
+        full:
+          kind: ceiling
+          unit: TB
+          of: a
+          limit: 10
+          headroom: 0.1
+          because: test
+        """,
+        ["held", "full"],
+    )
+    problems, _ = check_units(model)
+    assert len(problems) == 2, problems
+    assert any("'held'" in p and "a pure number" in p for p in problems), problems
+    assert any("'full' limit" in p for p in problems), problems

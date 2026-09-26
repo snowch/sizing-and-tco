@@ -8,11 +8,11 @@ description: >-
   arrive and data accumulates; a host has cores, memory and disk, and each of those is a chain
   that ends in a count of hosts. One of the three binds.
 
-  It is a conditional model. Its ceilings are the queueing knee, the point where more hosts stop
-  helping, the working set outgrowing memory, disk filling, and a host dying at the busy hour;
-  its one measured constant is how well the stored records compress. Its one rate constant —
-  CPU time per request — belongs on a rig nobody has declared, and is held as a labelled claim
-  until one is.
+  It is a conditional model. Its ceilings are: the queueing margin at the busy hour; the point
+  where more hosts stop helping; the working set outgrowing memory; disk filling; and a host lost
+  at the busy hour. Its one measured constant is how well the stored records compress. Its one
+  rate constant — CPU time per request — belongs on a rig nobody has declared, and is held as a
+  labelled claim until one is.
 
   Vendor-neutral by construction. Nothing below names a product; every figure is a workload
   assumption, a price you would get quoted, a spec sheet, or the measured constant.
@@ -29,8 +29,9 @@ nodes:
     distribution: {triangular: {minimum: 3000.0, likely: 8000.0, maximum: 20000.0}}
     provenance:
       kind: assumption
-      source: "ch04 — the busy hour, not the daily mean. Triangular because this is an engineer's
-        min/likely/max and pretending to more shape than that would be invention."
+      source: >-
+        ch04 — the busy hour, not the daily mean. Triangular, because this is an engineer's lowest,
+        most likely and highest values; claiming more precision would be invention.
     range: [500, 40000]
 
   stored_data_t0:
@@ -45,8 +46,10 @@ nodes:
       and annual_growth carries that for the rate and the level alike.
     provenance:
       kind: assumption
-      source: "stated workload (ch02) — what the service holds today: its database and the
-        objects users have uploaded, before replication, indexes or compression"
+      source: >-
+        The service owners estimate what the service holds today: its database and the objects users
+        have uploaded, before replication, indexes or compression. It has not been counted yet, and
+        counting it would turn the estimate into a fact.
     range: [1, 200]
 
   annual_growth:
@@ -57,9 +60,10 @@ nodes:
     distribution: {lognormal: {p10: 1.12, p90: 1.60}}
     provenance:
       kind: assumption
-      source: "ch04 — lognormal because growth compounds and cannot be negative. The p10/p90
-        say: surprised below 12% a year, surprised above 60%. One factor for requests and for
-        records, because users drive both."
+      source: >-
+        ch04 — lognormal because growth compounds and the factor cannot be zero or less. One future
+        in ten grows by less than 12% a year, and one in ten by more than 60%; outside that range
+        you would be surprised. One factor for requests and for records, because users drive both.
     range: [1.0, 2.0]
 
   horizon:
@@ -111,7 +115,7 @@ nodes:
     provenance:
       kind: vendor_claim
       source: "spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts
-        threads doubles this number without doubling the work a host does (ch07)"
+        threads doubles this number without doubling the work a host does"
     range: [4, 128]
 
   ram_per_host:
@@ -186,10 +190,13 @@ nodes:
     distribution: {triangular: {minimum: 0.008, likely: 0.012, maximum: 0.020}}
     provenance:
       kind: assumption
-      source: "held as an assumption because no reference machine is declared in rig/machine.yml;
-        `make measure-rig` on a declared machine replaces this node with a measured one.
-        Triangular *because* it has not been measured: once it is, the shape becomes a normal
-        around the measurement, which is a change of claim and not only of numbers (ch13)"
+      source: >-
+        The lowest, likeliest and highest values are this book's own choice for the running example:
+        not measured on any machine, not taken from any product. It is held as an assumption because
+        no reference machine is declared in `rig/machine.yml`; `make measure-rig` on a declared
+        machine replaces it with a measured one. It is triangular, with three values, because it has
+        not been measured. Once it is, it becomes a normal spread around the measurement, which is a
+        change of claim and not only of numbers (ch13).
     range: [0.002, 0.05]
 
   hosts:
@@ -206,15 +213,17 @@ nodes:
       consequence of the number chosen here and not of the number the model would recommend in
       hindsight.
 
-      Deriving it instead would make the ceilings below tautologies: a fleet sized to sit under
-      the knee sits under it in every future, and the model would cheerfully report a zero per
-      cent chance of queueing. Making it an input is what lets the ceilings ask the only question
-      worth asking — *given what we actually bought, how often does the world break it?*
+      Suppose the fleet were worked out afresh in each future, from that future's own inputs; it
+      would sit inside every margin it was sized against, in every future. The ceilings that check
+      those margins would then report no chance of crossing them, which is true by definition but
+      tells you nothing. Holding the fleet as an input, one number the team decided, lets the
+      ceilings ask: given what was bought, how often do the futures cross the line?
     provenance:
       kind: assumption
-      source: "the sizing decision, taken the way it is usually taken: hosts_recommended
-        evaluated at every input's point estimate. Change this number and watch the ceilings
-        move — that is the exercise of ch12"
+      source: >-
+        The sizing decision, taken the usual way: the host count the model recommends (from ch10),
+        worked out with every input at its point estimate. Change this number and watch the ceilings
+        move; that is ch12's exercise.
     range: [4, 200]
 
   one_host:
@@ -271,9 +280,9 @@ nodes:
     unit: request
     label: requests in flight, if none waited
     note: >-
-      Little's law with the residence time equal to the service time: the fewest requests that
-      can be in the system at this arrival rate. ch06 replaces the service time with what a
-      request actually waits, and this number goes up.
+      Little's law with the residence time equal to the service time: the fewest requests that can
+      be in the system at this arrival rate. ch06 uses the residence time instead, which adds the
+      time a request waits, and this number goes up.
     formula: peak_request_rate * service_seconds
 
   # -- the knee ---------------------------------------------------------------------------------
@@ -300,9 +309,12 @@ nodes:
     label: queueing margin
     provenance:
       kind: assumption
-      source: "ch06 — how far under the knee the fleet is sized to run at the busy hour. Declared
-        once, here, and used by the sizing chain and by the ceiling that checks it, so the two
-        cannot drift apart"
+      source: >-
+        ch06 — the share of the fleet kept idle at the busy hour. The ceiling lets utilisation go up
+        to one minus this margin, and no further. Declared once, it is used by the ceiling that
+        checks utilisation at the busy hour (ch06), the ceiling on utilisation counting coordination
+        (ch07), the chain that sizes the fleet for requests (from ch10) and the ceiling with one
+        host lost (ch11), so they cannot drift apart.
     range: [0.0, 0.6]
 
   effective_utilisation:
@@ -315,9 +327,9 @@ nodes:
     unit: second
     label: residence time
     note: >-
-      Service time divided by the fraction of the fleet that is idle. That single division is
-      ch06's whole subject: it is nearly flat while there is slack and nearly vertical when there
-      is not, and nothing about the arithmetic warns you which side you are on.
+      Service time divided by the share of the fleet that is idle. That is the formula for one
+      server with one queue, applied here to the whole fleet; a fleet of many cores sharing one
+      stream of requests waits less than this at the same utilisation (ch06).
     formula: service_seconds / (1 - effective_utilisation)
 
   waiting_time:
@@ -331,10 +343,10 @@ nodes:
     unit: request
     label: requests in the system
     note: >-
-      Little's law, and the only relationship in Part II that is always true: the number of
-      requests in a system is the rate they arrive at times how long each one stays. No
-      pattern of arrivals assumed, no queue discipline assumed, nothing assumed except that the system
-      is in a steady state. ch05 is about what that buys and what it does not.
+      Little's law: the number of requests in a system is the rate they arrive at times how long
+      each one stays. It assumes no pattern of arrivals and no order in which requests are served.
+      It holds while the system is in a steady state: as many requests leaving as arriving. ch05 is
+      about what that buys and what it does not.
     formula: peak_request_rate * residence_time
 
   queueing_headroom:
@@ -381,6 +393,7 @@ nodes:
       source: "ch07 — fitted from two measurements, where two exist. Triangular because a fit
         gives a central value and a range rather than a shape, and its maximum is the claim to
         distrust: a serial fraction can always be worse than the one you measured"
+    range: [0.0, 0.05]
 
   crosstalk:
     kind: input
@@ -397,6 +410,7 @@ nodes:
       source: "ch07 — fitted, and the harder of the two to fit. Lognormal because it spans an
         order of magnitude and cannot be negative, and because a shape should not assert a hard
         upper bound on a quantity this weakly fitted"
+    range: [0.000005, 0.0003]
 
   linear_throughput:
     kind: derived
@@ -407,11 +421,11 @@ nodes:
   achievable_throughput:
     kind: derived
     unit: request/second
-    label: throughput the fleet can actually reach
+    label: achievable throughput
     note: >-
-      The universal scalability law. One host's throughput times the count, divided by what
-      contention and crosstalk take back. With crosstalk at zero it is Amdahl's ceiling; with both
-      at zero it is the straight line above.
+      The universal scalability law. One host's throughput times the host count, divided by what
+      contention and crosstalk take back. With crosstalk at zero, it approaches Amdahl's limit and
+      never falls; with both at zero, it is `linear_throughput`: the straight line.
     formula: linear_throughput / (1 + contention * (host_count - 1) + crosstalk * host_count * (host_count - 1))
 
   scaling_efficiency:
@@ -453,9 +467,9 @@ nodes:
     unit: dimensionless
     label: utilisation, counting coordination
     note: >-
-      The same fleet's utilisation, worked out from what it can actually deliver rather than from
-      what one host could deliver alone. It is higher than the row above, always, and the gap is
-      the work the hosts are doing on each other's behalf.
+      The same fleet's utilisation, worked out from what it can deliver rather than from what its
+      hosts could deliver alone. It is higher than `utilisation` whenever the fleet has more than
+      one host, and equal at one host. The gap is the work the hosts do on each other's behalf.
     formula: peak_request_rate / achievable_throughput
 
   optimism:
@@ -472,9 +486,10 @@ nodes:
     limit: 1
     headroom: queueing_margin
     because: >-
-      The same queueing margin as above, applied to the capacity the fleet actually has rather
-      than to the capacity its parts would have had alone. Where the two ceilings disagree, this
-      is the one that is about the system you own (ch07).
+      This ceiling keeps the queueing margin, the same margin as the ceiling labelled utilisation at
+      the busy hour. It applies the margin to the capacity the fleet can deliver, counting
+      coordination, rather than to the capacity its hosts would have alone. Where the two ceilings
+      disagree, this one is about the system you own (ch07).
 
   # -- the working set: a regime change --------------------------------------------------------
 
@@ -505,9 +520,11 @@ nodes:
     label: cache margin
     provenance:
       kind: assumption
-      source: "ch08 — how much of the fleet's memory is kept free of the working set, for its
-        own daily swing and for the process heaps. Declared once and used by the chain and by
-        the ceiling"
+      source: >-
+        ch08 — how much of the fleet's memory is kept free of the working set, for its own daily
+        swing and for the process heaps. Declared once, the ceiling on the working set checks
+        against it (ch08), and from ch10 so does the chain that sizes the fleet for memory, so the
+        two cannot drift apart.
     range: [0.0, 0.6]
 
   fleet_ram:
@@ -524,10 +541,11 @@ nodes:
     limit: 1
     headroom: cache_margin
     because: >-
-      Past the limit, reads that were served from memory go to disk, and the service time per
-      request is no longer the number this model was built on: it is a different number, from a
-      different regime, and nothing in a chain of multiplications predicts the step (ch08). The
-      margin is the working set's own daily swing.
+      Past the limit, memory cannot hold the whole working set, so some reads go to disk. A
+      request's time then includes waiting for those reads, and the model has no term for that wait,
+      so the service time per request is no longer the number this model was built on. Nothing in a
+      chain of multiplications says what it becomes (ch08), and the margin is the working set's own
+      daily swing.
 
   # -- capacity: from what you hold to what you must buy ---------------------------------------
 
@@ -636,10 +654,10 @@ nodes:
     unit: host
     label: hosts the model recommends
     note: >-
-      Where a reader meets a binding constraint. Three chains produce three host counts and you
-      buy the largest, which means that across this model's uncertainty the answer is sometimes
-      set by CPU, sometimes by memory and sometimes by disk — and an average of the three is a
-      fleet that satisfies none of them.
+      Where a reader meets a binding constraint. Three chains produce three host counts and you buy
+      the largest, which means that across this model's uncertainty the answer is sometimes set by
+      CPU, sometimes by memory and sometimes by disk — and an average of the three never drops below
+      all of them, but falls short of the largest whenever they are different.
     formula: max(hosts_for_requests, hosts_for_memory, hosts_for_storage)
 
   # -- a host dies at the busy hour ------------------------------------------------------------
@@ -647,13 +665,13 @@ nodes:
   hosts_after_failure:
     kind: derived
     unit: host
-    label: hosts left when one dies
+    label: hosts after one is lost
     formula: hosts - one_host
 
   utilisation_after_failure:
     kind: derived
     unit: dimensionless
-    label: utilisation with one host down
+    label: survivors' utilisation
     formula: busy_cores / (hosts_after_failure * cores_per_host)
 
   failure_headroom:
@@ -665,9 +683,9 @@ nodes:
     headroom: queueing_margin
     because: >-
       One host down at the busy hour: its share of the requests lands on the survivors, and the
-      question is whether they are still under the knee. N+1 is this ceiling with the margin at
-      zero. The margin here is the queueing margin, because a fleet that has lost a host is
-      still a queue (ch11).
+      question is whether they are still inside the queueing margin. N+1 is this ceiling with the
+      margin at zero. The margin here is the queueing margin, because a fleet that has lost a host
+      is still a queue (ch11).
 
   # -- capital ----------------------------------------------------------------------------------
 
@@ -746,8 +764,11 @@ nodes:
     value: 8766
     provenance:
       kind: fact
-      source: "by definition, 365.25 x 24. The quarter-day is worth about a fifth of a per cent
-        over five years — less than this model's other errors, and free to get right"
+      source: >-
+        by definition, 365.25 x 24. The quarter-day is six hours a year; leaving it out would
+        understate every hourly cost by under a tenth of a per cent—the same share every year, not
+        growing with the horizon. It is smaller than this model's other errors, and free to get
+        right.
 
   annual_energy:
     kind: derived
@@ -779,7 +800,7 @@ nodes:
       kind: vendor_claim
       source: "the platform software's per-core licence, as quoted. Lognormal: a price, and a
         wide one, because it is the line item most often negotiated. It is what makes the core
-        count a cost as well as a capacity (ch17)"
+        count a cost as well as a capacity (ch15)"
 
   licence_per_host:
     kind: input
@@ -788,15 +809,18 @@ nodes:
     value: 0
     label: licence per host
     note: >-
-      A declared zero, not an absent line. This quote licenses the platform software per core,
-      so its per-host charge is nil and the model says so, with a source. A comparison needs
-      the same lines on both sides: a line that one quote does not have is a cost that quote
-      never pays, and the only honest way to leave it out is to put it in at zero (ch22).
+      A declared zero, not an absent line. For a quote that licenses the platform software per core,
+      as the design the plan was built on does, there is no per-host charge. For a quote that
+      licenses per host, as ch22's challenger does, the per-host figure goes here and zero goes in
+      `licence_per_core`. A comparison needs the same lines on both sides: a line one quote does not
+      have is a cost that quote does not pay, and the way to leave it out is to put it in at zero
+      (ch22).
     provenance:
       kind: vendor_claim
-      source: "the price list: per core, with no per-host charge. A quote that licenses per host
-        instead puts its figure here and zero in licence_per_core, and the two totals are then
-        compared like for like"
+      source: >-
+        The design the plan was built on is licensed per core, with no per-host charge. When a
+        design licenses per host, that figure goes here and zero in `licence_per_core`, allowing the
+        two to be compared like for like.
     range: [0, 12000]
 
   annual_licences:
@@ -832,9 +856,9 @@ nodes:
     distribution: {triangular: {minimum: 0.5, likely: 1.0, maximum: 2.0}}
     provenance:
       kind: assumption
-      source: "engineers this fleet occupies, full-time equivalent. Triangular, and the shape
-        cannot express what actually happens: people are not divisible, so the real
-        distribution is lumpy in the way ch08 calls a regime change"
+      source: >-
+        Engineers this fleet occupies, full-time equivalent. Triangular, and the shape cannot
+        express what happens: people are not divisible, so the real spread moves in whole people.
 
   fully_loaded_salary:
     kind: input
@@ -868,16 +892,18 @@ nodes:
     value: 0
     label: one-off cost of moving to this design
     note: >-
-      A declared zero. This is the design the plan was built on, so there is nothing to move.
-      A design that would replace it carries the cost of the move here: the months of running
-      both, the data copied twice, the people doing that instead of their jobs. It is the line
-      an incumbent's comparison never shows and a challenger's never includes, which is why it
-      is a node with a source rather than a footnote (ch22).
+      A declared zero for the design the plan was built on, because it already runs on that
+      platform. A design that would replace it carries the cost of the move here: the months of
+      running both, the data copied twice, the people doing that instead of their jobs. The buyer
+      pays for the move, not either vendor: a challenger's quote has no line for it, and a plan
+      built on the incumbent has nothing to put in it. That is why it is a node with a source rather
+      than a footnote (ch22).
     provenance:
       kind: assumption
-      source: "nothing to migrate: the platform the plan already runs on, on the hosts already
-        quoted. A challenger's scenario overrides this with the team's own estimate of the move,
-        marked as what it is"
+      source: >-
+        The design the plan was built on runs on that platform already, so there is nothing to
+        migrate. A challenger's scenario overrides this with the team's own estimate of the move,
+        marked as an assumption.
     range: [0, 1000000]
 
   tco:
@@ -907,9 +933,13 @@ nodes:
     unit: request/second
     label: mean request rate over the horizon
     note: >-
-      The mean of the day-one and horizon means: a straight line drawn under a curve that is not
-      straight, which understates the area. Stated rather than hidden, because a unit cost is
-      only as defensible as its denominator (ch17).
+      It is the mean of the day-one and horizon mean rates—a straight line between the two ends of
+      the horizon. The rate compounds, so the curve bends upward and the line lies above it,
+      overstating requests served and making cost per million requests come out low, more so the
+      faster growth is. It is kept because the error runs one way, so you know which way to correct
+      it. The exact average becomes zero divided by zero when there is no growth, a case
+      `annual_growth`'s range includes, so a formula cannot branch around it. Stated rather than
+      hidden, because a unit cost is only as defensible as its denominator (ch17).
     formula: (peak_request_rate_t0 / peak_to_mean + mean_request_rate) / 2
 
   requests_over_horizon:
@@ -930,7 +960,13 @@ nodes:
   average_stored:
     kind: derived
     unit: TB
-    note: "the mean of the day-one and horizon holdings, with the same understatement as above"
+    note: >-
+      It is the mean of the day-one and horizon holdings: a straight line between the two ends of
+      the horizon. The holding compounds, so the curve bends upward and the line lies above it,
+      overstating what is held on average. Cost per stored terabyte-month comes out low, more so the
+      faster growth is; ch17 shows by how much. It follows the same convention as the mean request
+      rate, for the same reason: the exact average becomes zero divided by zero when there is no
+      growth.
     formula: (stored_data_t0 + stored_data) / 2
 
   cost_per_stored_tb_month:
@@ -938,9 +974,11 @@ nodes:
     unit: USD/TB/month
     label: cost per stored TB per month
     note: >-
-      Divides by a horizon in years and is declared in months. Identical dimensions, a factor of
-      twelve apart; a check that compared only dimensions would publish a figure twelve times too
-      large and pass. sizing/units.py converts.
+      In each future, it divides that future's total by that future's straight-line holding, so it
+      is neither a ratio of two middle values nor a denominator from ch17's problems. It divides by
+      a horizon in years and is declared in months. Identical dimensions, a factor of twelve apart,
+      so a check comparing only dimensions would publish a figure twelve times too large and pass.
+      The build converts, and Appendix D lists the conversion.
     formula: tco / average_stored / horizon
 
 outputs:

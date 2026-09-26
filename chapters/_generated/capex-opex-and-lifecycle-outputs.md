@@ -24,4 +24,4 @@
 | how much the queueing view understated it | 1.47 | 1.27 to 1.84 |  |
 | fraction of the peak already built | 0.328 | 0.186 to 0.584 |  |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

@@ -201,10 +201,11 @@ def record_compression() -> dict:
             "to_use_it": "re-run bench.measure.application_records against a sample of your own "
             "records, or replace the generator with one that reads them",
             "the_mixture_is_an_assumption": "the proportions and the schemas were chosen, not "
-            "observed; they are the first thing to change and the largest source of error here",
+            "observed; they are the first thing to change; nothing in this repository measures how "
+            "far a different mixture moves the ratio",
             "measured_as_one_stream": "a database compresses page by page and sees less "
-            "cross-record redundancy than a stream does, so this ratio is a ceiling on what a "
-            "store achieves rather than an estimate of it",
+            "cross-record redundancy than a stream does, so this ratio is an upper bound on what "
+            "a store achieves rather than an estimate of it",
         },
         code_sources=SOURCES,
         write=True,

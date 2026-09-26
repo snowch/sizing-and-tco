@@ -2,14 +2,15 @@
 
 This module is small on purpose. It is quoted into ch13 and ch14 and it is meant to be read, not
 imported and trusted, so there is no simulation framework underneath it and no statistics package
-beside it — numpy for arrays, :mod:`sizing.normal` for one rational approximation, and nothing
+beside it — numpy for arrays, ``sizing.normal`` for one rational approximation, and nothing
 else. A reader who finishes ch14 should be able to delete this file and write it again.
 
 ## One idea
 
 Every distribution here is sampled the same way, and it is the only sampling idea in the book:
 
-    draw a percentile uniformly at random, and ask the distribution what value sits at it.
+    draw a fraction between 0 and 1 uniformly at random, and ask the distribution what value sits
+    at it.
 
 That is *inverse transform sampling*. It is why each distribution below needs exactly one
 function — its percentile function, ``ppf`` — and why adding a distribution to this book is
@@ -39,12 +40,12 @@ from sizing.normal import normal_ppf
 #: because it appears in the parameter solution below and a bare 1.2816 there would be a mystery.
 Z90 = float(normal_ppf(0.9))
 
-#: How many draws a model is sampled with unless a scenario says otherwise.
+#: How many draws a model is sampled with when its scenario does not say.
 #:
-#: Not a magic number: ch14 derives it. At this count the 90% interval of the reference storage
-#: model is stable to within the precision the book reports it to, which is the only definition of
-#: "enough samples" that means anything. A model whose answer is still moving at 100,000 draws is
-#: telling you something about itself, and :func:`samples_needed` says how many it wants.
+#: Every scenario in the repository states its own count, so this is the fallback. ch14 measures
+#: what this count buys: how much the web service model's five-year total moves from one run to
+#: the next, at this count and at smaller ones. Whether it is enough depends on the precision you
+#: will report the answer to. :func:`samples_needed` works out the count for a precision you choose.
 DEFAULT_SAMPLES = 100_000
 
 
@@ -52,7 +53,7 @@ def rng(seed: int) -> np.random.Generator:
     """The generator, seeded.
 
     One per run, created here so that every result in the book can record the seed that produced
-    it and be reproduced exactly. An unseeded Monte Carlo is a measurement nobody can repeat,
+    it and be reproduced exactly. An unseeded Monte Carlo is a result nobody can repeat,
     which is the same thing this repository refuses everywhere else.
 
     PCG64 rather than the legacy Mersenne Twister: numpy's modern generator is what
@@ -64,8 +65,8 @@ def rng(seed: int) -> np.random.Generator:
 
 # -- percentile functions ----------------------------------------------------------------
 #
-# Each takes a vector of percentiles in (0, 1) and returns the values at them. That is the whole
-# interface. Everything else in this module is arrangement.
+# Each takes a vector of fractions between 0 and 1 and returns the values at them. That is the
+# whole interface. Everything else in this module is arrangement.
 
 
 def uniform_ppf(u: np.ndarray, minimum: float, maximum: float) -> np.ndarray:
@@ -151,7 +152,9 @@ SHAPES: dict[str, Callable[..., np.ndarray]] = {
 def sample(spec: dict, n: int, generator: np.random.Generator) -> np.ndarray:
     """Draw ``n`` values from a declared distribution.
 
-    Two lines, and they are the two lines of the whole chapter: draw percentiles, look up values.
+    Two lines, and they are the chapter's whole sampling idea. The first finds the shape the
+    declaration names and its parameters. The second draws ``n`` random fractions between 0 and 1
+    and hands them to that shape's percentile function, which returns the value at each.
     """
     shape, parameters = one_shape(spec)
     return SHAPES[shape](generator.random(n), **parameters)
@@ -238,7 +241,7 @@ def correlate(
     # A reference set with the right shape and no correlation: the normal scores, independently
     # shuffled per column, from the run's own generator so the whole thing reproduces from one
     # stamped seed. Working in scores rather than in the data is what makes the method
-    # indifferent to what the marginals actually are.
+    # indifferent to the shape of each input's distribution.
     scores = normal_ppf(np.arange(1, n + 1) / (n + 1))
     reference = np.column_stack([generator.permutation(scores) for _ in range(k)])
 

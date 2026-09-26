@@ -5,12 +5,19 @@ Eight rules. The last one is the reason this script exists rather than being fol
 suite: it is where the book's central claim stops being a paragraph in the front matter and
 becomes something the build enforces.
 
-1. **Every formula typechecks.** Units are checked dimensionally and each node's declared unit is
-   compared against what its formula actually produces. A model that multiplies series by
-   requests and calls the answer bytes does not build.
-2. **Every input declares a provenance kind and a source.** Not "has a provenance field" — a
-   non-empty source string, from the three kinds. A number nobody will admit to is the commonest
-   defect in a spreadsheet and the cheapest one to make impossible.
+1. **Every formula typechecks.** Units are checked dimensionally, and each node's declared unit is
+   compared with what its formula produces. A model that multiplies series by requests and calls
+   the answer bytes does not build. Quantities in different units of one dimension may not meet
+   in `+`, `-`, `min` or `max`, because the build converts a formula's result once, into the
+   node's unit; `TB + TiB` will not typecheck. A plain number is not an amount of data: a node
+   declared in bytes, or a ceiling limit in bytes, whose formula gives a plain number does not
+   build.
+2. **Every input declares a provenance kind and a source, and every correlation a reason.** Not
+   "has a provenance field": a non-empty source string, from the three kinds. A number nobody
+   will admit to is the commonest defect in a spreadsheet and the cheapest one to make
+   impossible. Every input also declares who decides it: `decided:` is `you`, `outside` or
+   `definition`. A correlation's `because` may not be empty: a coefficient with no reason cannot
+   be argued with.
 3. **A `fact` cites something.** The strongest provenance kind has to point at a stamped result,
    a file, a specification or a document. An assumption wearing a better label is worse than an
    assumption.
@@ -155,6 +162,15 @@ def check_model(model: Model, problems: list[str]) -> None:
                     "gets copied into the next model by somebody who does not know what it was "
                     "for."
                 )
+
+    # 2 (continued) — a pair of inputs said to move together gives its reason too
+    for pair in model.correlations:
+        if not str(pair.get("because") or "").strip():
+            problems.append(
+                f"{where}: the correlation between {pair.get('a')!r} and {pair.get('b')!r} gives "
+                "no reason. A coefficient with no reason cannot be argued with, and the next "
+                "person to copy it does not know what it was for."
+            )
 
     # 7 — shape
     reachable: set[str] = set()

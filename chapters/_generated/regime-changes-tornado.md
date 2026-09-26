@@ -2,13 +2,13 @@
 
 | Input | Kind | active series at its p10 | at its p90 | Swing |
 |---|---|---:|---:|---:|
-| accidental label values | input | 6,131,856 | 36,791,133 | 30,659,278 |
-| annual growth | input | 8,356,817 | 26,995,673 | 18,638,856 |
-| label values endpoint | input | 8,016,214 | 25,640,826 | 17,624,612 |
-| label values status | input | 11,136,220 | 20,748,006 | 9,611,786 |
-| lines per request | input | 15,019,917 | 15,019,917 | 0 |
-| bytes per log line, compressed | measured | 15,019,917 | 15,019,917 | 0 |
-| bytes per sample, compressed | measured | 15,019,917 | 15,019,917 | 0 |
-| queries per second | input | 15,019,917 | 15,019,917 | 0 |
+| extra accidental label values | input | 8,707,235 | 36,791,133 | 28,083,898 |
+| annual growth | input | 8,355,616 | 26,991,793 | 18,636,177 |
+| label values endpoint | input | 8,015,062 | 25,637,140 | 17,622,078 |
+| label values status | input | 11,134,620 | 20,745,024 | 9,610,404 |
+| lines per request | input | 15,017,758 | 15,017,758 | 0 |
+| bytes per log line, compressed | measured | 15,017,758 | 15,017,758 | 0 |
+| bytes per sample, compressed | measured | 15,017,758 | 15,017,758 | 0 |
+| queries per second | input | 15,017,758 | 15,017,758 | 0 |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***

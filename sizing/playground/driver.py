@@ -162,6 +162,10 @@ def grade(stubs: str, test: str, root: str = "/", files: dict[str, str] | str | 
                 "-q",
                 "--color=no",
                 "--tb=short",
+                # A failed comparison says what the test's own message says and no more. With
+                # pytest's assertion rewriting, `got == pytest.approx(expected)` printed the
+                # expected value under the message, which put the answer under the Check.
+                "--assert=plain",
                 "--capture=sys",
                 "-p",
                 "no:cacheprovider",

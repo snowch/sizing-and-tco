@@ -7,7 +7,7 @@
 | metric names per host | 60.0 | series/host | ○ |
 | collector throughput quoted | 6.00 | MB/s/core | ◐ |
 | hosts | 1,200 | host | ○ |
-| accidental label values | 2.45 |  | ○ |
+| extra accidental label values | 1.45 |  | ○ |
 | label values endpoint | 8.78 |  | ○ |
 | label values status | 3.55 |  | ○ |
 | lines per request | 13.2 | line/request | ○ |
@@ -34,4 +34,4 @@
 
 **Claim:** ● traceable to a measurement or a definition · ◐ supplied by the vendor selling it · ○ an assumption
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***

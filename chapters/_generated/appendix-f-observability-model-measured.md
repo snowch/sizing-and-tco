@@ -8,4 +8,4 @@
 | spans per request | *not yet measured* | — | span/request | `bench/results/traces-spans-per-request.json` does not exist |
 | bytes per span, compressed | 73.6 | ± 0.0173 | bytes / span | python zlib (DEFLATE level 6) |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***

@@ -30,4 +30,4 @@
 | *utilisation at the busy hour* — over its limit | 30% | 8% |
 | *fraction of the fleet doing nothing useful* — over its limit | 0% | 0% |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) and [`web_service-twice_the_hosts`](/models/web_service-twice_the_hosts.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) and [`web_service-twice_the_hosts`](/models/web_service-twice_the_hosts.html) · the model to explore; each input with a range has a slider*

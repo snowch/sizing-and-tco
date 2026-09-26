@@ -7,8 +7,8 @@
 | ○ | collector cores | assumption | the sizing decision for the ingest tier |
 | ◐ | collector throughput quoted | vendor claim | throughput per core as documented by the collector. Unverified here, and marked as a claim in every figure it appears in |
 | ○ | horizon | assumption | the planning horizon for this platform |
-| ○ | hosts | assumption | stated estate size (ch02) |
-| ○ | accidental label values | assumption | ch08 — the cardinality explosion, as a distribution rather than as a warning. Lognormal because this one has no ceiling: a label carrying a user id multiplies the series count by a number nobody chose, and a triangular would assert a maximum that does not exist |
+| ○ | hosts | assumption | the estate's host count as stated by its operators |
+| ○ | extra accidental label values | assumption | ch08 — the cardinality explosion, as a band rather than as a warning. Lognormal because this one has no ceiling: a label carrying a user id multiplies the series count by a number nobody chose, and a triangular would assert a maximum that does not exist. Counted from the second value, so the factor it feeds is never below one. |
 | ○ | label values endpoint | assumption | distinct routes appearing as a label value. Triangular because somebody could go and count them this afternoon; the maximum is the routes that exist today, and a new service adds to it |
 | ○ | label values status | assumption | distinct status classes kept as a label. Triangular, and the one input in this model whose bounds are genuinely hard: a request cannot carry a status the code does not emit |
 | ○ | lines per request | assumption | application log lines emitted per request served. Triangular, from reading a sample of the logs — and the maximum is the part to distrust, because a debug flag left on in production is outside it |
@@ -20,7 +20,7 @@
 | ○ | queries per second | assumption | dashboards, alert rules and people, at the busy hour. Triangular because two of those three are countable and the third is not |
 | ○ | query nodes | assumption | the sizing decision for the query tier |
 | ◐ | query scan rate quoted | vendor claim | series scanned per second per query node, quoted |
-| ○ | request rate | assumption | ch03 — the busy hour across the estate, not the daily mean. Triangular: a minimum, a likely and a maximum is the whole of what a dashboard gives you, and the maximum is the busiest hour anybody has looked at rather than the busiest one there will be |
+| ○ | request rate | assumption | ch04 — the busy hour across the estate, not the daily mean. Triangular: a minimum, a likely and a maximum is the whole of what a dashboard gives you, and the maximum is the busiest hour anybody has looked at rather than the busiest one there will be |
 | ○ | scrape interval | assumption | a control knob (ch12): doubling it halves the metrics chain and loses resolution that cannot be recovered afterwards |
 | ○ | series per query, before labels | assumption | how many distinct metric-name-and-host combinations one dashboard panel or alert rule covers, before any label expansion. Triangular, and wide: dashboards differ from each other more than anything else in this model does |
 | ○ | storage price | assumption | all-in cost of a usable TB-month on this tier. Lognormal because it is a price — and carried across by hand from whichever storage tier's unit economics somebody had to hand, rather than by sampling, which is the seam ch18 is about |
@@ -30,4 +30,4 @@
 | ○ | usable tb per node | assumption | usable capacity per storage node after replication |
 | | **26 inputs** | | **2 fact, 2 vendor claim, 22 assumption** |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***

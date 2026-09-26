@@ -13,4 +13,4 @@
 
 **Claim:** ● traceable to a measurement or a definition · ◐ supplied by the vendor selling it · ○ an assumption
 
-*Source — [`web_service_demand-reference`](/models/web_service_demand-reference.html) · every input on a slider*
+*Source — [`web_service_demand-reference`](/models/web_service_demand-reference.html) · the model to explore; each input with a range has a slider*

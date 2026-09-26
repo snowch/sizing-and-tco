@@ -12,4 +12,4 @@
 | People | $849,062 | 42% |
 | **Total** | **$2,002,083** | |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

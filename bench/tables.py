@@ -196,7 +196,7 @@ def source(
         # rather than something they can download. A figure may say something else instead:
         # ch01's table is computed from the finished model, and a reader on page one who follows
         # the link should be told that is what they are about to see.
-        parts.append(note or "every input on a slider")
+        parts.append(note or "the model to explore; each input with a range has a slider")
     else:
         # What a measurement is of, for the results where that is the point.
         parts += _what_it_measured(name)

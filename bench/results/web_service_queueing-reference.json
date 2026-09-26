@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "7d723f26e875b399",
+  "code_fingerprint": "b4f03467aebb68eb",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/09-queueing/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-26T18:37:33+00:00",
-  "git_revision": "7a2f2fd",
+  "generated_at": "2026-09-26T19:29:45+00:00",
+  "git_revision": "24211b2",
   "kind": "model",
   "name": "web_service_queueing-reference",
   "produced_by": {
@@ -65,7 +65,7 @@
       "utilisation": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-26T18:37:33+00:00",
+    "generated_at": "2026-09-26T19:29:45+00:00",
     "model": "web_service_queueing",
     "nodes": {
       "annual_growth": {
@@ -220,7 +220,7 @@
         "point": 1.338656042454521,
         "provenance": {
           "kind": "assumption",
-          "source": "ch04 \u2014 lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%. One factor for requests and for records, because users drive both."
+          "source": "ch04 \u2014 lognormal because growth compounds and the factor cannot be zero or less. One future in ten grows by less than 12% a year, and one in ten by more than 60%; outside that range you would be surprised. One factor for requests and for records, because users drive both."
         },
         "row": 4,
         "slider": {
@@ -572,7 +572,7 @@
         "kind": "derived",
         "label": "requests in the system",
         "layer": 7,
-        "note": "Little's law, and the only relationship in Part II that is always true: the number of requests in a system is the rate they arrive at times how long each one stays. No pattern of arrivals assumed, no queue discipline assumed, nothing assumed except that the system is in a steady state. ch05 is about what that buys and what it does not.",
+        "note": "Little's law: the number of requests in a system is the rate they arrive at times how long each one stays. It assumes no pattern of arrivals and no order in which requests are served. It holds while the system is in a steady state: as many requests leaving as arriving. ch05 is about what that buys and what it does not.",
         "point": 1562.3357108628495,
         "row": 1,
         "summary": {
@@ -626,7 +626,7 @@
         "point": 16.0,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts threads doubles this number without doubling the work a host does (ch07)"
+          "source": "spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts threads doubles this number without doubling the work a host does"
         },
         "row": 0,
         "slider": {
@@ -864,11 +864,11 @@
         "kind": "input",
         "label": "hosts in the fleet",
         "layer": 2,
-        "note": "**The most important node in this model, and the one a spreadsheet hides.** Sizing does not produce a fleet; it produces a recommendation, and then a person decides. It arrives here, in Part II, because a queue needs something to stand in front of \u2014 but it is decided in ch12, and everything downstream of it, every dollar, every watt, every ceiling, is a consequence of the number chosen here and not of the number the model would recommend in hindsight.\nDeriving it instead would make the ceilings below tautologies: a fleet sized to sit under the knee sits under it in every future, and the model would cheerfully report a zero per cent chance of queueing. Making it an input is what lets the ceilings ask the only question worth asking \u2014 *given what we actually bought, how often does the world break it?*",
+        "note": "**The most important node in this model, and the one a spreadsheet hides.** Sizing does not produce a fleet; it produces a recommendation, and then a person decides. It arrives here, in Part II, because a queue needs something to stand in front of \u2014 but it is decided in ch12, and everything downstream of it, every dollar, every watt, every ceiling, is a consequence of the number chosen here and not of the number the model would recommend in hindsight.\nSuppose the fleet were worked out afresh in each future, from that future's own inputs; it would sit inside every margin it was sized against, in every future. The ceilings that check those margins would then report no chance of crossing them, which is true by definition but tells you nothing. Holding the fleet as an input, one number the team decided, lets the ceilings ask: given what was bought, how often do the futures cross the line?",
         "point": 54.0,
         "provenance": {
           "kind": "assumption",
-          "source": "the sizing decision, taken the way it is usually taken: hosts_recommended evaluated at every input's point estimate. Change this number and watch the ceilings move \u2014 that is the exercise of ch12"
+          "source": "The sizing decision, taken the usual way: the host count the model recommends (from ch10), worked out with every input at its point estimate. Change this number and watch the ceilings move; that is ch12's exercise."
         },
         "row": 1,
         "slider": {
@@ -1035,7 +1035,7 @@
         "kind": "derived",
         "label": "requests in flight, if none waited",
         "layer": 3,
-        "note": "Little's law with the residence time equal to the service time: the fewest requests that can be in the system at this arrival rate. ch06 replaces the service time with what a request actually waits, and this number goes up.",
+        "note": "Little's law with the residence time equal to the service time: the fewest requests that can be in the system at this arrival rate. ch06 uses the residence time instead, which adds the time a request waits, and this number goes up.",
         "point": 556.3360618821654,
         "row": 2,
         "summary": {
@@ -1783,7 +1783,7 @@
         "point": 9900.495061637923,
         "provenance": {
           "kind": "assumption",
-          "source": "ch04 \u2014 the busy hour, not the daily mean. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention."
+          "source": "ch04 \u2014 the busy hour, not the daily mean. Triangular, because this is an engineer's lowest, most likely and highest values; claiming more precision would be invention."
         },
         "row": 3,
         "slider": {
@@ -2164,7 +2164,7 @@
         "point": 0.3,
         "provenance": {
           "kind": "assumption",
-          "source": "ch06 \u2014 how far under the knee the fleet is sized to run at the busy hour. Declared once, here, and used by the sizing chain and by the ceiling that checks it, so the two cannot drift apart"
+          "source": "ch06 \u2014 the share of the fleet kept idle at the busy hour. The ceiling lets utilisation go up to one minus this margin, and no further. Declared once, it is used by the ceiling that checks utilisation at the busy hour (ch06), the ceiling on utilisation counting coordination (ch07), the chain that sizes the fleet for requests (from ch10) and the ceiling with one host lost (ch11), so they cannot drift apart."
         },
         "row": 0,
         "slider": {
@@ -2543,7 +2543,7 @@
         "kind": "derived",
         "label": "residence time",
         "layer": 6,
-        "note": "Service time divided by the fraction of the fleet that is idle. That single division is ch06's whole subject: it is nearly flat while there is slack and nearly vertical when there is not, and nothing about the arithmetic warns you which side you are on.",
+        "note": "Service time divided by the share of the fleet that is idle. That is the formula for one server with one queue, applied here to the whole fleet; a fleet of many cores sharing one stream of requests waits less than this at the same utilisation (ch06).",
         "point": 0.03670898993926409,
         "row": 0,
         "summary": {
@@ -2712,7 +2712,7 @@
         "point": 0.01307179676972449,
         "provenance": {
           "kind": "assumption",
-          "source": "held as an assumption because no reference machine is declared in rig/machine.yml; `make measure-rig` on a declared machine replaces this node with a measured one. Triangular *because* it has not been measured: once it is, the shape becomes a normal around the measurement, which is a change of claim and not only of numbers (ch13)"
+          "source": "The lowest, likeliest and highest values are this book's own choice for the running example: not measured on any machine, not taken from any product. It is held as an assumption because no reference machine is declared in `rig/machine.yml`; `make measure-rig` on a declared machine replaces it with a measured one. It is triangular, with three values, because it has not been measured. Once it is, it becomes a normal spread around the measurement, which is a change of claim and not only of numbers (ch13)."
         },
         "row": 0,
         "slider": {
@@ -3111,7 +3111,7 @@
         "point": 15.0,
         "provenance": {
           "kind": "assumption",
-          "source": "stated workload (ch02) \u2014 what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression"
+          "source": "The service owners estimate what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression. It has not been counted yet, and counting it would turn the estimate into a fact."
         },
         "row": 7,
         "slider": {

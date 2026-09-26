@@ -2,21 +2,21 @@
 
 | Output | Reference scenario | The four knobs, turned down |
 |---|---:|---:|
-| metrics ingest | 4.69<br>*0.709 to 29.1* | 2.35<br>*0.354 to 14.6* |
+| metrics ingest | 4.69<br>*1.03 to 30.0* | 2.35<br>*0.514 to 15.0* |
 | logs ingest | 44.7<br>*9.66 to 164* | 4.47<br>*0.966 to 16.4* |
 | traces ingest | *not yet measured* | *not yet measured* |
 | traces stored | *not yet measured* | *not yet measured* |
-| ingest, metrics and logs only | 49.4<br>*12.5 to 182* | 6.81<br>*1.90 to 27.5* |
-| stored, metrics and logs only | 278<br>*74.6 to 1,301* | 29.8<br>*7.90 to 142* |
-| active series | 15,019,917<br>*2,269,389 to 93,180,409* | 15,019,917<br>*2,269,389 to 93,180,409* |
-| label cardinality | 76.3<br>*17.9 to 300* | 76.3<br>*17.9 to 300* |
-| retention cost, metrics and logs only | $4,085<br>*$957.47 to $21,788* | $438.25<br>*$101.75 to $2,374* |
-| retention store fill | 0.579<br>*0.155 to 2.71* | 0.0621<br>*0.0165 to 0.296* |
-| ingest utilisation, quoted | 0.514<br>*0.130 to 1.90* | 0.0710<br>*0.0198 to 0.287* |
-| query path utilisation | 0.569<br>*0.0591 to 3.37* | 0.569<br>*0.0591 to 3.37* |
+| ingest, metrics and logs only | 49.4<br>*12.8 to 183* | 6.81<br>*2.07 to 28.1* |
+| stored, metrics and logs only | 278<br>*86.0 to 1,330* | 29.8<br>*9.19 to 146* |
+| active series | 15,017,758<br>*3,291,520 to 96,141,601* | 15,017,758<br>*3,291,520 to 96,141,601* |
+| label cardinality | 76.3<br>*25.3 to 309* | 76.3<br>*25.3 to 309* |
+| retention cost, metrics and logs only | $4,084<br>*$1,094 to $22,248* | $438.21<br>*$116.76 to $2,430* |
+| retention store fill | 0.579<br>*0.179 to 2.77* | 0.0621<br>*0.0192 to 0.304* |
+| ingest utilisation, quoted | 0.514<br>*0.133 to 1.91* | 0.0710<br>*0.0216 to 0.292* |
+| query path utilisation | 0.569<br>*0.0747 to 3.44* | 0.569<br>*0.0747 to 3.44* |
 | ingest utilisation, measured | *not yet measured* | *not yet measured* |
-| *query path utilisation* — over its limit | 28% | 28% |
-| *ingest utilisation, quoted* — over its limit | 21% | 0% |
+| *query path utilisation* — over its limit | 29% | 29% |
+| *ingest utilisation, quoted* — over its limit | 22% | 0% |
 | *retention store fill* — over its limit | 30% | 0% |
 
-*Source — [`observability-reference`](/models/observability-reference.html) and [`observability-knobs_turned_down`](/models/observability-knobs_turned_down.html) · every input on a slider · **4 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) and [`observability-knobs_turned_down`](/models/observability-knobs_turned_down.html) · the model to explore; each input with a range has a slider · **4 constant(s) not yet measured***

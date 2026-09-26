@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "d5c2a2e5ec293526",
+  "code_fingerprint": "8e675c8b6c8c8b5b",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/03-demand_inputs_all/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-26T18:37:31+00:00",
-  "git_revision": "7a2f2fd",
+  "generated_at": "2026-09-26T19:29:43+00:00",
+  "git_revision": "24211b2",
   "kind": "model",
   "name": "web_service_demand_inputs_all-reference",
   "produced_by": {
@@ -40,7 +40,7 @@
     "currency": "USD",
     "description": "The web service model as it stands at the end of ch02.",
     "factors": {},
-    "generated_at": "2026-09-26T18:37:31+00:00",
+    "generated_at": "2026-09-26T19:29:43+00:00",
     "model": "web_service_demand_inputs_all",
     "nodes": {
       "annual_growth": {
@@ -54,7 +54,7 @@
         "point": 1.3,
         "provenance": {
           "kind": "assumption",
-          "source": "Chosen, not measured. One number cannot say how sure you are of it, so ch04 replaces it with a spread."
+          "source": "Not measured. The service owners estimate how fast demand grows each year. One number cannot say how sure they are of it, so ch04 replaces it with a spread."
         },
         "row": 0,
         "slider": {
@@ -110,7 +110,7 @@
         "point": 8000.0,
         "provenance": {
           "kind": "assumption",
-          "source": "This figure comes from the forecaster, who holds a spread of plausible busy-hour rates and rounds it to one. ch04 replaces the one number with the spread."
+          "source": "The service owners estimate the request rate in the busy hour. They have a spread of plausible rates in mind and round it to one number; ch04 replaces it with the spread."
         },
         "row": 3,
         "slider": {
@@ -130,7 +130,7 @@
         "point": 15.0,
         "provenance": {
           "kind": "assumption",
-          "source": "stated workload (ch02) \u2014 what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression"
+          "source": "The service owners estimate what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression. It has not been counted yet, and counting it would turn the estimate into a fact."
         },
         "row": 4,
         "slider": {

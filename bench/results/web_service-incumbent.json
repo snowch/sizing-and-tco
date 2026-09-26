@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "932acf01e9cfe31b",
+  "code_fingerprint": "b4b1eaa60ff7e45c",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-26T18:37:21+00:00",
-  "git_revision": "7a2f2fd",
+  "generated_at": "2026-09-26T19:29:33+00:00",
+  "git_revision": "24211b2",
   "kind": "model",
   "name": "web_service-incumbent",
   "produced_by": {
@@ -51,7 +51,7 @@
       }
     ],
     "currency": "USD",
-    "description": "The book's running example: a service that takes requests and keeps records, run on some number of ordinary hosts, sized from a stated workload and costed over five years. Requests arrive and data accumulates; a host has cores, memory and disk, and each of those is a chain that ends in a count of hosts. One of the three binds.\nIt is a conditional model. Its ceilings are the queueing knee, the point where more hosts stop helping, the working set outgrowing memory, disk filling, and a host dying at the busy hour; its one measured constant is how well the stored records compress. Its one rate constant \u2014 CPU time per request \u2014 belongs on a rig nobody has declared, and is held as a labelled claim until one is.\nVendor-neutral by construction. Nothing below names a product; every figure is a workload assumption, a price you would get quoted, a spec sheet, or the measured constant.",
+    "description": "The book's running example: a service that takes requests and keeps records, run on some number of ordinary hosts, sized from a stated workload and costed over five years. Requests arrive and data accumulates; a host has cores, memory and disk, and each of those is a chain that ends in a count of hosts. One of the three binds.\nIt is a conditional model. Its ceilings are: the queueing margin at the busy hour; the point where more hosts stop helping; the working set outgrowing memory; disk filling; and a host lost at the busy hour. Its one measured constant is how well the stored records compress. Its one rate constant \u2014 CPU time per request \u2014 belongs on a rig nobody has declared, and is held as a labelled claim until one is.\nVendor-neutral by construction. Nothing below names a product; every figure is a workload assumption, a price you would get quoted, a spec sheet, or the measured constant.",
     "factors": {
       "achievable_throughput": 1.0,
       "annual_energy": 1.0,
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-26T18:37:20+00:00",
+    "generated_at": "2026-09-26T19:29:32+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {
@@ -347,9 +347,9 @@
           "spacing": "linear"
         },
         "kind": "derived",
-        "label": "throughput the fleet can actually reach",
+        "label": "achievable throughput",
         "layer": 3,
-        "note": "The universal scalability law. One host's throughput times the count, divided by what contention and crosstalk take back. With crosstalk at zero it is Amdahl's ceiling; with both at zero it is the straight line above.",
+        "note": "The universal scalability law. One host's throughput times the host count, divided by what contention and crosstalk take back. With crosstalk at zero, it approaches Amdahl's limit and never falls; with both at zero, it is `linear_throughput`: the straight line.",
         "point": 44876.38772799169,
         "row": 5,
         "summary": {
@@ -865,7 +865,7 @@
         "point": 1.338656042454521,
         "provenance": {
           "kind": "assumption",
-          "source": "ch04 \u2014 lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%. One factor for requests and for records, because users drive both."
+          "source": "ch04 \u2014 lognormal because growth compounds and the factor cannot be zero or less. One future in ten grows by less than 12% a year, and one in ten by more than 60%; outside that range you would be surprised. One factor for requests and for records, because users drive both."
         },
         "row": 8,
         "slider": {
@@ -1651,7 +1651,7 @@
         "kind": "derived",
         "label": "mean request rate over the horizon",
         "layer": 5,
-        "note": "The mean of the day-one and horizon means: a straight line drawn under a curve that is not straight, which understates the area. Stated rather than hidden, because a unit cost is only as defensible as its denominator (ch17).",
+        "note": "It is the mean of the day-one and horizon mean rates\u2014a straight line between the two ends of the horizon. The rate compounds, so the curve bends upward and the line lies above it, overstating requests served and making cost per million requests come out low, more so the faster growth is. It is kept because the error runs one way, so you know which way to correct it. The exact average becomes zero divided by zero when there is no growth, a case `annual_growth`'s range includes, so a formula cannot branch around it. Stated rather than hidden, because a unit cost is only as defensible as its denominator (ch17).",
         "point": 6968.845968459147,
         "row": 0,
         "summary": {
@@ -1834,7 +1834,7 @@
         "kind": "derived",
         "label": "average stored",
         "layer": 6,
-        "note": "the mean of the day-one and horizon holdings, with the same understatement as above",
+        "note": "It is the mean of the day-one and horizon holdings: a straight line between the two ends of the horizon. The holding compounds, so the curve bends upward and the line lies above it, overstating what is held on average. Cost per stored terabyte-month comes out low, more so the faster growth is; ch17 shows by how much. It follows the same convention as the mean request rate, for the same reason: the exact average becomes zero divided by zero when there is no growth.",
         "point": 39.740834681375084,
         "row": 2,
         "summary": {
@@ -2040,7 +2040,7 @@
         },
         "ceiling": {
           "allowed": 0.75,
-          "because": "Past the limit, reads that were served from memory go to disk, and the service time per request is no longer the number this model was built on: it is a different number, from a different regime, and nothing in a chain of multiplications predicts the step (ch08). The margin is the working set's own daily swing.",
+          "because": "Past the limit, memory cannot hold the whole working set, so some reads go to disk. A request's time then includes waiting for those reads, and the model has no term for that wait, so the service time per request is no longer the number this model was built on. Nothing in a chain of multiplications says what it becomes (ch08), and the margin is the working set's own daily swing.",
           "headroom": 0.25,
           "headroom_text": "cache_margin",
           "limit": 1.0,
@@ -2222,7 +2222,7 @@
         "point": 0.25,
         "provenance": {
           "kind": "assumption",
-          "source": "ch08 \u2014 how much of the fleet's memory is kept free of the working set, for its own daily swing and for the process heaps. Declared once and used by the chain and by the ceiling"
+          "source": "ch08 \u2014 how much of the fleet's memory is kept free of the working set, for its own daily swing and for the process heaps. Declared once, the ceiling on the working set checks against it (ch08), and from ch10 so does the chain that sizes the fleet for memory, so the two cannot drift apart."
         },
         "row": 12,
         "slider": {
@@ -2563,7 +2563,7 @@
         "kind": "derived",
         "label": "requests in the system",
         "layer": 7,
-        "note": "Little's law, and the only relationship in Part II that is always true: the number of requests in a system is the rate they arrive at times how long each one stays. No pattern of arrivals assumed, no queue discipline assumed, nothing assumed except that the system is in a steady state. ch05 is about what that buys and what it does not.",
+        "note": "Little's law: the number of requests in a system is the rate they arrive at times how long each one stays. It assumes no pattern of arrivals and no order in which requests are served. It holds while the system is in a steady state: as many requests leaving as arriving. ch05 is about what that buys and what it does not.",
         "point": 1562.3357108628495,
         "row": 2,
         "summary": {
@@ -2735,6 +2735,10 @@
           "source": "ch07 \u2014 fitted from two measurements, where two exist. Triangular because a fit gives a central value and a range rather than a shape, and its maximum is the claim to distrust: a serial fraction can always be worse than the one you measured"
         },
         "row": 9,
+        "slider": {
+          "max": 0.05,
+          "min": 0.0
+        },
         "summary": {
           "max": 0.014976338188515638,
           "mean": 0.007334319544798875,
@@ -2755,7 +2759,7 @@
         },
         "ceiling": {
           "allowed": 0.7,
-          "because": "The same queueing margin as above, applied to the capacity the fleet actually has rather than to the capacity its parts would have had alone. Where the two ceilings disagree, this is the one that is about the system you own (ch07).",
+          "because": "This ceiling keeps the queueing margin, the same margin as the ceiling labelled utilisation at the busy hour. It applies the margin to the capacity the fleet can deliver, counting coordination, rather than to the capacity its hosts would have alone. Where the two ceilings disagree, this one is about the system you own (ch07).",
           "headroom": 0.3,
           "headroom_text": "queueing_margin",
           "limit": 1.0,
@@ -2963,7 +2967,7 @@
         "point": 16.0,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts threads doubles this number without doubling the work a host does (ch07)"
+          "source": "spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts threads doubles this number without doubling the work a host does"
         },
         "row": 8,
         "slider": {
@@ -3314,7 +3318,7 @@
         "kind": "derived",
         "label": "cost per stored TB per month",
         "layer": 7,
-        "note": "Divides by a horizon in years and is declared in months. Identical dimensions, a factor of twelve apart; a check that compared only dimensions would publish a figure twelve times too large and pass. sizing/units.py converts.",
+        "note": "In each future, it divides that future's total by that future's straight-line holding, so it is neither a ratio of two middle values nor a denominator from ch17's problems. It divides by a horizon in years and is declared in months. Identical dimensions, a factor of twelve apart, so a check comparing only dimensions would publish a figure twelve times too large and pass. The build converts, and Appendix D lists the conversion.",
         "point": 839.6414698789445,
         "row": 1,
         "summary": {
@@ -3485,6 +3489,10 @@
           "source": "ch07 \u2014 fitted, and the harder of the two to fit. Lognormal because it spans an order of magnitude and cannot be negative, and because a shape should not assert a hard upper bound on a quantity this weakly fitted"
         },
         "row": 10,
+        "slider": {
+          "max": 0.0003,
+          "min": 5e-06
+        },
         "summary": {
           "max": 0.0006598257539015619,
           "mean": 4.703472443134585e-05,
@@ -4263,7 +4271,7 @@
         },
         "ceiling": {
           "allowed": 0.7,
-          "because": "One host down at the busy hour: its share of the requests lands on the survivors, and the question is whether they are still under the knee. N+1 is this ceiling with the margin at zero. The margin here is the queueing margin, because a fleet that has lost a host is still a queue (ch11).",
+          "because": "One host down at the busy hour: its share of the requests lands on the survivors, and the question is whether they are still inside the queueing margin. N+1 is this ceiling with the margin at zero. The margin here is the queueing margin, because a fleet that has lost a host is still a queue (ch11).",
           "headroom": 0.3,
           "headroom_text": "queueing_margin",
           "limit": 1.0,
@@ -5110,11 +5118,11 @@
         "kind": "input",
         "label": "hosts in the fleet",
         "layer": 0,
-        "note": "**The most important node in this model, and the one a spreadsheet hides.** Sizing does not produce a fleet; it produces a recommendation, and then a person decides. It arrives here, in Part II, because a queue needs something to stand in front of \u2014 but it is decided in ch12, and everything downstream of it, every dollar, every watt, every ceiling, is a consequence of the number chosen here and not of the number the model would recommend in hindsight.\nDeriving it instead would make the ceilings below tautologies: a fleet sized to sit under the knee sits under it in every future, and the model would cheerfully report a zero per cent chance of queueing. Making it an input is what lets the ceilings ask the only question worth asking \u2014 *given what we actually bought, how often does the world break it?*",
+        "note": "**The most important node in this model, and the one a spreadsheet hides.** Sizing does not produce a fleet; it produces a recommendation, and then a person decides. It arrives here, in Part II, because a queue needs something to stand in front of \u2014 but it is decided in ch12, and everything downstream of it, every dollar, every watt, every ceiling, is a consequence of the number chosen here and not of the number the model would recommend in hindsight.\nSuppose the fleet were worked out afresh in each future, from that future's own inputs; it would sit inside every margin it was sized against, in every future. The ceilings that check those margins would then report no chance of crossing them, which is true by definition but tells you nothing. Holding the fleet as an input, one number the team decided, lets the ceilings ask: given what was bought, how often do the futures cross the line?",
         "point": 54.0,
         "provenance": {
           "kind": "assumption",
-          "source": "the sizing decision, taken the way it is usually taken: hosts_recommended evaluated at every input's point estimate. Change this number and watch the ceilings move \u2014 that is the exercise of ch12"
+          "source": "The sizing decision, taken the usual way: the host count the model recommends (from ch10), worked out with every input at its point estimate. Change this number and watch the ceilings move; that is ch12's exercise."
         },
         "row": 5,
         "slider": {
@@ -5143,7 +5151,7 @@
         ],
         "formula": "hosts - one_host",
         "kind": "derived",
-        "label": "hosts left when one dies",
+        "label": "hosts after one is lost",
         "layer": 3,
         "note": null,
         "point": 53.0,
@@ -5911,7 +5919,7 @@
         "kind": "derived",
         "label": "hosts the model recommends",
         "layer": 5,
-        "note": "Where a reader meets a binding constraint. Three chains produce three host counts and you buy the largest, which means that across this model's uncertainty the answer is sometimes set by CPU, sometimes by memory and sometimes by disk \u2014 and an average of the three is a fleet that satisfies none of them.",
+        "note": "Where a reader meets a binding constraint. Three chains produce three host counts and you buy the largest, which means that across this model's uncertainty the answer is sometimes set by CPU, sometimes by memory and sometimes by disk \u2014 and an average of the three never drops below all of them, but falls short of the largest whenever they are different.",
         "point": 54.0,
         "row": 8,
         "summary": {
@@ -6111,7 +6119,7 @@
         "point": 8766.0,
         "provenance": {
           "kind": "fact",
-          "source": "by definition, 365.25 x 24. The quarter-day is worth about a fifth of a per cent over five years \u2014 less than this model's other errors, and free to get right"
+          "source": "by definition, 365.25 x 24. The quarter-day is six hours a year; leaving it out would understate every hourly cost by under a tenth of a per cent\u2014the same share every year, not growing with the horizon. It is smaller than this model's other errors, and free to get right."
         },
         "row": 2,
         "unit": "hour/year"
@@ -6274,7 +6282,7 @@
         "kind": "derived",
         "label": "requests in flight, if none waited",
         "layer": 3,
-        "note": "Little's law with the residence time equal to the service time: the fewest requests that can be in the system at this arrival rate. ch06 replaces the service time with what a request actually waits, and this number goes up.",
+        "note": "Little's law with the residence time equal to the service time: the fewest requests that can be in the system at this arrival rate. ch06 uses the residence time instead, which adds the time a request waits, and this number goes up.",
         "point": 556.3360618821654,
         "row": 6,
         "summary": {
@@ -6502,7 +6510,7 @@
         "point": 79.99999999999997,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "the platform software's per-core licence, as quoted. Lognormal: a price, and a wide one, because it is the line item most often negotiated. It is what makes the core count a cost as well as a capacity (ch17)"
+          "source": "the platform software's per-core licence, as quoted. Lognormal: a price, and a wide one, because it is the line item most often negotiated. It is what makes the core count a cost as well as a capacity (ch15)"
         },
         "row": 4,
         "unit": "USD/core/year"
@@ -6514,11 +6522,11 @@
         "kind": "input",
         "label": "licence per host",
         "layer": 2,
-        "note": "A declared zero, not an absent line. This quote licenses the platform software per core, so its per-host charge is nil and the model says so, with a source. A comparison needs the same lines on both sides: a line that one quote does not have is a cost that quote never pays, and the only honest way to leave it out is to put it in at zero (ch22).",
+        "note": "A declared zero, not an absent line. For a quote that licenses the platform software per core, as the design the plan was built on does, there is no per-host charge. For a quote that licenses per host, as ch22's challenger does, the per-host figure goes here and zero goes in `licence_per_core`. A comparison needs the same lines on both sides: a line one quote does not have is a cost that quote does not pay, and the way to leave it out is to put it in at zero (ch22).",
         "point": 0.0,
         "provenance": {
           "kind": "vendor_claim",
-          "source": "the price list: per core, with no per-host charge. A quote that licenses per host instead puts its figure here and zero in licence_per_core, and the two totals are then compared like for like"
+          "source": "The design the plan was built on is licensed per core, with no per-host charge. When a design licenses per host, that figure goes here and zero in `licence_per_core`, allowing the two to be compared like for like."
         },
         "row": 5,
         "slider": {
@@ -7056,11 +7064,11 @@
         "kind": "input",
         "label": "one-off cost of moving to this design",
         "layer": 5,
-        "note": "A declared zero. This is the design the plan was built on, so there is nothing to move. A design that would replace it carries the cost of the move here: the months of running both, the data copied twice, the people doing that instead of their jobs. It is the line an incumbent's comparison never shows and a challenger's never includes, which is why it is a node with a source rather than a footnote (ch22).",
+        "note": "A declared zero for the design the plan was built on, because it already runs on that platform. A design that would replace it carries the cost of the move here: the months of running both, the data copied twice, the people doing that instead of their jobs. The buyer pays for the move, not either vendor: a challenger's quote has no line for it, and a plan built on the incumbent has nothing to put in it. That is why it is a node with a source rather than a footnote (ch22).",
         "point": 0.0,
         "provenance": {
           "kind": "assumption",
-          "source": "nothing to migrate: the platform the plan already runs on, on the hosts already quoted. A challenger's scenario overrides this with the team's own estimate of the move, marked as what it is"
+          "source": "The design the plan was built on runs on that platform already, so there is nothing to migrate. A challenger's scenario overrides this with the team's own estimate of the move, marked as an assumption."
         },
         "row": 3,
         "slider": {
@@ -8359,7 +8367,7 @@
         "point": 9900.495061637923,
         "provenance": {
           "kind": "assumption",
-          "source": "ch04 \u2014 the busy hour, not the daily mean. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention."
+          "source": "ch04 \u2014 the busy hour, not the daily mean. Triangular, because this is an engineer's lowest, most likely and highest values; claiming more precision would be invention."
         },
         "row": 4,
         "slider": {
@@ -8913,7 +8921,7 @@
         "point": 0.3,
         "provenance": {
           "kind": "assumption",
-          "source": "ch06 \u2014 how far under the knee the fleet is sized to run at the busy hour. Declared once, here, and used by the sizing chain and by the ceiling that checks it, so the two cannot drift apart"
+          "source": "ch06 \u2014 the share of the fleet kept idle at the busy hour. The ceiling lets utilisation go up to one minus this margin, and no further. Declared once, it is used by the ceiling that checks utilisation at the busy hour (ch06), the ceiling on utilisation counting coordination (ch07), the chain that sizes the fleet for requests (from ch10) and the ceiling with one host lost (ch11), so they cannot drift apart."
         },
         "row": 11,
         "slider": {
@@ -10020,7 +10028,7 @@
         "kind": "derived",
         "label": "residence time",
         "layer": 6,
-        "note": "Service time divided by the fraction of the fleet that is idle. That single division is ch06's whole subject: it is nearly flat while there is slack and nearly vertical when there is not, and nothing about the arithmetic warns you which side you are on.",
+        "note": "Service time divided by the share of the fleet that is idle. That is the formula for one server with one queue, applied here to the whole fleet; a fleet of many cores sharing one stream of requests waits less than this at the same utilisation (ch06).",
         "point": 0.03670898993926409,
         "row": 3,
         "summary": {
@@ -10564,7 +10572,7 @@
         "point": 0.01307179676972449,
         "provenance": {
           "kind": "assumption",
-          "source": "held as an assumption because no reference machine is declared in rig/machine.yml; `make measure-rig` on a declared machine replaces this node with a measured one. Triangular *because* it has not been measured: once it is, the shape becomes a normal around the measurement, which is a change of claim and not only of numbers (ch13)"
+          "source": "The lowest, likeliest and highest values are this book's own choice for the running example: not measured on any machine, not taken from any product. It is held as an assumption because no reference machine is declared in `rig/machine.yml`; `make measure-rig` on a declared machine replaces it with a measured one. It is triangular, with three values, because it has not been measured. Once it is, it becomes a normal spread around the measurement, which is a change of claim and not only of numbers (ch13)."
         },
         "row": 7,
         "slider": {
@@ -11095,7 +11103,7 @@
         "point": 1.1339745962155614,
         "provenance": {
           "kind": "assumption",
-          "source": "engineers this fleet occupies, full-time equivalent. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch08 calls a regime change"
+          "source": "Engineers this fleet occupies, full-time equivalent. Triangular, and the shape cannot express what happens: people are not divisible, so the real spread moves in whole people."
         },
         "row": 6,
         "summary": {
@@ -11306,7 +11314,7 @@
         "point": 15.0,
         "provenance": {
           "kind": "assumption",
-          "source": "stated workload (ch02) \u2014 what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression"
+          "source": "The service owners estimate what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression. It has not been counted yet, and counting it would turn the estimate into a fact."
         },
         "row": 5,
         "slider": {
@@ -11861,7 +11869,7 @@
           "spacing": "linear"
         },
         "kind": "derived",
-        "label": "utilisation with one host down",
+        "label": "survivors' utilisation",
         "layer": 4,
         "note": null,
         "point": 0.6560566767478365,
@@ -12053,7 +12061,7 @@
         "kind": "derived",
         "label": "utilisation, counting coordination",
         "layer": 4,
-        "note": "The same fleet's utilisation, worked out from what it can actually deliver rather than from what one host could deliver alone. It is higher than the row above, always, and the gap is the work the hosts are doing on each other's behalf.",
+        "note": "The same fleet's utilisation, worked out from what it can deliver rather than from what its hosts could deliver alone. It is higher than `utilisation` whenever the fleet has more than one host, and equal at one host. The gap is the work the hosts do on each other's behalf.",
         "point": 0.9483835953428347,
         "row": 6,
         "summary": {
@@ -16081,7 +16089,9 @@
         "overrides": {
           "annual_growth": 1.0,
           "cache_margin": 0.0,
+          "contention": 0.0,
           "cores_per_host": 4.0,
+          "crosstalk": 5e-06,
           "disk_margin": 0.0,
           "disk_per_host": 1.0,
           "electricity_price": 0.04,
@@ -16101,7 +16111,7 @@
           "stored_data_t0": 1.0
         },
         "values": {
-          "achievable_throughput": 7833.505614853029,
+          "achievable_throughput": 7999.5200287982725,
           "annual_energy": 10885.81124872777,
           "annual_energy_cost": 435.43244994911083,
           "annual_growth": 1.0,
@@ -16116,13 +16126,13 @@
           "cache_margin": 0.0,
           "capex": 31201.061053385296,
           "concurrency": 1.0666666666666667,
-          "contention": 0.0069377422517014516,
-          "coordination_headroom": 0.06382838343180033,
+          "contention": 0.0,
+          "coordination_headroom": 0.06250375,
           "cores": 16.0,
           "cores_per_host": 4.0,
           "cost_per_million_requests": 11.763154444103739,
           "cost_per_stored_tb_month": 15467.371778552006,
-          "crosstalk": 3.67423461417477e-05,
+          "crosstalk": 5e-06,
           "disk_fill": 0.09351456936721952,
           "disk_margin": 0.0,
           "disk_per_host": 1.0,
@@ -16132,7 +16142,7 @@
           "failure_headroom": 0.08333333333333333,
           "fleet_ram": 0.034359738368,
           "fully_loaded_salary": 149749.79131871954,
-          "headroom_to_peak": 0.024330733130425084,
+          "headroom_to_peak": 0.00894427190999916,
           "horizon": 3.0,
           "horizon_periods": 3.0,
           "host_capex": 26153.393661244038,
@@ -16162,9 +16172,9 @@
           "one_host": 1.0,
           "one_request": 1.0,
           "one_year": 1.0,
-          "optimism": 1.0212541349088053,
+          "optimism": 1.00006,
           "os_reserve": 0.0,
-          "peak_hosts": 164.40112916277405,
+          "peak_hosts": 447.21359549995793,
           "peak_request_rate": 500.0,
           "peak_request_rate_t0": 500.0,
           "peak_to_mean": 1.0,
@@ -16179,8 +16189,8 @@
           "replication_factor": 1.0,
           "requests_over_horizon": 47336400000.0,
           "residence_time": 0.0021333333333333334,
-          "scaling_efficiency": 0.9791882018566287,
-          "scaling_loss": 0.020811798143371307,
+          "scaling_efficiency": 0.9999400035997841,
+          "scaling_loss": 5.999640021592256e-05,
           "seconds_per_year": 31557600.0,
           "service_demand": 0.002,
           "service_seconds": 0.002,
@@ -16193,7 +16203,7 @@
           "utilisation": 0.0625,
           "utilisation_after_failure": 0.08333333333333333,
           "utilisation_cap": 0.98,
-          "utilisation_including_coordination": 0.06382838343180033,
+          "utilisation_including_coordination": 0.06250375,
           "waiting_time": 0.0001333333333333334,
           "working_set": 0.005
         }
@@ -16202,7 +16212,9 @@
         "overrides": {
           "annual_growth": 1.25,
           "cache_margin": 0.15,
+          "contention": 0.0125,
           "cores_per_host": 35.0,
+          "crosstalk": 7.874999999999999e-05,
           "disk_margin": 0.1125,
           "disk_per_host": 15.75,
           "electricity_price": 0.14250000000000002,
@@ -16222,7 +16234,7 @@
           "stored_data_t0": 50.75
         },
         "values": {
-          "achievable_throughput": 90627.75604862999,
+          "achievable_throughput": 70968.13932250868,
           "annual_energy": 187508.09875933584,
           "annual_energy_cost": 26719.90407320536,
           "annual_growth": 1.25,
@@ -16237,13 +16249,13 @@
           "cache_margin": 0.15,
           "capex": 413414.05895735516,
           "concurrency": 469.95236789292926,
-          "contention": 0.0069377422517014516,
-          "coordination_headroom": 0.29552514133910407,
+          "contention": 0.0125,
+          "coordination_headroom": 0.3773916108157373,
           "cores": 1855.0,
           "cores_per_host": 35.0,
           "cost_per_million_requests": 3.928971079462069,
           "cost_per_stored_tb_month": 649.9354876967457,
-          "crosstalk": 3.67423461417477e-05,
+          "crosstalk": 7.874999999999999e-05,
           "disk_fill": 0.10273643523706305,
           "disk_margin": 0.1125,
           "disk_per_host": 15.75,
@@ -16253,7 +16265,7 @@
           "failure_headroom": 0.20602138781167093,
           "fleet_ram": 13.4189810712576,
           "fully_loaded_salary": 149749.79131871954,
-          "headroom_to_peak": 0.3223822139781323,
+          "headroom_to_peak": 0.4732957434411318,
           "horizon": 4.25,
           "horizon_periods": 4.25,
           "host_capex": 346532.4660114835,
@@ -16283,9 +16295,9 @@
           "one_host": 1.0,
           "one_request": 1.0,
           "one_year": 1.0,
-          "optimism": 1.462024503055132,
+          "optimism": 1.8670349999999998,
           "os_reserve": 0.1,
-          "peak_hosts": 164.40112916277405,
+          "peak_hosts": 111.98072396480808,
           "peak_request_rate": 26782.78041551722,
           "peak_request_rate_t0": 10375.0,
           "peak_to_mean": 3.25,
@@ -16300,8 +16312,8 @@
           "replication_factor": 1.75,
           "requests_over_horizon": 766706781195.8594,
           "residence_time": 0.01754681032372022,
-          "scaling_efficiency": 0.6839830645179622,
-          "scaling_loss": 0.3160169354820378,
+          "scaling_efficiency": 0.5356085986604429,
+          "scaling_loss": 0.46439140133955714,
           "seconds_per_year": 31557600.0,
           "service_demand": 0.014,
           "service_seconds": 0.014,
@@ -16314,7 +16326,7 @@
           "utilisation": 0.20213419181522432,
           "utilisation_after_failure": 0.20602138781167093,
           "utilisation_cap": 0.98,
-          "utilisation_including_coordination": 0.29552514133910407,
+          "utilisation_including_coordination": 0.3773916108157373,
           "waiting_time": 0.00354681032372022,
           "working_set": 10.317017431748486
         }
@@ -16323,7 +16335,9 @@
         "overrides": {
           "annual_growth": 1.5,
           "cache_margin": 0.3,
+          "contention": 0.025,
           "cores_per_host": 66.0,
+          "crosstalk": 0.0001525,
           "disk_margin": 0.225,
           "disk_per_host": 30.5,
           "electricity_price": 0.24500000000000002,
@@ -16343,7 +16357,7 @@
           "stored_data_t0": 100.5
         },
         "values": {
-          "achievable_throughput": 124528.25109021366,
+          "achievable_throughput": 50808.53266361468,
           "annual_energy": 444141.0989480931,
           "annual_energy_cost": 108814.56924228281,
           "annual_growth": 1.5,
@@ -16358,13 +16372,13 @@
           "cache_margin": 0.3,
           "capex": 795627.0568613249,
           "concurrency": 17960.92969897402,
-          "contention": 0.0069377422517014516,
-          "coordination_headroom": 1.5123735159336922,
+          "contention": 0.025,
+          "coordination_headroom": 3.7067244232630716,
           "cores": 6732.0,
           "cores_per_host": 66.0,
           "cost_per_million_requests": 2.938844929812554,
           "cost_per_stored_tb_month": 283.1363754455475,
-          "crosstalk": 3.67423461417477e-05,
+          "crosstalk": 0.0001525,
           "disk_fill": 0.28096178522793597,
           "disk_margin": 0.225,
           "disk_per_host": 30.5,
@@ -16374,7 +16388,7 @@
           "failure_headroom": 0.7345730501490972,
           "fleet_ram": 45.2105437446144,
           "fully_loaded_salary": 149749.79131871954,
-          "headroom_to_peak": 0.6204336948258397,
+          "headroom_to_peak": 1.2756536785869068,
           "horizon": 5.5,
           "horizon_periods": 5.5,
           "host_capex": 666911.538361723,
@@ -16404,9 +16418,9 @@
           "one_host": 1.0,
           "one_request": 1.0,
           "one_year": 1.0,
-          "optimism": 2.0792316173741314,
+          "optimism": 5.096055,
           "os_reserve": 0.2,
-          "peak_hosts": 164.40112916277405,
+          "peak_hosts": 79.95900589021115,
           "peak_request_rate": 188333.22893438005,
           "peak_request_rate_t0": 20250.0,
           "peak_to_mean": 5.5,
@@ -16421,8 +16435,8 @@
           "replication_factor": 2.5,
           "requests_over_horizon": 3291193052709.797,
           "residence_time": 0.09536782117844989,
-          "scaling_efficiency": 0.4809468996354064,
-          "scaling_loss": 0.5190531003645936,
+          "scaling_efficiency": 0.19623022122013992,
+          "scaling_loss": 0.8037697787798601,
           "seconds_per_year": 31557600.0,
           "service_demand": 0.026000000000000002,
           "service_seconds": 0.026000000000000002,
@@ -16435,7 +16449,7 @@
           "utilisation": 0.7273713535790081,
           "utilisation_after_failure": 0.7345730501490972,
           "utilisation_cap": 0.98,
-          "utilisation_including_coordination": 1.5123735159336922,
+          "utilisation_including_coordination": 3.7067244232630716,
           "waiting_time": 0.06936782117844989,
           "working_set": 142.5403530842243
         }
@@ -16444,7 +16458,9 @@
         "overrides": {
           "annual_growth": 1.9,
           "cache_margin": 0.54,
+          "contention": 0.045000000000000005,
           "cores_per_host": 115.60000000000001,
+          "crosstalk": 0.00027049999999999996,
           "disk_margin": 0.405,
           "disk_per_host": 54.1,
           "electricity_price": 0.40900000000000003,
@@ -16464,7 +16480,7 @@
           "stored_data_t0": 180.1
         },
         "values": {
-          "achievable_throughput": 134365.28538649034,
+          "achievable_throughput": 25880.22183384511,
           "annual_energy": 1021176.1816206548,
           "annual_energy_cost": 417661.0582828478,
           "annual_growth": 1.9,
@@ -16479,13 +16495,13 @@
           "cache_margin": 0.54,
           "capex": 1407167.8535076769,
           "concurrency": 10038428.160881002,
-          "contention": 0.0069377422517014516,
-          "coordination_headroom": 33.05751451570868,
+          "contention": 0.045000000000000005,
+          "coordination_headroom": 171.6284505051058,
           "cores": 20854.24,
           "cores_per_host": 115.60000000000001,
           "cost_per_million_requests": 0.6024694140152116,
           "cost_per_stored_tb_month": 34.85040974942382,
-          "crosstalk": 3.67423461417477e-05,
+          "crosstalk": 0.00027049999999999996,
           "disk_fill": 3.1468273444697368,
           "disk_margin": 0.405,
           "disk_per_host": 54.1,
@@ -16495,7 +16511,7 @@
           "failure_headroom": 9.680893405624488,
           "fleet_ram": 114.34986899568065,
           "fully_loaded_salary": 149749.79131871954,
-          "headroom_to_peak": 1.0973160641821713,
+          "headroom_to_peak": 3.0361168503197984,
           "horizon": 7.5,
           "horizon_periods": 7.5,
           "host_capex": 1179518.0541221062,
@@ -16525,9 +16541,9 @@
           "one_host": 1.0,
           "one_request": 1.0,
           "one_year": 1.0,
-          "optimism": 3.4337514323236893,
+          "optimism": 17.827397079999997,
           "os_reserve": 0.36000000000000004,
-          "peak_hosts": 164.40112916277405,
+          "peak_hosts": 59.41800296026098,
           "peak_request_rate": 4441782.372071244,
           "peak_request_rate_t0": 36050.0,
           "peak_to_mean": 9.1,
@@ -16542,8 +16558,8 @@
           "replication_factor": 3.7,
           "requests_over_horizon": 58231995686075.06,
           "residence_time": 2.259999999999998,
-          "scaling_efficiency": 0.2912266713852609,
-          "scaling_loss": 0.7087733286147391,
+          "scaling_efficiency": 0.05609343840340377,
+          "scaling_loss": 0.9439065615965962,
           "seconds_per_year": 31557600.0,
           "service_demand": 0.045200000000000004,
           "service_seconds": 0.045200000000000004,
@@ -16556,7 +16572,7 @@
           "utilisation": 9.627229916679784,
           "utilisation_after_failure": 9.680893405624488,
           "utilisation_cap": 0.98,
-          "utilisation_including_coordination": 33.05751451570868,
+          "utilisation_including_coordination": 171.6284505051058,
           "waiting_time": 2.214799999999998,
           "working_set": 6002.511342838098
         }
@@ -16565,7 +16581,9 @@
         "overrides": {
           "annual_growth": 2.0,
           "cache_margin": 0.6,
+          "contention": 0.05,
           "cores_per_host": 128.0,
+          "crosstalk": 0.0003,
           "disk_margin": 0.45,
           "disk_per_host": 60.0,
           "electricity_price": 0.45,
@@ -16585,7 +16603,7 @@
           "stored_data_t0": 200.0
         },
         "values": {
-          "achievable_throughput": 133230.77046367,
+          "achievable_throughput": 22367.84622105723,
           "annual_energy": 1197439.237360055,
           "annual_energy_cost": 538847.6568120248,
           "annual_growth": 2.0,
@@ -16600,13 +16618,13 @@
           "cache_margin": 0.6,
           "capex": 1560053.0526692646,
           "concurrency": 25599999.999999978,
-          "contention": 0.0069377422517014516,
-          "coordination_headroom": 76.85912169060295,
+          "contention": 0.05,
+          "coordination_headroom": 457.8,
           "cores": 25600.0,
           "cores_per_host": 128.0,
           "cost_per_million_requests": 0.3489806367997359,
           "cost_per_stored_tb_month": 18.35498557311891,
-          "crosstalk": 3.67423461417477e-05,
+          "crosstalk": 0.0003,
           "disk_fill": 6.3839279354688525,
           "disk_margin": 0.45,
           "disk_per_host": 60.0,
@@ -16616,7 +16634,7 @@
           "failure_headroom": 20.100502512562816,
           "fleet_ram": 131.94139533312,
           "fully_loaded_salary": 149749.79131871954,
-          "headroom_to_peak": 1.216536656521254,
+          "headroom_to_peak": 3.554093266554554,
           "horizon": 8.0,
           "horizon_periods": 8.0,
           "host_capex": 1307669.6830622018,
@@ -16646,9 +16664,9 @@
           "one_host": 1.0,
           "one_request": 1.0,
           "one_year": 1.0,
-          "optimism": 3.8429560845301474,
+          "optimism": 22.89,
           "os_reserve": 0.4,
-          "peak_hosts": 164.40112916277405,
+          "peak_hosts": 56.27314338711378,
           "peak_request_rate": 10240000.0,
           "peak_request_rate_t0": 40000.0,
           "peak_to_mean": 10.0,
@@ -16663,8 +16681,8 @@
           "replication_factor": 4.0,
           "requests_over_horizon": 129764851200000.0,
           "residence_time": 2.499999999999998,
-          "scaling_efficiency": 0.26021634856185544,
-          "scaling_loss": 0.7397836514381446,
+          "scaling_efficiency": 0.0436871996505024,
+          "scaling_loss": 0.9563128003494976,
           "seconds_per_year": 31557600.0,
           "service_demand": 0.05,
           "service_seconds": 0.05,
@@ -16677,7 +16695,7 @@
           "utilisation": 20.0,
           "utilisation_after_failure": 20.100502512562816,
           "utilisation_cap": 0.98,
-          "utilisation_including_coordination": 76.85912169060295,
+          "utilisation_including_coordination": 457.8,
           "waiting_time": 2.449999999999998,
           "working_set": 15360.0
         }

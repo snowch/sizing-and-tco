@@ -2,18 +2,18 @@
 
 | Output | Point estimate | 90% interval | Unit |
 |---|---:|---:|---|
-| metrics ingest | 4.69 | 0.709 to 29.1 | MB/s |
+| metrics ingest | 4.69 | 1.03 to 30.0 | MB/s |
 | logs ingest | 44.7 | 9.66 to 164 | MB/s |
 | traces ingest | *not yet measured* | *not yet measured* | MB/s |
 | traces stored | *not yet measured* | *not yet measured* | TB |
-| ingest, metrics and logs only | 49.4 | 12.5 to 182 | MB/s |
-| stored, metrics and logs only | 278 | 74.6 to 1,301 | TB |
-| active series | 15,019,917 | 2,269,389 to 93,180,409 | series |
-| label cardinality | 76.3 | 17.9 to 300 |  |
-| retention cost, metrics and logs only | $4,085 | $957.47 to $21,788 | USD/month |
-| retention store fill | 0.579 | 0.155 to 2.71 |  |
-| ingest utilisation, quoted | 0.514 | 0.130 to 1.90 |  |
-| query path utilisation | 0.569 | 0.0591 to 3.37 |  |
+| ingest, metrics and logs only | 49.4 | 12.8 to 183 | MB/s |
+| stored, metrics and logs only | 278 | 86.0 to 1,330 | TB |
+| active series | 15,017,758 | 3,291,520 to 96,141,601 | series |
+| label cardinality | 76.3 | 25.3 to 309 |  |
+| retention cost, metrics and logs only | $4,084 | $1,094 to $22,248 | USD/month |
+| retention store fill | 0.579 | 0.179 to 2.77 |  |
+| ingest utilisation, quoted | 0.514 | 0.133 to 1.91 |  |
+| query path utilisation | 0.569 | 0.0747 to 3.44 |  |
 | ingest utilisation, measured | *not yet measured* | *not yet measured* |  |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***

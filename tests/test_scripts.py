@@ -329,6 +329,27 @@ def test_the_foot_of_a_page_points_at_its_neighbours_in_the_reading_order():
             assert 'class="next"' not in foot, f"{href} is the last page and offers a next"
 
 
+def test_a_cross_reference_lands_on_the_page_it_names():
+    """MyST names the first page in the contents `index`, and this build publishes the cover as
+    index.html and the preface as preface.html. Keyed by published name, ch22's link to the
+    introduction opened the cover."""
+    build = site()
+    index = build.renderer.parsed_pages()
+    if not index:
+        pytest.skip("no parsed content; run `myst build` first")
+    order = [s for s in build.renderer.page_order() if s in index]
+    build.renderer.PAGES = build.page_names(index, order)
+    try:
+        for at, source in enumerate(order):
+            url = "/" if at == 0 else f"/{index[source]['slug']}"
+            assert build.renderer._published(url) == build.href_for(source), (
+                f"a link to {source} opens {build.renderer._published(url)}; "
+                "renderer.PAGES must be keyed by MyST's slug"
+            )
+    finally:
+        build.renderer.PAGES = {}
+
+
 def viewers():
     """``scripts/build-viewers.py``, imported so the tests can ask what it builds."""
     from importlib import util

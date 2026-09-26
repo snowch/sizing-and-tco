@@ -5,4 +5,4 @@
 | peak request rate at horizon | 29,703 | request/second |
 | records held at horizon | 55.7 | TB |
 
-*Source — [`web_service_demand-reference`](/models/web_service_demand-reference.html) · every input on a slider*
+*Source — [`web_service_demand-reference`](/models/web_service_demand-reference.html) · the model to explore; each input with a range has a slider*

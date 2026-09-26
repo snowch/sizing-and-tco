@@ -47,6 +47,7 @@ from typing import Any, ClassVar
 import yaml
 
 from sizing import expr
+from sizing.mc import DEFAULT_SAMPLES
 from sizing.results import load_result, result_exists
 from sizing.units import UnitError
 from sizing.units import parse as parse_unit
@@ -337,7 +338,7 @@ class Scenario:
     title: str
     overrides: dict[str, float] = field(default_factory=dict)
     because: str = ""
-    samples: int = 100_000
+    samples: int = DEFAULT_SAMPLES
     seed: int = 20260916
     path: Path | None = None
 
@@ -369,7 +370,13 @@ def _node_from(name: str, spec: dict, where: str) -> Node:
         raise ModelError(
             f"{where}: node {name!r} has kind {kind!r}; expected one of {', '.join(KINDS)}"
         )
-    unit = str(_require(spec, "unit", f"{where}: node {name!r}"))
+    unit = _text(spec, "unit").strip()
+    if not unit:
+        raise ModelError(
+            f"{where}: node {name!r} declares no unit. A pure ratio is written `dimensionless`. A "
+            "blank is refused because it could mean a pure ratio, or it could mean the unit was "
+            "never decided (ch02)."
+        )
     try:
         parse_unit(unit)
     except UnitError as exc:
@@ -486,7 +493,7 @@ def load_scenario(path: str | Path) -> Scenario:
         title=str(raw.get("title", raw["scenario"])),
         overrides={str(k): float(v) for k, v in (raw.get("overrides") or {}).items()},
         because=_text(raw, "because").strip(),
-        samples=int(raw.get("samples", 100_000)),
+        samples=int(raw.get("samples", DEFAULT_SAMPLES)),
         seed=int(raw.get("seed", 20260916)),
         path=path,
     )

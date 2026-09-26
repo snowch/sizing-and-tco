@@ -2,10 +2,10 @@
 
 | | Input | Provenance | Source |
 |---|---|---|---|
-| ○ | annual growth factor | assumption | ch04 — lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%. One factor for requests and for records, because users drive both. |
-| ○ | cache margin | assumption | ch08 — how much of the fleet's memory is kept free of the working set, for its own daily swing and for the process heaps. Declared once and used by the chain and by the ceiling |
+| ○ | annual growth factor | assumption | ch04 — lognormal because growth compounds and the factor cannot be zero or less. One future in ten grows by less than 12% a year, and one in ten by more than 60%; outside that range you would be surprised. One factor for requests and for records, because users drive both. |
+| ○ | cache margin | assumption | ch08 — how much of the fleet's memory is kept free of the working set, for its own daily swing and for the process heaps. Declared once, the ceiling on the working set checks against it (ch08), and from ch10 so does the chain that sizes the fleet for memory, so the two cannot drift apart. |
 | ○ | contention | assumption | ch07 — fitted from two measurements, where two exist. Triangular because a fit gives a central value and a range rather than a shape, and its maximum is the claim to distrust: a serial fraction can always be worse than the one you measured |
-| ◐ | cores per host | vendor claim | spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts threads doubles this number without doubling the work a host does (ch07) |
+| ◐ | cores per host | vendor claim | spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts threads doubles this number without doubling the work a host does |
 | ○ | crosstalk | assumption | ch07 — fitted, and the harder of the two to fit. Lognormal because it spans an order of magnitude and cannot be negative, and because a shape should not assert a hard upper bound on a quantity this weakly fitted |
 | ○ | disk margin | assumption | ch11 — room to re-replicate a dead host's records onto the survivors, plus what a filesystem needs to keep allocating well. Declared once and used by the chain and by the ceiling |
 | ◐ | disk per host | vendor claim | spec sheet: one local drive. Decimal TB, not TiB — appendix D, and it is a 10% difference |
@@ -14,31 +14,31 @@
 | ○ | horizon | assumption | the refresh cycle this fleet is bought against |
 | ◐ | host power | vendor claim | typical draw under load, per host as configured. Triangular, and one of the few inputs here whose bounds are physical rather than editorial: a host cannot draw less than it idles at, or more than its supply will give it |
 | ◐ | host price | vendor claim | chassis, CPU, memory, drives and boot media, as configured. Lognormal like any price, and wide because a host is a configuration rather than a commodity |
-| ○ | hosts in the fleet | assumption | the sizing decision, taken the way it is usually taken: hosts_recommended evaluated at every input's point estimate. Change this number and watch the ceilings move — that is the exercise of ch12 |
+| ○ | hosts in the fleet | assumption | The sizing decision, taken the usual way: the host count the model recommends (from ch10), worked out with every input at its point estimate. Change this number and watch the ceilings move; that is ch12's exercise. |
 | ○ | share of records touched in a busy hour | assumption | ch08 — the working set as a share of everything held. Triangular; nobody measures this and everybody has an opinion, and the maximum is a service whose users all look at the same week's data |
-| ● | hours per year | fact | by definition, 365.25 x 24. The quarter-day is worth about a fifth of a per cent over five years — less than this model's other errors, and free to get right |
+| ● | hours per year | fact | by definition, 365.25 x 24. The quarter-day is six hours a year; leaving it out would understate every hourly cost by under a tenth of a per cent—the same share every year, not growing with the horizon. It is smaller than this model's other errors, and free to get right. |
 | ○ | index overhead | assumption | indexes, the write-ahead log and journals as a multiplier on stored bytes. Triangular, and the bounds are for a service with a few indexes per table — a search-heavy one is off the top of this range |
-| ◐ | licence per core | vendor claim | the platform software's per-core licence, as quoted. Lognormal: a price, and a wide one, because it is the line item most often negotiated. It is what makes the core count a cost as well as a capacity (ch17) |
-| ◐ | licence per host | vendor claim | the price list: per core, with no per-host charge. A quote that licenses per host instead puts its figure here and zero in licence_per_core, and the two totals are then compared like for like |
-| ○ | one-off cost of moving to this design | assumption | nothing to migrate: the platform the plan already runs on, on the hosts already quoted. A challenger's scenario overrides this with the team's own estimate of the move, marked as what it is |
+| ◐ | licence per core | vendor claim | the platform software's per-core licence, as quoted. Lognormal: a price, and a wide one, because it is the line item most often negotiated. It is what makes the core count a cost as well as a capacity (ch15) |
+| ◐ | licence per host | vendor claim | The design the plan was built on is licensed per core, with no per-host charge. When a design licenses per host, that figure goes here and zero in `licence_per_core`, allowing the two to be compared like for like. |
+| ○ | one-off cost of moving to this design | assumption | The design the plan was built on runs on that platform already, so there is nothing to migrate. A challenger's scenario overrides this with the team's own estimate of the move, marked as an assumption. |
 | ○ | network price per host | assumption | switch ports, optics and cabling, amortised per host. Triangular rather than lognormal, although it is a price: it is a bill of materials divided by a host count somebody chose, so the bounds are the plausible designs rather than a market |
 | ● | one core | fact | definition |
 | ● | one host | fact | definition |
 | ● | one request | fact | definition |
 | ● | one year | fact | definition |
 | ○ | os reserve | assumption | the share of memory the kernel, the agents and the page cache floor keep before the service sees any. Triangular: a floor, a usual figure, and a host with too many agents on it |
-| ○ | peak request rate, day one | assumption | ch04 — the busy hour, not the daily mean. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention. |
+| ○ | peak request rate, day one | assumption | ch04 — the busy hour, not the daily mean. Triangular, because this is an engineer's lowest, most likely and highest values; claiming more precision would be invention. |
 | ○ | peak-to-mean ratio | assumption | ch04 — the busy hour against the daily mean. Triangular, and it is a property of your traffic that belongs to the estate target: nothing here can measure it |
 | ○ | PUE | assumption | ch16 — facility overhead. A multiplier on IT load, and the single number a colocation contract is most likely to disagree with you about. Triangular: the minimum is a good building, the maximum is a poor one, and below one is impossible |
-| ○ | queueing margin | assumption | ch06 — how far under the knee the fleet is sized to run at the busy hour. Declared once, here, and used by the sizing chain and by the ceiling that checks it, so the two cannot drift apart |
+| ○ | queueing margin | assumption | ch06 — the share of the fleet kept idle at the busy hour. The ceiling lets utilisation go up to one minus this margin, and no further. Declared once, it is used by the ceiling that checks utilisation at the busy hour (ch06), the ceiling on utilisation counting coordination (ch07), the chain that sizes the fleet for requests (from ch10) and the ceiling with one host lost (ch11), so they cannot drift apart. |
 | ◐ | ram per host | vendor claim | spec sheet: the modules fitted. The sheet says 64 GB and means GiB — appendix D — and the operating system will report less than either, which is os_reserve's job |
 | ○ | replication factor | assumption | three copies of every record, so that a host can die and take its disks with it. A different durability scheme substitutes its own factor here and the rest of the model is unchanged, which is the point of it being a node |
 | ● | seconds per year | fact | by definition, 365.25 x 86,400 |
-| ○ | CPU time per request | assumption | held as an assumption because no reference machine is declared in rig/machine.yml; `make measure-rig` on a declared machine replaces this node with a measured one. Triangular *because* it has not been measured: once it is, the shape becomes a normal around the measurement, which is a change of claim and not only of numbers (ch13) |
-| ○ | engineers, full-time equivalent | assumption | engineers this fleet occupies, full-time equivalent. Triangular, and the shape cannot express what actually happens: people are not divisible, so the real distribution is lumpy in the way ch08 calls a regime change |
-| ○ | records held, day one | assumption | stated workload (ch02) — what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression |
+| ○ | CPU time per request | assumption | The lowest, likeliest and highest values are this book's own choice for the running example: not measured on any machine, not taken from any product. It is held as an assumption because no reference machine is declared in `rig/machine.yml`; `make measure-rig` on a declared machine replaces it with a measured one. It is triangular, with three values, because it has not been measured. Once it is, it becomes a normal spread around the measurement, which is a change of claim and not only of numbers (ch13). |
+| ○ | engineers, full-time equivalent | assumption | Engineers this fleet occupies, full-time equivalent. Triangular, and the shape cannot express what happens: people are not divisible, so the real spread moves in whole people. |
+| ○ | records held, day one | assumption | The service owners estimate what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression. It has not been counted yet, and counting it would turn the estimate into a fact. |
 | ◐ | support rate | vendor claim | annual support as a fraction of capital cost. Triangular because it is negotiated inside a band the market sets rather than drawn from one: the spread is what different buyers get, not what varies from year to year |
 | ○ | utilisation the model will admit to | assumption | where this model stops being about queues (ch06) |
 | | **37 inputs** | | **6 fact, 8 vendor claim, 23 assumption** |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

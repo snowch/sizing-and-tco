@@ -6,4 +6,4 @@
 | records held at horizon | 55.7 | TB |
 | memory the service can use, per host | 0.0618 | TB/host |
 
-*Source — [`web_service_provenance-reference`](/models/web_service_provenance-reference.html) · every input on a slider*
+*Source — [`web_service_provenance-reference`](/models/web_service_provenance-reference.html) · the model to explore; each input with a range has a slider*

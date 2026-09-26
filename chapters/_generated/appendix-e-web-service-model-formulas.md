@@ -20,7 +20,7 @@
 | host count (`host_count`) | `hosts / one_host` |  | [ch07](#when-adding-servers-stops-helping) |
 | throughput of one host alone (`single_host_throughput`) | `cores_per_host / service_demand` | request/second/host | [ch07](#when-adding-servers-stops-helping) |
 | throughput if scaling were free (`linear_throughput`) | `hosts * single_host_throughput` | request/second | [ch07](#when-adding-servers-stops-helping) |
-| throughput the fleet can actually reach (`achievable_throughput`) | `linear_throughput / (1 + contention * (host_count - 1) + crosstalk * host_count * (host_count - 1))` | request/second | [ch07](#when-adding-servers-stops-helping) |
+| achievable throughput (`achievable_throughput`) | `linear_throughput / (1 + contention * (host_count - 1) + crosstalk * host_count * (host_count - 1))` | request/second | [ch07](#when-adding-servers-stops-helping) |
 | scaling efficiency (`scaling_efficiency`) | `achievable_throughput / linear_throughput` |  | [ch07](#when-adding-servers-stops-helping) |
 | fraction of the fleet doing nothing useful (`scaling_loss`) | `1 - scaling_efficiency` against a limit of `1`, keeping `0.5` below it |  | [ch07](#when-adding-servers-stops-helping) |
 | where adding hosts stops helping (`peak_hosts`) | `one_host * sqrt((1 - contention) / crosstalk)` | host | [ch07](#when-adding-servers-stops-helping) |
@@ -39,8 +39,8 @@
 | hosts for requests (`hosts_for_requests`) | `ceil(busy_cores / (cores_per_host * (1 - queueing_margin)))` | host | [ch10](#bandwidth-and-the-binding-constraint) |
 | hosts for memory (`hosts_for_memory`) | `ceil(working_set / (ram_for_service * (1 - cache_margin)))` | host | [ch10](#bandwidth-and-the-binding-constraint) |
 | hosts the model recommends (`hosts_recommended`) | `max(hosts_for_requests, hosts_for_memory, hosts_for_storage)` | host | [ch10](#bandwidth-and-the-binding-constraint) |
-| hosts left when one dies (`hosts_after_failure`) | `hosts - one_host` | host | [ch11](#headroom-and-failure-domains) |
-| utilisation with one host down (`utilisation_after_failure`) | `busy_cores / (hosts_after_failure * cores_per_host)` |  | [ch11](#headroom-and-failure-domains) |
+| hosts after one is lost (`hosts_after_failure`) | `hosts - one_host` | host | [ch11](#headroom-and-failure-domains) |
+| survivors' utilisation (`utilisation_after_failure`) | `busy_cores / (hosts_after_failure * cores_per_host)` |  | [ch11](#headroom-and-failure-domains) |
 | utilisation with one host down (`failure_headroom`) | `utilisation_after_failure` against a limit of `1`, keeping `queueing_margin` below it |  | [ch11](#headroom-and-failure-domains) |
 | host capex (`host_capex`) | `hosts * host_price` | USD | [ch18](#the-five-year-model) |
 | network capex (`network_capex`) | `hosts * network_price_per_host` | USD | [ch18](#the-five-year-model) |

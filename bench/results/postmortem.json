@@ -9,8 +9,8 @@
     "no_observation_was_used": "nothing here is a measurement of a real outcome. It is the model's own futures, filtered to the ones in which the design failed \u2014 which is what makes it reproducible and also what bounds what it can say",
     "read_the_base_rate": "`something_extreme_share` must be read against `something_extreme_everywhere`. Even with three uncertain inputs feeding a ceiling, one of them is beyond its own p90 in a fair share of all futures, failure or not, and the share rises with every input added. A post-mortem that does not say so has discovered the number of inputs"
   },
-  "generated_at": "2026-09-21T02:56:46+00:00",
-  "git_revision": "2110500",
+  "generated_at": "2026-09-26T19:31:08+00:00",
+  "git_revision": "24211b2",
   "kind": "measurement",
   "name": "postmortem",
   "produced_by": {
@@ -22,7 +22,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -69,76 +69,76 @@
       "ceiling": "quoted_pipeline_utilisation",
       "inputs": 8,
       "model": "observability",
-      "nothing_extreme_share": 0.15257481675148232,
+      "nothing_extreme_share": 0.15135936269742023,
       "rows": [
         {
-          "extreme_in_failures": 0.2882954386292544,
-          "in_failures": 57389.662204236185,
+          "extreme_in_failures": 0.23588532258811543,
+          "in_failures": 2.4746600966342625,
+          "input": "label_values_accidental_extra",
+          "label": "extra accidental label values",
+          "overall": 1.4448009965283188,
+          "shift": 0.7128034259254872
+        },
+        {
+          "extreme_in_failures": 0.2869714232782178,
+          "in_failures": 57274.03481014373,
           "input": "request_rate",
           "label": "request rate",
           "overall": 38412.151272768926,
-          "shift": 0.49404967705937275
+          "shift": 0.4910394995436336
         },
         {
-          "extreme_in_failures": 0.23040291330127458,
-          "in_failures": 3.5973488224339376,
-          "input": "label_values_accidental",
-          "label": "accidental label values",
-          "overall": 2.4441849600139514,
-          "shift": 0.4717989355492165
-        },
-        {
-          "extreme_in_failures": 0.28073206032027637,
-          "in_failures": 19.123891320866505,
+          "extreme_in_failures": 0.27877356305868184,
+          "in_failures": 19.071542794090746,
           "input": "lines_per_request",
           "label": "lines per request",
           "overall": 13.143573157096524,
-          "shift": 0.4549994200428722
+          "shift": 0.4510165969436988
         },
         {
-          "extreme_in_failures": 0.30038750641953404,
-          "in_failures": 1.5906541432973416,
+          "extreme_in_failures": 0.29975452734935853,
+          "in_failures": 1.5904411660799818,
           "input": "annual_growth",
           "label": "annual growth",
           "overall": 1.3979206942609528,
-          "shift": 0.13787151862594205
+          "shift": 0.13771916576484333
         },
         {
-          "extreme_in_failures": 0.11382417479807648,
-          "in_failures": 9.199440703528564,
+          "extreme_in_failures": 0.11402899356213236,
+          "in_failures": 9.200711195473469,
           "input": "label_values_endpoint",
           "label": "label values endpoint",
           "overall": 8.776252690376067,
-          "shift": 0.048219670522540836
+          "shift": 0.048364435263225536
         },
         {
-          "extreme_in_failures": 0.11265698678743172,
-          "in_failures": 3.5998688161283736,
+          "extreme_in_failures": 0.11273215691723404,
+          "in_failures": 3.6013543134938177,
           "input": "label_values_status",
           "label": "label values status",
           "overall": 3.5492131327039242,
-          "shift": 0.014272370108655119
+          "shift": 0.014690912841903714
         },
         {
-          "extreme_in_failures": 0.09977123114991363,
-          "in_failures": 9.36997987513698,
+          "extreme_in_failures": 0.0996248436848687,
+          "in_failures": 9.369980434844685,
           "input": "metrics_sample_bytes",
           "label": "bytes per sample, compressed",
           "overall": 9.369963506986634,
-          "shift": 1.7468745032722666e-06
+          "shift": 1.8066087490442584e-06
         },
         {
-          "extreme_in_failures": 0.1003781689154489,
-          "in_failures": 32.3555718016439,
+          "extreme_in_failures": 0.10087536473530638,
+          "in_failures": 32.355574575741485,
           "input": "logs_line_bytes",
           "label": "bytes per log line, compressed",
           "overall": 32.355562777026734,
-          "shift": 2.7892011100760783e-07
+          "shift": 3.64657998241924e-07
         }
       ],
-      "share_of_futures": 0.21419,
+      "share_of_futures": 0.21591,
       "something_extreme_everywhere": 0.55056,
-      "something_extreme_share": 0.8474251832485177
+      "something_extreme_share": 0.8486406373025798
     },
     "not_in_the_model": [
       "collector_throughput_measured",

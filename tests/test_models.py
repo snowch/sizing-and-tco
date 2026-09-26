@@ -48,16 +48,20 @@ PINS = {
         "headroom_to_peak": (0.32846489726073863, 0.18552259764577544, 0.5839492207928927),
     },
     "observability-reference": {
-        "metrics_ingest": (4.691199947653698, 0.7087674746854326, 29.10375682615168),
+        "metrics_ingest": (4.690525675732987, 1.0281030534303035, 30.03000207689474),
         "logs_ingest": (44.67582461292441, 9.662904248123636, 164.16836699415467),
-        "known_ingest": (49.36702456057811, 12.455331200106434, 182.09640536115296),
-        "known_stored": (277.9276075876119, 74.61499109864353, 1301.0762787876827),
-        "active_series": (15019917.210191535, 2269388.9349276964, 93180409.27366705),
-        "label_cardinality": (76.31587707750207, 17.926983727788215, 300.4866647992642),
-        "known_storage_cost": (4084.6849441327413, 957.4699566381062, 21788.208342526315),
-        "store_fill": (0.579015849140858, 0.155447898122174, 2.710575580807672),
-        "quoted_pipeline_utilisation": (0.5142398391726887, 0.129743033334442, 1.8968375558453434),
-        "query_utilisation": (0.5686076313785159, 0.05914481544577415, 3.3746456809609255),
+        "known_ingest": (49.366350288657394, 12.754666869809254, 183.2348626083403),
+        "known_stored": (277.9043047500321, 86.01529418301705, 1330.4260841749765),
+        "active_series": (15017758.379073862, 3291520.3972351565, 96141600.67321894),
+        "label_cardinality": (76.30490810291307, 25.345525343894938, 309.3147038660808),
+        "known_storage_cost": (4084.342463762965, 1093.769977167327, 22248.388204028983),
+        "store_fill": (0.5789673015625669, 0.17919852954795218, 2.7717210086978676),
+        "quoted_pipeline_utilisation": (
+            0.5142328155068479,
+            0.13286111322717972,
+            1.9086964855035449,
+        ),
+        "query_utilisation": (0.5685259047064452, 0.07473488302392478, 3.435641712050884),
     },
 }
 
@@ -424,3 +428,55 @@ def test_what_the_fleet_costs_does_not_depend_on_what_it_holds():
         "the total would now follow the data, which means the fleet is being derived rather "
         "than decided -- the distinction `hosts` exists to make"
     )
+
+
+# -- what the build refuses -------------------------------------------------------------------
+
+
+def _verify_models():
+    """`scripts/verify-models.py` is a script, not a module, and its name has a dash in it."""
+    from importlib import util
+    from pathlib import Path
+
+    spec = util.spec_from_file_location(
+        "verify_models", Path(__file__).resolve().parent.parent / "scripts/verify-models.py"
+    )
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_a_correlation_with_no_reason_does_not_build():
+    """ch14 calls a correlation's `because` the required column; the build is what requires it."""
+    from dataclasses import replace
+
+    model = MODELS["web_service"]
+    assert model.correlations, "the web service model declares the correlations this relies on"
+    unexplained = [{**pair, "because": None} for pair in model.correlations]
+    problems: list[str] = []
+    _verify_models().check_model(replace(model, correlations=tuple(unexplained)), problems)
+    refused = [p for p in problems if "correlation between" in p]
+    assert len(refused) == len(unexplained), problems
+
+
+def test_a_node_with_a_blank_unit_does_not_load(tmp_path):
+    """A blank unit could mean a pure ratio or an undecided one. It used to arrive as the unit
+    "None", and the error named a word the reader never typed."""
+    from sizing.dsl import ModelError, load_model
+
+    (tmp_path / "model.yaml").write_text(
+        """
+model: blank
+nodes:
+  per_host:
+    kind: input
+    decided: you
+    unit:
+    value: 3
+    provenance: {kind: assumption, source: test}
+outputs: [per_host]
+"""
+    )
+    with pytest.raises(ModelError, match="'per_host' declares no unit") as refused:
+        load_model(tmp_path / "model.yaml")
+    assert "None" not in str(refused.value)

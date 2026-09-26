@@ -11,4 +11,4 @@
 | host power | input | $311,695 | $321,549 | $9,854 |
 | PUE | input | $313,346 | $319,934 | $6,588 |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

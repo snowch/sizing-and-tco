@@ -11,4 +11,4 @@
 | network price per host | input | $1,969,541 | $2,046,600 | $77,059 |
 | host power | input | $1,979,689 | $2,028,960 | $49,271 |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

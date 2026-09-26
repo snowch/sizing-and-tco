@@ -9,4 +9,4 @@
 | utilisation at the busy hour | 0.64 | 30% | 0.70 | 1.00 | ok | 46% | 30% |
 | fraction of the fleet doing nothing useful | 0.32 | 50% | 0.50 | 1.00 | ok | 1% | 0% |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

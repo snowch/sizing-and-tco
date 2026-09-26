@@ -14,6 +14,7 @@ it: the alternative is a reader pressing Check and being told the test could not
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -90,6 +91,39 @@ def test_what_a_chapter_ships_is_enough_to_run_every_one_of_its_problems(slug, t
                     f"{report['test']}::{entry['name']} is scaffolding and does not pass over "
                     f"what the page ships:\n{entry['message']}"
                 )
+
+
+def test_a_failed_check_does_not_print_the_answer(tmp_path):
+    """pytest's assertion rewriting explains a failed `==` with both sides, so a test comparing the
+    reader's number against `pytest.approx(expected)` showed the expected value under the Check.
+    The page runs pytest with plain assertions: a failure says the test's own message."""
+    here = tmp_path / "tests" / "probe"
+    here.mkdir(parents=True)
+    (tmp_path / "tests" / "__init__.py").write_text("")
+    (here / "__init__.py").write_text("")
+    (here / "stubs.py").write_text("def answer():\n    return 1.0\n")
+    (here / "test_problem_1_probe.py").write_text(
+        "import pytest\n"
+        "from tests.probe.stubs import answer\n\n"
+        "def oracle():\n    return 4817.25\n\n"
+        "@pytest.mark.problem\n"
+        "def test_answer():\n"
+        "    assert answer() == pytest.approx(oracle()), 'not the figure the model gives'\n"
+    )
+    run = subprocess.run(
+        [sys.executable, "-c", SCRIPT, str(tmp_path), "tests/probe/test_problem_1_probe.py"],
+        capture_output=True,
+        text=True,
+        cwd=tmp_path,
+        env={**os.environ, "PYTHONPATH": str(ROOT)},
+        timeout=120,
+    )
+    assert run.returncode == 0, run.stderr[-3000:]
+    (report,) = json.loads(run.stdout)
+    (entry,) = report["tests"]
+    assert entry["outcome"] == "failed"
+    assert "not the figure the model gives" in entry["message"]
+    assert "4817" not in entry["message"] and "4817" not in report["output"], report["output"]
 
 
 def test_every_problem_test_grades_a_piece_of_the_stubs_file_or_a_file():

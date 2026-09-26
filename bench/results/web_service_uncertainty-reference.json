@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "456e2089b7ca86ae",
+  "code_fingerprint": "762b79bb1db4b0f8",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/07-uncertainty/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-26T18:37:32+00:00",
-  "git_revision": "7a2f2fd",
+  "generated_at": "2026-09-26T19:29:44+00:00",
+  "git_revision": "24211b2",
   "kind": "model",
   "name": "web_service_uncertainty-reference",
   "produced_by": {
@@ -46,7 +46,7 @@
       "ram_for_service": 0.001073741824,
       "stored_data": 1.0
     },
-    "generated_at": "2026-09-26T18:37:32+00:00",
+    "generated_at": "2026-09-26T19:29:44+00:00",
     "model": "web_service_uncertainty",
     "nodes": {
       "annual_growth": {
@@ -201,7 +201,7 @@
         "point": 1.338656042454521,
         "provenance": {
           "kind": "assumption",
-          "source": "ch04 \u2014 lognormal because growth compounds and cannot be negative. The p10/p90 say: surprised below 12% a year, surprised above 60%. One factor for requests and for records, because users drive both."
+          "source": "ch04 \u2014 lognormal because growth compounds and the factor cannot be zero or less. One future in ten grows by less than 12% a year, and one in ten by more than 60%; outside that range you would be surprised. One factor for requests and for records, because users drive both."
         },
         "row": 1,
         "slider": {
@@ -968,7 +968,7 @@
         "point": 9900.495061637923,
         "provenance": {
           "kind": "assumption",
-          "source": "ch04 \u2014 the busy hour, not the daily mean. Triangular because this is an engineer's min/likely/max and pretending to more shape than that would be invention."
+          "source": "ch04 \u2014 the busy hour, not the daily mean. Triangular, because this is an engineer's lowest, most likely and highest values; claiming more precision would be invention."
         },
         "row": 0,
         "slider": {
@@ -1559,7 +1559,7 @@
         "point": 15.0,
         "provenance": {
           "kind": "assumption",
-          "source": "stated workload (ch02) \u2014 what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression"
+          "source": "The service owners estimate what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression. It has not been counted yet, and counting it would turn the estimate into a fact."
         },
         "row": 3,
         "slider": {

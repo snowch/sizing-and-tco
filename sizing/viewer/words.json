@@ -20,7 +20,8 @@
     "resample_done": "Resampled: {samples} samples, seed {seed}",
     "resample_with": ", with {held} held. ",
     "resample_after": "The intervals and the histograms below are for these settings. ",
-    "resample_failed": "The sampler did not run here: {error} — the stamped intervals stand."
+    "resample_failed": "The sampler did not run here: {error} — the stamped intervals stand.",
+    "log_bins": " · each bar covers the same multiple of the one before, on a logarithmic axis"
   },
   "plain": {
     "band": "Band",
@@ -36,6 +37,7 @@
     "single": "a single value",
     "lognormal": "1 future in 10 below {p10}, 1 in 10 above {p90}",
     "triangular": "from {minimum} to {maximum}, most likely {likely}",
-    "uniform": "anywhere from {minimum} to {maximum}"
+    "uniform": "anywhere from {minimum} to {maximum}",
+    "log_bins": " · each bar covers the same multiple of the one before, not the same width"
   }
 }

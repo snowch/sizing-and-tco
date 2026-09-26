@@ -4,6 +4,7 @@
 |---|---|---|
 | horizon periods (`horizon_periods`) | `horizon / one_year` |  |
 | growth factor (`growth_factor`) | `annual_growth ** horizon_periods` |  |
+| accidental label values (`label_values_accidental`) | `1 + label_values_accidental_extra` |  |
 | label cardinality (`label_cardinality`) | `label_values_endpoint * label_values_status * label_values_accidental` |  |
 | active series (`active_series`) | `hosts * base_metrics_per_host * label_cardinality * growth_factor` | series |
 | sample rate (`sample_rate`) | `one_sample_per_series / scrape_interval` | sample/series/second |

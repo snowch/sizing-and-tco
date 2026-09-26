@@ -29,7 +29,7 @@ nodes:
     note: >-
       No band: an estate is a thing you can count, and this one has been counted. What it does
       next is growth_factor's business, not this node's.
-    provenance: {kind: assumption, source: "stated estate size (ch02)"}
+    provenance: {kind: assumption, source: "the estate's host count as stated by its operators"}
     range: [50, 3000]
 
   request_rate:
@@ -39,7 +39,7 @@ nodes:
     distribution: {triangular: {minimum: 8000.0, likely: 25000.0, maximum: 90000.0}}
     provenance:
       kind: assumption
-      source: "ch03 — the busy hour across the estate, not the daily mean. Triangular: a
+      source: "ch04 — the busy hour across the estate, not the daily mean. Triangular: a
         minimum, a likely and a maximum is the whole of what a dashboard gives you, and the
         maximum is the busiest hour anybody has looked at rather than the busiest one there
         will be"
@@ -107,23 +107,35 @@ nodes:
         model whose bounds are genuinely hard: a request cannot carry a status the code does
         not emit"
 
-  label_values_accidental:
+  label_values_accidental_extra:
     kind: input
     decided: outside
     unit: dimensionless
-    label: accidental label values
+    label: extra accidental label values
     note: >-
-      The label nobody planned. A pod name under a rolling deploy, a customer id added during an
-      incident, a version string. Lognormal and wide, because the failure mode is multiplicative:
-      whatever it is, it multiplies every series that carries it, and the distribution has to be
-      able to express "usually nothing, occasionally catastrophic".
-    distribution: {lognormal: {p10: 1.0, p90: 6.0}}
+      The label nobody planned: a pod name under a rolling deploy, a customer id added during an
+      incident, a version string. Counted from the second value, because a label with one value
+      multiplies the series count by one, so this input can only add series, never take any away.
+      Lognormal and wide, because the failure mode is multiplicative: whatever the label is, it
+      multiplies every series that carries it, and the band has to span from usually a little to
+      occasionally catastrophic.
+    distribution: {lognormal: {p10: 0.42, p90: 5.0}}
     provenance:
       kind: assumption
-      source: "ch08 — the cardinality explosion, as a distribution rather than as a warning.
-        Lognormal because this one has no ceiling: a label carrying a user id multiplies the
-        series count by a number nobody chose, and a triangular would assert a maximum that
-        does not exist"
+      source: >-
+        ch08 — the cardinality explosion, as a band rather than as a warning. Lognormal because this
+        one has no ceiling: a label carrying a user id multiplies the series count by a number
+        nobody chose, and a triangular would assert a maximum that does not exist. Counted from the
+        second value, so the factor it feeds is never below one.
+
+  label_values_accidental:
+    kind: derived
+    unit: dimensionless
+    label: accidental label values
+    note: >-
+      One plus the extra values: the number of values the accidental label takes. That is the factor
+      it multiplies the series count by, and it is never below one.
+    formula: 1 + label_values_accidental_extra
 
   label_cardinality:
     kind: derived
@@ -131,9 +143,10 @@ nodes:
     label: label cardinality
     note: >-
       A product of uncertain counts, which is why it is lognormal-ish whether or not anybody chose
-      that, and why it dominates the tornado for every metrics figure in this model. Multiplying
-      three quantities that are each uncertain by a factor of three gives one uncertain by a
-      factor of twenty-seven, and no amount of care about the other inputs recovers that.
+      that. One of its inputs, the accidental label, leads the tornado for every metrics figure in
+      this model. Its band is wider than any one count's, narrower than their widths multiplied,
+      because the three counts rarely sit at their high ends together. No amount of care about the
+      other inputs narrows it.
     formula: label_values_endpoint * label_values_status * label_values_accidental
 
   # -- chain one: metrics ------------------------------------------------------------------------
@@ -354,8 +367,8 @@ nodes:
     note: >-
       The same quantity as the node above, taken rather than quoted. It needs the reference
       machine (`rig`) and nobody has run it, so the ceiling built on it is absent while the
-      ceiling built on the vendor's claim is not. Reading those two rows next to each other is
-      most of ch03.
+      ceiling built on the vendor's claim is not. This node sits beside
+      `collector_throughput_quoted` in ch03, so the pipeline capacity each gives can be compared.
     result: collector-throughput-per-core
 
   quoted_pipeline_capacity:
@@ -545,7 +558,7 @@ outputs:
 
 correlations:
   - a: annual_growth
-    b: label_values_accidental
+    b: label_values_accidental_extra
     rho: 0.5
     because: >-
       A platform that is growing is a platform that is being changed, and labels arrive with

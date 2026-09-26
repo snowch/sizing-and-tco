@@ -191,6 +191,21 @@ def href_for(source: str) -> str:
     return f"{stem.replace('_', '-')}.html"
 
 
+def page_names(index: dict[str, dict], sources: list[str]) -> dict[str, str]:
+    """Where a cross-reference lands: MyST's slug for each page, mapped to where it is published.
+
+    A link's URL ends in the slug MyST gave the page, not in the name this build publishes it
+    under, and for two pages those differ. MyST calls the first page in the table of contents
+    `index`, and this build publishes the cover as index.html and the preface as preface.html.
+    Keyed by the published name, a link to the preface opened the cover.
+    """
+    return {
+        str(index[s].get("slug") or Path(href_for(s)).stem): href_for(s)
+        for s in sources
+        if s in index
+    }
+
+
 #: Node types whose text is never a glossary link: code, headings, and text that is already a
 #: link or a title.
 UNLINKED = frozenset(
@@ -1869,7 +1884,7 @@ def main() -> int:
 
     # What each page is called here, so a cross-reference resolves to this build rather than to
     # the themed site it was parsed for.
-    renderer.PAGES = {Path(href_for(s)).stem: href_for(s) for s in wanted}
+    renderer.PAGES = page_names(index, wanted)
 
     args.out.mkdir(parents=True, exist_ok=True)
     favicon = ROOT / "public" / "favicon.svg"

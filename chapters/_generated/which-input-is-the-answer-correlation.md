@@ -4,7 +4,7 @@
 |---|---|---:|---:|---:|
 | `web_service` | tco | 7.077e+05 | 6.94e+05 | +2.0% |
 | `web_service` | hosts_recommended | 105 | 102 | +2.9% |
-| `observability` | known_ingest | 84.82 | 72.38 | +17.2% |
-| `observability` | query_utilisation | 1.658 | 1.648 | +0.6% |
+| `observability` | known_ingest | 85.24 | 72.74 | +17.2% |
+| `observability` | query_utilisation | 1.68 | 1.674 | +0.4% |
 
 *Source — [`correlation-effect`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/correlation-effect.json) · `sizing.mc` — Iman-Conover rank correlation*

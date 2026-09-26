@@ -11,4 +11,4 @@
 | fully loaded salary | input | 206,269 | 206,269 | 0 |
 | host price | input | 206,269 | 206,269 | 0 |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

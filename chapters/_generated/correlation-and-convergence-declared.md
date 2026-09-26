@@ -5,4 +5,4 @@
 | peak_request_rate_t0 | service_demand | +0.40 | The unhappy one. A busier service is usually a slower one per request — caches miss more, locks are held longer, the garbage collector runs while somebody is waiting. Treating the two as independent understates the tail of every figure in this model, and it understates it exactly when the fleet is busiest. |
 | host_price | network_price_per_host | +0.50 | Both are quoted by the same supply chain in the same quarter. A year when hosts are scarce is usually a year when optics are, and treating them as independent narrows the interval on capital cost by pretending one can save you from the other. |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

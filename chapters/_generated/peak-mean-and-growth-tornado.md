@@ -11,4 +11,4 @@
 | crosstalk | input | 54 | 54 | 0 |
 | electricity price | input | 54 | 54 | 0 |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*
