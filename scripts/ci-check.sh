@@ -10,6 +10,7 @@
 # rather than a preview of one that could only be built by a runner with a template registry in
 # reach. What it cannot check is what only a reader's browser can answer: whether Python starts
 # in their tab, and what a page looks like.
+# `make review` asks a browser those questions, outside CI because it needs the network.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."

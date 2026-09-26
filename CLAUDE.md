@@ -89,6 +89,7 @@ make models    # evaluate and stamp every model
 make measure   # re-take the corpus constants
 make book      # build the site and serve it
 make machine   # what this computer is, and whether it may take a rig measurement
+make review    # every published page in a browser, pressed and measured: half an editorial review
 ```
 
 ## The five invariants

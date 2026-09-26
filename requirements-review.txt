@@ -1,0 +1,9 @@
+# The browser review, scripts/review-pages.py. Not in requirements-dev.txt: CI does not run it,
+# because it needs the network and a browser, and it answers what CI cannot -- what a reader's
+# browser does with the site. Versions verified 2026-09-26.
+#
+# Playwright drives a Chromium it downloads separately:
+#   python3 -m playwright install chromium
+# unless one is already provided, as it is where PLAYWRIGHT_BROWSERS_PATH names a directory
+# holding the build this version expects.
+playwright==1.56.0

@@ -237,6 +237,15 @@ matters: could a competent engineer understand this paragraph on the first readi
 split the sentence or the paragraph. The introduction was rewritten that way, and it is the
 example to hold a page against.
 
+Then read it the way it publishes. `make review ARGS="--only <page> --problems"` opens the page at
+five widths and in the dark theme, presses every control on it, and writes
+`_build/review/report.md`: what a phone hides, what Escape fails to close, what a model shows at
+the ends of its sliders, and whether each problem's Check runs. It cannot tell you which of those
+matter. A hidden column matters when the prose points at it, so read the report beside the page.
+Put a plausible wrong answer to each problem in a folder outside the repository, pass it with
+`--attempts`, and read what the page says back: that is the feedback a reader who got it wrong
+gets.
+
 ## Figures
 
 Two kinds, both declared in `bench/figures.py` and both rendered by `scripts/render-figures.py`:
@@ -310,6 +319,7 @@ A problem is a stub the reader edits and a test that passes only when they are r
 - [ ] Edited against `STYLE.md`: short sentences, one idea per paragraph, the point stated first,
       and its closing checklist run over the page
 - [ ] Cross-references and citations resolve; `./scripts/ci-check.sh` clean
+- [ ] `make review` run on the page, and every finding in its report fixed or judged harmless
 - [ ] `[DRAFT]` removed
 
 Not when it reaches a length. There is no page target: judge a section at a time.

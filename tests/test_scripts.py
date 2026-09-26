@@ -104,6 +104,24 @@ JS_TEMPLATES = (
     ]
     + [("bench/theme.py", name) for name in ("_PARENT", "FRAME")]
     + [("bench/reading.py", "_PARENT")]
+    + [
+        ("scripts/review-pages.py", name)
+        for name in (
+            "LAYOUT",
+            "NAMES",
+            "CONTRAST",
+            "POINTER",
+            "ICON_FONT",
+            "LINKS",
+            "VIEWER_LAYOUT",
+            "VIEWER_PRESS",
+            "FUTURES_PRESS",
+            "UNDER",
+            "EXPAND_HOLDS",
+            "PROBLEM_LABEL",
+            "TYPE_IN",
+        )
+    ]
 )
 
 
@@ -1331,3 +1349,51 @@ def test_the_contents_list_holds_every_section_and_what_is_in_it():
         )
     first = re.search(r"(?m)^## (.+)$", (ROOT / "index.md").read_text()).group(1)
     assert build.contents_of(index["index.md"])[0]["text"] == first.strip()
+
+
+def review_pages():
+    """``scripts/review-pages.py``, imported, without the browser it drives."""
+    from importlib import util
+
+    spec = util.spec_from_file_location("review_pages", ROOT / "scripts" / "review-pages.py")
+    module = util.module_from_spec(spec)
+    sys.modules[spec.name] = module  # its dataclasses look their module up while they are built
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_review_walks_every_page_a_reader_can_open():
+    """A review that skipped a page would report it clean, which is worse than not reviewing it.
+
+    The walk is ``myst.yml``'s table of contents, so a page added there is reviewed without
+    anybody remembering to add it; this holds the walk to the book's own list of what it has.
+    """
+    from bench.outline import APPENDICES, PART_PAGES
+
+    walked = review_pages().pages()
+    sources = {source for source, _ in walked}
+    book = {"index.md", "cover.md", *(c.path for c in CHAPTERS)}
+    book |= {a.path for a in APPENDICES} | {p.path for p in PART_PAGES}
+    assert book <= sources, f"never reviewed: {sorted(book - sources)}"
+    names = [name for _, name in walked]
+    assert len(names) == len(set(names)), "two pages publish under one name"
+
+
+def test_the_review_lists_its_pages_without_a_browser():
+    """CI installs no browser, so everything short of the walk works without Playwright."""
+    listed = subprocess.run(
+        [sys.executable, "scripts/review-pages.py", "--list", "--only", "point-estimates"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert listed.returncode == 0, listed.stderr[-600:]
+    assert listed.stdout.split() == ["point-estimates.html", "chapters/point_estimates.md"]
+
+    unknown = subprocess.run(
+        [sys.executable, "scripts/review-pages.py", "--list", "--only", "no-such-page"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert unknown.returncode == 2 and "no-such-page" in unknown.stderr

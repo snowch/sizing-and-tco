@@ -101,6 +101,12 @@ book:  ## Build the site and serve it at localhost:3000 (re-run to pick up an ed
 	@echo
 	@cd _build/html && $(PYTHON) -m http.server 3000
 
+.PHONY: review
+review:  ## Walk every published page in a browser at five widths, press everything, and report
+	@echo '  ARGS passes options, for instance ARGS="--base http://localhost:3000/ --only point-estimates".'
+	@echo '  The report is the mechanical half of a review, and says at its top what it cannot see.'
+	$(PYTHON) scripts/review-pages.py $(ARGS)
+
 .PHONY: chapter
 chapter:  ## Regenerate any missing chapter stubs (never touches written prose)
 	$(PYTHON) scripts/new-chapter.py --all
