@@ -151,6 +151,39 @@ def test_a_table_drawing_on_two_results_names_both():
         )
 
 
+def test_the_unmeasured_box_counts_what_waits_not_what_is_missing():
+    """A missing constant lists itself in its own ``blocked_by``, so counting every node with one
+    counted the two observability constants as their own downstream: eight where six wait."""
+    from bench.stamp import load_result
+    from bench.tables import not_yet_measured
+
+    for path in sorted((ROOT / "bench" / "results").glob("*.json")):
+        payload = load_result(path.stem).get("summary") or {}
+        missing = payload.get("unmeasured") or []
+        if not missing:
+            continue
+        waiting = [
+            name
+            for name, node in payload["nodes"].items()
+            if node.get("blocked_by") and name not in missing
+        ]
+        assert f"\n{len(waiting)} node(s) downstream" in not_yet_measured(path.stem), (
+            f"{path.stem}: the box does not count the {len(waiting)} node(s) that wait on "
+            "the missing constants"
+        )
+
+
+def test_two_scenarios_of_one_model_count_its_missing_constants_once():
+    """The scenarios table names two runs of the observability model, which share their two
+    missing constants; the Source line said four."""
+    from bench.stamp import load_result
+    from bench.tables import source
+
+    one = load_result("observability-reference")["produced_by"]["unmeasured"]
+    both = source("observability-reference", "observability-knobs_turned_down")
+    assert one and f"**{len(one)} constant(s) not yet measured**" in both, both
+
+
 def test_every_declared_figure_is_included_somewhere():
     """A figure nobody includes is rendered on every build and read by nobody.
 

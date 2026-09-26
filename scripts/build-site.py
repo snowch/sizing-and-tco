@@ -44,7 +44,7 @@ from bench.reading import BUTTON as TEXT_BUTTON  # noqa: E402
 from bench.reading import PARENT as TEXT_PARENT  # noqa: E402
 from bench.stamp import shown  # noqa: E402
 from bench.tables import GLOSSARY  # noqa: E402
-from bench.theme import BUTTON, PARENT, both_ways  # noqa: E402
+from bench.theme import BUTTON, FRAME, PARENT, both_ways  # noqa: E402
 from sizing.playground.toolkit import (  # noqa: E402
     BOOT,
     PYODIDE,
@@ -206,10 +206,12 @@ def page_names(index: dict[str, dict], sources: list[str]) -> dict[str, str]:
     }
 
 
-#: Node types whose text is never a glossary link: code, headings, and text that is already a
-#: link or a title.
+#: Node types whose text is never a glossary link: code, headings, text that is already a link
+#: or a title, and tables. A table is data, not prose, and the vocabulary test skips it for the
+#: same reason: its cells use words in the senses a model needs (bytes per sample, a trace
+#: sample rate), and a column heading is no place to send a reader away.
 UNLINKED = frozenset(
-    {"inlineCode", "code", "link", "crossReference", "heading", "admonitionTitle", "image"}
+    {"inlineCode", "code", "link", "crossReference", "heading", "admonitionTitle", "image", "table"}
 )
 
 
@@ -255,13 +257,21 @@ def _link_in(node, pattern: re.Pattern, linkable: dict[str, str], done: set[str]
     children = node.get("children")
     if not isinstance(children, list):
         return
-    out = []
+    out, exempt = [], False
     for child in children:
-        if isinstance(child, dict) and child.get("type") == "text":
+        if exempt:
+            # `% word-ok:` says the block after it uses a word in another sense, a scrape's
+            # samples or a scrape interval, so a link to the glossary's meaning would be wrong.
+            # The block keeps its words as they are, and the next mention gets the link.
+            out.append(child)
+            exempt = False
+        elif isinstance(child, dict) and child.get("type") == "text":
             out.extend(_split_text(child, pattern, linkable, done))
         else:
             _link_in(child, pattern, linkable, done)
             out.append(child)
+        if isinstance(child, dict) and child.get("type") == "comment":
+            exempt = str(child.get("value", "")).strip().startswith("word-ok:")
     node["children"] = out
 
 
@@ -1861,6 +1871,48 @@ def crawlables(out: Path, pages: list[str]) -> None:
     (out / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {site}/sitemap.xml\n")
 
 
+#: The files Appendix H's checker lays out beside the toolkit: the verifier the build runs, and
+#: what it imports from the harness. The same three harness files a problem that runs the
+#: verifier ships, for the same reason (sizing/playground/toolkit.py, ``problem_files``).
+CHECKER_FILES = (
+    "scripts/verify-models.py",
+    "bench/__init__.py",
+    "bench/stamp.py",
+    "bench/measure.py",
+)
+
+
+def checker_page() -> str:
+    """Appendix H's model checker: a pasted file, checked by the toolkit in the reader's tab.
+
+    It carries the toolkit, the verifier, and every stamped measurement a model file can name,
+    so a measured constant reads the value the desk reads rather than showing as not yet
+    measured. The model results stay behind: a model file cannot name one.
+    """
+    measurements = {
+        path.name: path.read_text()
+        for path in sorted((ROOT / "bench" / "results").glob("*.json"))
+        if json.loads(path.read_text()).get("target") in ("corpus", "rig", "estate")
+    }
+    toolkit = {
+        "pyodide": PYODIDE,
+        "modules": sources(),
+        "results": measurements,
+        "wheels": wheels(),
+        "files": {name: (ROOT / name).read_text() for name in CHECKER_FILES},
+    }
+    viewer = ROOT / "sizing" / "viewer"
+    return (
+        (viewer / "checker.html")
+        .read_text()
+        .replace("__CSS__", both_ways((viewer / "checker.css").read_text()))
+        .replace("__FRAME__", FRAME)
+        .replace("__BOOT__", BOOT)
+        # Inside a <script> element, "</" would end it early; JSON allows the escape.
+        .replace("__TOOLKIT__", json.dumps(toolkit).replace("</", "<\\/"))
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
@@ -1890,12 +1942,9 @@ def main() -> int:
     favicon = ROOT / "public" / "favicon.svg"
     if favicon.exists():
         (args.out / "favicon.svg").write_text(favicon.read_text())
-    # Copy the custom model viewer to the models directory so the appendix can link to it
-    custom_viewer = ROOT / "public" / "custom-model-viewer.html"
-    if custom_viewer.exists():
-        models_dir = args.out / "models"
-        models_dir.mkdir(parents=True, exist_ok=True)
-        (models_dir / "custom-model-viewer.html").write_text(custom_viewer.read_text())
+    # Appendix H's model checker, which the appendix embeds from /models/.
+    (args.out / "models").mkdir(parents=True, exist_ok=True)
+    (args.out / "models" / "custom-model-viewer.html").write_text(checker_page())
     # The index is taken from every page before any page is rendered: rendering promotes the
     # headings, and the index reads the depths MyST wrote.
     records: list[dict] = []

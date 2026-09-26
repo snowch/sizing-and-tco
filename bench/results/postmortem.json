@@ -9,8 +9,8 @@
     "no_observation_was_used": "nothing here is a measurement of a real outcome. It is the model's own futures, filtered to the ones in which the design failed \u2014 which is what makes it reproducible and also what bounds what it can say",
     "read_the_base_rate": "`something_extreme_share` must be read against `something_extreme_everywhere`. Even with three uncertain inputs feeding a ceiling, one of them is beyond its own p90 in a fair share of all futures, failure or not, and the share rises with every input added. A post-mortem that does not say so has discovered the number of inputs"
   },
-  "generated_at": "2026-09-26T19:31:08+00:00",
-  "git_revision": "24211b2",
+  "generated_at": "2026-09-26T20:05:38+00:00",
+  "git_revision": "3c118c9",
   "kind": "measurement",
   "name": "postmortem",
   "produced_by": {

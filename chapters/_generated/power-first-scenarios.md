@@ -4,7 +4,7 @@
 |---|---:|---:|
 | hosts the model recommends | 54<br>*20 to 230* | 54<br>*20 to 230* |
 | hosts in the fleet | 54 | 36 |
-| five-year total cost of ownership | $2,002,083<br>*$1,508,230 to $2,923,724* | $1,617,743<br>*$1,189,939 to $2,388,434* |
+| total cost of ownership | $2,002,083<br>*$1,508,230 to $2,923,724* | $1,617,743<br>*$1,189,939 to $2,388,434* |
 | cost per million requests | $1.82<br>*$0.55 to $5.98* | $1.47<br>*$0.44 to $4.84* |
 | cost per stored TB per month | $839.64<br>*$305.33 to $2,108* | $678.46<br>*$244.15 to $1,707* |
 | capex | $421,214<br>*$272,130 to $658,773* | $280,810<br>*$181,420 to $439,182* |

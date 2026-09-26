@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "7a2f1f8f785a1d1f",
+  "code_fingerprint": "a5929dd5cfc80f80",
   "code_sources": [
     "bench/run_models.py",
     "models/observability/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-26T19:29:29+00:00",
-  "git_revision": "24211b2",
+  "generated_at": "2026-09-26T20:02:09+00:00",
+  "git_revision": "3c118c9",
   "kind": "model",
   "name": "observability-reference",
   "produced_by": {
@@ -60,7 +60,7 @@
       }
     ],
     "currency": "USD",
-    "description": "The book's second model, and the counterweight to the web service. Three multiplicative chains hang off the same few roots, so they are correlated whether or not anybody says so; label cardinality is a product of uncertain counts and therefore dominates everything downstream of it; the control knobs are sampling and retention rather than money; and there are three separate outputs with three separate ceilings, which no single number can summarise.\nIt also has a hole in it. Spans per request is a property of somebody's instrumented application, not of any corpus or any machine, so this repository cannot measure it \u2014 and the whole traces chain is therefore shown as unmeasured rather than filled in with a plausible number. That is not a gap waiting to be tidied up. It is what an honest sizing model looks like before the measurement is taken, and it is on a published page for exactly that reason.",
+    "description": "The book's second model, and the counterweight to the web service. Three chains of multiplications, metrics, logs and traces, share their roots, so they move together whether or not the model says so. Label cardinality is a product of uncertain counts, and it drives the active series count and the query path. The control knobs are sampling and retention, not money. Three tiers\u2014ingest, retention store and query path\u2014carry four ceilings between them, and no single number summarises them.\nIt has a gap in it: two measured constants have no measurement yet. Spans per request is an `estate` observation: only a running system with instrumented applications can give it, not a body of data or a machine. The traces chain needs it. Collector throughput per core is a `rig` measurement, taken on the reference machine, and the measured ingest ceiling needs it. The figures that depend on them are shown as not yet measured rather than filled in with a plausible number, because a plausible number would print the same as a measured one.",
     "factors": {
       "active_series": 1.0,
       "growth_factor": 1.0,
@@ -99,7 +99,7 @@
       "traces_ingest": 1e-06,
       "traces_stored": 0.0864
     },
-    "generated_at": "2026-09-26T19:29:29+00:00",
+    "generated_at": "2026-09-26T20:02:08+00:00",
     "model": "observability",
     "nodes": {
       "active_series": {
@@ -960,7 +960,7 @@
         "kind": "derived",
         "label": "ingest, metrics and logs only",
         "layer": 5,
-        "note": "Metrics plus logs, and deliberately *not* the total. It is a lower bound with a whole chain missing from it, and ch19 is about exactly this shape of error: a number that is correct arithmetic over an incomplete structure looks identical to a number that is right.",
+        "note": "Metrics plus logs, and deliberately not the total. The traces chain is missing because spans per request is not measured yet, so it is too low and serves as a lower bound. ch20 is about this shape of error: correct arithmetic over an incomplete structure looks identical to a number that is right.",
         "point": 49.366350288657394,
         "row": 2,
         "summary": {
@@ -1492,7 +1492,7 @@
         "kind": "derived",
         "label": "label cardinality",
         "layer": 2,
-        "note": "A product of uncertain counts, which is why it is lognormal-ish whether or not anybody chose that. One of its inputs, the accidental label, leads the tornado for every metrics figure in this model. Its band is wider than any one count's, narrower than their widths multiplied, because the three counts rarely sit at their high ends together. No amount of care about the other inputs narrows it.",
+        "note": "It is the product of three uncertain counts: the endpoint label's values, the status label's values, and the accidental label's values. Its lognormal-ish shape comes from the multiplying, not from anyone choosing it. The accidental label leads the tornado for the active series count, metrics ingest and query path utilisation, and the product's band is wider than any one count's but much narrower than the counts' bands multiplied together, because the model draws them independently, so a high one usually meets middling or low ones. Appendix F sets each factor's range beside the product's.",
         "point": 76.30490810291307,
         "row": 8,
         "summary": {
@@ -2002,7 +2002,7 @@
         "point": 8.775027839678176,
         "provenance": {
           "kind": "assumption",
-          "source": "distinct routes appearing as a label value. Triangular because somebody could go and count them this afternoon; the maximum is the routes that exist today, and a new service adds to it"
+          "source": "distinct routes appearing as a label value. Triangular because the routes can be counted, so the range is known; the maximum is the routes that exist today, and a new service adds to it"
         },
         "row": 3,
         "summary": {
@@ -2171,7 +2171,7 @@
         "point": 3.550510257216822,
         "provenance": {
           "kind": "assumption",
-          "source": "distinct status classes kept as a label. Triangular, and the one input in this model whose bounds are genuinely hard: a request cannot carry a status the code does not emit"
+          "source": "distinct status classes kept as a label. Triangular, and its bounds are firm unlike those of any other input in the model, because a request cannot carry a status the code does not emit"
         },
         "row": 4,
         "summary": {
@@ -2367,7 +2367,7 @@
         "point": 1.0,
         "provenance": {
           "kind": "assumption",
-          "source": "a control knob (ch12): drop and aggregation rules"
+          "source": "a control knob: drop and aggregation rules"
         },
         "row": 3,
         "slider": {
@@ -2887,8 +2887,8 @@
         "layer": 3,
         "measured": {
           "corpus": "bench.measure.log_lines \u2014 JSON service logs, five templates, six services, 128-bit trace ids, seeds 0-7",
-          "fingerprint": "e08fbd954e7a4c8d",
-          "generated_at": "2026-09-19T12:34:08+00:00",
+          "fingerprint": "7d2ff90384f79f4a",
+          "generated_at": "2026-09-26T19:30:37+00:00",
           "sd": 0.004369766640344477,
           "stack": "python zlib (DEFLATE level 6)",
           "value": 32.35555625
@@ -2921,7 +2921,7 @@
         "point": 30.0,
         "provenance": {
           "kind": "assumption",
-          "source": "a control knob (ch12)"
+          "source": "a control knob"
         },
         "row": 0,
         "slider": {
@@ -3328,7 +3328,7 @@
         "point": 400.0,
         "provenance": {
           "kind": "assumption",
-          "source": "a control knob (ch12)"
+          "source": "a control knob"
         },
         "row": 1,
         "slider": {
@@ -3480,8 +3480,8 @@
         "layer": 3,
         "measured": {
           "corpus": "bench.measure.metric_samples \u2014 400 series x 500 points, 15/30/60s scrape intervals with occasional jitter, lognormal random-walk values, seeds 0-7",
-          "fingerprint": "e08fbd954e7a4c8d",
-          "generated_at": "2026-09-19T12:34:09+00:00",
+          "fingerprint": "7d2ff90384f79f4a",
+          "generated_at": "2026-09-26T19:30:39+00:00",
           "sd": 0.0009068057272558302,
           "stack": "this repository's encoder, not any product's",
           "value": 9.369958333333333
@@ -4698,7 +4698,7 @@
         "point": 38376.36200343877,
         "provenance": {
           "kind": "assumption",
-          "source": "ch04 \u2014 the busy hour across the estate, not the daily mean. Triangular: a minimum, a likely and a maximum is the whole of what a dashboard gives you, and the maximum is the busiest hour anybody has looked at rather than the busiest one there will be"
+          "source": "ch04 \u2014 the busy hour across the estate, not the daily mean. Triangular, because a dashboard gives a lowest, a typical and a highest value and nothing more. The maximum is the busiest hour on record, not the busiest there will be"
         },
         "row": 7,
         "slider": {
@@ -4756,7 +4756,7 @@
         "point": 30.0,
         "provenance": {
           "kind": "assumption",
-          "source": "a control knob (ch12): doubling it halves the metrics chain and loses resolution that cannot be recovered afterwards"
+          "source": "a control knob: doubling it halves the metrics chain and loses resolution that cannot be recovered afterwards"
         },
         "row": 5,
         "slider": {
@@ -4923,7 +4923,7 @@
         "kind": "derived",
         "label": "series per query",
         "layer": 3,
-        "note": "The same cardinality node that drives the metrics ingest chain drives this one too, by a different route: a label that multiplies the series a scrape produces also multiplies the series a query has to walk past to ignore. That is why one accidental label breaks two ceilings at once, and why turning down scrape interval and retention \u2014 which fix the first \u2014 does nothing at all for the second (ch12).",
+        "note": "The same cardinality node that drives the metrics ingest chain drives this one too, by a different route: a label that multiplies the series a scrape produces also multiplies the series a query has to walk past to ignore. That is why one accidental label breaks two ceilings at once, and why turning down scrape interval and retention \u2014 which fix the first \u2014 does nothing at all for the second.",
         "point": 54120.30724680239,
         "row": 10,
         "summary": {
@@ -5323,7 +5323,7 @@
         "point": 14.69693845669907,
         "provenance": {
           "kind": "assumption",
-          "source": "all-in cost of a usable TB-month on this tier. Lognormal because it is a price \u2014 and carried across by hand from whichever storage tier's unit economics somebody had to hand, rather than by sampling, which is the seam ch18 is about"
+          "source": "all-in cost of a usable TB-month on this tier. Lognormal because it is a price, and a price cannot go below zero. It was copied by hand from another model's unit economics, as a range, rather than passed across with that model's own spread. That seam between two models is ch18's subject"
         },
         "row": 0,
         "summary": {
@@ -5595,7 +5595,7 @@
         "point": 0.05,
         "provenance": {
           "kind": "assumption",
-          "source": "a control knob (ch12), and the one with the widest range: head sampling at 1% and at 100% are two different platforms"
+          "source": "a control knob, and the one with the widest range: head sampling at 1% and at 100% are two different platforms"
         },
         "row": 10,
         "slider": {
@@ -5644,7 +5644,7 @@
         "point": 14.0,
         "provenance": {
           "kind": "assumption",
-          "source": "a control knob (ch12)"
+          "source": "a control knob"
         },
         "row": 10,
         "slider": {
@@ -5796,8 +5796,8 @@
         "layer": 3,
         "measured": {
           "corpus": "bench.measure.trace_spans \u2014 spans with 2-14 attributes drawn from a ten-key vocabulary, 128-bit trace ids, seeds 0-7",
-          "fingerprint": "e08fbd954e7a4c8d",
-          "generated_at": "2026-09-19T12:34:15+00:00",
+          "fingerprint": "7d2ff90384f79f4a",
+          "generated_at": "2026-09-26T19:30:43+00:00",
           "sd": 0.017268804737545856,
           "stack": "python zlib (DEFLATE level 6)",
           "value": 73.63665833333333

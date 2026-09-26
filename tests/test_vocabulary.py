@@ -131,3 +131,28 @@ def test_a_rationed_word_waits_for_the_chapter_that_teaches_it(term):
         + "\nSay the plain thing instead, or, where this is a different sense of the word "
         "— a scrape interval, bytes per sample — put `% word-ok: <reason>` on the line before."
     )
+
+
+def test_a_glossary_title_waits_for_the_words_it_uses():
+    """A glossary entry's meaning is also the title of every link to it.
+
+    The site links a term's first mention on each page after the term's own chapter, and puts the
+    meaning on the link, where hovering shows it. So a term taught in ch01 whose meaning said
+    "sampling" put the word in front of a reader of ch02, ch03, ch08, ch09 and ch12, and the scan
+    above never saw it, because it reads the pages and not the titles.
+    """
+    where, order = home(), position()
+    early = []
+    for term, (slug, meaning, _plain) in GLOSSARY.items():
+        for word in RATIONED:
+            hit = FORMS[word].search(meaning)
+            if hit and order[slug] < order[where[word]]:
+                early.append(
+                    f"{term!r} is introduced in {slug} and its meaning says {hit.group(0)!r}"
+                )
+    assert not early, (
+        "these glossary meanings show, as link titles, before the chapter that teaches the word:\n  "
+        + "\n  ".join(early)
+        + "\nSay the plain thing in the meaning. The row's *Said plainly* column is not a title, "
+        "so it is not held to this."
+    )

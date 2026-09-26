@@ -3,17 +3,19 @@ title: An observability platform — metrics, logs and traces
 currency: USD
 
 description: >-
-  The book's second model, and the counterweight to the web service. Three multiplicative
-  chains hang off the same few roots, so they are correlated whether or not anybody says so; label
-  cardinality is a product of uncertain counts and therefore dominates everything downstream of
-  it; the control knobs are sampling and retention rather than money; and there are three separate
-  outputs with three separate ceilings, which no single number can summarise.
+  The book's second model, and the counterweight to the web service. Three chains of
+  multiplications, metrics, logs and traces, share their roots, so they move together whether or not
+  the model says so. Label cardinality is a product of uncertain counts, and it drives the active
+  series count and the query path. The control knobs are sampling and retention, not money. Three
+  tiers—ingest, retention store and query path—carry four ceilings between them, and no single
+  number summarises them.
 
-  It also has a hole in it. Spans per request is a property of somebody's instrumented
-  application, not of any corpus or any machine, so this repository cannot measure it — and the
-  whole traces chain is therefore shown as unmeasured rather than filled in with a plausible
-  number. That is not a gap waiting to be tidied up. It is what an honest sizing model looks like
-  before the measurement is taken, and it is on a published page for exactly that reason.
+  It has a gap in it: two measured constants have no measurement yet. Spans per request is an
+  `estate` observation: only a running system with instrumented applications can give it, not a body
+  of data or a machine. The traces chain needs it. Collector throughput per core is a `rig`
+  measurement, taken on the reference machine, and the measured ingest ceiling needs it. The figures
+  that depend on them are shown as not yet measured rather than filled in with a plausible number,
+  because a plausible number would print the same as a measured one.
 
 nodes:
 
@@ -39,10 +41,10 @@ nodes:
     distribution: {triangular: {minimum: 8000.0, likely: 25000.0, maximum: 90000.0}}
     provenance:
       kind: assumption
-      source: "ch04 — the busy hour across the estate, not the daily mean. Triangular: a
-        minimum, a likely and a maximum is the whole of what a dashboard gives you, and the
-        maximum is the busiest hour anybody has looked at rather than the busiest one there
-        will be"
+      source: >-
+        ch04 — the busy hour across the estate, not the daily mean. Triangular, because a dashboard
+        gives a lowest, a typical and a highest value and nothing more. The maximum is the busiest
+        hour on record, not the busiest there will be
     range: [2000, 200000]
 
   annual_growth:
@@ -92,9 +94,9 @@ nodes:
     distribution: {triangular: {minimum: 2.0, likely: 6.0, maximum: 20.0}}
     provenance:
       kind: assumption
-      source: "distinct routes appearing as a label value. Triangular because somebody could
-        go and count them this afternoon; the maximum is the routes that exist today, and a
-        new service adds to it"
+      source: >-
+        distinct routes appearing as a label value. Triangular because the routes can be counted, so
+        the range is known; the maximum is the routes that exist today, and a new service adds to it
 
   label_values_status:
     kind: input
@@ -103,9 +105,9 @@ nodes:
     distribution: {triangular: {minimum: 2.0, likely: 3.0, maximum: 6.0}}
     provenance:
       kind: assumption
-      source: "distinct status classes kept as a label. Triangular, and the one input in this
-        model whose bounds are genuinely hard: a request cannot carry a status the code does
-        not emit"
+      source: >-
+        distinct status classes kept as a label. Triangular, and its bounds are firm unlike those of
+        any other input in the model, because a request cannot carry a status the code does not emit
 
   label_values_accidental_extra:
     kind: input
@@ -142,11 +144,13 @@ nodes:
     unit: dimensionless
     label: label cardinality
     note: >-
-      A product of uncertain counts, which is why it is lognormal-ish whether or not anybody chose
-      that. One of its inputs, the accidental label, leads the tornado for every metrics figure in
-      this model. Its band is wider than any one count's, narrower than their widths multiplied,
-      because the three counts rarely sit at their high ends together. No amount of care about the
-      other inputs narrows it.
+      It is the product of three uncertain counts: the endpoint label's values, the status label's
+      values, and the accidental label's values. Its lognormal-ish shape comes from the multiplying,
+      not from anyone choosing it. The accidental label leads the tornado for the active series
+      count, metrics ingest and query path utilisation, and the product's band is wider than any one
+      count's but much narrower than the counts' bands multiplied together, because the model draws
+      them independently, so a high one usually meets middling or low ones. Appendix F sets each
+      factor's range beside the product's.
     formula: label_values_endpoint * label_values_status * label_values_accidental
 
   # -- chain one: metrics ------------------------------------------------------------------------
@@ -173,7 +177,7 @@ nodes:
     decided: you
     unit: second
     value: 30
-    provenance: {kind: assumption, source: "a control knob (ch12): doubling it halves the metrics
+    provenance: {kind: assumption, source: "a control knob: doubling it halves the metrics
       chain and loses resolution that cannot be recovered afterwards"}
     range: [10, 120]
 
@@ -208,7 +212,7 @@ nodes:
     decided: you
     unit: day
     value: 400
-    provenance: {kind: assumption, source: "a control knob (ch12)"}
+    provenance: {kind: assumption, source: "a control knob"}
     range: [15, 800]
 
   metrics_stored:
@@ -235,7 +239,7 @@ nodes:
     unit: dimensionless
     value: 1.0
     label: fraction of log lines kept
-    provenance: {kind: assumption, source: "a control knob (ch12): drop and aggregation rules"}
+    provenance: {kind: assumption, source: "a control knob: drop and aggregation rules"}
     range: [0.05, 1.0]
 
   log_line_rate:
@@ -260,7 +264,7 @@ nodes:
     decided: you
     unit: day
     value: 30
-    provenance: {kind: assumption, source: "a control knob (ch12)"}
+    provenance: {kind: assumption, source: "a control knob"}
     range: [3, 365]
 
   logs_stored:
@@ -287,7 +291,7 @@ nodes:
     unit: dimensionless
     value: 0.05
     label: trace sampling rate
-    provenance: {kind: assumption, source: "a control knob (ch12), and the one with the widest
+    provenance: {kind: assumption, source: "a control knob, and the one with the widest
       range: head sampling at 1% and at 100% are two different platforms"}
     range: [0.001, 1.0]
 
@@ -313,7 +317,7 @@ nodes:
     decided: you
     unit: day
     value: 14
-    provenance: {kind: assumption, source: "a control knob (ch12)"}
+    provenance: {kind: assumption, source: "a control knob"}
     range: [1, 90]
 
   traces_stored:
@@ -328,9 +332,10 @@ nodes:
     unit: MB/s
     label: ingest, metrics and logs only
     note: >-
-      Metrics plus logs, and deliberately *not* the total. It is a lower bound with a whole chain
-      missing from it, and ch19 is about exactly this shape of error: a number that is correct
-      arithmetic over an incomplete structure looks identical to a number that is right.
+      Metrics plus logs, and deliberately not the total. The traces chain is missing because spans
+      per request is not measured yet, so it is too low and serves as a lower bound. ch20 is about
+      this shape of error: correct arithmetic over an incomplete structure looks identical to a
+      number that is right.
     formula: metrics_ingest + logs_ingest
 
   total_ingest:
@@ -478,7 +483,7 @@ nodes:
       different route: a label that multiplies the series a scrape produces also multiplies the
       series a query has to walk past to ignore. That is why one accidental label breaks two
       ceilings at once, and why turning down scrape interval and retention — which fix the first
-      — does nothing at all for the second (ch12).
+      — does nothing at all for the second.
     formula: series_per_query_base * label_cardinality
 
   query_series_rate:
@@ -531,9 +536,11 @@ nodes:
     distribution: {lognormal: {p10: 9.0, p90: 24.0}}
     provenance:
       kind: assumption
-      source: "all-in cost of a usable TB-month on this tier. Lognormal because it is a price —
-        and carried across by hand from whichever storage tier's unit economics somebody had to
-        hand, rather than by sampling, which is the seam ch18 is about"
+      source: >-
+        all-in cost of a usable TB-month on this tier. Lognormal because it is a price, and a price
+        cannot go below zero. It was copied by hand from another model's unit economics, as a range,
+        rather than passed across with that model's own spread. That seam between two models is
+        ch18's subject
 
   known_storage_cost:
     kind: derived

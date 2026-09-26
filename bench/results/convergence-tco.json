@@ -8,8 +8,8 @@
     "the_interval_does_not_shrink": "the half_width column settles rather than falling. More samples locate the interval more precisely; they do not narrow the uncertainty the model describes",
     "what_this_measures": "sampling noise, and nothing else. An interval that has stopped moving is an interval whose *arithmetic* has settled; whether the model is right is a different question and Monte Carlo cannot answer it (ch14, ch19)"
   },
-  "generated_at": "2026-09-26T19:30:25+00:00",
-  "git_revision": "24211b2",
+  "generated_at": "2026-09-26T20:04:51+00:00",
+  "git_revision": "3c118c9",
   "kind": "measurement",
   "name": "convergence-tco",
   "produced_by": {

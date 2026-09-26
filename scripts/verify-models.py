@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Refuse to build a model this book would not defend.
 
+    python3 scripts/verify-models.py                      # every model under models/
+    python3 scripts/verify-models.py path/to/model.yaml   # a file of your own, wherever it is
+
 Eight rules. The last one is the reason this script exists rather than being folded into the test
 suite: it is where the book's central claim stops being a paragraph in the front matter and
 becomes something the build enforces.
@@ -42,6 +45,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
@@ -54,7 +59,10 @@ from sizing.dsl import (  # noqa: E402
     Input,
     Measured,
     Model,
+    ModelError,
+    Scenario,
     discover,
+    load_model,
     scenarios_for,
 )
 from sizing.evaluate import check_units, evaluate  # noqa: E402
@@ -239,7 +247,88 @@ def check_stamps(problems: list[str]) -> None:
             )
 
 
+def check_file(path: str | Path) -> tuple[Model | None, list[str]]:
+    """One model file, wherever it is: every rule above, and its scenarios if it has any.
+
+    A file that will not load at all -- a YAML error, a formula naming a node the file does not
+    define -- is one problem rather than a traceback, so a file of the reader's own is answered
+    the way the book's are. The stamps are not checked: they belong to the repository, not to the
+    file. The browser's model checker calls this too, so the page and the desk give one verdict.
+    """
+    try:
+        model = load_model(path)
+    except ModelError as exc:
+        return None, [str(exc)]
+    except yaml.YAMLError as exc:
+        return None, [f"{shown(path)}: is not valid YAML. {exc}"]
+    except OSError as exc:
+        return None, [f"{shown(path)}: cannot be opened ({exc.strerror})"]
+    problems: list[str] = []
+    check_model(model, problems)
+    check_scenarios(model, problems)
+    return model, problems
+
+
+def what_it_says(model: Model) -> list[dict]:
+    """Each output under each of the file's scenarios: the point value, and the 5th and 95th.
+
+    A file with no scenarios is worked out as written, with nothing overridden. Sampled with the
+    seed and the number of draws every model in the book uses, so the same file gives the same
+    answer on every machine.
+    """
+    scenarios = scenarios_for(model) or (Scenario(name="as written", title="as written"),)
+    out = []
+    for scenario in scenarios:
+        evaluation = evaluate(model, scenario)
+        for name in model.outputs:
+            summary = evaluation.summaries.get(name, {})
+            out.append(
+                {
+                    "scenario": scenario.name,
+                    "name": name,
+                    "unit": model.nodes[name].unit,
+                    "point": evaluation.point.get(name),
+                    "p5": summary.get("p5"),
+                    "p95": summary.get("p95"),
+                    "waits_on": list(evaluation.blocked.get(name, ())),
+                }
+            )
+    return out
+
+
+def check_files(paths: list[str]) -> int:
+    """The verifier pointed at files of your own, and what each one says when it passes."""
+    from bench.tables import fmt, unit_label
+
+    checked = [(path, *check_file(path)) for path in paths]
+    problems = [problem for _path, _model, found in checked for problem in found]
+    if problems:
+        print("verify-models: FAILED")
+        for problem in problems:
+            print(f"  - {problem}")
+        return 1
+
+    for path, model, _ in checked:
+        assert model is not None
+        print(f"{shown(path)}: {len(model.nodes)} nodes, {model.classification} model")
+        for row in what_it_says(model):
+            unit = unit_label(row["unit"])
+            name = f"{row['name']} ({unit})" if unit else row["name"]
+            if row["waits_on"]:
+                said = f"not yet measured: waits on {', '.join(row['waits_on'])}"
+            else:
+                said = fmt(row["point"], row["unit"])
+                if row["p5"] is not None:
+                    said += f", 5th to 95th {fmt(row['p5'], row['unit'])} to "
+                    said += fmt(row["p95"], row["unit"])
+            print(f"  {row['scenario']}: {name} = {said}")
+    print(f"\nverify-models: OK ({len(checked)} file(s))")
+    return 0
+
+
 def main() -> int:
+    if len(sys.argv) > 1:
+        return check_files(sys.argv[1:])
     problems: list[str] = []
     models = discover()
     if not models:

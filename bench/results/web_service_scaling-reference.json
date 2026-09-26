@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "84d502f8a8fecc2e",
+  "code_fingerprint": "d0607277b1f614e7",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/10-scaling/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-26T19:29:46+00:00",
-  "git_revision": "24211b2",
+  "generated_at": "2026-09-26T20:03:04+00:00",
+  "git_revision": "3c118c9",
   "kind": "model",
   "name": "web_service_scaling-reference",
   "produced_by": {
@@ -80,7 +80,7 @@
       "utilisation_including_coordination": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-09-26T19:29:46+00:00",
+    "generated_at": "2026-09-26T20:03:03+00:00",
     "model": "web_service_scaling",
     "nodes": {
       "achievable_throughput": {
@@ -995,7 +995,7 @@
         "point": 0.0069377422517014516,
         "provenance": {
           "kind": "assumption",
-          "source": "ch07 \u2014 fitted from two measurements, where two exist. Triangular because a fit gives a central value and a range rather than a shape, and its maximum is the claim to distrust: a serial fraction can always be worse than the one you measured"
+          "source": "ch07 \u2014 an assumption: it has not been fitted for this service; a fit from throughput measured at three fleet sizes, one a single host, would replace it. Triangular, because a fit gives a central value and a range rather than a shape. Its maximum is the end to distrust: a serial fraction can always be worse than the one you measured."
         },
         "row": 3,
         "slider": {
@@ -1391,7 +1391,7 @@
         "point": 3.67423461417477e-05,
         "provenance": {
           "kind": "assumption",
-          "source": "ch07 \u2014 fitted, and the harder of the two to fit. Lognormal because it spans an order of magnitude and cannot be negative, and because a shape should not assert a hard upper bound on a quantity this weakly fitted"
+          "source": "ch07 \u2014 an assumption, not fitted for this service, though the same measurement as contention's would replace it: a fit from throughput at three fleet sizes, one a single host. It is the harder of the two to fit because it shows only in how the curve bends at larger fleets, and the three measured sizes usually sit at the small end. Lognormal, because it is wide and cannot be negative, and because a shape should not assert a hard upper limit on a quantity this weakly known."
         },
         "row": 4,
         "slider": {
@@ -3533,7 +3533,7 @@
         },
         "ceiling": {
           "allowed": 0.7,
-          "because": "Not a capacity limit: a fleet at ninety per cent has not run out of anything, it has a queue in front of it. The margin is large because the cost of crossing it is paid in latency by every request, not in a failure somebody gets paged for (ch06).",
+          "because": "Not a capacity limit: a fleet that is busy most of the time, but short of fully busy, has not run out of anything; it has a queue in front of it. The margin is large because crossing it is paid for in waiting time by every request, not in a failure that pages the people on call (ch06).",
           "headroom": 0.3,
           "headroom_text": "queueing_margin",
           "limit": 1.0,
@@ -4299,7 +4299,7 @@
         },
         "ceiling": {
           "allowed": 0.5,
-          "because": "At half, one host in two is paying for the other's coordination. There is no failure and nothing gets paged; the fleet simply costs twice what its work is worth, and it will go on doing so until somebody looks. A budget is the only thing this ceiling protects, which is why the margin is the loosest in the book and why it is still worth declaring (ch07).",
+          "because": "At the margin, half the fleet's work is lost: one host in two does no useful work. The loss is to contention and to coordination between hosts. Nothing fails and nothing pages anyone; the fleet costs twice what its work is worth. A budget is the only thing this ceiling protects (ch07).",
           "headroom": 0.5,
           "headroom_text": "0.5",
           "limit": 1.0,

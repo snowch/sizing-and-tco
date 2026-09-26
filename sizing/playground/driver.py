@@ -1,11 +1,12 @@
 """What the browser calls. The real toolkit, run in the reader's tab.
 
-Two calls. ``resample`` is the viewer's: the same sampler that stamped the book's intervals, run
+Three calls. ``resample`` is the viewer's: the same sampler that stamped the book's intervals, run
 again with the inputs a reader has fixed, so that "suppose you knew growth was 1.6" gets the
 interval that is left rather than a point value and a note saying the distributions belong to the
 scenario. ``grade`` is a problem's: pytest itself, run over the chapter's own test file against
 the stubs file as the reader has it, so that the verdict under a problem in the page is the
-verdict the same test gives at a desk.
+verdict the same test gives at a desk. ``check`` is Appendix H's model checker: the verifier the
+build runs over the book's own models, run over a file the reader pasted.
 
 Nothing here reimplements anything. Both call the toolkit the build calls, so a verdict in the
 browser is the build's verdict, not a second opinion about it.
@@ -51,6 +52,78 @@ def resample(model_text: str, scenario_text: str, fixed: dict | None = None) -> 
         )
         payload = export_payload(model, scenario)
     return json.dumps(payload)
+
+
+def check(model_text: str, root: str = "/") -> str:
+    """Check a model file the reader pasted, by the rules the build holds the book's models to.
+
+    ``scripts/verify-models.py`` does the checking, through the same function it runs for
+    ``python3 scripts/verify-models.py your/model.yaml`` at a desk, so a file this passes is a
+    file the desk passes. ``root`` is where the page laid the script out. Returns JSON: the
+    problems if there are any; otherwise every node as the toolkit read it, and what each output
+    comes to with nothing overridden.
+    """
+    import importlib.util
+    import math
+
+    spec = importlib.util.spec_from_file_location(
+        "verify_models", Path(root) / "scripts" / "verify-models.py"
+    )
+    verify = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
+    spec.loader.exec_module(verify)  # type: ignore[union-attr]
+
+    with tempfile.TemporaryDirectory() as directory:
+        path = Path(directory) / "model.yaml"
+        path.write_text(model_text)
+        model, problems = verify.check_file(path)
+        # The file is the reader's, not a path in a temporary directory they never made. The
+        # verifier names it three ways: as given, resolved, and relative to the root.
+        names = {str(path), str(path.resolve()), verify.shown(path)}
+        for name in sorted(names, key=len, reverse=True):
+            problems = [problem.replace(name, "your file") for problem in problems]
+        if problems or model is None:
+            return json.dumps({"problems": problems})
+        says = verify.what_it_says(model)
+
+    def number(value):
+        return value if isinstance(value, (int, float)) and math.isfinite(value) else None
+
+    nodes = []
+    for name in model.order:
+        node = model.nodes[name]
+        provenance = getattr(node, "provenance", None)
+        nodes.append(
+            {
+                "name": name,
+                "kind": node.kind,
+                "unit": node.unit,
+                "label": node.label or "",
+                "note": node.note or "",
+                "decided": getattr(node, "decided", ""),
+                "value": number(getattr(node, "value", None)),
+                "distribution": getattr(node, "distribution", None),
+                "provenance": None
+                if provenance is None
+                else {"kind": provenance.kind, "source": provenance.source},
+                "formula": getattr(node, "formula_text", "") or getattr(node, "of_text", ""),
+                "limit": getattr(node, "limit_text", ""),
+                "headroom": getattr(node, "headroom_text", ""),
+                "because": getattr(node, "because", ""),
+                "result": getattr(node, "result", ""),
+            }
+        )
+    for row in says:
+        for key in ("point", "p5", "p95"):
+            row[key] = number(row[key])
+    return json.dumps(
+        {
+            "problems": [],
+            "title": model.title,
+            "classification": model.classification,
+            "nodes": nodes,
+            "says": says,
+        }
+    )
 
 
 #: How much of a failure's text a verdict carries. The first lines are the assertion and its
