@@ -68,7 +68,7 @@ the model's sampled futures, as it did in [ch13](#monte-carlo).
 ```
 
 The red line is the point estimate, and it is not the middle. The chart marks the point estimate,
-the median (the dark dashed line), and the ends of the 90% interval; the subtitle gives the median
+the median (the solid dark line), and the ends of the 90% interval; the subtitle gives the median
 and the interval's ends as figures. Pick any of the three choices off the chart, and say which one
 it was.
 
