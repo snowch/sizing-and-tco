@@ -164,7 +164,7 @@ wait, and the queue grows as long as the busy hour lasts. That breaks the law's 
 nothing is steady, and in those futures, the count of requests in flight describes nothing.
 
 ```{image} _figures/littles-law-in-flight.svg
-:alt: Requests in flight at the busy hour, as a distribution
+:alt: Requests in flight at the busy hour, as a band
 :width: 100%
 ```
 
@@ -182,11 +182,13 @@ each of them came from:
 :width: 100%
 ```
 
-Two things are missing from that picture, and both arrive in the next chapter. The time each
-request stays is its service time, so nothing here waits. And the utilisation in the table has
-nothing to judge it against: the model can say how busy the fleet is, and cannot yet say whether
-that is too busy. [ch06](#queueing-and-the-knee) supplies the waiting and the verdict together,
-because they are the same fact.
+Nothing in this file waits: the residence time here is the service time. The file judges no
+utilisation and cannot say how close to one is too close. [ch06](#queueing-and-the-knee) supplies
+the waiting and that judgement together, because both come from one division: the service time
+divided by the share of the fleet that is idle, which climbs steeply as utilisation nears one.
+That chapter's ceiling on utilisation also flags the futures past one as over their limit, which
+this file cannot yet do. In those futures the in-flight figure above describes a fleet you do not
+have.
 
 ### Three things the law lets you catch
 

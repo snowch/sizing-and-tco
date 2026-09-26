@@ -70,38 +70,41 @@ only question a tornado answers well.
 ```{include} _generated/which-input-is-the-answer-residence.md
 ```
 
-Two charts and a table, because the third is short enough to read as a table. Look at what is at
-the top of each.
+Three figures on this page swing one input at a time. Look at what is at the top of each.
 
-**Cardinality**, in the observability model. It is a product of uncertain counts, and the
-uncertainty compounds ([ch08](#regime-changes)).
+**The five-year total**: the top bar is the number of engineers, then licence per core, salary, and
+host price.
 
-**The busy hour**, in the web service's residence time. The day-one rate and the growth that
-multiplies it tie at the top. The cost of a request is a distant third, and nothing else is on
-the chart at all. Those are the inputs that meet in a division by what is left of the system
-([ch06](#queueing-and-the-knee)), and a bar that long is the knee.
+**The retention store** (the observability model's stored metrics and logs): the top bar is annual
+growth, and extra accidental label values are a close second. Growth is raised to the power of the
+horizon. Extra accidental label values feed label cardinality, a product of uncertain counts, and
+that uncertainty compounds ([ch08](#regime-changes)).
 
-**The head count**, in the web service's five-year total. That breaks the pattern the other two
-make, and the break is the most useful thing on this page.
+**The residence time** (the web service): the day-one busy-hour rate and annual growth tie at the
+top. CPU time per request is a distant third, and no other input moves it. These inputs meet in a
+division by what is left of the system ([ch06](#queueing-and-the-knee)), and a bar that long is the
+knee.
 
-The pattern the first two make is this: **the widest bar is somewhere the model is not linear**.
-An exponent, a product of uncertain things, a division by a small remainder. Inputs that are
-merely multiplied by constants, or added, hardly move anything, however uncertain they are. So the
-five-year total ought to be topped by the growth rate, which is raised to a power. And
-[ch04](#peak-mean-and-growth)'s tornado, which swings the same inputs against the *recommended*
-host count, is topped by growth with nothing else close.
+Two of these figures share a pattern: **the widest bar is somewhere the model is not linear.** An
+exponent, a product of uncertain things, a division by a small remainder. The retention store and
+the residence time both show this. Inputs that are only multiplied by constants, or added, hardly
+move anything, however uncertain they are.
 
-The first chart is against the five-year total, and growth is not on it at all. It cannot be. The
-cost chain starts at *hosts in the fleet*, which is a decision somebody took, and a decision has
-no distribution. The exponent left the cost model at the moment the fleet was chosen. What remains
-downstream of that choice is a bill of materials, and in a bill of materials the largest line
-wins: how many people run the fleet, what a licence costs per core, what those people are paid,
-and only then what a host costs.
+Growth is raised to a power, so you would expect the five-year total to follow the same pattern.
+[ch04](#peak-mean-and-growth)'s tornado swings the busy-hour request rate at the horizon, before any
+fleet has been chosen, and growth tops it, well ahead of the next input, the day-one busy hour. But
+growth is not on the five-year total's chart, and it cannot be.
 
-The rule to take from it: **a tornado is about the output you point it at, and pinning a
-decision can remove the dominant input from everything downstream of it.** Neither chart is wrong.
-They answer different questions. The cost question has a boring answer because the interesting
-one was settled before it was asked.
+The cost chain starts at *hosts in the fleet*, which is a decision somebody took, and a decision has
+no distribution. The exponent left the cost chain when the fleet was chosen. What remains downstream
+is a bill of materials, and in a bill of materials the largest line wins: engineers, licence per
+core, salary, host price. [ch15](#capex-opex-and-lifecycle) found this same ordering for the running
+cost.
+
+**A tornado is about the output you point it at, and pinning a decision can remove the dominant
+input from everything downstream of it.** [ch04](#peak-mean-and-growth)'s tornado and the five-year
+total's chart are both right. They answer different questions. The cost question has a boring answer
+because the interesting one was settled before it was asked.
 
 ### The correlation the chart cannot show
 
@@ -120,16 +123,20 @@ worth attention, and the tornado will not tell you so.
 
 ### What one-at-a-time misses
 
-Problem 19.2 measures a sharper version of the same limitation.
+Swing input A alone. Swing B alone. Swing both. If the model were additive in them, the third would
+be the sum of the first two.
 
-Swing input A alone. Swing B alone. Swing both. If the model were additive in them, the third
-would be the sum of the first two. In a model built out of multiplications it is not, and the
-model in this book is built out of multiplications.
+Where two inputs meet in a product, it is in general not. In the web service, growth raised to the
+horizon multiplies the day-one busy hour. In the observability model, the label value counts
+multiply each other into cardinality. In the five-year total, the number of engineers multiplies
+what each is paid. Problem 19.2 measures the gap on two pairs from the web service: one that meets
+in a product and one that meets only in a sum. Where inputs meet only in a sum, as the lines of the
+five-year total do, the swings do add.
 
-So a tornado's bars do not add up to the interval, and they are not a decomposition of it. They
-are a ranking, and that is all they are. The chart invites you to treat the bar lengths as shares
-of the variance, and that is a mistake. A variance-based decomposition does answer that question.
-It is not in this toolkit, and `NEXT_STEPS.md` in the repository lists it as work left to do.
+So a tornado's bars do not add up to the interval, and they are not a decomposition of it. They are
+a ranking, and that is all they are. The chart invites you to read the bar lengths as shares of the
+variance, and that is a mistake. A variance-based decomposition would answer that question. It is
+not in this toolkit. `NEXT_STEPS.md` in the repository lists it as work left to do.
 
 ### What the measurement would be worth
 
@@ -168,9 +175,9 @@ asked. The answer has the opposite shape:
 One input, annual growth, dominates every column. Where it lands matters most: found low, it would
 remove most of the interval; found high, far less.
 
-At its high end, three inputs leave the interval wider: the day-one busy-hour rate, the share of
-records touched, and CPU time per request. Each multiplies the demand, so a high value scales up
-every other input's contribution.
+Three inputs widen the host count's interval when found at the high end of their bands: the day-one
+busy-hour rate, the share of records touched in a busy hour, and CPU time per request. Each
+multiplies the demand, so a high value scales up the spread that every other input contributes.
 
 Growth belongs to no target and cannot be measured at all ([ch04](#peak-mean-and-growth)). The
 table will keep pointing at it. The only thing you can do with it is decide it, by policy, and
@@ -217,9 +224,12 @@ will land, until you take it. For an input that multiplies others, where it land
 the interval narrows a lot, a little, or widens. So the tables show what a perfect measurement would
 do, but how close you get to it depends on the measurement you can take.
 
-**Anything about interactions.** One at a time, by construction. Problem 19.2 measures the gap,
-and the gap is not small in a multiplicative model. An input whose effect appears only in
-combination with another gets a short bar and can still be the thing that sinks you.
+**Anything about interactions.** One at a time, by construction. Where two inputs multiply, moving
+both together can move the answer further than their two bars added up. How big the gap is depends
+on the two bands. It is small when either band is narrow. It grows when both bands are wide and
+reach further above their middle value than below it, as when a growth rate is raised to a power and
+compounding stretches its high end. An input whose effect appears only in combination with another
+gets a short bar and can still be the thing that sinks you.
 
 **Anything about correlated inputs.** As above: a bar is one input and a correlation is two.
 

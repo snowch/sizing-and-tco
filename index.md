@@ -79,9 +79,9 @@ count. [ch18 · The five-year model](#the-five-year-model) produces a cost.
 
 Each chapter that adds to the web service model shows it as it stands at the end of that chapter,
 in a viewer where you can drag its inputs. Some pages show the finished model before the book has
-built it. ch01 does this to demonstrate what the whole model produces. Every figure is produced by
-the build from the repository's files. The build fails when a figure no longer matches the code
-that made it.
+built it. ch01 does, to show what the whole model produces. Every figure is produced by the
+build from the repository's files. The build fails when a figure no longer matches the code that
+made it.
 
 ## Why a file, and not a spreadsheet
 
@@ -98,10 +98,10 @@ it.
   knowledge stays with whoever built the sheet. The model file requires every input to declare its
   kind (fact, vendor's claim, or assumption) and its source; the build refuses any without both,
   and a fact must cite something.
-- **Certainty.** A cell holds one number however unsure you are of it. The model file input can
-  express uncertainty: a low value you would be surprised to see it fall below and a high value
-  you would be surprised to see it rise above. A number nobody has measured is left empty, and so
-  is everything computed from it — the page prints "not yet measured" instead of a guess.
+- **Certainty.** A cell holds one number however unsure you are of it. An input in a model file
+  can say how unsure you are: a low value you would be surprised to see it fall below and a high
+  value you would be surprised to see it rise above. A number nobody has measured is left empty,
+  and so is everything computed from it — the page prints "not yet measured" instead of a guess.
 
 ## Who this book is for
 
@@ -144,7 +144,8 @@ Nothing in this book needs a datacentre, a cloud account, or a licence.
 
 ## Where to start
 
-Read [ch01](#point-estimates) first to see what a single number leaves out. The chapter draws the
-line the rest of the book is built on: between a model that is right whenever every input is
-right, and a model that can be wrong even then, because it rests on a number someone measured on
-one system, or because it runs into a limit.
+Read [ch01](#point-estimates) first. It shows what a single number leaves out when you answer
+"how big" or "how much" with one figure. The chapter draws the line the rest of the book is built
+on: between a model that is right whenever every input is right, and a model that can be wrong
+even then. It can be wrong when it rests on a number someone measured on one piece of software,
+or when it runs into a limit.

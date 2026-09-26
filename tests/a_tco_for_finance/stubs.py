@@ -72,13 +72,17 @@ def one_number() -> tuple[float, str]:
     Return the number you would give for the reference design's five-year total, and a string
     saying what it hides.
 
-    Any defensible choice passes: the median, a percentile, a rounded figure. The test
-    checks that it came out of the model, that you rounded it to a precision the model can support,
-    and that your sentence names a specific thing - the percentile you chose, the structural
-    omission, the assumption the whole thing rests on. A sentence that says "it is uncertain" is
-    not naming anything.
+    Any defensible choice passes: the median, a high percentile, a round figure above the median.
 
-    The point is that the sentence is the deliverable. The number is what gets written down; the
-    sentence is what makes it honest, and you get one.
+    The test checks three things. First, the number lies inside the model's 90% interval for the
+    total, or close to it. Second, it is rounded: a whole multiple of a round step (1, 2 or 5
+    times a power of ten from 100, or 2.5 times one from 1,000), and the step is no finer than a
+    hundredth of the width of the 90% interval. Third, the sentence names something specific:
+    which percentile or the median; an input the total rests on, such as growth or a price; a
+    cost it leaves out; or a limit, such as the busy-hour ceiling. It has at least eight words. A
+    sentence that only says it is uncertain names nothing.
+
+    The sentence is the deliverable. The number is what gets written down; the sentence is what
+    makes it honest, and you get one.
     """
     raise NotImplementedError("problem 21.2")

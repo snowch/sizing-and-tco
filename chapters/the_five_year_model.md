@@ -62,13 +62,13 @@ There are two ways to join them, and they differ in what becomes of the upstream
 and carries it through. The uncertainty in the upstream price becomes uncertainty in the downstream
 answer, because the upstream price is uncertain.
 
-**Hand over a number.** Somebody reads the upstream median, writes it in a document, and the
-downstream model treats it as known. This is what happens in practice: in a meeting, between two
-teams, and often between two quarters.
+**Hand over a number.** The team that owns the downstream model reads the upstream median off
+the upstream team's report and types it in as a known figure. This is what happens in practice:
+in a meeting, between two teams, and often between two quarters.
 
-Problem 18.1 does both joins. The headline number stays roughly where it was, but the interval
-narrows because the upstream price's uncertainty is no longer in it. The interval is wrong, not the
-headline.
+Problem 18.1 does both joins. The headline (median) stays roughly where it was. The interval from
+the number handover is narrower, and the narrowing is not earned: it comes from dropping the
+upstream price's uncertainty, not from knowing anything more.
 
 That is why the handover survives review: a change that moved the answer would be noticed, but a
 change that removes the doubt looks like tidying up.
@@ -181,9 +181,9 @@ now two structures, and the lines missing from each are invisible to the other.
 
 - **Models are joined by numbers written down, and the joins are undefended.** Each model is
   defensible on its own terms. The seam between them is where the doubt goes missing.
-- **Hand over a number instead of a distribution and the downstream interval gets narrower, not
-  wrong.** The headline stays where it was and the doubt disappears, which is why it survives
-  review.
+- **Hand over a number instead of a distribution, and the headline stays while the interval loses
+  the upstream doubt.** The median of the answer stays roughly where it was, so the handover looks
+  like tidying up instead of deleting a real doubt.
 - **An undeclared correlation across a seam can err in either direction.** On this seam, price and
   volume move apart: a fixed fleet's total is spread over more terabytes as growth rises, while the
   stored terabytes rise. Pairing them as unrelated makes the joined interval too wide here, the

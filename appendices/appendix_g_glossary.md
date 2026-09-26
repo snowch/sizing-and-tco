@@ -11,20 +11,28 @@ short_title: "Appendix G · Glossary"
 
 | | |
 |---|---|
-| **Purpose** | Every term the book introduces, with the chapter that introduces it |
+| **Purpose** | Words this book uses in a technical sense, each with the chapter introducing it |
 | **Source** | `bench/tables.py`, and the chapters themselves |
 :::
 
-This book rations its vocabulary. Every term below arrives in one chapter, because a model has
-just raised a question that needs it, and never as a definition at the front of a section. The
-list is short by design: a reader who finishes the book should have gained about twenty words,
-not a dialect.
+This book rations its vocabulary. The table holds the words this book uses in a technical sense,
+each with the chapter introducing it, what it means here and how to say it plainly, in
+alphabetical order. Six of the words are statistics words — distribution, sample, percentile,
+interval, correlation and convergence — and each first appears where a model has just raised a
+question that needs it. [ch13](#monte-carlo) introduces the first four;
+[ch14](#correlation-and-convergence) introduces the last two. A test in the repository fails any
+page that uses one of the six before its chapter. The other words are the book's working
+vocabulary: capacity-planning terms and the names of what the book's models contain.
 
-Four of the terms name kinds of error. Read them as a group. Measurement uncertainty and
-parameter uncertainty are what an interval is made of. Scenario uncertainty is why this book runs
-a model more than once rather than widening its inputs. Structural error is none of those three.
-The model is wrong in shape rather than in its numbers, and it is
-[ch20 · The missing node](#the-missing-node).
+Four kinds of error run through the book, and [ch20](#the-missing-node) explains them plainly. A
+measured constant wobbles — measure it again and it moves — and its standard error says by how
+much. An unmeasured input is unknown; its range is a choice, as for a price or growth rate. Those
+two are what an interval is made of, and the model carries both. The world can take a different
+path the model was not run for: a launch doubling the busy hour, or growth stopping. No interval
+covers that. The book runs a scenario instead, a fresh pass through the model with different
+inputs. The model can be wrong in shape: a cost line missing, a ceiling never declared, two
+quantities multiplied that should be added. That is *structural error*. It appears nowhere in an
+interval or scenario, because nothing in the model file knows the piece is missing.
 
 The last column is not a simplification. It is the sentence to use out loud. Where a term has a
 plain-English equivalent, this book says the plain one first and names the term second, including
@@ -36,8 +44,12 @@ discussed.
 
 ## What the repository calls things
 
-Four words appear on every stamped number in the book, and they are the ones a reader is most
-likely to meet without an introduction. They name **what was asked a question**:
+Every stamped result declares a **target**: what was asked to get the number. The four targets
+are `corpus`, `rig`, `estate` and `model`. You meet them in [ch03](#where-the-numbers-come-from),
+in the table of measured constants, which has a Target column. The words also appear where a
+chapter names the evidence a number would need, such as a `rig` measurement that has not been
+taken. The table below is generated from the code that stamps results, so it says what the code
+says.
 
 ```{literalinclude} ../bench/stamp.py
 :language: python
@@ -45,10 +57,12 @@ likely to meet without an introduction. They name **what was asked a question**:
 :end-before: #: What a file *is*.
 ```
 
-Three of those are measurements: something outside this repository was asked a question. A
-`model` result is not. It is evidence about what this book's models say and about nothing else,
-so its fingerprint covers the whole sampler and every figure derived from it moves when the
-method does. Keeping it apart from the other three is what stops the distinction going soft.
+Three of those targets are measurements — something outside this repository was asked a question.
+A `model` result is not; it is a computation from the book's own models, evidence about what
+those models say and nothing else. A `model` result's fingerprint covers the whole DSL core — the
+code that reads, checks, evaluates and samples a model file — so every such figure moves when the
+method does. Keeping `model` apart from the other three keeps two things separate: a measurement
+of something outside the book, and a computation about the book's own models.
 
 The node kinds (`input`, `derived`, `measured`, `ceiling`) and the provenance kinds (`fact`,
 `vendor_claim`, `assumption`) are in [Appendix A](#appendix-a-dsl-reference), where the fields
@@ -58,27 +72,27 @@ they carry are quoted alongside them.
 
 None of these is an oversight. Each one has something the book says instead:
 
-**Confidence interval.** The intervals in this book are percentile intervals of a sampled output:
-the gap between the fifth and ninety-fifth percentiles of the futures the model produced. The
-statistical term means something else, a statement about a procedure repeated over experiments,
-and borrowing it would import a guarantee this method does not offer.
+**Confidence interval.** This book reports 90% intervals: the gap between the fifth and the
+ninety-fifth percentile of the answers the model produced. A 90% interval is a statement about the
+model, not about the world. The statistical term *confidence interval* means something different:
+a statement about an estimation procedure repeated over many experiments. Borrowing that name
+would import a guarantee this method does not offer. A *prediction interval* is a claim about
+where a future observation will fall; that would need a track record, and the book's models do
+not have one. The *Over allowed* and *Over limit* columns in a ceiling table report the share of
+the model's futures that ended on the wrong side of a declared line — reported as a share, never
+as a range — and they are none of those three.
 
-Four things get called an interval in conversation and only one of them appears in these pages.
-A **percentile interval** is what this book reports: two percentiles of the values a model
-produced, and a statement about the model rather than about the world. A **confidence interval**
-is a statement about an estimation procedure. A **prediction interval** is a claim about where a
-future observation will fall, which would require this book's models to have a track record they
-do not have. And the **probability a ceiling is breached**, the last column of every ceiling
-table, is none of those three. It is the share of the model's futures that ended on the wrong
-side of a declared line, which is why it is reported as a share and never as a range.
-
-**Expected value.** The mean. In a sizing model it is usually worse than the median: outputs that
-come from chains of multiplication are skewed, so the mean sits above most of the futures and
-describes none of them. This book reports the median and says so.
+**Expected value.** The mean. Outputs from chains of multiplication in a sizing model are often
+skewed, with a long tail on the high side. That tail pulls the mean above the median, so the mean
+sits above most of the futures and describes few of them. The output tables in this book report
+the point estimate and the 90% interval. When one number has to be handed over,
+[ch21](#a-tco-for-finance) makes choosing it a decision said out loud: the median, a high
+percentile, or a round number above the median.
 
 **Best case and worst case.** Percentiles, named. A "worst case" is whatever the person saying it
-last thought of; the ninety-fifth percentile is a specific claim about a specific model that
-somebody can disagree with.
+last thought of; the ninety-fifth percentile is a specific claim about a specific model that you
+can disagree with. The phrase appears once in this book, as a label in
+[ch01](#point-estimates)'s first table, marking the run with every input at its worse value.
 
 **Contingency.** Headroom, with a stated reason and a ceiling it is measured against
 ([ch11](#headroom-and-failure-domains)). A contingency is a number added at the end to feel safer;
@@ -98,7 +112,8 @@ answer is what the whole book is about.
 
 ## Where each term is introduced
 
-The middle column of the table above links to the chapter that introduces the term and defines it
-in context. Reading those sections in order is a shorter path through the book than reading the
-book, and a worse one: every term in that list arrives attached to a model that had just produced
-a number nobody could defend, and the term is much easier to remember with the number attached.
+The table's second column, *Introduced in*, links each term to the chapter that introduces it. To
+read the terms in the book's order, follow the chapter labels in that column. You could read only
+those sections, which is quicker than reading the whole book. But you lose something: in the
+chapter, each term arrives because a model has just produced a number you cannot yet defend, and a
+term is easier to remember with that number beside it.

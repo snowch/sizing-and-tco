@@ -2,7 +2,9 @@
 
 The test evaluates both quotes here and hands the reader the two arrays of five-year totals. What
 it grades against is its own subtraction of the same two arrays, derived at test time and never
-stored.
+stored. It grades twice: on every future, which is what the chapter's table prints, and on the
+first few thousand of the same futures, which the chapter does not print, so a figure copied off
+the page does not pass.
 """
 
 from __future__ import annotations
@@ -17,6 +19,11 @@ MODEL = "models/web_service/model.yaml"
 INCUMBENT = "models/web_service/scenarios/incumbent.yaml"
 CHALLENGER = "models/web_service/scenarios/challenger.yaml"
 REQUIRED = {"p5", "p50", "p95", "share_challenger_cheaper"}
+#: The second set of futures the answer is graded on: the first this many of the same draws.
+SUBSET = 10_000
+#: How close a percentile must be, relative and in dollars, and how close the share must be.
+REL, ABS, SHARE = 1e-3, 1.0, 2e-3
+LEVELS = {"p5": 5, "p50": 50, "p95": 95}
 
 
 @pytest.fixture(scope="module")
@@ -28,18 +35,26 @@ def totals():
     return incumbent, challenger
 
 
-@pytest.fixture(scope="module")
-def paired(totals):
+@pytest.fixture(scope="module", params=("every future", "a subset of the futures"))
+def case(request, totals):
     incumbent, challenger = totals
+    if request.param != "every future":
+        incumbent, challenger = incumbent[:SUBSET], challenger[:SUBSET]
+    return incumbent, challenger
+
+
+@pytest.fixture(scope="module")
+def paired(case):
+    incumbent, challenger = case
     return challenger - incumbent
 
 
 @pytest.fixture(scope="module")
-def answer(totals):
+def answer(case):
     from tests.comparing_two_tcos.stubs import paired_difference
 
     # Copies, so an answer that subtracts in place cannot change what it is graded against.
-    incumbent, challenger = totals
+    incumbent, challenger = case
     return paired_difference(incumbent.copy(), challenger.copy())
 
 
@@ -48,39 +63,83 @@ def width_of(values: np.ndarray) -> float:
     return float(high - low)
 
 
+def close(value: float, target: float) -> bool:
+    return float(value) == pytest.approx(float(target), rel=REL, abs=ABS)
+
+
+def what_went_wrong(key: str, value: float, case, paired: np.ndarray) -> str:
+    """Name the mistake an answer looks like, without saying what the right answer is."""
+    incumbent, challenger = case
+    level = LEVELS[key]
+    if close(value, -np.percentile(paired, 100 - level)):
+        return (
+            "the sign is the wrong way round. The difference is the challenger's total minus "
+            "the incumbent's, so a future in which the challenger is cheaper comes out negative."
+        )
+    if close(value, np.percentile(challenger, level) - np.percentile(incumbent, level)):
+        return (
+            "that is one total's percentile minus the other's, each taken on its own. It is not "
+            "a percentile of the difference, and here it comes out narrower. Subtract the arrays "
+            "entry by entry first, then take the percentiles of the result."
+        )
+    if key != "p50" and close(
+        value, np.percentile(challenger, level) - np.percentile(incumbent, 100 - level)
+    ):
+        return (
+            "that is the end of one interval minus the opposite end of the other, as if the two "
+            "totals could each be anywhere in their own intervals. Subtract the arrays entry by "
+            "entry first, then take the percentiles of the result."
+        )
+    return (
+        "it is not a percentile of the difference taken future by future. Subtract the arrays "
+        "entry by entry, the i-th total from the i-th total, then take the percentiles."
+    )
+
+
 @pytest.mark.problem
 def test_it_has_the_four_figures(answer):
     assert set(answer) == REQUIRED, sorted(set(answer) ^ REQUIRED)
 
 
 @pytest.mark.problem
-def test_the_percentiles_are_of_the_paired_difference(answer, paired):
-    p5, p50, p95 = np.percentile(paired, [5, 50, 95])
-    for key, expected in (("p5", p5), ("p50", p50), ("p95", p95)):
-        assert answer[key] == pytest.approx(expected, rel=1e-3, abs=1.0), (
-            f"{key}: got {answer[key]:,.0f}, the paired difference has {expected:,.0f}. "
-            "Subtract sample by sample, the i-th total from the i-th total."
+def test_the_percentiles_are_of_the_paired_difference(answer, case, paired):
+    for key, level in LEVELS.items():
+        expected = np.percentile(paired, level)
+        assert close(answer[key], expected), (
+            f"{key}: you returned {float(answer[key]):,.0f}, and "
+            + what_went_wrong(key, answer[key], case, paired)
         )
 
 
 @pytest.mark.problem
 def test_you_did_not_subtract_two_independent_draws(answer, paired):
     """The wrong answer is wider, and wider by a lot: the two totals share most of their futures."""
-    width, right = answer["p95"] - answer["p5"], width_of(paired)
-    assert width < right * 1.5, (
-        f"your interval is {width:,.0f} wide and the paired one is {right:,.0f}. An interval "
-        "that much wider is the difference of two *independent* draws: the electricity price "
-        "from one future against the price from another. Both designs live in the same future."
+    width = answer["p95"] - answer["p5"]
+    assert width < width_of(paired) * 1.5, (
+        f"your interval is {width:,.0f} wide, more than half as wide again as the difference "
+        "taken future by future. An interval that wide is the difference of two *independent* "
+        "draws, the electricity price from one future against the price from another, or of "
+        "the two intervals' opposite ends. Both designs live in the same future."
     )
 
 
 @pytest.mark.problem
 def test_the_share_is_a_fraction_of_the_same_futures(answer, paired):
     expected = float((paired < 0).mean())
-    assert answer["share_challenger_cheaper"] == pytest.approx(expected, abs=2e-3), (
-        f"got {answer['share_challenger_cheaper']:.3f}, expected {expected:.3f}: the share of "
-        "futures in which the challenger's total is the lower one"
-    )
+    share = float(answer["share_challenger_cheaper"])
+    if share == pytest.approx(expected * 100, abs=SHARE * 100):
+        hint = "the share is a fraction between 0 and 1, not a percentage."
+    elif share == pytest.approx(1 - expected, abs=SHARE):
+        hint = (
+            "that is the share of futures in which the incumbent is cheaper. The challenger is "
+            "cheaper where challenger minus incumbent is below zero."
+        )
+    else:
+        hint = (
+            "count the futures in which the challenger's total is below the incumbent's, the "
+            "same future on both sides, and divide by the number of futures."
+        )
+    assert share == pytest.approx(expected, abs=SHARE), f"you returned {share:.3f}: {hint}"
 
 
 # -- scaffolding: the problem is answerable, and the paired answer differs from the naive one ----
@@ -110,11 +169,39 @@ def test_the_two_arrays_are_one_future_per_entry(totals):
         challenger.shape,
     )
     assert np.all(incumbent > 0) and np.all(challenger > 0)
+    assert incumbent.size > SUBSET
 
 
-def test_pairing_narrows_the_interval_materially(totals, paired):
+def test_the_figures_on_the_page_do_not_pass_on_the_subset(totals):
+    """The chapter prints the answer over every future. Over the subset, every graded figure
+    lands outside the tolerance of that answer, so copying the table cannot pass both."""
+    incumbent, challenger = totals
+    every, some = challenger - incumbent, (challenger - incumbent)[:SUBSET]
+    for level in LEVELS.values():
+        assert not close(np.percentile(some, level), np.percentile(every, level)), level
+    assert abs(float((some < 0).mean()) - float((every < 0).mean())) > SHARE
+
+
+def test_the_diagnoses_do_not_fire_on_a_right_answer(case, paired):
+    """Each mistake the test names is a different number from the right answer, so a reader who
+    is nearly right is never told they made one of them."""
+    incumbent, challenger = case
+    for key, level in LEVELS.items():
+        right = np.percentile(paired, level)
+        assert not close(right, -np.percentile(paired, 100 - level)), key
+        assert not close(right, np.percentile(challenger, level) - np.percentile(incumbent, level))
+        if key != "p50":
+            assert not close(
+                right, np.percentile(challenger, level) - np.percentile(incumbent, 100 - level)
+            ), key
+    share = float((paired < 0).mean())
+    assert share != pytest.approx(1 - share, abs=SHARE)
+
+
+def test_pairing_narrows_the_interval_materially(totals):
     """If it did not, the problem would have nothing to teach."""
     incumbent, challenger = totals
+    paired = challenger - incumbent
     shuffled = np.random.default_rng(1).permutation(challenger)
     assert width_of(paired) < width_of(shuffled - incumbent) * 0.5, (
         width_of(paired),

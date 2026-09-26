@@ -33,14 +33,22 @@ how long your system takes to fail and how long your users will wait for it to r
 those to use is yours to decide, from your traffic and your tolerance, and the model cannot make
 the choice for you.
 
-The arithmetic is trivial: the busiest hour's share of the day, times the day's total. Problem
-4.1 is that arithmetic. The peak-to-mean ratio behind it is not trivial. It is a measured
-quantity, it varies by workload, and quoting somebody else's is how a system gets sized for a
-shape it does not have.
+Problem 4.1 asks you to turn a day's profile and the day's total into the rate in the busiest
+hour. The peak-to-mean ratio, the busy hour divided by the daily mean, is a property of the
+traffic: of when your users arrive. It varies by workload. Quoting another workload's ratio sizes
+your system for a daily profile it does not have.
 
-This chapter puts that ratio into the model as an input with a shape rather than a figure,
-because nobody has measured it on this service, and the file says so. It then derives the mean
-rate from the busy hour:
+You get your own ratio by watching your own traffic. In [ch03](#where-the-numbers-come-from)'s
+terms, that is an `estate` observation: a look at a running system that only you can take and
+nobody else can check. Nobody has observed this ratio for this service, so the model holds it as an
+input with a band, marked `assumption`. An input is not a measured constant. A measured constant
+belongs to one piece of software at one version. This ratio belongs to your users.
+
+The band is triangular, with a lowest value, a most likely value, and a highest. How likely a value
+is falls in a straight line from the most likely down to nothing at each end. By definition, the
+mean is the busy hour divided by this ratio. So if the ratio is right, the mean is right, and the
+toolkit still calls the model definitional. The model then works out the mean rate from the
+busy-hour rate:
 
 ```{literalinclude} ../models/web_service/stages/07-uncertainty/model.yaml
 :language: yaml

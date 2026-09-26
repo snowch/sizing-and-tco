@@ -29,14 +29,14 @@ the seam as one number in a document, and while the headline value survives, the
 it does not, because one number has no room for it.
 
 The cost chains begin with *hosts in the fleet*, a number already decided. What follows is a bill of
-materials: quantities multiplied by prices, summed up. The relationships in these chains hold by
-definition, so they are *definitional* in [ch01](#point-estimates)'s sense—this follows from what
-they contain, not from their being about cost—and sampling the inputs shows all the uncertainty in
-the terms they have.
+materials: counts times prices, added up. Each of those relationships holds by definition, so the
+cost chains are definitional in [ch01](#point-estimates)'s sense. That follows from what the chains
+contain, not from their being about cost. Sampling their inputs shows all the doubt in the terms the
+chains have.
 
 This part adds no ceiling of its own; the ceilings from Parts II and III remain in the model.
-[ch16](#power-first) runs into them: a fleet sized on a power budget exceeds the hard limit of three
-ceilings at the point estimates—the working set no longer fits in memory, the disks are full, and
-the busy hour (counted with coordination) exceeds the fleet's capacity. The two queueing ceilings
-have consumed their margin, and ch16's finding is that this workload does not fit in this power
+[ch16](#power-first) runs into them. Sized from a power budget, the fleet is over the hard limit of
+three ceilings at the point estimates. The working set no longer fits in memory, the disks are full,
+and the busy hour, counted with coordination, is more than the fleet can serve. The two queueing
+ceilings have used up their margin. ch16 concludes that this workload does not fit in this power
 envelope.

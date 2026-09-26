@@ -30,7 +30,8 @@ A run calls the pieces in a different order:
    `sizing/mc.py`.)
 5. `summarise` and `histogram`, for every node whose value varies.
 
-The function that makes these calls is `evaluate` in `sizing/evaluate.py`.
+The function that makes these calls is `evaluate` in `sizing/evaluate.py`. The module's
+docstring from `sizing/mc.py` follows.
 
 ```{include} ../sizing/mc.py
 :start-after: Monte Carlo, from first principles.
@@ -126,7 +127,14 @@ each misleads.
 :end-before: def one_shape
 ```
 
-Two lines, and they are the two lines of the entire subject.
+A run calls `sample` once for each uncertain input. A measured constant does not go through
+`sample`: it declares no distribution, only a value and a standard error, both read from its
+stamped measurement. For a measured constant, the run draws random fractions between 0 and 1 from
+the same generator and passes them directly to `normal_ppf_scaled`, with the measured value as the
+centre and the standard error as the spread. So both kinds of input are sampled the same way: draw
+a random fraction and look up the value at it. Only the lookup differs — the declared shape's
+percentile function for an ordinary input, `normal_ppf_scaled` for a measured constant. The code
+below shows how `sample` pulls the one shape out of a declaration.
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -148,11 +156,11 @@ Two lines, and they are the two lines of the entire subject.
 :end-before: def correlate(
 ```
 
-Inducing a correlation on *ranks* and then reading it back on *values* does not return the number
-you asked for. It comes back attenuated, by an amount that depends only on the coefficient: ask
-for a strong correlation, measure the result, and it is visibly weaker. This is the correction
-that is easy to leave out and hard to find afterwards, and the fix is one line of trigonometry
-before the sort rather than an apology in the documentation after it.
+`rank_to_score_correlation` is Pearson's formula @pearson1907further, inverted. `correlate`, below,
+calls it on the declared matrix before it shapes the scores, not after. So the `rho` you declare for
+a pair is the rank correlation the run produces, which is why
+[ch14](#correlation-and-convergence)'s table of declared correlations labels its column "Rank
+correlation".
 
 ```{literalinclude} ../sizing/mc.py
 :language: python

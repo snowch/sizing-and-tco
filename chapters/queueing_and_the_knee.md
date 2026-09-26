@@ -118,13 +118,18 @@ what they were protecting. The toolkit refuses a ceiling that leaves it empty.
 [ch11](#headroom-and-failure-domains) is where that decision gets made deliberately instead of
 inherited.
 
-All of it is in the graph now: the division, the clamp and the ceiling. Drag *hosts in the
-fleet* down and watch the verdict change before the number under it looks alarming.
+All of it is in the graph now: the division, the clamp and the ceiling. Open *Inputs* and drag
+*hosts in the fleet* down. The last row of *Outputs* (the panel inside *Inputs*, below the
+sliders) is *utilisation at the busy hour*, shown in a badge that is green under the allowed line,
+amber past the allowed line, and red past the limit. The ceiling's box in the graph turns red
+only past the limit, so the badge is where the first change shows. At the moment it turns amber,
+*residence time*, a few rows up in *Outputs*, has grown by the multiple the queueing table shows at
+that utilisation: slower, but nothing a reader would call alarming.
 
 ```{iframe} /models/web_service_queueing-reference.html
 :width: 100%
-The graph as ch06 leaves it, with the first ceiling in it. Click *utilisation at the busy hour* for
-its margin and its reason.
+Click the *utilisation at the busy hour* row in *Outputs* to open *Details*, which shows the
+ceiling's limit, headroom, allowed value and its reason.
 ```
 
 ### Why the margin is so large

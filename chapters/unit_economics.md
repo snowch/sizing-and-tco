@@ -92,32 +92,53 @@ average, and a larger denominator gives a smaller unit cost: the straight line f
 The faster the growth, the larger the overstatement, as this table shows across the three growth
 factors from the model's own band for annual growth: its p10, its median and its p90.
 
+The request side has the same straight line. The mean request rate over the horizon is the average
+of the day-one and horizon mean rates. So it overstates the requests served in the same proportion
+as the holding, for the same growth, and the cost per million requests is flattered by the same
+amount.
+
+The model keeps the straight line for two reasons. First, its error runs one way. For steady growth
+at any rate the straight line never falls below the compounding average, so the model's unit cost
+can only err low, and you know which way to correct it. Second, the exact average of a compounding
+holding needs a logarithm of the growth, and with no growth it becomes zero divided by zero. No
+growth is the bottom of the range the growth factor's slider allows, and a formula in the model file
+cannot branch around it. The model states the convention and its direction rather than hiding it,
+because a unit cost is only as defensible as its denominator.
+
 ### Why the unit cost has a wide interval
+
+A unit cost falls when growth arrives. The fleet is fixed: the number of hosts is the decision you
+took in [ch12](#the-sizing-model), so the five-year total does not move when growth does. If the
+growth turns up, the fleet serves the requests it was bought for, and the cost per million of them
+is low. If it does not, you have paid for hosts nobody kept busy, and the same fleet is expensive
+per request.
 
 ```{image} _figures/unit-economics-distribution.svg
 :alt: Cost per million requests, as a distribution
 :width: 100%
 ```
 
-That is the most counter-intuitive figure in the book.
-
-A unit cost falls when growth arrives. You bought a fleet for a future. If the future turns up,
-the fleet serves the requests it was bought for, and the cost per million of them is low. If it
-does not, you have paid for hosts nobody kept busy, and the same fleet is expensive per request.
-
-So the wide interval on this figure is not measurement error. It is the model saying that **the
-unit cost of a fleet depends on something that has not happened yet**. Most of the uncertainty is
-in the denominator, not in the numerator.
+The chart shows how wide the cost per million requests is across the model's futures. The width is
+not measurement error: it is the model saying that **the unit cost of a fleet depends on something
+that has not happened yet**. Most of the uncertainty is in the denominator, not in the numerator:
+the inputs that move the unit cost most change only the requests served.
 
 ```{include} _generated/unit-economics-tornado.md
 ```
 
-That is why the growth rate is at the top of this tornado too, with the busy hour and the
-peak-to-mean ratio under it and every price below those. It is also why a unit cost quoted
-without a date is quoting a guess about the future.
+The tornado shows the direction. The annual growth factor is at the top. At its p10, low growth, it
+gives the highest cost per million requests in the table; at its p90, high growth, the lowest. That
+is why a unit cost quoted without a date is quoting a guess about the future. The busy hour on day
+one and the peak-to-mean ratio come next, and both change only how many requests are served. The
+peak-to-mean row runs the other way: a higher ratio means a lower mean rate for the same busy hour,
+so fewer requests and a higher cost per million. The cost inputs sit below those three: engineers,
+licences, salary, host price, support.
 
-The same total over the other denominator this fleet carries, the records it holds, is a
-different unit cost with a different shape:
+The same total over the other denominator this fleet carries, the records it holds, is a different
+unit cost. Its spread is narrower in proportion to its median. You can see it by comparing the two
+charts' subtitles. The reason: its denominator moves with the growth factor alone, because day one's
+holding is one fixed number. The request denominator also carries the busy hour on day one and the
+peak-to-mean ratio:
 
 ```{image} _figures/unit-economics-per-stored.svg
 :alt: The same total over a different denominator, cost per stored TB per month
@@ -131,21 +152,30 @@ the answer to a question, and the question has to travel with it.
 
 ### What makes a unit cost comparable
 
-Three things. A unit cost missing any of them cannot be compared with anything.
+A unit cost can be compared with another only when three things about it are stated: its period,
+what its denominator counts, and what its numerator includes. Missing any one, it cannot be
+compared with anything.
 
-**The period.** Per month or per year, stated. See above.
+**The period.** Per month or per year, written next to the figure. A cost per terabyte with no
+period can be out by twelve (the first section of this page).
 
-**The denominator's definition.** Requests or terabytes. The busy hour or the mean. At what point
-in the life. Before or after replication. Two organisations comparing "cost per request" are
-usually comparing different requests, and the peak-to-mean ratio in
-[ch04](#peak-mean-and-growth) is larger than the difference either is arguing about.
+**The denominator's definition.** This hides multiple choices: requests or terabytes; the busy hour
+or the mean; day one, the horizon or an average between; before or after replication. Two
+organisations comparing "cost per request" can be comparing different requests without either
+knowing, because neither figure says which it used.
 
-**What is in the numerator.** People or not. Network or not. The building or not. A supplier's
-figure includes their margin and excludes your staff. An internal figure usually does the
-reverse.
+**What is in the numerator.** People or not; network or not; the building or not. A supplier's
+figure includes their margin and excludes your staff. An internal figure usually does the reverse.
 
-The book's own figure states all three in the model file, where a reviewer can see them. A unit
-cost stated that way is the only kind that survives being quoted by somebody who was not there.
+This model's cost per stored terabyte-month states all three. The period is in the node's declared
+unit, per terabyte per month. The denominator is in `average_stored`'s formula and note, quoted
+under *The model's own denominator*, earlier on this page, and in day one's holding, whose source
+says it counts the records before replication, indexes or compression. The numerator appears in
+the formulas that build the five-year total: hosts, network, electricity including the building's
+power overhead, licences, support, staff and the cost of moving to the design. Nothing for the
+building itself beyond its power. [Appendix E](#appendix-e-web-service-model) lists every one of
+those formulas, and where each input came from. A unit cost stated that way survives being quoted
+by somebody who was not there.
 
 ### What a unit cost is for
 
@@ -173,8 +203,9 @@ smaller, not more visible. [ch20](#the-missing-node) teaches how to look for a l
 not have, an error no amount of sampling can see.
 
 **Anything about marginal cost.** Every figure here is an average: total over quantity. What the
-*next* million requests cost is a different number. It is nothing until a threshold, and then a
-whole host. No average can express that ([ch08](#regime-changes)).
+*next* million requests cost is a different number. The next million requests cost nothing until
+the fleet runs out of room, and then they cost a whole host, because hosts are bought whole. An
+average spreads that step evenly over every request, so no average can express it.
 
 ## Key takeaways
 
@@ -189,6 +220,10 @@ whole host. No average can express that ([ch08](#regime-changes)).
   least four defensible combinations exist for the same total, they are not close together, mostly
   because growth separates day one from the horizon, and only dividing first puts the same future
   above and below the line.
+- **A straight line between day one and the horizon flatters a unit cost.** A compounding holding
+  curves upward, so the straight line overstates what is held on average and the unit cost comes
+  out low. The faster the growth, the more it flatters. The model keeps it and says so, because the
+  error runs one way.
 - **The unit cost of a fleet depends on a future that has not happened yet.** If the growth arrives,
   the fleet is cheap per request. If it does not, the same fleet is expensive. Most of the interval
   is in the denominator.

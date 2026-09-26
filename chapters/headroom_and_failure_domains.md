@@ -32,10 +32,13 @@ example's, as this chapter leaves it, then the observability platform's:
 
 They are all percentages, and they are not the same kind of thing at all.
 
-**A capacity margin protects against a cliff.** The disk fills, or the working set stops fitting
-in memory, and you find out immediately: one as failed writes, the other as a service time that
-has doubled. What the margin buys is the time between noticing and doing something, plus the
-space a failed host's copies need to land in.
+**A capacity margin protects against a cliff.** Two ceilings protect capacity: *working set
+against memory* and *disk fill at horizon*. When the disk fills it shows up as failed writes. When
+the working set stops fitting in memory, some reads that were served from memory go to disk and the
+service time per request becomes a different number, from a different regime — and
+[ch08](#regime-changes) is about why nothing in a chain of multiplications can say what that number
+is. What the margin buys is the time between noticing and doing something, plus the space a lost
+host's copies need to land in.
 
 **A queueing margin protects against a slope.** Nothing fails and nobody is paged. The fleet slides
 up [ch06](#queueing-and-the-knee)'s curve and every request pays in latency, for as long as nobody
@@ -64,11 +67,11 @@ declares. Here they are, in its words:
 Most headroom is judgement. One piece of it is arithmetic.
 
 A fleet that has to survive losing hosts needs somewhere for their share of the requests to go. That
-capacity is the **failure reserve**. It has to be there beforehand. A fleet that finds it needs one
-during a loss is already over the knee. A **failure domain** is the set of hosts one fault takes out
-together. One host is the smallest. Hosts that share a rack, a switch or a power feed make a larger
-one. The reserve has to cover the failure domain you plan to survive. This chapter's arithmetic, and
-the model's ceiling below, take it to be one host.
+capacity is the **failure reserve**. It has to be there beforehand. A fleet that finds it needs a
+failure reserve during a loss is already past its queueing margin. A **failure domain** is the set
+of hosts one fault takes out together. One host is the smallest. Hosts that share a rack, a switch
+or a power feed make a larger one. The reserve has to cover the failure domain you plan to survive.
+This chapter's arithmetic, and the model's ceiling below, take it to be one host.
 
 Problem 11.1 asks for one number: the share of the fleet's capacity that has to be kept free to
 survive losing a given number of hosts. Every fleet keeps one host free for each host it plans to
@@ -103,13 +106,14 @@ A sizing conversation collects margins. Rebuild wants some. Queueing wants some.
 now and the next purchase wants some. Each request arrives separately, each is defensible, and
 each is granted.
 
-They do not add. Each one takes its share of what the previous one left, so applying them in
-sequence is multiplication. Three margins of a quarter each sound like three quarters of the
-fleet left working, and they are not: three quarters of three quarters of three quarters is a
-little over two fifths. Problem 11.2 is that composition.
+Margins do not add. Each takes its share of what the previous one left, so applying them in
+sequence multiplies them. Take three margins of a quarter each. Added together, they reserve three
+quarters of the fleet and leave a quarter working. Applied in sequence, they leave a little over
+two fifths working.
 
-Nobody in the room multiplied them. That is how a fleet ends up twice the size anybody intended,
-with every individual decision in the chain defensible.
+So adding over-reserves: a room that adds its margins sizes the fleet as though only a quarter of
+it will do the work, and buys hosts that none of the margins it granted asked for. Problem 11.2 is
+the composition.
 
 Push the margins up and addition stops describing anything. Three margins of ninety per cent add
 to nearly three whole fleets, and no system has negative capacity. Taking nine tenths three times
@@ -132,11 +136,16 @@ better than none.
 
 Not a verdict. A probability.
 
-Read the last two columns of the tables above. They answer one question: across everything this
-model thinks could happen, how often does the design end up past this limit? A point estimate
-comfortably inside the margin tells you about one future only. [ch13](#monte-carlo) is where the
-other futures come from. [ch12](#the-sizing-model) is what the difference between the two
-readings costs.
+The last two columns of the tables above answer two questions: *Over allowed* shows how often the
+design ends up past the allowed line — the limit less the margin — and *Over limit* shows how often
+it ends up past the limit itself. A verdict at the plan describes one future, but these columns
+describe all the futures the model thinks could happen.
+
+At *utilisation at the busy hour*, the verdict is *ok*, but the *Over limit* column still shows the
+design past the limit in a share of the futures. At *utilisation, counting coordination*, the
+verdict is already *into the margin* — the plan has spent part of the reserve before anything has
+failed. Read its *Over limit* cell. [ch12](#the-sizing-model) prices the difference between a
+verdict at the plan and what the columns show.
 
 ## What this cannot tell you
 
@@ -170,10 +179,12 @@ requests.
   protects against a cliff, a queueing margin against a slope, a scaling margin against a budget,
   and one percentage cannot serve all three.
 - **The failure reserve is the one margin you can compute, and it is for a loss, not a failure.** A
-  host drained for an upgrade costs the same capacity as one that died. A small fleet pays an
-  enormous share for the reserve and a large fleet almost nothing.
-- **Margins multiply. They do not add.** Each takes its share of what the last one left, so three
-  modest margins can leave well under half the fleet doing the work it was bought for.
+  host drained for an upgrade removes the same capacity as one that has died, and every fleet keeps
+  one host free for each it plans to lose: a small fleet keeps a large share of itself free and a
+  large fleet a small share.
+- **Margins multiply. They do not add.** Each takes its share of what the one before left, so
+  adding reserves more than the margins call for. A fleet sized by adding buys hosts none of the
+  margins asked for, and for large margins addition reserves more than the whole fleet.
 - **A margin without a reason gets copied.** Every ceiling carries a *because*, so that the margin
   can be argued with, adjusted when the reason changes, and dropped when it goes away.
 - **What a margin produces is a probability, not a verdict.** Across every future the model thinks

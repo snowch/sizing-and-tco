@@ -3,7 +3,7 @@
 The design failed. Both problems are about what the model can say afterwards, about the web
 service's failures. The first ranks the inputs by how far each one moved in the failures. The
 second counts the failures in which nothing was extreme, and holds that count against its base
-rate: how often something is extreme when nothing has failed.
+rate: how often something is extreme in any future, whether or not it failed.
 """
 
 from __future__ import annotations

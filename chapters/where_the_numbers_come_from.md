@@ -63,9 +63,9 @@ not cover this one. Writing both down is the discipline: the claim is recorded a
 is doubtful about it is recorded beside it.
 
 `os_reserve` is an `assumption`: one number for the share of memory the kernel, the agents and the
-page cache floor keep. With `os_reserve`, the model reaches its first node about hardware rather
-than data: `ram_for_service`, the memory the service can use per host, which is `ram_per_host`
-times one minus `os_reserve`. The form that takes is:
+page cache floor keep. It has not been measured on these hosts. With `os_reserve`, the model
+reaches its first node about hardware rather than data: `ram_for_service`, the memory the service
+can use per host, which is `ram_per_host` times one minus `os_reserve`. The input is:
 
 ```{literalinclude} ../models/web_service/stages/06-provenance/model.yaml
 :language: yaml
@@ -289,10 +289,13 @@ Three, in `tests/where_the_numbers_come_from/`. The first two have tests. The th
 says why.
 
 **3.1 — Take a constant, and stamp it so somebody else could check it.**
-Pick a quantity a codec decides, measure it over a corpus you generate deterministically, and
-hand back what a stamp records: a value, a standard error that came from somewhere, a unit for
-each with no time in it, and the corpus and codec that produced them. The test stamps it and holds
-it to every rule in `bench.stamp.provenance_problems`.
+Pick a quantity a codec decides and measure it over a corpus you generate deterministically, in
+several shards. Hand back what a stamp records: the mean over the shards as the value, the standard
+error of that mean, the figure from each shard, a unit for each figure with no time in it, and the
+corpus and codec that produced them. *What a measurement is worth*, above, works a standard error
+through from its shards. The test stamps the answer, holds it to every rule in
+`bench.stamp.provenance_problems`, and checks that your standard error matches the shards you
+provide.
 
 ```bash
 python3 -m pytest tests/where_the_numbers_come_from/test_problem_1_measure.py -m problem

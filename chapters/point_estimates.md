@@ -157,7 +157,7 @@ python3 -m pytest tests/point_estimates/test_problem_2_together.py -m problem
 **Model B.** The arithmetic is the same as Model A. The processor time per request was measured at 0.5 ms on version 2.1 of the backend.
 
 % number-ok: the example's own limits, not measurements of the book's model
-**Model C.** The arithmetic is the same as Model A, with the same two inputs. Requests in flight equals peak rate times time each request spends in the service (Little's law, a relationship [ch05](#littles-law) shows is true of any system, whatever is inside it). Response time climbs steeply once the cores are busy more than 75% of the time, so the model keeps them below that. A host gains less benefit from each core it adds beyond 32 cores, because the cores contend with each other.
+**Model C.** The arithmetic is the same as Model A, with the same two inputs. Requests in flight equals peak rate times time each request spends in the service (Little's law, which [ch05](#littles-law) shows holds in a steady state in any system, whatever is inside it). Response time climbs steeply once the cores are busy more than 75% of the time, so the model keeps them below that. A host gains less benefit from each core it adds beyond 32 cores, because the cores contend with each other.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_3_which_kind.py -m problem

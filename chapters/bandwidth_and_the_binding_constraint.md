@@ -99,11 +99,10 @@ fact about losing to anybody.
 
 In each future, the gap is the difference between what the winning chain asks for and the runner-up;
 the row "Median gap between the winner and the runner-up" is the middle of those gaps. Set the
-median gap against the three "Median of the request chain alone", "Median of the memory chain
-alone", and "Median of the disk chain alone" rows: the gap is a sizeable share of what any one chain
-asks for, so these are not three estimates of the same thing that differ slightly—they are three
-different questions with three different answers. The row "Gap exceeded in one future in twenty"
-shows how wide the gap gets: in one future in twenty it exceeds that value.
+median gap against the three *Median of the … chain alone* rows. The gap is a sizeable share of what
+any one chain asks for. These are not three estimates of the same thing that differ slightly: they
+are three different questions with three different answers. The row "Gap exceeded in one future in
+twenty" shows how wide the gap gets: in one future in twenty it exceeds that value.
 
 The row "Median of the largest of the three" sits above every one of the three chain medians because
 the largest of three uncertain counts usually sits above where any one of them usually does. So the
@@ -163,9 +162,15 @@ answer to be set by something nobody was watching.
 
 The chance that *some* constraint binds unexpectedly rises with the number of chains, even while
 the chance of any particular one doing so stays small. Say six chains, each of which surprises you
-one time in ten. The chance that none of them does is nine-tenths multiplied by itself six times,
-which is a little over a half. So a model with six chains spends about half its life with
-something nobody was watching in charge, and every one of the six looked safe on its own.
+one time in ten. If the surprises are unrelated to each other, the chance that none of them happens
+is nine-tenths multiplied by itself six times, which is a little over a half. So a model with six
+such chains spends about half its life with something nobody was watching in charge, and every one
+of the six looked safe on its own.
+
+But that arithmetic treats every chain as a separate gamble. The chains in this service share the
+growth factor, so they tend to surprise you in the same futures. The chance that none surprises you
+is then higher than the arithmetic gives. It still does not follow that more chains are safe: adding
+a chain never makes it less likely that *some* chain surprises you.
 
 The observability model in [Appendix F](#appendix-f-observability-model) also has three chains, one
 each for metrics, logs and traces. There the chains are different workloads that share one ingest
@@ -190,11 +195,11 @@ measured figure would be a `rig` result nobody has taken—the kind quoted from 
 else running.
 
 **Whether another host adds a whole host.** The request chain divides the cores busy at the busy
-hour by what one host can carry, assuming each added host adds a whole host of work—the straight
-line [ch07](#when-adding-servers-stops-helping) showed does not hold. The model checks the fleet you
-decide on against coordination in the ceiling *utilisation, counting coordination*, but the chain
-that recommends a count leaves it out. So wherever coordination costs something, the request chain
-asks for fewer hosts than the requests need.
+hour by what one host can carry, assuming each added host adds a whole host of work—that is, a
+straight line. However, [ch07](#when-adding-servers-stops-helping) showed this assumption does not
+hold. The model checks the fleet you decide on against coordination in the ceiling *utilisation,
+counting coordination*, but the chain that recommends a count leaves it out. So wherever
+coordination costs something, the request chain asks for fewer hosts than the requests need.
 
 **Any feedback between the chains.** The chains share inputs: the growth factor, and for memory and
 disk the records held, but in this model none acts on another. In a real service, a working set that
@@ -271,7 +276,10 @@ one chain, you have found an assumption rather than a fact.
 
 ## Where to go next
 
-[ch11](#headroom-and-failure-domains) is the margin that sits under all three chains, and why it
-is three different margins rather than one.
+Each chain divides by a capacity less a margin: the request chain by a queueing margin, the memory
+chain by a cache margin, the disk chain by a disk margin. [ch11](#headroom-and-failure-domains)
+sorts margins into three kinds by what they protect—a capacity margin against a cliff, a queueing
+margin against a slope, a scaling margin against a budget—and asks what happens when a host dies
+at the busy hour.
 
 [ch12](#the-sizing-model) puts all of Part III together and produces a number.

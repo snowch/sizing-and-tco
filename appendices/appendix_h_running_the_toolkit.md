@@ -33,20 +33,21 @@ npm install -g "mystmd@$(node -p "require('./package.json').devDependencies.myst
 ## What the commands do
 
 ```bash
+make help       # list every target, each with a line saying what it does
 make measure    # re-take every constant that a codec decides
 make models     # evaluate and sample every model, and stamp what each one said
 make figures    # re-render every table and diagram from the stamped results
+make problems   # runs every chapter's problems. They fail until you solve them
 make check      # everything CI runs
-make book       # live preview at localhost:3000
+make book       # build the site and serve it at localhost:3000; run it again after an edit
 ```
 
-Run `make check` before you believe anything. It is the same script CI runs, so the two cannot
-drift, and it takes well under a minute.
+To run one problem rather than all of them, use the command under that problem: `python3 -m pytest tests/<chapter>/<test file> -m problem`.
+
+Run `make check` before you believe anything. It is the same script CI runs, so the two cannot drift. It re-runs every model and rebuilds every page, so it takes minutes. Without MyST installed, `make check` skips the book build and every check that reads it, and says so.
 
 % number-ok: settings this book chose, not figures it measured. Stated once because they never vary, and tests/test_book.py fails if they do.
-Every model run in this book draws 100,000 samples from seed 20260916. Neither appears under the
-tables, because a constant repeated under ninety figures is not information, and a test fails if
-a run ever uses a different one, so that this sentence cannot quietly stop being true.
+Every model run in this book draws 100,000 samples from seed 20260916. Neither appears under the tables, because a constant repeated under ninety figures is not information. A test fails if any run uses a different sample count or seed, so the sentence above cannot stop being true without the build failing.
 
 `python3 -m pip`, not a standalone tool install. `python3 -m pytest` has to work, and a `pytest`
 installed by pipx or uv has its own environment and cannot import this repository's code.
@@ -83,32 +84,43 @@ saying it has not been measured. [ch03](#where-the-numbers-come-from) is about w
 Every constant, including the ones nobody has measured. A row saying *not yet measured* is not a
 gap somebody forgot to fill; it is a figure this repository refuses to invent.
 
-A model is a file. Here is what each one is made of:
+Each model is a file. The table below counts the kinds of node in the web service model, this book's running example:
 
 ```{include} ../chapters/_generated/appendix-h-running-the-toolkit-models.md
 ```
 
-The last row says whether the build classifies the model as a definitional model or a conditional
-one. It works that out from the file, since a `measured` node or a `ceiling` makes it conditional,
-and [ch06](#queueing-and-the-knee) is where the reader's own model crosses that line.
+The table's last row says whether the build classifies this model as a definitional model or a conditional one. The build works that out from the file: a `measured` node or a `ceiling` makes a model conditional. [ch06](#queueing-and-the-knee) is where this running example crosses that line; the chapter adds its first ceiling, and from then on it is conditional.
 
 ## Running your own model
 
-If you have a model of your own, point the toolkit at it in two ways.
+A model file of your own can be checked, and worked out, in two places: at a desk with one command, or in the browser in the frame on this page. Both run the same checks the build runs on the book's own models.
 
-### Running the toolkit: desktop
+Your file must be in the format the book's own model files use. It needs a `model:` name, a `nodes:` section and an `outputs:` list. [Appendix A](#appendix-a-dsl-reference) describes the format.
 
-At a desk, with Python:
+### At a desk
 
 ```bash
-python3 -m sizing.playground.driver /path/to/your/model.yaml
+python3 scripts/verify-models.py path/to/your/model.yaml
 ```
 
-The output is a JSON fixture, suitable for the browser as a `window.__MODEL__` payload. You can feed this to the interactive viewer on the right to see your model's structure, dependencies, inputs and outputs. Or load it into your own pages that embed the viewer the same way the chapters do.
+The file can be anywhere; it does not have to be inside the repository. The command applies every rule the build applies to the book's models:
 
-### Running the toolkit: online
+- every formula's result has the unit its node declares;
+- every input says who decides it and where its number came from (a provenance kind and a source), and a `fact` cites something;
+- every ceiling declares a headroom and a reason;
+- every node feeds an output.
 
-In your browser, use the custom model viewer below. Paste your model file, and the viewer shows your model's structure, dependencies, and what each node computes. You can inspect the graph, click each node to see its definition, and read off formulas and dependencies. If anything is wrong — a formula will not typecheck, or a provenance is missing — the page says so.
+If the file breaks any rule, the command lists every problem at once and exits with an error. A file that will not load at all — a formula that names a node the file does not define, for instance — is reported the same way, as one problem.
+
+If the file passes, the command prints how many nodes it has and whether it is a definitional model or a conditional one. Then, for each output, it prints the value with every input at its stated value or at the median of its distribution. Where an input is uncertain, it also prints the 5th and 95th percentiles of the output.
+
+If a folder named `scenarios` sits beside the file, the command works out each scenario in it. Otherwise it works out the file as written. The command writes nothing: no file in the repository changes.
+
+### In the browser
+
+Paste a model file into the box in the frame below and press *Check*. The box opens with a small working model in the same format, which you can edit.
+
+The page runs `scripts/verify-models.py` on what you pasted: the same rules, from the same file, as the desk command. The first press downloads a Python runtime, once; after that your browser keeps it. Nothing you paste is sent anywhere.
 
 (custom-model-viewer)=
 
@@ -116,7 +128,9 @@ In your browser, use the custom model viewer below. Paste your model file, and t
 :width: 100%
 ```
 
-The viewer runs the real `sizing.dsl` machinery, unmodified, in your browser. What you paste is parsed the same way `make check` parses the book's own models. Every error it rejects is one the toolkit will reject at the desk.
+If the toolkit refuses the file, the page lists every problem. The desk command would refuse the same file for the same reasons. If the file passes, the page says whether it is a definitional or a conditional model, shows each output's value and its 5th-to-95th range, and lists every node. Open a node to see what the file declares for it: its label, its value or distribution, where its number came from, its formula, and for a ceiling its limit, headroom and reason.
+
+The page checks the pasted file alone, so it has no scenarios: it works the file out as written. For scenarios, use the desk command. The page draws no graph and has no sliders. Those are in the chapters' model viewers, built from results the book has stamped; a model of your own has no stamped result.
 
 ## Interactive viewer features
 
@@ -128,13 +142,13 @@ The toolkit's interactive viewers appear throughout the book. Each feature is in
 | **Sliders** | [ch02](#what-a-workload-is) | Open *Inputs* under the graph: one slider for each input that declares a range. Drag it and everything downstream updates as you drag. |
 | **Click a node** | [ch02](#what-a-workload-is) | Opens *Details*: a derived node's formula, an input's value and source, and under *In the file* the node's own lines in the model file. |
 | **Unit checking** | [ch02](#what-a-workload-is) | The toolkit validates every formula. A quantity with the wrong unit is rejected, not silently accepted like a spreadsheet. |
-| **Provenance detail** | [ch03](#where-the-numbers-come-from) | Click an input node to see where it came from: measurement (●), vendor claim (◐), or assumption (○). |
+| **Provenance detail** | [ch03](#where-the-numbers-come-from) | Click an input node and *Details* names its provenance kind in words — fact, vendor claim or assumption — followed by its source. The book's provenance tables mark the same three kinds with ● for a fact, ◐ for a vendor claim and ○ for an assumption. |
 | **Measured constants** | [ch09](#capacity) | Amber nodes: numbers measured on a named implementation. The file holds no number for one, only the name of the stamped result it comes from. |
 | **Ceiling nodes** | [ch06](#queueing-and-the-knee) | Red nodes: limits past which the model changes regime, such as the queueing knee. A chain of multiplications cannot model these, and the build refuses one that declares no headroom below it. |
 | **Model file** | [ch02](#what-a-workload-is) | On a wide screen, press *Expand* and choose *Model file* to read the whole file, with the node you picked marked. |
 | **Problem Check** | Throughout | Embedded under chapter problems. Runs your solution against the toolkit's test suite. Passes only when solved. |
 
-The colours mean the same in every viewer: blue for an input, hollow grey for derived, amber for a measured constant, red for a ceiling. The same interactions (drag, click, expand) work everywhere. Once you understand the pattern in one chapter, you can read any model in the book.
+The colours mean the same in every model viewer in the chapters: blue for an input, hollow grey for derived, amber for a measured constant, red for a ceiling. Every one of those viewers has the same controls: drag a slider, click a node, expand the viewer. The checker above uses the same four colours down the left edge of each node and has none of those controls: it lists the nodes of a file and opens one when you click it. Once you can read one chapter's model, you can read any model in the book.
 
 ## What this cannot tell you
 

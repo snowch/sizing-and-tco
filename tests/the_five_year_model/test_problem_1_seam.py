@@ -64,6 +64,20 @@ def where_it_is_off(yours: tuple[float, float], expected: tuple[float, float]) -
     return " and ".join(said)
 
 
+def how_much_narrower(wide: tuple[float, float], narrow: tuple[float, float]) -> float:
+    """The fraction of the wide interval that the narrow one loses.
+
+    A wide interval with no width has nothing to lose, and dividing by it would stop the test with
+    a ZeroDivisionError instead of a message the reader can act on.
+    """
+    width = wide[1] - wide[0]
+    assert width > 0, (
+        "your interval with the price carried across as a distribution has no width, so there is "
+        "nothing for the other join to narrow. Its high end must be above its low end."
+    )
+    return 1 - (narrow[1] - narrow[0]) / width
+
+
 @pytest.mark.problem
 def test_the_distribution_carried_across_gives_this_interval(stored, price):
     """Draw by draw: the i-th stored figure priced at the i-th price."""
@@ -106,9 +120,7 @@ def test_the_point_estimate_narrows_the_answer(stored, price):
 
 @pytest.mark.problem
 def test_the_narrowing_is_substantial(stored, price):
-    wide = mine(stored, price, True)
-    narrow = mine(stored, price, False)
-    shrinkage = 1 - (narrow[1] - narrow[0]) / (wide[1] - wide[0])
+    shrinkage = how_much_narrower(mine(stored, price, True), mine(stored, price, False))
     assert shrinkage > 0.1, (
         f"the interval only narrows by {shrinkage:.1%}. Check that the price is reaching the "
         "product as a distribution in one case and as a single number in the other."
@@ -163,6 +175,19 @@ def test_a_wrong_answer_is_not_told_the_right_one(stored, price):
         assert message, "a wrong interval produced no explanation"
         for value in expected:
             assert f"{value:,.0f}" not in message, message
+
+
+def test_an_interval_with_no_width_is_told_so():
+    """Scaffolding: a zero-width answer fails with a message, not a ZeroDivisionError.
+
+    The message names the fault and carries no figure, so it cannot give away an expected value.
+    Only its first line is the guard's own: pytest's rewriting appends the comparison below it,
+    which the page's Check, run with ``--assert=plain``, does not show.
+    """
+    with pytest.raises(AssertionError, match="no width") as failure:
+        how_much_narrower((5.0, 5.0), (1.0, 2.0))
+    message = str(failure.value).splitlines()[0]
+    assert not any(c.isdigit() for c in message), message
 
 
 def test_the_dsl_has_no_node_kind_for_this():

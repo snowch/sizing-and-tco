@@ -59,9 +59,10 @@ becomes the binding constraint.
 year, busy or idle. So choosing a host count also commits you to a yearly bill that you never
 sign as a separate decision. Here it is the second-largest running line.
 
-**Support** is a percentage of capital. It is a deferred part of the purchase, indexed to the
-purchase, rather than a running cost. Negotiate the capital down and the support falls with it.
-That is worth knowing before you negotiate.
+**Support** is a yearly charge set as a share of the capital cost. It is billed every year like
+a running cost and the table counts it under *Running*, but it is sized by the capital, not by how
+the fleet is used. So a discount on the capital also cuts the support in every year: each unit of
+money taken off the purchase takes more than that off the total.
 
 **People** is carried as about one engineer's time at a fully loaded rate (salary, employer
 costs, tooling and overhead), and both the engineer count and the rate are assumptions. The line
@@ -115,13 +116,16 @@ apply yours consistently. Saying which you chose, in a comment, is required.
 These are named here so you know each was left out on purpose, not forgotten.
 
 **Tax and depreciation.** How capital is written down, over what period and against what depends
-on the jurisdiction and the company. All of it changes the answer a great deal. A book that
-guessed at it would be giving financial advice. So this chapter produces a cash total: what
-leaves the bank, and when. Hand that to somebody who knows your tax position.
+on the jurisdiction and the company. Any of it can change the answer. A book that guessed at it
+would be giving financial advice. So the total is cash only: what leaves the bank, before tax.
+Hand it to finance or a tax adviser.
 
 **Discount rates.** Money later is worth less than money now. The rate is a policy decision, not
-an engineering one. The model produces undiscounted cash flows on purpose, so that whoever
-applies a discount rate applies theirs.
+an engineering one, so the total is undiscounted. The model has no years in it: one yearly running
+cost multiplied by the horizon, plus the capital once. Every year costs the same, and nothing
+records when the capital is paid. The pieces finance needs to lay the money out by year and apply
+its own rate are on this page: the capital, the yearly running cost (*annual opex* under *What the
+model says*), and the horizon in the row labels.
 
 **Procurement reality.** Lead times, minimum orders, the discount you get for asking, the price
 that changes between the quote and the purchase order. All real, and none of it a modelling
@@ -154,8 +158,9 @@ the part the model is least certain of.
 
 **What the model's structure omits.** Every cost line above is one somebody thought of. There is
 no line for rack space, cross-connects, backup, disaster recovery, the database's own licence if
-it has one, the network gear between racks, or the cost of the migration that fills the fleet.
-The model reports each absent line as zero, confidently. Neither [ch13](#monte-carlo) nor
+it has one, or the network gear between racks. Migration is not missing: the model carries it as
+a declared zero, because the design builds on the platform it already runs on. The model
+reports each absent line as zero, confidently. Neither [ch13](#monte-carlo) nor
 [ch14](#correlation-and-convergence) can see it. That is
 [ch20 · The missing node](#the-missing-node).
 
@@ -217,20 +222,22 @@ whole purchase.
 python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_2_refresh.py -m problem
 ```
 
-**15.3 — Prices you can get.** No test: the prices are the ones you can get, and nobody
-else can get them.
+**15.3 — Prices you can get.** No test: the right figures are your organisation's prices, and
+no test in this repository can know them.
 
-Every price in this book's model is a vendor's claim or an assumption, and the chapter says so.
-Try to get yours. Find the real figure for each cost line: hardware, power, licences, support and
-the people. Record where each came from.
+Every price in this book's model is a vendor's claim or an assumption, and the page says so under
+*What this cannot tell you*. For each of the six cost lines in the split table—hosts, network,
+energy, licences, support and people—record where the figure came from. For any you could not
+get, record which team holds it. Count how many you obtained.
 
-Count how many you could obtain. In most organisations the hardware price is easy. The
-power price is held by a facilities team who have never been asked. The cost of the people is
-either unavailable or politically impossible to write down.
+A good answer shows, for each line, a figure and its source or a named gap. It classifies each
+line by its provenance kind from [ch03](#where-the-numbers-come-from): a bill, contract or invoice
+is a fact; a quote is a vendor's claim; your estimate is an assumption. It counts the gaps.
 
-A good answer has a source per line and an honest count of the gaps. The gaps are the finding. A
-five-year total built from two real prices and four guesses is not a cost model. Knowing which is
-which is the difference between a number and a negotiating position.
+An answer is wrong if it has a figure with no source, records a quote as a fact, or leaves an
+unobtained line out of the count. The gaps are the finding. A total built partly from guesses is
+usable if it names which lines are guesses. This book's model does that: every input carries its
+kind.
 
 ## Where to go next
 

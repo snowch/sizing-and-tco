@@ -43,8 +43,8 @@ Open *Inputs*, drag *replication factor* and watch *hosts for storage* under *Ou
 
 **Replication.** Whole copies. Three copies cost three times the space, survive two losses, and
 are the simplest thing that works. Erasure coding buys the same protection for less space by
-spreading the data over more pieces. Problem 9.2 is that comparison. It pays for the space it
-saves with reads that touch more machines. No model in this book has a term for that cost.
+spreading the data over more pieces. Problem 9.2 is that comparison. Erasure coding pays for the
+space it saves with reads that touch more machines. No model in this book has a term for that cost.
 
 **Compression.** The only term that reduces what you buy, and the only one measured rather than
 decided or assumed:
@@ -52,11 +52,17 @@ decided or assumed:
 ```{include} _generated/capacity-measured.md
 ```
 
-% word-ok: a handful of your own records, not a draw from a spread
-Read the last column. That ratio belongs to one codec and one body of data. It does not belong to
-compression in general, and it does not belong to your data. Take the method rather than the
-number: point the runner at a sample of your own records and get the ratio that belongs in your
-model ([ch03](#where-the-numbers-come-from)).
+That ratio belongs to one codec and one body of data, not to your data;
+[ch03](#where-the-numbers-come-from) is where the book makes that argument. To get the ratio that
+belongs in your model, replace the generator the stamped result names,
+`bench.measure.application_records`, with a generator that reads your own records and measure
+again.
+
+Click *record compression ratio* in the graph and open *In the file* under *Details*. Its entry
+holds no number. It holds only the name of the stamped result its number comes from,
+`result: records-compression`. *Details* also shows the measured value with its standard error,
+what it was measured against, and the path of the stamped result. A spreadsheet cell holding the
+same number could not tell you where it came from.
 
 **Overhead.** Indexes, the write-ahead log and the filesystem's own bookkeeping: the space the
 store keeps beside the records so that it can find them and survive a crash. It multiplies
@@ -93,12 +99,15 @@ same way: a sizing that takes one number for each term is optimistic.
 
 ### Two kinds of terabyte, and the ten per cent
 
-A drive's datasheet says a trillion bytes. A filesystem counts in powers of two. The difference is
-about a tenth. Both are called a terabyte in conversation, and a tenth is a large fraction of what
-compression was going to buy you.
+A drive's datasheet counts a terabyte as a trillion bytes. A filesystem counts in powers of two,
+and its unit, the tebibyte, is about a tenth larger. Both are called a terabyte in conversation.
+This model's example is *disk per host*, from a spec sheet declared in decimal terabytes, as its
+source says. If a plan reads the datasheet in the filesystem's unit, each drive holds about a tenth
+less than planned, and that shortfall comes out of the *disk margin*: the disks reach their fill
+limit sooner than the plan says, before any growth has arrived to explain it.
 
 So every node in this book declares a unit, and the toolkit converts rather than assuming. Problem
-9.3 is that conversion, and this is the chapter where getting it wrong costs money.
+9.3 is that conversion.
 
 ### What comes out
 
@@ -128,11 +137,6 @@ The range on the host count is wide. Most of its width is the growth rate from
 [ch04](#peak-mean-and-growth), as the tornado above showed, not anything in this chapter's chain.
 The disk arithmetic is the well-understood part of the problem. What it is applied to is not.
 
-The measured constant is in the file the same way a ceiling is, and the toolkit reads its stamp
-rather than its number. Click *record compression ratio* in the graph above and open *In the
-file* under Details: its entry holds no number, only the name of the stamped result its number
-comes from, which is more than a spreadsheet cell can say.
-
 ## What this cannot tell you
 
 **What your data compresses to.** The constant was measured over records this repository
@@ -144,10 +148,12 @@ store gets by compressing page by page instead of as one stream. What it would t
 compress your own records with the codec and setting you run, in the units your store compresses
 in. Problem 9.5 is that measurement.
 
-**Anything about record size.** The chain above is a chain of bytes. A store holding many small
-records spends a substantial and sometimes dominant share of its disk on per-record
-bookkeeping. The overhead term here is a flat multiplier and cannot express that. A model of a
-service with a small-record problem needs a term this one does not have.
+**Anything about record size.** The chain above is a chain of bytes: it starts from *records held,
+day one*, declared in terabytes, and never counts records. A store keeps bookkeeping for each
+record as well as for each byte: a header, an index entry. For small records that per-record cost
+is a larger share of the disk than for large ones, but nothing in this repository measures how large that share is.
+*Index overhead* is one multiplier on every byte and cannot express a cost depending on record
+count. A model of a service with many small records needs a term this one does not have.
 
 **What happens when a host's disks are lost.** Every figure is a healthy fleet. Losing a host means
 its copies have to be re-made on the survivors, using disk and bandwidth that were doing something
@@ -164,16 +170,18 @@ three decides the answer.
 :::{div}
 :class: takeaways
 
-% word-ok: a handful of your own records, not a draw from a spread
 - **Four terms stand between the bytes an application holds and what you buy.** Replication and
   overhead multiply it, compression divides it, and the fill limit is a surcharge on all of it.
-- **Compression is the only term that helps, and the only one that is measured.** Replication and
-  the margin are decisions, overhead is an assumption with a shape, and the measured constant
-  carries a standard error the others do not.
-- **The measured ratio belongs to one codec and one body of data.** Point the runner at a sample of
-  your own records and use the ratio that comes out, not the book's.
-- **A datasheet terabyte and a filesystem terabyte differ by about a tenth.** Every node declares
-  its unit and the toolkit converts, because this is the chapter where getting it wrong costs money.
+- **Of the chain's four terms, overhead carries the range that matters and compression carries a
+  bias.** Replication and the disk margin are decisions with no range. Overhead's range moves the
+  disk more than any other term in the chain, reaching further towards more disk. Compression's
+  standard error is negligible.
+- **The measured compression ratio is an upper bound for a real store.** It was measured as one
+  stream from one generated body of records; a real store compresses page by page and gets less.
+  Measure your own records in the units your store compresses in.
+- **A datasheet terabyte and a filesystem terabyte differ by about a tenth.** A drive counted in
+  the wrong unit holds less than planned, and the shortfall comes out of the disk margin. Every
+  node declares its unit and the toolkit converts.
 - **Almost all of the width in the host count is the growth rate, not the disk arithmetic.** The
   chain is the well-understood part of the problem. What it is applied to is not.
 :::

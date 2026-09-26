@@ -71,6 +71,13 @@ it and the chapter that added it. The table is rendered from the model file, so 
 with it. Each row shows the label and in backticks the name the file uses; formulas refer to nodes
 by those names.
 
+A ceiling's row starts with *limit on*, as its box in the graph does, separating it from the
+quantity it watches when the two share a label such as *utilisation, counting coordination*, which
+has a derived row and a *limit on* row. Inputs have no row; they appear only inside formulas. To
+find an input's source, look it up in the provenance table under *Where the inputs came from*; it
+lists every input under the same name it has in formulas. For example, `service_demand` in the
+formula for *cores busy at the busy hour* is *CPU time per request* in the provenance table.
+
 ```{include} ../chapters/_generated/appendix-e-web-service-model-formulas.md
 ```
 
@@ -117,11 +124,13 @@ only with another can still move the answer a long way.
 
 **Every bar is a cost input, and the demand side is not here at all.** No request rate, no growth
 rate, no records held. That is not an omission in the chart. The total prices the fleet that was
-bought, and the fleet is `hosts` — a number somebody decided, not one the model derived. More
-data does not buy more hosts by itself; it makes the fleet you have too small, and the model says
-so through the disk and cache ceilings rather than through the bill. Drag *records held, day one*
-on the interactive page and watch the recommendation and those two ceilings move while the total
-sits still. The panel names, for any input, which outputs it can move and which it cannot.
+bought, and the fleet is `hosts`, *hosts in the fleet*: a number you decide, which the model does
+not derive. More data does not buy more hosts by itself. It makes the fleet you have too small, and
+the model says so through the disk and cache ceilings, not through the bill. On the interactive
+page, drag *records held, day one*: *hosts the model recommends* and those two ceilings move, and
+the five-year total stays where it is. On that page, click any input in the graph; the *Details*
+panel shows it with a *Reaches* section naming the outputs it can move and, under "Cannot move", the
+ones it cannot.
 
 For demand to move the five-year total, you have to re-decide the fleet, which is what the second
 scenario below does.
@@ -154,11 +163,23 @@ Every input the model has is listed in the first table, with its kind — fact, 
 assumption — and the source the model file gives for it. The name in backticks is the one the
 formulas use, so an input you meet in the formula table can be looked up here.
 
-% word-ok: a sample of your own records is a handful of records, not one of the model's draws
-One measured constant, and its conditions are on the row: a compression ratio belongs to a codec
-and a body of data, and this one was measured over a synthetic corpus of application records that
-this repository generates. The method transfers; the number does not. Point the runner at a
-sample of your own records ([ch03](#where-the-numbers-come-from)).
+The model has one measured constant: *record compression ratio* (`record_compression`). The row
+names the implementation that measured it. The line under the table names the corpus — a synthetic
+mixture of application records this repository generates — and links the stamped result, which lists
+the conditions the number holds under. A compression ratio belongs to one codec and one body of
+data. The method transfers; the number does not.
+
+One condition shapes how you use the number: the records were compressed as one continuous stream. A
+database compresses page by page and sees less repetition across records than a stream does, so the
+ratio is an upper bound on what a store achieves, not an estimate. The model divides by it:
+`raw_per_stored = replication_factor * index_overhead / record_compression`. A ratio that is too
+high gives too little raw disk, so *raw disk needed at horizon*, *hosts for storage*, and *disk fill
+at horizon* all come out optimistic: a real store needs more disk than the chain says. Nothing in
+this repository measures how much more. To get the ratio for your own data, replace the generator
+the stamped result names, `bench.measure.application_records`, with a generator that reads your own
+records. Then run `make measure` to take the constant again, and `make models` to carry it through
+the model. [Appendix H](#appendix-h-running-the-toolkit) shows how to follow a constant back to its
+stamped result and re-derive it.
 
 ## Two scenarios, side by side
 

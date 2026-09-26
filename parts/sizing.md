@@ -31,6 +31,6 @@ reserves more of the fleet than the margins themselves ask for, and ends up buyi
 individual margin requested.
 
 **[ch12 · The sizing model](#the-sizing-model)** assembles all of it and produces the number the
-book is about. It lets the inputs move and asks how often the fleet goes past each of its ceilings;
-the answer is not one number but a relationship between hosts and risk, where the person signing for
-the fleet chooses where to sit. How those risks were computed is Part IV's subject.
+book is about. It lets the inputs move and asks how often the fleet goes past each of its ceilings.
+The answer is not one number: a relationship between a number of hosts and a risk. The person who
+signs for the fleet chooses a point on it. How those shares were computed is Part IV's subject.

@@ -38,13 +38,13 @@ point estimates recommended, and the same model reported this about it:
 ```
 
 The *Over limit* column shows *utilisation at the busy hour* went over its limit in a substantial
-share of the futures the model thought plausible. Its limit is one, every core busy, in the
-*Limit* column, not the *Allowed* one. Its *Verdict* is ok; the plan sat inside the margin at the
-point estimate, so these are failures the point estimate did not show. The row *utilisation,
-counting coordination* had a larger *Over limit* share, but its *Verdict* was already 'into the
-margin'. Other ceilings had their own *Over limit* shares; the working set outgrew memory in more
-futures than the busy hour went over its limit. Nobody was misled. Nothing was hidden. The
-figures were on a page.
+share of the futures the model thought plausible. Its limit is one, every core busy, in the *Limit*
+column, not the *Allowed* one. Its *Verdict* is ok; the plan sat below its *Allowed* figure with the
+margin untouched at the point estimate, so these are failures the point estimate did not show. The
+row *utilisation, counting coordination* had a larger *Over limit* share, but its *Verdict* was
+already "into the margin". Other ceilings had their own *Over limit* shares; the working set outgrew
+memory in more futures than the busy hour went over its limit. Nobody was misled. Nothing was
+hidden. The figures were on a page.
 
 That is the first finding of most post-mortems worth doing: **the failure was forecast, in
 writing, by the people it later surprised.** What went wrong was not the model. A percentage in a
@@ -102,10 +102,9 @@ afterwards tends to be about one dramatic thing, because a dramatic thing can be
 finding only turns up if you look for it.
 
 In most of the failures, something was extreme. That share means something only beside a second
-figure, which the same cell gives: the share of *all* futures, failed or not, in which something
-was extreme. Call this the **base rate** — how often something is extreme when nothing has
-failed. Against its base rate the finding holds: the failures contain an extreme input far more
-often than futures at large.
+figure, which the same cell gives: the share of *all* futures, failed or not, in which something was
+extreme. Call this the **base rate**. Against its base rate the finding holds: the failures contain
+an extreme input far more often than futures at large.
 
 Every input is above its own ninetieth percentile in one future in ten, by definition. The more
 uncertain inputs a model has, the more often at least one of them is extreme in any future,
@@ -114,9 +113,11 @@ rate has discovered how many inputs the model has.
 
 ### The same method, on a model with a hole in it
 
-Here is what this technique does when the cause is not in the file. The observability model's
-ingest total excludes traces entirely, because nobody has measured spans per request
-([ch20](#the-missing-node)):
+The observability model has a node for spans per request (`spans_per_request`), a measured constant
+that nobody has measured yet; the box below names it. A node with no value, and everything
+downstream of it, takes part in none of the futures the model draws, so the whole traces chain is in
+the file but in none of the samples. The ingest figure the model can compute is *ingest, metrics and
+logs only*, which leaves traces out ([ch20](#the-missing-node)):
 
 ```{include} _generated/what-the-model-got-wrong-unmeasured.md
 ```
@@ -126,9 +127,14 @@ Run the identical attribution against its ingest ceiling, and it is happy to hel
 ```{include} _generated/what-the-model-got-wrong-incomplete.md
 ```
 
-The top three are confident, specific and ranked. Not one of them mentions the chain that is
-missing, because the chain is not in the samples and never was. If traces were what filled that
-pipeline, this table is a list of innocent parties in descending order of how guilty they look.
+The rows are specific and ranked. Not one of them mentions spans per request, because the
+attribution can rank only inputs that were drawn, and spans per request never was. Two rows would
+have a share in the cause if traces filled the pipeline: *request rate*, the second row, and *annual
+growth*, the fourth. Both feed the traces chain as well: span rate is request rate times spans per
+request times the trace keep rate times the growth factor. The other rows (the label values, lines
+per request and the byte sizes) feed only metrics and logs. The table ranks the inputs as if they
+were the whole cause. If traces filled the pipeline, it ranks the wrong things in the order they
+look guilty.
 
 **A post-mortem inside a model is a post-mortem of that model.** It can tell you which of the
 things you thought of was responsible. It cannot tell you that you thought of the wrong things,
@@ -166,11 +172,11 @@ make the comparison without taking anybody's word for it.
 The [preface](#preface) posed one question: **How big, how much, and how wrong could I be?**
 
 **How big**: Part III answered it with a chain of multiplications and a number you could put on a
-purchase order. **How much**: Part V answered it over a horizon, split between the invoice that
-gets a meeting and the one that does not. **How wrong could I be**: the book answered it in two
-steps. First by sampling what was written down in Part IV. Then, in [ch20](#the-missing-node) and
-in the section on a model with a hole in it earlier on this page, by showing the part of the
-answer that sampling cannot reach.
+purchase order. **How much**: Part V answered it over a horizon, split between the invoice that gets
+a meeting and the one that does not. **How wrong could I be**: the book answered it in two steps.
+First by running the sampling that Part IV teaches, on inputs written down throughout the book.
+Then, in [ch20](#the-missing-node) and in the section on a model with a hole in it earlier on this
+page, by showing the part of the answer that sampling cannot reach.
 
 A model can tell you how wrong its inputs might be. Nothing in it can tell you that the model is
 the wrong shape, and a method that claimed otherwise would be the most dangerous thing in this

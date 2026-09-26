@@ -66,9 +66,10 @@ in a different size, which is the error that looks right.
 
 ## Counting units are units
 
-The build's unit registry treats things that are counted — requests, spans, samples, series, log
-lines, queries, hosts, nodes, cores, labels, drives, failures, US dollars — as units of their own,
-not as plain numbers.
+% word-ok: a sample here is one reading a scrape takes, a counting unit, not one of the model's draws
+The build's unit registry treats things that are counted as units of their own, not as plain
+numbers: requests, spans, samples, series, log lines, queries, hosts, nodes, cores, labels, drives,
+failures, and US dollars.
 
 ```{literalinclude} ../sizing/units.py
 :language: python
@@ -81,12 +82,14 @@ pair and you get a plausible answer with no complaint. With them, the formula
 `request/second × span/request × byte/span` produces `byte/second`, and no other product of those
 three is well formed.
 
+% word-ok: a sample here is one reading a scrape takes, a counting unit, not one of the model's draws
 Dollars are on the list for the same reason: a model that adds dollars to terabytes is broken, and
 nothing else in the registry would notice. The cost is a node. Going from one counting unit to
 another requires a node whose unit is the conversion itself — spans per request, samples per series,
 log lines per request, cores per host. That node is an input like any other, so it must say where
 its number came from:
 
+% word-ok: a sample here is one reading a scrape takes, a counting unit, not one of the model's draws
 - **spans per request** (observability model): a measured constant, belonging to one instrumented
   application at one version; nobody has measured it here.
 - **one sample per series** (observability model): a definition — one scrape takes one sample from
@@ -102,9 +105,9 @@ node with a stated source. A rule in a style guide cannot make you do that.
 ## Dimensions are not enough
 
 Most of what the check does is not refusing. It is converting: two units of the same kind with
-different sizes. A unit's dimensions are the kind of thing it measures — a length of time, an amount
-of data, money — without its size; terabytes and tebibytes have the same dimensions. The table below
-lists every conversion the build applies in the book's two models.
+different sizes. A unit's dimensions are the kind of thing it measures (a length of time, or money)
+without its size; terabytes and tebibytes have the same dimensions. The table below lists every
+conversion the build applies in the book's two models.
 
 ```{include} ../chapters/_generated/appendix-d-units-conversions.md
 ```
@@ -113,6 +116,11 @@ Every row is a formula whose result is the right kind of quantity at the wrong s
 terabyte per year and dollars per terabyte per month have identical dimensions. A check that
 compared dimensions alone would pass a unit cost twelve times too large — the cost per stored TB per
 month that [ch17](#unit-economics) works with, a figure likely to be quoted in a meeting.
+
+Because data has no dimension in the registry, a check on dimensions alone would treat a plain
+number and a terabyte as the same. The build counts bits and bytes in each unit as well, so it
+refuses both a formula that makes a pure number for a node declared in TB and a ceiling in TB with a
+plain number for its limit.
 
 ## Five places a unit goes wrong
 
@@ -161,7 +169,7 @@ units library at all.
 
 Pint is kept out of the arithmetic for two reasons. First, the toolkit reruns each model many times
 to see how far the answer can move, and numbers that carry units are slow to work with at that
-scale. Second, the code that reruns the model — `sizing/mc.py` — is written to be read end to end,
+scale. Second, the code that reruns the model (`sizing/mc.py`) is written to be read end to end,
 and [Appendix B](#appendix-b-monte-carlo-module) reads it. A units library inside it would add code
 with nothing to do with what that module is for.
 

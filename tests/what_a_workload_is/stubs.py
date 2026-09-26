@@ -17,22 +17,26 @@ def stocks_and_flows(nodes: dict[str, str]) -> dict[str, str]:
     dictionary mapping every one of those names to one of three strings:
 
     ``"stock"``
-        A level. How much there is, right now. Storage held, series alive, requests in flight.
+        A level: how much of some thing there is now. Its unit names the thing: hosts,
+        storage held, series alive, requests in flight.
     ``"flow"``
-        A rate. How much per unit of time. Bytes ingested per second, requests arriving per
-        second, dollars per year.
+        A rate: how much per unit of time. Bytes ingested per second, requests arriving per
+        second, dollars per month.
     ``"neither"``
-        A pure number, a ratio, a price per unit of something that is not time, a duration.
+        A duration, a ratio, a price per something that is not time, or a pure number,
+        including a count that multiplies something else, such as the values a label takes.
 
-    Classify by **meaning**, from the name and the words beside it. The test classifies by
-    **dimension**, from the unit the model declares - a flow has time in its denominator, a stock
-    does not, and a duration has time in its numerator. If your reading of what a quantity *is*
-    and the unit somebody declared for it disagree, one of the two is wrong, and finding out which
-    is the exercise.
+    Classify by meaning, from the name and the words beside it. The test classifies by
+    dimension, from the unit the model declares, by the rule under *Four kinds of quantity* on
+    the chapter page. A flow has time in its denominator. A stock's unit names an amount of
+    some thing with no *per*. A duration has time in its numerator and nothing else. Anything
+    else is neither. Every unit in this model typechecks, so where your reading of what a
+    quantity is and the unit the model declared for it disagree, your reading missed something
+    the unit records. A failed Check lists the nodes that disagree, each with its unit.
 
-    Why it matters: a stock and a flow are added, compared and budgeted differently, and the two
-    commonest sizing errors in this book's experience are multiplying a flow by nothing and
-    calling it a stock, and sizing a store from a peak rate that only holds for an hour.
+    Why it matters: a stock and a flow are added, compared and budgeted differently. Two
+    errors come from confusing them: multiplying a flow by a plain number and calling it a
+    stock, and sizing a store from a peak rate that holds for only an hour.
     """
     raise NotImplementedError("problem 2.1")
 

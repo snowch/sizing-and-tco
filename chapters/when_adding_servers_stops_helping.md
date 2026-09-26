@@ -103,14 +103,13 @@ promised.
 The table compares the fleet as it stands with the same workload on twice the hosts, with everything
 else unchanged. The *Ratio* column divides the second by the first. *Hosts in the fleet* and
 *throughput if scaling were free* both double. The straight line is one host's throughput times the
-count. The throughput the fleet can actually reach rises much less than double, so scaling
-efficiency—that throughput divided by the straight line—falls: its *Ratio* is throughput's halved.
+count. *Achievable throughput* rises much less than double, so scaling efficiency falls. It is
+throughput divided by the straight line: its *Ratio* is throughput's halved.
 
 *Utilisation* halves: the same busy cores divided by twice the cores, and it is the queueing figure
 from [ch06](#queueing-and-the-knee), which does not count coordination. *Utilisation, counting
 coordination* falls by much less than half, as it divides the arriving work by what the fleet
-actually delivers, which rose by less than double. Time spent queueing falls by more than half
-because the calculation uses the optimistic *utilisation* and ch06's non-linear division, which
+delivers, which rose by less than double. Time spent queueing falls by more than half because the calculation uses the optimistic *utilisation* and ch06's non-linear division, which
 works in your favour in this direction. *Where adding hosts stops helping* does not move, as it
 depends on the two coefficients, not on fleet size.
 
@@ -118,17 +117,16 @@ The next two tables show ch06's ceilings table for the fleet as it stands and fo
 They hold the ceiling ch06 introduced and the two this chapter adds. For both utilisation ceilings,
 the shares of futures past the allowed line and past the limit fall when the fleet doubles, as the
 *Over allowed* and *Over limit* columns show. *Fraction of the fleet doing nothing useful* has a
-limit of one—a fleet cannot waste more than all of its work—so it never passes its limit; read its
+limit of one. A fleet cannot waste more than all of its work, so it never passes its limit; read its
 allowed line instead. That row moves the opposite way when the fleet doubles: its value rises, its
 verdict worsens, and the share of futures past the allowed line rises. This ceiling protects a
-budget, not latency—nothing fails and nobody is paged—and a fleet past its allowed line is paying
+budget, not latency. Nothing fails and nobody is paged, and a fleet past its allowed line is paying
 for hosts whose work goes to coordination and contention rather than to requests.
 
 Doubling a fleet buys lower queueing time, by the optimistic measure, and little extra
-capacity—different purchases. A request for more hosts does not say which it is buying; the table
-shows them as separate rows so you can see which you are getting. The graph below has sliders for
-*contention* and *crosstalk*: drag *crosstalk* and the peak moves, while the fleet you have stays
-where it is.
+capacity. These are different purchases. A request for more hosts does not say which it is
+buying; the table shows them as separate rows so you can see which you are getting. The graph
+below has sliders for *contention* and *crosstalk*.
 
 ```{iframe} /models/web_service_scaling-reference.html
 :width: 100%
@@ -139,7 +137,7 @@ one on the utilisation the queueing view understated.
 ### Fitting the coefficients from what you have
 
 Measuring the fleet at more than one size is also how you fit the coefficients. The law has three
-unknowns—one host's throughput, contention and crosstalk—and three measurements at three different
+unknowns: one host's throughput, contention and crosstalk. Three measurements at three different
 host counts determine them exactly. You will usually have three: one machine on a bench, the fleet
 you run now, and the fleet you ran before you grew it. That is not much data, and it is what exists.
 
@@ -244,8 +242,8 @@ python3 -m pytest tests/when_adding_servers_stops_helping/test_problem_3_peak.py
 this repository has none of them.
 
 Somewhere in your organisation there is a tier that got a bigger fleet and did not get
-proportionally faster. Find its throughput at two fleet sizes, and a single machine's on a bench if
-anyone ever ran one. Those are the three measurements the chapter says you usually have.
+proportionally faster. Find its throughput at two fleet sizes, and a single machine's on a bench.
+Those are the three measurements the chapter says you usually have.
 
 Put them through the rearrangement you wrote for 7.2: by hand, or by calling your `fit` at a desk.
 The Check on this page runs the book's test cases, not your numbers. Then use 7.3 to write down
