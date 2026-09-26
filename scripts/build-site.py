@@ -806,7 +806,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const frame = box.querySelector("iframe");
     if (frame && frame.contentWindow) frame.contentWindow.postMessage({ expanded }, "*");
   };
+  // Expanded fills the screen, and on a phone it reads as a page of its own, so Back closes it
+  // rather than leaving the chapter. Opening adds a history entry; every way of closing goes
+  // back through it, so the entry never outlives the box and the next Back leaves as usual.
   const close = () => {
+    if (!document.querySelector(".expanded")) return;
+    if (history.state && history.state.expanded) history.back();
+    else shut();
+  };
+  addEventListener("popstate", () => shut());
+  const shut = () => {
     const open = document.querySelector(".expanded");
     if (!open) return;
     const button = open.querySelector(".expand");
@@ -833,8 +842,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const wire = (box, button) => {
     button.addEventListener("click", () => {
       if (box.classList.contains("expanded")) { close(); return; }
-      close();
+      shut();
       scrolled = window.scrollY;
+      history.pushState({ expanded: true }, "");
       box.classList.add("expanded");
       root.classList.add("model-open");
       tell(box, true);
