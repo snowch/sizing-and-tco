@@ -206,6 +206,13 @@ def test_the_shipped_files_leave_the_work_to_the_reader():
     copy = load_model(ROOT / "tests/the_missing_node/fixtures/repaired.yaml")
     assert set(copy.nodes) == set(shipped.nodes), "the copy the reader repairs is already repaired"
 
+    shipped = yaml.safe_load(
+        (ROOT / "tests/what_a_workload_is/problem_2_daily_ingest.yaml").read_text()
+    )
+    assert list(shipped) == ["daily_ingest"], "the fragment ships the one node and no duration"
+    assert shipped["daily_ingest"]["unit"] == "TB"
+    assert shipped["daily_ingest"].get("formula") in (None, "")
+
 
 def test_every_problem_file_holds_a_test_the_reader_has_to_pass():
     """The page counts the reader's tests, and the marker is what tells them from the book's.
@@ -242,3 +249,27 @@ def test_every_problem_file_holds_a_test_the_reader_has_to_pass():
         "these hold no test marked `problem`, so a reader is given nothing to pass:\n  "
         + "\n  ".join(missing)
     )
+
+
+def test_the_stub_for_problem_1_1_shows_the_names_it_hands_over():
+    """The example in problem 1.1's stub names inputs the web service model bands today.
+
+    The stub shows the reader what ``bands`` looks like, because a type is not a picture and a
+    reader at ch01 has never opened the model file. Checked here, over the stubs file as shipped,
+    rather than beside the problem, where the page runs every test over the reader's copy: a
+    reader who tidied the docstring away was told the book's own checks had failed.
+    """
+    import inspect
+
+    from tests.point_estimates.oracle import ends, the_model
+    from tests.point_estimates.stubs import spread_of_each
+
+    shown = [
+        line.split("'")[1]
+        for line in inspect.getdoc(spread_of_each).splitlines()
+        if line.strip().startswith("'") and "': (" in line
+    ]
+    assert shown, "the stub no longer shows what bands looks like"
+    handed = ends(the_model())
+    missing = [name for name in shown if name not in handed]
+    assert not missing, f"the stub's example names {missing}, which the reader is not handed"

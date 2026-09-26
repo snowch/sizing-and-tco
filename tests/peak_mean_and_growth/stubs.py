@@ -22,8 +22,9 @@ def busy_hour_rate(hourly_shape: np.ndarray, daily_total: float) -> float:
     particular - normalise them. That is most of the problem, and getting it wrong gives an answer
     that is confidently off by whatever the weights happened to add up to.
 
-    The test also checks a flat day, where the busy-hour rate and the daily mean rate must agree,
-    because a system with no peak has nothing to size for.
+    The test also checks a flat day, where every hour carries an equal share of the day, so the
+    busiest hour is no busier than the average. On a flat day the busy-hour rate and the daily mean
+    rate must agree, and a fleet still needs to size to that rate.
     """
     raise NotImplementedError("problem 4.1")
 
@@ -34,16 +35,18 @@ def growth_gap(t0: float, growth_factors: np.ndarray, years: float) -> tuple[flo
     You have a starting capacity ``t0`` and a bag of plausible annual growth factors
     (``growth_factors``: 1.2 means twenty per cent a year). You want the capacity after ``years``.
 
-    There are two things you could compute and people compute the wrong one:
+    There are two things you could compute—plans usually compute the first:
 
-    * take the **average growth rate** and compound it over the years;
-    * compound **every** growth rate over the years, and average the results.
+    * take the ordinary **average** of the growth factors (add them up and divide by how many)
+      and compound it over the years from ``t0``;
+    * compound **every** growth factor over the years from ``t0``, and take the ordinary average
+      of the results.
 
     Return both, in that order.
 
-    They are not equal, and one of them is always larger. Work out which before you run it, then
-    run it. The gap widens with the spread of the growth rates and with the horizon, which means
-    it is largest in exactly the situation people use a five-year plan for.
+    Over one year the two are equal. Over more than one year they differ, and one is always larger.
+    Work out which before you run it. The gap widens with the spread of the growth factors and with
+    the horizon, so it is largest over the five-year horizon a fleet is bought against.
 
     The test asserts the order and that the gap is material. It does not tell you the answer; the
     values come from the bag you are handed.

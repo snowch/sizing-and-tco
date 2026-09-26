@@ -14,21 +14,21 @@ You need to buy hosts for a new service. The order goes in this week. So you mul
 
 None of those is a single number. Traffic has grown at a different rate each year. You have not chosen a host yet. So you pick the middle value for each — what most people do. The arithmetic is straightforward. What comes out is one number. Nothing in it tells you whether it is safe to sign for.
 
-Two things are hidden in that number.
+Two things are hidden in that one number.
 
-1. **The ranges you threw away.** Each middle went into the arithmetic as a measured fact. What came out has no trace of the range it came from. Later you will give the model the full range instead of its middle and get a range of answers back.
+1. **The ranges you threw away.** Each input's middle value went into the arithmetic as if it were known exactly. The answer has no trace of the range each input came from.
 2. **A structural flaw.** A chain of multiplications cannot see the queueing knee: the point where spare capacity runs out and response time climbs steeply. Measuring the inputs better will never find this error.
 
-:::{note}
-Both flaws will be addressed as the book progresses: structural limits in [ch06](#queueing-and-the-knee), and ranges in [ch13](#monte-carlo).
-:::
+The table below shows the first of these for the book's own web service model, in its finished form. It has two rows: the hosts the model recommends, and the five-year total cost of ownership.
 
-Here is an example of the first of the two. When you work the web service arithmetic the way we just did—all inputs at their bottom, then all at their top—you get two answers. The point estimate (all at middle) sits between them. But not in the middle. Most possible outcomes need more hosts than the point estimate says, as [ch13](#monte-carlo) will show.
+The column headed *Point estimate* is the arithmetic done once, with every input at the middle of its range—the value it is as likely to fall below as above. The column headed *Smallest and largest answer* is the same arithmetic done many times over, each time with every input taking a fresh value from its range. That value is usually inside the ends the model gives it, and for some inputs now and then beyond them.
+
+Each end of that column is a single answer: the most extreme one out of all those repetitions. That is why it is unlikely but possible.
 
 ```{include} _generated/point-estimates-outputs.md
 ```
 
-The first row shows the point estimate (54). Beside it are the smallest and largest answers (3 to 1,481). They are not close. These extremes are unlikely, but possible.
+The two ends are far apart. The point estimate sits much nearer the smallest answer than the largest, in both rows. The method that produced the second column is taught in [ch13](#monte-carlo).
 
 ## The material
 
@@ -54,9 +54,9 @@ Multiplying uncertain numbers does not average their doubt. It compounds it.
 :::{div}
 :class: example
 
-You know this without servers. Suppose you take a taxi to work and the fare is charged by the minute. Ask someone: *how much will your commute cost this year?* They do not give a number. They say: *"Maybe 250 days, maybe 260 if I'm in the office more. 25 minutes usually, 40 if the bypass is busy. The rate is around £0.50 a minute, might be £0.75 in rush hour."*
+You know this without servers. Suppose you take a taxi to work and the fare is charged by the minute. Ask someone: *how much will your commute cost this year?* They do not give a number; they say: *"Maybe the usual number of days, a few more if I'm in the office much. The ride is usually short, but much longer when the bypass is busy. The fare is the usual rate, though higher in rush hour."*
 
-That is three ranges, not three numbers. Work through what that means:
+That is three ranges, not three numbers. The table below works out the year's fares for each combination: the usual commute first, then each input moved on its own to its most, then all three at once.
 
 | Run | Days | Minutes/day | Rate/min | Total cost |
 |-----|------|-------------|----------|-----------|
@@ -65,26 +65,18 @@ That is three ranges, not three numbers. Work through what that means:
 | 3 (worse traffic) | 250 | 40 | £0.50 | £5,000 |
 | 4 (worst case) | 260 | 40 | £0.75 | £7,800 |
 
-The arithmetic is right in each run. But the four answers are different. Pick one number? Which one did you pick? You do not know.
-
-If you picked the middle value for each (250 days, 25 minutes, £0.50), you got run 1. But the outcome could be run 2, 3, or 4. Run 4 costs more than twice as much.
+The arithmetic in every row is right. Each input moved on its own raises the fares, some a little and some a lot; all three together raise them further than any one does alone. Each usual value is the bottom of its range, so every surprise costs more. If you pick one value for each input, the usual one, you get the first row: a point estimate that is also the cheapest year you could have. One number cannot tell you which row your year will be.
 
 :::
 
 
-A point estimate assumes everything lands in the middle. Reality does not work that way.
+A point estimate treats every input as landing on the value you picked. The table shows what happens when some of them do not.
 
 The honest answer to *how big* is not one number. It is the list of answers you could get depending on what turns out to be true.
 
 ### The error a range cannot show
 
-So far this is about how wide the answer is. Now a different error: one that running the arithmetic again cannot find, and which decides whether your model needs the second half of this book.
-
-Almost all of the first row's width in the web service model came from the growth rate. It is a forecast. It compounds over five years. It moves the host count more than any other input. Finding that out, rather than guessing, is [ch19](#which-input-is-the-answer). It is the most useful thing you can do with a model you have.
-
-The second row (costing) moves for different reasons. Once you decide how many hosts to buy, the cost is just arithmetic. Sizing is about the world; costing is about a decision you have already made. Keeping those apart is most of Parts III and V.
-
-Varying inputs across their ranges gives you the complete picture, and most of this book teaches how to do it well. But it reports only the doubt you wrote down. There is a second kind of error it cannot see, and one question tells you whether your model is exposed to it:
+So far this page is about how wide the answer is. There is a second kind of error that running the arithmetic again cannot find. Varying the inputs across their ranges reports only the doubt you wrote down. One question tells you whether your model is exposed to it, and so whether the model needs ceilings with a declared margin below each:
 
 **Is the answer guaranteed to be right if every input is right?**
 
@@ -101,22 +93,20 @@ If yes, you have a definitional model. If no, you have a conditional one.
 
 **Conditional model.** A model that holds only on conditions. It has at least one of two things a definitional model does not.
 
-*Measured constants.* How much smaller a record is on disk than in memory after compression. How much work one processor core does per request. These are measured, not derived. Each belongs to one implementation at one version, and each has a measurement error. Upgrade the software and the constant is not uncertain, it is wrong, and it is outside the range you gave it, because that range described the old version.
+*Measured constants.* How much smaller a record is on disk than in memory after compression. How much work one processor core does per request. These are measured, not derived. Each belongs to one implementation at one version, and each has a measurement error. Upgrade the software and the constant is not uncertain, it is wrong, and it lies outside the range you gave it, because that range described the old version.
+
+A number is a measured constant because of where it came from, not because of what it measures. Processor time per request is a measured constant when somebody measured it on one implementation at one version, and the model records it as that measurement. When you estimated it or chose it, it is an ordinary uncertain input with a range, and on its own it leaves the model definitional.
 
 *Ceilings.* The queueing knee, where response time climbs steeply while there is still spare capacity. A host failing at the busy hour, so its load lands on survivors that are already busy. A working set outgrowing memory. These are regime changes, and **a chain of multiplications cannot model a regime change.** It carries on past the limit as if nothing happened, and reports a system running at several times its own limit.
 
 Every input can be right and the answer still wrong. So a conditional model must declare the headroom—the margin below each ceiling—it will not cross. The toolkit enforces this: you cannot build one without these declarations.
 :::
 
-The names say what a model contains, not what it is for. A model that works out how many hosts to buy can still be definitional, and the web service model is, until [ch06](#queueing-and-the-knee) adds its first ceiling. When this book says *sizing model* or *cost model* it means what those words mean at work: the model that produces a host count, and the model that turns it into money.
-
-### Where a definitional model becomes a conditional one
-
-The kind decides what you must guard against. In a definitional model, uncertainty in the inputs produces uncertainty in the output, and ranges on the inputs alone tell you everything you need. In a conditional model, an input can be inside its range and the answer still be wrong—because an unstated ceiling has been crossed. The toolkit reads the kind from the file: add one measured constant or one ceiling and the verdict changes. Problem 1.3 asks you to find that moment in three model descriptions.
+The toolkit works out which kind a model is from what is in it: one measured constant or one ceiling makes it conditional, and nobody declares this by hand. The names say what a model contains, not what it is for. A model that works out how many hosts to buy can still be definitional, and the web service model is, until [ch06](#queueing-and-the-knee) adds its first ceiling. When this book says *sizing model* or *cost model* it means what those words mean at work: the model that produces a host count, and the model that turns it into money. Problem 1.3 gives you three model descriptions to sort by kind.
 
 ## What this cannot tell you
 
-**What the model's structure omits.** Everything above is about a model already written down. A quantity nobody thought of appears nowhere in the model. No amount of running the arithmetic will put it there. The observability model has a hole of that shape.
+**What the model's structure omits.** Everything above is about a model already written down. A quantity nobody thought of appears nowhere in the model, and no amount of doing the arithmetic again puts it there. The observability model has no line for the network between its tiers: nothing in the model knows that line is missing. This gap differs from the unmeasured number the introduction mentions, which has a place in the model and is marked as not yet measured; a term nobody thought of has no place, so nothing marks it. [ch20](#the-missing-node) is about this second kind of gap.
 
 **Whether the spread is right.** The range reports the spreads in the file. If the growth rate's spread was a guess nobody checked, the range inherits the guess. It says nothing about it. The difference between measurement, claim and guess decides whether a range is a finding or decoration.
 
@@ -129,9 +119,10 @@ The kind decides what you must guard against. In a definitional model, uncertain
 
 - **A point estimate is silent, not wrong.** One value per input and the arithmetic done once gives
   a correct number that says nothing about how far it could be out.
-- **Doubt compounds along a chain of multiplications.** Multiplying uncertain numbers stretches
-  the answer further than any single input does, so the honest answer to *how big* is a range with
-  a most-likely region in it, not a figure.
+- **Doubt compounds along a chain of multiplications.** Moving several uncertain inputs at once
+  moves the answer further than any single input does on its own; the taxi table shows this—its
+  last row costs more than any other row. The honest answer to *how big* is the range of answers
+  you could get, not one figure.
 - **A range reports only the doubt you wrote down.** An error in the model's shape is invisible
   to any amount of varying the inputs.
 - **One question sorts every model.** Is the answer guaranteed to be right if every input is right?
@@ -152,22 +143,21 @@ Four in `tests/point_estimates/`. The first three have tests: run with `python3 
 python3 -m pytest tests/point_estimates/test_problem_1_each_input.py -m problem
 ```
 
-**1.2 — How wide are they together?** Look at the taxi table above. What is the ratio of run 4's cost to run 1's cost? Compare that ratio to the six you found in problem 1.1. The combined effect is wider than any single input's effect. This is why a point estimate cannot be defended by pointing at how carefully each input was chosen.
+**1.2 — How wide are they together?** Look at the taxi table: its rows move one input at a time to its most, then all three at once. For each row, work out how many times the usual commute's fares that row costs. The test gives you those multiples for the inputs moved alone, and asks for the multiples when several of them move together: all three and each pair. What you return is a rule that works for any set of them, not a number read off the last row. This is why a point estimate cannot be defended by pointing at how carefully each input was chosen.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_2_together.py -m problem
 ```
 
-**1.3 — Find where it changes kind.** Below are three descriptions of models for sizing a web service. Which are definitional (relationships true by definition, uncertain inputs only)? Which are conditional (adding measured constants or ceilings)? Name the measured constants or ceilings that decide it.
+**1.3 — Find where it changes kind.** Below are three descriptions of models for sizing a web service. Which are definitional (relationships true by definition, uncertain inputs only), and which are conditional (a measured constant or a ceiling added)? For each, return `definitional` or `conditional`.
 
-% number-ok: model example, not a measurement
-**Model A.** Peak requests per second × processor time per request × (100% ÷ utilization fraction) = cores needed. Inputs: peak rate (assumption), processor time per request (assumption), utilization (assumption).
+**Model A.** Cores busy at the peak equals peak requests per second times processor time per request. The peak rate is a forecast, with a range. The processor time per request is an estimate, with a range, that nobody has measured.
 
 % number-ok: measured constant example, not a measurement of the book's model
-**Model B.** Same structure. The processor time per request was measured at 0.5 ms on version 2.1 of the backend.
+**Model B.** The arithmetic is the same as Model A. The processor time per request was measured at 0.5 ms on version 2.1 of the backend.
 
-% number-ok: uncertainty examples and ceilings, not measurements of the book's model
-**Model C.** Same structure, plus: requests in flight = peak rate × time per request (Little's law). Response time climbs steeply when utilization exceeds 75%. A host can scale from 1 to 32 cores; beyond that, adding more cores helps less (contention). These are ceilings: the model cannot run at 150% utilization or with infinite cores, but arithmetic alone would claim it could.
+% number-ok: the example's own limits, not measurements of the book's model
+**Model C.** The arithmetic is the same as Model A, with the same two inputs. Requests in flight equals peak rate times time each request spends in the service (Little's law, a relationship [ch05](#littles-law) shows is true of any system, whatever is inside it). Response time climbs steeply once the cores are busy more than 75% of the time, so the model keeps them below that. A host gains less benefit from each core it adds beyond 32 cores, because the cores contend with each other.
 
 ```bash
 python3 -m pytest tests/point_estimates/test_problem_3_which_kind.py -m problem
@@ -179,7 +169,14 @@ Take a system you run. Write down three to six numbers that decide how big it mu
 
 Then answer two questions. Which, if wrong by half, would change what you would buy? Is there a constant somebody measured on one version of one piece of software? Or a limit your system hits before running out of capacity? If so, you are holding a conditional model: every input in it can be right and the answer still wrong.
 
-A good answer is short, names its sources, and is uncomfortable somewhere. Keep it. Every chapter ends with a problem about a system you run. They work best on the same one.
+A good answer is short, names its sources, and is uncomfortable somewhere. Your answer is not finished if any of these is true:
+
+- a number beside which you cannot write where it came from;
+- a number you wrote down as measured that was measured on a different version, or a different system, from the one you run;
+- a limit you found only after you had decided whether your model is definitional or conditional;
+- no number on your list, wrong by half, would change what you would buy, so the list is missing the numbers that decide the size.
+
+Keep your answer. Every chapter ends with a problem about a system you run, and they work best on the same one.
 
 ## Where to go next
 

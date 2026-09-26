@@ -1,7 +1,7 @@
 """Chapter 7's problems. Edit this file; the tests beside it say whether you are right.
 
-Two coefficients, fitted from measurements you could actually take, and one square root that tells
-you where the money stops working.
+Three numbers fitted from measurements you can take, and one square root that says where more
+hosts stop adding throughput.
 """
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ def throughput(
 
 
 def fit(measurements: list[tuple[float, float]]) -> tuple[float, float, float]:
-    """Problem 7.2 - the two coefficients, from measurements somebody could actually take.
+    """Problem 7.2 - the law's three numbers, from measurements you can take.
 
     ``measurements`` is a list of ``(hosts, throughput)`` pairs. You will usually have three: one
     machine, the fleet you have, and the fleet you had before you grew it. That is not much
@@ -46,10 +46,12 @@ def fit(measurements: list[tuple[float, float]]) -> tuple[float, float, float]:
     Three unknowns, so three measurements determine them exactly - solve, do not optimise. With
     the one-machine measurement in hand, ``one_host`` falls straight out, and the remaining two
     come from two linear equations once you rearrange the law to put the denominator on the other
-    side. Write the rearrangement down before you code it; it is the part worth understanding.
+    side. Write the rearrangement down before you code it; it shows why the three points must be
+    at different counts.
 
-    Then notice what you have done. You have fitted a two-parameter curve, extending to hundreds
-    of machines, from three points clustered at the low end. ch07 says what that is worth.
+    Then notice what you have done. You have extended a curve with three numbers in it to hundreds
+    of machines, from three points clustered at the low end. The chapter's section on fitting says
+    what that is worth.
     """
     raise NotImplementedError("problem 7.2")
 
@@ -60,12 +62,12 @@ def peak_hosts(contention: float, crosstalk: float) -> float:
     Return the host count at which throughput is greatest, from the two coefficients alone.
 
     Differentiate your answer to 7.1 with respect to the host count and set it to zero. It comes
-    out as a square root and it is worth the five minutes: it says the peak is a property of the
-    *software* - of how much it serialises and how much it coordinates - and that no budget moves
-    it.
+    out as a square root. It says the peak is a property of the software - of how much it
+    serialises and how much it coordinates - and that no budget moves it.
 
-    Handle zero crosstalk. With no coordination cost the curve never turns over, and the honest
-    answer is that there is no peak: raise, or return an infinity. A large number is not the
-    same answer.
+    Handle zero crosstalk. With no coordination cost the curve never turns over and there is no
+    peak. Raise ``ValueError``, or return an infinity (``math.inf`` or ``float("inf")``). A large
+    number is not the same answer, and nor is letting the division fail: the test fails a
+    ``ZeroDivisionError``.
     """
     raise NotImplementedError("problem 7.3")

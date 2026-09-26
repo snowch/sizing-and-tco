@@ -1,8 +1,9 @@
 """Chapter 2's problems. Edit this file; the tests beside it say whether you are right.
 
-The first two are about telling three kinds of quantity apart, which sounds like pedantry until
-the first time somebody sizes a retention store from a rate. The other two are about the file
-itself: the smallest one the build will accept, and one that loads and is still wrong.
+Problem 2.1 is about telling a stock from a flow by what a quantity means, and checking that
+against the unit the model declares. Problems 2.3 and 2.4 are about the file itself: the smallest
+one the build will accept, and one that loads and is still wrong. Problem 2.2 is not here: you
+edit ``problem_2_daily_ingest.yaml``, a fragment of the model file, beside this one.
 """
 
 from __future__ import annotations
@@ -36,30 +37,6 @@ def stocks_and_flows(nodes: dict[str, str]) -> dict[str, str]:
     raise NotImplementedError("problem 2.1")
 
 
-def daily_volume(model_text: str) -> str:
-    """Problem 2.2 - turn a rate into a volume, and make the build agree.
-
-    The observability model knows how many bytes a second arrive. Nobody reasons in bytes a
-    second; people reason in "how much a day", because that is what a retention conversation is
-    about and what an invoice is denominated in.
-
-    ``model_text`` is the observability model file, as written. Return the same text with one
-    more node in it, called ``daily_ingest``, giving the bytes that arrive in a day across
-    metrics and logs together. Declare it in ``TB`` - terabytes a day, with the day already
-    divided out, which is the form somebody can act on.
-
-    You will need a node carrying a duration before the multiplication means anything, as
-    ``one_year`` and ``one_sample_per_series`` do elsewhere in this book. That is not a
-    workaround: a rate times a pure number is still a rate, and the only thing that turns one
-    into a volume is multiplying by an amount of time.
-
-    The test writes what you return to a file and loads it as the build would. It checks the
-    unit typechecks, and that the answer is the ingest rate multiplied by a day - derived from
-    the model's own numbers at test time, so there is nothing to look up.
-    """
-    raise NotImplementedError("problem 2.2")
-
-
 def smallest_model_that_builds() -> str:
     """Problem 2.3 - the smallest model this repository will accept.
 
@@ -71,9 +48,10 @@ def smallest_model_that_builds() -> str:
     * passes ``sizing.evaluate.check_units`` with no problems;
     * passes every rule in ``scripts/verify-models.py`` that applies to it.
 
-    That last clause is the problem. Read the eight rules at the top of that script before
-    writing anything: an input with no provenance source, or a node that feeds no output, will be
-    refused, and the refusal is the thing you are here to meet.
+    That last clause is the problem. The rules are listed in Appendix A of the book, under
+    "What the build checks", and at the top of ``scripts/verify-models.py``. Read them before
+    writing anything. An input with no ``decided`` line or no provenance source, or a node that
+    feeds no output, is refused, and the refusal is what you are here to meet.
 
     Return the YAML as a string. The test writes it to a file and loads it exactly as the build
     would.

@@ -43,15 +43,19 @@ somebody will copy into the next model without knowing what it was for.
 
 ### Correlating ranks, not values
 
-The obvious way is to correlate the *values*: nudge each host price up a little when the network
-price is up. Do that and you have changed the host price distribution: the thing you carefully
-chose in [ch13](#monte-carlo), with its own percentiles and its own shape. You set out to encode
-one belief and quietly overwrote another.
+The obvious way to make two inputs move together is to push each value higher when the other is
+high. Do that and you have changed the host price distribution: the one you chose in
+[ch13](#monte-carlo), with its percentiles and its shape. You set out to add one belief and
+overwrote another.
 
-The method this book uses only ever **reorders**. Every value that was going to be in a column is
-still in it, in the same quantity. All that changes is which draws line up with which. So each
-input keeps exactly the distribution the modeller chose. The correlation is expressed in the
-pairing, not in the numbers.
+The toolkit reorders the draws instead, using Iman and Conover's method @imanconover1982. Every
+draw of each input stays in its column. All that changes is the order: after reordering, the
+highest host prices tend to sit beside the highest network prices. The method builds a **normal
+scores** column for each input by reading percentiles evenly spaced across the normal shape ch13
+used. It gives these stand-in columns the declared correlations, then sorts each input's real
+draws to match the rank order of its stand-ins. Because the stand-ins have the same shape
+regardless of each input's distribution, the method works the same on a lognormal price as on a
+triangular one.
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -59,12 +63,10 @@ pairing, not in the numbers.
 :end-before: # -- reading the answer
 ```
 
-One subtlety in there is easy to skip, and then to be quietly wrong about. The method works by
-correlating normal scores, and the rank correlation that comes out is weaker than the one that went
-in, by a known amount. Apply no correction, and every declared correlation lands slightly weaker
-than it was written. That error is small and consistent, and it is the kind that survives review
-forever, because nobody expects the number they typed to come back as a different number. So the
-relation is inverted before use:
+The rank correlation that comes out is slightly weaker than the normal scores were. Karl Pearson
+published the formula that links the two @pearson1907further. The toolkit inverts that formula
+before use, so the rank correlation you declare in a model file is the rank correlation you get.
+The code below is the inversion:
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -72,30 +74,32 @@ relation is inverted before use:
 :end-before: def correlate(
 ```
 
-Problem 14.2 checks both halves of the claim: that the correlation comes out where it was asked
-for, and that each input's own distribution did not move.
-
 ### What the correlations bought
 
-Both reference models, sampled twice: once with their declared correlations, once with the
-correlations deleted.
+Both reference models were sampled twice with the same seed: once with their declared
+correlations, once with every correlation removed.
 
 ```{include} _generated/correlation-and-convergence-effect.md
 ```
 
-Every row is positive. Assuming independence made every interval narrower, and in the
-observability model's ingest chain it made it *substantially* narrower. That chain has several
-inputs feeding off the same growth, and pretending they are strangers lets them cancel each other
-out.
+Every row shows a positive difference: removing the correlations made each half-width smaller.
+The observability model's `known_ingest` output shows the largest difference. It has two pairs
+reaching it: one between annual growth and extra accidental label values, the other between
+request rate and lines logged per request. These four inputs push the same direction together.
+Drawn independently, they would partly cancel. Declared as correlated, they push the same way, so
+the half-width widens.
 
-The web service's rows are modest, and they are in the table deliberately: its two declared pairs
-are weak ones, and one of them does not reach the five-year total at all. Seeing a correlation
-that barely matters beside one that does is the fastest way to stop treating the subject as
-magic.
+The web service's rows are small. Each output here is fed by only one declared pair, and both of
+its pairs are moderate. The busy-hour pair does not feed the five-year total; the price pair does
+not feed the host count.
 
-The general rule: **correlation between inputs that push the same way widens the interval**. It
-is not a correction. It is not a refinement. It does not make the model more precise. It removes
-an assumption that was making the model look better than it was.
+The `query_utilisation` output has no declared pair with both members feeding it. Its small
+difference comes from reordering the draws, not from a correlation affecting it. When only one
+input in a pair feeds an output, declaring the correlation does almost nothing there.
+
+**Correlation between inputs that push the same way widens the interval of every output both of
+them feed.** Declaring it is not a refinement and does not make the model more precise. It removes
+an assumption that was making the model look more certain than it was.
 
 ### How many samples is enough
 
@@ -157,7 +161,7 @@ else in this book, you needed far fewer samples than you took.
 ```{literalinclude} ../sizing/mc.py
 :language: python
 :start-at: def samples_needed
-:end-before: def histogram
+:end-before: #: Above this ratio
 ```
 
 ### What settling is not
@@ -198,15 +202,17 @@ only things that narrow it are measuring something or deciding something:
 :class: takeaways
 
 - **Inputs that move together must be drawn together.** Drawing a host price and a network price
-  independently claims that one can save you from the other, and it makes every interval narrower
-  than the evidence supports.
+  independently claims that one can offset the other. It makes the interval of every output both
+  prices feed narrower than the evidence supports.
 - **Correlate the ranks, not the values.** Reordering the draws expresses the pairing without
   changing the distribution each input was given, and the relation is inverted first so the declared
   strength comes out as written.
-- **Correlation between inputs that push the same way widens the interval.** It is not a refinement.
-  It removes an assumption that made the model look better than it was.
-- **More samples do not narrow an interval.** The width belongs to the inputs. More draws only
-  settle where the interval is, and the run-to-run wobble falls with the square root of the count.
+- **Correlation between inputs that push the same way widens the interval of every output both of
+  them feed.** It is not a refinement. It removes an assumption that made the model look more
+  certain than it was.
+- **More samples do not narrow an interval.** The width belongs to the inputs. More draws settle
+  where the interval is, and the run-to-run spread falls as one over the square root of the number
+  of draws.
 - **Enough samples is when the answer stops moving at the precision you will report it to, and a
   settled answer has settled its arithmetic and nothing else.** A model can converge beautifully on
   the wrong number.
@@ -230,11 +236,18 @@ python3 -m pytest tests/correlation_and_convergence/test_problem_1_root_n.py -m 
 ```
 
 **14.2 — Correlate two inputs, and change neither.**
-The page shows one entry for a model's correlations block, with the coefficient and the reason
-left empty. Fill them in. The test adds it to a copy of the web service model with every other
-correlation taken out and asserts two things: that the interval on a shared output widens, and
-that neither input's own distribution moves. The second is the property that makes the method
-trustworthy, and it is one line to check.
+Below is one entry for a model's `correlations:` block, pairing `host_price` with
+`network_price_per_host`. Fill in the rank correlation and the reason. The test adds your entry to
+a copy of the web service model with every other correlation removed, and checks five things:
+
+- the entry names the two prices with a rank correlation above zero and below one;
+- the 90% interval half-width of the capital cost (`capex`) grows;
+- neither price's own distribution moves: each keeps its percentiles;
+- the rank correlation measured in the model's draws is the one you declared;
+- the `because` says why the two move together.
+
+The third check shows that reordering keeps each input's distribution: adjusting the values
+instead would change the percentiles.
 
 ```bash
 python3 -m pytest tests/correlation_and_convergence/test_problem_2_marginals.py -m problem
@@ -253,12 +266,14 @@ pairs and find the ones that are not independent: the growth rate and the peak r
 and the quantity, the compression ratio and the kind of data.
 
 For each pair, say which direction and roughly how strongly. Then say what it does to your answer.
-Correlated inputs moving the same way widen the result, and treating them as independent is the
-commonest way a model quietly reports less doubt than it has.
+Correlated inputs moving the same way widen the interval of every output they both feed. The table
+in "What the correlations bought" above shows it: declaring the correlations widened every row.
+Treating them as independent makes the model report less doubt than it has.
 
 A good answer names at least one pair and says whether ignoring it makes your interval too narrow
 or too wide. If you find no pairs at all in a chain of six quantities about one system, look
-again. Independence is a strong claim, and it is rarely true.
+again. Independence is a strong claim. It says that knowing one quantity tells you nothing about
+the other.
 
 ## Where to go next
 

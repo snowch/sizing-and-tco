@@ -49,15 +49,32 @@ def mine(stored, price, use_distribution) -> tuple[float, float]:
     return float(low), float(high)
 
 
+def where_it_is_off(yours: tuple[float, float], expected: tuple[float, float]) -> str:
+    """Which end of the reader's interval is off, and which way, without saying where it belongs.
+
+    A message that printed the expected interval would hand the reader both joins, and so the
+    chapter's finding, after one wrong attempt.
+    """
+    said = []
+    for end, got, want in zip(("low", "high"), yours, expected, strict=False):
+        if not np.isfinite(got):
+            said.append(f"the {end} end is not a number")
+        elif got != pytest.approx(want, rel=1e-6):
+            said.append(f"the {end} end is too {'low' if got < want else 'high'}")
+    return " and ".join(said)
+
+
 @pytest.mark.problem
 def test_the_distribution_carried_across_gives_this_interval(stored, price):
     """Draw by draw: the i-th stored figure priced at the i-th price."""
     expected = mc.interval(joined(stored, price, True))
-    low, high = mine(stored, price, True)
-    assert (low, high) == pytest.approx(expected, rel=1e-6), (
-        f"with the price carried across as a distribution the interval is {expected[0]:,.0f} to "
-        f"{expected[1]:,.0f}, and yours is {low:,.0f} to {high:,.0f}. Multiply the two arrays "
-        "element by element and take the 5th and 95th percentiles of the product."
+    yours = mine(stored, price, True)
+    # A bare boolean, so that pytest's own report of the comparison cannot print the expected ends.
+    right = yours == pytest.approx(expected, rel=1e-6)
+    assert right, (
+        f"with the price carried across as a distribution, your interval runs from "
+        f"{yours[0]:,.0f} to {yours[1]:,.0f}, and {where_it_is_off(yours, expected)}. Multiply "
+        "the two arrays element by element and take the 5th and 95th percentiles of the product."
     )
 
 
@@ -65,10 +82,12 @@ def test_the_distribution_carried_across_gives_this_interval(stored, price):
 def test_the_median_carried_across_gives_this_interval(stored, price):
     """One number crosses the seam: the upstream median, treated downstream as known."""
     expected = mc.interval(joined(stored, price, False))
-    low, high = mine(stored, price, False)
-    assert (low, high) == pytest.approx(expected, rel=1e-6), (
-        f"with the price carried across as its median the interval is {expected[0]:,.0f} to "
-        f"{expected[1]:,.0f}, and yours is {low:,.0f} to {high:,.0f}. Price every stored figure "
+    yours = mine(stored, price, False)
+    # A bare boolean, so that pytest's own report of the comparison cannot print the expected ends.
+    right = yours == pytest.approx(expected, rel=1e-6)
+    assert right, (
+        f"with the price carried across as its median, your interval runs from {yours[0]:,.0f} "
+        f"to {yours[1]:,.0f}, and {where_it_is_off(yours, expected)}. Price every stored figure "
         "at the one median price, and take the 5th and 95th percentiles of that."
     )
 
@@ -129,6 +148,21 @@ def test_the_seam_moves_the_doubt_and_not_the_answer(stored, price):
     wide = float(np.median(joined(stored, price, True)))
     narrow = float(np.median(joined(stored, price, False)))
     assert abs(narrow - wide) / wide < 0.1, (wide, narrow)
+
+
+def test_a_wrong_answer_is_not_told_the_right_one(stored, price):
+    """Scaffolding: a failure message says which way the reader is off, never where to land.
+
+    The median join is a plausible wrong answer to the distribution join, and the other way round.
+    Neither message may carry the interval the reader was graded against.
+    """
+    wide = mc.interval(joined(stored, price, True))
+    narrow = mc.interval(joined(stored, price, False))
+    for yours, expected in ((narrow, wide), (wide, narrow)):
+        message = where_it_is_off(yours, expected)
+        assert message, "a wrong interval produced no explanation"
+        for value in expected:
+            assert f"{value:,.0f}" not in message, message
 
 
 def test_the_dsl_has_no_node_kind_for_this():

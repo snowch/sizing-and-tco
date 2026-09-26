@@ -18,7 +18,7 @@ def values():
 
 
 @pytest.mark.problem
-def test_it_is_the_ratio(values):
+def test_it_agrees_with_the_reference_split(values):
     mine = crossover_year(values["capex"], values["annual_opex"])
     assert mine == pytest.approx(values["capex"] / values["annual_opex"], rel=1e-9)
 
@@ -32,9 +32,16 @@ def test_the_cases_you_can_check_in_your_head():
 
 @pytest.mark.problem
 def test_free_to_run_never_crosses():
-    answer = crossover_year(1000.0, 0.0)
+    try:
+        answer = crossover_year(1000.0, 0.0)
+    except ZeroDivisionError:
+        pytest.fail(
+            "crossover_year divided by a running cost of zero. A fleet that costs nothing to run "
+            "is never overtaken by its running cost: the docstring says what to return."
+        )
     assert answer == float("inf") or answer > 1e9, (
-        "something with no running cost never gets overtaken by its running cost"
+        "a fleet with no running cost is never overtaken by its running cost; the docstring "
+        "says what to return"
     )
 
 

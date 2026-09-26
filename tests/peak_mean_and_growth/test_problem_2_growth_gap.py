@@ -39,8 +39,15 @@ CASES = {
 def test_both_are_computed_correctly(name, years):
     growth = CASES[name]
     compound_the_average, average_the_compounds = growth_gap(T0, growth, years)
-    assert compound_the_average == pytest.approx(T0 * growth.mean() ** years, rel=1e-9)
-    assert average_the_compounds == pytest.approx(float((T0 * growth**years).mean()), rel=1e-9)
+    assert compound_the_average == pytest.approx(T0 * growth.mean() ** years, rel=1e-9), (
+        f"{name}, {years:g} year(s): the first value is off. Take the ordinary average of the "
+        "factors (add them up and divide by how many), then compound that from t0. A doubling "
+        "and a halving do not average to no growth."
+    )
+    assert average_the_compounds == pytest.approx(float((T0 * growth**years).mean()), rel=1e-9), (
+        f"{name}, {years:g} year(s): the second value is off. Compound every factor from t0 "
+        "first, then take the ordinary average of the results."
+    )
 
 
 @pytest.mark.problem
@@ -48,9 +55,9 @@ def test_both_are_computed_correctly(name, years):
 def test_averaging_the_compounds_is_always_the_larger(name):
     compound_the_average, average_the_compounds = growth_gap(T0, CASES[name], 5.0)
     assert average_the_compounds > compound_the_average, (
-        "compounding curves upwards, so the average of the compounded outcomes is above the compound "
-        "of the average rate. Always, for any spread at all. If you got the other order, check "
-        "which of the two you returned first."
+        "compounding curves upwards, so the average of the compounded outcomes is above the "
+        "compound of the average rate, for any spread, over any horizon longer than a year. If "
+        "you got the other order, check which of the two you returned first."
     )
 
 
@@ -78,3 +85,10 @@ def test_a_certain_growth_rate_has_no_gap():
     """Scaffolding: the effect is about spread, and vanishes without it."""
     certain = np.full(1000, 1.3)
     assert float((T0 * certain**5).mean()) == pytest.approx(T0 * certain.mean() ** 5, rel=1e-9)
+
+
+def test_one_year_has_no_gap():
+    """Scaffolding: compounding once is one multiplication, so the two ways agree at one year."""
+    for name, growth in CASES.items():
+        once = float((T0 * growth**1.0).mean())
+        assert once == pytest.approx(T0 * growth.mean() ** 1.0, rel=1e-9), name

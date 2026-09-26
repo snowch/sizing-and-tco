@@ -50,11 +50,13 @@ def shards_needed(observed_sd: float, at_shards: int, target_sd: float) -> int:
     ``observed_sd``. You want ``target_sd``. Return the number of shards that would get you there,
     rounded up.
 
-    The standard error of a mean falls as one over the square root of the count, so this is the
-    arithmetic ch14 uses to ask how many draws are enough, used in the direction people find less
-    intuitive. It is also the arithmetic that stops a measurement campaign before it starts: work
-    out what halving your uncertainty costs *before* agreeing to halve it.
+    The standard error of a mean falls as one over the square root of the count. Here you use that
+    relationship backwards: from the error you want to the count that would buy it.
 
-    Return the total number of shards needed, not the number of extra ones.
+    This is the arithmetic that stops a measurement campaign before it starts: work out what
+    halving your uncertainty costs before agreeing to halve it.
+
+    Return the total number of shards needed, including the ones you already have, not the number
+    of extra ones. Refuse a target of zero.
     """
     raise NotImplementedError("problem 3.2")

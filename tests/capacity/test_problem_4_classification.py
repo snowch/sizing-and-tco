@@ -28,8 +28,8 @@ def scenario():
 def declared(model: Model) -> tuple[dict[str, str], dict[str, set[str]]]:
     """What the reader is handed: every node's kind, and the names each one reads."""
     kinds = {name: node.kind for name, node in model.nodes.items()}
-    feeds = {name: set(node.depends_on()) for name, node in model.nodes.items()}
-    return kinds, feeds
+    reads = {name: set(node.depends_on()) for name, node in model.nodes.items()}
+    return kinds, reads
 
 
 def without(model: Model, names: list[str]) -> Model:
@@ -42,13 +42,30 @@ def without(model: Model, names: list[str]) -> Model:
         for name, node in model.nodes.items()
         if name not in removed and removed & node.depends_on()
     }
-    assert not orphaned, "these read something you deleted, so they cannot be worked out: " + (
-        "; ".join(f"{name} reads {reads}" for name, reads in sorted(orphaned.items())[:5])
-        + ". Everything downstream of a deleted node goes with it."
-    )
+    if orphaned:
+        pytest.fail(orphan_message(model, removed, orphaned), pytrace=False)
     nodes = {name: node for name, node in model.nodes.items() if name not in removed}
     outputs = tuple(output for output in model.outputs if output not in removed)
     return replace(model, nodes=nodes, outputs=outputs)
+
+
+def orphan_message(model: Model, removed: set[str], orphaned: dict[str, list[str]]) -> str:
+    """Which nodes were left reading a deleted one, and, if inputs were deleted, why that is the
+    wrong direction. The model is the finished one, so some names belong to later chapters."""
+    listed = "; ".join(f"{name} reads {reads}" for name, reads in sorted(orphaned.items())[:5])
+    message = (
+        f"these read something you deleted, so they cannot be worked out: {listed}. This is the "
+        "finished model, so some of these names come from later chapters."
+    )
+    inputs = sorted(name for name in removed if model.nodes[name].kind == "input")
+    if inputs:
+        return message + (
+            f" You deleted inputs, such as {inputs[:3]}. An input reads nothing, so it is never "
+            "downstream of anything: `reads` maps each node to what it reads, not to what reads it."
+        )
+    return (
+        message + " Delete every node that reads a deleted node, and every node that reads those."
+    )
 
 
 def converted(model: Model) -> Model:
@@ -110,6 +127,15 @@ def test_an_output_survives_the_removal(base):
 
 def test_deleting_nothing_leaves_the_model_as_it_was(base, scenario):
     """Scaffolding: the route the grader takes is faithful."""
-    kinds, feeds = declared(base)
-    assert set(kinds) == set(feeds) == set(base.nodes)
+    kinds, reads = declared(base)
+    assert set(kinds) == set(reads) == set(base.nodes)
     assert point(without(base, []), scenario) == point(base, scenario)
+
+
+def test_reading_the_map_backwards_gets_its_own_message(base):
+    """Scaffolding: deleting an input, which only reading ``reads`` the wrong way round leads
+    to, is named in the message."""
+    assert "An input reads nothing" in orphan_message(base, {"hosts"}, {"cores": ["hosts"]})
+    assert "An input reads nothing" not in orphan_message(
+        base, {"record_compression"}, {"raw_per_stored": ["record_compression"]}
+    )

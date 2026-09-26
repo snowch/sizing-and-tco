@@ -53,8 +53,8 @@ def run():
 def test_the_spread_falls_as_one_over_root_n(run):
     spreads = [spread_at(run, samples=count, replicates=REPLICATES) for count in COUNTS]
     assert all(s > 0 for s in spreads), (
-        "a spread of zero means every replicate gave the same answer, which means the seeds were "
-        "not different. Re-read what `replicates` is for."
+        "every run at one of the counts gave the same 95th percentile, so the spread is zero. "
+        "Look at the seed each call to `run` gets."
     )
     for i in range(len(COUNTS) - 1):
         ratio = spreads[i] / spreads[i + 1]

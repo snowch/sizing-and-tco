@@ -16,9 +16,12 @@ Which quantities size a system, and which only look as though they do?
 
 The people who own the service tell you what it has to do. Before you can multiply any of it into a
 number of machines, you write each quantity down with a unit.
-The first distinction is between a rate and a level. That matters because sizing the storage for
-data you keep for a retention period from the rate it arrives, without multiplying by the period,
-gives you the wrong answer.
+
+The first distinction is between a rate, which says how fast something arrives, and a level, which
+says how much of it there is. This distinction matters because confusing them leads to sizing
+errors. Suppose you keep data for a retention period and calculate its storage need from the rate it
+arrives, without multiplying by the period. You get the wrong answer: you have a rate, not an amount
+of storage.
 
 This chapter writes the first nodes of the model the rest of the book uses. By the end, you have a
 model file of eight quantities. The toolkit reads it, checks every unit, and works out the demand at
@@ -26,7 +29,7 @@ the end of your purchase cycle.
 
 ## The material
 
-### Four kinds of quantity: flows and stocks get confused
+### Four kinds of quantity
 
 :::{div}
 :class: definition
@@ -60,9 +63,20 @@ chain**: the string of multiplications that runs from a workload to a number of 
 :::
 
 A quantity's unit says which of the four kinds it is. Because of that, the toolkit can check every
-formula by its units, and every node in this book must declare a unit. A flow has time in its
-denominator (per second), a duration has time in its numerator (years), a stock and a ratio have
-none.
+formula by its units, and every node in this book declares a unit.
+
+% word-ok: bytes per sample is a unit, the size of one stored data point
+- A flow has time in its denominator: per second, per month. Examples: requests per second,
+  megabytes per second.
+- A duration has time in its numerator: years, days, seconds.
+- A stock names an amount, with no *per* in its unit: hosts, terabytes, series, requests.
+- Everything else is a ratio, a pure number or a price. It has no unit, or has *per* followed by
+  something other than time: terabytes per node, bytes per sample, series per host.
+
+A count that multiplies something else has no unit—it is a pure number, not a stock. A replication
+factor counts copies; the number of values a label takes multiplies the number of series. A price
+per month has time in its denominator, so it is a flow of money: storage at so much per terabyte per
+month.
 
 The commonest error in sizing turns a flow into a stock by multiplying it by a plain number
 instead of by an amount of time. Requests a second times five is still requests a second: five
@@ -77,14 +91,19 @@ units combine and cancel, on a page of examples the toolkit works out itself.
 
 ### Writing down the first quantities
 
-A model is a file of named quantities, each with a unit and a source. A spreadsheet can hold both:
-a source in a comment or column, a unit in a header or cell format. But nothing forces you to fill
-them in, and nothing checks that you have. Without a required place, facts stay in the head of
-whoever built the sheet and leave with that person. The facts lost include where a value came
-from, what version of what you measured it against, whether it is a vendor's claim, or whether it
-was agreed by people who have since left. When `=B4*C7` multiplies a count of hosts by a request
-rate, formulas ignore units and do not track sources. You get a number; nothing tells you it is
-neither bytes nor requests, and nothing tells you which inputs were guesses.
+A model is a file of named quantities, each with a unit and a source. A spreadsheet can hold both: a
+source in a comment or a column, and a unit in a header or a cell format. Nothing forces you to fill
+them in, and nothing checks that you have. Without a required place for them, these facts stay in
+the head of whoever built the sheet and leave with that person: where a value came from; which
+version of what you measured it against; whether it is a vendor's claim; and whether it was agreed
+by people who have since left.
+
+When `=B4*C7` multiplies a count of hosts by a request rate, the result has a unit nobody wants:
+hosts times requests per second. What you need is requests per second per host, which is the rate
+divided by the hosts. A spreadsheet shows a number either way; nothing flags the error, and nothing
+tells you which inputs were guesses. The toolkit refuses a formula whose units do not produce the
+declared unit, so it would reject this multiplication on a node declared in requests per second per
+host.
 
 The model is one text file in YAML. A change to it shows up line by line, and you can review it
 like code. This chapter adds a few nodes at a time, each when you have learned what it needs.
@@ -130,14 +149,19 @@ in the Outputs list updates; the other node's row is greyed out because it does 
 connect these nodes yet. Once you add arithmetic later in this chapter, dragging one input will
 move others.
 
-Look at the lines in the two files quoted above. Four matter most: `kind`, `unit`, `value`
-and `provenance`. `kind` says what sort of node it is: `input` is a number the model is given.
-`unit` lets the toolkit tell a level from a rate and check every formula. `value` is the number a
-spreadsheet would have held. `provenance` records where the value came from and what kind of source
-it is. A source is optional and unchecked in a spreadsheet, but here the build refuses an input without
-one, and you can read it in the viewer's Details panel. A
-number without provenance is a rumour.
-[ch03](#where-the-numbers-come-from) explains the three kinds of source.
+Look at the two nodes quoted above. Five lines in each matter most: `kind`, `decided`, `unit`,
+`value` and `provenance`. `kind` says what sort of node it is: `input` is a number the model is
+given. `decided` says who settles the number—`outside` for your users or the world, `you` for your
+choice, `definition` for things true whoever asks; both nodes here are `outside`. `unit` lets the
+toolkit tell a level from a rate and check every formula. `value` is the number a spreadsheet would
+have held. `provenance` records where the value came from and which of three kinds of source it is:
+`fact`, `vendor_claim` or `assumption`; both nodes here are `assumption`, the service owners'
+estimates.
+
+The bar on an input marked `you` comes from the `decided` field. In a spreadsheet a source is
+optional and nobody checks it, but here the build refuses an input without a `decided` line or a
+`provenance` source. You can read the source in the viewer's Details panel. A number without
+provenance is a rumour.
 
 Three lines are optional: `label`, `note` and `range`. `label` reads better in a table than
 `stored_data_t0` does. `note` answers what a reader of the file would otherwise have to ask you; the
@@ -160,26 +184,28 @@ Here are three more quantities:
 
 ```{iframe} /models/web_service_demand_inputs_all-reference.html
 :width: 100%
-Five inputs, and none worked out from another yet.
+Interactive viewer: five inputs, none derived from another. Drag a slider to change its number only.
 ```
 
-**Five inputs, and no arithmetic yet.** All five nodes are blue: numbers the model is given. Dragging
-any slider leaves the others alone, because nothing is worked out from anything yet.
+**All five nodes are blue and independent.** They are numbers the model is given. Dragging any
+slider leaves the others alone, because no node is worked out from another yet.
 
 `annual_growth` is the factor demand multiplies by each year; a factor above one means growth.
-`horizon` is how long until you buy again: the refresh cycle you size for, and your choice.
-`one_year` is a year; you do not choose it, it is true by definition. It is there because growth
-compounds, so the horizon becomes an exponent, and an exponent must be a pure number.
+`horizon` is how long until you buy again—the refresh cycle you size for—and it is your choice.
+`one_year` is a year you do not choose, because it is true by definition. It is there because growth
+compounds, so the horizon becomes an exponent, and an exponent has no unit, as the note in the file
+says.
 
-`horizon / one_year` divides the duration by a year and leaves a pure number of years. A spreadsheet
-holds the horizon as a bare number, which works until a colleague types the horizon in months into
-the same cell. Growth then compounds over twelve times as many periods, and nothing warns you. The
-toolkit converts months to years before dividing, so the answer stays right.
+`horizon / one_year` divides a length of time by a length of time; the years cancel, and what is
+left is a count with no unit. A spreadsheet holds the horizon as a bare number and assumes it is in
+years, but that works only until a colleague types the horizon in months. Growth then compounds over
+twelve times as many periods, and nothing warns you. The toolkit converts months to years before it
+divides, so the answer stays right.
 
-### Computing what you need: deriving the horizon as an exponent
+### The first derived quantity
 
-The file now has five inputs. Next, the toolkit works out its first quantity from a formula over
-two of them, the horizon and one year:
+The file now has five inputs. Next, the toolkit works out its first quantity from a formula over two
+of them, the horizon and one year:
 
 ```{literalinclude} ../models/web_service/stages/04-demand_horizon_exponent/model.yaml
 :language: yaml
@@ -192,10 +218,11 @@ two of them, the horizon and one year:
 The first derived node.
 ```
 
-**Hollow means derived.** `horizon_periods` is an outline because the toolkit works it out from the
-formula `horizon / one_year`. The `kind: derived` line says its value is not stated, only computed.
-The toolkit checked that the formula gives a pure number before accepting it. Drag the horizon slider and `horizon_periods` changes
-with it. Click the node to see the formula in Details.
+**Hollow means derived.** `horizon_periods` is drawn as an outline because the toolkit works it out
+from the formula `horizon / one_year`. The `kind: derived` line says its value is not stated, only
+computed. The toolkit checked that the formula's units give the unit the node declares,
+`dimensionless`. Drag the horizon slider and `horizon_periods` changes with it. Click the node to
+see the formula in Details.
 
 ### Growing the demand to the horizon
 
@@ -208,9 +235,11 @@ to the end of the purchase cycle. That takes two more derived quantities:
 :end-at:     formula: stored_data_t0 * annual_growth ** horizon_periods
 ```
 
-`peak_request_rate` is the flow at the horizon; `stored_data` is the stock at the horizon. Both
-multiply the day-one value by the growth factor raised to `horizon_periods`, the number of years
-from day one to the horizon.
+`peak_request_rate` is the flow at the horizon, in requests per second; `stored_data` is the stock
+at the horizon, in terabytes. Both multiply the day-one value by the growth factor raised to
+`horizon_periods`, the number of years from day one to the horizon. In a formula, `**` means raised
+to the power of. `annual_growth ** horizon_periods` is the growth factor multiplied by itself once
+for each year to the horizon.
 
 You now have eight quantities: three outside your control (busy-hour
 rate, data held, growth factor), one you choose (horizon), one true by definition (`one_year`), and
@@ -240,20 +269,17 @@ write a mistake of that kind and watch it caught.
 
 ### The demand and the decisions
 
-Every input in the file looks the same, but they describe two different things. Some show what is
-outside your control: what your users send and how much data they create. The rest show what you
-have decided. Separate them first, in any model, including this one:
+Every input in the file looks the same, but they are one of three kinds: what is outside your
+control, what you have decided, and what is true by definition. Outside your control are what your
+users send and how much data they create. Separate them first, in any model, including this one:
 
 ```{include} _generated/what-a-workload-is-service.md
 ```
 
-The table groups the inputs as the file does, on each input's `decided:` line, and the build
-refuses a file that leaves one out. A year is true by definition because it is a year whoever
-asks.
-
-Look at the "Outside your control" group. Each is a single number you cannot change.
-[ch04](#peak-mean-and-growth) replaces the growth rate's single number with a spread: how low and
-how high growth might turn out.
+The table groups the inputs as the file does, on each input's `decided:` line. A year is true by
+definition because it is a year whoever asks. Each input also carries a second line: `provenance`,
+which says how the value is known. The Claim column's symbol comes from this line: ● marks a fact, ◐
+marks a vendor's claim, and ○ marks an assumption.
 
 :::{important}
 A value you cannot control, such as growth rate, looks as settled as a decision you made, such as
@@ -266,10 +292,10 @@ yours to change.
 
 ### What the file computes, and what kind of model it is
 
-Every number in the demand model above came from running this file.
-[`sizing`](#appendix-a-dsl-reference), the toolkit, reads the file, checks that every formula
-produces the unit its node declares, and works each node out from its dependencies. That is all
-running a model means. The table that follows shows what it produced:
+Every number in the demand model above came from running this file. `sizing`, the toolkit, reads
+the file, checks that every formula produces the unit its node declares, and works each node out
+from its dependencies. That is all running a model means. The table that follows shows what it
+produced:
 
 ```{include} _generated/what-a-workload-is-stage.md
 ```
@@ -298,23 +324,28 @@ carrying metrics, logs and traces:
 ```{include} _generated/what-a-workload-is-observability.md
 ```
 
-% word-ok: a scrape interval is a length of time and a sampling rate is a trace setting
-Read the *What you decide* group. Four of them are the knobs the platform gives you: scrape
-interval, retention, trace sampling rate, and the fraction of log lines you keep. The rest are the
-fleet you buy to run it, and the horizon. [Appendix F](#appendix-f-observability-model) shows what
-turning all four down saves.
+The *At the reference point* column shows the one value the model uses for each input. For an input
+stated as one number, it is that number. Many of this model's inputs are declared as a spread
+instead; for those, the column shows the middle of the spread, with half the values below it and
+half above. That is why *label values endpoint*, a count, shows a fraction.
 
-Now read the *Outside your control* group. Notice what is *not* among the decisions: the number of
-label values. A label is a tag on each metric, such as the endpoint or the status code, and each
-distinct value multiplies the number of series the platform stores. It dominates the model, and no
-platform knob reaches it: turn all four down and the label count stays where it was. The only lever
-is the application code that emits the labels, which belongs to the developers who wrote the
-application, not the team running the platform. [ch08](#regime-changes) is about that distinction.
+% word-ok: a scrape interval is a length of time and a sampling rate is a trace setting
+Six rows of the *What you decide* group are the platform's knobs, four kinds of setting: the scrape
+interval; a retention period for each of metrics, logs and traces; the trace sampling rate; and the
+fraction of log lines kept. The rest is the fleet you buy to run it—collector cores, store nodes,
+usable terabytes per node, query nodes—and the horizon.
+[Appendix F](#appendix-f-observability-model) turns one of each kind down and shows what that saves.
+
+The number of label values is not among the decisions. A label is a tag on each metric, such as the
+endpoint or the status code, and each distinct value multiplies the number of series the platform
+stores. It dominates the model. No platform knob reaches it: turn every knob down and the label
+count stays where it was. The only lever is the application code that emits the labels, which
+belongs to the developers who wrote it, not to the team running the platform.
 
 ### A workload can be described badly in three ways
 
-**Averaged.** A daily mean is the one number nobody experiences. [ch04](#peak-mean-and-growth) is
-about which number in a demand curve sizes you, and it is not that one.
+**Averaged.** A daily mean is the one number no user of the service experiences. The web service
+model uses the busy-hour request rate, not the daily mean.
 
 **In the wrong units.** A count of users is not a workload; it is a fact about a licence agreement.
 What sizes a system is what those users cause: requests, bytes, queries. The translation from users
@@ -326,14 +357,15 @@ for today, and nobody buys infrastructure for today.
 
 ### What the demand side leaves out
 
-Two of the rows in the web service table above are the workload proper: how fast requests arrive,
-and how much is held. What is not in the file yet is what each request *costs*: how much processor
-time it takes. It is not here because it is not a fact about the workload. It is a fact about one
-build of the software on one kind of machine, so it must be measured on that machine before the next
-chapters' arithmetic can run. That processor time, the arrival rate, and a count of machines are
-what [ch05](#littles-law) through [ch07](#when-adding-servers-stops-helping) build on. The demand
-side says what is asked of the system. How the system responds, slowing down as it fills for
-instance, is what those chapters add.
+Two rows of the web service's inputs table in *The demand and the decisions*, the busy-hour request
+rate and the records held on day one, are the workload itself. What the file does not hold yet is
+what each request costs: how much processor time it takes. That is not a fact about the workload,
+but a fact about one build of the software on one kind of machine. It belongs to a measurement taken
+on that machine. Until one is taken, the model holds it as an assumption, and its source says which
+measurement would replace it. That processor time, the arrival rate and a count of machines are what
+[ch05](#littles-law) through [ch07](#when-adding-servers-stops-helping) build on. The demand side
+says what is asked of the system, and how the system responds—such as slowing down as it fills—is
+what those chapters add.
 
 ## What this cannot tell you
 
@@ -363,8 +395,8 @@ range this book reports too narrow ([ch14](#correlation-and-convergence)).
 :class: takeaways
 
 - **A flow is a rate, a stock is a level, and the unit tells them apart.** A flow has time
-  underneath it. A stock is how much there is now. Ratios, counts and prices have no time in them at
-  all.
+  underneath it; a stock is how much there is now, with no *per* in its unit. Ratios, prices and
+  pure numbers like replication factors have no time in them at all.
 - **The commonest sizing error turns a flow into a stock by multiplying it by a plain number.** A
   rate times a number is still a rate. Only a duration makes it an amount, and the toolkit refuses
   the other.
@@ -372,8 +404,9 @@ range this book reports too narrow ([ch14](#correlation-and-convergence)).
   both, but does not require either and does not check them. The file requires both on every input,
   and the toolkit checks every formula against the units.
 - **Growth compounds, so the horizon has to become a pure number.** Dividing the duration by a
-  declared year is what turns it into an exponent, and a spreadsheet does that silently until
-  a colleague types months.
+  declared year turns it into an exponent with no unit. A spreadsheet does no division—it takes the
+  bare number as years, so when a colleague types months, growth compounds over twelve times as many
+  periods with no warning.
 - **Separate what is outside your control from what you decided.** A value for something you
   cannot control looks like a decision and stops being questioned.
 :::
@@ -392,18 +425,25 @@ python3 -m pytest tests/what_a_workload_is/test_problem_1_stocks_and_flows.py -m
 ```
 
 **2.2 — Turn a rate into a volume.**
-Add a node to the observability model giving terabytes a day of telemetry. A rate times a pure
-number is still a rate, and the toolkit will keep saying so until something in the formula
-carries a duration.
+Write the formula for a node called `daily_ingest`, which the page shows with its unit `TB` and an
+empty formula. It should give the telemetry that arrives in one day, metrics and logs only, as an
+amount in terabytes. Start from `known_ingest`, the rate at which metrics and logs arrive together
+in megabytes a second. Traces are left out because the traces chain has no value—spans per request
+has not been measured. A rate times a plain number is still a rate, and the toolkit refuses the
+formula until something in it carries a length of time. The test adds every node you declare to the
+observability model and makes `daily_ingest` an output. Any input you add must have a `decided` line
+and a provenance with a source, like every input in the book.
 
 ```bash
 python3 -m pytest tests/what_a_workload_is/test_problem_2_daily_volume.py -m problem
 ```
 
 **2.3 — The smallest model that builds.**
-Write a model file of your own with one input and one derived node that passes the loader, the
-dimensional pass and every rule in `scripts/verify-models.py`. Read the rules before you start;
-the refusals are the point.
+Write a model file of your own with one input and one derived node. It must pass the loader, the
+unit check, and every rule the build applies to a model. [Appendix A](#appendix-a-dsl-reference)
+lists the keys a file needs, under *The file*, and the rules, under *What the build checks*: read
+them before you start, because the refusals are the point. At a desk, the same rules appear at the
+top of `scripts/verify-models.py`.
 
 ```bash
 python3 -m pytest tests/what_a_workload_is/test_problem_3_smallest.py -m problem

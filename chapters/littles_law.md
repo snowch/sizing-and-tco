@@ -12,8 +12,8 @@ short_title: "ch05 Little's law"
 
 ## The question
 
-What can you infer about a system from the one relationship that is always true, and what can you
-not?
+What can you infer from the law when the system is steady, with as many requests leaving as
+arriving, and what can you not?
 
 Part I ended with a rate: how much work arrives at the busy hour. This chapter turns that rate
 into a count of requests in flight. It also turns a count of requests in flight back into the
@@ -24,46 +24,87 @@ works.
 
 ### The law
 
-The number of requests in a system is the rate they arrive at, times how long each one stays.
+Residence time is the time a request spends in the system, from arriving to leaving, including
+any time it waits in a queue. The law states that the number of requests in a system equals the
+rate they arrive at, times their residence time. The block below is the law as a node in the
+model file.
 
 ```{literalinclude} ../models/web_service/stages/08-littles_law/model.yaml
 :language: yaml
-:start-at: service_seconds:
+:start-at: in_flight_unqueued:
 :end-before: outputs:
 ```
 
-That is the whole of it. One multiplication, and a label that is doing a lot of work. *If none
-waited* is the time each request stays as this chapter leaves it: the time a processor spends on
-it and nothing else. [ch06](#queueing-and-the-knee) adds the waiting, and this number goes up.
+That is the whole of it. One multiplication. This chapter sets the residence time equal to the
+service time: how long one request takes when it waits for nothing. The node's label, *if none
+waited*, marks this choice, and the formula uses the service time, the model node
+`service_seconds`. The next section works it out from what a request costs.
+[ch06](#queueing-and-the-knee) adds the waiting to the residence time, and this number goes up.
 
-The law earns a chapter for what it leaves out. It says nothing about how requests arrive: they
-may be bursty, periodic or adversarial. Nothing about the order they are served in. Nothing about
-the shape of anything. No queueing model, no exponential anything.
+The law leaves out several things, which is why it gets a chapter. It assumes nothing about how
+requests arrive — they may be bursty, periodic or adversarial — and nothing about the order they
+are served in or the shape of anything.
 
-It has one condition. The system is in a steady state over the window you are looking at: as much
-going out as coming in.
+The law has one condition. The system is in a steady state over the window you look at: as many
+requests leave as arrive. The practical test is this: count the requests in flight at the start
+and end of the window. Over the window, arrivals minus departures equals the change in that
+count, because every request that arrived and has not left is still in flight. If the count at
+the end is close to where it started, next to the number that arrived, the window balanced and
+the law applies.
 
 ### What a request costs, and how busy that makes the fleet
 
-Little's law needs a rate and a time. [ch04](#peak-mean-and-growth) supplied the rate. The time
-is the first quantity in this book that belongs to the software rather than to the workload:
+Little's law needs a rate and a time. [ch04](#peak-mean-and-growth) supplied the rate: the
+busy-hour request rate at the horizon. The time comes from service demand. It is the first input
+in the web service model that belongs to the service's own software on a machine, rather than to
+the workload.
 
 ```{literalinclude} ../models/web_service/stages/08-littles_law/model.yaml
 :language: yaml
 :start-at: service_demand:
+:end-before: hosts:
+```
+
+Service demand is the processor time one request costs, in core-seconds, not how long the request
+takes. It belongs to one build of the software on one kind of machine. Nobody has measured it here:
+no reference machine is declared. Held as an unmeasured constant, it would have no value, nor would
+the cores busy, the utilisation, the requests in flight, and later the waiting time or the host
+count the model recommends. So the file declares it an **assumption** instead. This is not the
+placeholder [ch03](#where-the-numbers-come-from) refused: an assumption carries a declared range —
+the three values in the block — and every figure worked out from it carries that range too. A
+placeholder is one number that passes for a measurement once it is copied. The assumption's source
+says what would replace it: a measurement on a declared machine. The three values are this book's
+own choice, not measured on any machine and not taken from any product.
+
+The toolkit calls a model conditional when it holds a measured constant or a ceiling. This file
+holds neither, so the toolkit calls it a definitional model. Held as a measured constant, service
+demand would make it conditional. The file reads as definitional only because of this choice.
+
+```{literalinclude} ../models/web_service/stages/08-littles_law/model.yaml
+:language: yaml
+:start-at: service_seconds:
+:end-before: in_flight_unqueued:
+```
+
+Divide the core out of service demand and you have the service time: how long one request takes
+when it waits for nothing, in seconds. It is `service_seconds`, the time the law in the section
+above used.
+
+```{literalinclude} ../models/web_service/stages/08-littles_law/model.yaml
+:language: yaml
+:start-at: hosts:
 :end-before: one_core:
 ```
 
-Read the note on the first node twice. Service demand is how much of a processor a request
-*costs*. It is not how long the request takes. The difference is queueing, and the whole of
-Part II is about that difference. Service demand also belongs on a reference machine. Nobody has
-declared one. So the model holds it as an assumption, and its source says what measurement would
-replace it. It does not pose as a measured constant, because no measurement is behind it
-([ch03](#where-the-numbers-come-from)).
-
-The second node is the one a spreadsheet hides. Its note says why it is an input and not a
-result: the model recommends a fleet, a person decides one, and every ceiling from here on asks
-what happens to the fleet that was bought.
+*Hosts in the fleet* is an input you set, not a result the model works out. A fleet worked out
+from the demand would grow and shrink with the demand in every future the model drew, fitting all
+of them — and the model could never show a fleet that is too small. Held fixed as an input, the
+fleet stays the same while the demand varies, so the tables under "What the fleet says" further
+down this page can show futures where it is too small. The model recommends a fleet; a person
+decides one; the later chapters ask what happens to the fleet that was bought. The value in the
+block is the host count the finished model recommends when every input is at its point estimate.
+The block's note and source were written for that finished model: the ceilings, costs and
+recommended host count they mention arrive in later chapters, and none is in this file yet.
 
 Multiply the rate by the cost and you have the processors the busy hour keeps busy. Divide by the
 processors the fleet has and you have how busy it is:
@@ -74,12 +115,16 @@ processors the fleet has and you have how busy it is:
 :end-before: service_seconds:
 ```
 
-*Utilisation* is that ratio, and it is the number [ch06](#queueing-and-the-knee) turns into a
-waiting time. Nothing here says whether the fleet is too busy. That needs a ceiling, and the file
-has none yet.
+Utilisation is the cores busy divided by the cores the fleet has. It is the number
+[ch06](#queueing-and-the-knee) turns into a waiting time. A utilisation above one needs no ceiling
+to judge: the busy hour needs more cores than the fleet has, and the fleet cannot keep up. What
+this file cannot yet say is how close to one is too close — that takes a ceiling with a margin
+below it.
 
-Here is the graph as this chapter leaves it. Click *utilisation* to see the rate and the cost
-meeting. Drag *hosts in the fleet* and watch it move, while nothing yet says how far is too far.
+In the graph below, click *cores busy at the busy hour* to see the rate and the cost meet: it
+lights *peak request rate at horizon* and *CPU time per request*. Drag *hosts in the fleet* and
+watch *utilisation* change under **Outputs**, while *cores busy at the busy hour* stays fixed,
+because it does not depend on the fleet.
 
 ```{iframe} /models/web_service_littles_law-reference.html
 :width: 100%
@@ -88,22 +133,35 @@ The graph as ch05 leaves it: the busy hour, what a request costs, and how busy t
 
 ### Running the law backwards
 
-Nobody measures residence time. It is the hardest of the three quantities to get at honestly. An
-application's own timer starts when the request reaches the application, which is after it has
-finished queueing, and the queueing is generally most of the answer.
+An application's own timer does not measure residence time. It starts when the request reaches
+the application, which is after any queueing in front of it. Of the three quantities in the law,
+residence time is the hardest to measure directly.
 
 The other two are easy. Every system counts requests. Every system can expose a gauge of how many
 are in flight: a connection count, a thread-pool depth, a semaphore.
 
-So divide. Two hundred requests in flight while a thousand arrive a second is a fifth of a second
-each — the *true* residence time, including every queue the request sat in before your
-application saw it. If the service's own timer reports half that, the missing half is queueing it
-cannot see. Problem 5.2 is that division.
+So divide. Requests in flight divided by the arrival rate is the residence time, including every
+queue the request sat in before the application saw it. Two hundred requests in flight while a
+thousand arrive a second is a fifth of a second each — the true residence time. If the
+application's timer reports less than that, the gap has one of two causes: queueing before the
+timer starts, which the application cannot see, or a window in which arrivals and departures did
+not balance. Problem 5.2 is that division.
 
 ### What the fleet says
 
 ```{include} _generated/littles-law-outputs.md
 ```
+
+The rows *cores busy at the busy hour* and *requests in flight, if none waited* are identical in
+every column. That is not a mistake. When no request waits, each request in flight holds one core
+for the whole time it is in the system, so the count of requests in flight equals the count of
+cores busy. Neither row depends on the fleet: both come from the arrival rate and the service
+demand alone.
+
+The utilisation row's range runs above one. The table above says in what share of the futures
+that happened. Above one, the busy hour needs more cores than the fleet has, requests have to
+wait, and the queue grows as long as the busy hour lasts. That breaks the law's one condition:
+nothing is steady, and in those futures, the count of requests in flight describes nothing.
 
 ```{image} _figures/littles-law-in-flight.svg
 :alt: Requests in flight at the busy hour, as a distribution
@@ -129,10 +187,13 @@ because they are the same fact.
 
 ### Three things the law lets you catch
 
-**A latency that is not the latency.** Measure in-flight requests and arrival rate, divide, and
-compare against what your service reports. If the two disagree, the gap is queueing that happens
-before your timer starts: a connection backlog, a load balancer, a thread pool. Nothing in the
-application can see that gap. The user waits through it all the same.
+**A latency that is not the latency.** Measure the requests in flight and the arrival rate over a
+window, divide, and compare the answer with the latency your service reports. A gap has one of two
+causes: queueing before your timer starts — a connection backlog, a load balancer, a thread pool
+— or a window in which arrivals and departures did not balance. The in-flight count at the start
+and at the end of the window tells them apart: if it ended close to where it started, the window
+balanced and the gap is queueing your timer cannot see. Nothing in the application can see that
+queueing. The user waits through it all the same.
 
 **A capacity claim that cannot be true.** A system claiming to serve some rate with some
 concurrency is claiming a residence time. If that residence time is below its own service time,
@@ -142,24 +203,20 @@ somebody has made an arithmetic error, and the law finds it in one line.
 time is growing. Something downstream has slowed, and the queue in front of it is absorbing the
 difference. It will keep doing that silently until it cannot.
 
-### What the law will not do
-
-It will not tell you *why* residence time is what it is. It relates three numbers and has no
-opinion about which of them is causing the others.
-
-A law that assumes nothing has no mechanism in it, and a chapter about it has less to say than
-the ones that buy one.
-
 ## What this cannot tell you
 
-**Anything about a system that is not in a steady state.** The one condition, and the one people
-forget. During an incident, which is when somebody reaches for the law, arrivals exceed departures
-and the queue is growing. Then "how many are in the system" is not a stable quantity for the law
-to be about. Applied to a five-minute window in the middle of a pile-up, it produces a number that
-describes nothing.
+**Anything about a system that is not in a steady state.** The one condition: as many requests
+leave as arrive over the window. During an incident, when you are most likely to reach for the
+law, arrivals exceed departures and the queue grows. The count of requests in the system is not
+stable, so the law has nothing steady to be about. Applied to a window in the middle of a
+pile-up, it produces a number that describes nothing. The in-flight count gives it away: it ends
+the window well above where it started.
 
-**Which of the three quantities moved.** If in-flight requests doubled, the law says the product
-of the other two doubled. It cannot say which, and the two have completely different remedies.
+**Which of the three quantities moved.** If the requests in flight doubled, the law says the
+product of the other two doubled. It cannot say which. The law has no mechanism in it: it relates
+three numbers and does not say which of them causes the others. A higher arrival rate needs more
+capacity; a longer residence time means something has slowed, and you have to find it. The two
+have different remedies.
 
 **What the average is hiding.** The law is about averages, and a queue's average hides both of the
 states it is averaging over. A system with a handful of requests in flight on average can spend
@@ -179,11 +236,14 @@ about during an incident.
 - **What a request costs is not how long it takes.** Service demand is processor time per request,
   the first quantity in the model that belongs to the software rather than the workload. The
   difference between the two is queueing.
-- **Run the law backwards to get the residence time nobody measures.** Divide the requests in flight
-  by the arrival rate, and the answer includes every queue a request sat in before your timer
-  started.
+- **Run the law backwards to get the residence time your application's timer cannot see.** Divide
+  the requests in flight by the arrival rate. The answer includes every queue a request sat in
+  before your timer started, if the window balanced.
 - **The fleet is an input, not a result.** The model recommends a fleet, a person decides one, and
   every ceiling from here on asks what happens to the fleet that was bought.
+- **A utilisation above one is a fleet that cannot keep up.** The busy hour needs more cores than
+  the fleet has, the queue grows, and nothing is steady. In those futures the count of requests
+  in flight describes nothing, and this file cannot yet flag them.
 - **The law relates three numbers and has no opinion about which one moved.** Outside a steady
   state, or about the tail, it says nothing at all.
 :::
@@ -215,21 +275,33 @@ python3 -m pytest tests/littles_law/test_problem_2_backwards.py -m problem
 see it.
 
 Pick a queue you run: a request tier, a job pipeline, anything with work arriving and leaving.
-Measure two of the three quantities over a window: how fast work arrives, how much is in flight,
-how long a unit takes. Infer the third, then measure it too.
+Over one window, measure two of the three quantities: how fast work arrives, how much is in
+flight, how long a unit stays. Infer the third, then measure the third as well, and say where
+your timer starts. Also record the in-flight count at the start and at the end of the window.
+That is the test from "The law" for whether the window was steady.
 
-Watch the chapter's first limit. The law holds in a steady state, and your window almost
-certainly was not one. If the inferred and measured values disagree, you have not found an
-error in arithmetic that has been true since 1961. You have found out that arrivals and
-departures did not balance over your window, which is worth more than the number was.
+If the inferred and measured values disagree, you have not found an error in the law. Decide
+which of two gaps you have: queueing your timer cannot see, or a window in which arrivals and
+departures did not balance. The start and end counts decide it. A count that ended well away from
+where it started, next to the number that arrived, means the window did not balance. A count that
+ended close to its start means the window balanced, and the gap is queueing your timer cannot
+see.
 
-A good answer states the window, the three values, and the gap between inferred and measured. If
-there is no gap at all, check whether your window was long enough to contain a busy period.
+A good answer states: the window; the three values; the in-flight count at the start and the end;
+the gap between inferred and measured; which of the two causes it is, and the evidence. What would
+falsify the answer: a gap blamed on unseen queueing when the in-flight count ended well away from
+where it started; or a window called steady that contained a pile-up, with the count climbing
+through it. Agreement is a result, not a warning sign: if the window balanced and the two agree,
+your timer sees the whole of the residence time.
 
 ## Where to go next
 
 Little's original proof @little1961proof is five pages, and worth reading for how little it
 assumes.
 
-[ch06](#queueing-and-the-knee) buys a mechanism. It costs assumptions, and it explains the shape
-of the spread above.
+[ch06](#queueing-and-the-knee) buys a mechanism, and pays for it in assumptions: one queue and one
+class of work, requests that do not affect each other, and a service time that does not change
+with load. It explains why residence time climbs steeply as utilisation nears one: the service
+time divided by the share of the fleet that is idle. It adds the model's first ceiling, on
+utilisation, with a declared margin below it, so the model can say how close to one is too close
+and report the futures past it.

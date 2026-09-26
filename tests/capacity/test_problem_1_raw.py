@@ -17,6 +17,26 @@ def values():
     return point(load_model(MODEL), load_scenario(SCENARIO))
 
 
+def diagnosis(mine: float, values) -> str:
+    """What a wrong answer to the chain most likely got wrong, without saying what is right."""
+    ratio = mine / values["raw_data"]
+    if ratio == pytest.approx(values["record_compression"] ** 2, rel=1e-6):
+        return (
+            "You are out by the square of the compression ratio, so the division is upside down. "
+            "Compression makes what you buy smaller."
+        )
+    overhead = values["index_overhead"]
+    if ratio == pytest.approx((1 + overhead) / overhead, rel=1e-6):
+        return (
+            "The overhead is already a multiplier: 1.3 means thirty per cent more. Adding one to "
+            "it buys a whole extra copy of every byte."
+        )
+    return (
+        "The model works it out differently. Get the four cases you can do in your head right "
+        "first: one term at a time, with the other three at one."
+    )
+
+
 @pytest.mark.problem
 def test_it_agrees_with_the_model(values):
     mine = raw_for(
@@ -25,10 +45,8 @@ def test_it_agrees_with_the_model(values):
         values["record_compression"],
         values["index_overhead"],
     )
-    assert mine == pytest.approx(values["raw_data"], rel=1e-9), (
-        f"the model makes {values['raw_data']:,.0f} TB of it and you make {mine:,.0f}. If you "
-        "are out by roughly the square of the compression ratio, the division is upside down."
-    )
+    if mine != pytest.approx(values["raw_data"], rel=1e-9):
+        pytest.fail(diagnosis(mine, values), pytrace=False)
 
 
 @pytest.mark.problem
@@ -57,7 +75,10 @@ def test_it_holds_across_the_whole_sampled_range():
         evaluation.samples["record_compression"],
         evaluation.samples["index_overhead"],
     )
-    assert np.allclose(mine, evaluation.samples["raw_data"], rtol=1e-9)
+    assert np.allclose(mine, evaluation.samples["raw_data"], rtol=1e-9), (
+        "the chain agrees at the point estimates but not across every future the model drew: "
+        "something in it is not a plain multiplication or division"
+    )
 
 
 def test_the_model_still_has_the_four_terms(values):
@@ -69,3 +90,12 @@ def test_the_model_still_has_the_four_terms(values):
         "index_overhead",
     ):
         assert name in values
+
+
+def test_the_two_mistakes_get_different_messages(values):
+    """Scaffolding: an upside-down division and an overhead with one added are told apart."""
+    upside_down = values["raw_data"] * values["record_compression"] ** 2
+    overhead = values["index_overhead"]
+    one_added = values["raw_data"] * (1 + overhead) / overhead
+    assert "upside down" in diagnosis(upside_down, values)
+    assert "already a multiplier" in diagnosis(one_added, values)

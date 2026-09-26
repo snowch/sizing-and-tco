@@ -37,19 +37,24 @@ in memory, and you find out immediately: one as failed writes, the other as a se
 has doubled. What the margin buys is the time between noticing and doing something, plus the
 space a failed host's copies need to land in.
 
-**A queueing margin protects against a slope.** Nothing fails. There is no page. The system slides
-down [ch06](#queueing-and-the-knee)'s curve, paying in latency on every request, for as long as
-nobody looks. This margin is larger, for two reasons. The failure mode is invisible, and
-recovering from it means adding machines, which [ch07](#when-adding-servers-stops-helping) showed
-works badly.
+**A queueing margin protects against a slope.** Nothing fails and nobody is paged. The fleet slides
+up [ch06](#queueing-and-the-knee)'s curve and every request pays in latency, for as long as nobody
+looks. This margin is larger than the capacity margins in the table, for two reasons. The failure
+mode is invisible, and recovering from it means adding machines, which
+[ch07](#when-adding-servers-stops-helping) showed works badly.
 
 **A scaling margin protects a budget.** Nothing fails and nothing gets slow. The fleet costs more
-than its work is worth. It is the loosest margin in the book, and it is still worth
-declaring, because a cost that nobody has bounded is a cost that grows.
+than its work is worth. It is the largest percentage in the table, and it is still the loosest
+ceiling: its limit is the whole fleet wasted, so the allowed line still lets a large share of the
+fleet go on coordination before the ceiling objects. It is declared anyway, because a cost that has
+no bound on it grows.
 
-A single "keep thirty per cent free" rule applied to all three would be too tight for one, too
-loose for another, and unexplainable for the third. The model file gives a reason beside every
-margin it declares. Here they are, in its words:
+The right size of each kind of margin is set by a different thing: a capacity margin, by how fast
+you can react and how much room a lost host's copies need; a queueing margin, by how much latency
+every request can afford at the busy hour; a scaling margin, by how much waste the budget will
+carry. So one percentage applied to all three would fit at most one of them, and the reason it was
+chosen would not apply to the other two. The model file gives a reason beside every margin it
+declares. Here they are, in its words:
 
 ```{include} _generated/headroom-and-failure-domains-margins.md
 ```
@@ -58,20 +63,24 @@ margin it declares. Here they are, in its words:
 
 Most headroom is judgement. One piece of it is arithmetic.
 
-A fleet that has to survive losing hosts needs somewhere for those hosts' work to go. That
-capacity has to be there *beforehand*. A fleet that discovers it needs a failure reserve during a
-failure is already over the knee.
+A fleet that has to survive losing hosts needs somewhere for their share of the requests to go. That
+capacity is the **failure reserve**. It has to be there beforehand. A fleet that finds it needs one
+during a loss is already over the knee. A **failure domain** is the set of hosts one fault takes out
+together. One host is the smallest. Hosts that share a rack, a switch or a power feed make a larger
+one. The reserve has to cover the failure domain you plan to survive. This chapter's arithmetic, and
+the model's ceiling below, take it to be one host.
 
-Problem 11.1 is that fraction. It has a consequence people rarely state as a capacity argument. A
-small fleet pays an enormous margin, because one host in five is a fifth of the fleet. A large
-fleet pays almost nothing per host. That is a real and quantitative argument for larger failure
-domains, and it is not the argument people usually give for them.
+Problem 11.1 asks for one number: the share of the fleet's capacity that has to be kept free to
+survive losing a given number of hosts. Every fleet keeps one host free for each host it plans to
+lose. What changes with fleet size is the share of the fleet that host is. A small fleet keeps a
+large share of itself free: one host in five is a fifth of the fleet. A large fleet keeps a small
+share free. That is a capacity argument for larger pools, where each loss is a smaller share. It is
+not an argument for larger failure domains, which are worse, because more hosts go at once.
 
-The second half of that problem is worth more than the arithmetic. **The margin is for a loss, not
-for a failure.** A host drained for a kernel upgrade costs exactly the same capacity as one that
-has died, and planned work is far more common than failure. Most fleets spend their failure
-reserve on a Tuesday afternoon. A reserve sized for annual hardware failure is not there when
-somebody starts a rolling upgrade.
+**The margin is for a loss, not for a failure.** A host drained for a kernel upgrade removes the
+same capacity as one that has died. A rolling upgrade drains hosts on purpose, one after another. So
+planned work spends the reserve by design, and a reserve sized only for hardware failure is already
+in use while an upgrade runs.
 
 The running example carries this as a ceiling of its own: the queueing margin again, audited with
 one host gone, because a host lost at the busy hour is a queueing problem for the survivors:
@@ -145,9 +154,12 @@ independently. They do not. They share racks, power, switches, firmware versions
 engineer who is applying an update to all of them. A margin sized for one host and spent on a
 rack is a margin that was not there.
 
-**What happens when two margins are needed at once.** The composition arithmetic above assumes the
-margins are for independent things. A host lost during a growth spike during a busy hour is one
-event, not three, and the model has no term for it.
+**Whether two losses can happen at once.** The ceiling *utilisation with one host down* takes
+exactly one host away from the fleet. A planned drain during an upgrade and an unplanned loss can
+overlap: one host is out for a kernel upgrade when another fails. Then two hosts are gone at the
+busy hour. The model has no term for two hosts down at once. A reserve that covers one loss covers
+one of them, and the ceiling reports on a fleet that is one host larger than the one serving
+requests.
 
 ## Key takeaways
 
@@ -190,10 +202,19 @@ python3 -m pytest tests/headroom_and_failure_domains/test_problem_2_compose.py -
 ```
 
 **11.3 — Add a ceiling.**
-The page shows a fragment of the model file: a ceiling on connections per host with its unit,
-its margin and its reason left empty. Fill them in, and get a verdict and a breach probability
-out of it. The toolkit refuses it three different ways before it accepts it, and each refusal
-is a rule this chapter argues for.
+The page shows a fragment of the model file: one ceiling, *connections per host*, with three fields
+left empty. Fill in the `unit`, the `headroom` (the margin) and the `because` (the reason), and
+change nothing else. The expression and the limit are given. The limit carries its unit by being
+multiplied by the constant that holds it, the way the model file does. The unit has to be the one
+the expression produces. You can find the units of `concurrency` and `host_count` by clicking each
+in the graph above. A margin can be written as a number or as the name of a node that holds one, as
+`headroom: queueing_margin` in the listing above does. The toolkit refuses the fragment until all
+three are right: a missing or wrong unit is refused by the loader or the units check, and a missing
+margin or a missing reason is refused by the model verifier. Each refusal is a rule this chapter
+argues for. Once it is accepted, the test evaluates the web service model with the new ceiling and
+checks that the ceiling reports a verdict and how often the model's futures take it past its limit:
+the same *Verdict* and *Over limit* the tables at the top of this chapter show. The Check says
+whether the tests pass; it does not print those values.
 
 ```bash
 python3 -m pytest tests/headroom_and_failure_domains/test_problem_3_ceiling.py -m problem
@@ -209,14 +230,19 @@ Two follow-ups. Does the margin have a reason attached that is not "it is what w
 used"? And does your failure domain match the physical layout? Are the machines you assume fail
 independently in the same rack, the same power feed, the same availability zone?
 
-A good answer has a number, a name or a document, and a reason. If the reason is round, twenty
-per cent or thirty per cent, ask what it would have been if the first person to say it had said a
-different round number. That is usually the whole derivation.
+A good answer has three things: a number, a name or a document, and a reason. If the reason amounts
+to a round number — twenty per cent or thirty per cent — ask what it would have been had the first
+person to say it said a different round number. What would falsify the answer? Any one of these
+shows the margin is not the one the system needs: the reason names something the system no longer
+has, such as a hardware generation, a failure domain or a traffic pattern that has changed since the
+number was chosen; the reason is for a different kind of margin from the ceiling it sits on, for
+example a queueing reason on a disk ceiling; nobody can find who chose it or where it is written,
+which means there is no reason to check. Take those three things — the number, the name or document,
+and the reason that holds up under that test — back to whoever sizes the system next.
 
 ## Where to go next
 
 [ch12](#the-sizing-model) is Part III assembled: every chain, every margin, and a number at the
 end of it.
 
-[ch13](#monte-carlo) is what the last two columns of every table in this chapter actually came
-from.
+[ch13](#monte-carlo) is what the last two columns of every table in this chapter came from.

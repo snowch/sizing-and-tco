@@ -22,10 +22,9 @@ def concurrency(
     One multiplication. The test checks it against the web service model's own node, which is
     the law written as a formula, at the point estimate and then across every future.
 
-    Worth knowing what you are *not* assuming. Nothing about how requests arrive, nothing about
-    the order they are served in, nothing about the shape of anything. Only that the system
-    is in a steady state - as much going out as coming in, over the window you are looking at.
-    That is why this is the one relationship in Part II that is always true.
+    The law assumes nothing about how requests arrive, the order they are served in, or the
+    shape of anything. It has one condition: the system is in a steady state over the window
+    you look at, with as many requests leaving as arriving.
     """
     raise NotImplementedError("problem 5.1")
 

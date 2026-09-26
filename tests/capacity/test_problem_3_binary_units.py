@@ -150,11 +150,13 @@ def test_nothing_the_model_buys_moved(base, scenario):
     for name, node in base.nodes.items():
         if terabytes_in(node.unit) or isinstance(node, Input):
             continue
-        assert after[name] == pytest.approx(before[name], rel=1e-9), (
-            f"{name}: {before[name]:,.4f} became {after[name]:,.4f}, and it has no terabyte in "
-            "it. A consistent change of units moves nothing the model buys; something was "
-            "converted wrongly, or a unit was missed."
-        )
+        if after[name] != pytest.approx(before[name], rel=1e-9):
+            pytest.fail(
+                f"{name} has no terabyte in it and moved by a factor of "
+                f"{after[name] / before[name]:.4f}. A consistent change of units moves nothing "
+                "the model buys; something was converted wrongly, or a unit was missed.",
+                pytrace=False,
+            )
 
 
 @pytest.mark.problem
@@ -164,9 +166,37 @@ def test_every_tebibyte_figure_reads_smaller_by_exactly_the_ratio(base, scenario
     for name, node in base.nodes.items():
         if terabytes_in(node.unit) != 1 or isinstance(node, Input):
             continue
-        assert after[name] == pytest.approx(before[name] * TIB_PER_TB, rel=1e-9), (
-            f"{name}: {before[name]:,.3f} TB should read {before[name] * TIB_PER_TB:,.3f} TiB. "
-            "The same bytes counted in bigger units is a smaller number."
+        if after[name] != pytest.approx(before[name] * TIB_PER_TB, rel=1e-9):
+            pytest.fail(
+                f"{name}: read in tebibytes it should be smaller than in terabytes by exactly the "
+                "ratio of the two units, and it is not. The same bytes counted in bigger units "
+                "is a smaller number.",
+                pytrace=False,
+            )
+
+
+#: A price of the reader's own to convert, because no input in the web service model carries a
+#: terabyte below the line: the model's one such unit is on a computed node, which is relabelled.
+PRICE_UNIT = "USD/TB/month"
+PRICES = {"value": 10.0, "band": {"minimum": 8.0, "likely": 10.0, "maximum": 15.0}}
+
+
+@pytest.mark.problem
+@pytest.mark.parametrize("form", sorted(PRICES))
+def test_a_terabyte_below_the_line_converts_the_other_way(form):
+    was = PRICES[form]
+    units, values = in_binary_units({"price": PRICE_UNIT}, {"price": was})
+    unit, now = units["price"], values["price"]
+    assert tebibytes_in(unit) == -1 and terabytes_in(unit) == 0, (
+        f"price: {PRICE_UNIT!r} should become the same unit with a tebibyte in the terabyte's "
+        f"place, not {unit!r}"
+    )
+    pairs = [(now[key], was[key]) for key in was] if isinstance(was, dict) else [(now, was)]
+    for new, old in pairs:
+        assert in_old_units(new, unit, PRICE_UNIT) == pytest.approx(old, rel=1e-9), (
+            "price: the number no longer means the same money for the same bytes. A price per "
+            "terabyte-month has the terabyte below the line, so its number moves the opposite "
+            "way from a number of terabytes."
         )
 
 
@@ -191,3 +221,18 @@ def test_putting_the_declared_units_and_numbers_back_changes_nothing(base, scena
     assert set(units) == set(base.nodes)
     assert set(values) == {n for n, node in base.nodes.items() if isinstance(node, Input)}
     assert point(rebuilt(base, units, values), scenario) == point(base, scenario)
+
+
+def test_the_price_test_is_needed_and_can_fail():
+    """Scaffolding: the price test tells the two directions apart, so a conversion that treats a
+    terabyte below the line like one above it cannot pass it."""
+    below = sorted(
+        name
+        for name, node in load_model(MODEL).nodes.items()
+        if isinstance(node, Input) and terabytes_in(node.unit) < 0
+    )
+    assert not below, f"{below} carry a terabyte below the line; the 9.3 stub says no input does"
+    wrong_way = PRICES["value"] * TIB_PER_TB
+    assert in_old_units(wrong_way, "USD/TiB/month", PRICE_UNIT) != pytest.approx(
+        PRICES["value"], rel=1e-3
+    )

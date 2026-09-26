@@ -54,12 +54,43 @@ def output_at(model, scenario, output: str):
     return at
 
 
+def moves(at, bands: dict[str, tuple[float, float]]) -> tuple[float, float, float]:
+    """The three moves the problem describes: each input alone, then both together."""
+    (first, (low_1, high_1)), (second, (low_2, high_2)) = bands.items()
+    alone_1 = at({first: high_1}) - at({first: low_1})
+    alone_2 = at({second: high_2}) - at({second: low_2})
+    both = at({first: high_1, second: high_2}) - at({first: low_1, second: low_2})
+    return alone_1, alone_2, both
+
+
 @pytest.mark.problem
 def test_inputs_that_meet_in_a_product_interact(model, scenario):
     gap = interaction_gap(output_at(model, scenario, PRODUCT), swings(model, INTERACTING))
     assert abs(gap) > 0.02, (
-        f"{INTERACTING[0]} and {INTERACTING[1]} multiply each other on the way to the raw data, so "
-        f"moving both cannot be the sum of moving each - and you make the gap {gap:.1%}"
+        f"{INTERACTING[0]} and {INTERACTING[1]} multiply each other on the way to the raw data, "
+        f"and here moving both is not the sum of moving each - but you make the gap {gap:.1%}"
+    )
+
+
+@pytest.mark.problem
+def test_the_gap_is_a_fraction_of_the_separate_moves(model, scenario):
+    at, bands = output_at(model, scenario, PRODUCT), swings(model, INTERACTING)
+    gap = interaction_gap(at, bands)
+    alone_1, alone_2, both = moves(at, bands)
+    separate = alone_1 + alone_2
+    assert gap != pytest.approx(both - separate, rel=1e-6), (
+        "you returned the gap in terabytes of raw disk. Divide it by the two separate changes "
+        "added together, so that it reads as a fraction."
+    )
+    assert gap != pytest.approx((both - separate) / both, rel=1e-6), (
+        "you divided by the change when both move. Divide by the two separate changes added "
+        "together: the question is how far the tornado's bars, added up, miss the joint move."
+    )
+    assert gap == pytest.approx((both - separate) / separate, rel=1e-6), (
+        "the gap is not the fraction the docstring asks for. Move each input alone from the low "
+        "end of its band to the high end, leaving the other out of the dictionary. Then move both "
+        "from their low ends to their high ends. Subtract the two separate changes from the joint "
+        "one, and divide by the two separate changes added together."
     )
 
 
@@ -77,9 +108,10 @@ def test_the_gap_is_signed(model, scenario):
     """Direction matters: a tornado can understate as well as overstate."""
     gap = interaction_gap(output_at(model, scenario, PRODUCT), swings(model, INTERACTING))
     assert gap > 0, (
-        "two factors of a product swung upward together move it further than the sum of their "
-        "separate moves, so this gap is positive. Zero or negative has lost the sign, or the "
-        "direction of a swing."
+        "the gap for this pair points upwards. Both bands reach further above their middle "
+        "value than below it, growth most of all because it is raised to a power, so moving both "
+        "up together overshoots the two separate moves added up. Zero or negative has lost the "
+        "sign, or the direction of a swing."
     )
 
 
@@ -93,3 +125,20 @@ def test_both_pairs_are_still_in_the_model(model, scenario):
         assert name in model.ancestors(PRODUCT), name
     for name in SEPARATE:
         assert name in model.ancestors(SUM), name
+
+
+def test_the_product_pair_tells_the_wrong_fractions_apart(model, scenario):
+    """Scaffolding: the fraction, the bare gap and the gap over the joint move differ by far more
+    than the grading tolerance, and the right fraction clears the first test's threshold."""
+    alone_1, alone_2, both = moves(output_at(model, scenario, PRODUCT), swings(model, INTERACTING))
+    separate = alone_1 + alone_2
+    right = (both - separate) / separate
+    assert abs(right) > 0.02
+    for wrong in (both - separate, (both - separate) / both):
+        assert wrong != pytest.approx(right, rel=1e-3)
+
+
+def test_the_sum_pair_has_nothing_to_find(model, scenario):
+    """Scaffolding: the second pair is additive, so the second test asks for zero honestly."""
+    alone_1, alone_2, both = moves(output_at(model, scenario, SUM), swings(model, SEPARATE))
+    assert both == pytest.approx(alone_1 + alone_2, rel=1e-9)

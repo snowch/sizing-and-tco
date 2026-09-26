@@ -1,0 +1,21 @@
+# ch01's taxi commute: the three things a person says when asked what their commute will cost
+# this year, each as its usual value and the most it could be. Not one of the book's models and
+# nothing in it is measured: it is an example, and it lives under tests/ so that it can never be
+# mistaken for a figure the book publishes.
+#
+# Two things read it: the table on the page (bench/tables.py::commute_table) and problem 1.2's
+# test (tests/point_estimates/oracle.py::commute). One file, so the page and the test cannot
+# disagree about the example.
+days:
+  label: days a year
+  usual: 250
+  most: 260
+minutes:
+  label: minutes a day
+  usual: 25
+  most: 40
+fare:
+  label: fare a minute
+  pounds: true
+  usual: 0.50
+  most: 0.75

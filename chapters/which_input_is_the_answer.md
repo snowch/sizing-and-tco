@@ -14,9 +14,10 @@ short_title: "ch19 Which input to go and measure"
 
 Which input should you go and measure first, and how would the model tell you?
 
-An interval describes a problem. Choosing which input to go and measure is the only actionable
-thing you can do with one. Everything here works on a model that has already been sampled, so it
-needs [ch13](#monte-carlo) behind it rather than the chapter before.
+An interval describes a problem, but it does not tell you what to do about it. You can measure an
+input, decide it, or design around it — and before any of those, you need to know which input the
+answer rests on. Everything here works on a model that has already been sampled, so it needs
+[ch13](#monte-carlo) behind it rather than the chapter before.
 
 ## The material
 
@@ -26,14 +27,20 @@ The instinct is to run more samples. [ch14](#correlation-and-convergence) said w
 wide interval is not sampling noise. The interval is a property of the model's inputs. More draws
 locate it more precisely. They do not narrow it.
 
-So there are exactly two things that narrow an interval.
+Three things narrow an interval, each aimed at one input.
 
-- **Measure something.** Replace a guess with a figure that has a standard error.
-- **Decide something.** Replace an uncertainty with a constraint: cap the growth by policy, fix
-  how long records are kept, shed load above a stated rate.
+- **Measure it.** Replace a guess with a figure that has a standard error. That is
+  [ch03](#where-the-numbers-come-from)'s discipline; problem 3.2's arithmetic says how much
+  measuring is enough. It costs the measurement.
+- **Decide it.** Replace an uncertainty with a constraint: cap the growth by policy, or fix how
+  long records are kept. It costs flexibility rather than money.
+- **Design around it.** Change the system so the answer depends less on the input: shed load above
+  a stated rate, so the size of the fleet no longer depends on how high the busy hour goes. It
+  costs money and engineering work, and it lasts, whatever value the input turns out to have.
 
-Both are work. The question is which one is worth doing. The answer is not obvious, because the
-model has dozens of uncertain inputs and only one of them matters.
+All three are work. The question is which input to spend it on. The answer is not obvious: on some
+outputs one input carries most of the interval, and on others no single input carries much of it.
+The tables further down show both.
 
 ### Swing one thing at a time
 
@@ -47,8 +54,8 @@ everything else held still. Problem 19.1 builds this chart, against the host cou
 the total.
 
 The swing comes from the input's **declared distribution**, not from its slider range. Otherwise
-an input somebody gave a generous slider gets a long bar for free, and the chart measures
-somebody's choice of slider rather than the model.
+an input the modeller gave a generous slider would get a long bar for free, and the chart would
+measure the modeller's choice of slider rather than the model.
 
 The ordering is the useful part. It answers "what should I go and measure first". That is the
 only question a tornado answers well.
@@ -101,13 +108,15 @@ one was settled before it was asked.
 ```{include} _generated/which-input-is-the-answer-correlation.md
 ```
 
-Declared correlations widen every interval in the book. A tornado has no way to show that. Each
-bar moves one input, and a correlation is a statement about two.
+[ch14](#correlation-and-convergence) sampled both reference models twice: once with their declared
+correlations and once without. Declaring that two inputs move together widened every interval it
+measured. A tornado cannot show that, because each bar moves one input and a correlation is a
+statement about two.
 
-So the two figures answer different questions, and you should not read one against the other. The
-tornado says which input is worth measuring. The interval says what the model currently believes.
-An input with a short bar that is strongly correlated with a long one is still worth attention,
-and neither chart will say so.
+The tornado and the interval answer different questions. The tornado ranks inputs by how far each
+moves the answer alone, while the interval, sampled with correlations, says what the model
+currently believes. An input with a short bar that is strongly correlated with a long one is still
+worth attention, and the tornado will not tell you so.
 
 ### What one-at-a-time misses
 
@@ -124,84 +133,89 @@ It is not in this toolkit, and `NEXT_STEPS.md` in the repository lists it as wor
 
 ### What the measurement would be worth
 
-A ranking is not a quantity. Somebody has to approve the measurement, and they will ask what it
-would buy.
+A ranking is not a quantity. Whoever approves a measurement will ask what it would buy. That can be
+computed, and simply: take one uncertain input and pin it, as if measured perfectly, then re-sample
+the whole model. What comes back is the interval the model would report if that one thing were
+known.
 
-That is computable, and the computation is simple. Take one uncertain input and pin it at its
-median, as if somebody had gone and measured it perfectly. Re-sample the whole model. What comes
-back is the interval the model would report if that one thing were known.
+A perfect measurement can land anywhere in the input's band, and you do not know where until you
+take it. Each input is pinned three times: at the low end, middle, and high end — the same two ends
+the tornado swings it between. Each column is the share of today's interval that the pin
+removes, and a negative share means the interval came back wider. Here it is against the five-year
+total:
 
 ```{include} _generated/which-input-is-the-answer-worth-service.md
 ```
 
-The last column is a **ceiling**. No real measurement is perfect. A real one leaves a standard
-error behind, that error propagates like any other ([ch03](#where-the-numbers-come-from)), and
-the interval closes by less than the column says. That bound is what makes the column useful. A
-small number in it says the measurement is not worth commissioning *however well it goes*, and
-somebody can take that decision before spending anything.
+No single input removes much of the five-year total's interval, wherever it lands. The four at the
+top are engineers, licence per core, salary, and host price. Everything below removes almost
+nothing in any column, the electricity price included.
 
-Read down the column. No single input is worth much of the interval. The four at the top are the
-people and the prices the tornado put first. Each is worth a modest share, and everything below
-them is rounding. A campaign to pin down the *electricity price*, the line a review of a fleet's
-running cost spends longest on, would be a quarter's work for a result nobody could see on a
-chart.
+Licence per core removes the same share wherever it lands: it is only multiplied by the fleet's
+fixed count of cores and added to the other lines. Engineers and salary remove more if found low
+than high because they multiply each other. An input whose row is small in all three columns is
+not worth measuring, and you can tell that before spending anything.
 
-Now the same experiment against the host count, which is the question
-[ch12](#the-sizing-model) asked. The answer has the opposite shape:
+No real measurement is perfect. A real one leaves a standard error behind, that error propagates
+like any other ([ch03](#where-the-numbers-come-from)), and the table does not include it.
+
+Now the same experiment against the host count, which is the question [ch12](#the-sizing-model)
+asked. The answer has the opposite shape:
 
 ```{include} _generated/which-input-is-the-answer-worth-hosts.md
 ```
 
-One input is worth most of the interval, and everything below it is rounding. It is the growth
-rate, which belongs to no target and cannot be measured at all ([ch04](#peak-mean-and-growth)).
-The table will keep pointing at it. The only thing you can do with it is *decide* it, by policy,
-and accept the flexibility that costs.
+One input, annual growth, dominates every column. Where it lands matters most: found low, it would
+remove most of the interval; found high, far less.
+
+At its high end, three inputs leave the interval wider: the day-one busy-hour rate, the share of
+records touched, and CPU time per request. Each multiplies the demand, so a high value scales up
+every other input's contribution.
+
+Growth belongs to no target and cannot be measured at all ([ch04](#peak-mean-and-growth)). The
+table will keep pointing at it. The only thing you can do with it is decide it, by policy, and
+accept the flexibility that costs.
 
 And on the observability model, where the answer has a third shape:
 
 ```{include} _generated/which-input-is-the-answer-worth-observability.md
 ```
 
-Two inputs tie at the top, and **the same number is not the same decision**. One is a count of
-label values somebody could go and query this afternoon. The other is a growth rate again, with
-the same answer: decide it.
+In the retention store, annual growth and extra accidental label values almost tie in the middle
+column. The ends separate them: found low, growth removes more; found high, neither removes
+anything.
 
-Now the bottom rows of the last two tables.
+**The same number is not the same decision.** Extra accidental label values are a count you could
+query from your own system this afternoon. Growth is a forecast again, with the same answer:
+decide it.
 
-**The measured constants buy nothing.** The record compression ratio in one table, bytes per
-sample and bytes per log line in the other, were measured over a declared corpus, with a standard
-error, by the most careful machinery in this book. Remove that standard error entirely and
-neither interval moves. Their *values* matter, because they scale the answer. Their
-*uncertainty* is not what the answer rests on. Measuring them again, better, would produce a
-nicer provenance and the same interval.
+**The measured constants buy nothing.** The record compression ratio in the host count's table, and
+bytes per sample and bytes per log line in the retention store's, were measured over a declared
+corpus, with a standard error, by the most careful machinery in this book. Pin any of them at
+either end of its band or at its middle, and the interval does not move.
 
-**And the rows do not add up.** They come to rather more or rather less than the whole, depending
-on the model and the output, and they are not shares of anything. Uncertainty in a chain of
-multiplications does not divide between the inputs. Problem 19.2 measures the same fact from the
-other direction, where it is harder to argue with.
+Their *values* matter, because they scale the answer. Their *uncertainty* is not what the answer
+rests on. Measuring them again, better, would produce a nicer provenance and the same interval.
 
-### After you measure it
+**And the rows do not add up.** The middle column of the five-year total's table comes to well
+under the whole interval, and the retention store's to more than the whole. The rows are not shares
+of anything. Uncertainty in a chain of multiplications does not divide between the inputs.
 
-The point of a sensitivity analysis is to change something, so it ends in a plan. There are three
-things you can do with the input at the top:
+### Turning the ranking into a plan
 
-- **measure it**: turn an assumption into a measured constant with a standard error, which is
-  [ch03](#where-the-numbers-come-from)'s discipline, and problem 3.2's arithmetic says how much
-  measuring is enough;
-- **decide it**: turn an uncertainty into a policy, which costs flexibility rather than money;
-- **design around it**: make the answer less sensitive to it, which is usually the most expensive
-  option and the most durable.
-
-Then re-run the model, because the tornado will have a different input at the top. That is what
-progress looks like here. Not a narrower interval on the same chart, but a different chart.
+The point of a sensitivity analysis is to change something, so it ends in a plan. Take the input at
+the top and measure it, decide it, or design around it. Then re-run the model. The tornado will
+have a different input at the top. That is what progress looks like here: not a narrower interval
+on the same chart, but a different chart.
 
 ## What this cannot tell you
 
-**How much the interval would narrow if you measured it *in practice*.** The table above is the
-bound, computed by pretending the measurement is perfect. A real one leaves a standard error
-behind, and how large that error would be is not knowable before doing the work. So the honest
-figure is the ceiling, and the shortfall against it is somebody's judgement about how good a
-measurement they can take.
+**How much the interval would narrow if you measured it *in practice*.** The tables pin an input
+exactly, at three places in its band. A real measurement is not exact: it leaves a standard error
+behind, and how large that error would be is not knowable before doing the work. Nor is where it
+will land, until you take it. For an input that multiplies others, where it lands decides whether
+the interval narrows a lot, a little, or widens. So the tables show what a perfect measurement would
+do, but how close you get to it depends on the measurement you can take.
 
 **Anything about interactions.** One at a time, by construction. Problem 19.2 measures the gap,
 and the gap is not small in a multiplicative model. An input whose effect appears only in
@@ -223,8 +237,8 @@ model missing a cost line is a confident ranking of the wrong list.
 :::{div}
 :class: takeaways
 
-- **Only two things narrow an interval: measure something or decide something.** More samples locate
-  the interval. They never shrink it.
+- **Three things narrow an interval: measure an input, decide it, or design around it.** More
+  samples locate the interval. They never shrink it.
 - **A tornado ranks inputs by how far the answer moves when each one swings alone.** The ordering
   answers *what should I measure first*, and that is the only question it answers well.
 - **The widest bar is where the model is not linear.** An exponent, a product of uncertain things, a
@@ -233,9 +247,11 @@ model missing a cost line is a confident ranking of the wrong list.
 - **The bars are a ranking, not a decomposition.** They do not add up to the interval, they cannot
   show a correlation, and an input whose effect appears only in combination gets a short bar and can
   still sink you.
-- **What a measurement would be worth is a ceiling you can compute before spending anything.** Pin
-  an input at its median, re-sample, and read how much the interval closes. Often the input worth
-  most is a growth rate, and the only thing to do with a growth rate is decide it.
+- **What a perfect measurement of an input would buy can be computed before you spend anything.**
+  Pin the input at the low end, middle and high end of its band and re-sample to read how much of
+  the interval each pin removes. An input that multiplies others, found high, can leave the
+  interval wider. Often the input at the top is a growth rate, and the only thing to do with a
+  growth rate is decide it.
 :::
 
 ## Problems
@@ -247,16 +263,20 @@ why.
 Build the tornado for the number of hosts the model recommends. The test hands you two things:
 each input's band, which is the middle eighty per cent of its declared distribution, and a way
 to ask the model for the host count with any inputs held. The band is not the slider range, so
-every bar answers the same question. Draw one bar per input, longest first.
+every bar answers the same question. Return one bar per input, as the input's name and the bar's
+length, longest first.
 
 ```bash
 python3 -m pytest tests/which_input_is_the_answer/test_problem_1_tornado.py -m problem
 ```
 
 **19.2 — What one-at-a-time misses.**
-Move two inputs separately, then together, and measure the difference. The test hands you the
-two bands and the same way of asking the model as before. It names a pair that meets in a
-product and a pair that meets in a sum; predict which will show a gap.
+Move two inputs separately, then together, and measure the difference: how far the joint move is
+from the two separate moves added up, as a fraction of those two. The test hands you the two bands
+and the same way of asking the model as in problem 19.1. It runs your function on two pairs from
+the web service: the annual growth factor and the index overhead, which meet in a product, and the
+electricity price and the number of engineers, which meet only in a sum. The second pair checks
+that your function finds nothing where there is nothing to find.
 
 ```bash
 python3 -m pytest tests/which_input_is_the_answer/test_problem_2_interaction.py -m problem
@@ -269,10 +289,10 @@ Before computing anything, ask two colleagues which input they think the answer 
 to. Write down their answers. Then work it out: swing each input across the range you would
 defend, one at a time, and see which moves the result most.
 
-The disagreement is the point. In this book's model the growth rate wins whenever the output is a
-size and vanishes whenever it is a bill, and neither is what anybody guesses first. In yours it
-may be a price, a ratio or a constant nobody has measured. Being wrong about where the
-sensitivity is means measuring the wrong thing next.
+The disagreement is the point. In this book's web service model, growth dominates the ranking
+whenever the output is a size and disappears whenever it is a bill, where people and licences come
+first. In yours the top may be a price, a ratio or a constant nobody has measured. Being wrong about
+where the sensitivity is means measuring the wrong thing next.
 
 A good answer has a ranking, and a note of where it differed from what people expected. If it
 matched everybody's intuition exactly, check that your ranges are the ones you would defend rather

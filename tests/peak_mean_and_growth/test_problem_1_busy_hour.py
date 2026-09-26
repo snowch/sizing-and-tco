@@ -53,16 +53,21 @@ def expected(shape: np.ndarray, total: float) -> float:
 def test_it_finds_the_busiest_hour(name, shape):
     total = 1_000_000.0
     assert busy_hour_rate(shape, total) == pytest.approx(expected(shape, total), rel=1e-9), (
-        f"{name}: the busiest hour takes {shape.max() / shape.sum():.1%} of the day. The weights "
-        "are relative, so they have to be normalised before they mean anything."
+        f"{name}: the busy-hour rate is off. The weights are relative: turn each into its share "
+        "of the whole day before you use it. Twenty-four equal weights should give the daily "
+        "total spread evenly over the hours."
     )
 
 
 @pytest.mark.problem
-def test_a_flat_day_has_no_peak():
-    """A system with no peak has nothing to size for, and the two rates must agree."""
+def test_a_flat_day_peaks_at_its_mean():
+    """On a flat day the busiest hour is no busier than the average hour, so the two rates agree."""
     total = 24_000.0
-    assert busy_hour_rate(FLAT, total) == pytest.approx(total / 24, rel=1e-9)
+    assert busy_hour_rate(FLAT, total) == pytest.approx(total / 24, rel=1e-9), (
+        "a flat day: every hour carries the same share, so the busy-hour rate should be the daily "
+        "total spread evenly over the hours. If yours is many times larger, check what you "
+        "divided the weights by."
+    )
 
 
 @pytest.mark.problem

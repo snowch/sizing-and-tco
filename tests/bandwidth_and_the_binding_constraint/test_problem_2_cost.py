@@ -1,9 +1,11 @@
 """Problem 10.2 - the shortfall from sizing on the chain that usually wins.
 
-Graded against the published sweep and against the samples, both computed at test time.
+Graded against the published sweep and against the model's futures, both computed at test time.
 """
 
 from __future__ import annotations
+
+import math
 
 import numpy as np
 import pytest
@@ -46,10 +48,14 @@ def chains(usual_winner):
 @pytest.mark.problem
 def test_the_share_matches_the_published_sweep(chains, published, usual_winner):
     share, _ = cost_of_sizing_on_one(*chains)
-    expected = published[f"short_if_{usual_winner}"]
-    assert share == pytest.approx(expected, abs=0.005), (
-        f"the book publishes {expected:.1%} of samples in which a fleet sized on the "
-        f"{usual_winner} chain alone is too small, and you make it {share:.1%}"
+    # Compared outside the assert, so that a failure shows the reader's figure and not the book's.
+    right = math.isclose(float(share), published[f"short_if_{usual_winner}"], abs_tol=0.005)
+    assert right, (
+        f"you make the share of futures in which a fleet sized on the {usual_winner} chain alone "
+        f"is too small {float(share):.1%}, and the book's sweep disagrees. Check two things. The "
+        "share is a fraction between 0 and 1, not a percentage. And a future where another chain "
+        "asks for the same count as the chosen one is a tie, not a shortfall: count only the "
+        "futures where some other chain asks for strictly more."
     )
 
 
@@ -59,10 +65,17 @@ def test_the_shortfall_is_conditional(chains):
     _, shortfall = cost_of_sizing_on_one(chosen, others)
     largest_other = np.max(np.stack(others), axis=0)
     short = largest_other > chosen
-    expected = float(np.median((largest_other - chosen)[short]))
-    assert shortfall == pytest.approx(expected, rel=1e-9), (
-        "the median shortfall is over the samples where the fleet actually comes up short, not "
-        "over all of them. Averaging in the zeroes is how a shortfall comes to look harmless."
+    # Compared outside the assert, so that a failure shows the reader's figure and not the book's.
+    right = math.isclose(
+        float(shortfall), float(np.median((largest_other - chosen)[short])), rel_tol=1e-9
+    )
+    assert right, (
+        f"a median shortfall of {float(shortfall):g} hosts is not the one asked for. Take the "
+        "median over the futures where the fleet comes up short, and only those: the futures "
+        "where some other chain asks for strictly more than the chosen one. A tie is not short, "
+        "and nor is a future the chosen chain won. Each of those adds a zero, and zeros pull the "
+        "median down. If your figure matches the chapter's median shortfall across all futures, "
+        "you counted every future."
     )
 
 
@@ -72,7 +85,7 @@ def test_the_usual_winner_still_loses_more_often_than_not(chains):
     share, _ = cost_of_sizing_on_one(*chains)
     assert share > 0.5, (
         f"sized on the chain that wins most often, the fleet is too small in {share:.0%} of "
-        "samples. Winning a three-way race most often is not the same as winning it usually."
+        "futures. Winning a three-way race most often is not the same as winning it usually."
     )
 
 
@@ -90,7 +103,7 @@ def test_no_chain_is_safe_to_size_on(published):
     """Scaffolding: the distinction the problem turns on is a real one in this model.
 
     Every chain wins sometimes, and sizing on any one of them alone leaves the fleet short in
-    more samples than not. If a chain ever came to win nearly always, the chapter would be about
+    more futures than not. If a chain ever came to win nearly always, the chapter would be about
     that chain and this problem would need rewriting.
     """
     for name in CHAINS:

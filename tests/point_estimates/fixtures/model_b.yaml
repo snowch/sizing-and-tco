@@ -1,0 +1,29 @@
+# Problem 1.3's Model B, written as a model file. An exercise fixture: Model A with its processor
+# time replaced by a constant measured on one version of one backend. No result by that name is
+# stamped, on purpose, so the node reads as not yet measured; the kind of model does not depend
+# on whether the measurement has landed.
+model: problem_1_3_b
+title: Model B (exercise fixture)
+
+nodes:
+  peak_rate:
+    kind: input
+    unit: request/second
+    label: peak requests per second
+    distribution: {triangular: {minimum: 3000.0, likely: 8000.0, maximum: 20000.0}}
+    provenance: {kind: assumption, source: "exercise fixture: a forecast"}
+
+  processor_time:
+    kind: measured
+    unit: second * core / request
+    label: processor time per request, measured on version 2.1 of the backend
+    result: exercise-problem-1-3-backend-2-1
+
+  busy_cores:
+    kind: derived
+    unit: core
+    label: cores busy at the peak
+    formula: peak_rate * processor_time
+
+outputs:
+  - busy_cores

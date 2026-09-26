@@ -12,19 +12,24 @@ import numpy as np
 def straight_line_forecast(known: list[tuple[float, float]], at: np.ndarray) -> np.ndarray:
     """Problem 8.1 - do what a spreadsheet would do, and watch it fail.
 
-    ``known`` is a list of ``(utilisation, residence_time)`` pairs measured on a system that has
-    never been busy - all of them at low load, which is the data a healthy system actually has.
+    ``known`` is a list of ``(utilisation, residence_time)`` pairs from a system that has never
+    been busy: all at low load, which is the data a healthy system has.
+
     ``at`` is the utilisations you want a forecast for.
 
     Fit a straight line through the known points and return what it predicts at each of ``at``.
 
-    A straight line is not a strawman. It is what a chain of multiplications *is*: every model in
-    Parts I and III is linear in each of its inputs, and if you ask one of them what happens when
-    load doubles, it doubles something. That is the correct answer right up until it is not.
+    A straight line is the shape a chain of multiplications gives an input it multiplies by. In such
+    a chain every input is a multiplier or a divisor, and growth is raised to a power: the rule for
+    how an input moves the answer is the same at every size.
 
     The test compares your forecast against the curve the book swept out of the queueing model. At
-    the loads you fitted on, the line is excellent. Further out it is not wrong by a percentage;
-    it is wrong by a multiple, and the multiple grows.
+    the loads you fitted on, the line is excellent. Further out it is not wrong by a percentage; it
+    is wrong by a multiple, and the multiple grows.
+
+    The test also checks that what you return is a straight line. Fitting the queueing model's
+    division to the same points would follow the curve: that is the right model and the book's
+    lesson from ch06. This problem asks what the wrong one predicts.
     """
     raise NotImplementedError("problem 8.1")
 

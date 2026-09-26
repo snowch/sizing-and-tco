@@ -23,14 +23,17 @@ Once they are all cells in the same column, none. That is the problem.
 
 Every input in this book declares which of three things it is.
 
-**`fact`**: traceable to something. A stamped measurement, an invoice, a published specification.
-The toolkit refuses a `fact` whose source cites nothing. An assumption wearing a better label is
-worse than an assumption.
+**`fact`**: traceable to something: a stamped measurement, an invoice, or a published
+specification. A stamped measurement is a result file in `bench/results/`. It records the figure,
+the unit, what produced it (the body of data and the software, or the machine), and a fingerprint
+of the code that created it. The build refuses a `fact` whose source cites nothing. An assumption
+dressed as a `fact` is worse than one labelled as an assumption, because the label hides the doubt
+a reviewer would otherwise challenge.
 
-**`vendor_claim`**: stated by somebody selling it. Often true. Never checked here. It is coloured
-differently in every figure it appears in, and it is never quietly promoted. The moment a quoted
-throughput becomes "the throughput" in somebody's head, the model has acquired a fact it never
-earned.
+**`vendor_claim`**: stated by the vendor selling it. Often true, and never checked here. It carries
+its mark in the tables on this page — the ◐ symbol — and when you click a node in a model, its
+Provenance line names it a vendor claim. It is never quietly promoted to a `fact`. Once a quoted
+throughput becomes "the throughput" in your head, the model holds a fact it never earned.
 
 **`assumption`**: a decision this model makes. Naming it as one is what lets a reviewer argue with
 it. An assumption nobody can find is not a weaker claim than a measurement. It is a stronger one,
@@ -59,22 +62,31 @@ It takes one more quantity to reach the first node in the model that is about ha
 than data: the share of that memory the operating system keeps for itself, an assumption in the
 plainest sense of the word.
 
+```{literalinclude} ../models/web_service/stages/06-provenance/model.yaml
+:language: yaml
+:start-at: os_reserve:
+:end-before: ram_for_service:
+```
+
 ```{include} _generated/where-the-numbers-come-from-stage.md
 ```
 
 ```{include} _generated/where-the-numbers-come-from-stage-shape.md
 ```
 
-Three nodes on from [ch02](#what-a-workload-is)'s graph, and the new one at the end is the first
-in the model that is about hardware. Click *ram per host* to see whose claim it is.
+The graph below has three more nodes than [ch02](#what-a-workload-is)'s. The output table's final
+row is in decimal terabytes per host; *ram per host* itself is in gibibytes per host—the build
+converts between units. Since a gibibyte is larger than a gigabyte, the row is larger than what you
+would get by taking the reserve from the vendor's sheet figure and reading it as decimal gigabytes;
+that difference is the first gap, now visible.
 
 ```{iframe} /models/web_service_provenance-reference.html
 :width: 100%
-The graph as ch03 leaves it. The vendor's claim is a node like any other, and says so when clicked.
+The graph as ch03 leaves it. Click *ram per host* to see whose claim it is.
 ```
 
 Still a definitional model, and a vendor's claim does not change that. A claim is about a number: how
-much anybody should trust it. The distinction this book is built on is about the *shape* of the
+much you should trust it. The distinction this book is built on is about the *shape* of the
 arithmetic: whether the chain of multiplications stops applying somewhere. So a model can be
 built entirely out of figures a salesperson supplied and still be a definitional model, and a model built
 entirely out of your own measurements can be a conditional one. What flips it is a limit the system
@@ -88,32 +100,43 @@ it is the claim above:
 ```{include} _generated/where-the-numbers-come-from-service-provenance.md
 ```
 
-And here is the same census of the book's second model, the observability platform, which has all
-three kinds of claim among its inputs:
+The book's second model is the observability platform, and its inputs include all three kinds of
+claim. Both its vendor claims are figures quoted for a component: the collector's throughput per
+core and the query tier's scan rate. The census table below shows facts and vendor claims; one row
+counts assumptions, and the tally sums all three kinds. The complete census, every input with its
+source, is in [Appendix F](#appendix-f-observability-model).
 
 ```{include} _generated/where-the-numbers-come-from-provenance.md
 ```
 
-The tally at the bottom is the honest summary of any model, and for most models it is not
-flattering. That is fine. Not knowing is not.
+The tally at the bottom of each table shows what kind of claim each model rests on. Both models on
+this page rest primarily on assumptions. A labelled assumption is acceptable—a reviewer can find
+it and argue with it. An unlabelled assumption is not acceptable, because nothing marks it as a
+decision anyone could challenge.
 
 ### A measured constant is not a fact about the world
 
-A compression ratio is not a property of compression. It is a property of *some data* and *some
 % word-ok: a telemetry sample is one reading, not a draw from a spread
-software at some version*, and it moves when either changes. So do bytes per sample, spans per
-request, and throughput per core. This book calls those **measured constants** and gives them
-their own node kind. Every one of them carries the implementation it belongs to:
+A compression ratio is not a property of compression. It is a property of some data and some
+software at some version, and it moves when either changes. The software is the **codec**—the
+program that compresses or encodes the data. The data is a **corpus**—a declared body of data the
+codec runs over. Every corpus in this repository is generated by code in `bench/measure.py`, the
+same way every time, from starting numbers the result records. Numbers like bytes per sample, spans
+per request, and throughput per core behave the same way—this book calls them **measured
+constants** and gives them their own node kind, `measured`. Every one names the implementation it
+belongs to:
 
 ```{include} _generated/where-the-numbers-come-from-constants.md
 ```
 
-Read the last column. One of those constants was produced by an encoder that lives in this
-repository: this book's own, byte-aligned, and therefore worse than a production format that packs
-bits. The figure is correct, and it is about that encoder. Anybody who copied it into a model of a
-real system would be wrong by a factor nobody would ever find.
+% word-ok: a telemetry sample is one reading, not a draw from a spread
+The *Measured against* column names the implementation. One of these constants, bytes per sample,
+was produced by an encoder in this repository, not by any product. That encoder writes whole bytes,
+whereas a production format that packs bits uses fewer bytes per sample. The figure is correct, and
+it describes that encoder. If you copied it into a model of a real system, your model would be
+wrong by an amount this page does not measure.
 
-The method is what transfers. The number does not.
+The method transfers. The number does not.
 
 ### Four targets, and only two of them are yours to take
 
@@ -130,50 +153,60 @@ indistinguishable from a real one once it is a number in a table.
 
 ### The target that cannot be checked, only disclosed
 
-An observation of a running system cannot be reproduced by anybody, including you, next Tuesday.
-There is no corpus to re-run and no machine to re-run it on. The system has moved on.
+An observation of a running system cannot be repeated by you or anyone else, because there is no
+corpus to re-run and no machine to re-run it on—the system has moved on. The observability model
+includes one such quantity: *spans per request*, how many spans one request emits in one
+instrumented application at one version. The build cannot derive it, the reference machine cannot
+measure it, and it belongs to the `estate` target.
 
-So `estate` is held to the strictest disclosure rules in the book: what system, over what window,
-observed when. That disclosure is the *whole* of its verification. There is nothing else. When a
-page uses one, it says so at the point of use rather than in a footnote. A reader is entitled to
-know which numbers on a page rest on somebody's word.
+`estate` is held to the strictest disclosure rules in the book: the system, the window, and when
+you observed it. That disclosure is the only verification an `estate` figure receives.
 
-This is not a hole in the scheme. It is the honest bottom of it. Some quantities can only be known
-by watching a real system, and pretending otherwise would be worse than admitting it.
+When a page uses an `estate` figure, it says so where it uses it, not in a footnote, so you can
+tell which numbers rest on someone's word. Some quantities can only be known by watching a real
+system. The book discloses them; it does not claim they can be checked.
 
 ### When nobody has measured it
 
 ```{include} _generated/where-the-numbers-come-from-measured.md
 ```
 
-Two rows there say *not yet measured*. One needs a reference machine nobody has attached. The
-other needs somebody's instrumented application.
-
-The node has no value, so nothing downstream of it has a value either. The state propagates down
-the graph without anybody marking anything:
+Two rows of the constants table above say *not yet measured*. The first is collector throughput
+per core, a timing and thus a `rig` measurement—it needs the reference machine. The second is spans
+per request from the earlier section, an `estate` observation of an instrumented application you
+run.
 
 ```{include} _generated/where-the-numbers-come-from-unmeasured.md
 ```
 
-No placeholder. No estimate. No number borrowed from a different stack and quietly rounded. The
-figures that depend on those constants are absent, and the box says which constants and what would
-close them.
+A measured node with no value leaves nothing downstream with a value either; the toolkit works this
+out from the graph with nothing marked by hand. The box names each missing constant, the result
+file it needs, and counts the nodes downstream that cannot be computed.
 
-That is inconvenient on purpose. A placeholder is indistinguishable from a measurement after one
-copy-paste, and every organisation has a capacity plan built on one.
+The observability model declares collector throughput twice, on purpose: once as the vendor's
+quoted figure, and once as a measured constant. The table below shows the two side by side, each
+with the pipeline capacity it produces: collector cores times throughput per core.
+
+The quoted row has a value, and so does its capacity. The measured row has neither. The only
+pipeline capacity the model can compute today rests on the vendor's claim, and the table shows that
+instead of filling the gap. No placeholder, no estimate, no number borrowed from a different stack
+and quietly rounded. This gap stays visible on purpose: after one copy-paste, a placeholder cannot
+be distinguished from a measurement.
 
 ### The rig, and why the book will not let you fake it
 
 ```{include} _generated/where-the-numbers-come-from-rig.md
 ```
 
-The machine this was written on refuses to produce that figure, and not by convention. The
-toolkit compares the running processor and core count against the declared reference machine,
-and refuses on any other.
+The toolkit refuses to produce a `rig` measurement except on a machine that matches a declared
+reference machine. The reference machine is declared in a file that names its processor model and
+core count, and the toolkit compares your running processor against that
+declaration. If no declaration exists, the toolkit refuses on every machine.
 
-An environment variable would have been easier. It would also have let anybody stamp a laptop
-timing as a reference measurement by typing four characters. A target you can set by accident is
-not worth having.
+An environment variable would have been easier—you could set one and run anywhere. But setting a
+variable by accident would let you stamp a laptop timing as a reference measurement. The
+declaration must be a file that names the silicon, so a `rig` result cannot be produced by
+accident.
 
 ### What a measurement is worth
 
@@ -192,20 +225,22 @@ than during one.
 
 ## What this cannot tell you
 
-**Whether a corpus resembles your data.** Every constant above was measured over a body of data
-this repository generates, and the generator's proportions are an assumption stated in the
-stamped result. For the record compression ratio, the mix of record kinds in that corpus is the
-single largest source of error in the figure. It is larger than the codec, and larger than the
-shard-to-shard spread the result reports. The number has a standard error, and the standard error
-is about the wrong thing.
+**Whether a corpus resembles your data.** Every constant above was measured over a corpus this
+repository generates. For the record compression ratio, the corpus is a mix of three kinds of
+record: user profiles, orders and events. Those proportions and schemas were chosen, not observed,
+so they are an assumption. Nothing in this repository measures how the compression ratio changes
+when the mixture changes. The standard error you see covers only shard-to-shard variation with the
+mixture held constant. To measure what the mixture does, you would need to run the records
+generator over some of your own records, or with a different mixture, and compare the ratios.
 
-**Whether a `vendor_claim` is true.** Nothing here checks one. They are marked so that a reader
-can see how much of a model rests on them, and that is all. Where a vendor's number and a measured
-one exist side by side, [Appendix F](#appendix-f-observability-model) shows both. Where only the
-claim exists, that is what you have.
+**Whether a `vendor_claim` is true.** Nothing here checks one. They are marked so you can see how
+much of your model rests on them. The table under *When nobody has measured it* sets the quoted
+collector throughput beside the measured one, which has no value yet. Where only the claim exists,
+that is what you have.
 
-**Whether an `estate` observation happened.** It is somebody's word, with a disclosure attached.
-The book's position is that saying so plainly is better than the alternative, not that it is good.
+**Whether an `estate` observation happened.** It is someone's word, with a disclosure attached:
+what system, over what window, when. The disclosure lets you trace the figure to whoever took it.
+It does not make the figure checkable, or true.
 
 **Whether an assumption is reasonable.** The provenance census counts them. It does not read them.
 A model can be all assumptions, all sourced, all defensible-sounding, and completely wrong.
@@ -216,8 +251,8 @@ A model can be all assumptions, all sourced, all defensible-sounding, and comple
 :class: takeaways
 
 - **Every input says how much its author was claiming.** A fact is traceable to something, a
-  vendor's claim was stated by somebody selling it and is never quietly promoted, and an assumption
-  is a decision a reviewer can argue with.
+  vendor's claim was stated by the vendor and is never quietly promoted, and an assumption is a
+  decision a reviewer can argue with.
 - **A measured constant belongs to some data and some software at some version.** The method
   transfers. The number does not.
 - **Four targets, and nobody can check the fourth.** Corpus and model results can be re-derived by
@@ -225,8 +260,9 @@ A model can be all assumptions, all sourced, all defensible-sounding, and comple
   running system is somebody's word with a disclosure attached.
 - **A constant nobody has measured has no value, and nor does anything downstream of it.** No
   placeholder, no estimate, no number borrowed from a different stack.
-- **One measurement says nothing about its own wobble.** A constant is measured over several shards
-  and reported with a standard error, and halving that error costs four times the work.
+- **One measurement says nothing about its own wobble.** A constant is measured over several shards,
+  and the result reports their mean with a standard error—the spread divided by the square root of
+  the shard count. Halving that error takes four times as many shards.
 :::
 
 ## Problems
@@ -245,9 +281,9 @@ python3 -m pytest tests/where_the_numbers_come_from/test_problem_1_measure.py -m
 ```
 
 **3.2 — What would it cost to be more sure?**
-Given a standard error at some number of shards, work out how many shards a target would need.
-Halving your uncertainty costs four times the measuring, and knowing that before the campaign is
-worth more than knowing it during one.
+Given a standard error at some number of shards, work out how many shards would be needed to reach
+a target standard error. Halving your uncertainty costs four times the measuring. Work it out
+before the measurement campaign starts, while the answer can still affect the decision.
 
 ```bash
 python3 -m pytest tests/where_the_numbers_come_from/test_problem_2_shards.py -m problem
@@ -258,17 +294,22 @@ them.
 
 Take the quantities you wrote down for [ch02](#what-a-workload-is)'s problem 2.5 and put one of
 three words against each: `fact`, `vendor_claim`, `assumption`. Then, for every `fact`, write the
-source you would hand somebody who asked: a document, an invoice, a measurement with a date on it.
-Not where you think it came from. The thing you would send.
+source you would hand to someone who asked: a document, an invoice, a measurement with a date on
+it. Write the thing you would send, not where you think it came from.
 
-The useful part is the reclassification. Count how many started as facts and ended as vendor
-claims once you looked for the source. Count how many ended as assumptions because the source was
-a conversation. In this book's own models, more of the inputs are assumptions than anybody would
-guess before counting. That is why the labels are mandatory rather than encouraged.
+Any figure you read off a system you run—from a dashboard, a log line count, a monitoring tool—is
+what this chapter calls an `estate` observation. Its source is the system, the window it covers,
+and when you read it. Without those three, it is not yet a `fact`.
 
-A good answer has a source line for every `fact` that you could paste into an email, and at least
-one line that changed category while you were writing it. If nothing changed category, you have
-labelled what you believe rather than what you can show.
+The useful work is reclassification. Count how many started as facts and ended as vendor claims
+once you looked for the source. Count how many ended as assumptions because the source was a
+conversation. The census tables on this page show how many inputs in the book's own models are
+assumptions. That is why the labels are mandatory rather than encouraged.
+
+A good answer has a source line for every `fact` that you could paste into an email, a system, a
+window and a date for every `estate` figure, and at least one line that changed category while you
+were writing it. If nothing changed category, you have labelled what you believe rather than what
+you can show.
 
 ## Where to go next
 
