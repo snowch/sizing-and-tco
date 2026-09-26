@@ -40,6 +40,13 @@ from sizing.units import parse as parse_unit
 #: that one glance answers "how much of this model is somebody's guess".
 PROVENANCE_MARK = {"fact": "●", "vendor_claim": "◐", "assumption": "○"}
 
+#: The short form of each mark, for the key under a table. PROVENANCE_MEANING is the long form.
+CLAIM_KEY = {
+    "fact": "traceable to a measurement or a definition",
+    "vendor_claim": "supplied by the vendor selling it",
+    "assumption": "an assumption",
+}
+
 #: What a measurement says about itself, in the order a reader needs it.
 MEASURED_KEYS = ("corpus", "codec", "stack", "system", "window")
 
@@ -828,7 +835,10 @@ def workload_table(name: str) -> str:
     # A year is a year whoever asks. Nobody decides it, and it is not the world's doing either.
     if groups["definition"]:
         rows += ["| **True by definition** | | | |", *groups["definition"]]
-    return "\n".join(rows)
+    # The key sits under the table rather than in a paragraph after it: a reader who meets the
+    # symbols should not have to scroll past the table to learn what they mean.
+    key = " · ".join(f"{PROVENANCE_MARK[kind]} {words}" for kind, words in CLAIM_KEY.items())
+    return "\n".join(rows) + f"\n\n**Claim:** {key}"
 
 
 def cost_split_table(name: str) -> str:

@@ -32,4 +32,6 @@
 | one sample per series | 1.00 | sample/series | ● |
 | one year | 1.00 | year | ● |
 
+**Claim:** ● traceable to a measurement or a definition · ◐ supplied by the vendor selling it · ○ an assumption
+
 *Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***

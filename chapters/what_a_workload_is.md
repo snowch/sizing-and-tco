@@ -260,10 +260,6 @@ might turn out.
 The decisions are the only inputs you can change. Arguing over a number outside your control does
 not change it; measuring it narrows it.
 
-The *Claim* column shows how much the person who wrote each number down was claiming. **●** means
-traceable to a measurement or a definition. **◐** means supplied by the vendor selling it. **○**
-means an assumption.
-
 ### What the file computes, and what kind of model it is
 
 Every number in the demand model above came from running this file.
