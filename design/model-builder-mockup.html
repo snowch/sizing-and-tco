@@ -1,0 +1,1305 @@
+<!-- The model builder mock-up (design/model-builder.md). A throwaway prototype for the flow, not the
+     builder: its rules are an unchecked JavaScript copy of the toolkit, and the measured results in
+     RESULTS are invented for the demonstration and must never be reused. Open it in a browser. -->
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Model Builder</title></head><body>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --panel: #f4f6f7; --ink: #1d2a30; --muted: #5d717c; --line: #d8e0e4;
+  --accent: #2a78d6; --accent-ink: #ffffff;
+  --input: #e1edfb; --input-edge: #2a78d6;
+  --measured: #fdf0cc; --measured-edge: #c98500;
+  --ceiling: #fbdedd; --ceiling-edge: #e34948;
+  --derived: #ffffff; --derived-edge: #90a4ae;
+  --good: #1f8a4c; --warn: #b26b00; --bad: #c4332f;
+  --good-bg: #e3f4ea; --warn-bg: #fdf0cc; --bad-bg: #fbdedd;
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #151c20; --panel: #1b2429; --ink: #e4ebee; --muted: #93a6b0; --line: #2c3a41;
+    --accent: #3987e5; --accent-ink: #0d1418;
+    --input: #1b2e45; --input-edge: #3987e5;
+    --measured: #33280f; --measured-edge: #c98500;
+    --ceiling: #3a1c24; --ceiling-edge: #e0506e;
+    --derived: #151c20; --derived-edge: #6c828d;
+    --good: #4cc27f; --warn: #e0a53a; --bad: #ef6b6b;
+    --good-bg: #16301f; --warn-bg: #33280f; --bad-bg: #3a1c24;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #151c20; --panel: #1b2429; --ink: #e4ebee; --muted: #93a6b0; --line: #2c3a41;
+  --accent: #3987e5; --accent-ink: #0d1418;
+  --input: #1b2e45; --input-edge: #3987e5;
+  --measured: #33280f; --measured-edge: #c98500;
+  --ceiling: #3a1c24; --ceiling-edge: #e0506e;
+  --derived: #151c20; --derived-edge: #6c828d;
+  --good: #4cc27f; --warn: #e0a53a; --bad: #ef6b6b;
+  --good-bg: #16301f; --warn-bg: #33280f; --bad-bg: #3a1c24;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 var(--sans); }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: 1px solid var(--line); background: var(--bg); border-radius: 4px; padding: 5px 11px; }
+button:hover { border-color: var(--muted); }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+button.link { border: 0; background: none; color: var(--accent); padding: 0; }
+input, select, textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; width: 100%; }
+textarea { min-height: 64px; resize: vertical; }
+code, .mono { font-family: var(--mono); font-size: 12.5px; }
+h2 { font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; font-weight: 600; }
+
+header { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding-block: 10px; padding-inline: 16px; border-bottom: 1px solid var(--line); }
+header h1 { font-size: 16px; margin: 0; font-weight: 650; }
+header .sub { color: var(--muted); font-size: 12.5px; }
+.badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); }
+.badge.conditional { border-color: var(--measured-edge); background: var(--measured); }
+.badge.definitional { border-color: var(--input-edge); background: var(--input); }
+header .grow { flex: 1; }
+.example { font-size: 12px; color: var(--muted); }
+
+main { display: grid; grid-template-columns: 260px minmax(0, 1fr) 360px; min-height: calc(100% - 56px); }
+aside, section { padding-block: 14px; padding-inline: 16px; }
+#outline { border-right: 1px solid var(--line); background: var(--panel); }
+#side { border-left: 1px solid var(--line); background: var(--panel); }
+@media (max-width: 1100px) {
+  main { grid-template-columns: 240px minmax(0, 1fr); }
+  #side { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (max-width: 720px) {
+  main { grid-template-columns: 1fr; }
+  #outline { border-right: 0; border-bottom: 1px solid var(--line); }
+}
+
+.group { margin-bottom: 16px; }
+.nodelist { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.nodelist button { width: 100%; text-align: left; display: flex; align-items: center; gap: 8px; padding: 5px 8px; background: var(--bg); }
+.nodelist button[aria-current="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.swatch { width: 12px; height: 12px; border-radius: 2px; flex: none; border: 1.5px solid; }
+.swatch.input { background: var(--input); border-color: var(--input-edge); }
+.swatch.derived { background: var(--derived); border-color: var(--derived-edge); }
+.swatch.measured { background: var(--measured); border-color: var(--measured-edge); }
+.swatch.ceiling { background: var(--ceiling); border-color: var(--ceiling-edge); }
+.swatch.unknown { background: var(--bg); border-style: dashed; border-color: var(--muted); }
+.nodelist .n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nodelist .flag { font-size: 11px; color: var(--bad); }
+.add { width: 100%; margin: 4px 0 18px; }
+.modelnav { display: grid; gap: 4px; }
+.modelnav button { text-align: left; background: var(--bg); display: flex; justify-content: space-between; }
+.count { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+#centre { min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 5px; }
+#graph-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+#graph { display: block; }
+#graph .node { cursor: pointer; }
+#graph .node:focus-visible rect { stroke-width: 3; }
+#graph text { fill: var(--ink); font: 12px var(--sans); }
+#graph text.v { fill: var(--muted); font: 12px var(--mono); }
+#graph path.edge { fill: none; stroke: var(--derived-edge); stroke-width: 1.2; }
+#graph .hot rect { stroke: var(--accent) !important; stroke-width: 2.5; }
+
+.results { margin-top: 16px; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+td.n { text-align: right; font-family: var(--mono); font-size: 12.5px; }
+.table-wrap { overflow-x: auto; }
+
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.checks li { padding: 7px 10px 7px 30px; border-radius: 4px; position: relative; font-size: 13px; }
+.checks li::before { position: absolute; left: 10px; top: 7px; font-weight: 700; }
+.checks .pass { background: var(--good-bg); }
+.checks .pass::before { content: "✓"; color: var(--good); }
+.checks .fail { background: var(--bad-bg); }
+.checks .fail::before { content: "✕"; color: var(--bad); }
+.checks .warn { background: var(--warn-bg); }
+.checks .warn::before { content: "!"; color: var(--warn); }
+.checks small { color: var(--muted); display: block; }
+
+.tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+.tabs button[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+pre.yaml { margin: 0; padding: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; overflow: auto; max-height: 60vh; font: 12.5px/1.55 var(--mono); white-space: pre; }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.note { color: var(--muted); font-size: 12.5px; }
+.inspector dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; margin: 0 0 12px; }
+.inspector dt { color: var(--muted); font-size: 12.5px; }
+.inspector dd { margin: 0; overflow-wrap: anywhere; }
+
+/* The wizard: a sheet over the page. */
+#wizard { position: fixed; inset: 0; background: rgb(0 0 0 / .35); display: flex; justify-content: center; align-items: flex-start; padding-block: 5vh; padding-inline: 16px; z-index: 10; overflow: auto; }
+#wizard[hidden] { display: none !important; }
+.sheet { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; width: min(640px, 100%); box-shadow: 0 10px 40px rgb(0 0 0 / .2); }
+.sheet header { border-bottom: 1px solid var(--line); }
+.steps { display: flex; gap: 4px; flex-wrap: wrap; padding: 10px 16px 0; }
+.steps span { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--panel); color: var(--muted); }
+.steps span.on { background: var(--accent); color: var(--accent-ink); }
+.steps span.done { color: var(--ink); }
+.body { padding: 16px; }
+.q { font-size: 17px; font-weight: 650; margin: 0 0 4px; text-wrap: balance; }
+.why { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+.why b { color: var(--ink); font-weight: 600; }
+.choices { display: grid; gap: 8px; }
+.choice { display: grid; grid-template-columns: 22px 1fr; gap: 2px 10px; text-align: left; padding: 10px 12px; background: var(--bg); }
+.choice[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.choice .swatch { margin-top: 3px; width: 16px; height: 16px; }
+.choice strong { font-weight: 600; }
+.choice span.d { grid-column: 2; color: var(--muted); font-size: 12.5px; }
+.field { display: grid; gap: 4px; margin-bottom: 12px; }
+.field label { font-weight: 600; font-size: 13px; }
+.field .hint { color: var(--muted); font-size: 12px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.verdict { padding: 8px 10px; border-radius: 4px; font-size: 13px; margin-bottom: 12px; }
+.verdict.ok { background: var(--good-bg); }
+.verdict.bad { background: var(--bad-bg); }
+.verdict.warn { background: var(--warn-bg); }
+.foot { display: flex; justify-content: space-between; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--line); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font-size: 12px; padding: 2px 8px; font-family: var(--mono); }
+
+/* The path: the book's order, as a checklist. */
+.journey { list-style: none; margin: 0 0 6px; padding: 0; display: grid; gap: 2px; }
+.tree { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 3px; }
+.treeitem { width: 100%; text-align: left; display: flex; align-items: center; gap: 7px; padding: 4px 7px; background: var(--bg); }
+.treeitem[aria-current="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.treeitem .n { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.treeitem .todo { font-size: 11px; font-weight: 600; color: var(--accent); }
+#refine .ref { font-size: 11px; color: var(--muted); font-family: var(--mono); }
+.stage > button { width: 100%; text-align: left; display: grid; grid-template-columns: 20px 1fr; gap: 6px; align-items: center; background: none; border-color: transparent; padding: 5px 6px; }
+.stage > button:hover { border-color: var(--line); }
+.stage.open > button { background: var(--bg); border-color: var(--line); }
+.dot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--muted); display: grid; place-items: center; font-size: 10px; font-weight: 700; }
+.stage.done .dot { background: var(--good); border-color: var(--good); color: var(--bg); }
+.stage.done .dot::after { content: "✓"; }
+.stage.now .dot { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+.stage.problem .dot { border-color: var(--bad); color: var(--bad); }
+.stage.problem .dot::after { content: "!"; }
+.stage .ref { display: block; font-size: 11px; color: var(--muted); font-family: var(--mono); font-weight: 400; }
+.stage .t { font-weight: 600; font-size: 13px; }
+.stage.done .t { color: var(--muted); font-weight: 500; }
+.stagebody { padding: 6px 6px 10px 32px; font-size: 13px; }
+.stagebody p { margin: 0 0 8px; color: var(--muted); }
+.items { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.items li { display: grid; grid-template-columns: 16px 1fr; gap: 6px; align-items: start; }
+.items li .tick { color: var(--muted); }
+.items li.ok .tick { color: var(--good); }
+.items li button { margin-top: 3px; font-size: 12px; padding: 2px 8px; }
+.items li.opt .what::after { content: " (optional)"; color: var(--muted); }
+#coach { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 12px; margin-bottom: 12px; border-radius: 6px; border: 1px solid var(--accent); background: var(--input); }
+#coach.fix { border-color: var(--bad); background: var(--bad-bg); }
+#coach.done { border-color: var(--good); background: var(--good-bg); }
+#coach .lbl { font-size: 11px; letter-spacing: .07em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+#coach .msg { flex: 1; min-width: 200px; }
+#coach .msg small { display: block; color: var(--muted); }
+#start { position: fixed; inset: 0; z-index: 20; background: var(--bg); overflow: auto; padding-block: 6vh; padding-inline: 16px; }
+#start[hidden] { display: none !important; }
+#start .inner { max-width: 760px; margin: 0 auto; }
+#start h1 { font-size: 26px; margin: 0 0 6px; text-wrap: balance; }
+#start .lead { color: var(--muted); font-size: 15px; margin: 0 0 22px; max-width: 62ch; }
+.goals { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.goal { text-align: left; padding: 14px; display: grid; gap: 4px; background: var(--bg); }
+.goal:hover { border-color: var(--accent); }
+.goal strong { font-size: 15px; }
+.goal span { color: var(--muted); font-size: 13px; }
+.goal code { color: var(--ink); }
+.startfoot { margin-top: 22px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.sugs { display: grid; gap: 6px; margin: 4px 0 12px; }
+.sug { text-align: left; display: grid; gap: 1px; background: var(--bg); }
+.sug code { font-size: 12.5px; }
+.sug span { color: var(--muted); font-size: 12px; }
+.bars { display: grid; gap: 8px; margin-top: 8px; }
+.bar { display: grid; gap: 3px; font-size: 12.5px; }
+.bar .track { position: relative; height: 14px; background: var(--panel); border-radius: 3px; }
+.bar .fill { position: absolute; top: 0; bottom: 0; background: var(--accent); border-radius: 3px; }
+.bar .mid { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); }
+.bar .ends { display: flex; justify-content: space-between; font-family: var(--mono); color: var(--muted); font-size: 11.5px; }
+@media (prefers-reduced-motion: no-preference) { .sheet { animation: rise .16s ease-out; } }
+@keyframes rise { from { transform: translateY(8px); opacity: .6; } to { transform: none; opacity: 1; } }
+</style>
+
+<header>
+  <h1 id="title">Model Builder</h1>
+  <span id="klass" class="badge">definitional model</span>
+  <span class="sub" id="qline"></span>
+  <span class="grow"></span>
+  <button id="restart" type="button">New model</button>
+  <button id="theme" type="button" aria-label="Switch light or dark">◐</button>
+</header>
+
+<main>
+  <aside id="outline" aria-label="The model">
+    <div class="group">
+      <h2>The answer, worked back</h2>
+      <ul class="tree" id="tree"></ul>
+      <button class="add" id="add" type="button">+ Add any node</button>
+    </div>
+    <div class="group">
+      <h2>Then</h2>
+      <p class="note" id="refine-note" style="margin:0 0 6px">Once nothing is left to define.</p>
+      <ul class="items" id="refine"></ul>
+    </div>
+    <div class="group">
+      <h2>The model</h2>
+      <div class="modelnav">
+        <button type="button" data-tab="outputs">Outputs <span class="count" id="c-out"></span></button>
+        <button type="button" data-tab="correlations">Moves together <span class="count" id="c-cor"></span></button>
+        <button type="button" data-tab="scenarios">Scenarios <span class="count" id="c-sce"></span></button>
+        <button type="button" data-tab="checks">Build checks <span class="count" id="c-chk"></span></button>
+        <button type="button" data-tab="yaml">Model file</button>
+      </div>
+    </div>
+  </aside>
+
+  <section id="centre" aria-label="Graph and answers">
+    <div id="coach" aria-live="polite"></div>
+    <div class="legend">
+      <span><i class="swatch input"></i>input</span>
+      <span><i class="swatch derived"></i>worked out</span>
+      <span><i class="swatch measured"></i>measured</span>
+      <span><i class="swatch ceiling"></i>ceiling</span>
+      <span><i class="swatch unknown"></i>not yet measured</span>
+      <span>▌ bar: you decide it</span>
+    </div>
+    <div id="graph-wrap"><svg id="graph" role="img" aria-label="The model's graph"></svg></div>
+    <div class="results">
+      <h2>Answers</h2>
+      <div class="table-wrap"><table id="answers"></table></div>
+      <p class="note" id="answers-note"></p>
+    </div>
+  </section>
+
+  <aside id="side" aria-label="Details">
+    <div class="tabs" role="tablist" id="tabs">
+      <button role="tab" data-tab="node" type="button">Node</button>
+      <button role="tab" data-tab="outputs" type="button">Outputs</button>
+      <button role="tab" data-tab="correlations" type="button">Together</button>
+      <button role="tab" data-tab="scenarios" type="button">Scenarios</button>
+      <button role="tab" data-tab="checks" type="button">Checks</button>
+      <button role="tab" data-tab="measure" type="button">Measure first</button>
+      <button role="tab" data-tab="yaml" type="button">File</button>
+    </div>
+    <div id="panel"></div>
+  </aside>
+</main>
+
+<div id="start" hidden>
+  <div class="inner">
+    <h1>What are you being asked for?</h1>
+    <p class="lead">Start from the answer and work back. You name the answer; the builder asks what it is made of, and each thing you name is either given, measured, or worked out from more things. You stop when everything is given. It never fills in a number for you.</p>
+    <div class="goals">
+      <button type="button" class="goal" data-goal="hosts"><strong>How many machines?</strong><span>A fleet sized for the busy hour at the end of the purchase cycle, with a margin below the point where it slows down.</span><span><code>hosts</code></span></button>
+      <button type="button" class="goal" data-goal="storage"><strong>How much storage?</strong><span>What is held today, grown to the horizon, after compression and copies, below the point where disks fill.</span><span><code>TB</code></span></button>
+      <button type="button" class="goal" data-goal="cost"><strong>What will it cost?</strong><span>The machines you need, priced, over the life of the purchase: what you pay up front and what you pay to run them.</span><span><code>USD</code></span></button>
+      <button type="button" class="goal" data-goal="other"><strong>Something else</strong><span>Any quantity: a request rate, a bandwidth, a number of racks. You say what it is and what unit it is in.</span><span><code>your unit</code></span></button>
+    </div>
+    <div class="startfoot">
+      <button type="button" id="explore">Explore the worked example first</button>
+      <span class="note">ch02's demand model, already worked back to its inputs.</span>
+    </div>
+  </div>
+</div>
+
+<div id="wizard" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="wq">
+    <div class="steps" id="wsteps"></div>
+    <div class="body" id="wbody"></div>
+    <div class="foot">
+      <button type="button" id="wback">Back</button>
+      <div class="row">
+        <button type="button" id="wcancel">Cancel</button>
+        <button type="button" class="primary" id="wnext">Next</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------------------------------------------------------------------------------------
+   Units. Each unit is a factor to SI and a set of dimensions. Counts (request, host, series…)
+   are dimensions of their own, as they are in the book, so a host times a request is neither.
+--------------------------------------------------------------------------------------------- */
+const BASE = {
+  second: ["time", 1], minute: ["time", 60], hour: ["time", 3600], day: ["time", 86400],
+  week: ["time", 604800], month: ["time", 2629800], year: ["time", 31557600],
+  byte: ["data", 1], KB: ["data", 1e3], MB: ["data", 1e6], GB: ["data", 1e9], TB: ["data", 1e12], PB: ["data", 1e15],
+  USD: ["money", 1], W: ["power", 1], kW: ["power", 1e3],
+};
+const COUNTS = ["request", "host", "series", "line", "query", "node", "core", "span", "user", "record", "rack"];
+const SHOWN = { time: "second", data: "byte", money: "USD", power: "W" };
+
+function parseUnit(text) {
+  const t = (text || "").trim();
+  if (!t || t === "dimensionless" || t === "1") return { dims: {}, f: 1, ok: true };
+  const dims = {}; let f = 1; let sign = 1; let ok = true;
+  for (const part of t.split(/\s*([/*·])\s*/)) {
+    if (part === "/") { sign = -1; continue; }
+    if (part === "*" || part === "·") { sign = 1; continue; }
+    const m = part.match(/^([A-Za-z]+?)s?(?:\^(\d+))?$/);
+    const word = m ? m[1] : part; const p = (m && m[2] ? +m[2] : 1) * sign;
+    const exact = BASE[part] || BASE[word];
+    if (exact) { dims[exact[0]] = (dims[exact[0]] || 0) + p; f *= exact[1] ** p; }
+    else if (COUNTS.includes(word) || COUNTS.includes(part)) { const k = COUNTS.includes(word) ? word : part; dims[k] = (dims[k] || 0) + p; }
+    else ok = false;
+    if (sign === -1 && t.includes("/")) {} // each "/" applies to the next factor only
+    sign = 1;
+  }
+  for (const k of Object.keys(dims)) if (!dims[k]) delete dims[k];
+  return { dims, f, ok };
+}
+const sameDims = (a, b) => {
+  const k = new Set([...Object.keys(a), ...Object.keys(b)]);
+  for (const d of k) if ((a[d] || 0) !== (b[d] || 0)) return false;
+  return true;
+};
+function showDims(dims) {
+  const up = [], down = [];
+  for (const [k, p] of Object.entries(dims)) {
+    const w = SHOWN[k] || k;
+    (p > 0 ? up : down).push(Math.abs(p) === 1 ? w : `${w}^${Math.abs(p)}`);
+  }
+  if (!up.length && !down.length) return "a pure number";
+  return (up.join("·") || "1") + (down.length ? "/" + down.join("/") : "");
+}
+const kindOf = (dims) => {
+  const t = dims.time || 0;
+  const others = Object.keys(dims).filter((k) => k !== "time" && dims[k]);
+  if (t < 0) return "a flow";
+  if (t > 0 && !others.length) return "a duration";
+  if (!Object.keys(dims).length) return "a ratio or pure number";
+  if (dims.money && !t) return others.length > 1 ? "a price" : "an amount of money";
+  return "a stock";
+};
+
+/* ---------------------------------------------------------------------------------------------
+   Formulas: + - * / ** and brackets, over node names and plain numbers. Evaluated twice at
+   once: in numbers (SI) and in units. A unit error is an error, not a warning.
+--------------------------------------------------------------------------------------------- */
+function tokenize(s) {
+  const out = []; const re = /\s*(\*\*|[-+*/(),]|\d+(?:\.\d+)?(?:e[-+]?\d+)?|[A-Za-z_][A-Za-z0-9_]*)/gy;
+  let m; re.lastIndex = 0;
+  while (re.lastIndex < s.length && (m = re.exec(s))) out.push(m[1]);
+  if (re.lastIndex < s.trim().length && s.slice(re.lastIndex).trim()) throw new Error(`cannot read "${s.slice(re.lastIndex).trim()}"`);
+  return out;
+}
+/* The functions the book's DSL allows (sizing/expr.py), and no others. */
+const FUNCS = ["min", "max", "ceil", "floor", "sqrt", "log", "exp"];
+/* With `infer`, a name that is not in env is a node still to define. It carries a probe
+   dimension, "?name", and where the formula pins its unit (added to something, compared in
+   max, used as an exponent) the unit is learned. What is left over is solved against the
+   unit the node declares. */
+function evaluate(text, env, infer = false) {
+  const t = tokenize(text || ""); let i = 0;
+  const peek = () => t[i], take = () => t[i++];
+  const refs = new Set(), unknown = new Set(), learned = {};
+  const probes = (d) => Object.keys(d).filter((k) => k[0] === "?");
+  const lone = (d) => { const p = probes(d); return p.length === 1 && Object.keys(d).length === 1 && d[p[0]] === 1 ? p[0].slice(1) : null; };
+  const pure = (x, why) => {
+    if (!Object.keys(x.dims).length) return;
+    const u = infer && lone(x.dims); if (u) { learned[u] = {}; x.dims = {}; return; }
+    if (infer && probes(x.dims).length) { x.dims = {}; return; }
+    throw new Error(why(showDims(x.dims)));
+  };
+  const same = (a, b, msg) => {
+    if (sameDims(a.dims, b.dims)) return a.dims;
+    if (infer) {
+      const ua = lone(a.dims), ub = lone(b.dims);
+      if (ua && !probes(b.dims).length) { learned[ua] = b.dims; return b.dims; }
+      if (ub && !probes(a.dims).length) { learned[ub] = a.dims; return a.dims; }
+      if (probes(a.dims).length || probes(b.dims).length) return probes(a.dims).length ? b.dims : a.dims;
+    }
+    throw new Error(msg);
+  };
+  function atom() {
+    const x = take();
+    if (x === undefined) throw new Error("the formula ends too soon");
+    if (x === "(") { const v = add(); if (take() !== ")") throw new Error("a bracket is not closed"); return v; }
+    if (x === "-") { const v = atom(); return { v: v.v === null ? null : -v.v, dims: v.dims }; }
+    if (/^\d/.test(x)) return { v: +x, dims: {} };
+    if (FUNCS.includes(x) && peek() === "(") {
+      take(); const args = [add()];
+      while (peek() === ",") { take(); args.push(add()); }
+      if (take() !== ")") throw new Error(`${x}( is not closed`);
+      const vals = args.map((a) => a.v); const nul = vals.some((v) => v === null);
+      if (x === "min" || x === "max") {
+        let dims = args[0].dims;
+        for (const a of args.slice(1)) dims = same({ dims }, a, `${x} compares like with like: ${showDims(dims)} against ${showDims(a.dims)}`);
+        return { v: nul ? null : Math[x](...vals), dims };
+      }
+      if (x === "ceil" || x === "floor") return { v: nul ? null : Math[x](vals[0]), dims: args[0].dims };
+      if (x === "sqrt") { const d = {}; for (const [k, p] of Object.entries(args[0].dims)) { if (k[0] !== "?" && p % 2) throw new Error(`the square root of ${showDims(args[0].dims)} has no unit`); d[k] = p / 2; } return { v: nul ? null : Math.sqrt(vals[0]), dims: d }; }
+      pure(args[0], (d) => `${x} needs a pure number; this is ${d}`);
+      return { v: nul ? null : Math[x](vals[0]), dims: {} };
+    }
+    if (x in env) { refs.add(x); return env[x]; }
+    if (infer && /^[a-z_][a-z0-9_]*$/.test(x)) { unknown.add(x); return { v: null, dims: { ["?" + x]: 1 } }; }
+    throw new Error(`no node called ${x}`);
+  }
+  function power() {
+    let b = atom();
+    if (peek() === "**") {
+      take(); const e = power();
+      pure(e, (d) => `an exponent must be a pure number; this one is ${d}`);
+      // A power that is not a plain number can only apply to a pure number: growth, not terabytes.
+      if (e.v === null || !Number.isInteger(e.v)) pure(b, (d) => `${d} cannot be raised to a power that is not a whole number`);
+      const dims = {}; for (const [k, p] of Object.entries(b.dims)) dims[k] = p * (e.v ?? 1);
+      b = { v: b.v === null || e.v === null ? null : b.v ** e.v, dims };
+    }
+    return b;
+  }
+  function mul() {
+    let a = power();
+    while (peek() === "*" || peek() === "/") {
+      const op = take(), b = power(); const dims = { ...a.dims };
+      for (const [k, p] of Object.entries(b.dims)) dims[k] = (dims[k] || 0) + (op === "*" ? p : -p);
+      for (const k of Object.keys(dims)) if (!dims[k]) delete dims[k];
+      a = { v: a.v === null || b.v === null ? null : op === "*" ? a.v * b.v : a.v / b.v, dims };
+    }
+    return a;
+  }
+  function add() {
+    let a = mul();
+    while (peek() === "+" || peek() === "-") {
+      const op = take(), b = mul();
+      const dims = same(a, b, `cannot ${op === "+" ? "add" : "subtract"} ${showDims(b.dims)} ${op === "+" ? "to" : "from"} ${showDims(a.dims)}`);
+      a = { v: a.v === null || b.v === null ? null : op === "+" ? a.v + b.v : a.v - b.v, dims };
+    }
+    return a;
+  }
+  const r = add();
+  if (i < t.length) throw new Error(`unexpected "${t[i]}"`);
+  return { ...r, refs: [...refs], unknown: [...unknown], learned };
+}
+/* What a formula needs from the names it uses that do not exist yet. Returns each new name with
+   its unit where the formula fixes it, and whether what can be checked matches the target. */
+function needs(formula, target) {
+  const r = evaluate(formula, liveEnv(true), true);
+  const T = parseUnit(target).dims; const units = {};
+  for (const [u, d] of Object.entries(r.learned)) units[u] = d;
+  const left = Object.keys(r.dims).filter((k) => k[0] === "?");
+  const known = {}; for (const [k, p] of Object.entries(r.dims)) if (k[0] !== "?") known[k] = p;
+  let ok = true, why = "";
+  if (!left.length) { ok = sameDims(known, T); if (!ok) why = `the formula gives ${showDims(known)}, and the node declares ${target}`; }
+  else if (left.length === 1) {
+    const u = left[0].slice(1), pw = r.dims[left[0]]; const d = {}; let whole = true;
+    for (const k of new Set([...Object.keys(T), ...Object.keys(known)])) { const v = ((T[k] || 0) - (known[k] || 0)) / pw; if (!Number.isInteger(v)) whole = false; if (v) d[k] = v; }
+    if (whole) units[u] = d; else { ok = false; why = `no unit for ${u} would make this ${target}`; }
+  }
+  return { r, ok, why, fresh: r.unknown.filter((u) => !model.nodes[u]), units };
+}
+/* A unit string for a set of dimensions: one a node already uses if there is one, so a new node
+   reads like its neighbours. */
+function unitFor(dims) {
+  if (!dims) return "";
+  for (const n of Object.values(model.nodes)) if (n.unit && parseUnit(n.unit).ok && sameDims(parseUnit(n.unit).dims, dims)) return n.unit;
+  if (!Object.keys(dims).length) return "dimensionless";
+  const pref = { time: (p) => (p > 0 ? "year" : "second"), data: () => "TB", money: () => "USD", power: () => "W" };
+  const up = [], down = [];
+  for (const [k, p] of Object.entries(dims)) { const w = pref[k] ? pref[k](p) : k; (p > 0 ? up : down).push(Math.abs(p) === 1 ? w : `${w}^${Math.abs(p)}`); }
+  return (up.join("·") || "1") + (down.length ? "/" + down.join("/") : "");
+}
+
+/* ---------------------------------------------------------------------------------------------
+   The example: ch02's demand model, as the book leaves it at the end of that chapter.
+--------------------------------------------------------------------------------------------- */
+const EXAMPLE = {
+  model: "web_service_demand", title: "A web service's demand",
+  nodes: {
+    peak_request_rate_t0: { kind: "input", label: "peak request rate, day one", unit: "request/second", decided: "outside", value: 8000,
+      shape: { triangular: { minimum: 3000, likely: 8000, maximum: 20000 } },
+      provenance: { kind: "assumption", source: "The busy hour, as the people who own the service estimate it. Triangular: their least, likely and most." } },
+    stored_data_t0: { kind: "input", label: "records held, day one", unit: "TB", decided: "outside", value: 15,
+      provenance: { kind: "assumption", source: "What the service holds today, before replication or compression." },
+      note: "Keeps its single number: you can count what you hold today." },
+    annual_growth: { kind: "input", label: "annual growth factor", unit: "dimensionless", decided: "outside", value: 1.3,
+      shape: { lognormal: { p10: 1.12, p90: 1.6 } },
+      provenance: { kind: "assumption", source: "Lognormal because growth compounds and cannot be negative." } },
+    horizon: { kind: "input", label: "horizon", unit: "year", decided: "you", value: 5,
+      provenance: { kind: "assumption", source: "The refresh cycle this fleet is bought against." } },
+    one_year: { kind: "input", label: "one year", unit: "year", decided: "definition", value: 1,
+      provenance: { kind: "fact", source: "definition" } },
+    horizon_periods: { kind: "derived", label: "horizon, in years", unit: "dimensionless", formula: "horizon / one_year" },
+    peak_request_rate: { kind: "derived", label: "peak request rate at horizon", unit: "request/second", formula: "peak_request_rate_t0 * annual_growth ** horizon_periods" },
+    stored_data: { kind: "derived", label: "records held at horizon", unit: "TB", formula: "stored_data_t0 * annual_growth ** horizon_periods" },
+  },
+  outputs: ["peak_request_rate", "stored_data"],
+  correlations: [],
+  scenarios: [{ name: "sized_for_growth", overrides: { annual_growth: 1.6 }, because: "The growth rate at the top of the range the team would not be surprised by." }],
+};
+/* Stamped results a measured node may point at: in the real builder these come from bench/results. */
+const RESULTS = {
+  "records-compression": { value: 3.1, se: 0.08, unit: "dimensionless", stack: "this repository's record encoder, over the declared corpus", label: "record compression ratio" },
+  "logs-line-bytes": { value: 212, se: 4, unit: "byte/line", stack: "this repository's log codec, over the declared corpus", label: "bytes per log line" },
+  "metrics-sample-bytes": { value: 1.37, se: 0.02, unit: "byte", stack: "delta-of-delta encoder in this repository", label: "bytes per stored value" },
+  "service-demand": { value: null, se: null, unit: "second/request", stack: "needs the rig machine: not yet measured", label: "processor time per request" },
+};
+
+let model; const STORE = "model-builder-v3";
+try { model = JSON.parse(localStorage.getItem(STORE)) || null; } catch { model = null; }
+let firstVisit = !model;
+if (!model) model = { ...structuredClone(EXAMPLE), goal: "other", question: "Capacity planning for the web service's next refresh cycle.", skipped: [] };
+const save = () => { try { localStorage.setItem(STORE, JSON.stringify(model)); } catch {} };
+let selected = model.outputs[0] || Object.keys(model.nodes)[0] || null;
+let tab = "node";
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const fmt = (v) => v === null || v === undefined || Number.isNaN(v) ? "not yet measured"
+  : Math.abs(v) >= 100 ? Math.round(v).toLocaleString("en-GB") : +v.toPrecision(3) + "";
+
+/* ---------------------------------------------------------------------------------------------
+   Evaluation, in dependency order. A node with no value makes everything downstream have none.
+--------------------------------------------------------------------------------------------- */
+function depsOf(n) {
+  const exprs = n.kind === "derived" ? [n.formula] : n.kind === "ceiling" ? [n.of, n.limit, n.headroom] : [];
+  const names = new Set();
+  for (const e of exprs) { try { for (const tk of tokenize(e || "")) if (/^[A-Za-z_]/.test(tk) && model.nodes[tk]) names.add(tk); } catch {} }
+  return [...names];
+}
+function order() {
+  const seen = new Set(), out = [], onStack = new Set(); let cycle = null;
+  const visit = (k) => {
+    if (seen.has(k)) return; if (onStack.has(k)) { cycle = k; return; }
+    onStack.add(k); for (const d of depsOf(model.nodes[k])) visit(d); onStack.delete(k);
+    seen.add(k); out.push(k);
+  };
+  for (const k of Object.keys(model.nodes)) visit(k);
+  return { out, cycle };
+}
+function evaluateModel(overrides = {}) {
+  const env = {}, errors = {}, ceilings = {};
+  for (const k of order().out) {
+    const n = model.nodes[k]; const u = parseUnit(n.unit);
+    try {
+      if (n.kind === "pending") { env[k] = { v: null, dims: u.dims, pending: true }; continue; }
+      if (n.kind === "input") {
+        const v = k in overrides ? overrides[k] : n.value;
+        env[k] = { v: v === null || v === undefined || v === "" ? null : +v * u.f, dims: u.dims };
+      } else if (n.kind === "measured") {
+        const r = RESULTS[n.result];
+        env[k] = { v: r && r.value !== null ? r.value * u.f : null, dims: u.dims };
+      } else if (n.kind === "derived") {
+        // A node still to define with no unit yet stands in as a probe, so the arithmetic that can
+        // be checked is, and the rest waits for it.
+        const envNow = {}; for (const [q, x] of Object.entries(env)) if (!(x.pending && !model.nodes[q].unit)) envNow[q] = x;
+        const r = evaluate(n.formula, envNow, true);
+        const stray = r.unknown.filter((q) => !model.nodes[q]); if (stray.length) throw new Error(`no node called ${stray[0]}`);
+        if (Object.keys(r.dims).some((q) => q[0] === "?")) { env[k] = { v: null, dims: u.dims }; continue; }
+        if (!sameDims(r.dims, u.dims)) throw new Error(`the formula gives ${showDims(r.dims)}, and the node declares ${n.unit}`);
+        env[k] = { v: r.v, dims: u.dims };
+      } else if (n.kind === "ceiling") {
+        const of = evaluate(n.of, env), lim = evaluate(n.limit, env), head = evaluate(n.headroom || "0", env);
+        if (!sameDims(of.dims, lim.dims)) throw new Error(`what is checked is ${showDims(of.dims)} and the limit is ${showDims(lim.dims)}`);
+        if (Object.keys(head.dims).length) throw new Error("headroom must be a fraction: a pure number");
+        env[k] = { v: of.v, dims: of.dims };
+        const allowed = lim.v === null || head.v === null ? null : lim.v * (1 - head.v);
+        ceilings[k] = { value: of.v, limit: lim.v, allowed,
+          verdict: of.v === null || allowed === null ? "unknown" : of.v > lim.v ? "over" : of.v > allowed ? "into the margin" : "ok" };
+      }
+    } catch (e) { errors[k] = e.message; env[k] = { v: null, dims: u.dims }; }
+  }
+  const shown = {};
+  for (const [k, x] of Object.entries(env)) shown[k] = x.v === null ? null : x.v / parseUnit(model.nodes[k].unit).f;
+  return { values: shown, errors, ceilings };
+}
+
+/* Spread: sample the shaped inputs and read the tenth and ninetieth of every answer. */
+function z(p) { // Acklam's inverse normal CDF, rational approximation (Acklam 2003)
+  const a = [-39.69683028665376, 220.9460984245205, -275.9285104469687, 138.357751867269, -30.66479806614716, 2.506628277459239];
+  const b = [-54.47609879822406, 161.5858368580409, -155.6989798598866, 66.80131188771972, -13.28068155288572];
+  const c = [-0.007784894002430293, -0.3223964580411365, -2.400758277161838, -2.549732539343734, 4.374664141464968, 2.938163982698783];
+  const d = [0.007784695709041462, 0.3224671290700398, 2.445134137142996, 3.754408661907416];
+  const lo = 0.02425; let q, r;
+  if (p < lo) { q = Math.sqrt(-2 * Math.log(p)); return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+  if (p > 1 - lo) { q = Math.sqrt(-2 * Math.log(1 - p)); return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) / ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1); }
+  q = p - 0.5; r = q * q;
+  return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q / (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+}
+function draw(shape, u) {
+  const [name, p] = Object.entries(shape)[0];
+  if (name === "uniform") return p.minimum + u * (p.maximum - p.minimum);
+  if (name === "normal") return p.mean + p.sd * z(u);
+  if (name === "lognormal") { const k = 1.2815515655446004, mu = (Math.log(p.p10) + Math.log(p.p90)) / 2, s = (Math.log(p.p90) - Math.log(p.p10)) / (2 * k); return Math.exp(mu + s * z(u)); }
+  const { minimum: a, likely: c, maximum: bb } = p; const f = (c - a) / (bb - a);
+  return u < f ? a + Math.sqrt(u * (bb - a) * (c - a)) : bb - Math.sqrt((1 - u) * (bb - a) * (bb - c));
+}
+function spread(n = 1500) {
+  const shaped = Object.entries(model.nodes).filter(([, x]) => x.kind === "input" && x.shape);
+  if (!shaped.length) return null;
+  let seed = 20260916; const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) + 0.5) / 4294967296;
+  const runs = {}; for (const o of model.outputs) runs[o] = [];
+  for (let i = 0; i < n; i++) {
+    const ov = {}; for (const [k, x] of shaped) ov[k] = draw(x.shape, rand());
+    const r = evaluateModel(ov).values;
+    for (const o of model.outputs) if (r[o] !== null && r[o] !== undefined) runs[o].push(r[o]);
+  }
+  const out = {};
+  for (const [o, xs] of Object.entries(runs)) { xs.sort((a, b) => a - b); out[o] = xs.length ? [xs[Math.floor(xs.length * .1)], xs[Math.floor(xs.length * .9)]] : null; }
+  return out;
+}
+
+/* ---------------------------------------------------------------------------------------------
+   The build's checks, as verify-models.py states them. Each is the rule and whether it holds.
+--------------------------------------------------------------------------------------------- */
+function checks(result) {
+  const out = []; const N = model.nodes; const names = Object.keys(N);
+  const add = (level, text, why) => out.push({ level, text, why });
+  const { cycle } = order();
+  const todo = names.filter((k) => N[k].kind === "pending");
+  if (todo.length) add("fail", `Still to define: ${todo.join(", ")}`, "Each one is given, measured or worked out");
+  add(cycle ? "fail" : "pass", cycle ? `A cycle runs through ${cycle}` : "No cycles: every node can be worked out from the ones before it");
+  const badUnits = names.filter((k) => N[k].kind !== "pending" && !parseUnit(N[k].unit).ok);
+  add(badUnits.length ? "fail" : "pass", badUnits.length ? `Unknown unit on ${badUnits.join(", ")}` : "Every node declares a unit the toolkit knows", "ch02 · Appendix D");
+  const errs = Object.entries(result.errors);
+  add(errs.length ? "fail" : "pass", errs.length ? `${errs[0][0]}: ${errs[0][1]}` + (errs.length > 1 ? ` (and ${errs.length - 1} more)` : "") : "Every formula produces the unit its node declares", "ch02");
+  const noProv = names.filter((k) => N[k].kind === "input" && (!N[k].provenance || !N[k].provenance.kind || !(N[k].provenance.source || "").trim()));
+  add(noProv.length ? "fail" : "pass", noProv.length ? `No provenance on ${noProv.join(", ")}` : "Every input says where it came from", "ch03");
+  const noDec = names.filter((k) => N[k].kind === "input" && !N[k].decided);
+  add(noDec.length ? "fail" : "pass", noDec.length ? `No decided: line on ${noDec.join(", ")}` : "Every input says who decides it", "ch02");
+  const shapeUnnamed = names.filter((k) => N[k].shape && !new RegExp(Object.keys(N[k].shape)[0], "i").test(N[k].provenance?.source || ""));
+  add(shapeUnnamed.length ? "fail" : "pass", shapeUnnamed.length ? `${shapeUnnamed.join(", ")} has a shape its source does not name` : "Every shaped input names its shape in its source", "ch04 · Appendix C");
+  const ceil = names.filter((k) => N[k].kind === "ceiling");
+  const ceilBad = ceil.filter((k) => !(N[k].headroom || "").trim() || !(N[k].because || "").trim());
+  add(ceilBad.length ? "fail" : "pass", ceilBad.length ? `${ceilBad.join(", ")} needs headroom and a reason` : "Every ceiling has headroom and a reason", "ch11");
+  const meas = names.filter((k) => N[k].kind === "measured");
+  if (meas.length && !ceil.length) add("fail", "A measured constant with no ceiling anywhere: declare the limit, or say why there is none", "ch09");
+  const unmeasured = meas.filter((k) => !RESULTS[N[k].result] || RESULTS[N[k].result].value === null);
+  if (unmeasured.length) add("warn", `${unmeasured.join(", ")} not yet measured: everything downstream shows no value`, "ch03");
+  if (!model.outputs.length) add("fail", "The model declares no outputs, so nothing in it can be checked");
+  else {
+    const feeds = new Set(model.outputs); let grew = true;
+    while (grew) { grew = false; for (const o of [...feeds]) for (const d of depsOf(N[o] || {})) if (!feeds.has(d)) { feeds.add(d); grew = true; } }
+    for (const k of names) if (N[k].kind === "ceiling") feeds.add(k);
+    const orphan = names.filter((k) => !feeds.has(k));
+    add(orphan.length ? "fail" : "pass", orphan.length ? `${orphan.join(", ")} feeds no output` : "Every node feeds an output", "Appendix A");
+  }
+  const corBad = model.correlations.filter((c) => !(c.because || "").trim());
+  if (model.correlations.length) add(corBad.length ? "fail" : "pass", corBad.length ? "A pair that moves together has no reason" : "Every pair that moves together says why", "ch14");
+  const sceBad = model.scenarios.filter((s) => Object.keys(s.overrides).some((k) => !N[k] || N[k].kind !== "input"));
+  if (model.scenarios.length) add(sceBad.length ? "fail" : "pass", sceBad.length ? "A scenario overrides something that is not an input" : "Scenarios change inputs only, and say why", "ch21");
+  return out;
+}
+
+/* ---------------------------------------------------------------------------------------------
+   The file itself.
+--------------------------------------------------------------------------------------------- */
+function yamlFile() {
+  const q = (s) => /^[\w./ -]+$/.test(s) && !/^\d/.test(s) ? s : JSON.stringify(s);
+  const block = (s, pad) => ">-\n" + String(s).match(/.{1,86}(\s|$)/g).map((l) => pad + l.trim()).join("\n");
+  const L = [`model: ${model.model}`, `title: ${q(model.title)}`, "nodes:"];
+  for (const [k, n] of Object.entries(model.nodes)) {
+    if (n.kind === "pending") { L.push(`  # ${k}: still to define${n.unit ? `, in ${n.unit}` : ""}`); continue; }
+    L.push(`  ${k}:`, `    kind: ${n.kind}`);
+    if (n.kind === "input") L.push(`    decided: ${n.decided || "  # who decides this?"}`);
+    L.push(`    unit: ${n.unit || "dimensionless"}`);
+    if (n.label) L.push(`    label: ${q(n.label)}`);
+    if (n.kind === "input") {
+      L.push(n.value === null || n.value === undefined || n.value === "" ? "    # value: not yet measured" : `    value: ${n.value}`);
+      if (n.shape) { const [s, p] = Object.entries(n.shape)[0]; L.push(`    distribution: {${s}: {${Object.entries(p).map(([a, b]) => `${a}: ${b}`).join(", ")}}}`); }
+      L.push("    provenance:", `      kind: ${n.provenance?.kind || ""}`, `      source: ${block(n.provenance?.source || "", "        ")}`);
+      if (n.range) L.push(`    range: [${n.range[0]}, ${n.range[1]}]`);
+    }
+    if (n.kind === "derived") L.push(`    formula: ${n.formula}`);
+    if (n.kind === "measured") L.push(`    result: ${n.result}`);
+    if (n.kind === "ceiling") { L.push(`    of: ${n.of}`, `    limit: ${n.limit}`, `    headroom: ${n.headroom}`, `    because: ${block(n.because || "", "      ")}`); }
+    if (n.note) L.push(`    note: ${block(n.note, "      ")}`);
+  }
+  L.push(`outputs: [${model.outputs.join(", ")}]`);
+  if (model.correlations.length) {
+    L.push("correlations:");
+    for (const c of model.correlations) L.push(`  - a: ${c.a}`, `    b: ${c.b}`, `    rho: ${c.rho}`, `    because: ${block(c.because, "      ")}`);
+  } else L.push("correlations: []");
+  let text = L.join("\n") + "\n";
+  for (const s of model.scenarios) {
+    text += `\n# scenarios/${s.name}.yaml\nscenario: ${s.name}\noverrides:\n${Object.entries(s.overrides).map(([k, v]) => `  ${k}: ${v}`).join("\n")}\nbecause: ${block(s.because, "  ")}\nsamples: 100000\nseed: 20260916\n`;
+  }
+  return text;
+}
+
+/* ---------------------------------------------------------------------------------------------
+   The path. Stages in the book's order; each is a checklist of what the model needs, read from
+   the model itself, so the path cannot drift from what is in the file. An item's preset says
+   what kind of node to add. It never says what number to put in it.
+--------------------------------------------------------------------------------------------- */
+const nodes = () => Object.entries(model.nodes);
+const dimsOf = (n) => parseUnit(n.unit).dims;
+const isFlow = (n) => (dimsOf(n).time || 0) < 0;
+const isDuration = (n) => (dimsOf(n).time || 0) > 0 && Object.keys(dimsOf(n)).length === 1;
+const isPure = (n) => !Object.keys(dimsOf(n)).length;
+const hasHost = (n) => !!dimsOf(n).host && dimsOf(n).host > 0;
+const hasMoney = (n) => !!dimsOf(n).money;
+const isStock = (n) => !isFlow(n) && !isDuration(n) && !isPure(n) && !hasMoney(n);
+const any = (f) => nodes().some(([k, n]) => f(n, k));
+const outsideInputs = () => nodes().filter(([, n]) => n.kind === "input" && n.decided === "outside");
+const seen = new Set();
+/* The answer, worked back. Roots are the outputs; each node's children are what its formula
+   uses. A node still to define is where the work is. */
+const horizonNode = () => nodes().find(([, n]) => n.kind === "input" && isDuration(n) && n.decided === "you");
+function pendingOrder() {
+  const out = [], seenP = new Set(); const q = model.outputs.filter((o) => model.nodes[o]);
+  while (q.length) { const k = q.shift(); if (seenP.has(k)) continue; seenP.add(k); if (model.nodes[k].kind === "pending") out.push(k); q.push(...depsOf(model.nodes[k])); }
+  for (const [k, n] of nodes()) if (n.kind === "pending" && !out.includes(k)) out.push(k);
+  return out;
+}
+/* How many nodes still to define sit upstream of k: a value that is missing for that reason is
+   waiting on you, not on a measurement. */
+function waiting(k) {
+  const seenW = new Set(), q = [k]; let c = 0;
+  while (q.length) { const x = q.shift(); if (seenW.has(x) || !model.nodes[x]) continue; seenW.add(x); if (x !== k && model.nodes[x].kind === "pending") c++; q.push(...depsOf(model.nodes[x])); }
+  return c;
+}
+const valueText = (k, v) => v == null && waiting(k) ? `waits on ${waiting(k)} to define` : fmt(v);
+const parentsOf = (k) => nodes().filter(([, n]) => depsOf(n).includes(k)).map(([p, n]) => n.label || p);
+/* After the tree is complete: what the book says to do with a model that runs. Optional, in the
+   order that pays: know your sources, find the limit, give ranges, then rank what to measure. */
+const REFINE = [
+  { id: "sources", what: "Read where each number came from", ref: "ch03", why: "The assumptions outside your control are the list of things you could go and measure.",
+    done: () => seen.has("sources"), go: () => { seen.add("sources"); tab = "sources"; render(); } },
+  { id: "limit", what: "Say where it stops working", ref: "ch05 – ch08 · ch11", why: "Past a limit the system stops behaving like the arithmetic. Declare the limit and the margin you keep below it.",
+    done: () => any((n) => n.kind === "ceiling"), go: () => openWizard(null, { kind: "ceiling" }) },
+  { id: "ranges", what: "Give the inputs outside your control a range", ref: "ch04 · ch13", why: "One number hides how far off it could be. A range gives every answer a range.",
+    done: () => outsideInputs().length > 0 && outsideInputs().every(([, n]) => n.shape || n.certainty === "none" || n.note),
+    go: () => { const nx = outsideInputs().find(([, n]) => !n.shape && n.certainty !== "none" && !n.note); if (nx) { selected = nx[0]; openWizard(nx[0], null, "How sure"); } } },
+  { id: "measure", what: "See which input to measure first", ref: "ch19", why: "The input the answer rests on most is the one worth measuring.",
+    done: () => seen.has("measure"), go: () => { seen.add("measure"); tab = "measure"; render(); } },
+  { id: "scenario", what: "Compare a second case", ref: "ch21 · ch22", why: "Change inputs in a small file beside the model, with a reason, rather than editing the model.",
+    done: () => model.scenarios.length > 0, go: () => { tab = "scenarios"; render(); } },
+];
+const skipped = () => (model.skipped ||= []);
+function nextAction(chk) {
+  if (!model.outputs.filter((o) => model.nodes[o]).length) return { msg: "Start with the answer: what are you being asked for?", sub: "Name it and give it a unit. Everything else is worked back from it.", btn: "Name the answer", go: openAnswer };
+  if (!model.noHorizon && !horizonNode()) return { msg: "When is the answer for? Set the horizon.", sub: "How long you are buying for. It fixes what the answer means, and it is your decision · ch02", btn: "Set the horizon",
+    go: () => openWizard(null, { kind: "input", qkind: "duration", decided: "you", unit: "year", name: "horizon", label: "horizon" }), alt: ["The answer is for today", () => { model.noHorizon = true; commit(); }] };
+  const p = pendingOrder()[0];
+  if (p) { const par = parentsOf(p); return { msg: `Define ${model.nodes[p].label || p}`, sub: `${par.length ? `Needed by ${par.join(", ")}. ` : ""}Is it given, or worked out from other things?`, btn: "Define it", go: () => openResolve(p) }; }
+  const fail = chk.find((c) => c.level === "fail");
+  if (fail) return { fix: true, msg: fail.text, sub: "The build refuses a file with this problem.", btn: "See the checks", go: () => { tab = "checks"; render(); } };
+  const r = REFINE.find((x) => !x.done() && !skipped().includes(x.id));
+  if (r) return { msg: r.what, sub: `${r.why} · ${r.ref}`, btn: "Do it", go: r.go, alt: ["Skip", () => { skipped().push(r.id); commit(); }] };
+  return null;
+}
+function drawTree(result) {
+  const shown = new Set(); const rows = [];
+  const walk = (k, d) => {
+    const n = model.nodes[k]; if (!n) return; const again = shown.has(k); shown.add(k);
+    rows.push({ k, n, d, again });
+    if (!again) for (const c of depsOf(n)) walk(c, d + 1);
+  };
+  for (const o of model.outputs) walk(o, 0);
+  const checksRoots = nodes().filter(([k, n]) => n.kind === "ceiling" && !shown.has(k));
+  for (const [k] of checksRoots) walk(k, 0);
+  const loose = nodes().filter(([k]) => !shown.has(k));
+  const row = ({ k, n, d, again }) => {
+    const unk = n.kind === "pending" || (result.values[k] === null && (n.kind === "input" || n.kind === "measured"));
+    return `<li style="padding-left:${d * 14}px"><button type="button" class="treeitem" data-k="${k}" aria-current="${selected === k}"><i class="swatch ${unk ? "unknown" : n.kind}"></i><span class="n">${esc(n.label || k)}${again ? ' <span class="note">(above)</span>' : ""}</span>${n.kind === "pending" ? '<span class="todo">define</span>' : result.errors[k] ? '<span class="flag">unit</span>' : ""}</button></li>`;
+  };
+  $("tree").innerHTML = rows.length ? rows.map(row).join("") + (loose.length ? `<li class="note" style="margin-top:6px">Not feeding an answer:</li>` + loose.map(([k, n]) => row({ k, n, d: 0 })).join("") : "")
+    : `<li class="note">Nothing yet. The answer goes here first.</li>`;
+  for (const b of $("tree").querySelectorAll(".treeitem")) b.onclick = () => { const k = b.dataset.k; if (model.nodes[k].kind === "pending") return openResolve(k); selected = k; tab = "node"; render(); };
+  const complete = model.outputs.length && !pendingOrder().length && (model.noHorizon || horizonNode());
+  $("refine").innerHTML = REFINE.map((r, i) => `<li class="${r.done() ? "ok" : ""}"><span class="tick">${r.done() ? "✓" : skipped().includes(r.id) ? "–" : "○"}</span><div><span class="what">${r.what}</span> <span class="ref">${r.ref}</span>${complete ? `<br><button type="button" data-r="${i}">${r.done() ? "Open" : "Do it"}</button>` : ""}</div></li>`).join("");
+  for (const b of $("refine").querySelectorAll("[data-r]")) b.onclick = () => REFINE[+b.dataset.r].go();
+  $("refine-note").hidden = !!complete;
+}
+function drawCoach(chk) {
+  const a = nextAction(chk); const C = $("coach");
+  if (!a) { C.className = "done"; C.innerHTML = `<span class="lbl">Done</span><span class="msg">The answer is worked back to its inputs, the build passes, and every refinement is done or skipped.<small>Open <b>File</b> to copy the model.</small></span>`; return; }
+  C.className = a.fix ? "fix" : "";
+  C.innerHTML = `<span class="lbl">${a.fix ? "Fix first" : "Next step"}</span><span class="msg">${esc(a.msg)}<small>${esc(a.sub)}</small></span>${a.alt ? `<button type="button" id="coachalt">${a.alt[0]}</button>` : ""}<button type="button" class="primary" id="coachgo">${a.btn}</button>`;
+  $("coachgo").onclick = a.go; if (a.alt) $("coachalt").onclick = a.alt[1];
+}
+function rename(from, to) {
+  if (from === to) return;
+  const re = new RegExp(`\\b${from}\\b`, "g");
+  model.nodes[to] = model.nodes[from]; delete model.nodes[from];
+  for (const n of Object.values(model.nodes)) for (const f of ["formula", "of", "limit", "headroom"]) if (n[f]) n[f] = n[f].replace(re, to);
+  model.outputs = model.outputs.map((o) => (o === from ? to : o));
+  for (const c of model.correlations) { if (c.a === from) c.a = to; if (c.b === from) c.b = to; }
+  for (const s of model.scenarios) if (from in s.overrides) { s.overrides[to] = s.overrides[from]; delete s.overrides[from]; }
+}
+
+/* Which input the answer rests on: move each shaped input to its low and high end, one at a
+   time, and see how far the first output moves. The widest is the one to measure (ch19). */
+function swings(out) {
+  const base = evaluateModel().values[out];
+  const rows = [];
+  for (const [k, n] of nodes()) if (n.kind === "input" && n.shape) {
+    const lo = evaluateModel({ [k]: draw(n.shape, 0.1) }).values[out], hi = evaluateModel({ [k]: draw(n.shape, 0.9) }).values[out];
+    if (lo !== null && hi !== null) rows.push({ k, n, lo: Math.min(lo, hi), hi: Math.max(lo, hi) });
+  }
+  rows.sort((a, b) => (b.hi - b.lo) - (a.hi - a.lo));
+  return { base, rows };
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Drawing.
+--------------------------------------------------------------------------------------------- */
+function classify() {
+  const kinds = Object.values(model.nodes).map((n) => n.kind);
+  return kinds.includes("measured") || kinds.includes("ceiling") ? "conditional" : "definitional";
+}
+function layers() {
+  const L = {};
+  for (const k of order().out) { const d = depsOf(model.nodes[k]); L[k] = d.length ? 1 + Math.max(...d.map((x) => L[x] ?? 0)) : 0; }
+  return L;
+}
+function drawGraph(result) {
+  const svg = $("graph"); const L = layers(); const cols = {};
+  for (const [k, l] of Object.entries(L)) (cols[l] ||= []).push(k);
+  const W = 196, H = 46, GX = 70, GY = 14, P = 14;
+  const nc = Math.max(1, Object.keys(cols).length), nr = Math.max(1, ...Object.values(cols).map((c) => c.length));
+  const w = P * 2 + nc * W + (nc - 1) * GX, h = P * 2 + nr * H + (nr - 1) * GY;
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`); svg.setAttribute("width", w); svg.setAttribute("height", h);
+  const pos = {};
+  for (const [l, ks] of Object.entries(cols)) ks.forEach((k, i) => (pos[k] = { x: P + l * (W + GX), y: P + i * (H + GY) }));
+  let s = "";
+  for (const [k, n] of Object.entries(model.nodes)) for (const d of depsOf(n)) {
+    const a = pos[d], b = pos[k]; if (!a || !b) continue;
+    const x1 = a.x + W, y1 = a.y + H / 2, x2 = b.x, y2 = b.y + H / 2, mx = (x1 + x2) / 2;
+    s += `<path class="edge" d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}"/>`;
+  }
+  for (const [k, n] of Object.entries(model.nodes)) {
+    const p = pos[k]; const v = result.values[k];
+    const cls = n.kind === "pending" || (v === null && (n.kind === "measured" || n.kind === "input")) ? "unknown" : n.kind;
+    const fill = { input: "var(--input)", derived: "var(--derived)", measured: "var(--measured)", ceiling: "var(--ceiling)", unknown: "var(--bg)" }[cls];
+    const edge = { input: "var(--input-edge)", derived: "var(--derived-edge)", measured: "var(--measured-edge)", ceiling: "var(--ceiling-edge)", unknown: "var(--muted)" }[cls];
+    const err = result.errors[k];
+    s += `<g class="node${selected === k ? " hot" : ""}" data-k="${k}" tabindex="0" role="button" aria-label="${esc(n.label || k)}">`
+      + `<rect x="${p.x}" y="${p.y}" width="${W}" height="${H}" rx="4" fill="${fill}" stroke="${err ? "var(--bad)" : edge}" stroke-width="1.5"${cls === "unknown" ? ' stroke-dasharray="4 3"' : ""}/>`
+      + (n.decided === "you" ? `<rect x="${p.x}" y="${p.y}" width="5" height="${H}" rx="2" fill="var(--input-edge)"/>` : "")
+      + `<text x="${p.x + 12}" y="${p.y + 18}">${esc((n.label || k).slice(0, 30))}</text>`
+      + `<text class="v" x="${p.x + W - 10}" y="${p.y + 36}" text-anchor="end">${err ? "unit error" : n.kind === "pending" ? "to define" : valueText(k, v)}${result.ceilings[k] ? " · " + result.ceilings[k].verdict : ""}</text></g>`;
+  }
+  svg.innerHTML = s;
+  for (const g of svg.querySelectorAll(".node")) {
+    const go = () => { selected = g.dataset.k; tab = "node"; render(); };
+    g.addEventListener("click", go);
+    g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
+  }
+}
+function drawAnswers(result) {
+  if (!model.outputs.length) { $("answers").innerHTML = ""; $("answers-note").textContent = "No answers yet. When a node is one somebody will ask about, tick \"an output\" on it, and it appears here."; return; }
+  const sp = spread();
+  const rows = model.outputs.map((o) => {
+    const n = model.nodes[o]; if (!n) return "";
+    const band = sp && sp[o] ? `${fmt(sp[o][0])} to ${fmt(sp[o][1])}` : "—";
+    return `<tr><td>${esc(n.label || o)}</td><td class="n">${valueText(o, result.values[o])}</td><td class="n">${band}</td><td>${esc(n.unit)}</td></tr>`;
+  });
+  $("answers").innerHTML = `<tr><th>Output</th><th>At the book's values</th><th>Likely between</th><th>Unit</th></tr>${rows.join("")}`;
+  $("answers-note").textContent = sp
+    ? "The middle column uses one value per input. The next draws each shaped input from its shape and keeps the middle eight in ten answers."
+    : "Every input is one number, so there is no spread to show yet. Give an input a shape (ch04) and the answers get one.";
+}
+function drawOutline(result) {
+  const byKind = { input: 0, derived: 1, measured: 2, ceiling: 3 };
+  const ks = Object.keys(model.nodes).sort((a, b) => byKind[model.nodes[a].kind] - byKind[model.nodes[b].kind]);
+  if (!$("nodelist")) { $("c-out").textContent = model.outputs.length; $("c-cor").textContent = model.correlations.length; $("c-sce").textContent = model.scenarios.length; return; }
+  $("nodelist").innerHTML = ks.map((k) => {
+    const n = model.nodes[k]; const unk = result.values[k] === null && (n.kind === "input" || n.kind === "measured");
+    return `<li><button type="button" data-k="${k}" aria-current="${selected === k}"><i class="swatch ${unk ? "unknown" : n.kind}"></i><span class="n">${esc(n.label || k)}</span>${result.errors[k] ? '<span class="flag">unit</span>' : ""}</button></li>`;
+  }).join("");
+  for (const b of $("nodelist").querySelectorAll("button")) b.addEventListener("click", () => { selected = b.dataset.k; tab = "node"; render(); });
+  $("c-out").textContent = model.outputs.length;
+  $("c-cor").textContent = model.correlations.length;
+  $("c-sce").textContent = model.scenarios.length;
+}
+
+const DECIDED_WORDS = { outside: "outside your control", you: "you decide it", definition: "true by definition" };
+const PROV_WORDS = { fact: "● fact", vendor_claim: "◐ vendor's claim", assumption: "○ assumption" };
+function drawPanel(result, chk) {
+  for (const b of $("tabs").querySelectorAll("button")) b.setAttribute("aria-selected", String(b.dataset.tab === tab));
+  const P = $("panel");
+  if (tab === "node") {
+    const n = model.nodes[selected];
+    if (!n) { P.innerHTML = `<p class="note">Pick a node, or add one.</p>`; return; }
+    if (n.kind === "pending") { P.innerHTML = `<div class="inspector"><h2>still to define</h2><p class="q" style="font-size:16px">${esc(n.label || selected)}</p><p class="note">${parentsOf(selected).length ? `Needed by ${esc(parentsOf(selected).join(", "))}. ` : ""}${n.unit ? `Its unit is fixed by the formula that uses it: ${esc(n.unit)}.` : "Its unit is settled when you define it."}</p><button type="button" class="primary" id="defn">Define it</button></div>`; $("defn").onclick = () => openResolve(selected); return; }
+    const u = parseUnit(n.unit); const c = result.ceilings[selected];
+    P.innerHTML = `<div class="inspector"><h2>${esc(n.kind)}</h2><p class="q" style="font-size:16px">${esc(n.label || selected)}</p>
+      <dl><dt>name</dt><dd><code>${selected}</code></dd>
+      <dt>value</dt><dd class="mono">${valueText(selected, result.values[selected])}${result.values[selected] == null ? "" : " " + esc(n.unit)}</dd>
+      <dt>kind of quantity</dt><dd>${u.ok ? kindOf(u.dims) : "unknown unit"}</dd>
+      ${n.kind === "input" ? `<dt>who decides</dt><dd>${DECIDED_WORDS[n.decided] || "—"}</dd><dt>claim</dt><dd>${PROV_WORDS[n.provenance?.kind] || "—"}</dd><dt>source</dt><dd>${esc(n.provenance?.source)}</dd>` : ""}
+      ${n.shape ? `<dt>shape</dt><dd class="mono">${esc(JSON.stringify(n.shape))}</dd>` : ""}
+      ${n.formula ? `<dt>formula</dt><dd class="mono">${esc(n.formula)}</dd>` : ""}
+      ${n.kind === "measured" ? `<dt>result</dt><dd class="mono">${esc(n.result)}</dd><dt>measured on</dt><dd>${esc(RESULTS[n.result]?.stack)}</dd><dt>standard error</dt><dd class="mono">${fmt(RESULTS[n.result]?.se)}</dd>` : ""}
+      ${c ? `<dt>checks</dt><dd class="mono">${esc(n.of)}</dd><dt>limit</dt><dd class="mono">${esc(n.limit)} (${fmt(c.limit)})</dd><dt>headroom</dt><dd class="mono">${esc(n.headroom)} → allowed ${fmt(c.allowed)}</dd><dt>verdict</dt><dd><strong>${c.verdict}</strong></dd><dt>because</dt><dd>${esc(n.because)}</dd>` : ""}
+      ${n.note ? `<dt>note</dt><dd>${esc(n.note)}</dd>` : ""}</dl>
+      ${result.errors[selected] ? `<div class="verdict bad">${esc(result.errors[selected])}</div>` : ""}
+      <div class="row"><button type="button" id="edit">Edit with the wizard</button><button type="button" id="del">Remove</button>
+      <label class="row" style="width:auto"><input type="checkbox" id="isout" style="width:auto" ${model.outputs.includes(selected) ? "checked" : ""}> an output</label></div></div>`;
+    $("edit").onclick = () => openWizard(selected);
+    $("del").onclick = () => { delete model.nodes[selected]; model.outputs = model.outputs.filter((o) => o !== selected); selected = Object.keys(model.nodes)[0] || null; commit(); };
+    $("isout").onchange = (e) => { model.outputs = e.target.checked ? [...new Set([...model.outputs, selected])] : model.outputs.filter((o) => o !== selected); commit(); };
+  } else if (tab === "outputs") {
+    P.innerHTML = `<h2>Outputs</h2><p class="why">Which nodes are answers: the ones somebody will be asked about. The build fails a node that feeds none of them. <b>Appendix A</b></p>
+      ${Object.keys(model.nodes).map((k) => `<label class="row" style="margin-bottom:4px"><input type="checkbox" style="width:auto" data-k="${k}" ${model.outputs.includes(k) ? "checked" : ""}> ${esc(model.nodes[k].label || k)}</label>`).join("")}`;
+    for (const i of P.querySelectorAll("input")) i.onchange = () => { model.outputs = [...P.querySelectorAll("input:checked")].map((x) => x.dataset.k); commit(); };
+  } else if (tab === "correlations") {
+    const inputs = Object.keys(model.nodes).filter((k) => model.nodes[k].kind === "input" && model.nodes[k].shape);
+    P.innerHTML = `<h2>Inputs that move together</h2><p class="why">Two shaped inputs that rise and fall together widen every answer. Each pair needs a reason, or the next model copies the number without knowing why. <b>ch14</b></p>
+      ${model.correlations.map((c, i) => `<div class="verdict warn"><code>${c.a}</code> and <code>${c.b}</code>, ${c.rho}: ${esc(c.because)} <button class="link" data-i="${i}">remove</button></div>`).join("")}
+      ${inputs.length < 2 ? `<p class="note">Needs two inputs with a shape. Give inputs a shape in the wizard first.</p>` : `
+      <div class="grid2"><div class="field"><label for="ca">This</label><select id="ca">${inputs.map((k) => `<option>${k}</option>`)}</select></div>
+      <div class="field"><label for="cb">and this</label><select id="cb">${inputs.map((k, i) => `<option ${i === 1 ? "selected" : ""}>${k}</option>`)}</select></div>
+      <div class="field"><label for="cr">How strongly, −1 to 1</label><input id="cr" type="number" step="0.1" min="-1" max="1"></div></div>
+      <div class="field"><label for="cw">Why they move together</label><textarea id="cw"></textarea></div>
+      <button type="button" class="primary" id="cadd">Add the pair</button> <span class="note" id="cmsg"></span>`}`;
+    for (const b of P.querySelectorAll("button.link")) b.onclick = () => { model.correlations.splice(+b.dataset.i, 1); commit(); };
+    if ($("cadd")) $("cadd").onclick = () => {
+      const r = parseFloat($("cr").value), why = $("cw").value.trim();
+      if ($("ca").value === $("cb").value) return ($("cmsg").textContent = "Pick two different inputs.");
+      if (Number.isNaN(r) || r < -1 || r > 1) return ($("cmsg").textContent = "Strength must be between −1 and 1.");
+      if (!why) return ($("cmsg").textContent = "Say why. A pair with no reason does not build.");
+      model.correlations.push({ a: $("ca").value, b: $("cb").value, rho: r, because: why }); commit();
+    };
+  } else if (tab === "scenarios") {
+    const inputs = Object.keys(model.nodes).filter((k) => model.nodes[k].kind === "input");
+    P.innerHTML = `<h2>Scenarios</h2><p class="why">A scenario is a small file beside the model that changes inputs, says why, and pins the seed so anyone can repeat the run. It never edits a formula: that would be changing the arithmetic while claiming to change an assumption. <b>ch21</b></p>
+      ${model.scenarios.map((s, i) => { const r = evaluateModel(s.overrides).values; return `<div class="verdict ok"><strong>${esc(s.name)}</strong>: ${Object.entries(s.overrides).map(([k, v]) => `<code>${k}</code> = ${v}`).join(", ")}<br><span class="note">${esc(s.because)}</span><br>${model.outputs.map((o) => `${esc(model.nodes[o]?.label || o)}: <span class="mono">${fmt(r[o])}</span>`).join(" · ")} <button class="link" data-i="${i}">remove</button></div>`; }).join("")}
+      <div class="grid2"><div class="field"><label for="sn">Name</label><input id="sn" placeholder="e.g. twice_the_growth"></div>
+      <div class="field"><label for="si">Input to change</label><select id="si">${inputs.map((k) => `<option>${k}</option>`)}</select></div>
+      <div class="field"><label for="sv">New value</label><input id="sv" type="number" step="any"></div></div>
+      <div class="field"><label for="sw">Why this case matters</label><textarea id="sw"></textarea></div>
+      <button type="button" class="primary" id="sadd">Add the scenario</button> <span class="note" id="smsg"></span>`;
+    for (const b of P.querySelectorAll("button.link")) b.onclick = () => { model.scenarios.splice(+b.dataset.i, 1); commit(); };
+    $("sadd").onclick = () => {
+      const name = $("sn").value.trim(), v = parseFloat($("sv").value), why = $("sw").value.trim();
+      if (!/^[a-z][a-z0-9_]*$/.test(name)) return ($("smsg").textContent = "Name it in lower case with underscores.");
+      if (Number.isNaN(v)) return ($("smsg").textContent = "Give the new value.");
+      if (!why) return ($("smsg").textContent = "Say why this case matters.");
+      model.scenarios.push({ name, overrides: { [$("si").value]: v }, because: why }); commit();
+    };
+  } else if (tab === "checks") {
+    P.innerHTML = `<h2>What the build checks</h2><p class="why">The same rules <code>verify-models.py</code> applies to every model in the book. A file that fails one does not build.</p>
+      <ul class="checks">${chk.map((c) => `<li class="${c.level}">${esc(c.text)}${c.why ? `<small>${esc(c.why)}</small>` : ""}</li>`).join("")}</ul>`;
+  } else if (tab === "sources") {
+    const ins = nodes().filter(([, n]) => n.kind === "input");
+    const group = (kind, head) => { const g = ins.filter(([, n]) => n.provenance?.kind === kind); return g.length ? `<h2 style="margin-top:12px">${head}</h2>${g.map(([k, n]) => `<p style="margin:0 0 8px"><strong>${esc(n.label || k)}</strong> <span class="note">${DECIDED_WORDS[n.decided] || ""}</span><br><span class="note">${esc(n.provenance.source)}</span></p>`).join("")}` : ""; };
+    P.innerHTML = `<h2>Where the numbers come from</h2><p class="why">Every input, by how much its author was claiming. The assumptions outside your control are the ones you could go and measure; the decisions are the ones you can change. <b>ch03</b></p>
+      ${group("assumption", "○ Assumptions")}${group("vendor_claim", "◐ Vendors' claims")}${group("fact", "● Facts")}`;
+  } else if (tab === "measure") {
+    seen.add("measure");
+    const out = model.outputs.find((o) => model.nodes[o]) ; const unshaped = outsideInputs().filter(([, n]) => !n.shape);
+    if (!out) { P.innerHTML = `<h2>Which input to measure first</h2><p class="note">Mark an output first: this ranks inputs by how far they move it.</p>`; return; }
+    const { base, rows } = swings(out);
+    const lo = Math.min(base, ...rows.map((r) => r.lo)), hi = Math.max(base, ...rows.map((r) => r.hi)); const X = (v) => ((v - lo) / (hi - lo || 1)) * 100;
+    P.innerHTML = `<h2>Which input to measure first</h2><p class="why">Each bar moves one input from the low end of its range to the high end, with every other input at its value, and shows how far <b>${esc(model.nodes[out].label || out)}</b> moves. The widest bar is the input your answer rests on most: measuring it narrows the answer most. <b>ch19</b></p>
+      ${rows.length ? `<div class="bars">${rows.map((r) => `<div class="bar"><span>${esc(r.n.label || r.k)}</span><div class="track"><div class="fill" style="left:${X(r.lo)}%;width:${Math.max(1, X(r.hi) - X(r.lo))}%"></div><div class="mid" style="left:${X(base)}%"></div></div><div class="ends"><span>${fmt(r.lo)}</span><span>${fmt(r.hi)}</span></div></div>`).join("")}</div>` : `<p class="note">No input has a range yet, so nothing can be ranked.</p>`}
+      ${unshaped.length ? `<p class="note" style="margin-top:12px">Not ranked, because each is one number: ${unshaped.map(([k, n]) => `<code>${esc(n.label || k)}</code>`).join(", ")}. Give them a shape to see where they fall.</p>` : ""}
+      <p class="note">One input at a time: it cannot show two that matter only together (ch19, ch20).</p>`;
+  } else if (tab === "yaml") {
+    P.innerHTML = `<h2>The model file</h2><p class="why">What the wizard wrote. It is the same format the book's models use, so the viewer, the checks and the problems all read it.</p>
+      <div class="row" style="margin-bottom:8px"><button type="button" id="copy">Copy the file</button><span class="note" id="copied"></span></div><pre class="yaml" id="yaml">${esc(yamlFile())}</pre>`;
+    $("copy").onclick = () => navigator.clipboard.writeText(yamlFile()).then(() => ($("copied").textContent = "Copied"), () => {
+      const r = document.createRange(); r.selectNodeContents($("yaml")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); $("copied").textContent = "Selected: copy with your keyboard";
+    });
+  }
+}
+
+function render() {
+  const result = evaluateModel(); const chk = checks(result);
+  const klass = classify();
+  $("klass").textContent = `${klass} model`; $("klass").className = `badge ${klass}`;
+  $("title").textContent = model.title || "Model Builder";
+  const fails = chk.filter((c) => c.level === "fail").length;
+  $("c-chk").textContent = fails ? `${fails} failing` : "all pass";
+  $("c-chk").style.color = fails ? "var(--bad)" : "var(--good)";
+  drawOutline(result); drawTree(result); drawCoach(chk); drawGraph(result); drawAnswers(result); drawPanel(result, chk);
+  $("qline").textContent = model.question || "";
+}
+function commit() { save(); render(); }
+
+for (const b of document.querySelectorAll("[data-tab]")) b.addEventListener("click", () => { tab = b.dataset.tab; render(); });
+$("theme").onclick = () => {
+  const r = document.documentElement; const dark = r.dataset.theme ? r.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  r.dataset.theme = dark ? "light" : "dark";
+};
+
+/* ---------------------------------------------------------------------------------------------
+   The wizard. It asks the book's questions in the book's order, offers no default values, and
+   will not move on from a question the build would refuse.
+--------------------------------------------------------------------------------------------- */
+let W = null;
+const KIND_CHOICES = [
+  ["input", "A number the model is given", "The busy hour, a price, a horizon: somebody states it rather than works it out.", "ch02"],
+  ["derived", "Worked out from other nodes", "A formula over nodes you already have. The toolkit checks its unit.", "ch02"],
+  ["measured", "A constant measured on a real system", "A compression ratio, bytes per line: it belongs to one implementation and comes with an error. Makes the model conditional.", "ch09"],
+  ["ceiling", "A limit the arithmetic cannot cross", "Utilisation, a disk, a network: past it the system changes behaviour. Needs a margin and a reason. Makes the model conditional.", "ch06 · ch11"],
+];
+const QUANTITY = [
+  ["flow", "A rate", "Something per unit of time: requests a second, dollars a year.", ["request/second", "byte/second", "USD/year", "query/second"]],
+  ["stock", "A level", "How much there is now: terabytes held, hosts in the fleet.", ["TB", "GB", "host", "series"]],
+  ["duration", "A length of time", "A horizon, a retention period, the time one request takes.", ["year", "day", "month", "second"]],
+  ["ratio", "A ratio, a pure number or a price", "A growth factor, a replication factor, a cost per terabyte.", ["dimensionless", "USD/TB/month", "USD/host", "request/host"]],
+];
+function stepsFor(kind) {
+  if (kind === "answer") return ["The answer", "The decision"];
+  if (W && W.resolve) {
+    if (kind === "input") return ["Given or worked out", "Name", "Unit", "Who decides", "Source", "How sure", "Review"];
+    if (kind === "derived") return ["Given or worked out", "Name", ...(W.needUnit ? ["Unit"] : []), "Formula", "Review"];
+    if (kind === "measured") return ["Given or worked out", "Name", "Result", "Review"];
+    return ["Given or worked out"];
+  }
+  if (kind === "input") return ["What is it", "Name", "Unit", "Who decides", "Source", "How sure", "Review"];
+  if (kind === "derived") return ["What is it", "Name", "Unit", "Formula", "Review"];
+  if (kind === "measured") return ["What is it", "Name", "Result", "Review"];
+  if (kind === "ceiling") return ["What is it", "Name", "The limit", "Review"];
+  return ["What is it"];
+}
+function openWizard(editing, preset, at) {
+  if (editing) W = { step: 1, editing, key: editing, n: structuredClone(model.nodes[editing]) };
+  else if (preset) {
+    // The path decides what kind of node this is; the person decides everything that is a number.
+    const n = { kind: preset.kind };
+    for (const f of ["qkind", "decided", "unit"]) if (preset[f]) n[f] = preset[f];
+    W = { step: 1, key: "", n, hint: preset };
+  } else W = { step: 0, key: "", n: { kind: null } };
+  if (at) W.step = Math.max(0, stepsFor(W.n.kind).indexOf(at));
+  $("wizard").hidden = false; drawWizard();
+}
+const ANSWERS = {
+  hosts: { name: "hosts", label: "hosts to buy", unit: "host" },
+  storage: { name: "storage_to_buy", label: "storage to buy", unit: "TB" },
+  cost: { name: "total_cost", label: "cost over the life of the purchase", unit: "USD" },
+  other: {},
+};
+function openAnswer() { W = { step: 0, key: model.goal && ANSWERS[model.goal]?.name || "", n: { kind: "answer", unit: ANSWERS[model.goal]?.unit || "", label: ANSWERS[model.goal]?.label || "" }, hint: ANSWERS[model.goal] }; $("wizard").hidden = false; drawWizard(); }
+function openResolve(k) { selected = k; const n = model.nodes[k]; W = { step: 0, resolve: true, needUnit: !n.unit, from: k, key: k, n: { kind: null, unit: n.unit || "", label: n.label || "" } }; $("wizard").hidden = false; drawWizard(); }
+/* Patterns from the book's own models. Each is offered only where its result has the unit the
+   node needs; the names are the book's, and any that do not exist yet become nodes to define. */
+function patterns(key, unit) {
+  const T = parseUnit(unit).dims; const P = [];
+  const hostsLike = !!T.host && Object.keys(T).length === 1;
+  if (hostsLike) {
+    P.push({ f: `ceil(busy_cores / (cores_per_host * (1 - queueing_margin)))`, why: "What the load needs, divided by what one host gives below a margin, rounded up", ref: "ch09 · ch11" });
+    P.push({ f: `max(hosts_for_requests, hosts_for_storage)`, why: "The resource that binds: the larger of two needs", ref: "ch10" });
+  }
+  if (Object.keys(T).length && !hostsLike) P.push({ f: `${key.replace(/_at_horizon$|_to_buy$/, "")}_t0 * annual_growth ** horizon_periods`, why: "Today's figure, grown to the horizon", ref: "ch02 · ch04" });
+  if (!Object.keys(T).length && horizonNode()) P.push({ f: `${horizonNode()[0]} / one_year`, why: "A length of time as a number of years, so it can be an exponent", ref: "ch02" });
+  if (T.core && Object.keys(T).length === 1) P.push({ f: `peak_request_rate * service_demand`, why: "Work arriving, times what each piece of work costs a processor", ref: "ch05 · ch09" });
+  if (T.data && Object.keys(T).length === 1) P.push({ f: `stored_data * replication_factor / record_compression`, why: "What is held, times the copies kept, divided by how far it compresses", ref: "ch09" });
+  if (T.money && Object.keys(T).length === 1) P.push({ f: `hosts * host_price + hosts * running_cost_per_host_year * horizon`, why: "What you pay up front, plus what it costs to run, over the horizon", ref: "ch15 · ch18" });
+  if (T.time === -1 || (T.time === undefined && Object.keys(T).length)) P.push({ f: `max(${key}_a, ${key}_b)`, why: "The larger of two", ref: "ch10" });
+  return P.filter((p) => { try { return needs(p.f, unit).ok; } catch { return false; } }).slice(0, 5);
+}
+/* Combinations of existing nodes that produce the unit a worked-out node declares. */
+function suggestions(unit) {
+  const target = parseUnit(unit).dims; const env = liveEnv(); const names = Object.keys(env); const out = [];
+  const comb = (a, b, s) => { const r = { ...a }; for (const [k, p] of Object.entries(b)) r[k] = (r[k] || 0) + s * p; for (const k of Object.keys(r)) if (!r[k]) delete r[k]; return r; };
+  const label = (k) => kindOf(env[k].dims).replace(/^an? /, "");
+  const growth = names.find((k) => model.nodes[k]?.kind === "input" && !Object.keys(env[k].dims).length && model.nodes[k].decided === "outside");
+  const periods = names.find((k) => model.nodes[k]?.kind === "derived" && !Object.keys(env[k].dims).length && /\//.test(model.nodes[k].formula || ""));
+  if (growth && periods) for (const k of names) if (model.nodes[k].kind === "input" && Object.keys(target).length && sameDims(env[k].dims, target))
+    out.push({ f: `${k} * ${growth} ** ${periods}`, why: `the day-one ${label(k)}, grown to the horizon` });
+  for (let i = 0; i < names.length; i++) for (let j = 0; j < names.length; j++) {
+    if (i === j) continue; const a = names[i], b = names[j];
+    if (!Object.keys(env[a].dims).length && !Object.keys(env[b].dims).length) continue;
+    if (i < j && sameDims(comb(env[a].dims, env[b].dims, 1), target)) out.push({ f: `${a} * ${b}`, why: `${label(a)} × ${label(b)}` });
+    if (sameDims(comb(env[a].dims, env[b].dims, -1), target)) out.push({ f: `${a} / ${b}`, why: `${label(a)} ÷ ${label(b)}` });
+  }
+  return out.slice(0, 6);
+}
+function closeWizard() { $("wizard").hidden = true; W = null; $("add").focus(); }
+$("add").onclick = () => openWizard(null);
+$("wcancel").onclick = closeWizard;
+$("wizard").addEventListener("keydown", (e) => { if (e.key === "Escape") closeWizard(); });
+$("wback").onclick = () => { if (W.step > 0) { W.step--; drawWizard(); } };
+$("wnext").onclick = () => {
+  const problem = validate();
+  if (problem) { $("wmsg").textContent = problem; $("wmsg").className = "verdict bad"; return; }
+  const steps = stepsFor(W.n.kind);
+  if (W.step === steps.length - 1) {
+    if (W.n.kind === "answer") {
+      model.nodes[W.key] = { kind: "pending", unit: W.n.unit, label: W.n.label };
+      model.outputs = [...new Set([...model.outputs, W.key])]; model.question = W.question;
+      selected = W.key; closeWizard(); commit(); return;
+    }
+    const old = W.editing || W.from;
+    if (old && old !== W.key) rename(old, W.key);
+    if (W.n.kind === "derived") {
+      const x = needs(W.n.formula, W.n.unit);
+      for (const u of x.fresh) model.nodes[u] = { kind: "pending", unit: x.units[u] ? unitFor(x.units[u]) : "", label: u.replace(/_/g, " ") };
+    }
+    model.nodes[W.key] = W.n; selected = W.key; tab = "node"; closeWizard(); commit(); return;
+  }
+  W.step++; drawWizard();
+};
+function validate() {
+  const n = W.n, step = stepsFor(n.kind)[W.step];
+  if (step === "What is it" && !n.kind) return "Pick what kind of node this is.";
+  if (step === "Given or worked out" && !n.kind) return "Say whether it is given, measured or worked out.";
+  if (step === "The answer") { if (!/^[a-z][a-z0-9_]*$/.test(W.key)) return "Name it in lower case with underscores: formulas use this name."; if (!(n.label || "").trim()) return "Give it a label."; if (!n.unit || !parseUnit(n.unit).ok) return "Give it a unit the toolkit knows."; }
+  if (step === "The decision" && !(W.question || "").trim()) return "Say what decision the answer feeds. It is how you will know the answer is precise enough.";
+  if (step === "Name") {
+    if (!/^[a-z][a-z0-9_]*$/.test(W.key)) return "The name is what formulas use: lower case, letters, digits and underscores.";
+    if (model.nodes[W.key] && W.key !== (W.editing || W.from)) return `There is already a node called ${W.key}.`;
+    if (!(n.label || "").trim()) return "Give it a label: the words a table will show.";
+  }
+  if (step === "Unit") { if (!n.unit) return "Every node declares a unit."; if (!parseUnit(n.unit).ok) return `The toolkit does not know the unit ${n.unit}.`; }
+  if (step === "Who decides" && !n.decided) return "Say who decides it. The build refuses an input that does not.";
+  if (step === "Source") {
+    if (!n.provenance?.kind) return "Say what kind of claim this is.";
+    if (!(n.provenance.source || "").trim()) return "Write the source. An input with no source does not build.";
+    if (n.provenance.kind === "fact" && (n.provenance.source || "").trim().length < 8) return "A fact has to cite something: a measurement, an invoice, a specification.";
+  }
+  if (step === "How sure") {
+    if (n.certainty === "shape") {
+      const [s, p] = Object.entries(n.shape || { x: {} })[0] || [];
+      if (!s || Object.values(p).some((v) => v === "" || v === null || Number.isNaN(+v))) return "Fill in every number the shape needs.";
+      if (s === "triangular" && !(+p.minimum <= +p.likely && +p.likely <= +p.maximum)) return "Least, likely and most must be in that order.";
+      if (s === "lognormal" && !(0 < +p.p10 && +p.p10 < +p.p90)) return "The low figure must be above zero and below the high one.";
+      if (!new RegExp(s, "i").test(n.provenance.source)) return `Name the shape in the source: say why it is ${s}. The build checks for it.`;
+    } else if (n.certainty === "one" && (n.value === "" || n.value === null || n.value === undefined || Number.isNaN(+n.value))) return "Give the number, or choose not yet measured.";
+    else if (!n.certainty) return "Choose how sure you are.";
+  }
+  if (step === "Formula") { if (!(n.formula || "").trim()) return "Write the formula, or pick a pattern."; try { const x = needs(n.formula, n.unit); if (!x.ok) return x.why[0].toUpperCase() + x.why.slice(1) + "."; } catch (e) { return e.message; } }
+  if (step === "Result" && !n.result) return "Pick the stamped result this constant comes from.";
+  if (step === "The limit") {
+    for (const f of ["of", "limit", "headroom"]) if (!(n[f] || "").trim()) return `Fill in ${f === "of" ? "what is checked" : f}.`;
+    if (!(n.because || "").trim()) return "Say why this is a limit. A ceiling with no reason does not build.";
+    try { const e = liveEnv(); const a = evaluate(n.of, e), b = evaluate(n.limit, e), h = evaluate(n.headroom, e);
+      if (!sameDims(a.dims, b.dims)) return `What is checked is ${showDims(a.dims)}; the limit is ${showDims(b.dims)}.`;
+      if (Object.keys(h.dims).length) return "Headroom is a fraction of the limit: a pure number."; } catch (e) { return e.message; }
+  }
+  return "";
+}
+function liveEnv(skipLoose) {
+  const r = evaluateModel(); const env = {}; const me = W && (W.editing || W.from);
+  for (const [k, n] of Object.entries(model.nodes)) if (k !== me) {
+    if (skipLoose && n.kind === "pending" && !n.unit) continue;
+    const u = parseUnit(n.unit); env[k] = { v: r.values[k] == null ? null : r.values[k] * u.f, dims: u.dims };
+  }
+  return env;
+}
+function drawWizard() {
+  const n = W.n; const steps = stepsFor(n.kind); const step = steps[W.step];
+  $("wsteps").innerHTML = steps.map((s, i) => `<span class="${i === W.step ? "on" : i < W.step ? "done" : ""}">${i + 1} ${s}</span>`).join("");
+  $("wback").disabled = W.step === 0 || (W.editing && W.step === 1) || (W.hint && !W.resolve && W.n.kind !== "answer" && W.step === 1);
+  $("wnext").textContent = W.step === steps.length - 1 ? (W.editing ? "Save changes" : "Add to the model") : "Next";
+  const B = $("wbody"); let h = "";
+  const why = (text, ref) => `<p class="why">${text} <b>${ref}</b></p>`;
+  if (step === "The answer") {
+    h = `<p class="q" id="wq">What is the answer called, and what is it measured in?</p>${why("This is the output: the number somebody will ask you for. Its unit is what every formula below it has to produce.", "ch01")}
+      <div class="field"><label for="wk">Name in formulas</label><input id="wk" class="mono" value="${esc(W.key)}" placeholder="hosts" autocomplete="off"></div>
+      <div class="field"><label for="wl">Label</label><input id="wl" value="${esc(n.label)}" placeholder="hosts to buy"></div>
+      <div class="field"><label for="wu">Unit</label><input id="wu" class="mono" value="${esc(n.unit)}" placeholder="host" autocomplete="off"><div class="chips">${["host", "TB", "USD", "request/second", "rack"].map((c) => `<button type="button" data-u="${c}">${c}</button>`).join("")}</div><span class="hint" id="wuk"></span></div>`;
+  } else if (step === "The decision") {
+    h = `<p class="q" id="wq">What decision does the answer feed?</p>${why("Who will act on the number, and what they will do with it. It tells you how precise the answer needs to be, and it is what you check the finished model against.", "ch01 · ch21")}
+      <div class="field"><label for="wqq">The decision</label><textarea id="wqq" placeholder="Finance approves the hardware order for the next refresh cycle.">${esc(W.question)}</textarea></div>`;
+  } else if (step === "Given or worked out") {
+    h = `<p class="q" id="wq">Is ${esc(n.label || W.key)} given, or worked out from other things?</p>${why(`${n.unit ? `Whatever it is, it is in <code>${esc(n.unit)}</code>: the formula that uses it fixed that. ` : ""}Given means somebody states it, estimates it or decides it. Worked out means you can write it as a formula over other quantities, which then need defining in turn.`, "ch02")}
+      <div class="choices">${[["input", "Given", "A number the model is told: the busy hour, a price, a margin you choose. You stop here."], ["derived", "Worked out from other things", "You can write it as arithmetic over other quantities. Each new name becomes the next thing to define."], ["measured", "Measured on a real system", "A constant from a stamped measurement, with its error: processor time per request, a compression ratio. Makes the model conditional · ch09"]].map(([k, t, d]) => `<button type="button" class="choice" data-v="${k}" aria-pressed="${n.kind === k}"><i class="swatch ${k}"></i><strong>${t}</strong><span class="d">${d}</span></button>`).join("")}</div>`;
+  } else if (step === "What is it") {
+    h = `<p class="q" id="wq">What is this quantity?</p>${why("The kind decides what the node needs. Two of them make the model conditional: its answer is right only while what they describe holds.", "ch01")}
+      <div class="choices">${KIND_CHOICES.map(([k, t, d, ref]) => `<button type="button" class="choice" data-v="${k}" aria-pressed="${n.kind === k}"><i class="swatch ${k}"></i><strong>${t}</strong><span class="d">${d} · ${ref}</span></button>`).join("")}</div>`;
+  } else if (step === "Name") {
+    h = `<p class="q" id="wq">What is it called?</p>${why("Two names: one formulas use, one people read. A label reads better in a table than stored_data_t0 does.", "ch02")}
+      <div class="field"><label for="wk">Name in formulas</label><input id="wk" class="mono" value="${esc(W.key)}" placeholder="${esc(W.hint?.name || "peak_request_rate_t0")}" autocomplete="off"><span class="hint">Lower case, underscores. This is what other nodes' formulas refer to.</span></div>
+      <div class="field"><label for="wl">Label</label><input id="wl" value="${esc(n.label)}" placeholder="${esc(W.hint?.label || "peak request rate, day one")}"></div>
+      <div class="field"><label for="wn">Note (optional)</label><textarea id="wn" placeholder="Whatever a reader of this file would otherwise have to ask you.">${esc(n.note)}</textarea></div>`;
+  } else if (step === "Unit") {
+    const u = parseUnit(n.unit);
+    h = `<p class="q" id="wq">What kind of quantity is it?</p>${why("The unit says whether this is a rate, a level, a length of time or a ratio. The commonest sizing error multiplies a rate by a plain number and calls the result an amount.", "ch02")}
+      <div class="choices">${QUANTITY.map(([k, t, d]) => `<button type="button" class="choice" data-q="${k}" aria-pressed="${n.qkind === k}"><i class="swatch derived"></i><strong>${t}</strong><span class="d">${d}</span></button>`).join("")}</div>
+      ${n.qkind ? `<div class="field" style="margin-top:12px"><label for="wu">Unit</label><input id="wu" class="mono" value="${esc(n.unit)}" placeholder="request/second" autocomplete="off">
+      <div class="chips">${QUANTITY.find((q) => q[0] === n.qkind)[3].map((c) => `<button type="button" data-u="${c}">${c}</button>`).join("")}</div>
+      <span class="hint" id="wuk">${n.unit ? (u.ok ? `The toolkit reads this as ${kindOf(u.dims)}.` + (kindOf(u.dims).replace(/^an? /, "").startsWith(QUANTITY.find((q) => q[0] === n.qkind)[1].toLowerCase().replace(/^an? /, "").split(",")[0]) || n.qkind === "ratio" ? "" : " That is not what you picked above: check which one you mean.") : "Not a unit the toolkit knows.") : ""}</span></div>` : ""}`;
+  } else if (step === "Who decides") {
+    h = `<p class="q" id="wq">Who decides this number?</p>${why("Inputs look alike in the file, but some describe what is outside your control and some record what you decided. Only the decisions are yours to change.", "ch02")}
+      <div class="choices">${[["outside", "Outside your control", "Your users, the market, a vendor's price: you can measure it, not set it."], ["you", "You decide it", "The horizon, a headroom margin, the fleet you buy. Shown with a bar down its edge."], ["definition", "True by definition", "A year is a year whoever asks. Nobody chooses it."]].map(([k, t, d]) => `<button type="button" class="choice" data-d="${k}" aria-pressed="${n.decided === k}"><i class="swatch input"></i><strong>${t}</strong><span class="d">${d}</span></button>`).join("")}</div>`;
+  } else if (step === "Source") {
+    const p = n.provenance || {};
+    h = `<p class="q" id="wq">Where did the number come from?</p>${why("How much the person writing it down is claiming. A vendor's claim is never quietly promoted to a fact.", "ch03")}
+      <div class="choices">${[["fact", "● A fact", "Traceable to a measurement, an invoice or a published specification. Must cite it."], ["vendor_claim", "◐ A vendor's claim", "Stated by someone selling it: plausible and unverified."], ["assumption", "○ An assumption", "A decision or an estimate that a reviewer may disagree with."]].map(([k, t, d]) => `<button type="button" class="choice" data-p="${k}" aria-pressed="${p.kind === k}"><span></span><strong>${t}</strong><span class="d">${d}</span></button>`).join("")}</div>
+      <div class="field" style="margin-top:12px"><label for="ws">Source</label><textarea id="ws" placeholder="${p.kind === "fact" ? "Cite the measurement, invoice or specification." : p.kind === "vendor_claim" ? "Who quoted it, and where." : "Who estimated it, and why this value."}">${esc(p.source)}</textarea></div>`;
+  } else if (step === "How sure") {
+    const shape = n.shape ? Object.keys(n.shape)[0] : null; const p = shape ? n.shape[shape] : {};
+    const F = { triangular: ["minimum", "likely", "maximum"], lognormal: ["p10", "p90"], uniform: ["minimum", "maximum"], normal: ["mean", "sd"] };
+    const WORDS = { triangular: "The least, the likeliest and the most. For an expert's guess.", lognormal: "Low and high figures you would be surprised to see crossed, one time in ten each. For anything that compounds or cannot go negative.", uniform: "Anywhere between two bounds, equally. When you know the limits and nothing else.", normal: "A central value and a symmetric error. For a measured quantity with a standard error." };
+    h = `<p class="q" id="wq">How sure are you of it?</p>${why(n.decided === "outside" ? "This one is outside your control. One number hides how far off it could be; a shape says so, and every answer downstream shows the spread." : "One number is fine for a decision. A shape is for something you do not control.", "ch04 · Appendix C")}
+      <div class="choices">${[["one", "One number", "Enough for a decision, or for now."], ["shape", "A range with a shape", "How low and how high it might settle."], ["none", "Not yet measured", "No value. Everything downstream shows not yet measured until somebody measures it. Never a placeholder."]].map(([k, t, d]) => `<button type="button" class="choice" data-c="${k}" aria-pressed="${n.certainty === k}"><span></span><strong>${t}</strong><span class="d">${d}</span></button>`).join("")}</div>
+      ${n.certainty === "one" ? `<div class="field" style="margin-top:12px"><label for="wv">Value, in ${esc(n.unit)}</label><input id="wv" type="number" step="any" value="${esc(n.value)}"></div>` : ""}
+      ${n.certainty === "shape" ? `<div class="field" style="margin-top:12px"><label>Shape</label><div class="chips">${Object.keys(F).map((s) => `<button type="button" data-s="${s}" aria-pressed="${shape === s}" style="${shape === s ? "border-color:var(--accent)" : ""}">${s}</button>`).join("")}</div>${shape ? `<span class="hint">${WORDS[shape]}</span>` : ""}</div>
+        ${shape ? `<div class="grid2">${F[shape].map((f) => `<div class="field"><label for="wp-${f}">${f}</label><input id="wp-${f}" data-f="${f}" type="number" step="any" value="${esc(p[f])}"></div>`).join("")}</div>
+        <p class="note">The source must name the shape and say why it is this one. The build checks for the word.</p>` : ""}` : ""}
+      ${n.certainty && n.certainty !== "none" ? `<div class="grid2"><div class="field"><label for="wr0">Slider from (optional)</label><input id="wr0" type="number" step="any" value="${esc(n.range?.[0])}"></div><div class="field"><label for="wr1">to</label><input id="wr1" type="number" step="any" value="${esc(n.range?.[1])}"></div></div>` : ""}`;
+  } else if (step === "Formula") {
+    let live = ""; try { if (n.formula) { const x = needs(n.formula, n.unit); const r = x.r; const ok = x.ok; if (x.fresh.length && ok) throw { soft: true };
+      live = `<div class="verdict ${ok ? "ok" : "bad"}">Gives <strong>${showDims(r.dims)}</strong>${!ok ? "" : r.v !== null ? `, worth ${fmt(r.v / parseUnit(n.unit).f)} ${esc(n.unit)}` : ", with no value yet"}. ${ok ? "Matches the declared unit." : `The node declares ${esc(n.unit)}: the formula is wrong, not imprecise.`}</div>`; } }
+      catch (e) { live = e.soft ? `<div class="verdict ok">The units work so far. The rest is checked as you define the new nodes.</div>` : `<div class="verdict bad">${esc(e.message)}</div>`; }
+    h = `<p class="q" id="wq">How is it worked out?</p>${why("Write it over the names of other nodes. The toolkit works the units out as you type and refuses a formula whose unit is not the node's.", "ch02 · Appendix D")}
+      <div class="field"><label for="wf">Formula, giving ${esc(n.unit)}</label><input id="wf" class="mono" value="${esc(n.formula)}" placeholder="stored_data_t0 * annual_growth ** horizon_periods" autocomplete="off"></div>
+      <div id="wlive">${live}</div>
+      ${(() => { let x; try { x = n.formula ? needs(n.formula, n.unit) : null; } catch { x = null; } return x && x.fresh.length ? `<div class="verdict warn">This adds ${x.fresh.length === 1 ? "a node" : `${x.fresh.length} nodes`} to define next: ${x.fresh.map((u) => `<code>${u}</code>${x.units[u] ? ` in ${esc(unitFor(x.units[u]))}` : ""}`).join(", ")}.</div>` : ""; })()}
+      ${(() => { const s = patterns(W.key, n.unit); return s.length ? `<p class="note" style="margin:0 0 4px">Patterns from the book that give ${esc(n.unit)}:</p><div class="sugs">${s.map((x) => `<button type="button" class="sug" data-sug="${esc(x.f)}"><code>${esc(x.f)}</code><span>${esc(x.why)} · ${x.ref}</span></button>`).join("")}</div>` : ""; })()}
+      ${(() => { const s = suggestions(n.unit); return s.length ? `<p class="note" style="margin:0 0 4px">Combinations of your nodes that give ${esc(n.unit)}:</p><div class="sugs">${s.map((x) => `<button type="button" class="sug" data-sug="${esc(x.f)}"><code>${esc(x.f)}</code><span>${esc(x.why)}</span></button>`).join("")}</div>` : `<p class="note">No pair of your nodes gives ${esc(n.unit)} yet. Build from the names below.</p>`; })()}
+      <div class="chips">${Object.keys(model.nodes).filter((k) => k !== W.editing).map((k) => `<button type="button" data-ins="${k}">${k}</button>`).join("")}</div>`;
+  } else if (step === "Result") {
+    h = `<p class="q" id="wq">Which measurement is it?</p>${why("A measured constant is not typed in. It points at a stamped result, which carries the number, its standard error and the implementation it was measured on. If the result does not exist yet, the node has no value.", "ch09 · ch03")}
+      <div class="choices">${Object.entries(RESULTS).map(([k, r]) => `<button type="button" class="choice" data-r="${k}" aria-pressed="${n.result === k}"><i class="swatch ${r.value === null ? "unknown" : "measured"}"></i><strong>${r.label}</strong><span class="d"><code>${k}</code> · ${r.value === null ? "not yet measured" : `${fmt(r.value)} ± ${fmt(r.se)} ${r.unit}`} · ${r.stack}</span></button>`).join("")}</div>`;
+  } else if (step === "The limit") {
+    h = `<p class="q" id="wq">What is the limit, and how far below it do you stay?</p>${why("A ceiling is where the arithmetic stops working: past it the system behaves differently. A limit with no margin is a comparison, not a sizing rule, so headroom and a reason are both required.", "ch06 · ch11")}
+      <div class="field"><label for="wo">What is checked</label><input id="wo" class="mono" value="${esc(n.of)}" placeholder="utilisation"><span class="hint">A node name or an expression.</span></div>
+      <div class="grid2"><div class="field"><label for="wli">Limit</label><input id="wli" class="mono" value="${esc(n.limit)}" placeholder="1"></div>
+      <div class="field"><label for="wh">Headroom</label><input id="wh" class="mono" value="${esc(n.headroom)}" placeholder="queueing_margin"><span class="hint">A fraction of the limit kept free. Name a node so sizing and checking use the same margin.</span></div></div>
+      <div class="field"><label for="wb">Why this is a limit</label><textarea id="wb" placeholder="What happens past it, and who pays.">${esc(n.because)}</textarea></div>`;
+  } else if (step === "Review") {
+    const saveModel = model.nodes; const tmp = { ...model.nodes }; if (W.editing) delete tmp[W.editing]; tmp[W.key] = n;
+    model.nodes = tmp; const y = yamlFile(); const kl = classify(); model.nodes = saveModel;
+    const part = y.split("\n"); const s = part.findIndex((l) => l === `  ${W.key}:`); let e = s + 1; while (e < part.length && part[e].startsWith("    ")) e++;
+    h = `<p class="q" id="wq">This is what goes in the file.</p>${why(`With it, the model is <strong>${kl}</strong>. Add it, then check the graph and the build checks.`, "Appendix A")}
+      <pre class="yaml">${esc(part.slice(s, e).join("\n"))}</pre>`;
+  }
+  B.innerHTML = h + `<div id="wmsg" aria-live="polite"></div>`;
+  // Wiring. Every control writes into W.n and redraws, so the next question follows the answer.
+  const on = (sel, fn) => { for (const el of B.querySelectorAll(sel)) el.addEventListener("click", () => { fn(el); drawWizard(); }); };
+  on("[data-v]", (el) => { if (W.resolve) { W.n = { kind: el.dataset.v, unit: W.n.unit, label: W.n.label }; if (W.n.unit && el.dataset.v === "input") { const k = kindOf(parseUnit(W.n.unit).dims); W.n.qkind = k.includes("flow") ? "flow" : k.includes("duration") ? "duration" : k.includes("stock") || k.includes("amount") ? "stock" : "ratio"; } } else if (!W.editing) W.n = { kind: el.dataset.v }; });
+  on("[data-q]", (el) => { n.qkind = el.dataset.q; });
+  on("[data-u]", (el) => { n.unit = el.dataset.u; });
+  on("[data-d]", (el) => { n.decided = el.dataset.d; });
+  on("[data-p]", (el) => { n.provenance = { ...(n.provenance || {}), kind: el.dataset.p }; });
+  on("[data-c]", (el) => { n.certainty = el.dataset.c; if (n.certainty !== "shape") delete n.shape; if (n.certainty === "none") { n.value = null; delete n.range; } });
+  on("[data-s]", (el) => { n.shape = { [el.dataset.s]: {} }; });
+  on("[data-r]", (el) => { n.result = el.dataset.r; n.unit = RESULTS[el.dataset.r].unit; });
+  on("[data-ins]", (el) => { n.formula = ((n.formula || "") + " " + el.dataset.ins).trim(); });
+  on("[data-sug]", (el) => { n.formula = el.dataset.sug; });
+  const bind = (id, fn, redraw) => { const el = $(id); if (el) el.addEventListener("input", () => { fn(el.value); if (redraw) redraw(); }); };
+  bind("wqq", (v) => (W.question = v));
+  bind("wk", (v) => (W.key = v.trim())); bind("wl", (v) => (n.label = v)); bind("wn", (v) => (n.note = v || undefined));
+  if (step === "The answer" && n.unit) { const u = parseUnit(n.unit); $("wuk").textContent = u.ok ? `The toolkit reads this as ${kindOf(u.dims)}.` : "Not a unit the toolkit knows."; }
+  bind("wu", (v) => (n.unit = v.trim()), () => { const u = parseUnit(n.unit); $("wuk").textContent = n.unit ? (u.ok ? `The toolkit reads this as ${kindOf(u.dims)}.` : "Not a unit the toolkit knows.") : ""; });
+  bind("ws", (v) => (n.provenance = { ...(n.provenance || {}), source: v }));
+  bind("wv", (v) => (n.value = v === "" ? "" : +v));
+  const rng = () => { const a = $("wr0")?.value, b = $("wr1")?.value; n.range = a !== "" && b !== "" && a !== undefined ? [+a, +b] : undefined; };
+  bind("wr0", rng); bind("wr1", rng);
+  for (const el of B.querySelectorAll("[data-f]")) el.addEventListener("input", () => { const s = Object.keys(n.shape)[0]; n.shape[s][el.dataset.f] = el.value === "" ? "" : +el.value; if (el.dataset.f === "likely" || el.dataset.f === "mean") n.value = +el.value; if (s === "lognormal" || s === "uniform") { const q = n.shape[s]; const a = +(q.p10 ?? q.minimum), b = +(q.p90 ?? q.maximum); if (a > 0 && b > 0) n.value = +(s === "lognormal" ? Math.sqrt(a * b) : (a + b) / 2).toPrecision(4); } });
+  bind("wf", (v) => (n.formula = v), () => { let live = ""; try { const x = needs(n.formula, n.unit); const r = x.r; const ok = x.ok; if (x.fresh.length && ok) throw { soft: true };
+    live = `<div class="verdict ${ok ? "ok" : "bad"}">Gives <strong>${showDims(r.dims)}</strong>${!ok ? "" : r.v !== null ? `, worth ${fmt(r.v / parseUnit(n.unit).f)} ${esc(n.unit)}` : ", with no value yet"}. ${ok ? "Matches the declared unit." : `The node declares ${esc(n.unit)}: the formula is wrong, not imprecise.`}</div>`; }
+    catch (e) { live = !n.formula ? "" : e.soft ? `<div class="verdict ok">The units work so far. The rest is checked as you define the new nodes. Press Next to see which.</div>` : `<div class="verdict bad">${esc(e.message)}</div>`; } $("wlive").innerHTML = live; });
+  bind("wo", (v) => (n.of = v)); bind("wli", (v) => (n.limit = v)); bind("wh", (v) => (n.headroom = v)); bind("wb", (v) => (n.because = v));
+  const first = B.querySelector("input, textarea, .choice"); if (first && document.activeElement?.closest?.("#wizard") == null) first.focus();
+}
+// Input nodes loaded from the example need the wizard's own bookkeeping to edit cleanly.
+for (const n of Object.values(model.nodes)) if (n.kind === "input" && !n.certainty) n.certainty = n.value === null || n.value === undefined ? "none" : n.shape ? "shape" : "one";
+for (const n of Object.values(model.nodes)) if (!n.qkind && n.unit) { const k = kindOf(parseUnit(n.unit).dims); n.qkind = k.includes("flow") ? "flow" : k.includes("duration") ? "duration" : k.includes("stock") || k.includes("amount") ? "stock" : "ratio"; }
+function showStart() { $("start").hidden = false; $("start").querySelector(".goal").focus(); }
+for (const g of document.querySelectorAll("[data-goal]")) g.onclick = () => {
+  model = { model: "my_model", title: "My model", goal: g.dataset.goal, question: "", nodes: {}, outputs: [], correlations: [], scenarios: [], skipped: [] };
+  selected = null; tab = "node"; seen.clear(); $("start").hidden = true; commit(); openAnswer();
+};
+$("explore").onclick = () => {
+  model = { ...structuredClone(EXAMPLE), goal: "other", question: "Capacity planning for the web service's next refresh cycle.", skipped: [] };
+  for (const n of Object.values(model.nodes)) if (n.kind === "input") n.certainty = n.value == null ? "none" : n.shape ? "shape" : "one";
+  selected = model.outputs[0]; seen.clear(); $("start").hidden = true; commit();
+};
+$("restart").onclick = showStart;
+render();
+if (firstVisit) showStart();
+</script>
+</body></html>

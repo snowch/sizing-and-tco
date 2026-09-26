@@ -3,8 +3,8 @@
 A tool that lets a reader build a model of their own system, guided by the book's questions, and
 write the same YAML the book's models use. This is the design; nothing here is built yet.
 
-The clickable mock-up is at <https://claude.ai/artifact/CHisDmFTuXUytyYf6f1BjH> (private to the
-owner). It is the reference for the flow described below. Its engine is a JavaScript copy of the
+The clickable mock-up is [`model-builder-mockup.html`](model-builder-mockup.html) beside this
+file: open it in a browser. It is the reference for the flow described below. Its engine is a JavaScript copy of the
 toolkit's rules and its measured results are invented; both are listed under
 [What the mock-up fakes](#what-the-mock-up-fakes).
 
