@@ -282,9 +282,18 @@ def test_the_takeaways_box_is_drawn_like_a_definition_box_with_its_own_icon():
     assert ".takeaways {" in css or ".takeaways," in css, (
         "the takeaways box is not drawn like a definition"
     )
-    icon = re.search(r"\.takeaways::before \{ content: '([a-z_]+)'; \}", css)
-    assert icon, "the takeaways box has no icon"
-    assert icon[1] != "menu_book", "the takeaways box borrows the definition box's icon"
+    icons = dict(
+        re.findall(
+            r"\.(definition|takeaways|example|admonition\.note) \{ --icon: (url\([^)]*\)); \}", css
+        )
+    )
+    assert "takeaways" in icons, "the takeaways box has no icon"
+    assert icons["takeaways"] != icons.get("definition"), (
+        "the takeaways box borrows the definition box's icon"
+    )
+    assert "font-family: 'Material" not in css and "fonts.googleapis" not in css, (
+        "a box icon is a web font again: offline, the box shows the icon's name in its place"
+    )
 
 
 def test_a_term_link_carries_its_meaning_and_the_glossary_rows_carry_ids():
@@ -752,6 +761,65 @@ def counting() -> str:
     runner = site().PROBLEMS
     start = runner.index("function score(tests) {")
     return runner[start : runner.index("\n}\n", start) + 3]
+
+
+def splicing() -> str:
+    runner = site().PROBLEMS
+    start = runner.index("function splice(whole, pieces) {")
+    return runner[start : runner.index("\n}\n", start) + 3]
+
+
+@pytest.mark.node
+def test_one_function_under_two_problems_is_spliced_once(tmp_path):
+    """ch12 shows `hosts_for_risk` under 12.1 and again under 12.2, one range of the file twice.
+
+    Splicing both boxes cut the file at offsets the first splice had already moved: an answer
+    shorter than the stub left a stray tail and a SyntaxError in a line the reader never wrote,
+    and a longer one was overwritten by the untouched copy, so the tests ran the stub.
+    """
+    if shutil.which("node") is None:
+        pytest.skip("no node")
+    whole = "head\ndef f():\n    raise NotImplementedError\n\ndef g():\n    pass\ntail\n"
+    start = whole.index("def f")
+    end = whole.index("\n\ndef g")  # a range stops before its newline, as a piece's does
+    later = whole.index("def g")
+    cases = {
+        name: [
+            {"start": start, "end": end, "text": answer},
+            {"start": start, "end": end, "text": answer},
+            {
+                "start": later,
+                "end": later + len("def g():\n    pass"),
+                "text": "def g():\n    return 1\n",
+            },
+        ]
+        for name, answer in {
+            "shorter": "def f():\n    return 1\n",
+            "longer": "def f():\n    x = 1\n    y = 2\n    return x + y\n",
+        }.items()
+    }
+    harness = """
+    const [whole, cases] = JSON.parse(process.argv[2]);
+    const out = {};
+    for (const [name, pieces] of Object.entries(cases)) out[name] = splice(whole, pieces);
+    console.log(JSON.stringify(out));
+    """
+    script = tmp_path / "splice.mjs"
+    script.write_text(splicing() + textwrap.dedent(harness))
+    run = subprocess.run(
+        ["node", str(script), json.dumps([whole, cases])],
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert run.returncode == 0, run.stderr[-2000:]
+    got = json.loads(run.stdout)
+    for name, pieces in cases.items():
+        # A box's text ends in the newline the browser adds, and the splice drops it.
+        expected = whole[:start] + pieces[0]["text"].rstrip("\n") + whole[end:]
+        expected = expected.replace("def g():\n    pass", pieces[2]["text"].rstrip("\n"))
+        assert got[name] == expected, f"{name}: the reader's answer did not reach the file intact"
+        compile(got[name].replace("head\n", "").replace("tail\n", ""), name, "exec")
 
 
 @pytest.mark.node

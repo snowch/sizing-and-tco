@@ -12,4 +12,4 @@
 | **every one of them** | | **0** | **100%** |
 | | | *now: 105* | *the rows above total 99%, which is not how this works* |
 
-*Source — [`value-of-information`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/value-of-information.json) · sizing.evaluate*
+*Source — [`value-of-information`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/value-of-information.json) · `sizing.evaluate`*

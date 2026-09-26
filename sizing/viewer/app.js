@@ -187,6 +187,9 @@ function drawGraph(values, blocked) {
       // A bar down the left edge, which composes with the fill (kind) and the dash (measured
       // or not) rather than competing with either for the same channel.
       (isDecision(node) ? `<rect x="${x}" y="${y + 3}" width="3" height="${BOX.h - 6}" rx="1.5" fill="${edge}"/>` : "") +
+      // A vendor's claim carries the tables' half-filled mark, so it is told apart here too
+      // (invariant 4): by fill it is an input like any other.
+      (node.provenance && node.provenance.kind === "vendor_claim" ? vendorMark(x + BOX.w - 9, y + 9) : "") +
       `<text x="${x + 6}" y="${y + 13}" fill="var(--ink)">${fit(node.label)}</text>` +
       `<text x="${x + BOX.w - 6}" y="${y + 26}" text-anchor="end" fill="var(--muted)" font-size="9">${value}</text>` +
       `</g>`
@@ -210,6 +213,33 @@ function drawGraph(values, blocked) {
     g.addEventListener("mouseleave", () => { hot(g.dataset.node, false); lit(); });
   }
   lit();
+  scrollNote();
+}
+
+// On a narrow screen the graph scrolls sideways, and a box the chapter tells the reader to watch
+// can sit out of sight with nothing saying it is there. Count them and say so.
+function scrollNote() {
+  const note = $("scroll-note");
+  if (!note) return;
+  const box = $("graph-scroll").getBoundingClientRect();
+  const hidden = box.width
+    ? [...$("graph").querySelectorAll(".node")].filter((g) => g.getBoundingClientRect().right > box.right + 1).length
+    : 0;
+  note.hidden = hidden === 0;
+  // Expand is the chapter's button; an expanded model, or this page on its own, has none to tap.
+  const root = document.documentElement;
+  const expand = root.classList.contains("embedded") && !root.classList.contains("expanded")
+    ? ", or tap Expand above to give the model the whole screen" : "";
+  note.textContent = hidden === 1
+    ? `Scroll sideways to see the box out of sight to the right${expand}.`
+    : `Scroll sideways to see the ${hidden} boxes out of sight to the right${expand}.`;
+}
+
+// ◐, drawn: a ring with its left half filled, the mark the book's tables give a vendor's claim.
+function vendorMark(cx, cy) {
+  const r = 3.6;
+  return `<g class="vendor-mark"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--ink)" stroke-width="1.1"/>` +
+    `<path d="M${cx},${cy - r} A${r},${r} 0 0 0 ${cx},${cy + r} Z" fill="var(--ink)"/></g>`;
 }
 
 // The picked node keeps its own lines lit, so it stays findable once the pointer moves on.
@@ -238,7 +268,10 @@ function focusNote() {
     if (fed(selected)) offers.push(link("downstream", "Show only what it feeds"));
     note.innerHTML = `<strong>${PAYLOAD.nodes[selected].label}</strong> is picked. ` + offers.join(" · ");
   } else {
-    note.innerHTML = "Click a node to read about it under Details. Rest the pointer on one to light its own lines.";
+    // A phone has no pointer to rest, so the note says what a tap does instead.
+    note.innerHTML = matchMedia("(hover: none)").matches
+      ? "Tap a node to read about it under Details and to highlight its connections."
+      : "Click a node to read about it under Details. Rest the pointer on a node to light its own lines.";
   }
   const on = (id, act) => { if ($(id)) $(id).addEventListener("click", () => { act(); render(); }); };
   on("flip", () => { direction = direction === "down" ? "up" : "down"; });
@@ -307,7 +340,10 @@ function outputsTable(values, blocked) {
       : fmt(values[name], node.unit);
     return `${open}<td>${node.label}</td><td class="n">${cell}</td></tr>`;
   });
-  const why = touched
+  // Only when a row is grey: with every row moving, a note about greyed rows describes nothing
+  // on screen and sends the reader looking for it.
+  const greyed = touched && PAYLOAD.outputs.some((name) => name !== touched && !reach.has(name));
+  const why = greyed
     ? `<p class="note">Greyed rows cannot be moved by <strong>${PAYLOAD.nodes[touched].label}</strong>,`
       + ` however far you drag it.</p>`
     : "";
@@ -417,11 +453,18 @@ function detail(values, blocked) {
   const worked = PAYLOAD.outputs.filter((o) => o !== name && PAYLOAD.nodes[o].depends_on.length);
   const moves = worked.filter((o) => reach.has(o));
   const stuck = worked.filter((o) => !reach.has(o));
+  // A node that is itself an output is told about the others, rather than "moves none of
+  // them" as though it reached nothing at all.
+  const isOutput = PAYLOAD.outputs.includes(name);
   if (moves.length || stuck.length) {
-    parts.push(`<h2>Reaches</h2>`
-      + `<p class="note">Moves <strong>${moves.length} of ${moves.length + stuck.length}</strong>`
-      + ` outputs: ${moves.length ? neighbours(moves) : "none of them"}.</p>`
-      + (stuck.length
+    const says = isOutput
+      ? (moves.length
+          ? `This output changes <strong>${moves.length}</strong> of the other outputs: ${neighbours(moves)}.`
+          : "This output doesn't change any of the other outputs.")
+      : `Moves <strong>${moves.length} of ${moves.length + stuck.length}</strong>`
+        + ` outputs: ${moves.length ? neighbours(moves) : "none of them"}.`;
+    parts.push(`<h2>Reaches</h2><p class="note">${says}</p>`
+      + (stuck.length && !isOutput
           ? `<p class="note dead">Cannot move: ${neighbours(stuck)}.</p>`
           : ""));
   }
@@ -636,10 +679,18 @@ if (CAN_RESAMPLE) $("resample").addEventListener("click", resample);
       const height = Math.ceil(document.body.getBoundingClientRect().height);
       window.parent.postMessage({ sizing: expanded ? null : height }, "*");
     };
+    // Escape closes an expanded model, but once the reader has clicked a node or a slider the
+    // keyboard is in this page, where the chapter cannot hear it. Pass the key up.
+    addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && document.documentElement.classList.contains("expanded")) {
+        window.parent.postMessage({ close: true }, "*");
+      }
+    });
     addEventListener("message", (e) => {
       if (e.source === window.parent && e.data && typeof e.data.expanded === "boolean") {
         document.documentElement.classList.toggle("expanded", e.data.expanded);
         report();
+        scrollNote();
       }
     });
     new ResizeObserver(report).observe(document.body);
@@ -651,3 +702,5 @@ if (CAN_RESAMPLE) $("resample").addEventListener("click", resample);
 
 buildControls();
 render();
+$("graph-scroll").addEventListener("scroll", scrollNote, { passive: true });
+addEventListener("resize", scrollNote);

@@ -328,7 +328,11 @@ def _image(node: dict) -> str:
     ):
         if candidate.exists():
             if candidate.suffix == ".svg":
-                return f"<div>{candidate.read_text()}</div>"
+                # Inlined, a figure lost the alt text its author wrote: a screen reader met
+                # the drawing's loose labels instead. The wrapper carries it as the image's name.
+                alt = str(node.get("alt", "")).strip()
+                named = f' role="img" aria-label="{html.escape(alt)}"' if alt else ""
+                return f"<div{named}>{candidate.read_text()}</div>"
             return f'<img src="{html.escape(str(candidate))}" alt="{html.escape(str(node.get("alt", "")))}">'
     raise MissingImageError(
         f"the renderer cannot find the image {url!r}. It is not in the repository and not in "

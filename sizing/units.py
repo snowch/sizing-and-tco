@@ -35,6 +35,7 @@ the middle of it would be answering a question nobody asked. Units are a gate, n
 from __future__ import annotations
 
 import pint
+from pint.util import to_units_container
 
 #: Quantities that are counted rather than measured, each its own dimension.
 #:
@@ -118,6 +119,24 @@ def compatible(left: str, right: str) -> bool:
 def dimensionality(unit: str) -> str:
     """A unit's dimensions, as a string, for an error message or a stamped result."""
     return str(parse(unit).dimensionality)
+
+
+def described(unit: str) -> str:
+    """What kind of quantity a unit makes, in the words ch02 teaches, for an error message.
+
+    Not its dimensions: bytes carry none in this registry, so a message built from dimensions
+    told a reader who had just learnt that a terabyte is a stock that ``TB`` was dimensionless.
+    """
+    parsed = parse(unit)
+    time = parsed.dimensionality.get("[time]", 0)
+    if time < 0:
+        return "a rate"
+    if time > 0:
+        return "a duration"
+    powers = list(to_units_container(parsed).values())
+    if not powers:
+        return "a pure number"
+    return "an amount" if all(power > 0 for power in powers) else "a ratio"
 
 
 def has_time(unit: str) -> bool:

@@ -8,4 +8,4 @@
 | 100,000 | $708,422 | $4,231 | 3.41× |
 | | *settles* | *falls* | **2.64× per decade** from 1,000 samples up, against √10 = 3.16 |
 
-*Source — [`convergence-tco`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/convergence-tco.json) · sizing.mc*
+*Source — [`convergence-tco`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/convergence-tco.json) · `sizing.mc`*

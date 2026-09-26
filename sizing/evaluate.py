@@ -44,7 +44,7 @@ from sizing.dsl import (  # noqa: F401
     Scenario,
     load_scenario,
 )
-from sizing.units import UNITS, compatible, dimensionality
+from sizing.units import UNITS, compatible, described
 from sizing.units import parse as parse_unit
 
 #: The percentiles a tornado swings an input between. Wide enough to matter, narrow enough that
@@ -243,9 +243,9 @@ def check_units(model: Model) -> tuple[list[str], dict[str, float]]:
             produced_unit = str(_units_of(produced))
             if not compatible(produced_unit, wanted):
                 problems.append(
-                    f"{model.name}: node {name!r}{suffix} declares {wanted!r} "
-                    f"[{dimensionality(wanted)}] but `{text}` produces {produced_unit!r} "
-                    f"[{dimensionality(produced_unit)}]"
+                    f"{model.name}: node {name!r}{suffix} declares {wanted!r}, "
+                    f"{described(wanted)}, but `{text}` produces {produced_unit!r}, "
+                    f"{described(produced_unit)}"
                 )
                 continue
             factor = float(UNITS.Quantity(1.0, produced_unit).to(wanted).magnitude)

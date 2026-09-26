@@ -125,6 +125,9 @@ code { font: 12px/1.4 ui-monospace, "SF Mono", Menlo, monospace; background: var
    so the key showed "you decide" identical to "input". Inset, it sits inside the outline the way
    the graph's bar does. */
 .legend i.decision { box-shadow: inset 3px 0 0 var(--input-edge); }
+/* The tables' ◐ for a vendor's claim: a ring, its left half filled. */
+.legend i.vendor { width: 9px; height: 9px; border-radius: 50%; border: 1.2px solid var(--ink);
+                   background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
 
 /* -- resampling ------------------------------------------------------------------ */
 button.primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); margin: 8px 0 4px; display: block; }

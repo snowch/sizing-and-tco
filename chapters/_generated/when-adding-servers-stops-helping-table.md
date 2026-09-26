@@ -17,4 +17,4 @@
 | 400 | 50,830 | 489,604 | 10% | 127.1 |
 | | | | *swept peak* | *160 hosts, against 164.4 predicted from the two coefficients* |
 
-*Source — [`scaling-curve`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/scaling-curve.json) · sizing.evaluate*
+*Source — [`scaling-curve`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/scaling-curve.json) · `sizing.evaluate`*

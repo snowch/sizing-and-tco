@@ -345,6 +345,16 @@ class Scenario:
 # -- loading -------------------------------------------------------------------------------
 
 
+def _text(mapping: dict, key: str, default: str = "") -> str:
+    """A field as text, where an empty one is empty.
+
+    YAML reads `because:` with nothing after it as None, and `str(None)` is the four letters
+    "None". That passed every check for a non-empty reason, so a ceiling with no reason built.
+    """
+    value = mapping.get(key)
+    return default if value is None else str(value)
+
+
 def _require(mapping: dict, key: str, where: str) -> Any:
     if key not in mapping:
         raise ModelError(f"{where}: missing required field {key!r}")
@@ -379,11 +389,11 @@ def _node_from(name: str, spec: dict, where: str) -> Node:
             value=None if spec.get("value") is None else float(spec["value"]),
             distribution=spec.get("distribution"),
             provenance=Provenance(
-                kind=str(provenance.get("kind", "")),
-                source=str(provenance.get("source", "")),
+                kind=_text(provenance, "kind"),
+                source=_text(provenance, "source"),
             ),
             slider=tuple(float(v) for v in spec["range"]) if spec.get("range") else None,
-            decided=str(spec.get("decided", "")),
+            decided=_text(spec, "decided"),
         )
 
     if kind == "derived":
@@ -412,7 +422,7 @@ def _node_from(name: str, spec: dict, where: str) -> Node:
         limit_text=limit_text,
         headroom=expr.parse(headroom_text or "0", where=f"{at} headroom"),
         headroom_text=headroom_text,
-        because=str(spec.get("because", "")),
+        because=_text(spec, "because"),
     )
 
 
@@ -461,7 +471,7 @@ def load_model(path: str | Path) -> Model:
         nodes=nodes,
         outputs=outputs,
         correlations=tuple(raw.get("correlations", ())),
-        description=str(raw.get("description", "")).strip(),
+        description=_text(raw, "description").strip(),
         path=path,
     )
     _ = model.order  # raises on a cycle, here rather than three steps later
@@ -475,7 +485,7 @@ def load_scenario(path: str | Path) -> Scenario:
         name=str(_require(raw, "scenario", str(path))),
         title=str(raw.get("title", raw["scenario"])),
         overrides={str(k): float(v) for k, v in (raw.get("overrides") or {}).items()},
-        because=str(raw.get("because", "")).strip(),
+        because=_text(raw, "because").strip(),
         samples=int(raw.get("samples", 100_000)),
         seed=int(raw.get("seed", 20260916)),
         path=path,

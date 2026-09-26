@@ -197,18 +197,18 @@ def correlation_matrix(names: list[str], pairs: list[dict]) -> np.ndarray:
 
 
 def rank_to_score_correlation(rank_rho: np.ndarray) -> np.ndarray:
-    """Convert the correlation a modeller declares into the one the machinery needs.
+    """Work out the score correlation to ask for, so the ranks come out as declared.
 
-    A subtlety that is easy to skip and then be quietly wrong about. :func:`correlate` works by
-    correlating *normal scores* and then reordering, and the rank correlation that comes out is
-    not the number that went in — it is attenuated, by a known amount:
+    :func:`correlate` correlates normal scores and then reorders each input to follow them. The
+    rank correlation that comes out is lower than the score correlation that went in, by a fixed
+    formula, a result due to Karl Pearson (1907):
 
         rank correlation  =  (6 / pi) * arcsin(score correlation / 2)
 
-    Declare 0.8 and, uncorrected, you get 0.785. Small, consistent, and exactly the kind of error
-    that survives review forever because nobody expects the number they typed to be a different
-    number. So the relation is inverted here: a model file's ``rho`` means the rank correlation
-    the modeller wants, and this works out what to ask the scores for.
+    The gap is small and consistent: ask the scores for 0.8 and the ranks come out at about
+    0.786. That is why it survives review, since nobody expects the number they typed to come
+    back different. So this inverts the formula: a model file's ``rho`` means the rank
+    correlation the modeller wants.
     """
     return 2.0 * np.sin(np.pi * rank_rho / 6.0)
 
@@ -216,17 +216,15 @@ def rank_to_score_correlation(rank_rho: np.ndarray) -> np.ndarray:
 def correlate(
     columns: np.ndarray, target: np.ndarray, generator: np.random.Generator
 ) -> np.ndarray:
-    """Induce a rank correlation between columns without touching their distributions.
+    """Give each input the rank correlation a model declares, without changing its distribution.
 
-    Iman and Conover's method @imanconover1982. It is worth understanding rather than importing,
-    because what it does *not* do is the reason it is the right tool: it only ever **reorders**
-    each column. Every value that was going to be in a column is still in it, so each input keeps
-    exactly the distribution the modeller chose, and the only thing that changes is which draws
-    line up with which. Correlating the values instead — the obvious first attempt — quietly
-    changes the marginals, and then the model is answering a question nobody asked.
+    Iman and Conover's method (1982): each column is reordered to match the target correlations.
+    Every value that was in a column is still in it, so each input keeps exactly the distribution
+    the modeller chose. Only which draws line up with which changes.
 
-    Problem 14.2 checks both halves of that claim: the interval widens, and the marginals do not
-    move.
+    Correlating the values themselves instead would change each input's distribution, and then
+    the model would answer a question nobody asked. Problem 14.2 checks both: each input's
+    distribution does not move, and the rank correlation comes out as declared.
 
     ``columns`` is (samples, inputs); ``target`` is the square matrix from
     :func:`correlation_matrix`, holding rank correlations.
@@ -274,12 +272,11 @@ PERCENTILES = (5, 25, 50, 75, 95)
 
 
 def summarise(x: np.ndarray) -> dict:
-    """What a bag of values is reported as.
+    """Summarise a node's draws as percentiles, minimum, maximum, mean and standard deviation.
 
-    Interpolated percentiles, unlike the book's measurement chapters, and for a reason worth
-    naming: these are 100,000 draws from a continuous distribution, not eleven timings of a real
-    program. There is no "sample that actually happened" to prefer here — every one of them is
-    something the model made up.
+    The percentiles are interpolated between draws rather than read directly from them. This is
+    the right choice because the draws come from a continuous distribution the model made up: no
+    single draw is real, so there is no reason to prefer one.
     """
     x = np.asarray(x, dtype=float)
     values = np.percentile(x, PERCENTILES)
@@ -303,25 +300,28 @@ def interval(x: np.ndarray, lo: float = 5, hi: float = 95) -> tuple[float, float
 
 
 def half_width(x: np.ndarray, lo: float = 5, hi: float = 95) -> float:
-    """Half the width of an interval — the number that falls as one over the square root of n."""
+    """Half the distance between the 5th and 95th percentile of the draws, by default.
+
+    The width belongs to the distribution. More draws locate it; they do not shrink it.
+    """
     low, high = interval(x, lo, hi)
     return (high - low) / 2.0
 
 
-def samples_needed(observed_half_width: float, at_n: int, target_half_width: float) -> int:
-    """How many draws to get the interval down to a width you would report.
+def samples_needed(observed_spread: float, at_n: int, target_spread: float) -> int:
+    """How many draws until the answer moves between runs by no more than ``target_spread``.
 
-    Straight from the square-root law: the width falls as one over the square root of the sample
-    count, so to halve it you need four times as many. ch14 shows the law rather than asserting
-    it, and this is the arithmetic that follows once you believe it.
+    ``observed_spread`` is how much a figure varied between runs of ``at_n`` draws with different
+    seeds. The run-to-run spread falls as one over the square root of the number of draws, so
+    halving it takes four times as many draws. ch14 shows the law in a table.
 
-    This is a statement about *sampling noise only* — how much the answer wobbles because it was
-    made of a finite number of draws. It says nothing about whether the model is right, and the
-    distinction is the most important one in the chapter.
+    This is about sampling noise only: how much the answer wobbles because it was made from a
+    finite number of draws. It says nothing about whether the model is right, and the interval
+    does not narrow with more draws.
     """
-    if target_half_width <= 0:
-        raise ValueError("target half-width must be positive")
-    ratio = observed_half_width / target_half_width
+    if target_spread <= 0:
+        raise ValueError("the target spread must be positive")
+    ratio = observed_spread / target_spread
     return int(np.ceil(at_n * ratio * ratio))
 
 
@@ -333,15 +333,15 @@ LOG_BINNING_SPAN = 100.0
 
 
 def histogram(x: np.ndarray, bins: int = 64) -> dict:
-    """A node's distribution, small enough to ship to a browser for every node in the graph.
+    """Compress a node's draws into counts and bin edges, small enough for the browser.
 
-    Counts and edges rather than the draws themselves: forty numbers a node instead of a hundred
-    thousand, which is what makes it affordable to let the reader click any node in the DAG and
-    watch a narrow input distribution turn into a wide output one further down the chain.
+    By default that is 64 counts and 65 edges instead of 100,000 draws, for every node in the
+    graph. This is what lets you click any node and see a narrow input become a wide output
+    further down the chain.
 
-    The bins are equal in width, unless the draws span more than :data:`LOG_BINNING_SPAN`, in
-    which case they are equal in *ratio* and ``spacing`` says so. Whatever draws the histogram
-    needs to know which it has: the same counts mean different things on the two axes.
+    Bins are equal in width, or equal in ratio if the draws span more than
+    :data:`LOG_BINNING_SPAN`; the result's ``spacing`` says which. Anything that draws the
+    histogram must check ``spacing``: the same counts mean different things on the two axes.
     """
     x = np.asarray(x, dtype=float)
     low, high = float(x.min()), float(x.max())

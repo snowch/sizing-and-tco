@@ -12,4 +12,4 @@
 | network price per host | shared by both | $1,262 per host | $1,091 per host | inside the middle eighty per cent of what it could be |
 | annual growth factor | shared by both | 1.34 | — | no value of it moves the difference |
 
-*Source — [`comparison`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/comparison.json) · sizing.evaluate*
+*Source — [`comparison`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/comparison.json) · `sizing.evaluate`*

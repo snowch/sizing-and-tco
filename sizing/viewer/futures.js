@@ -240,7 +240,14 @@ function reset() {
 function start() {
   // The chapter floats its Expand button over this frame's top right corner, so the header keeps
   // a space clear for it. Same arrangement as the model viewer's.
-  if (window.self !== window.top) document.documentElement.classList.add("embedded");
+  if (window.self !== window.top) {
+    document.documentElement.classList.add("embedded");
+    // Once a button here has the keyboard, the chapter cannot hear Escape; ask it to close the
+    // expanded box. The chapter ignores this when the box is not expanded.
+    addEventListener("keydown", (e) => {
+      if (e.key === "Escape") window.parent.postMessage({ close: true }, "*");
+    });
+  }
   // Set here rather than in the page, so the pile's height lives in one file: the constants above
   // moved once and left the axis labels outside the frame, which is a silent way to lose them.
   $("pile").setAttribute("viewBox", `0 0 ${W} ${H}`);

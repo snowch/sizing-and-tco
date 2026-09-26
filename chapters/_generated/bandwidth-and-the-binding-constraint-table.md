@@ -16,4 +16,4 @@
 | Median of the disk chain alone | 49 hosts |
 | Median of the largest of the three | 68 hosts |
 
-*Source — [`binding-constraint`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/binding-constraint.json) · sizing.evaluate*
+*Source — [`binding-constraint`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/binding-constraint.json) · `sizing.evaluate`*

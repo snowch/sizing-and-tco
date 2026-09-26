@@ -7,4 +7,4 @@
 | CPU time per request | 0.0131 | 0.0145 | +11% | 19% of them |
 | **3 inputs** | | *30% of futures ended here* | | *something was beyond its p90 in 58% of them, against 25% of futures generally* |
 
-*Source — [`postmortem`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/postmortem.json) · sizing.evaluate*
+*Source — [`postmortem`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/postmortem.json) · `sizing.evaluate`*

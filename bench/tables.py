@@ -30,6 +30,7 @@ fact about the figure, not a filing detail (invariant 3). And what a measured co
 from __future__ import annotations
 
 import math
+import re
 from collections import Counter
 
 from bench.stamp import load_result
@@ -135,7 +136,17 @@ def _what_it_measured(name: str) -> list[str]:
     # the *implementation* it belongs to, so the stack is the one that survives.
     if produced.get("stack") and produced.get("codec"):
         keys.remove("codec")
-    return [str(produced[key]) for key in keys if produced.get(key)]
+    return [_code_names(str(produced[key])) for key in keys if produced.get(key)]
+
+
+#: A dotted module name, such as `sizing.mc`, set as code. As plain text MyST read it as a web
+#: address -- `.mc` is a country's domain -- and linked every Source line naming the sampler to
+#: a site in Monaco.
+MODULE_NAME = re.compile(r"(?<![`\w.])([a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)+)(?![`\w])")
+
+
+def _code_names(text: str) -> str:
+    return MODULE_NAME.sub(r"`\1`", text)
 
 
 def _where(name: str) -> str:

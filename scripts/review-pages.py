@@ -313,7 +313,9 @@ POINTER = r"""() => {
 
 ICON_FONT = r"""async () => {
   await document.fonts.ready;
-  const uses = document.querySelector(".admonition.note, .definition, .takeaways, .example");
+  // Only a box whose icon is a font's ligature depends on the font arriving.
+  const uses = [...document.querySelectorAll(".admonition.note, .definition, .takeaways, .example")]
+    .some((e) => getComputedStyle(e, "::before").fontFamily.includes("Material Icons"));
   if (!uses) return true;
   return [...document.fonts].some((f) => f.family.replace(/["']/g, "") === "Material Icons" && f.status === "loaded");
 }"""
@@ -939,8 +941,14 @@ class Reviewer:
                     page.add("blocks", "the book's own checks fail", number, verdict[:300], label)
             if not attempts_dir or not attempts_dir.is_dir():
                 continue
+            boxes = problem.query_selector_all("pre.editable")
             for attempt in sorted(attempts_dir.glob(f"{number}-*")):
-                editable.evaluate(TYPE_IN, attempt.read_text())
+                text = attempt.read_text()
+                # Into the box that holds the function the attempt defines: a problem can show
+                # another problem's function above its own (ch12's 12.2 shows 12.1's).
+                box = self.box_for(boxes, text) or editable
+                before = box.evaluate("(p) => p.textContent")
+                box.evaluate(TYPE_IN, text)
                 verdict, output = self.press_check(tab, problem)
                 name = attempt.stem
                 (record / f"{name}.txt").write_text(verdict + "\n\n" + output)
@@ -948,7 +956,19 @@ class Reviewer:
                 page.attempts.append(
                     f"`{attempt.name}`: {verdict.splitlines()[0] if verdict else 'no verdict'}"
                 )
+                box.evaluate(TYPE_IN, before)
             editable.evaluate(TYPE_IN, stub)
+
+    @staticmethod
+    def box_for(boxes, text: str):
+        """The editable box defining the same function as the attempt, if one does."""
+        wanted = re.search(r"^def (\w+)", text, re.M)
+        if not wanted:
+            return None
+        for box in boxes:
+            if re.search(rf"^def {wanted[1]}\b", box.evaluate("(p) => p.textContent"), re.M):
+                return box
+        return None
 
     def press_check(self, tab, problem) -> tuple[str, str]:
         button = problem.query_selector(".check-here")

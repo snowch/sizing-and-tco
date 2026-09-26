@@ -50,7 +50,7 @@ PAGE = """<!doctype html>
 </header>
 <main>
   <section id="controls">
-    <h2><button id="toggle-controls" class="toggle-panel" aria-expanded="false">▶</button> Inputs</h2>
+    <h2><button id="toggle-controls" class="toggle-panel" aria-expanded="false" aria-label="Toggle Inputs panel">▶</button> Inputs</h2>
     <div id="controls-content">
       <p class="note">Every slider comes from a range the model file declares. Moving one recomputes
       the whole graph immediately.</p>
@@ -89,15 +89,17 @@ PAGE = """<!doctype html>
       <span><i style="background:var(--measured);border:1px solid var(--measured-edge)"></i>measured</span>
       <span><i style="background:var(--ceiling);border:1px solid var(--ceiling-edge)"></i>ceiling</span>
       <span><i style="background:var(--bg);border:1px dashed var(--ceiling-edge)"></i>not yet measured</span>
+      <span><i class="vendor"></i>vendor claim, not measured</span>
     </div>
     <p class="note" id="focus-note"></p>
     <!-- Only the graph scrolls sideways on a narrow screen; the legend and notes above it stay. -->
     <div id="graph-scroll"><svg id="graph" xmlns="http://www.w3.org/2000/svg"></svg></div>
+    <p class="note" id="scroll-note" hidden></p>
     </div>
     <pre id="file-view"></pre>
   </section>
   <section id="detail">
-    <h2><button id="toggle-detail" class="toggle-panel" aria-expanded="false">▶</button> Details</h2>
+    <h2><button id="toggle-detail" class="toggle-panel" aria-expanded="false" aria-label="Toggle Details panel">▶</button> Details</h2>
     <div id="detail-content">
       <div id="detail-body"></div>
     </div>
