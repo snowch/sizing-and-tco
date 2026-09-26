@@ -256,10 +256,12 @@ Look at the "Outside your control" group. Each is a single number you cannot cha
 how high growth might turn out.
 
 :::{important}
-When you assign a value to what you cannot control (growth rate, request rate), it looks as settled
-as a decision you made. Nothing marks it as provisional, so your team stops questioning it.
-Measuring what you cannot control narrows it; arguing about it does not. Only decisions are yours
-to change.
+A value you cannot control, such as growth rate, looks as settled as a decision you made, such as
+the horizon. The file marks the difference: each input's `provenance` says whether it is a `fact`,
+a `vendor_claim`, or an `assumption`; its `source` explains why; and the ○ symbol in the Claim
+column marks each `assumption`. Treat the ○ rows outside your control as things to go and measure.
+Measuring narrows how far off the value could be; arguing about it does not. Only decisions are
+yours to change.
 :::
 
 ### What the file computes, and what kind of model it is
