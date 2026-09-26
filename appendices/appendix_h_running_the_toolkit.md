@@ -20,15 +20,39 @@ check a figure rather than trust it, or run a problem, or point the toolkit at y
 
 ## Installing it
 
-The problems run in their chapters and need nothing. At a desk they need Python and nothing
-else. Building the book needs Node as well, for the parser that resolves its cross-references:
+The problems run in their chapters and need nothing installed. At a desk you need Python 3.11 or
+later. Install the toolkit's dependencies into a virtual environment of the repository's own,
+because many operating systems' own Python refuses `pip install` with
+`error: externally-managed-environment`.
 
 ```bash
 git clone https://github.com/snowch/sizing-and-tco.git
 cd sizing-and-tco
+python3 -m venv .venv
+source .venv/bin/activate
 python3 -m pip install -r requirements.txt -r requirements-dev.txt
+python3 scripts/verify-setup.py
+```
+
+While the environment is active, `python3` is the environment's Python, so `python3 -m pytest` and
+every `make` target use the packages you just installed. Activate it again in each new terminal with
+`source .venv/bin/activate`. Use `python3 -m pip` and `python3 -m pytest`, not a `pytest` installed
+as a standalone tool. A standalone `pytest` runs in an environment of its own and cannot
+import this repository's code.
+
+`python3 scripts/verify-setup.py` says whether the three Python packages the toolkit needs import,
+and prints their versions. It also says whether `myst` and `node` are on your path, and whether this
+machine may take a timing for the book. It fails only when one of the three Python packages is
+missing.
+
+Building the book needs Node as well, for the parser that resolves the book's cross-references. Only
+a reader who wants to build the book needs it; the problems and the checks on the figures do not.
+
+```bash
 npm install -g "mystmd@$(node -p "require('./package.json').devDependencies.mystmd")"
 ```
+
+It installs the version of MyST that `package.json` pins. CI installs Node 22.
 
 ## What the commands do
 
@@ -37,7 +61,7 @@ make help       # list every target, each with a line saying what it does
 make measure    # re-take every constant that a codec decides
 make models     # evaluate and sample every model, and stamp what each one said
 make figures    # re-render every table and diagram from the stamped results
-make problems   # runs every chapter's problems. They fail until you solve them
+make problems   # run every chapter's problems; they fail until you solve them
 make check      # everything CI runs
 make book       # build the site and serve it at localhost:3000; run it again after an edit
 ```
@@ -48,9 +72,6 @@ Run `make check` before you believe anything. It is the same script CI runs, so 
 
 % number-ok: settings this book chose, not figures it measured. Stated once because they never vary, and tests/test_book.py fails if they do.
 Every model run in this book draws 100,000 samples from seed 20260916. Neither appears under the tables, because a constant repeated under ninety figures is not information. A test fails if any run uses a different sample count or seed, so the sentence above cannot stop being true without the build failing.
-
-`python3 -m pip`, not a standalone tool install. `python3 -m pytest` has to work, and a `pytest`
-installed by pipx or uv has its own environment and cannot import this repository's code.
 
 ## How to check a number in this book
 

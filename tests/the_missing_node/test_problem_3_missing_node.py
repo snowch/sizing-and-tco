@@ -1,8 +1,10 @@
 """Problem 20.3 — find the missing node.
 
 The oracle is an observation the model does not contain: what the service cost per month, as the
-average of twelve invoices. It is invented for this exercise, and it lives here rather than under
-``bench/results/`` precisely so that it can never be mistaken for a figure the book publishes.
+average of twelve invoices. It is invented for this exercise, and it lives here, in the file that
+grades against it. ``bench/run_missing_node.py`` reads it from this file for ch20's table, beside
+what the model says, and stamps it with a condition saying it is invented, so the page and this
+test cannot disagree and nobody can mistake it for an observation of anything.
 """
 
 from __future__ import annotations
@@ -23,7 +25,8 @@ OUTPUT = "monthly_cost"
 
 #: What the service cost per month, averaged over twelve invoices. Invented for this exercise.
 #: The model as shipped cannot reach it, and widening its inputs is not allowed to be the way you
-#: get there.
+#: get there. ``bench/run_missing_node.py`` reads this line as source for ch20's table, so it
+#: stays a plain number, and changing it means re-running that runner.
 OBSERVED_MONTHLY = 38_200.0
 
 #: How far the percentiles of an untouched derived node may wander between the two runs. The

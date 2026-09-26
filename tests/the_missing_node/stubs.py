@@ -1,8 +1,8 @@
 """Chapter 20's problems. Edit this file; the tests beside it say whether you are right.
 
 Three problems about a model that is wrong in shape. The first two ask the question that comes
-before any repair: how would you know? The third is the repair, and the only exercise in the book
-whose oracle is outside the model.
+before any repair: how would you know? The third is the repair, graded against a figure the model
+file does not contain: an invented monthly invoice average, kept in that problem's test.
 """
 
 from __future__ import annotations
@@ -53,8 +53,10 @@ def widen_until_it_fits(samples: np.ndarray, observation: float) -> float:
     somebody would do to the file: the same repair, one step downstream. The factor is at least
     one, because an observation already inside needs no widening.
 
-    Then look at what that does to the interval. The model now agrees with the observation and can
-    no longer distinguish between designs, which is the only thing it was for. A model that cannot
-    be wrong has stopped being able to be useful, and this number is what that costs.
+    Then look at what that does to the interval. The model now agrees with the observation, and the
+    interval becomes that many times wider - every draw moves away from the median by that factor.
+    The median does not move, so the answer looks the same. The interval now contains figures the
+    model used to rule out, so fewer observations could show it wrong; a model that cannot be wrong
+    has stopped being able to be useful, and this number is what that costs.
     """
     raise NotImplementedError("problem 20.2")

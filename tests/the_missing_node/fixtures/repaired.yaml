@@ -8,8 +8,9 @@
 # exactly one cost line. Every number in it is invented for the exercise; the file lives under
 # tests/ rather than models/ so that it can never be mistaken for a figure the book publishes.
 #
-# Your repair goes in this file, the model's own way: a node with a unit, a formula or a band,
-# and a provenance source, plus the line that prices what it names.
+# Your repair: a node with a unit, a formula or a band, and a provenance source.
+# Make the source say what you would measure to confirm the size, not just where
+# the figure comes from. Add the line that prices what the node names.
 model: incomplete_service
 title: A hosted service, monthly (exercise fixture — incomplete)
 currency: USD

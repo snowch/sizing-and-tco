@@ -11,28 +11,32 @@ short_title: "Appendix G · Glossary"
 
 | | |
 |---|---|
-| **Purpose** | Words this book uses in a technical sense, each with the chapter introducing it |
+| **Purpose** | Words this book uses in a technical sense, each with the chapter introducing it and how to say it plainly |
 | **Source** | `bench/tables.py`, and the chapters themselves |
 :::
 
-This book rations its vocabulary. The table holds the words this book uses in a technical sense,
-each with the chapter introducing it, what it means here and how to say it plainly, in
-alphabetical order. Six of the words are statistics words — distribution, sample, percentile,
-interval, correlation and convergence — and each first appears where a model has just raised a
-question that needs it. [ch13](#monte-carlo) introduces the first four;
-[ch14](#correlation-and-convergence) introduces the last two. A test in the repository fails any
-page that uses one of the six before its chapter. The other words are the book's working
-vocabulary: capacity-planning terms and the names of what the book's models contain.
+This book rations its vocabulary. The table lists the words this book uses in a technical sense,
+each row giving the chapter that introduces the word, what it means in this book, and how to say it
+plainly. The rows are in alphabetical order. Six of the words are statistics words: distribution,
+sample, percentile, interval, correlation and convergence. Each first appears in the chapter where a
+model has just raised a question that needs it. [ch13](#monte-carlo) introduces distribution,
+sample, percentile and interval, and [ch14](#correlation-and-convergence) introduces correlation and
+convergence. The other words are the book's working vocabulary: capacity-planning terms and the
+names of what the book's models contain. A test in the repository fails any page that uses one of
+the six before its chapter.
 
-Four kinds of error run through the book, and [ch20](#the-missing-node) explains them plainly. A
-measured constant wobbles — measure it again and it moves — and its standard error says by how
-much. An unmeasured input is unknown; its range is a choice, as for a price or growth rate. Those
-two are what an interval is made of, and the model carries both. The world can take a different
-path the model was not run for: a launch doubling the busy hour, or growth stopping. No interval
-covers that. The book runs a scenario instead, a fresh pass through the model with different
-inputs. The model can be wrong in shape: a cost line missing, a ceiling never declared, two
-quantities multiplied that should be added. That is *structural error*. It appears nowhere in an
-interval or scenario, because nothing in the model file knows the piece is missing.
+Four kinds of error run through the book, and [ch20](#the-missing-node) sets them side by side in
+plain words. A measured constant wobbles: measure it again and it moves, and its standard error says
+by how much. An input nobody measured is unknown: its range is a choice, as for a price or a growth
+rate. Those two are what an interval is made of, and the model carries both. The world can take a
+path the model was not run for: a launch that doubles the busy hour, growth that stops. No interval
+covers that. So the book runs a scenario, a second run of the model with some inputs overridden,
+instead of widening the inputs.
+
+The model can be the wrong shape: a cost line missing, a ceiling never declared, two quantities
+multiplied that should have been added. That is *structural error*. [ch13](#monte-carlo) names it.
+It shows up in no interval and no scenario, because nothing in the model file knows the piece is
+missing.
 
 The last column is not a simplification. It is the sentence to use out loud. Where a term has a
 plain-English equivalent, this book says the plain one first and names the term second, including

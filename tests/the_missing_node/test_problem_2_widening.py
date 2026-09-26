@@ -21,7 +21,13 @@ def widened(samples: np.ndarray, factor: float) -> np.ndarray:
 
 @pytest.mark.problem
 def test_an_observation_already_inside_needs_no_widening(samples):
-    assert widen_until_it_fits(samples, float(np.median(samples))) == pytest.approx(1.0, abs=0.05)
+    factor = widen_until_it_fits(samples, float(np.median(samples)))
+    assert factor == pytest.approx(1.0, abs=0.05), (
+        f"the observation is the model's own median, already inside the interval, and this "
+        f"returned a factor of {factor:.2f}. An observation inside needs no widening, and a factor "
+        "below one would narrow the interval rather than widen it. The docstring says what the "
+        "smallest factor is."
+    )
 
 
 @pytest.mark.problem
@@ -52,9 +58,10 @@ def test_the_repair_destroys_the_model(samples):
     before = mc.interval(samples)
     after = mc.interval(widened(samples, factor))
     assert (after[1] - after[0]) > 3 * (before[1] - before[0]), (
-        f"the interval goes from {before[1] - before[0]:.2f} wide to {after[1] - after[0]:.2f}. "
-        "The model now agrees with the observation and can no longer tell two designs apart, "
-        "which is the only thing it was for."
+        f"the interval goes from {before[1] - before[0]:.2f} wide to {after[1] - after[0]:.2f}, "
+        "and the observation is three times the largest value the model drew. A factor that fits "
+        "it stretches the interval much further than that. If the test that the factor works "
+        "also fails, fix that one first: it is the same mistake."
     )
 
 
