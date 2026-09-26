@@ -91,7 +91,8 @@ PAGE = """<!doctype html>
       <span><i style="background:var(--bg);border:1px dashed var(--ceiling-edge)"></i>not yet measured</span>
     </div>
     <p class="note" id="focus-note"></p>
-    <svg id="graph" xmlns="http://www.w3.org/2000/svg"></svg>
+    <!-- Only the graph scrolls sideways on a narrow screen; the legend and notes above it stay. -->
+    <div id="graph-scroll"><svg id="graph" xmlns="http://www.w3.org/2000/svg"></svg></div>
     </div>
     <pre id="file-view"></pre>
   </section>

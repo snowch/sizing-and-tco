@@ -44,8 +44,9 @@
 * { box-sizing: border-box; }
 /* Chrome on Android enlarges text in blocks it judges to be reading text ("font boosting"),
    so the Inputs heading, over a panel of prose, came out larger than the Details heading
-   beside it. The sizes here are chosen, so the browser keeps them. */
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+   beside it. The sizes here are chosen, so the browser keeps them. Firefox for Android does the
+   same ("font inflation") and turns it off only for the prefixed value none. */
+html { -webkit-text-size-adjust: 100%; -moz-text-size-adjust: none; text-size-adjust: 100%; }
 body { margin: 0; font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); }
 a { color: var(--accent); }
 header { padding: 14px 20px; border-bottom: 1px solid var(--line); }
@@ -88,6 +89,7 @@ button { font: inherit; font-size: 12px; padding: 4px 10px; border: 1px solid va
 button:hover { border-color: var(--muted); }
 #canvas { overflow: auto; }
 #graph { display: block; height: auto; }
+#graph-scroll { overflow-x: auto; }
 .node rect { cursor: pointer; }
 .node.hot rect { stroke: var(--accent); stroke-width: 2.2; }
 .node text { pointer-events: none; font-size: 9.5px; }
