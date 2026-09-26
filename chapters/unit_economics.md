@@ -43,7 +43,7 @@ how long it ran. So the trap moves. Was the rate the busy hour or the mean? The 
 ratio [ch04](#peak-mean-and-growth) put in the model. A cost per request quoted against the busy
 hour is several times the same cost quoted against the mean, and both describe the same fleet.
 
-### The denominator is the part nobody checks
+### The denominator hides two choices
 
 Take one model, one set of samples, one five-year total, and ask for a cost per stored terabyte per
 month. The denominator hides two separate choices, and each has more than one defensible answer. The
@@ -213,11 +213,10 @@ average spreads that step evenly over every request, so no average can express i
 - **A unit cost is a total divided by a quantity, and the trap is in the division.** Per month and
   per year differ by a factor of twelve. The busy hour and the mean differ by the peak-to-mean
   ratio. Both look equally authoritative on a slide.
-- **The denominator is the part nobody checks.** The denominator hides two choices: when in the
-  fleet's life you count what is held, and whether you divide before or after taking the median. At
-  least four defensible combinations exist for the same total, they are not close together, mostly
-  because growth separates day one from the horizon, and only dividing first puts the same future
-  above and below the line.
+- **The denominator hides two choices:** when in the fleet's life you count what is held, and
+  whether you divide before or after taking the median. At least four defensible combinations
+  exist for the same total, they are not close together, mostly because growth separates day one
+  from the horizon, and only dividing first puts the same future above and below the line.
 - **A straight line between day one and the horizon flatters a unit cost.** A compounding holding
   curves upward, so the straight line overstates what is held on average and the unit cost comes
   out low. The faster the growth, the more it flatters. The model keeps it and says so, because the
@@ -260,13 +259,13 @@ python3 -m pytest tests/unit_economics/test_problem_2_denominators.py -m problem
 **17.3 — Your denominator, and who chose it.** No test: the denominator is a choice, and there is
 no right one to check it against.
 
-Work out your own cost per unit, then interrogate the denominator. Per terabyte stored, per
-terabyte ingested, per request, per user, per team: all defensible, all different numbers. The
-choice usually predates anybody currently looking at it.
+Work out your own cost per unit, then interrogate the denominator. Per terabyte stored, per terabyte
+ingested, per request, per user, per team: all defensible, all different numbers. Find out when the
+denominator was chosen, and by whom.
 
 Then find out what the figure is used for. A unit cost quoted in a budget meeting and a unit cost
-used to decide whether to build or buy need different denominators. The same number is routinely
-used for both.
+used to decide whether to build or buy need different denominators. Check whether one figure is
+serving both.
 
 A good answer gives the figure, its denominator, its period, what its numerator includes, who chose
 the denominator and what the figure is used for. If you divide the total by the denominator and the
@@ -280,6 +279,6 @@ something worth more than the number.
 ## Where to go next
 
 [ch18](#the-five-year-model) is what happens when a unit cost from one model becomes an input to
-another, which is where most of them end up.
+another.
 
 [ch19](#which-input-is-the-answer) is the question the tornado above keeps raising.

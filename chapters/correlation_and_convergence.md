@@ -12,13 +12,14 @@ short_title: "ch14 Correlation and convergence"
 
 ## The question
 
-[ch13](#monte-carlo) drew two pairs of inputs together—a host's price with the network's price,
-and the busy hour with what a request costs—and said so at its end. It did not show how the
+[ch13](#monte-carlo) drew two pairs of inputs together (a host's price with the network's price,
+and the busy hour with what a request costs) and said so at its end. It did not show how the
 pairing is done or what it changed. This chapter does both.
 
-ch13 assumed that a hundred thousand samples was enough to settle the answer, but said it had not
-established that. This chapter works out what "enough" means. One thing to know now: more samples
-do not make an interval narrower. They tell you where it is more precisely.
+ch13 assumed that the number of samples it drew was enough to settle the answer, but said it had
+not established that. The heading of each of its charts gives the number. This chapter works out
+what "enough" means. One thing to know now: more samples do not make an interval narrower. They
+tell you where it is more precisely.
 
 ## The material
 
@@ -108,9 +109,9 @@ an assumption that was making the model look more certain than it was.
 
 ### How many samples is enough
 
-Now the second thing [ch13](#monte-carlo) assumed: that a hundred thousand draws was enough. The
-obvious test is to run the model at rising sample counts and watch the interval narrow. That
-experiment does not work.
+Now the second thing [ch13](#monte-carlo) assumed: that its sample count was enough. The obvious
+test is to run the model at rising sample counts and watch the interval narrow. That experiment does
+not work.
 
 **The interval does not narrow.** Its width is set by how uncertain the model's inputs are. More
 draws do not shrink it. They **converge** on it: the answer settles towards the width the inputs
@@ -150,8 +151,9 @@ half-width has visibly not settled.
 :width: 100%
 ```
 
-To cut the run-to-run spread by a factor of ten, you need a hundred times as many draws. That is
-why nobody buys precision this way past a point.
+To cut the run-to-run spread by a factor of ten, you need a hundred times as many draws. So past a
+point, each further gain in precision costs far more draws than the last, and more draws stop being
+a sensible way to buy it.
 
 The law gives a definition of "enough" that is a calculation rather than a habit:
 
@@ -178,11 +180,11 @@ measured at some number of draws, and the spread you want; it returns how many d
 A model whose answer has stopped moving between runs has settled its *arithmetic*. That is all it
 has settled.
 
-You can run a model at a million samples, watch the interval stabilise to four significant
-figures, and present it with complete confidence, while a whole cost line is missing from the
-model. The sampling converged beautifully on the wrong number. Convergence is a statement about
-the calculation, never about the thing being calculated. [ch20](#the-missing-node)'s problem 20.3
-hands you a model in that state, and an invoice it cannot reach.
+You can run a model at a very large sample count and watch its interval stop moving between runs,
+while a whole cost line is missing from the model. The sampling converged on the wrong number.
+Convergence is a statement about the calculation, never about the thing being calculated.
+[ch20](#the-missing-node)'s problem 20.3 hands you a model in that state, and an invoice it cannot
+reach.
 
 ## What this cannot tell you
 
@@ -223,8 +225,8 @@ only things that narrow it are measuring something or deciding something:
   where the interval is, and the run-to-run spread falls as one over the square root of the number
   of draws.
 - **Enough samples is when the answer stops moving at the precision you will report it to, and a
-  settled answer has settled its arithmetic and nothing else.** A model can converge beautifully on
-  the wrong number.
+  settled answer has settled its arithmetic and nothing else.** A model can converge on the
+  wrong number.
 :::
 
 ## Problems
@@ -267,7 +269,7 @@ python3 -m pytest tests/correlation_and_convergence/test_problem_2_marginals.py 
 shows, and there is nothing for a test to compute.
 
 [ch13](#monte-carlo) says every result in this book records its seed, and re-running with that
-seed gives the same numbers to the last digit. Imagine somebody re-runs the web service model with
+seed gives the same numbers to the last digit. A colleague re-runs the web service model with
 its recorded seed several times, gets the same 95th percentile of the five-year total each time,
 and concludes by this chapter's definition that the sample count was enough. Say whether that
 observation supports the conclusion, and why. Then say what you would change to find out whether

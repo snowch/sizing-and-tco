@@ -60,8 +60,8 @@ says.
 
 Three of those targets are measurements — something outside this repository was asked a question.
 A `model` result is not; it is a computation from the book's own models, evidence about what
-those models say and nothing else. A `model` result's fingerprint covers the whole DSL core — the
-code that reads, checks, evaluates and samples a model file — so every such figure moves when the
+those models say and nothing else. A `model` result's fingerprint covers the whole DSL core (the
+code that reads, checks, evaluates and samples a model file), so every such figure moves when the
 method does. Keeping `model` apart from the other three keeps two things separate: a measurement
 of something outside the book, and a computation about the book's own models.
 
@@ -80,8 +80,8 @@ a statement about an estimation procedure repeated over many experiments. Borrow
 would import a guarantee this method does not offer. A *prediction interval* is a claim about
 where a future observation will fall; that would need a track record, and the book's models do
 not have one. The *Over allowed* and *Over limit* columns in a ceiling table report the share of
-the model's futures that ended on the wrong side of a declared line — reported as a share, never
-as a range — and they are none of those three.
+the model's futures that ended on the wrong side of a declared line (reported as a share, never
+as a range), and they are none of those three.
 
 **Expected value.** The mean. Outputs from chains of multiplication in a sizing model are often
 skewed, with a long tail on the high side. That tail pulls the mean above the median, so the mean
@@ -92,8 +92,7 @@ percentile, or a round number above the median.
 
 **Best case and worst case.** Percentiles, named. A "worst case" is whatever the person saying it
 last thought of; the ninety-fifth percentile is a specific claim about a specific model that you
-can disagree with. The phrase appears once in this book, as a label in
-[ch01](#point-estimates)'s first table, marking the run with every input at its worse value.
+can disagree with.
 
 **Contingency.** Headroom, with a stated reason and a ceiling it is measured against
 ([ch11](#headroom-and-failure-domains)). A contingency is a number added at the end to feel safer;

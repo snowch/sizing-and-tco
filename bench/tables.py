@@ -796,7 +796,7 @@ def straight_line_overstatement(_name: str | None, model_name: str) -> str:
 
 
 #: Where the tornado swung each input, in words a page before ch13 has defined beside the table.
-PLAIN_ENDS = ("input: low", "input: high")
+PLAIN_ENDS = ("with the input at its low end", "at its high end")
 
 
 def tornado_in_plain_words(name: str, output: str, limit: int = 8) -> str:
@@ -1660,6 +1660,25 @@ def distribution_keys(_name: str = "") -> str:
     return "\n".join(rows)
 
 
+#: A conversion factor in words, as the build applies it. ``{factor}`` is already a printed number.
+FACTOR_TIMES = "multiplies by {factor}"
+FACTOR_OVER = "divides by {factor}"
+
+
+def _factor_words(factor: float) -> str:
+    """A conversion factor as the build applies it, in words a reader can check by hand.
+
+    ``divides by 12`` rather than ``multiplies by 0.0833333``, and never ``1e-06``: a factor that
+    is a whole number, or one over a whole number, is printed as that whole number.
+    """
+    if factor >= 1 and abs(factor - round(factor)) < 1e-9 * factor:
+        return FACTOR_TIMES.format(factor=f"{round(factor):,}")
+    inverse = 1 / factor
+    if factor < 1 and abs(inverse - round(inverse)) < 1e-6 * inverse:
+        return FACTOR_OVER.format(factor=f"{round(inverse):,}")
+    return FACTOR_TIMES.format(factor=f"{factor:.6g}")
+
+
 #: How units combine: what is multiplied or divided, the unit the answer is read in, and what
 #: happened. The registry the build uses works out every result; the last column is the reason.
 UNIT_ALGEBRA: tuple[tuple[str, tuple[str, ...], str, str, str], ...] = (
@@ -1738,7 +1757,7 @@ UNIT_ALGEBRA: tuple[tuple[str, tuple[str, ...], str, str, str], ...] = (
         ("Mbit/second", "second"),
         "*",
         "MB",
-        "the seconds cancel and the build divides by eight, because the link was quoted in bits",
+        "the seconds cancel, and the link was quoted in bits: eight to a byte",
     ),
     (
         "memory per host as the sheet quotes it, times the hosts",
@@ -1792,42 +1811,144 @@ def unit_algebra_table(_name: str = "") -> str:
         factor = _combine(units, operation).to(target).magnitude
         shown = f"`{target}`"
         if abs(factor - 1.0) > 1e-12:
-            shown += f", and the build multiplies by {factor:,.6g}"
+            shown += f", and the build {_factor_words(factor)}"
         rows.append(f"| {what} | {_spelled(units, operation)} | {shown} | {why} |")
     return "\n".join(rows)
 
 
-#: What a node declares against what its formula produces, and the three things the check does.
-UNIT_VERDICTS: tuple[tuple[str, tuple[str, ...], str, str], ...] = (
-    ("a request rate, for a duration", ("request/second", "second"), "*", "request"),
-    ("a request rate, times a plain number", ("request/second", "dimensionless"), "*", "request"),
-    ("a price per terabyte-year", ("USD/TB/year",), "*", "USD/TB/month"),
-    ("watts, times the hours in a year", ("W", "hour/year"), "*", "kWh/year"),
-    ("a drive as the sheet quotes it", ("TB",), "*", "TiB"),
-    ("a link rate, for a duration", ("Mbit/second", "second"), "*", "MB"),
-    ("bytes per span, times spans per request", ("byte/span", "span/request"), "*", "byte/request"),
-    ("bytes per span, times spans per request", ("byte/span", "span/request"), "*", "byte/second"),
+#: What a node declares against what its formula makes, and what the build does: accept, convert,
+#: or refuse for one of two reasons. Each row is run through the build's own unit check.
+#: (the case, {input: unit}, the formula, the unit the node declares)
+UNIT_VERDICTS: tuple[tuple[str, dict[str, str], str, str], ...] = (
+    (
+        "a request rate, for a duration",
+        {"rate": "request/second", "window": "second"},
+        "rate * window",
+        "request",
+    ),
+    (
+        "a request rate, times a plain number",
+        {"rate": "request/second", "copies": "dimensionless"},
+        "rate * copies",
+        "request",
+    ),
+    ("a price per terabyte-year", {"price": "USD/TB/year"}, "price", "USD/TB/month"),
+    (
+        "watts, times the hours in a year",
+        {"power": "W", "hours": "hour/year"},
+        "power * hours",
+        "kWh/year",
+    ),
+    ("a drive as the sheet quotes it", {"drive": "TB"}, "drive", "TiB"),
+    (
+        "a link rate, for a duration",
+        {"link": "Mbit/second", "window": "second"},
+        "link * window",
+        "MB",
+    ),
+    (
+        "bytes per span, times spans per request",
+        {"size": "byte/span", "spans": "span/request"},
+        "size * spans",
+        "byte/request",
+    ),
+    (
+        "bytes per span, times spans per request",
+        {"size": "byte/span", "spans": "span/request"},
+        "size * spans",
+        "byte/second",
+    ),
+    (
+        "raw data, plus a spare drive quoted in binary",
+        {"raw": "TB", "spare": "TiB"},
+        "raw + spare",
+        "TB",
+    ),
+    (
+        "a working set over memory per host, rounded up to whole hosts",
+        {"working_set": "TB", "memory": "GiB/host"},
+        "ceil(working_set / memory)",
+        "host",
+    ),
 )
+
+#: The verdicts table's headings, and the words its cells are built from.
+VERDICT_HEADINGS = ("Case", "Formula", "Node declares", "Verdict")
+FORMULA_UNIT = "`{name}` in `{unit}`"
+REFUSED_KIND = (
+    "the formula makes {produced} and the node declares {declared}, "
+    "and no factor turns one into the other"
+)
+REFUSED_SUM = (
+    "two units of one kind meet in a sum, "
+    "and the build converts a formula's result once, not each number inside it"
+)
+REFUSED_ROUNDS = "the formula rounds before the build converts, so it rounds the wrong number"
+
+
+def _spelled_formula(formula: str, inputs: dict[str, str]) -> str:
+    """A row's formula and the unit of each name in it: `raw + spare`, `raw` in `TB`, ..."""
+    units = ", ".join(FORMULA_UNIT.format(name=name, unit=unit) for name, unit in inputs.items())
+    return units if formula in inputs else f"`{formula}`, {units}"
 
 
 def unit_check_table(_name: str = "") -> str:
-    """The three verdicts the unit check can reach, on hand-picked formulas, worked out by it."""
-    import pint
+    """What the unit check does with each hand-picked formula, reached by the check itself.
 
-    rows = ["| Formula | Produces | Node declares | Verdict |", "|---|---|---|---|"]
-    for what, units, operation, declared in UNIT_VERDICTS:
-        produced = _combine(units, operation)
-        try:
-            factor = produced.to(declared).magnitude
-        except pint.DimensionalityError:
-            verdict = "**refused**: not the same kind of quantity, and no factor makes it one"
-        else:
-            verdict = (
-                "accepted as written"
-                if abs(factor - 1.0) < 1e-12
-                else f"converted: the build multiplies by {factor:,.6g}"
+    Each row becomes a model of one derived node over its inputs and goes through
+    :func:`sizing.evaluate.check_units`, so the table cannot show a verdict the build would not
+    reach. A refusal says which of the two reasons applies, in the words the build's own message
+    uses for the kinds of quantity.
+    """
+    from sizing.dsl import Model, _node_from
+    from sizing.evaluate import (
+        UNIT_FUNCTIONS,
+        _mixed_operands,
+        _rounds_in_the_wrong_unit,
+        _units_of,
+        _walk,
+        check_units,
+        plausible_magnitudes,
+    )
+    from sizing.units import UNITS, compatible, described
+
+    rows = ["| " + " | ".join(VERDICT_HEADINGS) + " |", "|---|---|---|---|"]
+    for what, inputs, formula, declared in UNIT_VERDICTS:
+        spec = {
+            name: {
+                "kind": "input",
+                "unit": unit,
+                "value": 2.0,
+                "provenance": {"kind": "assumption", "source": "a row of this table"},
+            }
+            for name, unit in inputs.items()
+        }
+        spec["result"] = {"kind": "derived", "unit": declared, "formula": formula}
+        nodes = {name: _node_from(name, node, "appendix D") for name, node in spec.items()}
+        model = Model(name="row", title=what, currency="USD", nodes=nodes, outputs=("result",))
+        problems, factors = check_units(model)
+        magnitudes = plausible_magnitudes(model)
+        quantities = {
+            name: UNITS.Quantity(magnitudes[name], parse_unit(node.unit))
+            for name, node in nodes.items()
+        }
+        tree = nodes["result"].formula
+        produced = str(_units_of(_walk(tree, quantities, UNIT_FUNCTIONS)))
+        if not compatible(produced, declared):
+            verdict = "**refused**: " + REFUSED_KIND.format(
+                produced=described(produced), declared=described(declared)
             )
-        rows.append(f"| {what} | {_spelled(units, operation)} | `{declared}` | {verdict} |")
+        elif _mixed_operands(tree, quantities, formula, declared):
+            verdict = "**refused**: " + REFUSED_SUM
+        elif _rounds_in_the_wrong_unit(tree, quantities, formula, declared):
+            verdict = "**refused**: " + REFUSED_ROUNDS
+        elif problems:
+            raise AssertionError(f"{what}: a refusal this table has no words for: {problems}")
+        elif abs(factors["result"] - 1.0) < 1e-12:
+            verdict = "accepted as written"
+        else:
+            verdict = f"converted: the build {_factor_words(factors['result'])}"
+        rows.append(f"| {what} | {_spelled_formula(formula, inputs)} | `{declared}` | {verdict} |")
     return "\n".join(rows)
 
 
@@ -1846,8 +1967,8 @@ def conversions_table(_name: str = "") -> str:
     from sizing.evaluate import check_units
 
     rows = [
-        "| Model | Node | Formula produces | Node declares | Factor |",
-        "|---|---|---|---|---:|",
+        "| Model | Node | Formula produces | Node declares | The build |",
+        "|---|---|---|---|---|",
     ]
     for model in discover():
         problems, factors = check_units(model)
@@ -1861,8 +1982,8 @@ def conversions_table(_name: str = "") -> str:
             node = model.nodes[node_name]
             produced = _produced_unit(model, node_name)
             rows.append(
-                f"| `{model.name}` | {node.display} | {produced} | {unit_label(node.unit)} "
-                f"| x{factor:,.6g} |"
+                f"| `{model.name}` | {node.display} | `{produced}` | `{node.unit}` "
+                f"| {_factor_words(factor)} |"
             )
     if len(rows) == 2:
         rows.append("| | *no model needs a conversion* | | | |")
@@ -1883,7 +2004,7 @@ def _produced_unit(model, node_name: str) -> str:
     node = model.nodes[node_name]
     tree = getattr(node, "formula", None) or getattr(node, "of", None)
     try:
-        return unit_label(str(_units_of(_walk(tree, quantities, UNIT_FUNCTIONS))))
+        return format(_units_of(_walk(tree, quantities, UNIT_FUNCTIONS)), "C")
     except Exception:  # pragma: no cover - a model that does not typecheck is skipped above
         return "?"
 

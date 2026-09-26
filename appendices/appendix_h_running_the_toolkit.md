@@ -131,7 +131,7 @@ The file can be anywhere; it does not have to be inside the repository. The comm
 - every ceiling declares a headroom and a reason;
 - every node feeds an output.
 
-If the file breaks any rule, the command lists every problem at once and exits with an error. A file that will not load at all — a formula that names a node the file does not define, for instance — is reported the same way, as one problem.
+If the file breaks any rule, the command lists every problem at once and exits with an error. A file that will not load at all (a formula that names a node the file does not define, for instance) is reported the same way, as one problem.
 
 If the file passes, the command prints how many nodes it has and whether it is a definitional model or a conditional one. Then, for each output, it prints the value with every input at its stated value or at the median of its distribution. Where an input is uncertain, it also prints the 5th and 95th percentiles of the output.
 
@@ -163,9 +163,9 @@ The toolkit's interactive viewers appear throughout the book. Each feature is in
 | **Sliders** | [ch02](#what-a-workload-is) | Open *Inputs* under the graph: one slider for each input that declares a range. Drag it and everything downstream updates as you drag. |
 | **Click a node** | [ch02](#what-a-workload-is) | Opens *Details*: a derived node's formula, an input's value and source, and under *In the file* the node's own lines in the model file. |
 | **Unit checking** | [ch02](#what-a-workload-is) | The toolkit validates every formula. A quantity with the wrong unit is rejected, not silently accepted like a spreadsheet. |
-| **Provenance detail** | [ch03](#where-the-numbers-come-from) | Click an input node and *Details* names its provenance kind in words — fact, vendor claim or assumption — followed by its source. The book's provenance tables mark the same three kinds with ● for a fact, ◐ for a vendor claim and ○ for an assumption. |
+| **Provenance detail** | [ch03](#where-the-numbers-come-from) | Click an input node and *Details* names its provenance kind in words (fact, vendor claim or assumption), followed by its source. The book's provenance tables mark the same three kinds with ● for a fact, ◐ for a vendor claim and ○ for an assumption. |
 | **Measured constants** | [ch09](#capacity) | Amber nodes: numbers measured on a named implementation. The file holds no number for one, only the name of the stamped result it comes from. |
-| **Ceiling nodes** | [ch06](#queueing-and-the-knee) | Red nodes: limits past which the model changes regime, such as the queueing knee. A chain of multiplications cannot model these, and the build refuses one that declares no headroom below it. |
+| **Ceiling nodes** | [ch06](#queueing-and-the-knee) | Red nodes: limits past which the model changes regime, such as every core busy at the busy hour. A chain of multiplications cannot model these, and the build refuses one that declares no headroom below it. |
 | **Model file** | [ch02](#what-a-workload-is) | On a wide screen, press *Expand* and choose *Model file* to read the whole file, with the node you picked marked. |
 | **Problem Check** | Throughout | Embedded under chapter problems. Runs your solution against the toolkit's test suite. Passes only when solved. |
 
@@ -180,10 +180,10 @@ figure in its last digits. `make check` allows a tolerance looser than that nois
 anything this book prints, so the noise passes and a real change does not. Where to put that
 tolerance is a judgement, not a fact.
 
-**Whether the tools are the right versions.** `verify-setup.py` checks that things are present,
-not that they are the versions the pins name. A dependency resolved differently is the commonest
-reason a fresh checkout disagrees with CI, and the honest fix is to read `requirements.txt` rather
-than to trust a tick.
+**Whether the tools are the right versions.** `verify-setup.py` checks that things are present and
+prints the versions it finds, not that they are the versions the pins name. A dependency resolved to
+a different version can make a fresh checkout disagree with CI. To check, compare the versions
+`verify-setup.py` prints with the pins in `requirements.txt`.
 
 **Anything about the models themselves.** Every check on this page is about whether the machinery
 runs. A model can pass every one of them and still be a bad description of your system. The

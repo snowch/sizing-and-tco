@@ -128,8 +128,8 @@ Picture the triangle. Its base runs from the least value the input could take to
 stands over the value the expert would bet on: the **most likely value**, which the code calls
 `likely`. This value is called the **mode**.
 
-The height of the triangle at a value says how likely values near it are. A shape drawn this way —
-higher where values are likely, lower where they are not — is the input's **density**. The whole
+The height of the triangle at a value says how likely values near it are. A shape drawn this way
+(higher where values are likely, lower where they are not) is the input's **density**. The whole
 area under it is one.
 
 The area under the density from the minimum up to a value is the fraction of the bag below that
@@ -224,8 +224,6 @@ click along the chain towards the output until the bar charts stop being narrow.
 :width: 100%
 ```
 
-One more word.
-
 An **interval** is the gap between two percentiles. This book reports the gap between the 5th and
 the 95th percentile, and calls it the 90% interval. On the charts they are the dashed lines *p5* and
 *p95*. The book does not call it a confidence interval. That phrase means something precise to a
@@ -304,13 +302,13 @@ every sample and reports a confident interval around the wrong answer. That is *
 No technique in this chapter can see it, and it is the subject of
 [ch20 · The missing node](#the-missing-node).
 
-**Whether the shapes were chosen honestly.** A triangular with generous bounds and a lognormal
-with tight ones will give different intervals for the same input, and nothing here can tell you
-which was right. The distribution is an assumption like any other, and this book makes you write
-it in a file with your name on it for that reason.
+**Whether the shapes are right.** A triangular with generous bounds and a lognormal with tight
+ones will give different intervals for the same input, and nothing here can tell you which was
+right. The distribution is an assumption like any other, and this book makes you write it in a file
+with your name on it for that reason.
 
 **How the inputs were drawn together.** The sampler above draws each input on its own. The intervals
-on this page were not produced quite that way. The model declares two pairs of inputs that move
+on this page were not produced that way. The model declares two pairs of inputs that move
 together: a host's price and the network's price per host, quoted by the same supply chain; and the
 busy-hour request rate and the processor time each request takes, because a busier service is a
 slower one per request. The evaluator applies the pairing after the draw, so every figure on this
@@ -395,8 +393,8 @@ python3 -m pytest tests/monte_carlo/test_problem_2_by_hand.py -m problem
 ```
 
 **13.3 — Where the point estimate sits.**
-For each of four outputs of the web service model — the host count the model recommends, the
-five-year total cost, capex, and annual opex — find the fraction of its sampled answers that fall
+For each of four outputs of the web service model (the host count the model recommends, the
+five-year total cost, capex, and annual opex), find the fraction of its sampled answers that fall
 strictly below its point estimate. Some of these fractions sit near one half and some do not. For
 each one that does not, name the step in its chain that moved the point, and which way. The section
 *Reading the answer* gives you the two kinds of step to look for.

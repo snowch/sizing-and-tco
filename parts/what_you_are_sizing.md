@@ -18,7 +18,7 @@ what accumulates, and how sure you can be of either.
 **[ch01 · Point estimates](#point-estimates)** is the argument the rest of the book answers. A point
 estimate is not wrong. It is silent about the ranges it threw away when it picked one value for each
 input. It is also silent about an error that running the arithmetic again cannot find. ch01 draws
-the line this book is built on: on one side is a *definitional model*, built only from relationships
+the line this book is built on. On one side is a *definitional model*, built only from relationships
 that hold by definition; on the other is a *conditional model*, which rests on a measured constant
 or runs into a limit.
 

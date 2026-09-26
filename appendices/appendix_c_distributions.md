@@ -46,7 +46,7 @@ shape is the right claim about what can happen.
 figures. A retention window somebody will pick from a range at a meeting you are not in. A
 parameter with a documented minimum and maximum and no reason to prefer the middle.
 
-**What it asserts.** That every value between the bounds is exactly as likely as every other, and
+**What it asserts.** That every value between the bounds is as likely as every other, and
 that nothing outside them can happen. Equal likelihood is a strong claim that reads as a weak one:
 it looks like saying "I do not know", and it is saying "the extremes are as likely as the
 middle".
@@ -78,10 +78,10 @@ occur. Values are most likely at the one you would bet on, and likelihood falls 
 down to none at each bound. The straight lines are a convenience of the shape, not a claim you
 made; the hard bounds are the claim that misleads.
 
-**How it lies.** The bounds came from somebody's memory, and the shape says nothing outside them
+**How it lies.** The bounds came from the expert's memory, and the shape says nothing outside them
 can occur. So the model cannot produce the case where the peak hour is twice anything anyone has
 seen. Every triangular input is a small promise that the world will stay inside the range of what
-has already happened, and the futures that hurt are exactly the ones that do not.
+has already happened, and the futures that hurt are the ones that do not.
 
 **Use it for a human estimate**, and remember that it cannot surprise you.
 
@@ -227,10 +227,10 @@ structural events. A shape that tries to absorb them produces an interval so wid
 distinguish two designs, and distinguishing designs is what the model is for. They belong in *What
 this cannot tell you*, not in a parameter ([ch20](#the-missing-node)).
 
-**Mixtures.** A mixture — two regimes with a probability of each — would be easy to add, and is
-deliberately left out. When a quantity has two regimes, the honest model has a node for which
-regime it is in and a scenario for each. A number that clusters around two different values is
-usually two decisions wearing one name.
+**Mixtures.** A mixture (two regimes with a probability of each) would be easy to add, and is
+deliberately left out. When a quantity has two regimes, this book gives it a node for which regime
+it is in and a scenario for each, so the regime is a stated choice rather than a blend. A number
+that clusters around two different values is usually two decisions wearing one name.
 
 **Empirical resampling.** Drawing from observed history rather than from a shape. It is a good
 technique that needs history, and most sizing exercises have none. Where this book has data it

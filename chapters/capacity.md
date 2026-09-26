@@ -14,8 +14,7 @@ short_title: "ch09 Capacity"
 
 How far is what you buy from what you can use?
 
-Further than most people's first estimate, and always in the same direction: you buy more than you
-can use. Four terms separate the two, and nobody writes them down together.
+The gap always runs one way: you buy more than you can use. Four terms separate the two.
 
 ## The material
 
@@ -106,7 +105,7 @@ A drive's datasheet counts a terabyte as a trillion bytes. A filesystem counts i
 and its unit, the tebibyte, is about a tenth larger. Both are called a terabyte in conversation.
 This model's example is *disk per host*, from a spec sheet declared in decimal terabytes, as its
 source says. If a plan reads the datasheet in the filesystem's unit, each drive holds about a tenth
-less than planned, and that shortfall comes out of the *disk margin*: the disks reach their fill
+less than planned, and that shortfall comes out of the *disk margin*. The disks reach their fill
 limit sooner than the plan says, before any growth has arrived to explain it.
 
 So every node in this book declares a unit, and the toolkit converts rather than assuming. Problem
@@ -166,10 +165,10 @@ its copies have to be re-made on the survivors, using disk and bandwidth that we
 else. The chain has no term for the window in which that is happening
 ([ch11](#headroom-and-failure-domains)).
 
-**Whether disk is the chain that binds.** It is the chain this chapter followed. It is not the one
-that most often decides, and the model assumes neither.
-[ch10](#bandwidth-and-the-binding-constraint) is the other two chains, and how often each of the
-three decides the answer.
+**Whether disk is the chain that binds.** Disk is the chain this chapter followed; in this model it
+decides the host count less often than either of the other two.
+[ch10](#bandwidth-and-the-binding-constraint) adds the other two chains and shows how often each of
+the three decides.
 
 ## Key takeaways
 
@@ -219,7 +218,7 @@ python3 -m pytest tests/capacity/test_problem_2_erasure.py -m problem
 Re-declare every unit that carries a terabyte in tebibytes, inputs included, and convert each
 input's number so that it still means the same bytes. The test runs over the finished web service
 model, with the nodes later chapters add, so the result carries prices in dollars. Nothing the
-model buys has moved means the same hosts, the same money, and every tebibyte figure reading
+model buys has moved: the same hosts and the same money. Every figure now in tebibytes reads
 smaller by exactly the ratio of the two units. The test also hands your function a price per
 terabyte-month of its own, because no input in the model has a terabyte below the line.
 Converting is not compensating, and the difference between the two is the chapter. If a host
@@ -235,7 +234,7 @@ every ceiling, and everything downstream of them. At least one of its outputs ha
 test uses the finished model, which includes ceilings from chapters you have not read yet. You do
 not need to know them: the stub hands you every node's kind and the nodes each one reads, and that
 is enough to find what to delete. Then write one sentence saying what the result can no longer
-tell anybody. If you cannot name it, you removed something that was doing no work, and the model
+tell you. If you cannot name it, you removed something that was doing no work, and the model
 should not have had it.
 
 ```bash
@@ -258,11 +257,11 @@ whose source nobody recorded.
 
 A good answer has a ratio, how many records it came from, the codec and its setting, the unit it
 was compressed in, and a sentence about the number it replaces. If your measured ratio matches the
-planning figure exactly, find out who measured it first. You may have just re-derived a guess.
+planning figure exactly, find out who measured it first. You may have re-derived a guess.
 
 ## Where to go next
 
-[ch10](#bandwidth-and-the-binding-constraint) is the other two chains, and the question of which
-of the three you are buying.
+[ch10](#bandwidth-and-the-binding-constraint) asks which of the three chains you are buying.
 
-[Appendix D](#appendix-d-units) is the terabyte problem and the rest of the conversions that bite.
+[Appendix D](#appendix-d-units) covers the terabyte problem and lists every unit conversion the
+build applies in the two models.

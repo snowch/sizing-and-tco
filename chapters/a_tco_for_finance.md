@@ -90,9 +90,13 @@ input at its point estimate. The right column buys what the model recommends whe
 factor reaches its 90th percentile—growth that one future in ten exceeds. Every other input stays at
 its point estimate. This is the bigger fleet [ch12](#the-sizing-model) set against the ceilings, now
 with a price attached, chosen deliberately instead of by default. The rows are, from top to
-bottom: the hosts each design buys; the capex row, paid once; the annual opex row, paid each year;
-the five-year total at three points (point estimate, median, 95th percentile); and the busy-hour
-row, showing how often the busy hour exceeds the fleet's capacity.
+bottom:
+
+- the hosts each design buys;
+- the capex row, paid once;
+- the annual opex row, paid each year;
+- the five-year total at three points (point estimate, median, 95th percentile); and
+- the busy-hour row, showing how often the busy hour exceeds the fleet's capacity.
 
 Read the rows across both columns and the question changes. It is no longer "is this estimate
 right", which no one at the table can answer. It becomes "is the extra money in the right column
@@ -172,23 +176,29 @@ One page, holding four things:
 - The number, and the sentence.
 - The decision table: what each design buys, what it costs, and how often the busy hour is more
   than the fleet can serve.
-- The ceilings that matter, each written as what fails—at the busy hour the service cannot keep
-  up—rather than as a utilisation.
+- The ceilings that matter, each written as what fails (at the busy hour the service cannot keep
+  up) rather than as a utilisation.
 - The money, kept in its pieces.
 
 Two things go with the page, attached rather than on it: the provenance table, with the vendor
 claims marked; and a link to the model file, so finance can change an input and see what happens.
 
-Hand over the money in its pieces, not only as the five-year total: the capex row, the annual opex
-row, and the horizon. The capital is paid once. The annual opex row is the same amount in every
-year the fleet runs, because the fleet is bought once and does not change size. The model has no
-years: it multiplies one yearly running cost by the horizon and adds the capital once, and nothing
-in it records when the capital is paid. Finance places the pieces in years and applies its own
-discount rate, and can only do that while the pieces are still separate.
-[ch15](#capex-opex-and-lifecycle) says why this book does not discount: the rate is a policy
-decision, not an engineering one. Use the point-estimate figures for the pieces: they are the ones
-that add up to the five-year total at the point estimate. The median and the 95th percentile of the
-total do not split into pieces that way.
+Hand over the money in its pieces, not only as the five-year total. The three pieces are: the
+capex row, the annual opex row, and the horizon.
+
+The capital is paid once. The annual opex row is the same amount in every year the fleet runs,
+because the fleet is bought once and does not change size.
+
+The model has no years. It multiplies one yearly running cost by the horizon and adds the capital
+once. Nothing in it records when the capital is paid.
+
+Finance places the pieces in years and applies its own discount rate. It can do that only while the
+pieces are still separate. [ch15](#capex-opex-and-lifecycle) says why this book does not discount:
+the rate is a policy decision, not an engineering one.
+
+Use the point-estimate figures for the pieces. They are the ones that add up to the five-year total
+at the point estimate. The median and the 95th percentile of the total do not split into pieces
+that way.
 
 ## What this cannot tell you
 
@@ -210,12 +220,12 @@ resolving it yourself.
 the same dollar. They are not: money later is worth less than money now. The model has no years in
 it, and nothing records when the capital is paid. The capital is a larger share of the right-hand
 design's total than of the left's. When finance places the capital before the running costs, as a
-single purchase suggests, a discount rate shrinks the running cost more than the capital. Both
-totals fall, and the design with the larger capital share loses a smaller share of its total.
-Discounting would therefore change the comparison between the columns, not only both totals. The
-page hands finance the pieces, the capital and the yearly running cost, kept separate, so finance
-can place them in years and apply its own rate. It does not claim the undiscounted total is the
-answer.
+single purchase suggests, a discount rate shrinks the running cost more than the capital.
+
+Both totals fall. The design with the larger capital share loses a smaller share of its total. So
+discounting changes the comparison between the columns, not only both totals. The page hands
+finance the pieces: the capital and the yearly running cost, kept separate. Finance can place them
+in years and apply its own rate. The page does not claim the undiscounted total is the answer.
 
 **Whether the structure is complete.** [ch20](#the-missing-node) is the standing limitation, and it
 does not stop applying because the audience has changed. The decision table is a comparison between
@@ -274,14 +284,20 @@ python3 -m pytest tests/a_tco_for_finance/test_problem_1_decision_table.py -m pr
 **21.2 — They have asked for one number.**
 Give it. Then write the sentence. Any defensible choice of number passes. The median and both ends
 of the 90% interval are in the chart's subtitle, and the median and the 95th percentile are rows of
-the decision table. The test checks three things. First, the number is one the model produced: it
-lies inside the 90% interval of the reference design's five-year total, or close to it. Second, it
-is rounded to a precision the model can support. The rule: the number is a whole multiple of a
-round step, and the step is no finer than a hundredth of the width of the 90% interval. The stub's
-docstring lists the round steps. Third, the sentence names something specific. The test looks for
-a word that names one: which percentile or the median; an input the total rests on, such as growth
-or a price; a cost the total leaves out; or a limit, such as the busy-hour ceiling. A sentence that
-only says the figure is uncertain names nothing.
+the decision table.
+
+The test checks three things:
+
+1. The number is one the model produced. It lies inside the 90% interval of the reference design's
+   five-year total, or close to it.
+2. It is rounded to a precision the model can support. The rule: the number is a whole multiple of
+   a round step, and the step is no finer than a hundredth of the width of the 90% interval. The
+   stub's docstring lists the round steps.
+3. The sentence names something specific. The test looks for a word that names one: which
+   percentile or the median; an input the total rests on, such as growth or a price; a cost the
+   total leaves out; or a limit, such as the busy-hour ceiling.
+
+A sentence that only says the figure is uncertain names nothing.
 
 ```bash
 python3 -m pytest tests/a_tco_for_finance/test_problem_2_one_number.py -m problem
@@ -304,8 +320,8 @@ whether a document like this works, so the only test is handing it to the person
 ## Where to go next
 
 [ch22](#comparing-two-tcos) is the last step of the argument. When the two columns are two quotes
-rather than two sizes of one fleet, the difference between them is what somebody is deciding, and
-it has an interval of its own.
+rather than two sizes of one fleet, the difference between them is what the person who signs is
+deciding, and it has an interval of its own.
 
 [ch23](#what-the-model-got-wrong) is what happens afterwards: at the model's horizon, when one of
 the futures in that table turned out to be the one you got.

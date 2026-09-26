@@ -15,9 +15,9 @@ short_title: "Appendix D · Units"
 | **Source** | `sizing/units.py`, `sizing/evaluate.py` |
 :::
 
-A sizing model is a chain of multiplications. The commonest way for one to be wrong is multiplying
-two quantities that should never have met — series by requests, bytes by seconds, a per-node figure
-by a per-core one. A spreadsheet cannot see any of these: a cell holds a number, and the number
+A sizing model is a chain of multiplications. One way for it to be wrong is to multiply two
+quantities that should never have met: series by requests, bytes by seconds, a per-node figure by a
+per-core one. A spreadsheet cannot see any of these: a cell holds a number, and the number
 carries no unit. Every node in this book's models declares its unit, and the build works out the
 unit each formula produces and compares it with what was declared; it converts or refuses. This
 check is why the book has a build step.
@@ -49,7 +49,7 @@ compares the two. It does one of three things:
 The build accepts the formula as written, converts it to the declared unit, or refuses. It accepts
 when the formula makes exactly the unit declared. It converts when the formula makes the same kind
 of quantity as declared, in a different size — one factor is recorded for the node, and the whole
-result is multiplied by it.
+result is converted by it.
 
 It refuses for two reasons. The formula may make a different kind of quantity from the one declared:
 a rate where the node declares an amount. No factor turns one into the other, and the refusal names
@@ -163,7 +163,7 @@ power of five *years*.
 Pint is the units library the build uses. It is used by the unit check and nowhere else in the code
 that works a model out. The check runs before any number is computed — on every model on every push,
 and again each time the toolkit evaluates a model. It hands back one factor per node, then the units
-are stripped and the arithmetic is done on plain numbers, each node's result multiplied by its
+are stripped and the arithmetic is done on plain numbers, each node's result converted by its
 factor. The model viewer on the published pages applies the same factors in the browser, with no
 units library at all.
 
@@ -180,14 +180,14 @@ with nothing to do with what that module is for.
 Pint works out the unit of a formula by doing the arithmetic on numbers that carry units. So the
 check has to give every node a number, not only a unit. The obvious number is one for every node,
 but that breaks sound formulas. The web service model works out hosts for storage as
-`raw_data / (disk_per_host * (1 - disk_margin))`. With every node at one, `1 - disk_margin`
+`ceil(raw_data / (disk_per_host * (1 - disk_margin)))`. With every node at one, `1 - disk_margin`
 becomes zero, and the division fails.
 
 The check then reports an error in a formula whose units are right: a false alarm. That false alarm
 is how the problem showed up, on a model that was correct. So the check gives each node its real
-value where one can be worked out. If a constant nobody has measured is needed, it is tried at one,
-and if that breaks the formula, the node is tried again at a value that cancels nothing. A node that
-still cannot be worked out is reported for what it is, not as a unit error:
+value where one can be worked out. A measured constant with no value, or an input with no point
+value, is given the value one. If a node's arithmetic then fails, it is given a value that cancels
+nothing. A node that still cannot be worked out is reported for what it is, not as a unit error:
 
 ```{literalinclude} ../sizing/evaluate.py
 :language: python

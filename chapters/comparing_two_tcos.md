@@ -182,7 +182,7 @@ money.
 ```
 
 They cope about equally often, and that is by construction. Both were sized by the same rule to
-the same margins, so both are over the knee at the busy hour in about the same share of futures.
+the same margins, so both are over their limit at the busy hour in about the same share of futures.
 A comparison that sized one design to the daily mean and the other to the busy hour would show a
 cheaper fleet that copes less often, and would not say so.
 
@@ -268,7 +268,7 @@ when the item is missing.
 | The cost of the move, on the side that has to move | this chapter | the challenger's vendor does not quote it, because the buyer pays for it; a plan built on the incumbent has nothing to move |
 | The difference as an interval over shared futures, and the share of futures in which it flips | this chapter | two intervals side by side, which say nothing, or one number, which says too much |
 | Each design's ceilings, as how often it fails to cope | [ch11](#headroom-and-failure-domains), [ch21](#a-tco-for-finance) | cheaper because it copes less often |
-| The break-evens, and whether each lies inside a range anybody would defend | this chapter, [ch19](#which-input-is-the-answer) | a comparison that turns on an input nobody measured |
+| The break-evens, and whether each lies inside a range you would defend | this chapter, [ch19](#which-input-is-the-answer) | a comparison that turns on an input nobody measured |
 | The people line held equal unless there is evidence, and marked as a claim if not | this chapter | a headcount the vendor supplied |
 | Unit costs on the same denominator and the same period | [ch17](#unit-economics) | per terabyte-month against per terabyte-year, the busy hour against the mean |
 | What was left out, named | [ch20](#the-missing-node) | a line neither total has, which favours whichever side it would have hurt |

@@ -46,10 +46,9 @@ already "into the margin". Other ceilings had their own *Over limit* shares; the
 memory in more futures than the busy hour went over its limit. Nobody was misled. Nothing was
 hidden. The figures were on a page.
 
-That is the first finding of most post-mortems worth doing: **the failure was forecast, in
-writing, by the people it later surprised.** What went wrong was not the model. A percentage in a
-table is not an event, and a number nobody has to sign for is a number nobody reads out loud.
-That is all of [ch21](#a-tco-for-finance), arriving too late to help.
+This is the first finding here: **the failure was forecast, in writing, by the people it later
+surprised.** What went wrong was not the model. A percentage in a table is not an event, and a
+number nobody has to sign for is a number nobody reads out loud. That is all of [ch21](#a-tco-for-finance), arriving too late to help.
 
 ### Where the failures were
 
@@ -68,11 +67,12 @@ peak, grown to the horizon, times the CPU time each request costs, over a fixed 
 None sits where it usually does, because the three meet in one multiplication, and any of them
 being a little high can carry that product over its limit.
 
-Now read it against [ch04](#peak-mean-and-growth)'s tornado and
-[ch19](#which-input-is-the-answer)'s value-of-information table. Both put growth first and
-nothing close. The column here ranks by how far each input moved, not by what the move did, and
-the two orderings differ for a structural reason. Growth moved less than the busy hour did and
-did more, because the horizon raises it to a power. So these are three different questions:
+Now read it against [ch04](#peak-mean-and-growth)'s tornado of the peak request rate at the
+horizon, before any fleet is chosen, and [ch19](#which-input-is-the-answer)'s value-of-information
+table. Both put growth first: in ch04's tornado, it is well ahead of the day-one busy hour, and in
+ch19's table, well ahead of the rest. The column here ranks by how far each input moved, not by
+what the move did, and the two orderings differ for a structural reason. Growth moved less than the
+busy hour did and did more, because the horizon raises it to a power. So these are three different questions:
 *what moves the answer*, *what is worth measuring*, and *what broke it*. The third has to be read
 with the model's shape beside it. Otherwise it ranks the inputs by how they were written down
 rather than by what they do.
@@ -185,7 +185,8 @@ book.
 ## What this cannot tell you
 
 **Whether the cause was in the model at all.** The whole chapter conditions on the model's own
-samples, so every answer it can give is drawn from the list of things somebody already declared.
+samples, so every answer it can give is drawn from the list of things the model's author already
+declared.
 [ch20](#the-missing-node) is the failure mode, and this chapter demonstrates it rather than
 escaping it.
 
@@ -202,7 +203,7 @@ this chapter reports serenely that nothing went wrong.
 shed load, or move the margin. Attribution is a diagnosis. This book has been careful throughout
 not to pretend a diagnosis is a remedy.
 
-**Whether any of this happened.** It did not. These are computed futures. The only honest way to
+**Whether any of this happened.** It did not. These are computed futures. The only way to
 run this chapter against reality is to have written the prediction down first and to observe
 the system afterwards, and a book can do neither for you.
 
@@ -275,9 +276,8 @@ quantity nobody had written down, and no amount of sampling would have found it.
 
 A good answer identifies which of the two it was and says what would have caught it. What would
 show the diagnosis wrong: the input you blamed was inside its declared band at the time, or the
-quantity you called missing was in the model and merely not looked at. If the honest answer is
-that nothing available at the time would have caught it, write that down. It is the most useful
-entry in the list, and the one most often rewritten into a lesson nobody learned.
+quantity you called missing was in the model and merely not looked at. If the answer is that
+nothing available at the time would have caught it, write that down.
 
 ## Where to go next
 
@@ -285,8 +285,10 @@ entry in the list, and the one most often rewritten into a lesson nobody learned
 rather than before, because its argument reads differently once you have seen an attribution rank
 the inputs a model has without hesitating and say nothing about the one it lacks.
 
-[ch03](#where-the-numbers-come-from) is the target a real post-mortem belongs to, and the rules
-that make somebody's observation of their own system worth anything to anybody else.
+A real post-mortem compares against something that happened: an `estate` observation.
+[ch03](#where-the-numbers-come-from) sets the disclosure an `estate` figure must carry: the system,
+the window, and when it was observed. That disclosure lets another reader trace the figure to
+whoever took it, though not check it.
 
 [Appendix E](#appendix-e-web-service-model) is the web service model in full, the model this
 chapter's post-mortem ran on.

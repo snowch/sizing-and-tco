@@ -16,9 +16,11 @@ arrivals, no order of service. It has one condition: the system is in a steady s
 you are looking at, with as many requests leaving as arriving. The law relates three numbers, and it
 cannot tell you why any of them is what it is.
 
-**[ch06 · Queueing, and the knee](#queueing-and-the-knee)** buys a mechanism and pays for it in
-assumptions. It also takes the knee out of its own title. The curve has no corner in it, and what
-people point at is their own tolerance.
+**[ch06 · Queueing, and the knee](#queueing-and-the-knee)** gives a mechanism for why response
+time climbs as a system gets busier, and pays for it with assumptions. The curve has no corner: the
+bend in any drawing of it sits wherever the axis stops. What people point at and call the knee is
+the point where the slope first passed what they were willing to put up with — a fact about them,
+not the queue. ch06 replaces a knee rule with a declared margin that carries a reason.
 
 **[ch07 · When adding servers stops helping](#when-adding-servers-stops-helping)** addresses the
 obvious response to a system that is too busy: buy more machines. This works less well than the
@@ -30,6 +32,5 @@ threshold with different physics on either side is something no product of quant
 however carefully the inputs are chosen. That is why the model file format has a ceiling node kind
 and why the toolkit refuses a model that declares a limit without a margin.
 
-If you take one thing from this part, take this: **the model is not wrong about how busy the fleet
-is or about how big its working set is, but it is wrong about what those numbers mean past the
-limit.**
+**The model is not wrong about how busy the fleet is or about how big its working set is, but it
+is wrong about what those numbers mean past the limit.**

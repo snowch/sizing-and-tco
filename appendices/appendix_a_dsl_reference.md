@@ -263,8 +263,8 @@ Which nodes are answers. Everything else in the graph is working:
 
 The list decides what the tables report and what the tornado is drawn against. It is not a
 restriction — every node keeps its value and its distribution, and the interactive page will show
-you any of them. It is an editorial judgement about which handful of numbers somebody is going to
-be asked about.
+you any of them. It is an editorial judgement about which handful of numbers you are going to be
+asked about.
 
 ## Correlations
 
@@ -285,9 +285,9 @@ random: inputs with a distribution, or measured constants with a standard error.
 A pair naming anything else is dropped without a message: a misspelt name, an input with no
 distribution, or an input a scenario has pinned. The model still builds and runs as though the pair
 were not there; the misspelling is the case to watch for. The build refuses a correlation whose
-`because` is missing or empty; it is part of the rule that every input says where it came from. A
-coefficient with no reason attached is a number somebody will copy into the next model without
-knowing what it was for.
+`because` is missing or empty: it is part of the rule that every input says where it came from. A
+coefficient with no reason attached is a number the next modeller copies without knowing what it was
+for.
 
 ## Scenarios
 

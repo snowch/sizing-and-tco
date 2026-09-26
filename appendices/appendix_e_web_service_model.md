@@ -159,13 +159,13 @@ single number carries none.
 ```{include} ../chapters/_generated/appendix-e-web-service-model-measured.md
 ```
 
-Every input the model has is listed in the first table, with its kind — fact, vendor claim or
-assumption — and the source the model file gives for it. The name in backticks is the one the
+Every input the model has is listed in the first table, with its kind (fact, vendor claim or
+assumption) and the source the model file gives for it. The name in backticks is the one the
 formulas use, so an input you meet in the formula table can be looked up here.
 
 The model has one measured constant: *record compression ratio* (`record_compression`). The row
-names the implementation that measured it. The line under the table names the corpus — a synthetic
-mixture of application records this repository generates — and links the stamped result, which lists
+names the implementation that measured it. The line under the table names the corpus, a synthetic
+mixture of application records this repository generates, and links the stamped result, which lists
 the conditions the number holds under. A compression ratio belongs to one codec and one body of
 data. The method transfers; the number does not.
 
@@ -190,9 +190,9 @@ The left column buys the fleet the model recommends at the point estimates. The 
 the fleet the p90 growth case would need — growth that is plausible but not expected. Only *hosts in
 the fleet* differs between them; *hosts the model recommends* is the same in both because the
 recommendation does not depend on the fleet you buy. The difference in capital is a number, and so
-is the difference in how often each ceiling goes over its limit: the right column costs more, and
-four ceilings about load and space — *utilisation at the busy hour*, *utilisation with one host
-down*, *working set against memory*, *disk fill at horizon* — are over their limits in far fewer of
+is the difference in how often each ceiling goes over its limit. The right column costs more, and
+four ceilings about load and space (*utilisation at the busy hour*, *utilisation with one host
+down*, *working set against memory*, *disk fill at horizon*) are over their limits in far fewer of
 its futures.
 
 More hosts means more coordination between them. *Fraction of the fleet doing nothing useful* rises,
@@ -207,7 +207,7 @@ make and defend, which is [ch21 · A TCO for a finance audience](#a-tco-for-fina
 ## What this cannot tell you
 
 **Whether the fleet is the right one.** The model prices `hosts`, and `hosts` is a decision. Every
-figure on this page is conditional on it, and nothing here argues for the number: the reference
+figure on this page is conditional on it, and nothing here argues for the number. The reference
 scenario takes the recommendation at the point estimates, which is how the decision is usually
 taken and is not the same as it being right. The ceilings say whether that fleet survives the
 model's futures; they cannot say whether a different fleet would have been a better buy. That
@@ -215,8 +215,8 @@ comparison is a second scenario and a judgement, which is [ch21](#a-tco-for-fina
 
 **What the structure leaves out.** The chains here are demand, memory and disk, and they meet only
 at *hosts the model recommends*. Nothing connects a request to the record it writes, so the model
-cannot work out whether traffic and data grow together. It assumes they do, through a single input —
-*annual growth factor* — that multiplies both the busy-hour request rate and the records held. That
+cannot work out whether traffic and data grow together. It assumes they do, through a single input,
+*annual growth factor*, that multiplies both the busy-hour request rate and the records held. That
 is a stronger assumption than a correlation: a correlation would let the two tend to grow together
 while differing in any one future, but a shared factor makes them grow at the same rate in every
 future the model draws. The model's two declared correlations are about other inputs: busy-hour

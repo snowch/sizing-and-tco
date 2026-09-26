@@ -87,9 +87,6 @@ made it.
 
 A spreadsheet cell holds a value and nothing about it. It doesn't tell you the unit, where it came from, or how certain it is. Everything this book does depends on those three things being written down beside the number.
 
-For unit, source, and certainty, a spreadsheet lets knowledge slip away where a model file keeps
-it.
-
 - **Unit.** A spreadsheet multiplies a rate by a plain number and produces identical digits
   regardless of whether the result is a rate or an amount. The toolkit enforces units on every
   formula and refuses any that do not match the declared unit: requests per second times seconds
@@ -147,5 +144,5 @@ Nothing in this book needs a datacentre, a cloud account, or a licence.
 Read [ch01](#point-estimates) first. It shows what a single number leaves out when you answer
 "how big" or "how much" with one figure. The chapter draws the line the rest of the book is built
 on: between a model that is right whenever every input is right, and a model that can be wrong
-even then. It can be wrong when it rests on a number someone measured on one piece of software,
+even then. It can be wrong when it rests on a number measured on one piece of software,
 or when it runs into a limit.

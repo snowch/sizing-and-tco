@@ -866,7 +866,7 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     "appendix-d-units-verdicts": Table(
         render=tables.unit_check_table,
-        computed_from="`sizing/units.py`, which reached every verdict",
+        computed_from="`sizing/evaluate.py`'s unit check, which reached every verdict",
     ),
     "appendix-d-units-conversions": Table(
         render=tables.conversions_table,

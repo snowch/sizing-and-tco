@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "4a989746cdb34c6c",
+  "code_fingerprint": "dfaacfcb4cb63c90",
   "code_sources": [
     "bench/run_missing_node.py",
     "sizing/dsl.py",
@@ -15,8 +15,8 @@
     "the_invoice_is_invented_too": "the average of twelve invoices that do not exist, kept in the problem's test so it is never mistaken for an observation of anything",
     "what_an_interval_here_is": "a statement about this file's declared inputs, and nothing about whether the file has every cost line (ch20)"
   },
-  "generated_at": "2026-09-26T20:57:57+00:00",
-  "git_revision": "611164a",
+  "generated_at": "2026-09-26T21:36:57+00:00",
+  "git_revision": "39f1b8b",
   "kind": "measurement",
   "name": "the-missing-node-fixture",
   "produced_by": {

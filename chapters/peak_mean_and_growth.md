@@ -71,7 +71,7 @@ how far the answer moves. That distance is its **swing**. Do it for every input 
 longest first. They form a funnel, which is where **tornado** gets its name. A **future** is one of
 many runs of the model's arithmetic, with every uncertain input set to one of its possible values,
 picked at random. The table shows the busy-hour rate at the horizon with each input at its low
-end—where only one future in ten falls below—and its high end, where only one in ten comes in above.
+end, where only one future in ten falls below, and its high end, where only one in ten comes in above.
 Inputs that do not feed the busy-hour rate, such as the peak-to-mean ratio, leave it unchanged.
 
 ```{image} _figures/peak-mean-and-growth-chart.svg
@@ -141,7 +141,7 @@ average is about sixteen times.
 
 Compounding curves upwards, so the high rates run away faster than the low ones fall. Averaging
 first flattens the curve and throws that away. The gap widens with the spread and with the
-horizon, which makes it largest over exactly the five-year plan a fleet gets bought against.
+horizon, which makes it largest over the five-year plan a fleet gets bought against.
 
 Problem 4.2 is that comparison. Write down which way you think it goes before you run it.
 
@@ -156,7 +156,8 @@ Nothing in [ch03](#where-the-numbers-come-from) helps here.
 A compression ratio can be measured. A price can be quoted. A growth rate is a claim about the
 future, and no amount of provenance discipline turns one into a measurement. The best available
 version is: the last three years, extrapolated, with a band wide enough to admit that the next
-three might not resemble them. The width of that band is a judgement nobody can check.
+three might not resemble them. The width of that band is a judgement nobody can check in
+advance.
 
 This book gives growth a band of the kind called **lognormal**. In plain words, a lognormal band is
 lopsided: it runs further above its middle value than below it, and never reaches zero. It fits
@@ -192,12 +193,13 @@ of your traffic, and it belongs to the `estate` target ([ch03](#where-the-number
 Everything above tells you what to do with one once you have it.
 
 **Whether growth will continue.** The model extrapolates. Extrapolation is the assumption that the
-mechanism producing the last three years is still running. The one thing a capacity model cannot
-see is the quarter it stops: a product retired, a customer lost, a competitor won.
+mechanism producing the last three years is still running. A capacity model cannot see the
+quarter that mechanism stops: a product retired, a customer lost, a competitor won.
 
-**Whether the band's width is honest.** A growth rate stated as *surprised below here, surprised
-above there* is a claim about somebody's surprise, and nobody goes back afterwards to count how
-often they were surprised. Nothing here calibrates that.
+**Whether the band's width is calibrated.** A growth band stated as *surprised below here,
+surprised above there* records the surprise of the model's author. Whether the width is right can
+only be checked afterwards, by counting how often actual growth fell outside it. Nothing here does
+that.
 
 **Anything about a shape that changes.** Every figure above assumes demand grows without changing
 its daily profile. A workload that grows by adding a different kind of user grows in a different
@@ -219,9 +221,9 @@ shape, and the busy hour moves.
 - **Compounding the average growth rate understates the expected capacity.** Over any horizon
   longer than a year, compounding every plausible rate and averaging the results gives a larger
   answer. The gap grows with the spread and with the horizon.
-- **A growth rate is a claim about the future, and no provenance turns it into a measurement.** The
-  honest form is a band stated as *surprised below this, surprised above that*, with a horizon
-  attached.
+- **A growth rate is a claim about the future, and no provenance turns it into a measurement.** State
+  it as a band, *surprised below this, surprised above that*, with a horizon attached. A sentence
+  can be argued with; a bare number cannot.
 :::
 
 ## Problems
@@ -246,12 +248,12 @@ python3 -m pytest tests/peak_mean_and_growth/test_problem_2_growth_gap.py -m pro
 ```
 
 **4.3 — What is your growth rate a claim about?** No test. This chapter has already said that
-nobody can check the width of a growth band, and writing a test for it would contradict that on
-the same page.
+nobody can check the width of a growth band in advance, and writing a test for it would contradict
+that on the same page.
 
 Find the growth rate somebody is currently using to plan the system you work on. Then answer
 three questions about it. What is it extrapolating: users, requests, retained data, or revenue
-that somebody has converted into one of those? Over what period was it measured, and is that
+converted into one of those? Over what period was it measured, and is that
 period long enough to contain the thing that would break it? And what would have to happen for it
 to be wrong by half, in either direction?
 
@@ -269,5 +271,7 @@ rather than the next three.
 [ch05](#littles-law) begins Part II, and changes the subject from how much demand there is to what
 happens to a system when it arrives.
 
-[ch13](#monte-carlo) is where the band in this chapter's second figure comes from.
-[ch19](#which-input-is-the-answer) is what to do about growth sitting at the top of the tornado.
+[ch13](#monte-carlo) shows how the band in this chapter's second figure was produced.
+
+[ch19](#which-input-is-the-answer) shows what to do about growth at the top of the tornado: it
+cannot be measured, so it has to be decided.

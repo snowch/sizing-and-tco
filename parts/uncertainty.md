@@ -17,13 +17,15 @@ about as much code as fits on a page. It assumes you can read code and do arithm
 nothing about statistics. Four words of vocabulary arrive in it, each because a model has just
 raised a question that needs it.
 
-**[ch14 · Correlation and convergence](#correlation-and-convergence)** picks up two things ch13's
-figures already show but do not explain: inputs that move together, such as network price moving
-with host price or busy hour with request cost. It shows how this pairing was done and what effect
-it had. If you treat inputs that move together as if each moved on its own, the model will report a
-narrower spread of answers than the evidence supports. ch13 also assumed it had run the computation
-enough times but did not establish that. ch14 works out what "enough" means: running the computation
-more times does not narrow the spread but tells you more precisely where it sits.
+**[ch14 · Correlation and convergence](#correlation-and-convergence)** takes up two things ch13's
+figures already carry but ch13 did not explain. First, ch13 drew inputs together that move as pairs:
+network price with host price, and the busy hour with what a request costs. ch14 shows how the
+pairing is done and what it changed. If you treat inputs that move together as if each moved on its
+own, the model reports a narrower spread of answers than the evidence supports.
+
+Second, ch13 assumed it had run the computation enough times but did not show it. ch14 works out
+what "enough" means: running the computation more times does not narrow the spread, but tells you
+more precisely where it sits.
 
 Read both knowing what neither can do, which is [ch20](#the-missing-node)'s subject. The method
 shows the doubt written into the model file about the inputs it has; it says nothing about a term

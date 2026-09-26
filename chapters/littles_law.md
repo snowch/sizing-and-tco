@@ -42,7 +42,7 @@ waited*, marks this choice, and the formula uses the service time, the model nod
 [ch06](#queueing-and-the-knee) adds the waiting to the residence time, and this number goes up.
 
 The law leaves out several things, which is why it gets a chapter. It assumes nothing about how
-requests arrive — they may be bursty, periodic or adversarial — and nothing about the order they
+requests arrive (they may be bursty, periodic or adversarial) and nothing about the order they
 are served in or the shape of anything.
 
 The law has one condition. The system is in a steady state over the window you look at: as many
@@ -70,8 +70,8 @@ takes. It belongs to one build of the software on one kind of machine. Nobody ha
 no reference machine is declared. Held as an unmeasured constant, it would have no value, nor would
 the cores busy, the utilisation, the requests in flight, and later the waiting time or the host
 count the model recommends. So the file declares it an **assumption** instead. This is not the
-placeholder [ch03](#where-the-numbers-come-from) refused: an assumption carries a declared range —
-the three values in the block — and every figure worked out from it carries that range too. A
+placeholder [ch03](#where-the-numbers-come-from) refused: an assumption carries a declared range
+(the three values in the block), and every figure worked out from it carries that range too. A
 placeholder is one number that passes for a measurement once it is copied. The assumption's source
 says what would replace it: a measurement on a declared machine. The three values are this book's
 own choice, not measured on any machine and not taken from any product.
@@ -197,15 +197,15 @@ have.
 
 **A latency that is not the latency.** Measure the requests in flight and the arrival rate over a
 window, divide, and compare the answer with the latency your service reports. A gap has one of two
-causes: queueing before your timer starts — a connection backlog, a load balancer, a thread pool
-— or a window in which arrivals and departures did not balance. The in-flight count at the start
+causes: queueing before your timer starts (a connection backlog, a load balancer, a thread pool)
+or a window in which arrivals and departures did not balance. The in-flight count at the start
 and at the end of the window tells them apart: if it ended close to where it started, the window
 balanced and the gap is queueing your timer cannot see. Nothing in the application can see that
 queueing. The user waits through it all the same.
 
 **A capacity claim that cannot be true.** A system claiming to serve some rate with some
 concurrency is claiming a residence time. If that residence time is below its own service time,
-somebody has made an arithmetic error, and the law finds it in one line.
+the claim contains an arithmetic error, and the law finds it in one line.
 
 **A queue nobody declared.** If in-flight requests grow while the arrival rate is flat, residence
 time is growing. Something downstream has slowed, and the queue in front of it is absorbing the
@@ -231,8 +231,8 @@ states it is averaging over. A system with a handful of requests in flight on av
 most of its time empty and the rest badly backed up. The average describes neither.
 
 **Anything about the tail.** It relates means. A residence time inferred this way is a mean, and
-it says nothing about the slowest one request in a hundred, which is the number anybody cares
-about during an incident.
+it says nothing about the slowest one request in a hundred, the number you care about during an
+incident.
 
 ## Key takeaways
 

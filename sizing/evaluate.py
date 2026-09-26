@@ -160,11 +160,11 @@ def plausible_magnitudes(model: Model) -> dict[str, float]:
     error in a formula whose units are fine. So the arithmetic has to be done on numbers that are
     not all the same number.
 
-    So each node gets its real value where one can be computed — that is what the numbers *are*,
-    and they can never be degenerate in a way the model itself is not. A node downstream of a
-    constant nobody has measured gets 1.0, and if that makes its formula undefined it is retried
-    at a value that cancels nothing. A node that still cannot be evaluated is reported by
-    :func:`check_units` for what it is, rather than as a units problem it is not.
+    So each node gets its real value where one can be worked out, and those numbers cannot be
+    degenerate in a way the model itself is not. Measured constants with no value and inputs with
+    no point value each get 1.0, and a formula downstream is worked out from that 1.0. If working
+    out a formula fails, the node is given a value that cancels nothing. If a node still cannot be
+    evaluated, :func:`check_units` reports it for what it is, not as a units problem.
     """
     magnitudes: dict[str, float] = {}
     for name in model.order:
@@ -181,7 +181,8 @@ def plausible_magnitudes(model: Model) -> dict[str, float]:
                 magnitudes[name] = float(_walk(node.of, magnitudes, SCALAR_FUNCTIONS))
         except Exception:
             # 0.37 rather than 1.0 or 0: it cancels nothing, it keeps `1 - x` positive, and it
-            # leaves a logarithm defined. Only reached downstream of an unmeasured constant.
+            # leaves a logarithm defined. Reached when a node's formula cannot be evaluated on the
+            # numbers above it, such as the 1.0 given to an unmeasured constant.
             magnitudes[name] = 0.37
     return magnitudes
 

@@ -12,15 +12,19 @@ Part III chose the fleet. This part shows what that fleet costs over its life an
 it does, and what that figure is and is not comparable with.
 
 **[ch15 · Capex, opex and where the total stops](#capex-opex-and-lifecycle)** splits what you pay
-once from what you pay every month, and notices which of the two got the meeting.
+once from what you pay every month. Capital arrives as one signed invoice, so it gets a meeting, a
+comparison and a negotiation. Running cost arrives in pieces from several directions, and over the
+horizon it amounts to several times the capital.
 
 **[ch16 · Power first](#power-first)** is what changes when the constraint is watts rather than
 money. It is the one place in the book where the sizing runs backwards and the rounding goes the
 other way.
 
-**[ch17 · Unit economics](#unit-economics)** turns a total into a number somebody outside the team
-can compare against something. It spends most of its time on the denominator, because nobody
-checks it.
+**[ch17 · Unit economics](#unit-economics)** turns a total into a cost per unit of work. This can
+be compared against a supplier, last year, or another team. The chapter spends most of its time on
+the denominator, because the denominator hides choices: when in the fleet's life you count what is
+held, and whether you divide before or after taking the median. The defensible combinations are not
+close together.
 
 **[ch18 · The five-year model](#the-five-year-model)** concerns the seam between two models: how one
 uses a figure that another computed. Its example is the web service's cost per stored terabyte,

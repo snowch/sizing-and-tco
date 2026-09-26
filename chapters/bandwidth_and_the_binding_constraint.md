@@ -26,8 +26,8 @@ A web service has to serve its requests, keep its working set in memory, and hol
 disk. Those are three requirements with three different arithmetics, and none of them can be derived
 from the others.
 
-- The request chain runs from the busy hour, through the cost of a request and the margin under the
-  knee, to a number of hosts.
+- The request chain runs from the busy hour, through the cost of a request and the queueing margin,
+  to a number of hosts.
 - The memory chain runs from the records held, through the share of them a busy hour touches, to the
   hosts whose memory can hold that with room to spare.
 - The disk chain is [ch09](#capacity)'s.
@@ -98,7 +98,7 @@ No chain decides most of the time. The working set wins more often than the othe
 is close behind. The disk chain, the one [ch09](#capacity) spent a chapter on, wins least. Then read
 the three rows after the tie. Size on any one chain alone, even the usual winner, and the fleet is
 too small more often than not. *Wins most often* is a fact about a three-way race. *Too small* is a
-fact about losing to anybody.
+fact about losing to any one of the other chains.
 
 In each future, the gap is the difference between what the winning chain asks for and the runner-up;
 the row "Median gap between the winner and the runner-up" is the middle of those gaps. Set the
@@ -144,8 +144,8 @@ zeros.
 ```{include} _generated/bandwidth-and-the-binding-constraint-shortfall.md
 ```
 
-The median across all futures is small next to "Median of the memory chain alone"—it looks like a
-rounding error—because the zeros take the lower part of the shortfalls and the middle value lands
+The median across all futures is small next to "Median of the memory chain alone" (it looks like a
+rounding error) because the zeros take the lower part of the shortfalls and the middle value lands
 just past them. The average across all futures is larger, pulled up by a minority of futures where
 another chain asks for far more than the memory chain. So "median across all futures" makes the
 shortfall look harmless, but "averaged over every future" does not.
@@ -232,7 +232,7 @@ records for a few are the same model with different inputs and opposite answers.
   future.
 - **No chain wins most of the time.** Size on any single chain, even the one that wins most often,
   and the fleet is too small more often than not.
-- **The honest summary of sizing on one chain is two numbers.** How often it is wrong, and by how
+- **The summary of sizing on one chain is two numbers.** How often it is wrong, and by how
   much when it is. Either one alone is a way of not answering.
 - **More chains mean more chances to be caught out.** The chance that some constraint binds
   unexpectedly rises with their number, even while each one's chance stays small.
@@ -284,8 +284,8 @@ one chain, you have found an assumption rather than a fact.
 
 Each chain divides by a capacity less a margin: the request chain by a queueing margin, the memory
 chain by a cache margin, the disk chain by a disk margin. [ch11](#headroom-and-failure-domains)
-sorts margins into three kinds by what they protect—a capacity margin against a cliff, a queueing
-margin against a slope, a scaling margin against a budget—and asks what happens when a host dies
-at the busy hour.
+sorts margins into three kinds by what they protect: a capacity margin against a cliff, a queueing
+margin against a slope, a scaling margin against a budget. It also asks what happens when a host
+dies at the busy hour.
 
 [ch12](#the-sizing-model) puts all of Part III together and produces a number.

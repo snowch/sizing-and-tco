@@ -14,9 +14,10 @@ short_title: "ch18 The five-year model"
 
 How does one model use a figure another model computed, without losing its uncertainty?
 
-Usually the figure crosses as one number: somebody writes it down, and the second model treats it as
-known. The headline number survives that crossing. The uncertainty around it does not, because one
-number has no way to carry it.
+Usually the figure crosses as one number: the team that owns the downstream model reads it off the
+first team's report and types it in, and the downstream model treats it as known. The headline
+number survives that crossing. The uncertainty around it does not, because one number has no way to
+carry it.
 
 ## The material
 
@@ -52,7 +53,7 @@ answer, because the upstream price is uncertain.
 
 **Hand over a number.** The team that owns the downstream model reads the upstream median off
 the upstream team's report and types it in as a known figure. This is what happens in practice:
-in a meeting, between two teams, and often between two quarters.
+in a meeting, or between two teams.
 
 Problem 18.1 does both joins. The headline (median) stays roughly where it was. The interval from
 the number handover is narrower, and the narrowing is not earned: it comes from dropping the
@@ -116,7 +117,7 @@ that test, and the problem gets rewritten.
 Whether the format *should* have one is an open question. The case for: it would make the join
 explicit, checkable and correlatable. The case against: a model reaching into another model's
 samples needs a fingerprint covering both, needs scenarios that agree, and cannot be reasoned
-about on its own. One large model is not obviously better than two honest small ones with a
+about on its own. One large model is not obviously better than two small ones with a
 documented seam.
 
 This book has not resolved it. It names the seam and measures what crossing it badly costs.
@@ -129,9 +130,8 @@ horizon, line by line, using the split [ch15](#capex-opex-and-lifecycle) introdu
 ```{include} _generated/the-five-year-model-split.md
 ```
 
-Part V ends with this total and its composition. The running cost is most of the total;
-[ch15](#capex-opex-and-lifecycle) showed that the capital is the part that usually gets argued
-about.
+Part V ends with this total and its composition. The running cost is most of the total.
+[ch15](#capex-opex-and-lifecycle) breaks it into capital and running cost.
 
 And here is the whole file as a graph, for the first time. It holds everything
 [ch02](#what-a-workload-is) started with and everything the chapters between added to it. Every
@@ -182,9 +182,9 @@ now two structures, and the lines missing from each are invisible to the other.
   independence too narrow.
 - **This toolkit has no node for a distribution that came from another model.** The gap is named,
   tested for, and left open on purpose, because one large model is not obviously better than two
-  honest small ones with a documented seam.
+  small ones with a documented seam.
 - **What Part V hands on is a five-year total and its composition.** Most of the money is running
-  cost, the part that seldom gets argued about.
+  cost.
 :::
 
 ## Problems
@@ -226,8 +226,8 @@ about.
 
 ## Where to go next
 
-[ch19](#which-input-is-the-answer) begins Part VI and asks the only actionable question about a
-wide interval: which input should you go and measure?
+[ch19](#which-input-is-the-answer) begins Part VI. It asks which input you should go and measure,
+and what measuring it would buy.
 
 [ch20](#the-missing-node) is about the error this page's *What this cannot tell you* ended on: a
 line missing from the model, which no interval shows. It asks how you find that error.

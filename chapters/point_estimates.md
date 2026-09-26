@@ -34,7 +34,7 @@ The two ends are far apart. The point estimate sits much nearer the smallest ans
 
 ### A point estimate is not wrong. It is silent.
 
-A **point estimate** is the number you get when you pick one value for every input—typically the middle of a range—and do the arithmetic once. It is what a spreadsheet gives. It is what sizing conversations are about.
+A **point estimate** is the number you get when you pick one value for every input (typically the middle of a range) and do the arithmetic once. It is what a spreadsheet gives. It is what sizing conversations are about.
 
 To size a fleet for a web service you need:
 
@@ -68,7 +68,7 @@ The arithmetic in every row is right. Each input moved on its own raises the far
 
 A point estimate treats every input as landing on the value you picked. The table shows what happens when some of them do not.
 
-The honest answer to *how big* is not one number. It is the list of answers you could get depending on what turns out to be true.
+The answer to *how big* is not one number. It is the list of answers you could get depending on what turns out to be true.
 
 ### The error a range cannot show
 
@@ -91,11 +91,11 @@ If yes, you have a definitional model. If no, you have a conditional one.
 
 *Measured constants.* How much smaller a record is on disk than in memory after compression. How much work one processor core does per request. These are measured, not derived. Each belongs to one implementation at one version, and each has a measurement error. Upgrade the software and the constant is not uncertain, it is wrong, and it lies outside the range you gave it, because that range described the old version.
 
-A number is a measured constant because of where it came from, not because of what it measures. Processor time per request is a measured constant when somebody measured it on one implementation at one version, and the model records it as that measurement. When you estimated it or chose it, it is an ordinary uncertain input with a range, and on its own it leaves the model definitional.
+A number is a measured constant because of where it came from, not because of what it measures. Processor time per request is a measured constant when it was measured on one implementation at one version, and the model records it as that measurement. When you estimated it or chose it, it is an ordinary uncertain input with a range, and on its own it leaves the model definitional.
 
 *Ceilings.* A queue where the hosts are busy all the time and work arrives faster than it can be done; below that, response time climbs faster with every step of load. A host failing at the busy hour, so its load lands on survivors that are already busy. A working set outgrowing memory. These are regime changes, and **a chain of multiplications cannot model a regime change.** It carries on past the limit as if nothing happened, and reports a system running at several times its own limit.
 
-Every input can be right and the answer still wrong. So a conditional model must declare the headroom—the margin below each ceiling—it will not cross. The toolkit enforces this: you cannot build one without these declarations.
+Every input can be right and the answer still wrong. So a conditional model must declare the headroom (the margin below each ceiling) it will not cross. The toolkit enforces this: you cannot build one without these declarations.
 :::
 
 The toolkit works out which kind a model is from what is in it: one measured constant or one ceiling makes it conditional, and nobody declares this by hand. The names say what a model contains, not what it is for. A model that works out how many hosts to buy can still be definitional, and the web service model is, until [ch06](#queueing-and-the-knee) adds its first ceiling. When this book says *sizing model* or *cost model* it means what those words mean at work: the model that produces a host count, and the model that turns it into money. Problem 1.3 gives you three model descriptions to sort by kind.
@@ -106,7 +106,7 @@ The toolkit works out which kind a model is from what is in it: one measured con
 
 **Whether the spread is right.** The range reports the spreads in the file. If the growth rate's spread was a guess nobody checked, the range inherits the guess. It says nothing about it. The difference between measurement, claim and guess decides whether a range is a finding or decoration.
 
-**How much the range should worry you.** A wide range on a number nobody will act on for a year is not a problem. A narrow one on a purchase order might be. The arithmetic knows neither. This book has no opinion about your risk appetite.
+**How much the range should worry you.** A wide range on a number you will not act on for a year is not a problem. A narrow one on a purchase order might be. The arithmetic knows neither. This book has no opinion about your risk appetite.
 
 ## Key takeaways
 
@@ -117,7 +117,7 @@ The toolkit works out which kind a model is from what is in it: one measured con
   a correct number that says nothing about how far it could be out.
 - **Doubt compounds along a chain of multiplications.** Moving several uncertain inputs at once
   moves the answer further than any single input does on its own; the taxi table shows this—its
-  last row costs more than any other row. The honest answer to *how big* is the range of answers
+  last row costs more than any other row. The answer to *how big* is the range of answers
   you could get, not one figure.
 - **A range reports only the doubt you wrote down.** An error in the model's shape is invisible
   to any amount of varying the inputs.
@@ -163,7 +163,7 @@ python3 -m pytest tests/point_estimates/test_problem_3_which_kind.py -m problem
 
 Take a system you run. Write down three to six numbers that decide how big it must be. Not everything you know about it: what would change the answer. Beside each, write where it came from: measured, told by a supplier, or decided.
 
-Then answer two questions. Which, if wrong by half, would change what you would buy? Is there a constant somebody measured on one version of one piece of software? Or a limit your system hits before running out of capacity? If so, you are holding a conditional model: every input in it can be right and the answer still wrong.
+Then answer two questions. Which, if wrong by half, would change what you would buy? Is there a constant measured on one version of one piece of software? Or a limit your system hits before running out of capacity? If so, you are holding a conditional model: every input in it can be right and the answer still wrong.
 
 A good answer is short, names its sources, and is uncomfortable somewhere. Your answer is not finished if any of these is true:
 

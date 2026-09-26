@@ -78,8 +78,8 @@ the curve.
 
 [ch06](#queueing-and-the-knee) had no scaling term, so its utilisation was the work arriving
 divided by what the machines could do *if each of them worked alone*. They do not work alone. Some
-of their capacity is spent on each other, and the honest utilisation is the arriving work divided
-by what the fleet can deliver.
+of their capacity is spent on each other, and *utilisation, counting coordination* divides the
+arriving work by what the fleet can deliver.
 
 The model carries both numbers, side by side, on purpose:
 
@@ -206,7 +206,8 @@ step, the curve above describes a queue in front of the real problem.
   computes it from the utilisation that ignores coordination, so that gain is the optimistic one.
   Those are different purchases.
 - **The utilisation a queueing view quotes is optimistic.** Some of every machine's capacity is
-  spent on the others, so the honest figure divides by what the fleet can deliver.
+  spent on the others, so the figure that counts coordination divides by what the fleet can
+  deliver.
 - **The shape of the curve is the claim. The position of the peak is a guess.** Three measurements
   at different sizes fit the coefficients exactly, and extrapolating them to hundreds of machines is
   the bet you are placing.

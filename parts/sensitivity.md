@@ -28,6 +28,6 @@ Everything in Part IV and [ch19](#which-input-is-the-answer) is about the first 
 chapter is about the second. Around a model of the wrong shape, the machinery does worse than miss
 the error: it produces an interval settled around the wrong answer, and the settling looks rigorous.
 
-The order matters. A reader who does [ch19](#which-input-is-the-answer) without
+The order matters: a reader who does [ch19](#which-input-is-the-answer) without
 [ch20](#the-missing-node) has learned to optimise a list without asking whether the list is
 complete.

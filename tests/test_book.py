@@ -611,7 +611,7 @@ def test_every_model_run_shares_one_sample_count_and_seed():
         assert len(values) == 1, (
             f"results disagree about {field!r}: "
             + "; ".join(f"{value} in {sorted(names)}" for value, names in values.items())
-            + f". index.md states one {field} for the whole book and no figure prints it, so a "
+            + f". Appendix H states one {field} for the whole book and no figure prints it, so a "
             "second value is published nowhere a reader could find it."
         )
 

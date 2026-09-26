@@ -78,11 +78,11 @@ factor counts copies; the number of values a label takes multiplies the number o
 per month has time in its denominator, so it is a flow of money: storage at so much per terabyte per
 month.
 
-The commonest error in sizing turns a flow into a stock by multiplying it by a plain number
-instead of by an amount of time. Requests a second times five is still requests a second: five
-times as many of them, arriving just as fast, and not one of them stored anywhere. Requests a
-second times five *seconds* is requests, which is a thing you can hold. The plain number changes
-how much; only the duration changes what kind.
+One error in sizing turns a flow into a stock by multiplying it by a plain number instead of by
+an amount of time. Requests a second times five is still requests a second: five times as many of
+them, arriving just as fast, and not one of them stored anywhere. Requests a second times five
+*seconds* is requests, which you can hold. The plain number changes how much; only the duration
+changes what kind.
 
 A spreadsheet shows the same digits either way and cannot tell you
 which kind they are. The toolkit refuses a formula whose units do not produce the node's declared
@@ -93,10 +93,13 @@ units combine and cancel, on a page of examples the toolkit works out itself.
 
 A model is a file of named quantities, each with a unit and a source. A spreadsheet can hold both: a
 source in a comment or a column, and a unit in a header or a cell format. Nothing forces you to fill
-them in, and nothing checks that you have. Without a required place for them, these facts stay in
-the head of whoever built the sheet and leave with that person: where a value came from; which
-version of what you measured it against; whether it is a vendor's claim; and whether it was agreed
-by people who have since left.
+them in, and nothing checks that you have. Without a required place for them, four facts stay in
+the head of whoever built the sheet and leave with that person:
+
+- where a value came from;
+- which version of what you measured it against;
+- whether it is a vendor's claim;
+- whether it was agreed by people who have since left.
 
 When `=B4*C7` multiplies a count of hosts by a request rate, the result has a unit nobody wants:
 hosts times requests per second. What you need is requests per second per host, which is the rate
@@ -191,7 +194,7 @@ Interactive viewer: five inputs, none derived from another. Drag a slider to cha
 slider leaves the others alone, because no node is worked out from another yet.
 
 `annual_growth` is the factor demand multiplies by each year; a factor above one means growth.
-`horizon` is how long until you buy again—the refresh cycle you size for—and it is your choice.
+`horizon` is how long until you buy again (the refresh cycle you size for), and it is your choice.
 `one_year` is a year you do not choose, because it is true by definition. It is there because growth
 compounds, so the horizon becomes an exponent, and an exponent has no unit, as the note in the file
 says.
@@ -335,8 +338,8 @@ half above. That is why *label values endpoint*, a count, shows a fraction.
 % word-ok: a scrape interval is a length of time and a sampling rate is a trace setting
 Six rows of the *What you decide* group are the platform's knobs, four kinds of setting: the scrape
 interval; a retention period for each of metrics, logs and traces; the trace sampling rate; and the
-fraction of log lines kept. The rest is the fleet you buy to run it—collector cores, store nodes,
-usable terabytes per node, query nodes—and the horizon.
+fraction of log lines kept. The rest is the fleet you buy to run it (collector cores, store nodes,
+usable terabytes per node, query nodes) and the horizon.
 [Appendix F](#appendix-f-observability-model) turns one of each kind down and shows what that saves.
 
 The number of label values is not among the decisions. A label is a tag on each metric, such as the
@@ -356,7 +359,8 @@ to requests needs a measured constant: requests per user. It changes whenever us
 use the product, so it needs re-measuring.
 
 **As a single point in time.** A workload that does not state a growth rate is a workload stated
-for today, and nobody buys infrastructure for today.
+for today, and hardware is bought to last years, so it sizes a fleet for a moment that will have
+passed.
 
 ### What the demand side leaves out
 
@@ -367,7 +371,7 @@ but a fact about one build of the software on one kind of machine. It belongs to
 on that machine. Until one is taken, the model holds it as an assumption, and its source says which
 measurement would replace it. That processor time, the arrival rate and a count of machines are what
 [ch05](#littles-law) through [ch07](#when-adding-servers-stops-helping) build on. The demand side
-says what is asked of the system, and how the system responds—such as slowing down as it fills—is
+says what is asked of the system, and how the system responds (such as slowing down as it fills) is
 what those chapters add.
 
 ## What this cannot tell you
@@ -400,9 +404,8 @@ range this book reports too narrow ([ch14](#correlation-and-convergence)).
 - **A flow is a rate, a stock is a level, and the unit tells them apart.** A flow has time
   underneath it; a stock is how much there is now, with no *per* in its unit. Ratios, prices and
   pure numbers like replication factors have no time in them at all.
-- **The commonest sizing error turns a flow into a stock by multiplying it by a plain number.** A
-  rate times a number is still a rate. Only a duration makes it an amount, and the toolkit refuses
-  the other.
+- **One sizing error turns a flow into a stock by multiplying it by a plain number.** A rate times
+  a number is still a rate. Only a duration makes it an amount, and the toolkit refuses the other.
 - **A model is a file of named quantities, each with a unit and a source.** A spreadsheet can hold
   both, but does not require either and does not check them. The file requires both on every input,
   and the toolkit checks every formula against the units.
@@ -468,7 +471,7 @@ python3 -m pytest tests/what_a_workload_is/test_problem_4_broken.py -m problem
 no oracle for it.
 
 Take something you operate and write down the quantities that describe what it has to do. Not the
-metrics you happen to collect: the quantities somebody would need to size it. Give each one a
+metrics you happen to collect: the quantities you would need to size it. Give each one a
 unit. Then sort them: which are rates, which are levels, which are neither.
 
 Two things to look for when you have finished. Is there a quantity you could not give a unit to?
@@ -485,4 +488,5 @@ least one quantity than you were before you wrote it down.
 [ch03](#where-the-numbers-come-from) answers the question this chapter kept deferring: once you have
 written a quantity down, what are you claiming about it?
 
-[ch04](#peak-mean-and-growth) is the other one: demand moves, so which value of it sizes you?
+[ch04](#peak-mean-and-growth) takes up the other question this chapter raised: demand moves, so
+which value of it sizes you?

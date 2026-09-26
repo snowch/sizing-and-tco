@@ -25,10 +25,10 @@ machines follows from it.
 When power binds, the chain inverts. You start with an allocation at the wall. You divide out
 what the building spends on itself. You divide by what a machine draws. Then you round **down**.
 
-That rounding is the only one in this book that goes that way. Every other constraint is a demand
-to be satisfied, so it rounds up. This one is a supply that cannot be exceeded. Problem 16.1 is
-that inversion. People get the facility multiplier backwards: an inefficient building buys you
-*fewer* machines, not more.
+That rounding is the only one in this book that goes that way. Every other constraint is a demand to
+be satisfied, so it rounds up. This one is a supply that cannot be exceeded. Problem 16.1 is that
+inversion. You divide by the facility multiplier, so a less efficient building (a higher multiplier)
+buys you *fewer* machines, not more.
 
 Here is the same fleet on two axes:
 
@@ -40,8 +40,8 @@ Here is the same fleet on two axes:
 On the left, watts against hosts, and a wall: what the building will supply, the largest whole
 number of hosts that stays under it, and the next one, which does not. On the right, the same
 hosts against what they cost over the horizon. It is a slope, and there is nothing across it to
-stop anybody. That is the difference between a constraint and a price, and the rest of this
-chapter is about what happens to the fleet the wall leaves you.
+stop you buying another host. That is the difference between a constraint and a price, and the
+rest of this chapter is about what happens to the fleet the wall leaves you.
 
 ### What a power budget does to a fleet sized for demand
 
@@ -63,7 +63,7 @@ power-constrained design looks like a saving.
 Then look at the last row, *residence time*: the seconds a request spends in the system at the busy
 hour. Its ratio is far above one. Residence time is the time a request needs to run divided by the
 share of the fleet that is idle at the busy hour. The same load on fewer machines leaves less of the
-fleet idle. This is the knee from [ch06](#queueing-and-the-knee): the division by idle fraction is
+fleet idle. This is [ch06](#queueing-and-the-knee)'s curve: the division by idle fraction is
 nearly flat while there is slack, and nearly vertical when there is not.
 
 Then read the ceilings:
@@ -84,7 +84,8 @@ the rounded figure.
 
 Two more ceilings are *into the margin*: *utilisation at the busy hour* and *utilisation with one
 host down*. Each is still under its limit but past the line where the margin was meant to keep it.
-That margin was what kept the fleet off the knee, and spending it is why residence time rose.
+The *queueing margin*, which both use, kept a share of the fleet idle at the busy hour. When that
+idle share was spent down, residence time rose.
 
 The sixth ceiling, *fraction of the fleet doing nothing useful*, is ok. A smaller fleet loses a
 smaller share of itself to coordination. This does not help, because the busy-hour load did not
@@ -102,7 +103,7 @@ in which that ceiling is past its limit, for each fleet:
 The reference fleet already breaks each of the three in some of its futures. The power budget raises
 every one of those shares.
 
-So the honest output of this chapter is not a fleet. **It is the statement that this workload
+So the output of this chapter is not a fleet. **It is the statement that this workload
 does not fit in this power envelope**, with the numbers to say so.
 
 That is a useful answer, and a spreadsheet does not produce it. Sized from a power budget, a
@@ -187,18 +188,18 @@ them into money.
 So how much energy a fleet uses is set by its machines and its building. The price is the only part
 of the energy line that is a price.
 
-Energy is also the only cost line that is a **constraint** at the same time. Nobody is told they
-may not spend more on hosts. People are regularly told the rack has no more power.
+Energy is also the only cost line that is a **constraint** at the same time. A power allocation caps
+how many machines you can run; the cost of hosts has no such cap.
 
 ### A note on carbon
 
 The model does not carry a carbon figure. The omission is deliberate.
 
-Converting energy to emissions needs a grid intensity. That varies by region, by hour, and by
-whatever contractual instruments an organisation has bought. Those instruments are an accounting
-decision, not a physical one. This book produces the kilowatt-hours, which is the part it can
-defend. Multiplying them is somebody else's judgement, and the multiplier is where all the
-disagreement is.
+Converting energy to emissions needs a grid intensity, which varies by region, by hour, and by the
+contractual instruments an organisation has bought. Those instruments are an accounting decision,
+not a physical one. This book produces the kilowatt-hours, which is the part it can defend.
+Multiplying them by a grid intensity is a judgement for the organisation's carbon accounting, and
+the multiplier is where the disagreement is.
 
 If energy price and carbon price move together, a model that added a carbon line and drew its price
 independently of the energy price would understate the range of the total.
@@ -222,8 +223,8 @@ fleet that idles overnight and saturates at noon has an energy bill of one shape
 problem of another. This model has only the average.
 
 **Whether the building's multiplier is stable.** It varies with outside temperature and with how
-full the facility is. The figure quoted in a contract is usually an annual average under
-favourable assumptions.
+full the facility is. The model cannot show that variation; a single figure in a contract says
+nothing about when it applies.
 
 **What to do about it.** The model prices the fleet you end up with for each of the four responses
 above. Only for using less per machine does it also price what the change costs. It has no node for
@@ -241,14 +242,14 @@ and [ch21](#a-tco-for-finance) is about putting one to the people who pay for it
   running example is over three hard limits at the point estimate and into the margin on two more
   of its six ceilings. Its capital and running cost fall with the fleet, but the time a request
   spends in the system rises steeply.
-- **The honest output is a statement that the workload does not fit, with the numbers to say so.** A
+- **The output is a statement that the workload does not fit, with the numbers to say so.** A
   spreadsheet sized from a power budget gives a host count and stops.
 - **There are four ways out, and the model prices the whole trade for only one of them.** More
   power, less per machine, a better building, or wanting less. For each, the model prices the
   fleet you end up with; only for using less per machine does it also price what the change
   costs.
-- **Energy is the one cost that is also a constraint.** Nobody is told they may not spend more on
-  hosts. People are regularly told the rack has no more power.
+- **Energy is the one cost that is also a constraint.** A power allocation caps how many machines
+  you can run; the cost of hosts has no such cap.
 :::
 
 ## Problems
@@ -299,9 +300,9 @@ be the smallest.
 
 ## Where to go next
 
-[ch17](#unit-economics) turns a total into a cost per unit of work, which someone outside the team
-can compare. It is about the part of a unit cost that goes unchecked: what it divides by. The first
-table shows a lower *cost per million requests* for the power-first fleet. But the model divides the
-total by the requests the demand brings over the horizon, not by the requests the fleet can serve.
-The power-first fleet cannot serve them all at the busy hour, so its lower unit cost divides by work
-it cannot do.
+[ch17](#unit-economics) turns a total into a cost per unit of work, which you can compare against a
+supplier, last year or another team. It is about the part of a unit cost that goes unchecked: what
+it divides by. The first table shows a lower *cost per million requests* for the power-first fleet.
+But the model divides the total by the requests the demand brings over the horizon, not by the
+requests the fleet can serve. The power-first fleet cannot serve them all at the busy hour, so its
+lower unit cost divides by work it cannot do.

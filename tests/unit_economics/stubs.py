@@ -1,6 +1,6 @@
 """Chapter 17's problems. Edit this file; the tests beside it say whether you are right.
 
-Both are about the denominator, which is the half of a unit cost nobody checks.
+Both are about the denominator.
 """
 
 from __future__ import annotations

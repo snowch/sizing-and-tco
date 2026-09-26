@@ -15,8 +15,8 @@ short_title: "ch15 Capex, opex and where the total stops"
 What do you pay once, what do you pay every month, and what does this book deliberately not model?
 
 [ch12](#the-sizing-model) chose the fleet. This chapter prices it. The arithmetic is easy. Two
-things are hard. The first is the split between the invoice somebody signs and the bills that
-arrive afterwards. The second is knowing where a cost model should stop.
+things are hard. The first is the split between the one invoice you sign for the capital and the
+bills that arrive afterwards. The second is knowing where a cost model should stop.
 
 ## The material
 
@@ -67,8 +67,8 @@ money taken off the purchase takes more than that off the total.
 **People** is carried as about one engineer's time at a fully loaded rate (salary, employer
 costs, tooling and overhead), and both the engineer count and the rate are assumptions. The line
 is in the model because leaving it out is also a decision: an absent line counts as zero, and
-zero has no source. Here it is the largest line in the whole total, larger than the hosts. It is
-the hardest line to defend either way.
+zero has no source. Here it is the largest line in the whole total, larger than the hosts.
+Neither including it nor leaving it out rests on a measurement.
 
 ### What moves the running cost
 
@@ -82,7 +82,7 @@ per core, and what an engineer costs. The electricity price is near the bottom, 
 support rate.
 
 Growth does not appear in this table, although it was at the top of ch04's. The host count is
-fixed—decided in [ch12](#the-sizing-model)—so no input that describes demand or growth feeds the
+fixed, decided in [ch12](#the-sizing-model), so no input that describes demand or growth feeds the
 running cost. Because this tornado swings prices, per-host figures and the people estimate only,
 the order is this model's finding: people and licences move the running cost most, and energy
 moves it the least.
@@ -96,8 +96,8 @@ one whole purchase: the entire *Capital, paid once* row, hosts and network toget
 conventions are defensible, so two people with the same inputs can produce two totals that
 differ by a whole purchase and both be right—provided each says which convention they used.
 
-This book's model counts one purchase. The horizon is the refresh cycle—how long until you buy
-again—so the refresh that ends the horizon buys the fleet for the next horizon. That fleet's
+This book's model counts one purchase. The horizon is the refresh cycle (how long until you buy
+again), so the refresh that ends the horizon buys the fleet for the next horizon. That fleet's
 running cost is not in this total, and neither is its purchase: that capital belongs to the next
 plan. The model writes the convention down in the note on the total:
 
@@ -135,8 +135,8 @@ problem.
 terms decide whether a plan can change. They are not quantities.
 
 The line this chapter draws is **one cash total over the horizon, from physics and prices**.
-Everything on the other side—when the money is spent, tax, depreciation, discounting,
-procurement, and contracts—belongs to finance, tax advisers, or procurement.
+Everything on the other side (when the money is spent, tax, depreciation, discounting,
+procurement, and contracts) belongs to finance, tax advisers, or procurement.
 
 ### What the model says
 
@@ -146,21 +146,21 @@ procurement, and contracts—belongs to finance, tax advisers, or procurement.
 The table shows capital, yearly running cost and total at their point estimates and
 90% intervals. These come from the method of [ch13](#monte-carlo), where every input is drawn
 together many times over. The *capex* and total point estimates match the split table's *Capital* and
-**Total** rows. The *annual opex* is the yearly running cost—the split table's *Running* row
-divided by the horizon—which is what Problem 15.1 needs.
+**Total** rows. The *annual opex* is the yearly running cost (the split table's *Running* row
+divided by the horizon), which is what Problem 15.1 needs.
 
 The interval on the total is the only figure the rest of the page does not give. It is wider than
 the whole capital cost, because the *annual opex* interval across the horizon is much wider than
-the *capex* interval. The part that gets the least scrutiny—the cost arriving in pieces—is also
+the *capex* interval. The part that gets the least scrutiny, the cost arriving in pieces, is also
 the part the model is least certain of.
 
 ## What this cannot tell you
 
-**What the model's structure omits.** Every cost line above is one somebody thought of. There is
-no line for rack space, cross-connects, backup, disaster recovery, the database's own licence if
-it has one, or the network gear between racks. Migration is not missing: the model carries it as
-a declared zero, because the design builds on the platform it already runs on. The model
-reports each absent line as zero, confidently. Neither [ch13](#monte-carlo) nor
+**What the model's structure omits.** Every cost line above is one the model's author thought of.
+There is no line for rack space, cross-connects, backup, disaster recovery, the database's own
+licence if it has one, or the network gear between racks. Migration is not missing: the model
+carries it as a declared zero, because the design builds on the platform it already runs on. The
+model reports each absent line as zero, confidently. Neither [ch13](#monte-carlo) nor
 [ch14](#correlation-and-convergence) can see it. That is
 [ch20 · The missing node](#the-missing-node).
 
@@ -169,12 +169,12 @@ assumption ([ch03](#where-the-numbers-come-from)). None was measured. A price is
 thing this repository can measure.
 
 **What happens if the fleet is wrong.** The cost model takes the host count as given. If
-[ch12](#the-sizing-model)'s fleet goes over the knee partway through its horizon, the real total
-includes an unplanned purchase. No line here represents it.
+[ch12](#the-sizing-model)'s fleet goes past its limit at the busy hour partway through its horizon,
+the real total includes an unplanned purchase. No line here represents it.
 
 **Anything about when the money is spent.** The split above is a total over a horizon. Whether
 the capital lands in one quarter or three changes nothing in this model, and a great deal in
-somebody's budget.
+finance's budget for those quarters.
 
 ## Key takeaways
 
@@ -226,8 +226,8 @@ python3 -m pytest tests/capex_opex_and_lifecycle/test_problem_2_refresh.py -m pr
 no test in this repository can know them.
 
 Every price in this book's model is a vendor's claim or an assumption, and the page says so under
-*What this cannot tell you*. For each of the six cost lines in the split table—hosts, network,
-energy, licences, support and people—record where the figure came from. For any you could not
+*What this cannot tell you*. For each of the six cost lines in the split table (hosts, network,
+energy, licences, support and people), record where the figure came from. For any you could not
 get, record which team holds it. Count how many you obtained.
 
 A good answer shows, for each line, a figure and its source or a named gap. It classifies each
@@ -241,8 +241,8 @@ kind.
 
 ## Where to go next
 
-[ch16](#power-first) takes the energy line—physics in structure but claims and assumptions in its
-inputs—and asks what changes when it stops being a line item and becomes the constraint.
+[ch16](#power-first) takes the energy line (physics in structure but claims and assumptions in its
+inputs) and asks what changes when it stops being a line item and becomes the constraint.
 
-[ch17](#unit-economics) turns the total into a number somebody outside the team can compare
-against something.
+[ch17](#unit-economics) turns the total into a cost per unit of work. A unit cost can be compared
+against a supplier, against last year, or against another team.

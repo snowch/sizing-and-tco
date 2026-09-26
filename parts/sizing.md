@@ -14,7 +14,7 @@ produced.
 **[ch09 · Capacity](#capacity)** is the chain from what an application stores to what a purchase
 order says. Two of the chain's four terms are decisions: the replication factor and the disk margin,
 each a single value with no range. The other two are uncertain and lean the same way, towards
-needing more disk: index overhead has a range that reaches further up than down, and the compression
+needing more disk. Index overhead has a range that reaches further up than down. The compression
 ratio was measured on one continuous stream, so it represents the most a real store could achieve,
 not what it will achieve.
 
@@ -31,6 +31,7 @@ reserves more of the fleet than the margins themselves ask for, and ends up buyi
 individual margin requested.
 
 **[ch12 · The sizing model](#the-sizing-model)** assembles all of it and produces the number the
-book is about. It lets the inputs move and asks how often the fleet goes past each of its ceilings.
-The answer is not one number: a relationship between a number of hosts and a risk. The person who
-signs for the fleet chooses a point on it. How those shares were computed is Part IV's subject.
+book is about. It lets the inputs move and reports, for each ceiling, the share of the model's
+futures in which the fleet goes past it. The answer is not one number: it is a relationship between
+a number of hosts and a risk. The person who signs for the fleet chooses a point on it. Part IV
+explains how those shares are computed.

@@ -30,12 +30,12 @@ example's, as this chapter leaves it, then the observability platform's:
 ```{include} _generated/headroom-and-failure-domains-observability.md
 ```
 
-They are all percentages, and they are not the same kind of thing at all.
+They are all percentages, and they are not the same kind of thing.
 
 **A capacity margin protects against a cliff.** Two ceilings protect capacity: *working set
 against memory* and *disk fill at horizon*. When the disk fills it shows up as failed writes. When
 the working set stops fitting in memory, some reads that were served from memory go to disk and the
-service time per request becomes a different number, from a different regime — and
+service time per request becomes a different number, from a different regime.
 [ch08](#regime-changes) is about why nothing in a chain of multiplications can say what that number
 is. What the margin buys is the time between noticing and doing something, plus the space a lost
 host's copies need to land in.
@@ -48,16 +48,19 @@ mode is invisible, and recovering from it means adding machines, which
 
 **A scaling margin protects a budget.** Nothing fails and nothing gets slow. The fleet costs more
 than its work is worth. It is the largest percentage in the table, and it is still the loosest
-ceiling: its limit is the whole fleet wasted, so the allowed line still lets a large share of the
+ceiling. Its limit is the whole fleet wasted, so the allowed line still lets a large share of the
 fleet go on coordination before the ceiling objects. It is declared anyway, because a cost that has
 no bound on it grows.
 
-The right size of each kind of margin is set by a different thing: a capacity margin, by how fast
-you can react and how much room a lost host's copies need; a queueing margin, by how much latency
-every request can afford at the busy hour; a scaling margin, by how much waste the budget will
-carry. So one percentage applied to all three would fit at most one of them, and the reason it was
-chosen would not apply to the other two. The model file gives a reason beside every margin it
-declares. Here they are, in its words:
+The right size of each kind of margin is set by a different thing:
+
+- a capacity margin, by how fast you can react and how much room a lost host's copies need;
+- a queueing margin, by how much latency every request can afford at the busy hour;
+- a scaling margin, by how much waste the budget will carry.
+
+So one percentage applied to all three would fit at most one of them, and the reason it was chosen
+would not apply to the other two. The model file gives a reason beside every margin it declares.
+Here they are, in its words:
 
 ```{include} _generated/headroom-and-failure-domains-margins.md
 ```
@@ -137,7 +140,7 @@ better than none.
 Not a verdict. A probability.
 
 The last two columns of the tables above answer two questions: *Over allowed* shows how often the
-design ends up past the allowed line — the limit less the margin — and *Over limit* shows how often
+design ends up past the allowed line (the limit less the margin), and *Over limit* shows how often
 it ends up past the limit itself. A verdict at the plan describes one future, but these columns
 describe all the futures the model thinks could happen.
 
@@ -149,14 +152,14 @@ verdict at the plan and what the columns show.
 
 ## What this cannot tell you
 
-**Whether any of these margins is right.** Every one was declared by somebody, with a reason, and
-the reason is an argument rather than a measurement. This chapter argues that a margin must exist
-and must be explicable. It does not argue that these particular ones are correct, and it has no
-way to.
+**Whether any of these margins is right.** Every margin in this book was declared in its model
+file, with a reason, and the reason is an argument rather than a measurement. This chapter argues
+that a margin must exist and must be explicable. It does not argue that these particular ones are
+correct, and it has no way to.
 
 **How long you have.** A margin buys time between something going wrong and something being done.
-How much time depends on how fast your load moves and how quickly anybody notices, and neither is
-in any model here. A generous margin on a system nobody watches is not generous.
+How much time depends on how fast your load moves and how quickly you notice, and neither is in
+any model here. A generous margin on a system nobody watches is not generous.
 
 **Whether the failure domain is what you think.** The failure arithmetic assumes hosts fail
 independently. They do not. They share racks, power, switches, firmware versions, and the
@@ -179,7 +182,7 @@ requests.
   protects against a cliff, a queueing margin against a slope, a scaling margin against a budget,
   and one percentage cannot serve all three.
 - **The failure reserve is the one margin you can compute, and it is for a loss, not a failure.** A
-  host drained for an upgrade removes the same capacity as one that has died, and every fleet keeps
+  host drained for an upgrade removes the same capacity as one that has died. Every fleet keeps
   one host free for each it plans to lose: a small fleet keeps a large share of itself free and a
   large fleet a small share.
 - **Margins multiply. They do not add.** Each takes its share of what the one before left, so
@@ -187,8 +190,10 @@ requests.
   margins asked for, and for large margins addition reserves more than the whole fleet.
 - **A margin without a reason gets copied.** Every ceiling carries a *because*, so that the margin
   can be argued with, adjusted when the reason changes, and dropped when it goes away.
-- **What a margin produces is a probability, not a verdict.** Across every future the model thinks
-  plausible, how often the design ends up past this limit.
+- **What a margin produces is a probability, not a verdict.** Across the model's futures, *Over
+  allowed* is how often the design ends up past the allowed line (the limit less the margin).
+  *Over limit* is how often it ends up past the limit itself. The verdict describes the plan at the
+  point estimate only.
 :::
 
 ## Problems
@@ -235,25 +240,31 @@ python3 -m pytest tests/headroom_and_failure_domains/test_problem_3_ceiling.py -
 interesting part is who.
 
 Find the headroom your system is planned to, then find the person or the document that chose it.
-This is usually the shortest problem in the book and the most uncomfortable.
 
-Two follow-ups. Does the margin have a reason attached that is not "it is what we have always
-used"? And does your failure domain match the physical layout? Are the machines you assume fail
-independently in the same rack, the same power feed, the same availability zone?
+Does the margin have a reason attached that is not "it is what we have always used"? Does your
+failure domain match the physical layout: are the machines you assume fail independently in the
+same rack, the same power feed, the same availability zone?
 
 A good answer has three things: a number, a name or a document, and a reason. If the reason amounts
-to a round number — twenty per cent or thirty per cent — ask what it would have been had the first
-person to say it said a different round number. What would falsify the answer? Any one of these
-shows the margin is not the one the system needs: the reason names something the system no longer
-has, such as a hardware generation, a failure domain or a traffic pattern that has changed since the
-number was chosen; the reason is for a different kind of margin from the ceiling it sits on, for
-example a queueing reason on a disk ceiling; nobody can find who chose it or where it is written,
-which means there is no reason to check. Take those three things — the number, the name or document,
-and the reason that holds up under that test — back to whoever sizes the system next.
+to a round number, such as twenty or thirty per cent, ask what it would have been had the first
+person to say it said a different round number.
+
+What would falsify the answer? Any one of these shows the margin is not the one the system needs:
+
+- the reason names something the system no longer has, such as a hardware generation, a failure
+  domain or a traffic pattern that has changed since the number was chosen;
+- the reason is for a different kind of margin from the ceiling it sits on, for example a queueing
+  reason on a disk ceiling;
+- nobody can find who chose it or where it is written, which means there is no reason to check.
+
+Take the number, the name or document, and the reason that holds up under that test back to whoever
+sizes the system next.
 
 ## Where to go next
 
-[ch12](#the-sizing-model) is Part III assembled: every chain, every margin, and a number at the
-end of it.
+[ch12](#the-sizing-model) assembles Part III: every chain, every margin, and a number at the end of
+it.
 
-[ch13](#monte-carlo) is what the last two columns of every table in this chapter came from.
+[ch13](#monte-carlo) shows how the last two columns of every table in this chapter are computed: the
+model is worked out many times with its inputs drawn at random, and each column is the share of
+those runs past a line.

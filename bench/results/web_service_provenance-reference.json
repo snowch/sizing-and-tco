@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "e45c1676c6efb4b4",
+  "code_fingerprint": "8bd44e70552f1ac7",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/06-provenance/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-26T20:56:10+00:00",
-  "git_revision": "611164a",
+  "generated_at": "2026-09-26T21:35:02+00:00",
+  "git_revision": "39f1b8b",
   "kind": "model",
   "name": "web_service_provenance-reference",
   "produced_by": {
@@ -45,7 +45,7 @@
       "ram_for_service": 0.001073741824,
       "stored_data": 1.0
     },
-    "generated_at": "2026-09-26T20:56:10+00:00",
+    "generated_at": "2026-09-26T21:35:02+00:00",
     "model": "web_service_provenance",
     "nodes": {
       "annual_growth": {

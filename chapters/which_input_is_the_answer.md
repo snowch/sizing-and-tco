@@ -57,8 +57,8 @@ The swing comes from the input's **declared distribution**, not from its slider 
 an input the modeller gave a generous slider would get a long bar for free, and the chart would
 measure the modeller's choice of slider rather than the model.
 
-The ordering is the useful part. It answers "what should I go and measure first". That is the
-only question a tornado answers well.
+The ordering tells you what to measure first. A tornado swings one input at a time, so it cannot
+show inputs moving together or effects that only appear when two inputs move at once.
 
 ### What the widest bars have in common
 
@@ -82,8 +82,9 @@ that uncertainty compounds ([ch08](#regime-changes)).
 
 **The residence time** (the web service): the day-one busy-hour rate and annual growth tie at the
 top. CPU time per request is a distant third, and no other input moves it. These inputs meet in a
-division by what is left of the system ([ch06](#queueing-and-the-knee)), and a bar that long is the
-knee.
+division by what is left of the system ([ch06](#queueing-and-the-knee)). As what is left gets small,
+each step of load costs more than the one before, so an input that adds load swings the answer a
+long way.
 
 Two of these figures share a pattern: **the widest bar is somewhere the model is not linear.** An
 exponent, a product of uncertain things, a division by a small remainder. The retention store and
@@ -138,7 +139,7 @@ not in this toolkit. `NEXT_STEPS.md` in the repository lists it as work left to 
 ### What the measurement would be worth
 
 A ranking is not a quantity. Whoever approves a measurement will ask what it would buy. That can be
-computed, and simply: take one uncertain input and pin it, as if measured perfectly, then re-sample
+computed: take one uncertain input and pin it, as if measured perfectly, then re-sample
 the whole model. What comes back is the interval the model would report if that one thing were
 known.
 
@@ -233,7 +234,7 @@ gets a short bar and can still be the thing that sinks you.
 **Whether the input can be measured at all.** Against the host count, and again in the
 observability model, the input worth most is a growth rate. That is a claim about the future, and
 it belongs to no target ([ch04](#peak-mean-and-growth)). The chart will keep pointing at it, and
-the honest response is to decide it rather than measure it.
+the response is to decide it rather than measure it.
 
 **Whether the model has the right inputs.** An input that is not there has no bar. A tornado of a
 model missing a cost line is a confident ranking of the wrong list.
@@ -247,7 +248,8 @@ model missing a cost line is a confident ranking of the wrong list.
 - **Three things narrow an interval: measure an input, decide it, or design around it.** More
   samples locate the interval. They never shrink it.
 - **A tornado ranks inputs by how far the answer moves when each one swings alone.** The ordering
-  answers *what should I measure first*, and that is the only question it answers well.
+  answers *what should I measure first*; it swings one input at a time, so it cannot show inputs
+  moving together.
 - **The widest bar is where the model is not linear.** An exponent, a product of uncertain things, a
   division by a small remainder. Pinning a decision can remove the dominant input from everything
   downstream of it.

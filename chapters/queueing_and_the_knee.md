@@ -145,8 +145,8 @@ protecting against.
 A capacity ceiling fails at once. A full disk, which [ch09](#capacity) adds to this model, is one:
 writes stop and you find out immediately. A queueing ceiling is different: crossing it fires no
 alarm, nothing fails, and no one is paged. Instead, every request takes longer, and the curve above
-shows that each new load step costs more than the last. The cost is pure latency — slower
-responses, not errors — paid until someone looks at latency against utilisation.
+shows that each new load step costs more than the last. The cost is pure latency. You pay it in
+slower responses, not errors, until you plot latency against utilisation.
 
 The way back is worse, too. Coming back from a full disk means deleting something. Coming back
 from a queue means shedding load or adding machines, and
@@ -197,7 +197,7 @@ ordinary-looking number.
 
 **What your system's curve looks like.** Everything above is one queueing model with strong
 assumptions, swept across one input. A real system is several queues in series with feedback
-between them, and the only honest way to get its curve is to measure it. That needs the reference
+between them, and the only way to get its curve is to measure it. That needs the reference
 machine, and it is a `rig` measurement nobody has taken.
 
 **Anything about the tail.** This chapter computes mean residence time. The slowest one request
@@ -282,8 +282,7 @@ rather than an average. Read off the utilisation at which the scatter crosses yo
 is your knee, and it is yours rather than the system's.
 
 Then answer the question the chart cannot: what utilisation does your system run at, and who chose
-it? In most places the answer is that nobody chose it. It is wherever the last capacity argument
-left off.
+it? If nobody chose it, it sits wherever the last capacity argument left off.
 
 The scatter is an `estate` observation of a running system ([ch03](#where-the-numbers-come-from)).
 Nobody else can repeat it, so your answer must record which system, over what window, and when. A
@@ -291,7 +290,7 @@ good answer contains the multiple, the idle latency and where it came from on th
 utilisation where the scatter crosses the multiple, who chose the utilisation you run at, and the
 system, window and date. If the scatter never crosses, there are two possibilities. Either you are
 nowhere near your tolerance (worth knowing and probably worth money), or your utilisation metric is
-averaged over a window long enough to hide every peak. The second is the commoner.
+averaged over a window long enough to hide every peak.
 
 ## Where to go next
 

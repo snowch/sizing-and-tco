@@ -51,7 +51,7 @@ over more shards, and halving it costs four times the work. In this book's model
 moves the answer: [ch19](#which-input-is-the-answer) removed the standard errors of the measured
 constants and neither interval moved.
 
-**A number is unknown.** An input nobody measured, given a distribution somebody chose: a price,
+**A number is unknown.** An input nobody measured, given a distribution the modeller chose: a price,
 a growth rate, a count of label values ([ch13](#monte-carlo)). It shrinks when you go and measure
 that input. [ch19](#which-input-is-the-answer) ranks which one to measure first, and every input at
 the top of its tables is of this kind, not a measured constant.
@@ -82,8 +82,7 @@ fourth, which is a modelling decision nobody knew they were taking.
 ```
 
 The observability model's ingest figure combines metrics and logs, as shown in the *ingest, metrics
-and logs only* row. It is arithmetically correct: every input is declared, sourced and sampled, and
-the interval is as honest as the rest of the book.
+and logs only* row. It is arithmetically correct: every input is declared, sourced and sampled.
 
 The model leaves out an entire chain, traces. The *traces ingest* row shows *not yet measured*
 because spans per request has not been measured. Spans per request belongs to a single instrumented
@@ -145,9 +144,9 @@ problem's other tests refuse it.
 
 **Ask what is not in the graph.** Read the node list as a list of *categories*, and ask what
 category is absent. This technique answers what kind of cost is not in the model. The web service
-model works out a total with no line for watching its own fleet—no metrics, no logs, no
-traces—and no line for a testing environment. The book's second model sizes that kind of
-platform, for an estate of its own. Each is obvious once named, and invisible until then.
+model works out a total with no line for watching its own fleet (no metrics, no logs, no traces) and
+no line for a testing environment. The book's second model sizes that kind of platform, for an
+estate of its own. Each is obvious once named, and invisible until then.
 
 **Distrust an answer that is too neat.** A total that is too round. A unit cost close to a
 supplier's headline price. A utilisation that is what you hoped. This technique answers where to
@@ -168,19 +167,18 @@ in ten. A rule that rejects on a single miss will therefore reject a correct mod
 later, and the more observations you make, the surer that becomes. Deciding what would count as
 evidence is harder than it looks. The problem makes you state a rule rather than react.
 
-Problem 20.2 is the second trap, and it is the one that gets shipped. The model disagrees with
-reality, so make the model vaguer until it stops disagreeing. Widen the inputs. The observation
-lands inside, and everyone relaxes.
+Problem 20.2 is the second trap. The model disagrees with reality, so make the model vaguer until it
+stops disagreeing. Widen the inputs. The observation lands inside, and everyone relaxes.
 
 Widening scales every draw's distance from the median by a factor, so the interval ends up that
-many times wider. That factor—the number in problem 20.2—is what the widening costs. The median
+many times wider. That factor, the number in problem 20.2, is what the widening costs. The median
 does not move, so the headline number is unchanged and only the doubt has grown, which is why the
 repair passes review. A wider interval contains figures the model used to rule out, so fewer
 observations could ever show the model wrong.
 
-**A model that cannot be wrong has stopped being able to be useful.** Widening is how a model
-becomes unfalsifiable. An unfalsifiable model is an expensive way of writing down what somebody
-already believed.
+**A model that cannot be wrong has stopped being useful.** Widening is how a model becomes
+unfalsifiable. An unfalsifiable model is an expensive way of writing down what its author already
+believed.
 
 ## What this cannot tell you
 
@@ -245,7 +243,7 @@ python3 -m pytest tests/the_missing_node/test_problem_1_refuted.py -m problem
 Widen the model until it agrees with the observation, then measure the factor by which the model's
 spread about its median has to grow to land the observation inside the 90% interval. That factor
 is how many times wider the interval becomes. The median does not move, so the headline figure is
-unchanged; a model that cannot be wrong has stopped being able to be useful.
+unchanged; a model that cannot be wrong has stopped being useful.
 
 ```bash
 python3 -m pytest tests/the_missing_node/test_problem_2_widening.py -m problem
@@ -274,11 +272,11 @@ the system already exists), **ask what is not in the graph**, **distrust an answ
 neat**, and **get somebody who did not build it to read it**. The people who run the system day to
 day are one kind of reader who did not build the model.
 
-A good answer names at least one quantity that was not in the model and says how much it moves
-the answer. What would show it wrong is adding the quantity and watching no output move: then it
-was missing and harmless, and the one that matters is still missing. If you find nothing, the
-honest conclusion is that you have not looked hard enough, not that the model is complete. There
-is no test for completeness, which is what this chapter is about.
+A good answer names at least one quantity that was not in the model and says how much it moves the
+answer. What would show it wrong is adding the quantity and watching no output move: then it was
+missing and harmless, and the one that matters is still missing. If you find nothing, the conclusion
+is that you have not looked hard enough, not that the model is complete. There is no test for
+completeness, which is what this chapter is about.
 
 ## Where to go next
 

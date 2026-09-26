@@ -29,7 +29,7 @@ path. The logs chain does not use it.
 % word-ok: a scrape interval is a length of time, and sampling traces keeps some and drops the rest
 The control knobs set how much telemetry you keep and for how long: the scrape interval, the
 retention period for each signal, the fraction of log lines retained and the trace sampling rate.
-None of them is money. Three tiers—ingest, store and query—carry four ceilings between them, and no
+None of them is money. Three tiers (ingest, store and query) carry four ceilings between them, and no
 single number summarises them.
 
 It is a **conditional model**: it has measured constants and ceilings, and a model with either is

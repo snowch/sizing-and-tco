@@ -37,8 +37,6 @@ TICK, CROSS = "  ok  ", " miss "
 
 
 def main() -> int:
-    from bench.stamp import classify_machine, rig_declaration
-
     print(f"machine   {platform.platform(terse=True)}, python {platform.python_version()}")
 
     missing = []
@@ -55,6 +53,18 @@ def main() -> int:
         found = shutil.which(command)
         print(f"[{TICK if found else CROSS}] {command} — {why}" + ("" if found else f" ({remedy})"))
 
+    if missing:
+        # Checked before bench.stamp is imported: it needs the very packages that may be missing.
+        print()
+        print(
+            f"MISSING: {', '.join(missing)}. With the virtual environment active, run "
+            "`python3 -m pip install -r requirements.txt -r requirements-dev.txt` "
+            "from the repository root."
+        )
+        return 1
+
+    from bench.stamp import classify_machine, rig_declaration
+
     print()
     kind = classify_machine()
     declared = rig_declaration()
@@ -69,10 +79,6 @@ def main() -> int:
         print("as 'not measured yet' rather than as a number. That is the intended behaviour and")
         print("not a broken checkout (ch03).")
 
-    if missing:
-        print()
-        print(f"MISSING: {', '.join(missing)}. Run `make install`.")
-        return 1
     return 0
 
 

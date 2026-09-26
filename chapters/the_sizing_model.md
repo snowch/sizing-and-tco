@@ -135,9 +135,9 @@ ch02 started, with every chapter since added to it.
 There is not one. Part III has been building to that.
 
 A sizing model does not produce a number. It produces a *relationship between a number and a
-risk*, and somebody has to choose a point on it. Problem 12.1 is that choice made explicitly: pick
-a breach probability you are willing to be accountable for, and ask the model what it costs in
-machines.
+risk*, and the person who signs for the fleet has to choose a point on it. Problem 12.1 is that
+choice made explicit: pick a breach probability you are willing to be accountable for, and ask the
+model what it costs in machines.
 
 That is a different conversation from "how many hosts do we need", and a better one, because it
 is answerable. Here is a second fleet to set beside the first: the same model and the same
@@ -200,21 +200,21 @@ that is complete from one that is not. That is [ch20 · The missing node](#the-m
 
 **Whether the ceilings are in the right place.** Each of the six ceilings has a limit and a margin
 that a person declared with a reason, and [ch11](#headroom-and-failure-domains) is where those
-margins were chosen. The last two columns say exactly where the model's own answers fall against
+margins were chosen. The last two columns say where the model's own answers fall against
 those lines. They cannot say whether the lines are in the right place: the lines are judgements.
 
 **Where the uncertainty comes from.** The range is wide, and this chapter has not said which
-input makes it wide. That is the only actionable question about a wide range, and
-[ch19](#which-input-is-the-answer) answers it. The answer will not surprise you if you read
+input makes it wide. [ch19](#which-input-is-the-answer) answers which input the answer rests on,
+and what measuring it would buy. The answer will not surprise you if you read
 [ch04 · Peak, mean and growth](#peak-mean-and-growth).
 
 **What any of it costs.** Part III has sized a fleet and said nothing about money. Part V is
-cost, and it comes after sizing because it consumes sizing's output, including, if anybody is
-careful, its uncertainty.
+cost, and it comes after sizing because it consumes sizing's output. Sizing's uncertainty reaches
+the cost only if you carry the host count across with its range of futures, not as one number.
 
 **How any of these numbers were produced.** The last two columns of every ceilings table have
 appeared since [ch06](#queueing-and-the-knee). ch06 said what they mean. No page has yet said how
-they were computed. [ch13](#monte-carlo) is where they are computed.
+they were computed. [ch13](#monte-carlo) computes them.
 
 ## Key takeaways
 
@@ -230,9 +230,9 @@ they were computed. [ch13](#monte-carlo) is where they are computed.
   of those, *utilisation, counting coordination*, is already into the margin before any input moves.
   Across the futures the model draws, the fleet is past its limit at the busy hour in a real share
   of them, with nothing having gone wrong.
-- **A sizing model produces a relationship between a number and a risk, not a number.** Somebody has
-  to pick a point on it, and the only form the choice can be handed over in is *what it costs*
-  beside *how often it breaks*.
+- **A sizing model produces a relationship between a number and a risk, not a number.** The person
+  who signs for the fleet chooses a point on it. That choice can be handed over in only one form:
+  *what it costs* beside *how often it breaks*.
 - **A bigger fleet moves risk rather than removing it.** A fleet bought when growth is at the top
   of the band its source gives is past its limits at the busy hour and in memory in far fewer
   futures. The same fleet pushes the share of it doing nothing useful into that ceiling's margin,
@@ -302,18 +302,21 @@ someone did, whether or not they knew it.
 
 A good answer reaches a count of machines and has at least one mark on the chain. It names the limit
 that gives first, the input and the value that would make it give, and says whether that value is
-inside your surprise band. It names the person who accepted the risk. A chain with no marks is a
-definitional model. Either your system has no measured constants and no limits, which is rare, or
-you have not found them yet. The second is the more likely reading, and the more expensive one. How
-often the limit would give way, counted as a share of futures, needs the method of
-[ch13](#monte-carlo). Here the surprise band is enough. Falsifiers: the answer is wrong if, as the
-load grows, a different limit gives first. It is also wrong if the person you named says they never
-saw the risk. Then nobody accepted it, and that is the commoner finding. Take it to whoever signs
-for the fleet.
+inside your surprise band. It names the person who accepted the risk.
+
+A chain with no marks is a definitional model. Either your system has no measured constants and no
+limits, or you have not found them yet. Look again before you accept the first.
+
+How often the limit would give way, as a share of futures, needs the method of
+[ch13](#monte-carlo). Here the surprise band is enough.
+
+The answer is wrong if, as the load grows, a different limit gives first. It is also wrong if the
+person you named says they never saw the risk. Then nobody accepted it. Take the answer to whoever
+signs for the fleet.
 
 ## Where to go next
 
-[ch13](#monte-carlo) is where the last two columns came from. It sits here rather than at the
+[ch13](#monte-carlo) draws the futures for the last two columns. It sits here rather than at the
 front of the book for the reason this chapter has just demonstrated: the method is no use to you
 until you have a number you cannot defend, and can feel that you cannot defend it.
 

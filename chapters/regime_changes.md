@@ -256,7 +256,8 @@ system runs into before it runs out of the thing you normally count. Memory befo
 handles. A connection pool. A licence tier. A queue depth somebody set in 2019.
 
 For each, write what happens when it is crossed: not what you would do about it, but what the
-system does. The ones where the honest answer is "I do not know" are the expensive ones.
+system does. Where the answer is "I do not know", write that down: past a limit like that the model
+cannot say how much worse the far side is, and you cannot give its margin a reason.
 
 A good answer has more entries than this chapter names and at least one nobody in your team had
 written down before. If your list is exactly the regime changes this chapter names and no others,

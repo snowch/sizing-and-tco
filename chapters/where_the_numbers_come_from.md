@@ -31,7 +31,7 @@ dressed as a `fact` is worse than one labelled as an assumption, because the lab
 a reviewer would otherwise challenge.
 
 **`vendor_claim`**: stated by the vendor selling it. Often true, and never checked here. It carries
-its mark in the tables on this page — the ◐ symbol — and when you click a node in a model, its
+its mark in the tables on this page (the ◐ symbol), and when you click a node in a model, its
 Provenance line names it a vendor claim. It is never quietly promoted to a `fact`. Once a quoted
 throughput becomes "the throughput" in your head, the model holds a fact it never earned.
 
@@ -39,7 +39,7 @@ throughput becomes "the throughput" in your head, the model holds a fact it neve
 it. An assumption nobody can find is not a weaker claim than a measurement. It is a stronger one,
 because nothing can dislodge it.
 
-### The first number somebody else supplied
+### A vendor's specification
 
 Every input in [ch02](#what-a-workload-is)'s file was either outside your control (how many
 requests arrive, how much is held, how fast both grow) or decided by you (how long the fleet has to
@@ -82,8 +82,8 @@ can use per host, which is `ram_per_host` times one minus `os_reserve`. The inpu
 The graph below has three more nodes than [ch02](#what-a-workload-is)'s. The output table's final
 row is in decimal terabytes per host; *ram per host* itself is in gibibytes per host—the build
 converts between units. Since a gibibyte is larger than a gigabyte, the row is larger than what you
-would get by taking the reserve from the vendor's sheet figure and reading it as decimal gigabytes;
-that difference is the first gap, now visible.
+would get by taking the reserve from the vendor's sheet figure and reading it as decimal gigabytes.
+That difference is the first gap, now visible.
 
 ```{iframe} /models/web_service_provenance-reference.html
 :width: 100%
@@ -321,7 +321,7 @@ three words against each: `fact`, `vendor_claim`, `assumption`. Then, for every 
 source you would hand to someone who asked: a document, an invoice, a measurement with a date on
 it. Write the thing you would send, not where you think it came from.
 
-Any figure you read off a system you run—from a dashboard, a log line count, a monitoring tool—is
+Any figure you read off a system you run (from a dashboard, a log line count, a monitoring tool) is
 what this chapter calls an `estate` observation. Its source is the system, the window it covers,
 and when you read it. Without those three, it is not yet a `fact`.
 
@@ -341,4 +341,5 @@ you can show.
 demand at the horizon more than any other input. Growth cannot be measured at all: a growth rate is
 a claim about the future, and no amount of provenance discipline turns one into a measurement.
 
-[ch13](#monte-carlo) is what to do with a standard error once you have one.
+[ch13](#monte-carlo) carries a measured constant's standard error through the model like any other
+uncertainty.

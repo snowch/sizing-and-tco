@@ -172,8 +172,8 @@ The method of Iman and Conover @imanconover1982 works in three steps:
 
 1. Build a reference set with one column of normal scores per input, each shuffled independently
    using the run's generator, so the stamped seed reproduces it.
-2. Apply the wanted score correlations using two Cholesky factors—a standard way to give a set of
-   columns a chosen correlation—calculated from both the correlation the shuffled set has and the
+2. Apply the wanted score correlations using two Cholesky factors (a standard way to give a set of
+   columns a chosen correlation), calculated from both the correlation the shuffled set has and the
    correlation wanted.
 3. Reorder each input's draws to match its shaped column: largest draw where the largest score is,
    and so on down.
@@ -204,7 +204,7 @@ with a revised set.
 
 The `half_width` measures one run's answer width. The run-to-run spread measures how far the answer
 lands from one run to the next when only the seed changes. `samples_needed` takes the run-to-run
-spread and returns how many draws make it no more than a target; given a `half_width`, it returns a
+spread and returns how many draws make it no more than a target. Given a `half_width`, it returns a
 count that means nothing, because the half-width does not fall as draws grow. The law is that ten
 times smaller spread costs a hundred times the draws. The table below measures this on the web
 service model's five-year total: the model run many times at each sample count, each with its own
