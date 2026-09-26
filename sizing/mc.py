@@ -226,8 +226,8 @@ def correlate(
     the modeller chose. Only which draws line up with which changes.
 
     Correlating the values themselves instead would change each input's distribution, and then
-    the model would answer a question nobody asked. Problem 14.2 checks both: each input's
-    distribution does not move, and the rank correlation comes out as declared.
+    the model would answer a question nobody asked. Problem 14.2 checks, among other things,
+    that each input's distribution does not move, and the rank correlation comes out as declared.
 
     ``columns`` is (samples, inputs); ``target`` is the square matrix from
     :func:`correlation_matrix`, holding rank correlations.
@@ -318,8 +318,8 @@ def samples_needed(observed_spread: float, at_n: int, target_spread: float) -> i
     seeds. The run-to-run spread falls as one over the square root of the number of draws, so
     halving it takes four times as many draws. ch14 shows the law in a table.
 
-    This is about sampling noise only: how much the answer wobbles because it was made from a
-    finite number of draws. It says nothing about whether the model is right, and the interval
+    This is about sampling noise only: how much the answer moves from one run to the next because
+    it was made from a finite number of draws. It says nothing about whether the model is right, and the interval
     does not narrow with more draws.
     """
     if target_spread <= 0:

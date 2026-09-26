@@ -370,11 +370,11 @@ nodes:
     limit: 1
     headroom: queueing_margin
     because: >-
-      Not a capacity limit: a fleet at ninety per cent has not
-      run out of anything, it has a queue in front of it. The
-      margin is large because the cost of crossing it is paid
-      in latency by every request, not in a failure somebody gets
-      paged for (ch06).
+      Not a capacity limit: a fleet that is busy most of the time,
+      but short of fully busy, has not run out of anything; it
+      has a queue in front of it. The margin is large because
+      crossing it is paid for in waiting time by every request,
+      not in a failure that pages the people on call (ch06).
 outputs:
   - stored_data
   - ram_for_service

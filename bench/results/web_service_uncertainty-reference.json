@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "762b79bb1db4b0f8",
+  "code_fingerprint": "96051749b5ee3fad",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/07-uncertainty/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-26T19:29:44+00:00",
-  "git_revision": "24211b2",
+  "generated_at": "2026-09-26T20:02:57+00:00",
+  "git_revision": "3c118c9",
   "kind": "model",
   "name": "web_service_uncertainty-reference",
   "produced_by": {
@@ -46,7 +46,7 @@
       "ram_for_service": 0.001073741824,
       "stored_data": 1.0
     },
-    "generated_at": "2026-09-26T19:29:44+00:00",
+    "generated_at": "2026-09-26T20:02:57+00:00",
     "model": "web_service_uncertainty",
     "nodes": {
       "annual_growth": {

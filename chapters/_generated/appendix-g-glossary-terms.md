@@ -2,28 +2,37 @@
 
 | Term | Introduced in | What it means here | Said plainly |
 |---|---|---|---|
-| **definitional model** | [ch01](#point-estimates) | a model built only from relationships true by definition, so sampling its inputs is enough | it can only be wrong through its inputs |
-| **conditional model** | [ch01](#point-estimates) | a model with a measured constant or a ceiling in it, which must keep headroom below each ceiling | every input can be right and the answer still wrong |
-| **distribution** | [ch13](#monte-carlo) | the bag of values an uncertain quantity could take | a range of plausible values |
-| **flow** | [ch02](#what-a-workload-is) | a rate — requests per second, bytes per second, dollars per year | something that arrives |
-| **duration** | [ch02](#what-a-workload-is) | a length of time — a horizon, a retention period, the time one request spends in the system | how long |
-| **sample** | [ch13](#monte-carlo) | one value drawn from that bag | one guess |
-| **percentile** | [ch13](#monte-carlo) | the value a given fraction of the bag is below | the value nine tenths are under |
-| **interval** | [ch13](#monte-carlo) | the gap between two percentiles | how wide the answer is |
-| **correlation** | [ch14](#correlation-and-convergence) | the tendency of two inputs to move together | they move together |
-| **convergence** | [ch14](#correlation-and-convergence) | the answer ceasing to move between runs | it has settled |
-| **provenance** | [ch03](#where-the-numbers-come-from) | how much somebody is claiming when they write a number down | where it came from |
-| **measured constant** | [ch03](#where-the-numbers-come-from) | an empirical number belonging to one implementation at one version | a number somebody measured |
-| **ceiling** | [ch08](#regime-changes) | a limit past which a chain of multiplications stops describing anything | where it breaks |
-| **headroom** | [ch11](#headroom-and-failure-domains) | the margin a design keeps below a ceiling, and the reason for it | the slack you keep |
 | **binding constraint** | [ch10](#bandwidth-and-the-binding-constraint) | the chain that decides the answer, out of several that could | whichever runs out first |
+| **busy hour** | [ch04](#peak-mean-and-growth) | the stretch of heaviest demand that sizes the fleet; you decide how long that stretch is, from how long your system takes to fail and how long your users will wait for it to recover | peak demand time |
+| **ceiling** | [ch01](#point-estimates) | a limit past which a chain of multiplications stops describing anything | where it breaks |
+| **conditional model** | [ch01](#point-estimates) | a model with a measured constant or a ceiling in it, which must keep headroom below each ceiling | every input can be right and the answer still wrong |
+| **convergence** | [ch14](#correlation-and-convergence) | the answer ceasing to move between runs | it has settled |
+| **correlation** | [ch14](#correlation-and-convergence) | the tendency of two inputs to move together | they move together |
+| **definitional model** | [ch01](#point-estimates) | a model built only from relationships true by definition—accounting identities and physics—and working its arithmetic across its inputs' ranges shows all the doubt in the terms it has | if its structure is right, only wrong through inputs |
+| **distribution** | [ch13](#monte-carlo) | the bag of values an uncertain quantity could take | a range of plausible values |
+| **duration** | [ch02](#what-a-workload-is) | a length of time — a horizon, a retention period, the time one request spends in the system | how long |
+| **failure domain** | [ch11](#headroom-and-failure-domains) | the set of hosts one fault takes out together; one host is the smallest failure domain; a larger failure domain is worse because more hosts go at once | hosts failing together |
+| **flow** | [ch02](#what-a-workload-is) | a rate — requests per second, bytes per second, dollars per year | something that arrives |
+| **futures** | [ch04](#peak-mean-and-growth) | the possible outcomes a model works out, each one a run of the arithmetic with every uncertain input set to one value picked at random; the book reports the share of them where something happens | all possible outcomes |
+| **headroom** | [ch01](#point-estimates) | the margin a design keeps below a ceiling, and the reason for it | the slack you keep |
+| **interval** | [ch13](#monte-carlo) | the gap between two percentiles | how wide the answer is |
+| **knee** | [ch06](#queueing-and-the-knee) | where people say response time starts climbing steeply as a system gets busier; the curve is smooth and has no such point, so what people call the knee is where the climb passed what they would accept; this book declares a margin with a reason instead | where the wait passed what people would accept |
+| **measured constant** | [ch01](#point-estimates) | an empirical number belonging to one implementation at one version | a number somebody measured |
+| **median** | [ch10](#bandwidth-and-the-binding-constraint) | the middle answer: put every outcome in order and take the one in the middle; half the outcomes come in above it | the middle answer |
+| **percentile** | [ch13](#monte-carlo) | the value that a given share of a distribution's values fall below | where a share falls below |
+| **point estimate** | [ch01](#point-estimates) | the number you get from running the arithmetic once, with one value for every input, usually the middle of its range | what a spreadsheet gives |
+| **provenance** | [ch02](#what-a-workload-is) | the record every input in a model file carries of where its number came from and what kind of source it is, whether a fact, vendor claim or assumption | where it came from |
+| **regime change** | [ch08](#regime-changes) | a point at which a system stops obeying one rule and starts obeying another; a chain of multiplications cannot express one | the system changed |
+| **residence time** | [ch05](#littles-law) | the time a request spends in the system from arriving to leaving, including any time waiting in a queue | time in queue and service |
+| **sample** | [ch13](#monte-carlo) | one value drawn at random from a distribution | one guess |
+| **service demand** | [ch05](#littles-law) | the processor time one request costs, in core-seconds; not how long the request takes | CPU time per request |
+| **service time** | [ch05](#littles-law) | how long one request takes when it waits for nothing | time per request |
 | **sizing chain** | [ch02](#what-a-workload-is) | the string of multiplications that runs from a workload to a number of machines | how you calculate hosts needed |
+| **standard error** | [ch03](#where-the-numbers-come-from) | how far a measured average would typically move if you repeated the whole measurement; how uncertain a measured constant is in the model; it shrinks slowly as you measure more | how much to trust it |
 | **stock** | [ch02](#what-a-workload-is) | a level — terabytes held, series alive, requests in flight | how much there is right now |
-| **utilisation** | [ch06](#queueing-and-the-knee) | the fraction of a system that is busy | how busy it is |
+| **structural error** | [ch13](#monte-carlo) | a model that is wrong in shape rather than in its numbers | something is missing |
+| **tornado** | [ch04](#peak-mean-and-growth) | a chart showing which input moves an answer most; each uncertain input swings from a low to a high end of its range whilst every other input stays at its central value; the bars are sorted longest first, into a funnel | chart of what matters most |
 | **unit economics** | [ch17](#unit-economics) | a cost divided by a denominator you can defend | cost per something |
-| **structural error** | [ch20](#the-missing-node) | a model that is wrong in shape rather than in its numbers | something is missing |
-| **measurement uncertainty** | [ch03](#where-the-numbers-come-from) | the standard error beside a number somebody measured | how much the measuring wobbled |
-| **parameter uncertainty** | [ch13](#monte-carlo) | not knowing a value in a model whose shape is right | we do not know the number |
-| **scenario uncertainty** | [ch12](#the-sizing-model) | the world taking a path the model was not run for, which no interval covers | it might go differently |
+| **utilisation** | [ch05](#littles-law) | the fraction of a system that is busy | how busy it is |
 
 *Source — `bench/outline.py` and `bench/tables.py`*

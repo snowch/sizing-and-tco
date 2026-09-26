@@ -357,9 +357,10 @@ nodes:
     limit: 1
     headroom: queueing_margin
     because: >-
-      Not a capacity limit: a fleet at ninety per cent has not run out of anything, it has a
-      queue in front of it. The margin is large because the cost of crossing it is paid in
-      latency by every request, not in a failure somebody gets paged for (ch06).
+      Not a capacity limit: a fleet that is busy most of the time, but short of fully busy, has not
+      run out of anything; it has a queue in front of it. The margin is large because crossing it is
+      paid for in waiting time by every request, not in a failure that pages the people on call
+      (ch06).
 
   # -- what more hosts buy ----------------------------------------------------------------------
 
@@ -390,9 +391,11 @@ nodes:
     distribution: {triangular: {minimum: 0.002, likely: 0.005, maximum: 0.015}}
     provenance:
       kind: assumption
-      source: "ch07 — fitted from two measurements, where two exist. Triangular because a fit
-        gives a central value and a range rather than a shape, and its maximum is the claim to
-        distrust: a serial fraction can always be worse than the one you measured"
+      source: >-
+        ch07 — an assumption: it has not been fitted for this service; a fit from throughput
+        measured at three fleet sizes, one a single host, would replace it. Triangular, because a
+        fit gives a central value and a range rather than a shape. Its maximum is the end to
+        distrust: a serial fraction can always be worse than the one you measured.
     range: [0.0, 0.05]
 
   crosstalk:
@@ -407,9 +410,13 @@ nodes:
     distribution: {lognormal: {p10: 1.5e-5, p90: 9.0e-5}}
     provenance:
       kind: assumption
-      source: "ch07 — fitted, and the harder of the two to fit. Lognormal because it spans an
-        order of magnitude and cannot be negative, and because a shape should not assert a hard
-        upper bound on a quantity this weakly fitted"
+      source: >-
+        ch07 — an assumption, not fitted for this service, though the same measurement as
+        contention's would replace it: a fit from throughput at three fleet sizes, one a single
+        host. It is the harder of the two to fit because it shows only in how the curve bends at
+        larger fleets, and the three measured sizes usually sit at the small end. Lognormal, because
+        it is wide and cannot be negative, and because a shape should not assert a hard upper limit
+        on a quantity this weakly known.
     range: [0.000005, 0.0003]
 
   linear_throughput:
@@ -441,10 +448,10 @@ nodes:
     limit: 1
     headroom: 0.5
     because: >-
-      At half, one host in two is paying for the other's coordination. There is no failure and
-      nothing gets paged; the fleet simply costs twice what its work is worth, and it will go on
-      doing so until somebody looks. A budget is the only thing this ceiling protects, which is
-      why the margin is the loosest in the book and why it is still worth declaring (ch07).
+      At the margin, half the fleet's work is lost: one host in two does no useful work. The loss is
+      to contention and to coordination between hosts. Nothing fails and nothing pages anyone; the
+      fleet costs twice what its work is worth. A budget is the only thing this ceiling protects
+      (ch07).
 
   peak_hosts:
     kind: derived
@@ -632,10 +639,11 @@ nodes:
     limit: 1
     headroom: disk_margin
     because: >-
-      A fleet whose disks are full cannot take a dead host's records, and a filesystem at 97% is
-      a different filesystem. The margin is the same node the sizing used, so the two cannot
-      drift apart (ch11). Over the limit means out of space; inside the margin means the
-      re-replication reserve has been spent on data.
+      A fleet whose disks are full cannot take a dead host's records. A filesystem needs free space
+      to keep allocating well, and the margin carries this as an assumption rather than a
+      measurement. The margin is the same node the sizing used, so the two cannot drift apart
+      (ch11). Over the limit means out of space; inside the margin means the re-replication reserve
+      has been spent on data.
 
   # -- three chains, and the one that binds ----------------------------------------------------
 
@@ -909,7 +917,7 @@ nodes:
   tco:
     kind: derived
     unit: USD
-    label: five-year total cost of ownership
+    label: total cost of ownership
     note: >-
       Capital, running cost over the horizon, and whatever it costs to get there. The last term
       is zero for the design the plan was built on and is the first thing to look for in a

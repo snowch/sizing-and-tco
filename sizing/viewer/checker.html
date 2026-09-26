@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check a model file</title>
+<!-- Assembled by scripts/build-site.py into models/custom-model-viewer.html, which Appendix H
+     embeds. Nothing here reads a model file: the toolkit does, in this tab, through
+     scripts/verify-models.py, so this page and the desk give one verdict on the same file. -->
+<style>__CSS__</style>
+__FRAME__
+</head>
+<body>
+<main>
+  <p class="note">Paste a model file into the box and press <em>Check</em>. The page runs
+  <code>scripts/verify-models.py</code> in your tab, the script the build runs on the book's own
+  models, and shows the file as the toolkit read it. The first press downloads a Python runtime,
+  once. Nothing you paste is sent anywhere.</p>
+  <label for="model-text" class="label">Your model file</label>
+  <textarea id="model-text" spellcheck="false" autocapitalize="off" autocomplete="off">model: my_service
+title: Requests in a day, from the mean rate
+
+nodes:
+  mean_request_rate:
+    kind: input
+    decided: outside
+    unit: request/second
+    label: mean request rate over a day
+    value: 2000
+    provenance:
+      kind: assumption
+      source: "replace this with where your rate came from: a dashboard, a log, a forecast"
+    range: [100, 10000]
+
+  one_day:
+    kind: input
+    decided: definition
+    unit: day
+    value: 1
+    provenance: {kind: fact, source: "definition"}
+
+  requests_per_day:
+    kind: derived
+    unit: request
+    label: requests in a day
+    formula: mean_request_rate * one_day
+
+outputs:
+  - requests_per_day
+</textarea>
+  <div class="row">
+    <button id="check" type="button" class="primary">Check</button>
+    <span id="status" class="note" role="status" aria-live="polite"></span>
+  </div>
+  <div id="verdict" hidden></div>
+  <section id="says" hidden>
+    <h2>What it computes to</h2>
+    <p class="note">Each output is worked out with every input at its stated value or at the
+    median of its distribution. Where an input is uncertain, the last column gives the 5th and
+    95th percentiles of the output.</p>
+    <div class="scroll"><table><thead><tr><th>Output</th><th>Unit</th><th>Point</th>
+    <th>5th to 95th</th></tr></thead><tbody id="says-rows"></tbody></table></div>
+  </section>
+  <section id="nodes" hidden>
+    <h2>The file as the toolkit read it</h2>
+    <p class="note">Open a node to see what the file declares for it.</p>
+    <div id="node-list"></div>
+  </section>
+</main>
+<script>
+__BOOT__
+</script>
+<script type="application/json" id="toolkit">__TOOLKIT__</script>
+<script type="module">
+const TOOLKIT = JSON.parse(document.getElementById("toolkit").textContent);
+const $ = (id) => document.getElementById(id);
+let booting = null;
+
+function put(parent, tag, className, text) {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text !== undefined && text !== null) el.textContent = text;  // the reader's file is text
+  parent.appendChild(el);
+  return el;
+}
+
+function number(value) {
+  if (value === null || value === undefined) return "—";
+  const magnitude = value === 0 ? 0 : Math.floor(Math.log10(Math.abs(value)));
+  return value.toLocaleString("en-GB", { maximumFractionDigits: Math.max(0, Math.min(4, 2 - magnitude)) });
+}
+
+function field(list, name, value) {
+  if (value === null || value === undefined || value === "") return;
+  put(list, "dt", "", name);
+  put(list, "dd", "", typeof value === "string" ? value : JSON.stringify(value));
+}
+
+function showNodes(nodes) {
+  const box = $("node-list");
+  box.textContent = "";
+  for (const node of nodes) {
+    const item = put(box, "details", "node " + node.kind);
+    const summary = put(item, "summary");
+    put(summary, "span", "name", node.name);
+    put(summary, "span", "kind", node.kind + (node.unit ? " · " + node.unit : ""));
+    const list = put(item, "dl");
+    field(list, "label", node.label);
+    field(list, "decided", node.decided);
+    field(list, "value", node.value);
+    field(list, "distribution", node.distribution);
+    if (node.provenance) field(list, node.provenance.kind.replace("_", " "), node.provenance.source);
+    field(list, node.kind === "ceiling" ? "of" : "formula", node.formula);
+    field(list, "limit", node.limit);
+    field(list, "headroom", node.headroom);
+    field(list, "because", node.because);
+    field(list, "result", node.result);
+    field(list, "note", node.note);
+  }
+  $("nodes").hidden = false;
+}
+
+function showSays(rows) {
+  const body = $("says-rows");
+  body.textContent = "";
+  const several = new Set(rows.map((r) => r.scenario)).size > 1;
+  for (const row of rows) {
+    const tr = put(body, "tr");
+    put(tr, "td", "", several ? row.scenario + ": " + row.name : row.name);
+    put(tr, "td", "", row.unit === "dimensionless" ? "" : row.unit);
+    if (row.waits_on.length) {
+      put(tr, "td", "blocked", "not yet measured: waits on " + row.waits_on.join(", "));
+      put(tr, "td", "", "");
+    } else {
+      put(tr, "td", "num", number(row.point));
+      put(tr, "td", "num", row.p5 === null ? "" : number(row.p5) + " to " + number(row.p95));
+    }
+  }
+  $("says").hidden = false;
+}
+
+function verdict(text, good, problems) {
+  const box = $("verdict");
+  box.textContent = "";
+  box.className = "verdict " + (good ? "good" : "bad");
+  put(box, "p", "", text);
+  if (problems && problems.length) {
+    const ul = put(box, "ul");
+    for (const problem of problems) put(ul, "li", "", problem);
+  }
+  box.hidden = false;
+}
+
+async function check() {
+  const button = $("check");
+  button.disabled = true;
+  $("says").hidden = true;
+  $("nodes").hidden = true;
+  $("says-rows").textContent = "";
+  $("node-list").textContent = "";
+  $("verdict").hidden = true;
+  try {
+    booting = booting || shareToolkit({
+      pyodideUrl: TOOLKIT.pyodide, modules: TOOLKIT.modules, results: TOOLKIT.results,
+      wheels: TOOLKIT.wheels, files: TOOLKIT.files, status: (text) => { $("status").textContent = text; },
+    });
+    const pyodide = await booting;
+    $("status").textContent = "Checking…";
+    pyodide.globals.set("_text", $("model-text").value);
+    const report = JSON.parse(await pyodide.runPythonAsync(
+      "from sizing.playground.driver import check\ncheck(_text)"));
+    $("status").textContent = "";
+    if (report.problems.length) {
+      verdict(
+        "The toolkit refuses this file. The desk command would refuse it too, for the same reasons:",
+        false, report.problems);
+      return;
+    }
+    verdict("The file passes every check the build runs on the book's own models. It is a "
+      + report.classification + " model.", true);
+    showSays(report.says);
+    showNodes(report.nodes);
+  } catch (error) {
+    $("status").textContent = "";
+    verdict("The check could not run: " + (error && error.message ? error.message : error), false);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+$("check").addEventListener("click", check);
+</script>
+</body>
+</html>

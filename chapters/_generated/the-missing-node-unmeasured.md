@@ -6,7 +6,7 @@
 - **collector throughput per core, measured** — needs `bench/results/collector-throughput-per-core.json`
 - **spans per request** — needs `bench/results/traces-spans-per-request.json`
 
-8 node(s) downstream of those cannot be computed and are shown as — rather than filled in. Nothing is estimated in their place: this book publishes measurements or it publishes nothing.
+6 node(s) downstream of those cannot be computed. In the book's tables they are shown as *not yet measured*; on the interactive model page their boxes show —. Nothing is estimated in their place: this book publishes measurements or it publishes nothing.
 :::
 
 *Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***

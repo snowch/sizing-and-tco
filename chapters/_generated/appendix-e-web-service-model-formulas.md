@@ -53,7 +53,7 @@
 | annual staff cost (`annual_staff_cost`) | `staff_fte * fully_loaded_salary` | USD / year | [ch18](#the-five-year-model) |
 | annual opex (`annual_opex`) | `annual_energy_cost + annual_licences + annual_support + annual_staff_cost` | USD / year | [ch18](#the-five-year-model) |
 | lifecycle opex (`lifecycle_opex`) | `annual_opex * horizon` | USD | [ch18](#the-five-year-model) |
-| five-year total cost of ownership (`tco`) | `capex + lifecycle_opex + migration_cost` | USD | [ch18](#the-five-year-model) |
+| total cost of ownership (`tco`) | `capex + lifecycle_opex + migration_cost` | USD | [ch18](#the-five-year-model) |
 | mean request rate over the horizon (`average_request_rate`) | `(peak_request_rate_t0 / peak_to_mean + mean_request_rate) / 2` | request/second | [ch18](#the-five-year-model) |
 | requests over horizon (`requests_over_horizon`) | `average_request_rate * seconds_per_year * horizon` | request | [ch18](#the-five-year-model) |
 | cost per million requests (`cost_per_million_requests`) | `tco / requests_over_horizon` | USD/megarequest | [ch18](#the-five-year-model) |

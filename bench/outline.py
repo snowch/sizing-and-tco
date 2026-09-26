@@ -325,8 +325,8 @@ CHAPTERS: tuple[Chapter, ...] = (
         "correlation_and_convergence",
         "Correlation and convergence",
         PARTS[3],
-        "That interval assumed every input moves on its own, and that more samples would settle "
-        "it. Are either of those true?",
+        "ch13's figures already paired some inputs to move together and ran the arithmetic a "
+        "fixed number of times. What did the pairing change, and how many runs are enough?",
         consumes=("correlation-effect", "convergence-tco", "web_service-reference"),
         needs=("monte_carlo",),
     ),

@@ -202,8 +202,13 @@ def source(
         parts += _what_it_measured(name)
 
     # And the one thing a reader must not have to click for.
-    blocked = sum(
-        len(load_result(one).get("produced_by", {}).get("unmeasured") or []) for one in names
+    # Counted once per model and constant: two scenarios of one model share their constants.
+    blocked = len(
+        {
+            (load_result(one).get("summary", {}).get("model", one), constant)
+            for one in names
+            for constant in load_result(one).get("produced_by", {}).get("unmeasured") or []
+        }
     )
     if blocked:
         parts.append(f"**{blocked} constant(s) not yet measured**")
@@ -570,7 +575,9 @@ def not_yet_measured(name: str) -> str:
     if not missing:
         return ""
     blocked = sorted(
-        node_name for node_name, node in payload["nodes"].items() if node.get("blocked_by")
+        node_name
+        for node_name, node in payload["nodes"].items()
+        if node.get("blocked_by") and node_name not in missing
     )
     lines = [
         ":::{warning} Not measured yet",
@@ -582,9 +589,10 @@ def not_yet_measured(name: str) -> str:
         lines.append(f"- **{node['label']}** — needs `bench/results/{node['result']}.json`")
     lines += [
         "",
-        f"{len(blocked)} node(s) downstream of those cannot be computed and are shown as — "
-        "rather than filled in. Nothing is estimated in their place: this book publishes "
-        "measurements or it publishes nothing.",
+        f"{len(blocked)} node(s) downstream of those cannot be computed. In the book's tables "
+        "they are shown as *not yet measured*; on the interactive model page their boxes show —. "
+        "Nothing is estimated in their place: this book publishes measurements or it publishes "
+        "nothing.",
         ":::",
     ]
     return "\n".join(lines)
@@ -1149,14 +1157,30 @@ def _produced_unit(model, node_name: str) -> str:
         return "?"
 
 
-#: Every term the book rations: term -> (the chapter that introduces it, what it means here,
-#: and the plain-English phrase it replaces). The glossary table is rendered from this, and
-#: the site links a term's first mention on any page after that chapter to its entry.
+#: Every word the book uses in a technical sense: term -> (the chapter that introduces it,
+#: what it means here, and the plain-English phrase it replaces). Six of them are the
+#: rationed statistics words, and tests/test_vocabulary.py reads their chapters from here.
+#: The glossary table is rendered from this in alphabetical order, and the site links a
+#: term's first prose mention on any page after that chapter to its entry, with the
+#: meaning as the link's title. So a meaning uses none of the six before the six's own
+#: chapter: tests/test_vocabulary.py holds it to that.
 GLOSSARY: dict[str, tuple[str, str, str]] = {
-    "definitional model": (
+    "binding constraint": (
+        "bandwidth_and_the_binding_constraint",
+        "the chain that decides the answer, out of several that could",
+        "whichever runs out first",
+    ),
+    "busy hour": (
+        "peak_mean_and_growth",
+        "the stretch of heaviest demand that sizes the fleet; you decide how long that stretch "
+        "is, from how long your system takes to fail and how long your users will wait for it "
+        "to recover",
+        "peak demand time",
+    ),
+    "ceiling": (
         "point_estimates",
-        "a model built only from relationships true by definition, so sampling its inputs is enough",
-        "it can only be wrong through its inputs",
+        "a limit past which a chain of multiplications stops describing anything",
+        "where it breaks",
     ),
     "conditional model": (
         "point_estimates",
@@ -1164,117 +1188,167 @@ GLOSSARY: dict[str, tuple[str, str, str]] = {
         "ceiling",
         "every input can be right and the answer still wrong",
     ),
+    "convergence": (
+        "correlation_and_convergence",
+        "the answer ceasing to move between runs",
+        "it has settled",
+    ),
+    "correlation": (
+        "correlation_and_convergence",
+        "the tendency of two inputs to move together",
+        "they move together",
+    ),
+    "definitional model": (
+        "point_estimates",
+        "a model built only from relationships true by definition—accounting identities and "
+        "physics—and working its arithmetic across its inputs' ranges shows all the doubt in the "
+        "terms it has",
+        "if its structure is right, only wrong through inputs",
+    ),
     "distribution": (
         "monte_carlo",
         "the bag of values an uncertain quantity could take",
         "a range of plausible values",
-    ),
-    "flow": (
-        "what_a_workload_is",
-        "a rate — requests per second, bytes per second, dollars per year",
-        "something that arrives",
     ),
     "duration": (
         "what_a_workload_is",
         "a length of time — a horizon, a retention period, the time one request spends in the system",
         "how long",
     ),
-    "sample": ("monte_carlo", "one value drawn from that bag", "one guess"),
-    "percentile": (
-        "monte_carlo",
-        "the value a given fraction of the bag is below",
-        "the value nine tenths are under",
+    "failure domain": (
+        "headroom_and_failure_domains",
+        "the set of hosts one fault takes out together; one host is the smallest failure domain; "
+        "a larger failure domain is worse because more hosts go at once",
+        "hosts failing together",
     ),
-    "interval": ("monte_carlo", "the gap between two percentiles", "how wide the answer is"),
-    "correlation": (
-        "correlation_and_convergence",
-        "the tendency of two inputs to move together",
-        "they move together",
+    "flow": (
+        "what_a_workload_is",
+        "a rate — requests per second, bytes per second, dollars per year",
+        "something that arrives",
     ),
-    "convergence": (
-        "correlation_and_convergence",
-        "the answer ceasing to move between runs",
-        "it has settled",
-    ),
-    "provenance": (
-        "where_the_numbers_come_from",
-        "how much somebody is claiming when they write a number down",
-        "where it came from",
-    ),
-    "measured constant": (
-        "where_the_numbers_come_from",
-        "an empirical number belonging to one implementation at one version",
-        "a number somebody measured",
-    ),
-    "ceiling": (
-        "regime_changes",
-        "a limit past which a chain of multiplications stops describing anything",
-        "where it breaks",
+    "futures": (
+        "peak_mean_and_growth",
+        "the possible outcomes a model works out, each one a run of the arithmetic with every "
+        "uncertain input set to one value picked at random; the book reports the share of them "
+        "where something happens",
+        "all possible outcomes",
     ),
     "headroom": (
-        "headroom_and_failure_domains",
+        "point_estimates",
         "the margin a design keeps below a ceiling, and the reason for it",
         "the slack you keep",
     ),
-    "binding constraint": (
+    "interval": ("monte_carlo", "the gap between two percentiles", "how wide the answer is"),
+    "knee": (
+        "queueing_and_the_knee",
+        "where people say response time starts climbing steeply as a system gets busier; the "
+        "curve is smooth and has no such point, so what people call the knee is where the climb "
+        "passed what they would accept; this book declares a margin with a reason instead",
+        "where the wait passed what people would accept",
+    ),
+    "measured constant": (
+        "point_estimates",
+        "an empirical number belonging to one implementation at one version",
+        "a number somebody measured",
+    ),
+    "median": (
         "bandwidth_and_the_binding_constraint",
-        "the chain that decides the answer, out of several that could",
-        "whichever runs out first",
+        "the middle answer: put every outcome in order and take the one in the middle; half the "
+        "outcomes come in above it",
+        "the middle answer",
+    ),
+    "percentile": (
+        "monte_carlo",
+        "the value that a given share of a distribution's values fall below",
+        "where a share falls below",
+    ),
+    "point estimate": (
+        "point_estimates",
+        "the number you get from running the arithmetic once, with one value for every input, "
+        "usually the middle of its range",
+        "what a spreadsheet gives",
+    ),
+    "provenance": (
+        "what_a_workload_is",
+        "the record every input in a model file carries of where its number came from and what "
+        "kind of source it is, whether a fact, vendor claim or assumption",
+        "where it came from",
+    ),
+    "regime change": (
+        "regime_changes",
+        "a point at which a system stops obeying one rule and starts obeying another; a chain of "
+        "multiplications cannot express one",
+        "the system changed",
+    ),
+    "residence time": (
+        "littles_law",
+        "the time a request spends in the system from arriving to leaving, including any time "
+        "waiting in a queue",
+        "time in queue and service",
+    ),
+    "sample": ("monte_carlo", "one value drawn at random from a distribution", "one guess"),
+    "service demand": (
+        "littles_law",
+        "the processor time one request costs, in core-seconds; not how long the request takes",
+        "CPU time per request",
+    ),
+    "service time": (
+        "littles_law",
+        "how long one request takes when it waits for nothing",
+        "time per request",
     ),
     "sizing chain": (
         "what_a_workload_is",
         "the string of multiplications that runs from a workload to a number of machines",
         "how you calculate hosts needed",
     ),
+    "standard error": (
+        "where_the_numbers_come_from",
+        "how far a measured average would typically move if you repeated the whole measurement; "
+        "how uncertain a measured constant is in the model; it shrinks slowly as you measure more",
+        "how much to trust it",
+    ),
     "stock": (
         "what_a_workload_is",
         "a level — terabytes held, series alive, requests in flight",
         "how much there is right now",
     ),
-    "utilisation": (
-        "queueing_and_the_knee",
-        "the fraction of a system that is busy",
-        "how busy it is",
+    "structural error": (
+        "monte_carlo",
+        "a model that is wrong in shape rather than in its numbers",
+        "something is missing",
+    ),
+    "tornado": (
+        "peak_mean_and_growth",
+        "a chart showing which input moves an answer most; each uncertain input swings from a low "
+        "to a high end of its range whilst every other input stays at its central value; the bars "
+        "are sorted longest first, into a funnel",
+        "chart of what matters most",
     ),
     "unit economics": (
         "unit_economics",
         "a cost divided by a denominator you can defend",
         "cost per something",
     ),
-    "structural error": (
-        "the_missing_node",
-        "a model that is wrong in shape rather than in its numbers",
-        "something is missing",
-    ),
-    "measurement uncertainty": (
-        "where_the_numbers_come_from",
-        "the standard error beside a number somebody measured",
-        "how much the measuring wobbled",
-    ),
-    "parameter uncertainty": (
-        "monte_carlo",
-        "not knowing a value in a model whose shape is right",
-        "we do not know the number",
-    ),
-    "scenario uncertainty": (
-        "the_sizing_model",
-        "the world taking a path the model was not run for, which no interval covers",
-        "it might go differently",
+    "utilisation": (
+        "littles_law",
+        "the fraction of a system that is busy",
+        "how busy it is",
     ),
 }
 
 
 def glossary_table(_name: str = "") -> str:
-    """Every term the book rations, and the chapter that introduces it.
+    """Every word the book uses in a technical sense, and the chapter that introduces it.
 
     Generated from ``bench/outline.py`` rather than written out, so a term whose chapter moves
-    cannot end up pointing at the wrong one. The list is short on purpose: a book that introduces
-    forty pieces of vocabulary has taught forty pieces of vocabulary and nothing else.
+    cannot end up pointing at the wrong one. Sorted alphabetically, because a reader comes here
+    to look one word up; the chapter column gives the book's order.
     """
     from bench.outline import BY_SLUG
 
     rows = ["| Term | Introduced in | What it means here | Said plainly |", "|---|---|---|---|"]
-    for term, (slug, meaning, plain) in GLOSSARY.items():
+    for term, (slug, meaning, plain) in sorted(GLOSSARY.items()):
         chapter = BY_SLUG[slug]
         rows.append(f"| **{term}** | [{chapter.label}](#{chapter.anchor}) | {meaning} | {plain} |")
     return "\n".join(rows)

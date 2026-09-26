@@ -19,4 +19,4 @@
 | *ingest utilisation, quoted* — over its limit | 22% | 0% |
 | *retention store fill* — over its limit | 30% | 0% |
 
-*Source — [`observability-reference`](/models/observability-reference.html) and [`observability-knobs_turned_down`](/models/observability-knobs_turned_down.html) · the model to explore; each input with a range has a slider · **4 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) and [`observability-knobs_turned_down`](/models/observability-knobs_turned_down.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***
