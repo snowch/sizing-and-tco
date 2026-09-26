@@ -755,6 +755,7 @@ def test_every_glossary_term_is_defined_in_a_box_in_its_home_chapter():
         if not any(all(stem in body.lower() for stem in stems) for body in box.findall(text)):
             missing.append(f"{term} ({home})")
     assert not missing, (
-        "defined in no definition box in its home chapter: " + ", ".join(missing)
+        "defined in no definition box in its home chapter: "
+        + ", ".join(missing)
         + ". Put the sentence that says what it means in a :::{div} with :class: definition."
     )
