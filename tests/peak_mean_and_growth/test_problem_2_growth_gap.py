@@ -78,7 +78,10 @@ def test_the_gap_widens_with_the_spread():
 def test_the_gap_widens_with_the_horizon():
     one = growth_gap(T0, CASES["the model's own"], 1.0)
     five = growth_gap(T0, CASES["the model's own"], 5.0)
-    assert (five[1] / five[0]) > (one[1] / one[0])
+    assert (five[1] / five[0]) > (one[1] / one[0]), (
+        "The gap widens over five years compared to one; check that each value is compounded over "
+        "the years it is given."
+    )
 
 
 def test_a_certain_growth_rate_has_no_gap():

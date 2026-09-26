@@ -65,12 +65,17 @@ def test_a_small_cluster_pays_a_large_margin():
 
 @pytest.mark.problem
 def test_tolerating_more_losses_costs_proportionally_more():
-    assert failure_reserve(50, 3) == pytest.approx(3 * failure_reserve(50, 1))
+    assert failure_reserve(50, 3) == pytest.approx(3 * failure_reserve(50, 1)), (
+        "Tolerating three host losses should require three times as much capacity reserve as "
+        "tolerating one."
+    )
 
 
 @pytest.mark.problem
 def test_losing_everything_leaves_nothing():
-    assert failure_reserve(4, 4) == pytest.approx(1.0)
+    assert failure_reserve(4, 4) == pytest.approx(1.0), (
+        "When your fleet must survive losing every host, the reserved capacity is the whole fleet."
+    )
 
 
 def test_the_models_own_margin_is_in_the_plausible_range():

@@ -111,7 +111,10 @@ def test_it_reports_a_verdict_and_a_probability(extended, scenario, tmp_path):
         f"{name} declares no margin yet, so there is no allowed line to report against"
     )
     report = evaluate(extended, scenario).ceilings[name]
-    assert report["verdict"] in ("ok", "inside headroom", "over")
+    assert report["verdict"] in ("ok", "inside headroom", "over"), (
+        "The toolkit report for your ceiling must carry one of three verdicts: ok, inside "
+        "headroom, or over."
+    )
     margin = declared_margin(extended, node, scenario, tmp_path)
     assert report["allowed"] == pytest.approx(report["limit"] * (1 - margin)), (
         "the allowed line is the limit less the margin you declared"

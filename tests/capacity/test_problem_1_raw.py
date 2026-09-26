@@ -60,8 +60,12 @@ def test_the_cases_you_can_do_in_your_head():
 @pytest.mark.problem
 def test_compression_helps_and_replication_hurts():
     """The signs, which are the half of this that is worth getting right."""
-    assert raw_for(100.0, 3.0, 4.0, 1.0) < raw_for(100.0, 3.0, 2.0, 1.0)
-    assert raw_for(100.0, 4.0, 2.0, 1.0) > raw_for(100.0, 3.0, 2.0, 1.0)
+    assert raw_for(100.0, 3.0, 4.0, 1.0) < raw_for(100.0, 3.0, 2.0, 1.0), (
+        "A better compression ratio leaves you with less raw disk to buy, not the same or more."
+    )
+    assert raw_for(100.0, 4.0, 2.0, 1.0) > raw_for(100.0, 3.0, 2.0, 1.0), (
+        "Keeping more copies of each record costs more raw disk, not the same or less."
+    )
 
 
 @pytest.mark.problem

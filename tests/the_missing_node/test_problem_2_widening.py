@@ -47,7 +47,10 @@ def test_the_factor_it_returns_actually_works(samples):
 def test_a_further_observation_needs_more_widening(samples):
     near = widen_until_it_fits(samples, float(np.percentile(samples, 99.0)))
     far = widen_until_it_fits(samples, float(np.percentile(samples, 100.0)) * 3)
-    assert far > near
+    assert far > near, (
+        "An observation further out requires a larger widening factor than one closer in, not the "
+        "same or smaller."
+    )
 
 
 @pytest.mark.problem

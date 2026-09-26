@@ -55,7 +55,11 @@ def test_it_reproduces_the_published_curve(curve):
 
 @pytest.mark.problem
 def test_an_idle_system_costs_only_the_work():
-    assert float(np.asarray(residence_time(0.01, 0.0))) == pytest.approx(0.01)
+    mine = float(np.asarray(residence_time(0.01, 0.0)))
+    assert mine == pytest.approx(0.01), (
+        "An idle system costs only the work; with service time 0.01 seconds, your function "
+        f"returned {mine:g} seconds."
+    )
 
 
 @pytest.mark.problem
@@ -106,7 +110,10 @@ def test_a_full_system_is_not_a_finite_number_in_an_array_either():
         values = np.asarray(residence_time(1.0, np.array([0.5, 1.0, 1.2])), dtype=float)
     except (ZeroDivisionError, ValueError):
         return
-    assert np.isfinite(values[0])
+    assert np.isfinite(values[0]), (
+        "Each element below full utilisation must come back as an ordinary finite time; only "
+        "elements at or past full utilisation have nothing left to divide by."
+    )
     assert not np.any(np.isfinite(values[1:])), (
         "past a utilisation of one the formula describes nothing. An array of utilisations has "
         f"to come back non-finite where it crosses one, not negative and not capped. {NO_CLAMP}"

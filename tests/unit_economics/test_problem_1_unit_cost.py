@@ -48,9 +48,18 @@ def test_it_agrees_with_the_model(values):
 
 @pytest.mark.problem
 def test_the_cases_you_can_check_in_your_head():
-    assert unit_cost(1200.0, 1.0, 12.0) == pytest.approx(100.0)
-    assert unit_cost(1200.0, 10.0, 12.0) == pytest.approx(10.0)
-    assert unit_cost(1200.0, 1.0, 1.0) == pytest.approx(1200.0)
+    assert unit_cost(1200.0, 1.0, 12.0) == pytest.approx(100.0), (
+        "For a total of 1,200 over one terabyte and twelve months, your function should give the "
+        "cost per terabyte per month."
+    )
+    assert unit_cost(1200.0, 10.0, 12.0) == pytest.approx(10.0), (
+        "For a total of 1,200 over ten terabytes and twelve months, your function should give the "
+        "cost per terabyte per month."
+    )
+    assert unit_cost(1200.0, 1.0, 1.0) == pytest.approx(1200.0), (
+        "For a total of 1,200 over one terabyte and one month, your function should give the cost "
+        "per terabyte per month, not assuming a year."
+    )
 
 
 @pytest.mark.problem

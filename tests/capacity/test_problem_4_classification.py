@@ -79,13 +79,20 @@ def test_it_classifies_as_a_definitional_model(base):
         f"still a {after.classification} model. A model is a conditional model if it has a "
         "measured node or a ceiling in it - both, here."
     )
-    assert not after.of_kind("measured") and not after.of_kind("ceiling")
+    assert not after.of_kind("measured") and not after.of_kind("ceiling"), (
+        "Every measured constant and every ceiling must be in your list."
+    )
 
 
 @pytest.mark.problem
 def test_it_still_works(base, scenario):
     after = converted(base)
-    assert not check_units(after)[0]
+    problems, _ = check_units(after)
+    assert not problems, (
+        "What is left of the model no longer passes the dimensional check:"
+        + "\n"
+        + "\n".join(problems)
+    )
     values = point(after, scenario)
     assert set(after.outputs) & set(base.outputs), (
         "keep at least one of the original outputs working"

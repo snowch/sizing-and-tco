@@ -43,6 +43,9 @@ def test_it_agrees_with_the_model_at_the_point(at_the_point):
     values = at_the_point
     assert concurrency(values["peak_request_rate"], values["residence_time"]) == pytest.approx(
         values["concurrency"], rel=1e-9
+    ), (
+        "Your function, given the model's peak request rate and residence time, should give the "
+        "number of requests in the system that the law gives for those values."
     )
 
 
@@ -62,7 +65,10 @@ def test_it_agrees_across_every_future(evaluated, at_the_point):
 @pytest.mark.problem
 @pytest.mark.parametrize(("rate", "residence"), [(0.0, 1.0), (100.0, 0.0), (1e6, 1e-6)])
 def test_the_degenerate_cases_behave(rate, residence):
-    assert concurrency(rate, residence) == pytest.approx(rate * residence)
+    assert concurrency(rate, residence) == pytest.approx(rate * residence), (
+        f"With an arrival rate of {rate:g} and a residence time of {residence:g}, your function "
+        "should apply the law without treating it as a special case."
+    )
 
 
 def test_the_models_node_is_the_law():

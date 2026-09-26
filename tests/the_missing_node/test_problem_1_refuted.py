@@ -44,7 +44,10 @@ def test_one_miss_is_never_a_refutation(samples):
 def test_observations_inside_are_never_a_refutation(samples):
     """The model's own median, seen once and seen a hundred times."""
     median = percentile(samples, 50)
-    assert not is_refuted(samples, repeated(median, 1))
+    assert not is_refuted(samples, repeated(median, 1)), (
+        "A single observation at the model's median is not a refutation; your rule must weigh "
+        "where the observation falls, not just count how many there are."
+    )
     assert not is_refuted(samples, repeated(median, 100)), (
         "a hundred observations at the model's median agree with it a hundred times. A rule that "
         "grows more suspicious of every observation, inside or out, is not weighing where they "

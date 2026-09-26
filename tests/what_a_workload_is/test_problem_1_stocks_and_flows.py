@@ -54,7 +54,10 @@ def test_every_node_is_classified(model, in_words):
     answer = stocks_and_flows(in_words)
     missing = set(model.nodes) - set(answer)
     assert not missing, f"no classification for {sorted(missing)[:5]}"
-    assert set(answer.values()) <= {"stock", "flow", "neither"}
+    extra = [label for label in set(answer.values()) if label not in {"stock", "flow", "neither"}]
+    assert not extra, (
+        f'Every label you returned must be "stock", "flow", or "neither", not {extra}.'
+    )
 
 
 @pytest.mark.problem

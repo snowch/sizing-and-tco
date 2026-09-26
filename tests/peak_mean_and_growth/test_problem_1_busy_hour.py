@@ -76,6 +76,9 @@ def test_the_weights_do_not_have_to_sum_to_anything():
     total = 500.0
     assert busy_hour_rate(DIURNAL * 10, total) == pytest.approx(
         busy_hour_rate(DIURNAL, total), rel=1e-9
+    ), (
+        "The busy-hour rate stays the same when every weight is scaled by the same factor; "
+        "normalise them."
     )
 
 

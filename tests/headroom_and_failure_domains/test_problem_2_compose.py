@@ -28,6 +28,12 @@ def agrees(got: float, want: float) -> bool:
     return math.isclose(got, want, rel_tol=1e-12, abs_tol=1e-12)
 
 
+#: What both checks in test_it_never_leaves_a_negative_system say.
+LESS_THAN_THE_WHOLE = (
+    "Three margins together keep less than the whole system free, not equal to or more than it."
+)
+
+
 @pytest.mark.problem
 @pytest.mark.parametrize("margins", CASES)
 def test_they_compose_multiplicatively(margins):
@@ -43,21 +49,23 @@ def test_they_compose_multiplicatively(margins):
 
 @pytest.mark.problem
 def test_no_margins_is_no_margin():
-    assert compose([]) == pytest.approx(0.0)
+    assert compose([]) == pytest.approx(0.0), "With no margins, no capacity is kept free."
 
 
 @pytest.mark.problem
 def test_it_never_leaves_a_negative_system():
     """Adding three margins of ninety per cent would. That is the clue the problem mentions."""
-    assert compose([0.3, 0.3, 0.3]) < 1.0
-    assert compose([0.9, 0.9, 0.9]) < 1.0
+    assert compose([0.3, 0.3, 0.3]) < 1.0, LESS_THAN_THE_WHOLE
+    assert compose([0.9, 0.9, 0.9]) < 1.0, LESS_THAN_THE_WHOLE
 
 
 @pytest.mark.problem
 def test_the_composed_margin_is_less_than_the_sum():
     """Adding over-reserves, even for the small margins a sizing meeting grants."""
     margins = [0.25, 0.30, 0.20]
-    assert compose(margins) < sum(margins)
+    assert compose(margins) < sum(margins), (
+        "Three margins compose to less than their sum, not equal to or more."
+    )
 
 
 @pytest.mark.problem

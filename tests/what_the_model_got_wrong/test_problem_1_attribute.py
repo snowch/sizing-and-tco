@@ -93,7 +93,10 @@ def test_an_input_that_never_moves_has_no_shift():
     n = 1_000
     draws = {"fixed": np.full(n, 3.0), "moving": np.linspace(0.0, 1.0, n)}
     failed = draws["moving"] > 0.9
-    assert dict(attribute(draws, failed))["fixed"] == pytest.approx(0.0)
+    assert dict(attribute(draws, failed))["fixed"] == pytest.approx(0.0), (
+        "An input with the same value in every draw gets no shift—zero—not a number from dividing "
+        "a spread of zero."
+    )
 
 
 @pytest.mark.problem

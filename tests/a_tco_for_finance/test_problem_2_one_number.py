@@ -28,8 +28,10 @@ def summary():
 @pytest.mark.problem
 def test_it_is_a_number_and_a_sentence(answer):
     value, sentence = answer
-    assert isinstance(value, int | float) and value > 0
-    assert isinstance(sentence, str)
+    assert isinstance(value, int | float) and value > 0, (
+        "Your first value must be a Python int or float greater than zero."
+    )
+    assert isinstance(sentence, str), "Your second value must be a string."
 
 
 @pytest.mark.problem

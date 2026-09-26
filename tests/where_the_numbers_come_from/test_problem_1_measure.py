@@ -75,7 +75,12 @@ def test_it_passes_every_provenance_rule(answer):
             else ""
         )
         pytest.fail(f"the stamp refused it:\n{refusal}{hint}", pytrace=False)
-    assert not provenance_problems("your-constant.json", payload)
+    problems = provenance_problems("your-constant.json", payload)
+    assert not problems, (
+        "The stamp was built but the book's provenance rules refuse it:"
+        + "\n"
+        + "\n".join(problems)
+    )
 
 
 @pytest.mark.problem
