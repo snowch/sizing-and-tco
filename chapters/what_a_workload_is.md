@@ -251,15 +251,15 @@ The table groups the inputs as the file does, on each input's `decided:` line, a
 refuses a file that leaves one out. A year is true by definition because it is a year whoever
 asks.
 
-Look at the "Outside your control" group. Each is a single number you cannot change. You do not
-decide a growth rate, yet the file states one as flatly as the horizon. **An input you gave a single
-value to, and cannot control, is an assumption you have stopped noticing.**
-[ch04](#peak-mean-and-growth) replaces that single number with a spread: how low and how high growth
-might turn out.
+Look at the "Outside your control" group. Each is a single number you cannot change.
+[ch04](#peak-mean-and-growth) replaces the growth rate's single number with a spread: how low and
+how high growth might turn out.
 
 :::{important}
-The decisions are the only inputs you can change. Arguing over a number outside your control does
-not change it; measuring it narrows it.
+When you assign a value to what you cannot control (growth rate, request rate), it looks as settled
+as a decision you made. Nothing marks it as provisional, so your team stops questioning it. Only
+decisions are yours to change. Measuring what you cannot control narrows it; arguing about it does
+not.
 :::
 
 ### What the file computes, and what kind of model it is
@@ -372,8 +372,8 @@ range this book reports too narrow ([ch14](#correlation-and-convergence)).
 - **Growth compounds, so the horizon has to become a pure number.** Dividing the duration by a
   declared year is what turns it into an exponent, and a spreadsheet does that silently until
   a colleague types months.
-- **Separate what is outside your control from what you decided.** An input given a single value
-  that you cannot control is an assumption you have stopped noticing.
+- **Separate what is outside your control from what you decided.** A value for something you
+  cannot control looks like a decision and stops being questioned.
 :::
 
 ## Problems
