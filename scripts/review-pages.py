@@ -660,15 +660,19 @@ class Reviewer:
     def viewers(self, page: Page, tab, shots: Path, label: str, phone: bool, deep: bool) -> None:
         transcript = []
         for i, element in enumerate(tab.query_selector_all("#main iframe.viewer"), 1):
-            frame = self.frame_of(tab, element, "#toggle-controls")
+            frame = self.frame_of(tab, element, "body > *")
             where = f"model {i}, under “{element.evaluate(UNDER)}”"
             if not frame:
                 page.add(
                     "blocks", "model did not load", where, element.get_attribute("src") or "", label
                 )
                 continue
-            got = frame.evaluate(VIEWER_LAYOUT)
             element.screenshot(path=shots / f"model-{i}.png")
+            if not frame.query_selector("#toggle-controls"):
+                # Not one of the book's models: Appendix H's viewer waits for a reader's own
+                # file. It loaded, and there is nothing in it yet to press.
+                continue
+            got = frame.evaluate(VIEWER_LAYOUT)
             if got["outside"]:
                 page.add(
                     "look",
