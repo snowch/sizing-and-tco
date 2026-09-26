@@ -108,3 +108,32 @@ def test_no_chain_is_safe_to_size_on(published):
     """
     for name in CHAINS:
         assert published[f"short_if_{name}"] > 0.5, f"sizing on {name} alone is nearly safe"
+
+
+def test_counting_every_future_hides_the_shortfall(chains, published, usual_winner):
+    """Scaffolding: the chapter's shortfall table says what this problem says.
+
+    The page shows the median and the average shortfall across every future, and says the
+    median looks small because the futures where the chosen chain was big enough each add a
+    zero. This checks the published figures against the model's own futures, and that the
+    median over the short futures alone, which the reader computes, is larger than the one the
+    page shows. No figure is printed: the second is the answer.
+    """
+    chosen, others = chains
+    shortfall = np.clip(np.max(np.stack(others), axis=0) - chosen, 0, None)
+    over_all = float(np.median(shortfall))
+    assert published[f"shortfall_median_all_if_{usual_winner}"] == pytest.approx(over_all, abs=0.5)
+    assert published[f"shortfall_mean_all_if_{usual_winner}"] == pytest.approx(
+        float(np.mean(shortfall)), rel=0.01
+    )
+    assert over_all < 0.1 * float(np.median(chosen)), (
+        "the median shortfall across all futures is no longer small against the chain's own "
+        "median, and the chapter's shortfall section says it is"
+    )
+    assert float(np.mean(shortfall)) > over_all, (
+        "the average shortfall across all futures is no longer above the median, and the "
+        "chapter says the long upper tail pulls it up"
+    )
+    assert float(np.median(shortfall[shortfall > 0])) > over_all, (
+        "counting only the short futures no longer raises the median shortfall"
+    )

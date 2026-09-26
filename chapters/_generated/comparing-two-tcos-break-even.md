@@ -2,13 +2,13 @@
 
 | Input | Whose | As quoted, or at the point | The totals tie at | Verdict |
 |---|---|---:|---:|---|
-| one-off cost of moving to this design | DRAFT-PENDING 28f | $250,000 | $260,722 | DRAFT-PENDING 28g +4.3% |
+| one-off cost of moving to this design | an assumption, on the challenger's side | $250,000 | $260,722 | +4.3% on the assumption |
 | host price | the challenger's quote | $26,000 per host | $26,464 per host | +1.8% on the quote |
 | licence per host | the challenger's quote | $2,600 per host per year | $2,753 per host per year | +5.9% on the quote |
-| hosts in the fleet | DRAFT-PENDING 28f | 14 hosts | 14.2 hosts | DRAFT-PENDING 28g +1.2% |
+| hosts in the fleet | an assumption, on the challenger's side | 14 hosts | 14.2 hosts | +1.2% on the assumption |
 | engineers, full-time equivalent | a claim about your people | 1.13 | 1.15 | +1.3% of an engineer's time, on the challenger's side |
 | electricity price | shared by both | $0.134 per kWh | $0.109 per kWh | inside the middle eighty per cent of what it could be |
-| PUE | shared by both | 1.4 | 1.14 | DRAFT-PENDING 28i |
+| PUE | shared by both | 1.4 | 1.14 | below every value the model draws |
 | network price per host | shared by both | $1,262 per host | $1,091 per host | inside the middle eighty per cent of what it could be |
 | annual growth factor | shared by both | 1.34 | — | no value of it moves the difference |
 

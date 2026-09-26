@@ -75,7 +75,7 @@ end—where only one future in ten falls below—and its high end, where only on
 Inputs that do not feed the busy-hour rate, such as the peak-to-mean ratio, leave it unchanged.
 
 ```{image} _figures/peak-mean-and-growth-chart.svg
-:alt: Which input moves the busy-hour rate at the horizon most
+:alt: Which input moves the busy-hour request rate at the horizon most
 :width: 100%
 ```
 

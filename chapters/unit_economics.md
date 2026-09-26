@@ -23,11 +23,6 @@ anyway.
 
 ### Two divisions: a quantity and a period
 
-```{image} _figures/unit-economics-graph.svg
-:alt: Everything that feeds the unit cost, including its denominator
-:width: 100%
-```
-
 A unit cost is a total divided by a quantity. This fleet produces two unit costs from the same
 money, and the trap sits in a different place in each.
 
@@ -91,6 +86,9 @@ above the curve everywhere in between. So the straight-line average overstates w
 average, and a larger denominator gives a smaller unit cost: the straight line flatters the figure.
 The faster the growth, the larger the overstatement, as this table shows across the three growth
 factors from the model's own band for annual growth: its p10, its median and its p90.
+
+```{include} _generated/unit-economics-straight-line.md
+```
 
 The request side has the same straight line. The mean request rate over the horizon is the average
 of the day-one and horizon mean rates. So it overstates the requests served in the same proportion

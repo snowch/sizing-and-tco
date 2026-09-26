@@ -241,10 +241,7 @@ An input's `distribution` names exactly one shape, and under it the keys that sh
 quoted input uses this pattern: a `lognormal` with its two keys. The table lists the four shapes and
 their keys, read from the sampler's own code so it cannot drift from what a file may write:
 
-```{literalinclude} ../sizing/mc.py
-:language: python
-:start-at: SHAPES: dict[str, Callable[..., np.ndarray]] = {
-:end-before: def sample(
+```{include} ../chapters/_generated/appendix-a-dsl-reference-shapes.md
 ```
 
 A distribution naming no shape, two shapes, or keys its shape does not take cannot be worked out;

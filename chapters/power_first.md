@@ -96,6 +96,9 @@ every input at its middle value.
 For each of the three ceilings that are over, the table below shows the share of the model's futures
 in which that ceiling is past its limit, for each fleet:
 
+```{include} _generated/power-first-breaches.md
+```
+
 The reference fleet already breaks each of the three in some of its futures. The power budget raises
 every one of those shares.
 

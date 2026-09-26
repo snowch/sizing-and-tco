@@ -2,7 +2,7 @@
 
 | | |
 |---|---:|
-| DRAFT-PENDING 15a memory | 4 hosts |
-| DRAFT-PENDING 15b memory | 17 hosts |
+| Median shortfall across all futures, sized on the memory chain alone | 4 hosts |
+| Average shortfall across all futures, sized on the memory chain alone | 17 hosts |
 
 *Source — [`binding-constraint`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/binding-constraint.json) · `sizing.evaluate`*

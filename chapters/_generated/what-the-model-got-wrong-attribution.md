@@ -4,7 +4,7 @@
 |---|---:|---:|---:|---:|
 | peak request rate, day one (request/second) | 9,905 | 12,463 | +26% | 21% of them |
 | annual growth factor | 1.34 | 1.52 | +14% | 31% of them |
-| CPU time per request (DRAFT-PENDING 29a) | 0.0131 | 0.0145 | +11% | 19% of them |
+| CPU time per request (core-seconds / request) | 0.0131 | 0.0145 | +11% | 19% of them |
 | **3 inputs** | | *30% of futures ended here* | | *something was beyond its p90 in 58% of them, against 25% of futures generally* |
 
 *Source — [`postmortem`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/postmortem.json) · `sizing.evaluate`*

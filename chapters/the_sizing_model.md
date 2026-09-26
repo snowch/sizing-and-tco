@@ -61,7 +61,7 @@ rows below are the chains it was the largest of.
 ### The number looks at itself
 
 ```{image} _figures/the-sizing-model-hosts.svg
-:alt: The recommended host count, as a distribution
+:alt: The recommended host count across the model's futures, with the point estimate and the middle answer marked
 :width: 100%
 ```
 
@@ -146,6 +146,9 @@ comes in at the top of the band its source gives, with every other input at its 
 The top of the band is the rate the source says would surprise you, and the form
 [ch04](#peak-mean-and-growth) taught shows what that rate means. The first table gives its size
 beside what the model recommends at the point estimate, which has not changed.
+
+```{include} _generated/the-sizing-model-growth-fleet.md
+```
 
 ```{include} _generated/the-sizing-model-resized.md
 ```

@@ -108,9 +108,6 @@ because the interesting one was settled before it was asked.
 
 ### The correlation the chart cannot show
 
-```{include} _generated/which-input-is-the-answer-correlation.md
-```
-
 [ch14](#correlation-and-convergence) sampled both reference models twice: once with their declared
 correlations and once without. Declaring that two inputs move together widened every interval it
 measured. A tornado cannot show that, because each bar moves one input and a correlation is a

@@ -178,9 +178,6 @@ system. The book discloses them; it does not claim they can be checked.
 
 ### When nobody has measured it
 
-```{include} _generated/where-the-numbers-come-from-measured.md
-```
-
 Two rows of the constants table above say *not yet measured*. The first is collector throughput
 per core, a timing and thus a `rig` measurement—it needs the reference machine. The second is spans
 per request from the earlier section, an `estate` observation of an instrumented application you
@@ -196,6 +193,9 @@ file it needs, and counts the nodes downstream that cannot be computed.
 The observability model declares collector throughput twice, on purpose: once as the vendor's
 quoted figure, and once as a measured constant. The table below shows the two side by side, each
 with the pipeline capacity it produces: collector cores times throughput per core.
+
+```{include} _generated/where-the-numbers-come-from-claim-and-measurement.md
+```
 
 The quoted row has a value, and so does its capacity. The measured row has neither. The only
 pipeline capacity the model can compute today rests on the vendor's claim, and the table shows that
@@ -224,6 +224,9 @@ One measurement is a number. It says nothing about how far it would move if you 
 every constant in this book is measured over several shards: independently generated pieces of its
 corpus, each from its own starting number, which the result records. The result reports the mean
 of the shards' figures, with the standard error of that mean beside it.
+
+```{include} _generated/where-the-numbers-come-from-one-constant.md
+```
 
 The table walks one constant through: bytes per compressed log line. It shows the mean over the
 shards, the standard error of that mean, the spread between shards, and the lowest and highest

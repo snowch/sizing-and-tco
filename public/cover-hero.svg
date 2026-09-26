@@ -12,18 +12,18 @@
   <!-- Demand growing towards a fixed ceiling: what grows is the load, what has the limit is
        the hardware. The horizon is left unnumbered: the book's horizon is a model input. -->
   <g transform="translate(100, 80)">
-    <text x="-40" y="150" font-size="18" fill="#555">DRAFT-PENDING 33a</text>
+    <text x="-40" y="150" font-size="18" fill="#555">Demand</text>
 
     <rect x="0" y="180" width="80" height="80" fill="#4A90E2" opacity="0.8"/>
-    <text x="40" y="284" text-anchor="middle" font-size="18" fill="#333">DRAFT-PENDING 33b</text>
+    <text x="40" y="284" text-anchor="middle" font-size="18" fill="#333">Now</text>
 
     <rect x="120" y="100" width="80" height="160" fill="#7B68EE" opacity="0.8"/>
-    <text x="160" y="284" text-anchor="middle" font-size="18" fill="#333">DRAFT-PENDING 33c</text>
+    <text x="160" y="284" text-anchor="middle" font-size="18" fill="#333">Later</text>
 
     <rect x="240" y="40" width="80" height="220" fill="#50C878" opacity="0.8"/>
-    <text x="280" y="284" text-anchor="middle" font-size="18" fill="#333">DRAFT-PENDING 33d</text>
+    <text x="280" y="284" text-anchor="middle" font-size="18" fill="#333">Horizon</text>
 
     <line x1="-20" y1="30" x2="340" y2="30" stroke="#E74C3C" stroke-width="3" stroke-dasharray="5,5"/>
-    <text x="350" y="36" font-size="18" fill="#E74C3C">DRAFT-PENDING 33e</text>
+    <text x="350" y="36" font-size="18" fill="#E74C3C">Ceiling</text>
   </g>
 </svg>

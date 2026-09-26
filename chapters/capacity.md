@@ -22,7 +22,7 @@ can use. Four terms separate the two, and nobody writes them down together.
 ### The chain
 
 ```{image} _figures/capacity-graph.svg
-:alt: The chain from what you need to store to how many hosts you must buy
+:alt: The chain from the records held to how many hosts their disks need
 :width: 100%
 ```
 
@@ -84,6 +84,9 @@ with a standard error. The table below is a tornado (the chart [ch04](#peak-mean
 taught): it swings one input at a time across its range and records how far *raw disk needed at
 horizon* moves.
 
+```{include} _generated/capacity-tornado.md
+```
+
 Growth is at the top, as it was in ch04. Of the chain's own terms, *index overhead* is the one
 whose range moves the disk. *Record compression ratio* barely moves it: its standard error is tiny
 next to the overhead's range. Fixing compression at its measured value costs you nothing. The
@@ -118,6 +121,9 @@ So every node in this book declares a unit, and the toolkit converts rather than
 copy, every index and the compression are counted. *Hosts for storage* is how many hosts' disks
 that takes, with each disk filled only up to what the *disk margin* leaves. It is this chain's
 answer, and the model will end up with three such answers and have to choose between them.
+
+```{include} _generated/capacity-disk-fill.md
+```
 
 *Disk fill at horizon* is how full the disks are at the end of the period: *raw disk needed at
 horizon* divided by the disk installed in the fleet. A fill of one is full. The fleet it is

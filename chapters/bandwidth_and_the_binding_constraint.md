@@ -42,6 +42,9 @@ and index overhead for the disk chain.
 The table shows what each chain asks for, and what the model recommends, at the point estimate:
 every input at the middle of its range, and the arithmetic done once.
 
+```{include} _generated/bandwidth-and-the-binding-constraint-point.md
+```
+
 The three counts are close together, and the memory chain asks for the most. A small move in almost
 any input can change which chain is largest.
 
@@ -137,6 +140,9 @@ shortfall is zero.
 The table below has two rows for a fleet sized on the memory chain alone: "Median shortfall across
 all futures" and "Average shortfall across all futures", both counting every future including the
 zeros.
+
+```{include} _generated/bandwidth-and-the-binding-constraint-shortfall.md
+```
 
 The median across all futures is small next to "Median of the memory chain alone"—it looks like a
 rounding error—because the zeros take the lower part of the shortfalls and the middle value lands

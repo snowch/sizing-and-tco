@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "f8fcf5c7fda73474",
+  "code_fingerprint": "b036c265c851085b",
   "code_sources": [
     "bench/run_curves.py"
   ],
@@ -7,8 +7,8 @@
     "one_slice": "the host count moves and nothing else does; a fleet of denser or leaner machines is a different line on both axes",
     "the_allocation": "a single figure for what the building supplies. Contracted power, breaker capacity, cooling and what the facility will sustain are four different numbers, and this sweep takes one"
   },
-  "generated_at": "2026-09-26T20:00:06+00:00",
-  "git_revision": "24211b2",
+  "generated_at": "2026-09-26T20:57:58+00:00",
+  "git_revision": "611164a",
   "kind": "measurement",
   "name": "power-first-sweep",
   "produced_by": {

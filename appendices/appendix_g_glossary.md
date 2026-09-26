@@ -55,10 +55,7 @@ chapter names the evidence a number would need, such as a `rig` measurement that
 taken. The table below is generated from the code that stamps results, so it says what the code
 says.
 
-```{literalinclude} ../bench/stamp.py
-:language: python
-:start-at: TARGET_MEANING = {
-:end-before: #: What a file *is*.
+```{include} ../chapters/_generated/appendix-g-glossary-targets.md
 ```
 
 Three of those targets are measurements — something outside this repository was asked a question.

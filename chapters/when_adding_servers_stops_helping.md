@@ -113,6 +113,12 @@ delivers, which rose by less than double. Time spent queueing falls by more than
 works in your favour in this direction. *Where adding hosts stops helping* does not move, as it
 depends on the two coefficients, not on fleet size.
 
+```{include} _generated/when-adding-servers-stops-helping-ceilings-reference.md
+```
+
+```{include} _generated/when-adding-servers-stops-helping-ceilings-doubled.md
+```
+
 The next two tables show ch06's ceilings table for the fleet as it stands and for twice the hosts.
 They hold the ceiling ch06 introduced and the two this chapter adds. For both utilisation ceilings,
 the shares of futures past the allowed line and past the limit fall when the fleet doubles, as the

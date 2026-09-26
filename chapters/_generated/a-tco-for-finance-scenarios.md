@@ -2,12 +2,12 @@
 
 | | Reference scenario | Sized for the growth we might get, not the growth we expect |
 |---|---:|---:|
-| DRAFT-PENDING 27a | 54 | 131 |
-| DRAFT-PENDING 27b | $421,214<br>*$272,130 to $658,773* | $1,021,835<br>*$660,167 to $1,598,135* |
-| DRAFT-PENDING 27c | $316,174<br>*$227,660 to $484,257* | $524,874<br>*$386,622 to $822,825* |
-| DRAFT-PENDING 27d | $2,002,083 | $3,646,206 |
-| DRAFT-PENDING 27e | $2,097,968 | $3,834,749 |
-| DRAFT-PENDING 27f | $2,923,724 | $5,393,738 |
+| hosts in the fleet | 54 | 131 |
+| capex, paid once | $421,214<br>*$272,130 to $658,773* | $1,021,835<br>*$660,167 to $1,598,135* |
+| annual opex, paid in each year | $316,174<br>*$227,660 to $484,257* | $524,874<br>*$386,622 to $822,825* |
+| five-year total, at the point estimate | $2,002,083 | $3,646,206 |
+| five-year total, median | $2,097,968 | $3,834,749 |
+| five-year total, 95th percentile | $2,923,724 | $5,393,738 |
 | *utilisation at the busy hour* — over its limit | 30% | 5% |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) and [`web_service-sized_for_growth`](/models/web_service-sized_for_growth.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) and [`web_service-sized_for_growth`](/models/web_service-sized_for_growth.html) · the model to explore; each input with a range has a slider*

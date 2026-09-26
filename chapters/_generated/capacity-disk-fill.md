@@ -4,4 +4,4 @@
 |---|---:|---:|---:|---:|---|---:|---:|
 | disk fill at horizon | 0.67 | 25% | 0.75 | 1.00 | ok | 44% | 29% |
 
-*Source — [`web_service_capacity-reference`](/models/web_service_capacity-reference.html) · every input on a slider*
+*Source — [`web_service_capacity-reference`](/models/web_service_capacity-reference.html) · the model to explore; each input with a range has a slider*

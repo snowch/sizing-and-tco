@@ -7,7 +7,16 @@ ch19 ranks the inputs with a tornado, and a tornado answers *which input should 
 first*. It does not answer the question that follows, which is the one somebody has to approve:
 **and what would that buy?** A ranking is not a quantity. This is the quantity.
 
-DRAFT-PENDING 23a
+To find what measuring one input would remove, pin it at three values: the low end the tornado
+swings it between, its median, and the high end. At each, re-sample the whole model as if that
+input had been measured perfectly. The interval that comes back is what the model says if that
+input were known.
+
+Where the input lands decides what it removes, because inputs interact. An input that multiplies
+others, found high, scales up their spread: the interval may come back wider. These three figures
+are not a forecast of what a real measurement would remove. A real measurement leaves a standard
+error behind, and you cannot know how big that would be before you commission the work. An input
+whose three figures are all small is not worth measuring, wherever the measurement lands.
 
 Two further things fall out of running it, and both are worth more than the headline:
 
@@ -183,7 +192,12 @@ def value_of_information(write: bool = True) -> dict:
             "totals[0].sum_of_removals": "dimensionless",
         },
         conditions={
-            "where_the_measurement_lands": "DRAFT-PENDING 23b",
+            "where_the_measurement_lands": "each figure is the share of today's interval that knowing "
+            "this input exactly would remove, if the knowledge landed at the low end the tornado "
+            "swings it between, at its median, or at the high end (its 10th and 90th "
+            "percentiles). A negative share means the interval widened instead, because an input "
+            "that multiplies others, found high, scales up their spread. A real measurement also "
+            "leaves a standard error behind, which these figures do not account for",
             "removals_do_not_add": "the sum of the individual removals at the median is not one. "
             "Uncertainty in a chain of multiplications is not a quantity that divides between the inputs, and a "
             "figure read that way is read wrongly (ch19)",

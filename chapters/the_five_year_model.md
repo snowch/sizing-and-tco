@@ -22,37 +22,25 @@ number has no way to carry it.
 
 ### Models are joined by numbers written down
 
-Here is a seam that exists in this repository.
+This is a seam that exists in this repository: two models, one quantity.
 
-```{include} _generated/the-five-year-model-service.md
+The web service model computes a cost per stored terabyte per month for the records on its own fleet ([ch17](#unit-economics)): its five-year total divided by the terabytes it stores, per month. The computed price is ch17's unit cost. The straight-line average it divides by overstates what is held under growth, so the price comes out low; the straight line flatters the unit cost, more so the faster growth is. The observability model buys storage, and its retention cost is the stored terabytes times a storage price per terabyte-month. The table below shows the computed price, the assumed price, and the observability model's stored terabytes and retention cost.
+
+```{include} _generated/the-five-year-model-seam-ends.md
 ```
 
-The web service model produces a cost per stored terabyte per month, for the records on its own
-fleet ([ch17](#unit-economics)). The observability model buys storage:
+The Unit column shows the arithmetic: terabytes times dollars per terabyte-month equals dollars per month. The computed price and the assumed price are the same quantity in the same unit. `tests/the_five_year_model/` checks that the two units still match; if they stop matching, the models are no longer describing the same trade.
 
-```{include} _generated/the-five-year-model-observability.md
-```
-
-Its retention cost is stored terabytes times a price per terabyte-month. That is the same
-quantity, in the same units, that the other model computes. `tests/the_five_year_model/` checks
-that those two units still match. If they ever stop matching, the two models have quietly stopped
-describing the same trade.
-
-So the observability model could be driven by the web service model. Suppose its retention store
-ran on the same kind of fleet, at what a terabyte costs there. It is not driven that way. It
-declares the price as an assumption with its own invented distribution, so the two models are not
-joined at all. Here are the two, on one axis:
+So the observability model could take its price from the web service model, if its retention store ran on the same kind of fleet. It does not. The model declares the price as an assumption with its own range, and neither file refers to the other. The two models are not joined at all.
 
 ```{image} _figures/the-five-year-model-seam.svg
 :alt: The web service model's computed cost per stored terabyte-month and the observability model's assumed storage price, on one logarithmic axis
 :width: 100%
 ```
 
-Same quantity, same unit, two models that have never met. The top is computed, and it is wide
-because everything upstream of it is. The bottom was written down, from whichever storage tier's
-figure somebody had to hand, and its width is that person's guess. The two do not even overlap,
-which is the first thing a join would have asked about, and nothing did. The tick is what crosses
-a seam in practice: one number.
+The figure puts the two prices on one axis. The top panel is computed, and it is wide because every uncertain input upstream of it feeds it. The bottom panel was written down from whichever storage tier's figure was to hand, and its width is the guess of whoever wrote it. The two ranges do not overlap: the table shows the computed price's low end above the assumed price's high end. A join would have checked that first, and nothing did.
+
+The tick marks the upstream median, the same figure as the Median column of the table. That one number is what crosses a seam in practice.
 
 ### What happens when you do join them
 
@@ -89,6 +77,9 @@ models' growth describes the same users. The two files declare their growth sepa
 its own range.
 
 On this seam, growth pushes the two sides in opposite directions. The table shows it.
+
+```{include} _generated/the-five-year-model-seam-growth.md
+```
 
 Why the price falls as growth rises: the web service fleet is a fixed number of hosts, decided in
 [ch12](#the-sizing-model). So its five-year total does not depend on growth at all. More growth
@@ -149,7 +140,7 @@ where a second quote arrives and needs them.
 
 ```{iframe} /models/web_service-reference.html
 :width: 100%
-This is the finished model. The box *five-year total cost of ownership* sits near the right-hand end
+This is the finished model. The box *total cost of ownership* sits near the right-hand end
 of the graph, one column in from the last. If it is out of sight, scroll the graph sideways; a note
 under the graph says how many boxes are out of sight to the right. Click the box, then *Show only
 what feeds it*, to see how much of the graph feeds the total and how much does not.

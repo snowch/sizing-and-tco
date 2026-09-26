@@ -75,6 +75,11 @@ stretch the idle share of the fleet shrinks by the same factor, and the panel ti
 share at each end. Two stretches over which the idle share shrinks by the same factor have the
 same shape once each fills its axes.
 
+```{image} _figures/queueing-and-the-knee-zoom.svg
+:alt: The queueing curve drawn over two stretches, each filling its own axes: the same shape twice, with the bend wherever the axis stops
+:width: 100%
+```
+
 A stretch near idle, drawn alone, is almost a straight line. So where a knee appears depends on
 where the axis was stopped. There is nothing in the curve itself to find.
 

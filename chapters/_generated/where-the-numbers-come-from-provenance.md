@@ -6,7 +6,7 @@
 | ● | one sample per series<br>`one_sample_per_series` | fact | definition |
 | ● | one year<br>`one_year` | fact | definition |
 | ◐ | query scan rate quoted<br>`query_scan_rate_quoted` | vendor claim | series scanned per second per query node, quoted |
-| ○ | *DRAFT-PENDING 04a 22* | assumption | |
+| ○ | *22 more, not listed here* | assumption | |
 | | **26 inputs** | | **2 fact, 2 vendor claim, 22 assumption** |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***

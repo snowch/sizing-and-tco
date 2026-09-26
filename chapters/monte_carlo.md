@@ -26,49 +26,73 @@ and do arithmetic. It assumes nothing about statistics.
 
 ### A single number is a bet you did not know you placed
 
-Start with the model as [ch12](#the-sizing-model) left it.
+The table below is the book's finished web service model: [ch12](#the-sizing-model)'s host count,
+with the costs later chapters add to it.
 
 ```{include} _generated/monte-carlo-outputs.md
 ```
 
-The first column is what the chain produced: one value per output, from one value per input. The
-second column is the same model, with each input allowed to be as uncertain as the person who
-wrote it down is.
+The *Point estimate* column shows what you get when you work the model out once, with every input at
+the middle of its declared range. The *90% interval* column shows what happens when you work the
+model out many times, letting each input be as uncertain as the person who wrote it down is. This
+column holds the middle nine answers in ten.
 
-Look at the host count. The point estimate is a real number, correctly computed. It sits inside a
-range that spans an order of magnitude, nearer the low end than the middle. Nothing went wrong.
-The calculation had no way to mention that its inputs were guesses, so it did not mention it.
+Look at the host count row. The point estimate is a correctly computed number. Its range stretches
+wide: the top is many times the bottom, and the point estimate sits nearer the bottom than the
+middle. Nothing went wrong. The calculation had no way to say that its inputs were uncertain, so it
+did not say it.
+
+The finished model draws more uncertain inputs than ch12's, from the same seed. So each input
+receives different random values, and the host range can differ from ch12's in its last digit.
 
 ```{image} _figures/monte-carlo-hosts-distribution.svg
 :alt: The recommended host count as a distribution, with the point estimate marked
 :width: 100%
 ```
 
-Everything below is how that second column was produced.
+The chart shows the host count's answers as bars. Each bar counts how many answers landed in that
+stretch of host counts. The solid red line marked *point* is the point estimate. The dashed lines
+marked *p5* and *p95* are the two ends of the range. The heading says how many times the model was
+worked out. The *median* in the subtitle is the middle answer, with half the answers below it. The
+words *sample*, *interval* and the *p* in *p5* are defined in the sections below, where the method
+needs them.
+
+The rest of the chapter is how the *90% interval* column was produced.
 
 ### Instead of one value, a bag of values
 
-The idea is simple. If you do not know what the growth rate will be, do not give the model one
-growth rate. Give it a bag of plausible growth rates. Run the model once for every value in the
-bag. You get a bag of answers out, and the bag is the answer.
+If you do not know what the growth rate will be, do not give the model one growth rate. Give it a
+bag of plausible growth rates and work the model out once for every value. You get a bag of answers,
+and that bag is the answer.
 
-That is Monte Carlo. Everything else is bookkeeping: how to fill the bag, and how to read it.
+When several inputs are uncertain, each has its own bag. Each time through the model, you draw one
+value from every bag, with each input drawn separately from the others. If two inputs were drawn
+together, they would rise and fall together. That is a different claim about the world from two
+inputs that vary on their own.
 
-Two words, and you will not need many more. The bag of plausible values for an input is its
-**distribution**. One value drawn from the bag is a **sample**. The bag of answers that comes out
-the other end is the output's distribution. Reading one is a later section of this chapter.
+That is Monte Carlo. Everything else is bookkeeping: how to fill each bag and how to read the bag of
+answers.
 
-### Where the bag comes from: pick a percentile at random
+Two words: the bag of plausible values for an input is its **distribution**, and one value drawn
+from the bag is a **sample**. The bag of answers is the output's distribution. Two more words arrive
+later in this chapter, each where the method needs them.
 
-Filling the bag takes one line of code, and the same line works for every distribution.
+### Where the bag comes from
 
-Every distribution can be described by a function that answers one question: *what value sits at
-this percentile?* Give it 0.5 and it hands back the middle value. Give it 0.9 and it hands back
-the value that nine tenths of the distribution is below. Call that function the distribution's
-**percentile function**.
+Filling a bag takes two lines of code, and the same two lines work for every shape.
 
-Now: pick a percentile uniformly at random, between zero and one, and ask the function what value
-sits there. Do it a hundred thousand times. You have sampled the distribution.
+Every shape can be described by one function that answers one question: given a fraction between
+zero and one, what value is that fraction of the bag below? Give it one half and it returns the
+middle value. Give it nine tenths and it returns the value nine tenths of the bag is below.
+
+The value it returns is a **percentile**: the value a given fraction of the bag is below. So the
+function turns a fraction into a percentile. The book calls it the shape's **percentile function**.
+In the code it is called `ppf`.
+
+Pick a fraction at random between zero and one, every fraction equally likely, and ask the
+percentile function for the value there. Do that as many times as the model's scenario asks. The
+heading of each chart on this page says how many. The values you get are samples from the
+distribution: they fill the bag.
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -76,12 +100,12 @@ sits there. Do it a hundred thousand times. You have sampled the distribution.
 :end-before: def one_shape
 ```
 
-`generator.random(n)` draws the percentiles. The percentile function turns them into values. That
-is the entire sampler, and it is why adding a distribution to this book is three lines rather
+`generator.random(n)` draws the random fractions. The percentile function turns them into values.
+That is the whole sampler. That is why adding a shape to this book is three lines of code rather
 than a new dependency.
 
-The technique is called **inverse transform sampling**. Any distribution whose percentile
-function you can write down, you can sample. Problem 13.1 asks you to write one.
+The technique is called **inverse transform sampling**. Any shape whose percentile function you can
+write down, you can sample. Problem 13.1 asks you to write one.
 
 Here is the simplest:
 
@@ -91,8 +115,8 @@ Here is the simplest:
 :end-before: def triangular_ppf
 ```
 
-Percentile zero gives the minimum, percentile one gives the maximum, and everything in between is
-a straight line. You could have guessed that one. The next one needs some thought:
+A fraction of zero gives the minimum, a fraction of one gives the maximum, and the values between
+lie on a straight line. You could have guessed that one. The next one needs a picture.
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -100,25 +124,43 @@ a straight line. You could have guessed that one. The next one needs some though
 :end-before: def lognormal_ppf
 ```
 
-Two branches, meeting at the mode. Below the mode, the area under the triangle grows as the square
-of the distance from the minimum, so inverting it gives a square root. That is the whole
-derivation. Do it on paper once. Every other distribution in this chapter is the same exercise
-with different algebra.
+Picture the triangle. Its base runs from the least value the input could take to the most. Its peak
+stands over the value the expert would bet on: the **most likely value**, which the code calls
+`likely`. This value is called the **mode**.
+
+The height of the triangle at a value says how likely values near it are. A shape drawn this way —
+higher where values are likely, lower where they are not — is the input's **density**. The whole
+area under it is one.
+
+The area under the density from the minimum up to a value is the fraction of the bag below that
+value. So finding the value for a fraction means finding where the area from the left edge reaches
+that fraction.
+
+Left of the peak, the area up to a value is a smaller triangle. Its width and its height both grow
+in step with the distance from the minimum. So its area grows as the square of that distance.
+Halfway from the minimum to the peak, the small triangle is half as wide and half as tall, so it
+holds a quarter of the area it holds at the peak.
+
+Set that area equal to the fraction and solve for the value: you take a square root. That is the
+line `below` in the code.
+
+Right of the peak, run the same argument from the maximum, using the area above the value. That is
+the line `above`.
+
+`at_mode` is the share of the whole area that lies left of the peak. The code uses `below` when the
+fraction is smaller than that, and `above` otherwise.
+
+Work it through on paper once. Problem 13.1 is the same exercise for a shape this book does not
+have, and it needs one integral.
 
 ### Which shape for which input
 
-Choosing a distribution is a judgement, not a technical question. It is a claim about the world,
-and the first claim a reviewer should argue with.
+Choosing a shape is a judgement, not a technical question. It is a claim about the world, and the
+first claim a reviewer should argue with.
 
-**Lognormal, for prices and growth and anything that compounds.** Two properties make it the
-right shape for those. It cannot go negative, and neither can a price. And a product of several lognormals is
-another lognormal. A sizing chain is a product, so the uncertainty arriving at the end of one has
-roughly this shape whether or not anybody chose it.
-
-The parameters here are two percentiles rather than the mean and standard deviation of a
-logarithm. Nobody has an intuition for the standard deviation of a logarithm. Everybody has one
-for *"I would be surprised if it were under eleven or over nineteen"*. That is a sentence a person
-can say about a price, and it is what the model file records.
+**Lognormal, for prices and growth and anything that compounds.** The docstring that follows says
+why it is the right shape for those things and explains why it is declared by two values rather than
+by a mean.
 
 ```{literalinclude} ../sizing/mc.py
 :language: python
@@ -126,53 +168,54 @@ can say about a price, and it is what the model file records.
 :end-before: def normal_ppf_scaled
 ```
 
-**Triangular, for an expert's guess.** The least it could be, the most it could be, and the one
-they would bet on. Most sizing inputs arrive in this shape, because it is the shape of the answer
-to "what is it, roughly?". Name its flaw every time you use it: it asserts that nothing outside
-the bounds can happen, and the bounds came out of somebody's memory.
+The code uses `normal_ppf` and `Z90`. The first is the normal shape's percentile function, imported
+from `sizing/normal.py`. The second is `normal_ppf(0.9)`, defined at the top of `sizing/mc.py`: how
+far the 90th percentile of a standard normal sits from its middle. Problem 13.2 needs both.
 
-**Uniform, when the bounds really are all you know.** A price capped by a contract. A retention
-window somebody will pick from a range. Honest there, and dishonest as a default. It says
-the extremes are as likely as the middle, and almost nothing real is like that.
+**Triangular, for an expert's guess.** The previous section shows you the code and explains when it
+is honest and what its flaw is.
+
+**Uniform, when the bounds are all you know.** The previous section shows when this shape is honest
+and why it is dishonest as a default.
 
 **Normal, for measurement error.** In this book it means one thing: the standard error beside a
 measured constant. A number was measured, the measurement wobbles, and it is as likely to wobble
-high as low. It is the wrong default for a price: a normal will happily go negative and a price
-will not.
+high as low. It is the wrong default for a price: a normal can go negative, and a price cannot.
+[Appendix C](#appendix-c-distributions) gives each of the four shapes its own section, and then a
+*Choosing* section with a table and five questions for selecting one.
 
 Choosing badly is not a rounding error. It is a claim about what can happen, made in a model file
-that will outlive the meeting it came from. So the toolkit refuses an input that is sampled
-without naming its shape and saying why. Every input in this book records who claimed it, on what
-basis, and which of the four shapes it is:
+that will outlive the meeting it came from.
+
+Only the inputs the model samples have a shape; the rest are single values, such as definitions,
+spec-sheet figures, margins, and decisions about fleet size. For every sampled input, the build
+refuses a source that does not name its shape.
 
 ```{include} _generated/monte-carlo-provenance.md
 ```
 
-The tally at the bottom is the honest summary of any model. This many of the numbers are
-traceable. This many are somebody's sales material. This many were decided in a room.
+The table lists every input and its provenance. For a sampled input, the source names its shape, and
+most also say why that shape was chosen. The tally at the bottom shows what the model rests on: how
+many inputs trace to a source that can be checked (*fact*), how many come from a vendor's sales
+material (*vendor claim*), and how many were decided by the modeller (*assumption*).
 
 ### Running the bag through the model
 
-Nothing changes.
+Nothing changes about the arithmetic. The model is a graph of quantities, each computed from the
+ones before it. Working it out at a point walks the graph in order, doing arithmetic on single
+numbers. Sampling it walks the same graph in the same order, doing the same arithmetic on arrays:
+one value per sample. The operation `a * b` means the same thing whether `a` and `b` are two numbers
+or two long arrays.
 
-The model is a graph of quantities, each computed from the ones before it. Evaluating it at a
-point walks the graph in order, doing arithmetic on numbers. Sampling it walks the same graph in
-the same order, doing the same arithmetic on arrays. `a * b` means the same thing whether `a` and
-`b` are two numbers or two hundred thousand. The evaluator in this book has one expression
-walker, and hands it a different set of functions for each pass.
+So uncertainty travels through the graph without extra work. An input with a distribution becomes an
+array. Everything downstream of it becomes an array. A quantity with nothing uncertain upstream
+stays a single number, and the arithmetic uses that one number against every value in the array.
 
-So uncertainty propagates for free. An input with a distribution becomes an array. Everything
-downstream of it becomes an array. Everything else stays a single number and broadcasts.
-
-```{image} _figures/monte-carlo-graph.svg
-:alt: The sub-graph feeding the five-year total, coloured by node kind
-:width: 100%
-```
-
-Every node in that graph has a distribution once the model has been sampled, not just the ones at
-the end. The interactive version of this figure will show you any of them. That is the fastest
-way to find out *where* an interval got wide: you walk the chain until the histograms stop being
-narrow.
+Every node in the graph has its own bag of values once the model has been sampled, not only the
+outputs at the end. Open [the web service model](/models/web_service-reference.html) and click any
+box in the graph. The panel beside the graph shows that node's values as a bar chart, with its p5,
+median and p95 beneath it. Use it to find where the range of answers got wide: start at an input and
+click along the chain towards the output until the bar charts stop being narrow.
 
 ### Reading the answer
 
@@ -181,54 +224,66 @@ narrow.
 :width: 100%
 ```
 
-Two words, and then we are done with vocabulary.
+One more word.
 
-A **percentile** is the value a given fraction of the bag is below. The 5th percentile is the
-value only one sample in twenty came in under.
-
-An **interval** is the gap between two of them. This book reports the gap between the 5th and the
-95th percentile, calls it the 90% interval, and deliberately does not call it a confidence
-interval. That phrase means something precise to a statistician and something vaguer to everybody
-else. What is meant here is the plain reading: *the model put nine tenths of its belief in this
-range*.
+An **interval** is the gap between two percentiles. This book reports the gap between the 5th and
+the 95th percentile, and calls it the 90% interval. On the charts they are the dashed lines *p5* and
+*p95*. The book does not call it a confidence interval. That phrase means something precise to a
+statistician and something vaguer to most readers. What is meant here is the plain reading: the
+model put nine tenths of its belief in this range.
 
 Why two percentiles rather than the smallest and the largest answer in the bag: the ends are
 properties of how many answers you collected, not of the model. Collect ten times as many and the
 largest gets larger, every time, because the unlucky combinations had more chances to turn up. The
 middle settles, and [ch14](#correlation-and-convergence) measures how quickly.
 
-Note where the red line sits relative to the middle of the distribution. For a chain of
-multiplications with skewed inputs, the answer you get from the average inputs is not the average
-answer, and it is not the middle one either. There is a theorem behind that. You do not need it.
-You need to have seen it happen once.
+The red line marked *point* is the five-year total at the point estimate: every input at the middle
+of its range, the value half its bag is below. On this chart it sits below the *median*.
+
+This is not a quirk of these numbers. Pass one uncertain input straight through, and the point is
+the middle answer exactly: the middle input gives the middle output. Multiply two uncertain inputs,
+and the point stays close to the middle. The staff cost, engineers times salary, is an example.
+
+The five-year total adds several cost lines. Each line's bag is lopsided: a short way down to its
+lowest values, a long tail up to its highest. That shape is called **skewed**. Each line's own point
+sits at its own middle. Add the lines up. A line that comes in high can be far above its middle; a
+line that comes in low can be only a little below it. The highs outweigh the lows, so the middle of
+the total sits above the sum of the lines' middles. The point estimate of the total is the sum of
+the lines' points, which sit at their middles, so the point sits below the *median* of the chart.
+
+The host count's point also sits low, for a different reason: the model takes the largest of three
+chains. [ch12](#the-sizing-model) showed why that step pulls the point below the middle.
+
+So the point estimate is not the middle answer once a model adds lopsided quantities or takes the
+largest of several.
 
 ### How often each ceiling is breached
 
-The ceilings are what the machinery was built for, and a spreadsheet has no equivalent of this
-table.
+This is the ceiling table from [ch12](#the-sizing-model), for the finished model: the same fleet
+against the same ceilings. [ch12](#the-sizing-model) read its *Verdict* column, which is the plan at
+the point estimate.
 
 ```{include} _generated/monte-carlo-ceilings.md
 ```
 
-At the point estimate, every ceiling but one is fine. That is not surprising.
-[ch12](#the-sizing-model) sized the fleet from the point estimates, so of course it satisfies the
-ceilings it was sized against. The one it was not sized against is the one that is not fine. The
-last two columns are the same model asked a different question: across everything this model
-thinks could happen, how often is this limit breached?
+The finished model draws more inputs from the same seed, so the table may differ from ch12's in a
+single cell.
 
-That is a sizing answer. Not "you need this many hosts", but "at this many hosts, this is how
-often the thing you were trying to avoid happens anyway". Somebody can take responsibility for the
-second. Nobody can take responsibility for the first, because it does not say anything.
+A ceiling is a node in the graph, so it is sampled like every other node: one value for each time
+the model was worked out. *Allowed* is the *Limit* less its *Headroom*: the limit times one minus
+the headroom. *Over allowed* is the fraction of the samples whose value is above *Allowed*. *Over
+limit* is the fraction above *Limit*. Both lines are fixed at the plan's values; only the ceiling's
+own value varies from sample to sample.
 
-Once the question is in that form, it has a price. Here is the same model with a bigger fleet
-bought:
+The last two columns ask the same fleet a different question from the *Verdict*: across everything
+this model thinks could happen, how often is this line crossed?
 
-```{include} _generated/monte-carlo-ceilings-resized.md
-```
+That changes what the sizing answer is. Not "you need this many hosts", but "at this many hosts,
+this is how often the thing you were trying to avoid happens anyway". The person who signs for the
+fleet can take responsibility for the second. The first says nothing about risk.
 
-What the extra capital buys is the difference between two percentages. Whether it is worth it is
-not a modelling question, and [ch21](#a-tco-for-finance) is about how to put it to the person
-whose decision it is.
+ch12 also showed a bigger fleet against the same ceilings, and [ch21](#a-tco-for-finance) prices it
+and puts the choice to the person whose decision it is.
 
 ### The seed
 
@@ -236,17 +291,17 @@ Every sampled result in this book records the seed its random numbers came from,
 count, and a hash of the sampler's source. Run it again with those three and you get the same
 numbers to the last digit.
 
-That is not fastidiousness. An unseeded simulation is a measurement nobody can repeat, and a
-figure nobody can repeat is a figure nobody can check. This book refuses that everywhere else,
-and has no reason to start allowing it here.
+That is not fastidiousness. An unseeded simulation gives a result nobody can repeat, and a figure
+nobody can repeat is a figure nobody can check. This book refuses that everywhere else, and has no
+reason to start allowing it here.
 
 ## What this cannot tell you
 
-**Whether the model has the right shape.** Everything above takes the structure as given and asks
-what the inputs are worth. If a cost line is missing, if a ceiling was never declared, or if two
-quantities were multiplied that should have been added, sampling will propagate the error
-beautifully and report a confident interval around the wrong answer. That is *structural error*.
-It is invisible to every technique in this chapter, and it is the subject of
+**Whether the model has the right shape.** Everything above takes the model's structure as given and
+asks what the inputs are worth. If a cost line is missing, if a ceiling was never declared, or if
+two quantities were multiplied that should have been added, sampling carries the mistake through
+every sample and reports a confident interval around the wrong answer. That is *structural error*.
+No technique in this chapter can see it, and it is the subject of
 [ch20 · The missing node](#the-missing-node).
 
 **Whether the shapes were chosen honestly.** A triangular with generous bounds and a lognormal
@@ -254,18 +309,19 @@ with tight ones will give different intervals for the same input, and nothing he
 which was right. The distribution is an assumption like any other, and this book makes you write
 it in a file with your name on it for that reason.
 
-**How the inputs were drawn together.** The sampler above draws each input on its own. The
-intervals above were not produced that way. This model declares two pairs that move together: a
-host's price and the network's, quoted by the same supply chain; and the busy hour and what a
-request costs, because a busier service is a slower one per request. The evaluator applies the
-pairing after the draw. So every figure on this page already carries it, and this chapter has not
-said so until now. Drawing those pairs independently would make every interval here *narrower*,
-which is the direction that gets a plan approved. [ch14](#correlation-and-convergence) names the
-pairs, and measures what they were worth.
+**How the inputs were drawn together.** The sampler above draws each input on its own. The intervals
+on this page were not produced quite that way. The model declares two pairs of inputs that move
+together: a host's price and the network's price per host, quoted by the same supply chain; and the
+busy-hour request rate and the processor time each request takes, because a busier service is a
+slower one per request. The evaluator applies the pairing after the draw, so every figure on this
+page already carries it, and the chapter has not said so until now. Drawing those pairs
+independently would make every interval downstream of them narrower, which is the direction that
+gets a plan approved. [ch14](#correlation-and-convergence) names the pairs and measures what they
+were worth.
 
-**Whether a hundred thousand samples was enough.** This chapter assumed it and did not establish
-it. [ch14](#correlation-and-convergence) has the argument, and the way to work it out for a model
-of your own.
+**Whether enough samples were drawn.** This chapter assumed the number of samples was enough and did
+not show it. [ch14](#correlation-and-convergence) has the argument, and the way to work it out for a
+model of your own.
 
 **How likely any of this is.** The interval is a statement about the model's declared
 inputs. It is not a forecast, it carries no track record, and its 95th percentile is not a
@@ -278,20 +334,22 @@ deal more than a single number, and a great deal less than knowledge.
 :class: takeaways
 
 - **Give the model a bag of plausible values instead of one, and the bag of answers is the answer.**
-  Filling the bag is one line: pick a percentile at random and ask the distribution what value sits
-  there.
+  Filling a bag takes two lines: pick a fraction between zero and one at random, and ask the shape's
+  percentile function for the value there. Each input gets its own draws.
 - **The shape is a claim about the world, and the first thing a reviewer should argue with.**
-  Lognormal for what compounds, triangular for an expert's guess, uniform when the bounds really are
-  all you know, and normal for measurement error alone.
+  Lognormal for what compounds, triangular for an expert's guess, uniform when the bounds are all
+  you know, and normal for measurement error alone.
 - **Sampling the model is the same walk of the same graph, on arrays instead of numbers.** Every
-  node gets a distribution, not only the outputs, so you can walk the chain to where the interval
-  got wide.
-- **Read the middle, not the ends.** The smallest and largest answers are properties of how many you
-  drew. The interval between two percentiles is a property of the model, and the answer at the
-  average inputs is neither the average answer nor the middle one.
-- **The ceilings are what the machinery is for.** Not *you need this many hosts*, but *at this many,
-  this is how often the thing you were avoiding happens anyway*, which is an answer somebody can be
-  accountable for.
+  node gets its own bag of values, not only the outputs, so you can walk the chain to where the
+  interval got wide.
+- **Read the middle, not the ends.** The smallest and largest answers depend on how many you drew;
+  the interval between two percentiles belongs to the model. The point estimate, every input at its
+  middle, is not the middle answer once the model adds lopsided cost lines or takes the largest of
+  several chains.
+- **The ceilings are what the machinery is for.** Their last two columns show the fraction of
+  samples over each line. The answer they give is not *you need this many hosts* but *at this many,
+  this is how often the thing you were avoiding happens anyway*, which the person who signs for the
+  fleet can be held to.
 :::
 
 ## Problems
@@ -300,29 +358,48 @@ Four. The first three are in `tests/monte_carlo/` and are graded against definit
 compute for themselves. The fourth has no test and no known answer.
 
 **13.1 — Add a distribution.**
-Implement the percentile function for a shape this book does not have: a quantity known to within
-a factor, whose density is proportional to one over the value. Derive it as the chapter derived
-the triangular's. The test grades it against the density itself, integrated at test time, so there
-is nothing to look up.
+Implement the percentile function for a shape this book does not have: a quantity known only to
+within a factor, whose density is proportional to one over the value. Derive it the way the chapter
+derived the triangular's: the area under the density from the minimum up to a value, set equal to
+the fraction you are given, then solved for the value. It needs one integral, of one over the value,
+whose result is a natural logarithm. The rest of the chapter needs only arithmetic, so that step
+stands out. The test grades your function against the density itself, integrating it at test time,
+so there is nothing to look up.
 
 ```bash
 python3 -m pytest tests/monte_carlo/test_problem_1_ppf.py -m problem
 ```
 
 **13.2 — Sample a model by hand.**
-The test hands you two of the web service model's inputs, each with the distribution the model
-file declares for it. Sample both yourself, without the toolkit's sampler, work the cost they feed
-through by hand, and reproduce the interval this book publishes for it to within sampling error.
-The point is to discover how small the machinery is.
+The test hands you two of the web service model's inputs, the engineers the fleet occupies and their
+fully loaded salary, each with the distribution the model file declares for it. Both are quoted
+below, with the formula for the annual staff cost they feed. Sample each yourself, without the
+toolkit's sampler: each input with its own random fractions. Work the annual staff cost from your
+samples, one sample at a time, with the model's formula. Reproduce the 5th and 95th percentiles the
+book publishes for that cost. Your figures will not match to the last digit: a finite number of
+samples makes every percentile wobble a little from one set of draws to the next. That wobble is
+called sampling error, and the test allows for it.
+
+The page's `lognormal_ppf` uses two names from outside it: `normal_ppf`, which you import from
+`sizing.normal`, and `Z90`, which is `normal_ppf(0.9)`. The point is to find out how small the
+machinery is.
+
+```{literalinclude} ../models/web_service/model.yaml
+:language: yaml
+:start-at: staff_fte:
+:end-before: annual_opex:
+```
 
 ```bash
 python3 -m pytest tests/monte_carlo/test_problem_2_by_hand.py -m problem
 ```
 
 **13.3 — Where the point estimate sits.**
-For each output of the web service model, find the share of the sampled answers that fall below
-the point estimate. For a cost it is near a half. For the recommended host count it is not, and
-the chain says why. Name the step that moved it.
+For each of four outputs of the web service model — the host count the model recommends, the
+five-year total cost, capex, and annual opex — find the fraction of its sampled answers that fall
+strictly below its point estimate. Some of these fractions sit near one half and some do not. For
+each one that does not, name the step in its chain that moved the point, and which way. The section
+*Reading the answer* gives you the two kinds of step to look for.
 
 ```bash
 python3 -m pytest tests/monte_carlo/test_problem_3_where_the_point_sits.py -m problem
@@ -335,10 +412,19 @@ Take a price you pay, find two years of invoices for it, and decide which of the
 shapes in this chapter you would use and why. Then check what the last two years would have looked
 like under your choice. If the answer embarrasses you, that is the exercise working.
 
-A good answer names the shape, the reason it and not another, and the two ends of the band, as a
-sentence somebody could disagree with. What would show it wrong is the invoices: more than a
-couple of the twenty-four outside the band you declared means the band was too narrow, and none
-anywhere near its ends means it was too wide to be a claim at all.
+A good answer names the shape, the reason for it and not another, and the band, written the way the
+model file would declare it. For a lognormal, give the two values you would be surprised to see it
+under and over (its p10 and p90). For a triangular or a uniform, give its bounds. Write it as a
+sentence a colleague could disagree with.
+
+The invoices show it wrong, and what counts as wrong depends on the shape you chose.
+
+A lognormal declared by its p10 and p90 expects about one invoice in ten below the lower value and
+one in ten above the upper, so about one in five outside the band by design. Many more than that
+outside means the band was too narrow. None outside, and none near either end, means it was too wide
+to be a claim. A triangular or a uniform claims that nothing falls outside its bounds. Any invoice
+outside them means the bounds were wrong. The chapter argues that a normal is the wrong default for
+a price. An answer that chooses one has to answer that argument first.
 
 ## Where to go next
 
@@ -348,6 +434,9 @@ statistics, and is a useful corrective to the idea that this is a modern techniq
 `numpy.random`'s documentation on generators and seeding is worth twenty minutes, particularly
 the part about why `default_rng` exists and what it replaced.
 
-[ch14](#correlation-and-convergence) picks up the two things this chapter used without
 % word-ok: named here only to hand it to ch14, which teaches it
+[ch14](#correlation-and-convergence) picks up the two things this chapter used without
 establishing: the correlations the intervals above already carry, and the sample count.
+
+[Appendix B](#appendix-b-monte-carlo-module) quotes the complete `sizing/mc.py` and
+`sizing/normal.py`, showing the order a model run calls them.

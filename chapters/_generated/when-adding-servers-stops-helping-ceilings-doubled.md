@@ -6,4 +6,4 @@
 | utilisation, counting coordination | 0.70 | 30% | 0.70 | 1.00 | ok | 52% | 35% |
 | fraction of the fleet doing nothing useful | 0.54 | 50% | 0.50 | 1.00 | into the margin | 72% | 0% |
 
-*Source — [`web_service-twice_the_hosts`](/models/web_service-twice_the_hosts.html) · every input on a slider*
+*Source — [`web_service-twice_the_hosts`](/models/web_service-twice_the_hosts.html) · the model to explore; each input with a range has a slider*

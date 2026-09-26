@@ -2,16 +2,16 @@
 
 | | Input | Provenance | Source |
 |---|---|---|---|
-| ◐ | cores per host<br>`cores_per_host` | vendor claim | spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts threads doubles this number without doubling the work a host does (ch07) |
+| ◐ | cores per host<br>`cores_per_host` | vendor claim | spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts threads doubles this number without doubling the work a host does |
 | ◐ | disk per host<br>`disk_per_host` | vendor claim | spec sheet: one local drive. Decimal TB, not TiB — appendix D, and it is a 10% difference |
 | ◐ | host power<br>`host_power` | vendor claim | typical draw under load, per host as configured. Triangular, and one of the few inputs here whose bounds are physical rather than editorial: a host cannot draw less than it idles at, or more than its supply will give it |
 | ◐ | host price<br>`host_price` | vendor claim | chassis, CPU, memory, drives and boot media, as configured. Lognormal like any price, and wide because a host is a configuration rather than a commodity |
-| ◐ | licence per core<br>`licence_per_core` | vendor claim | the platform software's per-core licence, as quoted. Lognormal: a price, and a wide one, because it is the line item most often negotiated. It is what makes the core count a cost as well as a capacity (ch17) |
-| ◐ | licence per host<br>`licence_per_host` | vendor claim | the price list: per core, with no per-host charge. A quote that licenses per host instead puts its figure here and zero in licence_per_core, and the two totals are then compared like for like |
+| ◐ | licence per core<br>`licence_per_core` | vendor claim | the platform software's per-core licence, as quoted. Lognormal: a price, and a wide one, because it is the line item most often negotiated. It is what makes the core count a cost as well as a capacity (ch15) |
+| ◐ | licence per host<br>`licence_per_host` | vendor claim | The design the plan was built on is licensed per core, with no per-host charge. When a design licenses per host, that figure goes here and zero in `licence_per_core`, allowing the two to be compared like for like. |
 | ◐ | ram per host<br>`ram_per_host` | vendor claim | spec sheet: the modules fitted. The sheet says 64 GB and means GiB — appendix D — and the operating system will report less than either, which is os_reserve's job |
 | ◐ | support rate<br>`support_rate` | vendor claim | annual support as a fraction of capital cost. Triangular because it is negotiated inside a band the market sets rather than drawn from one: the spread is what different buyers get, not what varies from year to year |
-| ● | *DRAFT-PENDING 04a 6* | fact | |
-| ○ | *DRAFT-PENDING 04a 23* | assumption | |
+| ● | *6 more, not listed here* | fact | |
+| ○ | *23 more, not listed here* | assumption | |
 | | **37 inputs** | | **6 fact, 8 vendor claim, 23 assumption** |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

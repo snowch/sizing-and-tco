@@ -148,12 +148,7 @@ correctly. There is no point where the rule changes, so label cardinality is not
 
 The table below shows each count's band.
 
-```{image} _figures/regime-changes-cardinality.svg
-:alt: Label cardinality as a distribution — a product of uncertain counts
-:width: 100%
-```
-
-```{include} _generated/regime-changes-tornado.md
+```{include} _generated/regime-changes-label-bands.md
 ```
 
 The product's band is wider than any one count's band but narrower than the three widths multiplied,

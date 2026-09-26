@@ -4,6 +4,6 @@
 |---|---:|---:|---|
 | capex | $421,214 | $272,130 to $658,773 | USD |
 | annual opex | $316,174 | $227,660 to $484,257 | USD / year |
-| five-year total cost of ownership | $2,002,083 | $1,508,230 to $2,923,724 | USD |
+| total cost of ownership | $2,002,083 | $1,508,230 to $2,923,724 | USD |
 
-*Source — [`web_service-reference`](/models/web_service-reference.html) · every input on a slider*
+*Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

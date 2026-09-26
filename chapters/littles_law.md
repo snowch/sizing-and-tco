@@ -152,6 +152,9 @@ not balance. Problem 5.2 is that division.
 ```{include} _generated/littles-law-outputs.md
 ```
 
+```{include} _generated/littles-law-over-capacity.md
+```
+
 The rows *cores busy at the busy hour* and *requests in flight, if none waited* are identical in
 every column. That is not a mistake. When no request waits, each request in flight holds one core
 for the whole time it is in the system, so the count of requests in flight equals the count of

@@ -81,11 +81,6 @@ fourth, which is a modelling decision nobody knew they were taking.
 ```{include} _generated/the-missing-node-outputs.md
 ```
 
-```{image} _figures/the-missing-node-graph.svg
-:alt: What feeds the ingest total, and what is missing from it
-:width: 100%
-```
-
 The observability model's ingest figure combines metrics and logs, as shown in the *ingest, metrics
 and logs only* row. It is arithmetically correct: every input is declared, sourced and sampled, and
 the interval is as honest as the rest of the book.
@@ -118,6 +113,9 @@ reader has.
 This page shows a model in that state: the file under problem 20.3 calculates monthly cost from
 instances at a rate, storage at a rate, and a support charge on both. Every number was invented
 for the exercise, and the file is missing one cost line with no node to mark the gap.
+
+```{include} _generated/the-missing-node-fixture.md
+```
 
 The first row shows the file is a definitional model by [ch01](#point-estimates)'s test: every
 relationship holds by definition, yet it is incomplete because a line is missing, as the section

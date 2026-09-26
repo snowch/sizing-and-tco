@@ -129,6 +129,9 @@ table and the ceilings table.
 Each total has an interval of its own. The totals table below shows both: each five-year total
 at the point estimate and as a middle nine in ten. The two intervals are nearly the same.
 
+```{include} _generated/comparing-two-tcos-totals.md
+```
+
 That is not a coincidence. Most of what either total is uncertain about is shared. The
 electricity price, the building's overhead, what an engineer costs and how many are needed are
 the same inputs on both sides, and the same draw of each reaches both designs. When the

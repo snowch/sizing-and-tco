@@ -153,7 +153,9 @@ def queueing_curve(write: bool = True) -> dict:
             "than this one",
             "the_cap": "the model clamps utilisation before it divides by zero; past that point "
             "the formula has stopped describing a queue",
-            "one_server": "DRAFT-PENDING 09b",
+            "one_server": "the formula is the result for one server with one queue, applied to "
+            "the whole fleet. Many cores sharing one stream of requests wait less than this at the "
+            "same utilisation",
         },
         code_sources=SOURCES,
         write=write,

@@ -109,7 +109,7 @@ def unit_label(unit: str) -> str:
         "GB/s": "GB/s",
         "kWh/year": "kWh / year",
         "1/year": "per year",
-        "second * core / request": "DRAFT-PENDING 29a",
+        "second * core / request": "core-seconds / request",
     }
     return pretty.get(unit, unit)
 
@@ -329,11 +329,11 @@ COMMUTE = ROOT / "tests" / "point_estimates" / "fixtures" / "commute.yaml"
 #: The commute table's words: the first column's heading, its first and last rows, the suffix on
 #: a row where one input moves alone, and the last column's heading.
 COMMUTE_WORDS = {
-    "moves": "DRAFT-PENDING 02a",
-    "nothing": "DRAFT-PENDING 02b",
-    "alone": "DRAFT-PENDING 02c {name}",
-    "everything": "DRAFT-PENDING 02d",
-    "total": "DRAFT-PENDING 02e",
+    "moves": "What moves to its most",
+    "nothing": "Nothing: the usual commute",
+    "alone": "{name} only",
+    "everything": "Everything",
+    "total": "Fares for the year",
 }
 
 
@@ -464,7 +464,7 @@ def ceilings_table(name: str, *only: str) -> str:
 
 #: The band table's headings, in the model viewer's plain words for the two ends.
 BANDS_HEADER = (
-    "| DRAFT-PENDING 12a | DRAFT-PENDING 12b | DRAFT-PENDING 12c | DRAFT-PENDING 12d |",
+    "| Quantity | 1 future in 20 is below | 1 in 20 is above | Top ÷ bottom |",
     "|---|---:|---:|---:|",
 )
 
@@ -499,7 +499,7 @@ def bands_in_plain_words(name: str, *nodes: str) -> str:
 
 
 #: The spread table's three headings: the quantity, its 90% interval, and the top over the bottom.
-SPREAD_HEADINGS = ("DRAFT-PENDING 32a", "DRAFT-PENDING 32b", "DRAFT-PENDING 32c")
+SPREAD_HEADINGS = ("Quantity", "90% interval", "Top ÷ bottom")
 
 
 def spread_table(name: str, *nodes: str) -> str:
@@ -568,7 +568,7 @@ def _named(node: dict, node_name: str) -> str:
 
 
 #: The line standing in for the rows of one provenance kind a page leaves out.
-OMITTED = "*DRAFT-PENDING 04a {count}*"
+OMITTED = "*{count} more, not listed here*"
 
 
 def provenance_table(name: str, *kinds: str) -> str:
@@ -648,11 +648,11 @@ def measured_table(name: str) -> str:
 #: The claim-beside-measurement table's headings, and what its last column says of a measured
 #: constant: what took it, or that its result does not exist yet.
 CLAIM_HEADER = (
-    "| | DRAFT-PENDING 03a | DRAFT-PENDING 03b | Unit | DRAFT-PENDING 03c |",
+    "| | Quantity | What the model says | Unit | Where it comes from |",
     "|---|---|---:|---|---|",
 )
-CLAIM_MEASURED = "DRAFT-PENDING 03d {stack}"
-CLAIM_UNMEASURED = "DRAFT-PENDING 03e `bench/results/{result}.json`"
+CLAIM_MEASURED = "measured: {stack}"
+CLAIM_UNMEASURED = "measured: `bench/results/{result}.json` does not exist"
 
 
 def claim_beside_measurement(name: str, *nodes: str) -> str:
@@ -732,7 +732,7 @@ def tornado_table(
 
 
 #: The row that counts the inputs a tornado table leaves out because they do not move the output.
-STILL_ROW = "*DRAFT-PENDING 32d {count}*"
+STILL_ROW = "*{count} more with a range, which do not reach it*"
 
 
 def tornado_of_what_reaches(name: str, output: str) -> str:
@@ -747,13 +747,13 @@ def tornado_of_what_reaches(name: str, output: str) -> str:
 
 #: The straight-line table's headings, and the name of each row's point in the growth band.
 STRAIGHT_LINE_HEADINGS = (
-    "DRAFT-PENDING 20a",
-    "DRAFT-PENDING 20b",
-    "DRAFT-PENDING 20c",
-    "DRAFT-PENDING 20d",
-    "DRAFT-PENDING 20e",
+    "Annual growth factor",
+    "Held at the horizon (times day one)",
+    "Straight-line average (times day one)",
+    "Compounding average (times day one)",
+    "Straight line too high by",
 )
-STRAIGHT_LINE_POINTS = ("DRAFT-PENDING 20f", "DRAFT-PENDING 20g", "DRAFT-PENDING 20h")
+STRAIGHT_LINE_POINTS = ("p10", "median", "p90")
 
 
 def straight_line_overstatement(_name: str | None, model_name: str) -> str:
@@ -796,7 +796,7 @@ def straight_line_overstatement(_name: str | None, model_name: str) -> str:
 
 
 #: Where the tornado swung each input, in words a page before ch13 has defined beside the table.
-PLAIN_ENDS = ("DRAFT-PENDING 06a", "DRAFT-PENDING 06b")
+PLAIN_ENDS = ("input: low", "input: high")
 
 
 def tornado_in_plain_words(name: str, output: str, limit: int = 8) -> str:
@@ -811,7 +811,7 @@ def tornado_in_plain_words(name: str, output: str, limit: int = 8) -> str:
 
 #: ch19's residence table: the heading over its third column, with the unit a duration's cells
 #: do not carry.
-RESIDENCE_HEADING = "DRAFT-PENDING 25a"
+RESIDENCE_HEADING = "residence time in seconds"
 
 
 def tornado_of_what_moves(name: str, output: str, heading: str) -> str:
@@ -827,19 +827,19 @@ def tornado_of_what_moves(name: str, output: str, heading: str) -> str:
 #: share in words. A result holds no draws, so these points are all a page can say from it.
 _QUANTILES = (("p5", 0.05), ("p25", 0.25), ("p50", 0.5), ("p75", 0.75), ("p95", 0.95))
 SHARE_WORDS = {
-    0.05: "DRAFT-PENDING 08h-1",
-    0.25: "DRAFT-PENDING 08h-2",
-    0.5: "DRAFT-PENDING 08h-3",
-    0.75: "DRAFT-PENDING 08h-4",
-    0.95: "DRAFT-PENDING 08h-5",
+    0.05: "one in twenty",
+    0.25: "a quarter",
+    0.5: "half",
+    0.75: "three quarters",
+    0.95: "nineteen in twenty",
 }
 #: The share-past table's column heading, and how its one cell reads at each kind of bound.
-SHARE_HEADER = "DRAFT-PENDING 08a"
-SHARE_EVERY = "DRAFT-PENDING 08c"
-SHARE_NONE = "DRAFT-PENDING 08d"
-SHARE_AT_MOST = "DRAFT-PENDING 08e {high}"
-SHARE_MORE_THAN = "DRAFT-PENDING 08f {low}"
-SHARE_BETWEEN = "DRAFT-PENDING 08g {low} {high}"
+SHARE_HEADER = "Futures the model drew"
+SHARE_EVERY = "every one"
+SHARE_NONE = "none"
+SHARE_AT_MOST = "some, and no more than {high}"
+SHARE_MORE_THAN = "more than {low}"
+SHARE_BETWEEN = "more than {low}, and no more than {high}"
 
 
 def share_past(name: str, node: str, threshold: float, what: str) -> str:
@@ -871,13 +871,13 @@ def share_past(name: str, node: str, threshold: float, what: str) -> str:
 
 #: The value-of-information table's headings, and its two closing rows.
 INFORMATION_HEADINGS = (
-    "DRAFT-PENDING 24a",
-    "DRAFT-PENDING 24b",
-    "DRAFT-PENDING 24c",
-    "DRAFT-PENDING 24d",
+    "If this were known exactly",
+    "Removed, if found at its low end",
+    "at its middle",
+    "at its high end",
 )
-INFORMATION_EVERYTHING = "DRAFT-PENDING 24e"
-INFORMATION_TOTAL = ("DRAFT-PENDING 24f {total}", "DRAFT-PENDING 24g")
+INFORMATION_EVERYTHING = "every one of them"
+INFORMATION_TOTAL = ("the rows above total {total}", "and are not shares of anything")
 
 
 def _share_removed(value: float) -> str:
@@ -958,13 +958,13 @@ def postmortem_table(name: str, which: str) -> str:
 
 #: ch20's hard case: the table's heading and its rows, in order. ``{problem}`` is the problem's
 #: number, derived from the outline so that inserting a chapter cannot leave it stale.
-FIXTURE_HEADING = "DRAFT-PENDING 26a {problem}"
+FIXTURE_HEADING = "The model file under problem {problem}"
 FIXTURE_ROWS = (
-    "DRAFT-PENDING 26b-1",
-    "DRAFT-PENDING 26b-2",
-    "DRAFT-PENDING 26b-3",
-    "DRAFT-PENDING 26b-4",
-    "DRAFT-PENDING 26b-5",
+    "Kind of model, by [ch01](#point-estimates)'s test",
+    "Monthly cost, point estimate",
+    "Monthly cost, 90% interval",
+    "Average of twelve invoices, invented for the exercise",
+    "The model's futures at or above that average",
 )
 FIXTURE_RANGE = "{low} to {high}"
 
@@ -1061,8 +1061,8 @@ def not_yet_measured(name: str) -> str:
 CONVERGENCE_HEADINGS = (
     "Samples",
     "90% interval half-width",
-    "DRAFT-PENDING 17a {runs}",
-    "DRAFT-PENDING 17b",
+    "Run-to-run spread of p95, {runs} runs each",
+    "Fall in spread from the row above",
 )
 
 
@@ -1105,8 +1105,8 @@ def convergence_table(name: str) -> str:
 
 #: The correlation-effect table's two half-width columns.
 CORRELATION_HEADINGS = (
-    "DRAFT-PENDING 18a",
-    "DRAFT-PENDING 18b",
+    "90% interval half-width, correlations declared",
+    "90% interval half-width, inputs independent",
 )
 
 
@@ -1173,7 +1173,7 @@ def scenario_comparison(name: str, other: str) -> str:
 
 
 #: The ratio table's first and last column headings.
-RATIO_HEADINGS = ("DRAFT-PENDING 11a", "DRAFT-PENDING 11b")
+RATIO_HEADINGS = ("Output", "Ratio")
 
 
 def scenario_ratios(name: str, other: str, *only: str) -> str:
@@ -1212,7 +1212,7 @@ def scenario_ratios(name: str, other: str, *only: str) -> str:
 
 
 #: The breach table's first column heading.
-BREACH_HEADING = "DRAFT-PENDING 19a"
+BREACH_HEADING = "Futures over the limit"
 
 
 def breach_comparison(name: str, other: str, *only: str) -> str:
@@ -1251,12 +1251,12 @@ def breach_comparison(name: str, other: str, *only: str) -> str:
 #: the node's summary; "over" is how often the ceiling on that node crosses its limit, and its
 #: row takes the ceiling's own label, as the full comparison labels it.
 DECISION_ROWS = (
-    ("hosts", "point", "DRAFT-PENDING 27a"),
-    ("capex", "cell", "DRAFT-PENDING 27b"),
-    ("annual_opex", "cell", "DRAFT-PENDING 27c"),
-    ("tco", "point", "DRAFT-PENDING 27d"),
-    ("tco", "p50", "DRAFT-PENDING 27e"),
-    ("tco", "p95", "DRAFT-PENDING 27f"),
+    ("hosts", "point", "hosts in the fleet"),
+    ("capex", "cell", "capex, paid once"),
+    ("annual_opex", "cell", "annual opex, paid in each year"),
+    ("tco", "point", "five-year total, at the point estimate"),
+    ("tco", "p50", "five-year total, median"),
+    ("tco", "p95", "five-year total, 95th percentile"),
     ("queueing_headroom", "over", None),
 )
 DECISION_OVER = "*{label}* — over its limit"
@@ -1396,8 +1396,8 @@ def scaling_table(name: str) -> str:
 
 #: How the binding table writes a share of the model's futures, and its row for the gap that
 #: one future in twenty exceeds.
-BINDING_SHARE = "{:.0%} DRAFT-PENDING 14a"
-BINDING_P95_GAP = "DRAFT-PENDING 14b"
+BINDING_SHARE = "{:.0%} of futures"
+BINDING_P95_GAP = "Gap exceeded in one future in twenty"
 
 
 def binding_table(name: str) -> str:
@@ -1434,8 +1434,8 @@ def binding_table(name: str) -> str:
 #: How the binding-constraint sweep names each chain, and how the page names it.
 CHAIN_WORDS = {"requests": "request", "memory": "memory", "storage": "disk"}
 #: The shortfall table's two row labels; ``{chain}`` is the page's name for the usual winner.
-SHORTFALL_MEDIAN = "DRAFT-PENDING 15a {chain}"
-SHORTFALL_MEAN = "DRAFT-PENDING 15b {chain}"
+SHORTFALL_MEDIAN = "Median shortfall across all futures, sized on the {chain} chain alone"
+SHORTFALL_MEAN = "Average shortfall across all futures, sized on the {chain} chain alone"
 
 
 def binding_shortfall_table(name: str) -> str:
@@ -1543,11 +1543,11 @@ def cost_split_table(name: str) -> str:
 
 #: The seam tables' headings, and the words after each end's label: which side computed the
 #: price and which assumed it.
-SEAM_HEADINGS = ("DRAFT-PENDING 21a-1", "DRAFT-PENDING 21a-2", "DRAFT-PENDING 21a-3")
-SEAM_GROWTH_HEADINGS = ("DRAFT-PENDING 21a-1", "DRAFT-PENDING 21e-1", "DRAFT-PENDING 21e-2")
-SEAM_SIDES = ("DRAFT-PENDING 21b-1", "DRAFT-PENDING 21b-2")
-SEAM_COMPUTED = "DRAFT-PENDING 21c"
-SEAM_ASSUMED = "DRAFT-PENDING 21d"
+SEAM_HEADINGS = ("Unit", "Median", "90% interval")
+SEAM_GROWTH_HEADINGS = ("Unit", "Slow growth", "Fast growth")
+SEAM_SIDES = ("Web service model", "Observability model")
+SEAM_COMPUTED = "computed"
+SEAM_ASSUMED = "assumed"
 
 
 def seam_table(name: str, other: str) -> str:
@@ -1644,7 +1644,7 @@ def node_kinds_table(name: str) -> str:
 
 
 #: The shapes table's two headings.
-SHAPE_HEADINGS = ("DRAFT-PENDING 30a", "DRAFT-PENDING 30b")
+SHAPE_HEADINGS = ("Shape", "Keys under it")
 
 
 def distribution_keys(_name: str = "") -> str:
@@ -2086,7 +2086,7 @@ def glossary_table(_name: str = "") -> str:
 
 
 #: The targets table's two headings.
-TARGETS_HEADINGS = ("DRAFT-PENDING 22a", "DRAFT-PENDING 22b")
+TARGETS_HEADINGS = ("Target", "What it means")
 
 
 def targets_table(_name: str = "") -> str:
@@ -2243,8 +2243,8 @@ def comparison_lines(name: str) -> str:
 
 
 #: The totals table's headings, and its two rows.
-TOTALS_HEADINGS = ("DRAFT-PENDING 28a", "DRAFT-PENDING 28b", "DRAFT-PENDING 28c")
-TOTALS_ROWS = (("incumbent", "DRAFT-PENDING 28d"), ("challenger", "DRAFT-PENDING 28e"))
+TOTALS_HEADINGS = ("Five-year total", "At the point estimate", "Middle nine in ten")
+TOTALS_ROWS = (("incumbent", "Incumbent"), ("challenger", "Challenger"))
 
 
 def comparison_totals(name: str) -> str:
@@ -2316,11 +2316,11 @@ def comparison_ceilings(name: str) -> str:
 
 #: What the break-even table says of a line the challenger's side carries that is not the
 #: vendor's, and of a shared input's tie against the values the model drew for it.
-ASSUMED_WHOSE = "DRAFT-PENDING 28f"
-ASSUMED_VERDICT = "DRAFT-PENDING 28g {change}"
-TIE_IN_DRAWS = "DRAFT-PENDING 28h"
-TIE_BELOW_DRAWS = "DRAFT-PENDING 28i"
-TIE_ABOVE_DRAWS = "DRAFT-PENDING 28j"
+ASSUMED_WHOSE = "an assumption, on the challenger's side"
+ASSUMED_VERDICT = "{change} on the assumption"
+TIE_IN_DRAWS = "outside the middle eighty per cent, inside the values the model draws"
+TIE_BELOW_DRAWS = "below every value the model draws"
+TIE_ABOVE_DRAWS = "above every value the model draws"
 
 
 def comparison_break_even(name: str) -> str:

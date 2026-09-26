@@ -7,4 +7,4 @@
 | hosts for storage | 49 | host |
 | hosts the model recommends | 54 | host |
 
-*Source — [`web_service_binding-reference`](/models/web_service_binding-reference.html) · every input on a slider*
+*Source — [`web_service_binding-reference`](/models/web_service_binding-reference.html) · the model to explore; each input with a range has a slider*

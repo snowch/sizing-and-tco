@@ -2,9 +2,9 @@
 
 | Output | Point estimate | 90% interval | Unit |
 |---|---:|---:|---|
-| metrics ingest | 4.69 | 0.709 to 29.1 | MB/s |
+| metrics ingest | 4.69 | 1.03 to 30.0 | MB/s |
 | logs ingest | 44.7 | 9.66 to 164 | MB/s |
 | traces ingest | *not yet measured* | *not yet measured* | MB/s |
-| ingest, metrics and logs only | 49.4 | 12.5 to 182 | MB/s |
+| ingest, metrics and logs only | 49.4 | 12.8 to 183 | MB/s |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · every input on a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***

@@ -103,7 +103,7 @@ DECIDED_BAR = "#455a64"
 #: A measured constant with no measurement: the box is left empty.
 UNMEASURED_FILL = "#ffffff"
 #: The lead-in to the legend's second line, which says what an input's border means.
-LEGEND_BORDERS = "DRAFT-PENDING 01a"
+LEGEND_BORDERS = "an input's border says where it came from:"
 LEGEND_LINE = 16
 
 #: The dependency graph drawn narrow enough to read on a phone, for a model of a few columns.
@@ -331,14 +331,14 @@ def _legend(x: float, y: float, width: float, unmeasured: bool = False) -> tuple
     ]
     if unmeasured:
         kinds.append(
-            (_swatch(0, 0, UNMEASURED_FILL, KIND_STROKE["measured"], "3 3"), "DRAFT-PENDING 01b")
+            (_swatch(0, 0, UNMEASURED_FILL, KIND_STROKE["measured"], "3 3"), "not measured")
         )
     # Not a kind: the mark an input wears when somebody chose it.
     kinds.append(
         (
             _swatch(0, 0, KIND_FILL["input"], None)
             + f'<rect x="0" y="1" width="3" height="8" rx="1.5" fill="{DECIDED_BAR}"/>',
-            "DRAFT-PENDING 01c",
+            "you decide",
         )
     )
     borders = [
@@ -590,15 +590,15 @@ def distribution(result: str, node_name: str, plain: bool = False, middle: bool 
 #: The distribution figure's words for a page before ch13, which names a sample, an interval, a
 #: median and a percentile. They follow the model viewer's plain Details labels
 #: (`sizing/viewer/words.json`), because those pages send the reader from the figure to that panel.
-PLAIN_HEADING = "DRAFT-PENDING 07a {samples:,}"
-PLAIN_DETAIL = "DRAFT-PENDING 07b {low} / {high} / {middle}"
-PLAIN_LOW = "DRAFT-PENDING 07c"
-PLAIN_HIGH = "DRAFT-PENDING 07d"
-PLAIN_TAIL = "DRAFT-PENDING 07e"
+PLAIN_HEADING = "{samples:,} futures"
+PLAIN_DETAIL = "1 future in 20 below {low} · 1 in 20 above {high} · middle {middle}"
+PLAIN_LOW = "low end"
+PLAIN_HIGH = "high end"
+PLAIN_TAIL = "futures"
 
 
 #: The label on the median's line, where a figure draws one.
-MIDDLE_LABEL = "DRAFT-PENDING 16a"
+MIDDLE_LABEL = "median"
 
 
 def distribution_against_the_middle(result: str, node_name: str) -> str:
@@ -683,8 +683,10 @@ def _decade(power: int) -> str:
 
 
 #: The convergence figure's two line labels and its subtitle, in the convergence table's names.
-CONVERGENCE_SERIES = ("DRAFT-PENDING 17c", "DRAFT-PENDING 17d")
-CONVERGENCE_SUBTITLE = "DRAFT-PENDING 17e"
+CONVERGENCE_SERIES = ("90% interval half-width", "run-to-run spread of p95")
+CONVERGENCE_SUBTITLE = (
+    "Both axes logarithmic. The half-width settles; the run-to-run spread keeps falling"
+)
 
 
 def convergence(result: str) -> str:
@@ -864,12 +866,12 @@ def queueing_curve(result: str) -> str:
 
 
 #: The dashed line's label on the queueing curve: the model's margin, formatted from the result.
-QUEUEING_ALLOWED = "DRAFT-PENDING 09a {margin:.0%}"
+QUEUEING_ALLOWED = "allowed: a {margin:.0%} margin"
 #: The zoomed figure's words. Each panel's title and ticks are formatted from the result.
-ZOOM_TITLE = "DRAFT-PENDING 10a"
-ZOOM_SUBTITLE = "DRAFT-PENDING 10b"
-ZOOM_PANEL = "DRAFT-PENDING 10c {idle_from:.0%} {idle_to:.0%}"
-ZOOM_TICK = "DRAFT-PENDING 10d {utilisation:.0%}"
+ZOOM_TITLE = "The same curve, stopped in two places"
+ZOOM_SUBTITLE = "Each stretch is drawn to fill its own axes. The bend sits wherever the axis stops"
+ZOOM_PANEL = "idle share {idle_from:.0%} to {idle_to:.0%}"
+ZOOM_TICK = "{utilisation:.0%} busy"
 
 
 def queueing_zoom(result: str) -> str:
@@ -932,7 +934,7 @@ def queueing_zoom(result: str) -> str:
 
 
 #: The scaling figure's title.
-SCALING_TITLE = "DRAFT-PENDING 11c"
+SCALING_TITLE = "What more machines buy"
 
 
 def scaling_curve(result: str) -> str:
@@ -1016,7 +1018,7 @@ def scaling_curve(result: str) -> str:
 
 
 #: The shapes figure's title.
-SHAPES_TITLE = "DRAFT-PENDING 31a"
+SHAPES_TITLE = "The four shapes the sampler draws from"
 
 
 def distribution_shapes(_result: str | None = None) -> str:
@@ -1320,12 +1322,12 @@ WALL_WORDS = {
     "no_wall": "no wall: a price can be argued with",
     "fits": "fits: {n} hosts, {value}",
     "demand": "demand asked for {n}: {value}",
-    "one_more": "DRAFT-PENDING 19b {n}",
+    "one_more": "one more, {n}: over the wall",
 }
 
 
 #: The label on the seam figure's tick, which marks the upstream median.
-SEAM_TICK = "DRAFT-PENDING 21f {median}"
+SEAM_TICK = "what crosses a seam: the median, {median}"
 
 
 def seam(result: str, other: str) -> str:

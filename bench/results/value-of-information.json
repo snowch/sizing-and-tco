@@ -1,15 +1,15 @@
 {
-  "code_fingerprint": "b225d7ab240d2bdc",
+  "code_fingerprint": "521f0a66847947e8",
   "code_sources": [
     "bench/run_information.py"
   ],
   "conditions": {
     "removals_do_not_add": "the sum of the individual removals at the median is not one. Uncertainty in a chain of multiplications is not a quantity that divides between the inputs, and a figure read that way is read wrongly (ch19)",
     "what_it_cannot_say": "whether the input can be measured at all. The web service's total rests on how many people it takes and what a licence costs, which are decided and negotiated rather than measured; its host count and the observability model's store both rest on a growth rate, which belongs to no target. The honest response to those is to decide them rather than to commission a measurement (ch04)",
-    "where_the_measurement_lands": "DRAFT-PENDING 23b"
+    "where_the_measurement_lands": "each figure is the share of today's interval that knowing this input exactly would remove, if the knowledge landed at the low end the tornado swings it between, at its median, or at the high end (its 10th and 90th percentiles). A negative share means the interval widened instead, because an input that multiplies others, found high, scales up their spread. A real measurement also leaves a standard error behind, which these figures do not account for"
   },
-  "generated_at": "2026-09-26T20:19:58+00:00",
-  "git_revision": "24211b2",
+  "generated_at": "2026-09-26T20:57:50+00:00",
+  "git_revision": "611164a",
   "kind": "measurement",
   "name": "value-of-information",
   "produced_by": {
@@ -254,116 +254,116 @@
         "removed_low": 0.11428571428571432
       },
       {
-        "half_width": 613.2306438445196,
-        "if_known": 345.9655263101045,
-        "if_known_high": 621.8124986524568,
-        "if_known_low": 192.48912759781302,
+        "half_width": 622.2053949959798,
+        "if_known": 344.9923818100826,
+        "if_known_high": 620.0634416884225,
+        "if_known_low": 191.94768713166687,
         "input": "annual_growth",
         "kind": "input",
         "label": "annual growth",
         "model": "observability",
         "output": "known_stored",
-        "removed": 0.43583131439559686,
-        "removed_high": -0.013994497656110383,
-        "removed_low": 0.6861064763641895
+        "removed": 0.44553296293370825,
+        "removed_high": 0.0034425180571941993,
+        "removed_low": 0.6915043027987453
       },
       {
-        "half_width": 613.2306438445196,
-        "if_known": 346.25738730881744,
+        "half_width": 622.2053949959798,
+        "if_known": 346.22174525691764,
         "if_known_high": 623.4065065102776,
-        "if_known_low": 249.19901124529534,
-        "input": "label_values_accidental",
+        "if_known_low": 275.1862404963019,
+        "input": "label_values_accidental_extra",
         "kind": "input",
-        "label": "accidental label values",
+        "label": "extra accidental label values",
         "model": "observability",
         "output": "known_stored",
-        "removed": 0.4353553743856795,
-        "removed_high": -0.016593858718414012,
-        "removed_low": 0.5936292262190374
+        "removed": 0.443557146817805,
+        "removed_high": -0.0019304099963737276,
+        "removed_low": 0.5577244384097957
       },
       {
-        "half_width": 613.2306438445196,
-        "if_known": 561.0554945368825,
-        "if_known_high": 858.2147620919593,
-        "if_known_low": 375.7059250244943,
+        "half_width": 622.2053949959798,
+        "if_known": 572.3274044913018,
+        "if_known_high": 877.6714520481554,
+        "if_known_low": 381.1123045876503,
         "input": "label_values_endpoint",
         "kind": "input",
         "label": "label values endpoint",
         "model": "observability",
         "output": "known_stored",
-        "removed": 0.08508242344272954,
-        "removed_high": -0.39949751485275375,
-        "removed_low": 0.38733341395158327
+        "removed": 0.08016322408294174,
+        "removed_high": -0.41058155250136696,
+        "removed_low": 0.3874815171120257
       },
       {
-        "half_width": 613.2306438445196,
-        "if_known": 591.3594723496316,
-        "if_known_high": 763.9355283934672,
-        "if_known_low": 477.405246426157,
+        "half_width": 622.2053949959798,
+        "if_known": 599.3289832117803,
+        "if_known_high": 776.0904533391632,
+        "if_known_low": 483.1727380391311,
         "input": "label_values_status",
         "kind": "input",
         "label": "label values status",
         "model": "observability",
         "output": "known_stored",
-        "removed": 0.03566549016169729,
-        "removed_high": -0.24575563217802565,
-        "removed_low": 0.22149153631141782
+        "removed": 0.03676665610452845,
+        "removed_high": -0.24732196085213598,
+        "removed_low": 0.2234513845026158
       },
       {
-        "half_width": 613.2306438445196,
-        "if_known": 580.9637629920312,
-        "if_known_high": 656.5890789160235,
-        "if_known_low": 537.9439447600664,
+        "half_width": 622.2053949959798,
+        "if_known": 590.920008350794,
+        "if_known_high": 666.8190266169163,
+        "if_known_low": 547.0550020212099,
         "input": "lines_per_request",
         "kind": "input",
         "label": "lines per request",
         "model": "observability",
         "output": "known_stored",
-        "removed": 0.052617854597412195,
-        "removed_high": -0.07070493868290306,
-        "removed_low": 0.12277060815561858
+        "removed": 0.05028144547892888,
+        "removed_high": -0.0717024184935342,
+        "removed_low": 0.12078068364427375
       },
       {
-        "half_width": 613.2306438445196,
-        "if_known": 613.2181383594974,
-        "if_known_high": 613.232831618945,
-        "if_known_low": 613.1974663313607,
+        "half_width": 622.2053949959798,
+        "if_known": 621.3985518848133,
+        "if_known_high": 621.416199819685,
+        "if_known_low": 621.3779877734898,
         "input": "logs_line_bytes",
         "kind": "measured",
         "label": "bytes per log line, compressed",
         "model": "observability",
         "output": "known_stored",
-        "removed": 2.039279208843059e-05,
-        "removed_high": -3.567620841193886e-06,
-        "removed_low": 5.410282981110903e-05
+        "removed": 0.001296747211861904,
+        "removed_high": 0.001268383692333508,
+        "removed_low": 0.0013297975702947218
       },
       {
-        "half_width": 613.2306438445196,
-        "if_known": 613.1857527601885,
-        "if_known_high": 613.2557670644884,
-        "if_known_low": 613.1173665861327,
+        "half_width": 622.2053949959798,
+        "if_known": 621.3935423356611,
+        "if_known_high": 621.4511893245697,
+        "if_known_low": 621.336333096791,
         "input": "metrics_sample_bytes",
         "kind": "measured",
         "label": "bytes per sample, compressed",
         "model": "observability",
         "output": "known_stored",
-        "removed": 7.320424179990681e-05,
-        "removed_high": -4.096863100522263e-05,
-        "removed_low": 0.00018472210990105875
+        "removed": 0.0013047984907361698,
+        "removed_high": 0.0012121490386867162,
+        "removed_low": 0.001396744396911509
       },
       {
-        "half_width": 613.2306438445196,
-        "if_known": 580.5180485102281,
-        "if_known_high": 660.1658366001252,
-        "if_known_low": 534.644857524896,
+        "half_width": 622.2053949959798,
+        "if_known": 590.3109687227536,
+        "if_known_high": 669.6732369144165,
+        "if_known_low": 543.9932268174463,
         "input": "request_rate",
         "kind": "input",
         "label": "request rate",
         "model": "observability",
         "output": "known_stored",
-        "removed": 0.053344684683737875,
-        "removed_high": -0.07653758537139521,
-        "removed_low": 0.12815045547454484
+        "removed": 0.05126028563836582,
+        "removed_high": -0.07628966624235622,
+        "removed_low": 0.12570152687126546
       }
     ],
     "totals": [
@@ -387,12 +387,12 @@
       },
       {
         "all_known": 0.0,
-        "best_single": 0.43583131439559686,
-        "half_width": 613.2306438445196,
+        "best_single": 0.44553296293370825,
+        "half_width": 622.2053949959798,
         "inputs": 8,
         "model": "observability",
         "output": "known_stored",
-        "sum_of_removals": 1.0979907387007413
+        "sum_of_removals": 1.1101632667588763
       }
     ]
   },

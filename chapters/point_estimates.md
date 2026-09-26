@@ -58,12 +58,8 @@ You know this without servers. Suppose you take a taxi to work and the fare is c
 
 That is three ranges, not three numbers. The table below works out the year's fares for each combination: the usual commute first, then each input moved on its own to its most, then all three at once.
 
-| Run | Days | Minutes/day | Rate/min | Total cost |
-|-----|------|-------------|----------|-----------|
-| 1 (most likely) | 250 | 25 | £0.50 | £3,125 |
-| 2 (worse growth) | 260 | 25 | £0.50 | £3,250 |
-| 3 (worse traffic) | 250 | 40 | £0.50 | £5,000 |
-| 4 (worst case) | 260 | 40 | £0.75 | £7,800 |
+```{include} _generated/point-estimates-commute.md
+```
 
 The arithmetic in every row is right. Each input moved on its own raises the fares, some a little and some a lot; all three together raise them further than any one does alone. Each usual value is the bottom of its range, so every surprise costs more. If you pick one value for each input, the usual one, you get the first row: a point estimate that is also the cheapest year you could have. One number cannot tell you which row your year will be.
 

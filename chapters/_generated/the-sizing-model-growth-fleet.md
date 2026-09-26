@@ -5,4 +5,4 @@
 | hosts the model recommends | 54 | 20 to 230 | host |
 | hosts in the fleet | 131 | *fixed* | host |
 
-*Source — [`web_service-sized_for_growth`](/models/web_service-sized_for_growth.html) · every input on a slider*
+*Source — [`web_service-sized_for_growth`](/models/web_service-sized_for_growth.html) · the model to explore; each input with a range has a slider*

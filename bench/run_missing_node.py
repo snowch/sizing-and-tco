@@ -100,9 +100,12 @@ def run(write: bool = True) -> dict:
             "share_at_or_above_invoice": "dimensionless",
         },
         conditions={
-            "everything_here_is_invented": "DRAFT-PENDING 26d",
-            "the_invoice_is_invented_too": "DRAFT-PENDING 26e",
-            "what_an_interval_here_is": "DRAFT-PENDING 26f",
+            "everything_here_is_invented": "the fixture is an exercise, not one of the book's models, and "
+            "every input in it is an assumption made up for problem 20.3",
+            "the_invoice_is_invented_too": "the average of twelve invoices that do not exist, kept in the "
+            "problem's test so it is never mistaken for an observation of anything",
+            "what_an_interval_here_is": "a statement about this file's declared inputs, and nothing about "
+            "whether the file has every cost line (ch20)",
         },
         code_sources=SOURCES,
         write=write,
