@@ -94,6 +94,10 @@ make machine   # what this computer is, and whether it may take a rig measuremen
 make review    # every published page in a browser, pressed and measured: half an editorial review
 ```
 
+`make review` is the mechanical half of an editorial review. The reading half, one reader per page
+for the prose, the facts, the cross-references and the problems, is the `editorial-review` skill in
+`.claude/skills/editorial-review/`, which works from what `make review` writes.
+
 ## The five invariants
 
 1. **No numbers typed into prose.** Every figure comes from a stamped JSON in `bench/results/`,

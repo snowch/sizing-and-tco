@@ -1510,6 +1510,25 @@ def test_the_review_lists_its_pages_without_a_browser():
     assert unknown.returncode == 2 and "no-such-page" in unknown.stderr
 
 
+def test_the_reading_half_asks_the_script_only_for_what_it_has():
+    """The editorial-review skill is the half of the review a script cannot do, working from what
+    ``review-pages.py`` writes. A reviewer told to pass an option the script dropped, or to read a
+    file it no longer writes, stops at the first step or reviews without the page in front of it.
+    """
+    skill = ROOT / ".claude" / "skills" / "editorial-review"
+    brief = "\n".join(p.read_text() for p in sorted(skill.glob("*.md")))
+    assert (skill / "SKILL.md").read_text().startswith("---\nname: editorial-review\n"), (
+        "a skill without its name in the front matter is never offered"
+    )
+    script = (ROOT / "scripts" / "review-pages.py").read_text()
+    options = set(re.findall(r'add_argument\(\s*"(--[a-z-]+)"', script))
+    named = set(re.findall(r"(?<![\w-])(--[a-z][a-z-]+)", brief))
+    assert named <= options, f"the skill passes options the script lacks: {sorted(named - options)}"
+    for written in ("report.md", "findings.json", "text.txt", "models.md", '"problems"'):
+        assert written in script, f"the skill reads {written}, which the script no longer writes"
+    assert '<a id="{page.slug}"></a>' in script, "the reviewer finds its page's section by this"
+
+
 def test_a_drawing_shrunk_below_its_own_width_can_be_opened_at_it():
     """A figure's text is sized for the width it was drawn at, and the column shrinks it.
 
