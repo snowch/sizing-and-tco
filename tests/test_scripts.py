@@ -239,6 +239,10 @@ def test_a_chapter_shows_its_video_only_when_the_file_is_really_there(tmp_path, 
     assert found == tmp_path / "ch01-point-estimates.mp4"
     assert build_site.video_for("chapters/estimates.md") is None, "a slug, not a suffix of one"
     assert build_site.video_for("index.md") is None
+    (tmp_path / "preface.mp4").write_bytes(b"\0\0\0\x18ftypmp42")
+    assert build_site.video_for("index.md") == tmp_path / "preface.mp4", "the book's overview"
+    assert build_site.video_for("closing.md") is None
+    assert "overview of the book" in build_site.video_html(tmp_path / "preface.mp4", "index.md")
     assert 'src="videos/ch01-point-estimates.mp4"' in build_site.video_html(found)
 
 

@@ -122,12 +122,18 @@ def problem_set(slug: str) -> str:
 #: checkout did not fetch LFS files, shows no video.
 VIDEOS = ROOT / "chapters" / "notebooklm"
 
+#: The one page outside ``chapters/`` with a video: the book's overview, on the Preface.
+PREFACE = "index.md"
+
 
 def video_for(source: str) -> Path | None:
-    """The chapter's video, if there is a real one: matched by slug, never by chapter number."""
-    if not source.startswith("chapters/"):
+    """The page's video, if there is a real one: matched by slug, never by chapter number."""
+    if source == PREFACE:
+        slug = "preface"
+    elif source.startswith("chapters/"):
+        slug = Path(source).stem.replace("_", "-")
+    else:
         return None
-    slug = Path(source).stem.replace("_", "-")
     for path in sorted(VIDEOS.glob("*.mp4")):
         if re.fullmatch(rf"(?:ch\d+-)?{re.escape(slug)}", path.stem):
             with path.open("rb") as head:
@@ -137,13 +143,19 @@ def video_for(source: str) -> Path | None:
     return None
 
 
-def video_html(path: Path) -> str:
-    """The video under a chapter's title, said to be generated, and said to need the network."""
+def video_html(path: Path, source: str = "") -> str:
+    """The video under a page's title, said to be generated, and said to need the network."""
+    what = (
+        "A short video overview of the book, generated from its pages by an AI tool. The pages "
+        "are the authority"
+        if source == PREFACE
+        else "A video summary of this chapter, generated from the page by an AI tool. The page "
+        "is the authority"
+    )
     return (
         '<figure class="video"><video controls preload="none" '
-        f'src="videos/{html.escape(path.name)}"></video><figcaption>A video summary of this '
-        "chapter, generated from the page by an AI tool. The page is the authority; the video "
-        "needs a network connection.</figcaption></figure>"
+        f'src="videos/{html.escape(path.name)}"></video><figcaption>{what}; the video needs a '
+        "network connection.</figcaption></figure>"
     )
 
 
@@ -1885,7 +1897,7 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         # After the heading and its "builds on" line, where it is the first thing under the title.
         at = body.find("</p>", body.find('class="builds-on"')) + 4 if builds_on(source) else -1
         at = at if at > 3 else body.find("</h1>") + 5
-        body = body[:at] + video_html(video_for(source)) + body[at:]
+        body = body[:at] + video_html(video_for(source), source) + body[at:]
     if source not in TITLED_PAGES:
         # The introduction and the part pages carry their name in the front matter and nowhere
         # in the text, so the page opens on a blockquote with nothing above it saying where
