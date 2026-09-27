@@ -141,7 +141,7 @@ Nothing in this book needs a datacentre, a cloud account, or a licence.
 
 ## How this book was made
 
-Chris Snow wrote this book with Claude, an AI model made by Anthropic. Claude drafted much of the
+Chris Snow wrote this book in collaboration with Claude, an AI model made by Anthropic. Claude drafted much of the
 prose, the models and the toolkit. The author set the book's rules, chose what it covers, and
 decided what stays.
 

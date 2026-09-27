@@ -1911,7 +1911,7 @@ LICENCES = {
 
 #: How the book was written, said the same way on the cover and at the foot of every page. The
 #: preface's "How this book was made" says what it means.
-WRITTEN_WITH = "written with Claude (Anthropic)"
+WRITTEN_WITH = "in collaboration with Claude (Anthropic)"
 
 
 def colophon() -> str:
