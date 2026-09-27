@@ -16,3 +16,6 @@ Chapters in draft include a note at their top. Their numbers come from the build
 ![Demand growing across three time periods, approaching a dashed ceiling line.](/public/cover-hero.svg)
 
 By Chris Snow
+
+% number-ok: the names of the two licences, which carry their version numbers
+The prose and figures are under [CC BY-NC 4.0](https://github.com/snowch/sizing-and-tco/blob/main/LICENSE); the code and the model files are under [Apache 2.0](https://github.com/snowch/sizing-and-tco/blob/main/LICENSE-CODE).

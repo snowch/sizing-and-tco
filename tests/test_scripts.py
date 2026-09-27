@@ -1553,3 +1553,23 @@ def test_a_drawing_shrunk_below_its_own_width_can_be_opened_at_it():
     import inspect
 
     assert 'class="drawing"' in inspect.getsource(renderer._image)
+
+
+def test_every_page_names_the_licences_the_book_declares():
+    """The foot of every page reads its terms from myst.yml, and the cover names the same.
+
+    For a long time the licences were declared in myst.yml and shown on no page: the renderer
+    that replaced the theme never printed them, so a reader who copied a figure or a model from
+    the site had no way to see the terms it came under.
+    """
+    import yaml
+
+    build = site()
+    declared = yaml.safe_load((ROOT / "myst.yml").read_text())["project"]["license"]
+    cover = (ROOT / "cover.md").read_text()
+    for spdx in declared.values():
+        assert spdx in build.LICENCES, f"myst.yml declares {spdx}, which the colophon cannot name"
+        name, file = build.LICENCES[spdx]
+        assert (ROOT / file).exists(), f"{file}, the text of {spdx}, is not in the repository"
+        assert name in build.COLOPHON, f"the foot of every page does not name {name}"
+        assert name in cover and file in cover, f"the cover does not name {name}, or its file"

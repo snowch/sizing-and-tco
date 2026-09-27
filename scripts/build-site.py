@@ -1122,6 +1122,7 @@ PAGE = """<!doctype html>
   <main id="main" tabindex="-1">
 {body}
 {turn}
+{colophon}
   </main>
   <aside id="toc" class="toc" aria-label="On this page">{toc}</aside>
 </div>
@@ -1718,6 +1719,10 @@ button.primary:hover:not(:disabled) { color: var(--on-accent); filter: brightnes
 
 /* Carrying on reading. Two targets at the foot of every page, because the contents list is a
    place to look something up and this is the one a reader going front to back actually uses. */
+/* Who wrote it and the terms it is under, on every page: small, and below the reading. */
+.colophon { margin: 2.5rem 0 0; padding-top: 1rem; border-top: 1px solid var(--edge);
+            font: 13px/1.5 var(--chrome); color: var(--muted); }
+.colophon a { color: inherit; }
 .turn { display: flex; gap: .9rem; margin: 3.5rem 0 0; padding-top: 1.4rem;
         border-top: 1px solid var(--edge); }
 .turn a { flex: 1 1 0; min-width: 0; display: block; text-decoration: none; color: var(--ink);
@@ -1864,6 +1869,8 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         boot=BOOT_SCRIPT if problems else "",
         headlinks=headlinks,
         turn=turn,
+        # The cover says it in its own words, under its byline, so its foot would repeat them.
+        colophon="" if source == "cover.md" else COLOPHON,
     )
 
 
@@ -1891,6 +1898,41 @@ def turning(before: Neighbour, after: Neighbour) -> tuple[str, str]:
             f'<span class="what">{html.escape(title)}</span></a>'
         )
     return "\n".join(head), (f'<nav class="turn">{"".join(foot)}</nav>' if foot else "")
+
+
+#: What each licence ``myst.yml`` may declare is called, and the file in the repository that
+#: holds its text. A licence the book declares and this table does not know stops the build,
+#: rather than publishing a page that names no terms.
+LICENCES = {
+    "CC-BY-NC-4.0": ("CC BY-NC 4.0", "LICENSE"),
+    "Apache-2.0": ("Apache 2.0", "LICENSE-CODE"),
+}
+
+
+def colophon() -> str:
+    """The foot of every page: who wrote the book, and the terms each part of it is under.
+
+    Read from ``myst.yml``, the one place the licences are declared, so the pages cannot name
+    different terms from the repository. Most readers arrive on a chapter rather than the cover,
+    and a figure or a model file copied from any page carries these terms with it.
+    """
+    config = yaml.safe_load((ROOT / "myst.yml").read_text())["project"]
+    repo = config["github"].rstrip("/")
+    author = config["authors"][0]["name"]
+
+    def terms(spdx: str) -> str:
+        name, file = LICENCES[spdx]
+        return f'<a href="{repo}/blob/main/{file}">{html.escape(name)}</a>'
+
+    return (
+        f'<footer class="colophon">By {html.escape(author)} · Prose and figures: '
+        f"{terms(config['license']['content'])} · Code and models: "
+        f"{terms(config['license']['code'])}</footer>"
+    )
+
+
+#: Built once: every page carries the same foot.
+COLOPHON = colophon()
 
 
 def _site() -> str:
