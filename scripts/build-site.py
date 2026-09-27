@@ -943,6 +943,21 @@ document.addEventListener("DOMContentLoaded", () => {
     el.style.maxWidth = had;
     return wants > el.clientWidth + 1;
   };
+  // Two widths. Code, tables and files sit in the prose's column, and one that would be cut off
+  // there takes the wide column instead -- never a third width. Measured here because only the
+  // page knows the fonts it got; decided before the checks below, which then ask whether even
+  // the wide column cuts it off.
+  const promote = () => {
+    for (const el of document.querySelectorAll(
+      "#main > pre, #main > table, #main > .editable-block, #main > figure:has(> pre), "
+      + "#main > figure:has(> table), #main > .problem .editable-block")) {
+      el.classList.remove("wide");
+      const inner = el.matches("pre, table") ? el : el.querySelector("pre, table");
+      if (inner && squeezed(inner)) el.classList.add("wide");
+    }
+  };
+  promote();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(promote);
   for (const block of document.querySelectorAll("#main .editable-block")) {
     const pre = block.querySelector("pre");
     if (!pre || !cut(pre)) continue;
@@ -1420,7 +1435,10 @@ main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;
 
    Everything that cannot fit in that takes one wider column of 72rem. One, not two: a chapter
    with three left edges -- prose, then code, then a model further out than either -- reads as
-   three columns stacked rather than one. 72rem is the smallest number that serves both of its
+   three columns stacked rather than one. A block of code, a table or a file is text, read line
+   by line beside the paragraph that introduces it, so it keeps the prose's edges; it takes the
+   wide column only when it would be cut off in the narrow one, which the page measures (the
+   `wide` class, set in EXPAND). A model always takes it. 72rem is the smallest number that serves both of its
    tenants. Below 1100px the model viewer puts its detail panel under the graph instead of
    beside it, and the book's own code lines stop at 100 columns, whose widest block wants 942px
    -- at the prose column, 121 blocks over 33 pages were cut off mid-word and the bar above them
@@ -1436,22 +1454,30 @@ main { padding: 1rem clamp(1rem, 4vw, 2.6rem) 6rem;
      not grow when a reader's text does. The prose does, so at large text it overtook the column
      and a problem's stub sat narrower than the paragraph introducing it. The column is only
      ever an exception for being *wider*. */
-  #main > :is(figure:has(> iframe), table,
-              pre, .editable-block, .problem, figure:has(> pre)) {
+  #main > :is(figure:has(> iframe), .wide, .wide-block, .problem:has(.wide)) {
     max-width: min(100%, max(var(--u) * 72, var(--prose))); }
   #main > figure > figcaption { margin-inline: auto; }
+  /* A table is as wide as its content, so centring it gave every narrow table an edge of its
+     own. It starts where its column starts: the prose's, or the wide one. */
+  #main > table { margin-right: auto;
+    margin-left: calc((100% - min(100%, max(var(--measure), var(--prose)))) / 2); }
+  #main > table.wide {
+    margin-left: calc((100% - min(100%, max(var(--u) * 72, var(--prose)))) / 2); }
 }
 main :is(h1, h2, h3, h4) { font-family: var(--chrome); letter-spacing: -.012em;
                            scroll-margin-top: calc(var(--top) + 1rem); }
-h1 { font-size: clamp(1.6rem, 5.4vw, 2rem); font-weight: 700; line-height: 1.18;
+/* Headings in `em`, which here is the reading text, not `rem`: the reading text is set in px and
+   moves only with the header's size control, so at a 10px root a heading in rem came out smaller
+   than the paragraph under it. */
+h1 { font-size: clamp(1.4em, 5.4vw, 1.78em); font-weight: 700; line-height: 1.18;
      margin: 1.6rem 0 1.4rem; }
 .builds-on { margin: -.9rem 0 1.4rem; font: 14px/1.5 var(--chrome); color: var(--muted); }
 a.term { color: inherit; text-decoration: underline dotted var(--muted); text-underline-offset: .18em; }
 a.term:hover { color: var(--accent); text-decoration-color: var(--accent); }
-h2 { font-size: 1.35rem; font-weight: 650; line-height: 1.25; margin: 2.5rem 0 .9rem;
+h2 { font-size: 1.2em; font-weight: 650; line-height: 1.25; margin: 2.5rem 0 .9rem;
      padding-top: 1.1rem; border-top: 1px solid var(--edge); }
-h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.3; margin: 1.9rem 0 .6rem; }
-h4 { font-size: .95rem; font-weight: 600; color: var(--muted); margin: 1.6rem 0 .4rem; }
+h3 { font-size: 1.07em; font-weight: 700; line-height: 1.3; margin: 1.9rem 0 .6rem; }
+h4 { font-size: .85em; font-weight: 600; color: var(--muted); margin: 1.6rem 0 .4rem; }
 p, li { max-width: max(var(--measure), var(--prose)); }
 p { margin: 0 0 1.05rem; }
 ul, ol { padding-left: 1.4rem; }

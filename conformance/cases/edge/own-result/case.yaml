@@ -1,0 +1,4 @@
+about: >-
+  A measured node reading the model's own result, in results/ beside it, before the book's constant of the same name.
+expect:
+  - valid

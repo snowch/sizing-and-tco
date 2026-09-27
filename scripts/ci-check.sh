@@ -123,6 +123,12 @@ echo "== two generations in one pool still need what the book says they need =="
 # versus replace subtracted future by future.
 python3 -m bench.run_mixed_pool --check
 
+echo "== the conformance suite says what the toolkit says =="
+# conformance/: every case, probe and sampled range another implementation of these rules is held
+# to (the model builder, design/model-builder.md). Regenerated here and compared, so a rule that
+# changes without the suite changing fails the book, not the builder.
+python3 conformance/generate.py --check
+
 echo "== the post-mortem still attributes what the book says it attributes =="
 # ch23, and the half of it that matters: the same method on a model with a known hole in it,
 # which has to keep blaming the inputs that are present.

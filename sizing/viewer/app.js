@@ -473,7 +473,10 @@ function detail(values, blocked) {
     parts.push(`<h2>Provenance</h2><p class="note"><strong>${node.provenance.kind.replace("_", " ")}</strong> \u2014 ${node.provenance.source}</p>`);
   }
   if (node.measured) {
-    parts.push(`<h2>Measured</h2><p class="note">${fmt(node.measured.value, node.unit)} ± ${fmt(node.measured.sd, node.unit)}<br>${node.measured.stack}<br><code>bench/results/${node.result}.json</code></p>`);
+    parts.push(`<h2>Measured</h2><p class="note">${fmt(node.measured.value, node.unit)} ± ${fmt(node.measured.sd, node.unit)}<br>${node.measured.stack}<br>` +
+      (node.measured.own
+        ? `Your own measurement, of ${node.measured.system} over ${node.measured.window}, on ${node.measured.observed_at}. Nobody else can take it again.<br><code>results/${node.result}.json</code>, beside the model</p>`
+        : `<code>bench/results/${node.result}.json</code></p>`));
   }
   if (node.ceiling) {
     const c = ceilingState(PAYLOAD, name, values);

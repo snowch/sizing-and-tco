@@ -1173,17 +1173,18 @@ def test_a_chapter_is_two_widths_on_one_middle():
     wide = re.search(r"#main > :is\((.*?)\)\s*\{\s*max-width: ([^;]+);", css, re.S)
     assert wide, "nothing caps the wide column"
     selector, cap = wide.group(1), wide.group(2)
-    for part in (
-        "figure:has(> iframe)",
-        "table",
-        "pre",
-        ".editable-block",
-        ".problem",
-        "figure:has(> pre)",
-    ):
+    # A model always takes it; code, tables and files take it only when the prose's column
+    # would cut them off, which the page measures and marks `wide`. Giving every block of code
+    # the wide column put a three-line snippet at a different edge from the paragraph above it.
+    for part in ("figure:has(> iframe)", ".wide", ".wide-block", ".problem:has(.wide)"):
         assert part in selector, (
             f"{part} is not in the wide column, so it sits at an edge of its own"
         )
+    expand = site().EXPAND
+    promoted = re.search(r"const promote = \(\) => \{(.*?)\n  \};", expand, re.S)
+    assert promoted, "nothing moves a block that is cut off in the prose's column to the wide one"
+    for part in ("#main > pre", "#main > table", "#main > .editable-block", "figure:has(> pre)"):
+        assert part in promoted.group(1), f"{part} is never measured for the wide column"
     assert "--prose" in cap, (
         f"the wide column is capped by {cap!r}, which cannot grow with the reader's text -- so "
         "a paragraph can end up wider than the block it introduces"

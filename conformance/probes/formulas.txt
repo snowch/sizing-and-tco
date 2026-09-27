@@ -1,0 +1,146 @@
+# Formulas, one per line, and whether the book's parser accepts each and as what tree. The
+# JavaScript parser must agree exactly: same tree, or the same refusal.
+a
+a + b
+a - b - c
+a * b / c
+a / b / c
+a ** b ** c
+-a ** 2
+(-a) ** 2
+-a * b
++a
+--a
+- - a
+a * -b
+2 * a
+2.5 * a
+1e3 * a
+1E-3 * a
+1_000 * a
+.5 * a
+5. * a
+0x10 * a
+0o17 * a
+0b101 * a
+010
+1j * a
+min(a, b)
+max(a, b, c)
+min(a)
+max()
+ceil(a / b)
+floor(a)
+sqrt(a)
+log(a)
+exp(a)
+ceil(busy_cores / (cores_per_host * (1 - queueing_margin)))
+linear_throughput / (1 + contention * (host_count - 1) + crosstalk * host_count * (host_count - 1))
+one_host * sqrt((1 - contention) / crosstalk)
+(peak_request_rate_t0 / peak_to_mean + mean_request_rate) / 2
+  a + b  
+a +
+a b
+(a
+a)
+abs(a)
+round(a)
+math.ceil(a)
+a.b
+a[0]
+a if b else c
+a > b
+a == b
+a and b
+not a
+a % b
+a // b
+a @ b
+a & b
+a << b
+~a
+lambda: a
+max(a, key=b)
+max(*a)
+min(a for a in b)
+[a, b]
+(a, b)
+'text'
+"text"
+True
+False
+None
+true
+x_1
+_hidden
+café
+a
+ + b
+# Harder ones. A line starting json: is a JSON string, so a probe can hold a newline.
+json:"a +\nb"
+json:"(a +\n b)"
+json:"a \\\n + b"
+json:"a  # a comment"
+json:"a\n"
+json:"\n a"
+json:"a\tb"
+(a := b)
+f"{a}"
+b"x"
+...
+a if b
+(yield a)
+await a
+lambda x: x
+{a: b}
+{a}
+{}
+[x for x in y]
+{x for x in y}
+(a)(b)
+max(a)(b)
+(max)(a)
+max(**k)
+max(a,)
+max(a, b,)
+max(a b)
+1e400 * a
+100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+a ** -b
+-a ** -b
+2 ** -1
+a ^ b
+a | b
+a is b
+a is not b
+a not in b
+a in b
+x[1:2]
+ﬁ
+1if a else b
+0_0
+00
+1_
+1__0
+0x
+1e
+a.
+a..b
+'unterminated
+(
+)
+a,
+*a
+a = b
+a; b
+a:b
+.5e-3 * a
+5e+2 * a
+ceil
+ceil()
+a @ b
+a // -b
+(-1) ** 0.5
+a**b**-c
+not
+a b c

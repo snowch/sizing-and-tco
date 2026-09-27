@@ -231,3 +231,79 @@ def test_a_scenario_with_no_name_is_reported_not_a_traceback(tmp_path):
     problems: list[str] = []
     verify_models.check_scenarios(model, problems)
     assert any("does not load" in p for p in problems)
+
+
+# -- a reader's own measurement --------------------------------------------------------------
+
+MEASURED = """
+  x:
+    kind: measured
+    unit: dimensionless
+    result: {result}"""
+
+
+def own_result(path: Path, name: str, **produced_by) -> None:
+    """Write a result into the model's own folder, as a reader would."""
+    import json
+
+    folder = path.parent / "results"
+    folder.mkdir(exist_ok=True)
+    payload = {
+        "name": name,
+        "target": produced_by.pop("target", "estate"),
+        "kind": "measurement",
+        "produced_by": {
+            "method": "the test's own",
+            "stack": "the reader's service, version 4",
+            "system": "the reader's production cluster",
+            "window": "one week of busy hours",
+            "observed_at": "2026-09-01",
+            **produced_by,
+        },
+        "summary": {"value": 7.5, "sd": 0.25},
+        "units": {"value": "dimensionless", "sd": "dimensionless"},
+    }
+    payload["produced_by"] = {k: v for k, v in payload["produced_by"].items() if v is not None}
+    (folder / f"{name}.json").write_text(json.dumps(payload))
+
+
+def test_a_model_reads_its_own_result_before_the_book_s(tmp_path):
+    """Builder item 12: a reader's measurement had nowhere to go."""
+    path = model_file(tmp_path, MEASURED.format(result="records-compression"))
+    own_result(path, "records-compression")
+    model = load_model(path)
+    assert model.nodes["x"].own
+    assert model.nodes["x"].value == pytest.approx(7.5)
+    assert model.classification == "conditional"
+
+
+def test_without_its_own_result_a_model_reads_the_book_s(tmp_path):
+    model = load_model(model_file(tmp_path, MEASURED.format(result="records-compression")))
+    assert model.nodes["x"].is_measured and not model.nodes["x"].own
+
+
+def test_an_own_result_that_passes_says_nothing_about_itself(tmp_path):
+    path = model_file(tmp_path, MEASURED.format(result="spans-per-request"))
+    own_result(path, "spans-per-request")
+    assert not [p for p in problems_of(path) if "results/spans-per-request.json" in p]
+
+
+@pytest.mark.parametrize(
+    ("missing", "says"),
+    [
+        ({"system": None}, "'system'"),
+        ({"window": None}, "'window'"),
+        ({"observed_at": None}, "'observed_at'"),
+        ({"stack": None}, "names no `stack`"),
+        ({"target": "corpus"}, "target 'estate'"),
+    ],
+)
+def test_an_own_result_discloses_what_an_estate_result_does(tmp_path, missing, says):
+    path = model_file(tmp_path, MEASURED.format(result="spans-per-request"))
+    own_result(path, "spans-per-request", **missing)
+    assert any(says in p for p in problems_of(path))
+
+
+def test_a_result_name_cannot_reach_outside_the_folder(tmp_path):
+    path = model_file(tmp_path, MEASURED.format(result="../results/records-compression"))
+    assert not load_model(path).nodes["x"].is_measured

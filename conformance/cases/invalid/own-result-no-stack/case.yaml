@@ -1,0 +1,4 @@
+about: >-
+  A model's own result that names no implementation it was measured on.
+expect:
+  - measured.own-no-stack

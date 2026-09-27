@@ -1,0 +1,19 @@
+{
+ "kind": "measurement",
+ "name": "case-constant",
+ "produced_by": {
+  "observed_at": "2026-09-27",
+  "stack": "a stack named for this case",
+  "system": "the conformance case's own",
+  "window": "none: a fixture"
+ },
+ "summary": {
+  "sd": 0.0,
+  "value": 3.5
+ },
+ "target": "estate",
+ "units": {
+  "sd": "dimensionless",
+  "value": "dimensionless"
+ }
+}

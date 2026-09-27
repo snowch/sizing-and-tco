@@ -1,0 +1,4 @@
+about: >-
+  A model's own result declaring target corpus. A result a model carries is the reader's own observation, target estate.
+expect:
+  - measured.own-not-estate

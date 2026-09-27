@@ -168,6 +168,35 @@ been measured once. If the result does not exist, the node has no value and neit
 downstream of it — the state propagates by itself and the figures say *not yet measured* rather
 than showing an estimate ([ch03](#where-the-numbers-come-from)).
 
+#### Your own measurements
+
+Measured nodes reference results stored by the book in `bench/results/`. A model can also reference
+results from a `results/` folder beside the model file, alongside the `scenarios/` folder. The build
+looks there first. If the file is not found, it falls back to the book's folder. This is where
+measurements specific to your system go: spans per request on your application, or how well your
+data compresses.
+
+Without this folder, a constant that only your system can measure has no home. The alternatives are
+both poor: name a result that does not exist, leaving the chain unmeasured; or declare the number as
+an input with provenance `fact`, which makes the model definitional when it is not. A result file in
+your folder with the same name as one of the book's replaces it. Your compression ratio overrides
+the one the book measured on its corpus.
+
+The result name must be a plain file name. A name with a folder in it, such as `../x`, finds
+nothing. The node stays unmeasured. Nobody else can repeat your measurement. The build cannot
+re-derive it. Every file is held to the rules for an `estate` result: disclosure is the only check
+there is.
+
+The file must record:
+
+- `target: estate` and `kind: measurement`
+- in `produced_by`: `system`, `window`, `observed_at` (the date), and `stack` (implementation and version)
+- in `summary`: `value` and `sd` (its standard error)
+- in `units`: a unit for each
+
+The model viewer marks the node as your own measurement and shows the system, window and date beside
+it.
+
 ### `ceiling` — where the arithmetic stops working
 
 A quantity, a limit, a margin, and a reason:

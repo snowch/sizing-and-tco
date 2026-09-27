@@ -100,6 +100,14 @@ def export_payload(model: Model, scenario: Scenario) -> dict:
                     "corpus": (node.measurement or {}).get("produced_by", {}).get("corpus"),
                     "generated_at": (node.measurement or {}).get("generated_at"),
                     "fingerprint": (node.measurement or {}).get("code_fingerprint"),
+                    # The model's own result, not the book's: an observation nobody else can
+                    # re-take, so the viewer shows what it was of, over what, and when.
+                    "own": node.own,
+                    **{
+                        key: (node.measurement or {}).get("produced_by", {}).get(key)
+                        for key in ("system", "window", "observed_at")
+                        if node.own
+                    },
                 }
             )
         else:

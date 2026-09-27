@@ -62,7 +62,9 @@ keeping it separate is what stops the distinction going soft.
   `rig/machine.yml` and refused anywhere else. `bench.stamp.require_rig` enforces it.
 - **`estate`** — an observation of a running system. Reproducible by nobody, checkable by nobody,
   and therefore held to the strictest disclosure rules in the book: system, window, date. This is
-  the one target the build cannot verify, and a page using one says so at the point of use.
+  the one target the build cannot verify, and a page using one says so at the point of use. A
+  reader's own measurement is one: it lives in a `results/` folder beside their model, is read
+  before `bench/results/`, and `verify-models.py` holds it to these disclosure rules.
 - **`model`** — computed from a model file in this repository. No machine and no body of data was
   involved, so it is evidence about what the book's own models say and about nothing else. Its
   fingerprint covers the whole DSL core, so the claim moves when the method does. A `kind: model`

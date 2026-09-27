@@ -1,0 +1,20 @@
+{
+ "kind": "measurement",
+ "name": "records-compression",
+ "produced_by": {
+  "method": "a reader's own measurement, for this case",
+  "observed_at": "2026-09-01",
+  "stack": "the reader's encoder, version 2",
+  "system": "the reader's order store",
+  "window": "one day of writes"
+ },
+ "summary": {
+  "sd": 0.125,
+  "value": 4.25
+ },
+ "target": "estate",
+ "units": {
+  "sd": "dimensionless",
+  "value": "dimensionless"
+ }
+}

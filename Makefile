@@ -69,6 +69,10 @@ comparison:  ## Subtract two quotes for one workload, future by future (ch22)
 mixed-pool:  ## Two generations in one pool: new hosts per chain, and keep versus replace (ch10, ch22)
 	$(PYTHON) -m bench.run_mixed_pool
 
+.PHONY: conformance
+conformance:  ## Regenerate the conformance suite another implementation is held to
+	$(PYTHON) conformance/generate.py
+
 .PHONY: postmortem
 postmortem:  ## Attribute the running example's own failures (ch23)
 	$(PYTHON) -m bench.run_postmortem

@@ -1,0 +1,4 @@
+about: >-
+  A scenario file with no scenario name. The verifier reports the file does not load.
+expect:
+  - scenario.does-not-load

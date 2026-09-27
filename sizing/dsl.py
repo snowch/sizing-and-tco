@@ -48,7 +48,7 @@ import yaml
 
 from sizing import expr
 from sizing.mc import DEFAULT_SAMPLES
-from sizing.results import load_result, result_exists
+from sizing.results import is_own, load_result, result_exists
 from sizing.units import UnitError
 from sizing.units import parse as parse_unit
 
@@ -153,6 +153,8 @@ class Measured(Node):
     result: str = ""
     #: The stamped payload, or None when nobody has taken this measurement yet.
     measurement: dict | None = None
+    #: Read from the model's own ``results/`` folder: the reader's measurement, not the book's.
+    own: bool = False
     kind: ClassVar[str] = "measured"
 
     @property
@@ -413,7 +415,7 @@ def _require(mapping: dict, key: str, where: str) -> Any:
     return mapping[key]
 
 
-def _node_from(name: str, spec: dict, where: str) -> Node:
+def _node_from(name: str, spec: dict, where: str, folder: Path | None = None) -> Node:
     if not isinstance(spec, dict):
         raise ModelError(f"{where}: node {name!r} is not a mapping")
     kind = _require(spec, "kind", f"{where}: node {name!r}")
@@ -473,7 +475,8 @@ def _node_from(name: str, spec: dict, where: str) -> Node:
         return Measured(
             **common,
             result=result,
-            measurement=load_result(result) if result_exists(result) else None,
+            measurement=load_result(result, folder) if result_exists(result, folder) else None,
+            own=is_own(result, folder),
         )
 
     at = f"{where}: node {name!r}"
@@ -518,7 +521,9 @@ def load_model(path: str | Path) -> Model:
         )
 
     nodes_spec = _require(raw, "nodes", str(where))
-    nodes = {name: _node_from(name, spec, str(where)) for name, spec in nodes_spec.items()}
+    nodes = {
+        name: _node_from(name, spec, str(where), path.parent) for name, spec in nodes_spec.items()
+    }
 
     for node in nodes.values():
         for needed in sorted(node.depends_on()):

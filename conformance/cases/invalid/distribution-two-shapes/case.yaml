@@ -1,0 +1,5 @@
+about: >-
+  An input that declares two shapes. The verifier reports it, and the scenario does not evaluate.
+expect:
+  - input.no-one-shape
+  - scenario.does-not-evaluate

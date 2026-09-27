@@ -128,6 +128,7 @@ KIND_SOURCES: dict[str, tuple[str, ...]] = {
         "sizing/evaluate.py",
         "sizing/mc.py",
         "sizing/normal.py",
+        "sizing/results.py",
         "sizing/units.py",
     )
 }

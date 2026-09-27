@@ -31,7 +31,9 @@ becomes something the build enforces.
    a file, a specification or a document. An assumption wearing a better label is worse than an
    assumption.
 4. **Every measured node names a result**, and that result either exists and is current, or the
-   node is reported as not yet measured. Never filled in.
+   node is reported as not yet measured. Never filled in. A result in a `results/` folder beside
+   the model is read before the book's, and is the reader's own: it is held to the disclosure an
+   `estate` result makes (system, window, date) and names the implementation it was taken on.
 5. **A measured constant states its uncertainty.** A standard error of zero is a claim to have
    measured something exactly, and almost nothing is.
 6. **Every ceiling declares a headroom and a reason.** A limit with no margin is not a sizing
@@ -57,7 +59,13 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from bench.stamp import RESULTS_DIR, code_fingerprint, load_result, shown  # noqa: E402
+from bench.stamp import (  # noqa: E402
+    RESULTS_DIR,
+    code_fingerprint,
+    load_result,
+    provenance_problems,
+    shown,
+)
 from sizing import mc  # noqa: E402
 from sizing.dsl import (  # noqa: E402
     DECIDED_BY,
@@ -176,7 +184,9 @@ def check_model(model: Model, problems: list[str]) -> None:
             if not node.result.strip():
                 problems.append(f"{where}: measured node {name!r} names no result file")
             elif node.is_measured:
-                payload = load_result(node.result)
+                payload = node.measurement or {}
+                if node.own:
+                    problems += [f"{where}: {line}" for line in _own_result_problems(node)]
                 if "value" not in payload.get("summary", {}):
                     problems.append(
                         f"{where}: {node.result}.json has no `summary.value`, so node {name!r} "
@@ -261,6 +271,31 @@ def check_model(model: Model, problems: list[str]) -> None:
             )
     elif ceilings:  # pragma: no cover - unreachable by construction, kept as a tripwire
         problems.append(f"{where}: classified as a definitional model but declares ceilings")
+
+
+def _own_result_problems(node: Measured) -> list[str]:
+    """A result the model carries beside it is the reader's, and says what an estate result says.
+
+    Nobody else can re-take it, and the build cannot re-derive it, so its disclosure is the only
+    check there is: what system, over what window, on what date, and what implementation.
+    """
+    payload = node.measurement or {}
+    shown_as = f"results/{node.result}.json"
+    problems = []
+    if payload.get("target") != "estate" or payload.get("kind") != "measurement":
+        problems.append(
+            f"{shown_as}, beside the model, says target {payload.get('target')!r} and kind "
+            f"{payload.get('kind')!r}. A result a model carries is the reader's own observation: "
+            "target 'estate', kind 'measurement'."
+        )
+    else:
+        problems += provenance_problems(shown_as, payload)
+    if not str((payload.get("produced_by") or {}).get("stack") or "").strip():
+        problems.append(
+            f"{shown_as} names no `stack` in `produced_by`: the implementation and version it "
+            "was measured on, which is what makes it a measurement rather than a claim."
+        )
+    return problems
 
 
 def _one_shape(node: Input, where: str, name: str, problems: list[str]) -> str | None:
