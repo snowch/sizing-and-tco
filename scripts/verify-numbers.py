@@ -64,6 +64,7 @@ def published_pages() -> list[Path]:
         [
             ROOT / "cover.md",
             ROOT / "index.md",
+            ROOT / "closing.md",
             *(ROOT / "parts").glob("*.md"),
             *(ROOT / "chapters").glob("*.md"),
             *(ROOT / "appendices").glob("*.md"),

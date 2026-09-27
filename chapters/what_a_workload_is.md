@@ -485,6 +485,9 @@ much easier to find in your own notes than to believe in the abstract.
 A good answer fits on one page, has a unit against every line, and leaves you less sure about at
 least one quantity than you were before you wrote it down.
 
+To write it as a model file rather than notes, [Your own model](#your-own-model) describes a tool
+that asks for each line in turn.
+
 ## Where to go next
 
 [ch03](#where-the-numbers-come-from) answers the question this chapter kept deferring: once you have

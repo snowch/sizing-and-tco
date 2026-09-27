@@ -296,6 +296,9 @@ surprise you, in the sense ch04 used — is it inside or outside the band you wo
 *surprised below this, surprised above that*? Who accepted that risk? This chapter argues that
 someone did, whether or not they knew it.
 
+To build it as a model file, [Your own model](#your-own-model) describes a tool that asks for each
+node in turn.
+
 A good answer reaches a count of machines and has at least one mark on the chain. It names the limit
 that gives first, the input and the value that would make it give, and says whether that value is
 inside your surprise band. It names the person who accepted the risk.

@@ -105,6 +105,8 @@ project:
       children:
         - file: chapters/what_the_model_got_wrong.md
 
+    - file: closing.md
+
     - title: Appendices
       children:
         - file: appendices/appendix_a_dsl_reference.md

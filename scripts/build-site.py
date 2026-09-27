@@ -116,6 +116,10 @@ def problem_set(slug: str) -> str:
     )
 
 
+#: The page after the last chapter: the book's pointer to building a model of your own.
+CLOSING = "closing.md"
+
+
 def nav() -> list[dict]:
     """The book's structure, from the outline rather than from the table of contents.
 
@@ -142,6 +146,10 @@ def nav() -> list[dict]:
                 ],
             }
         )
+    # The closing page stands alone between the last part and the appendices, as the preface
+    # stands before the first. Its title is its own front matter's, so the two cannot differ.
+    closing = yaml.safe_load((ROOT / CLOSING).read_text().split("---")[1])
+    out.append({"title": closing["title"], "href": href_for(CLOSING), "children": []})
     out.append(
         {
             "title": "Appendices",
