@@ -18,13 +18,13 @@ bills that arrive afterwards. The second is knowing where a cost model should st
 
 ### The split
 
+Capital cost, or *capex*, is what you pay once. Running cost, or *opex*, is what you pay every
+month for as long as you keep the fleet. The table below shows the split in its two headline
+rows: *Capital, paid once* and *Running, over 5 years*. Over the horizon, the running cost is
+several times the capital cost.
+
 ```{include} _generated/capex-opex-and-lifecycle-split.md
 ```
-
-Capital cost, or *capex*, is what you pay once. Running cost, or *opex*, is what you pay every
-month for as long as you keep the fleet. The table shows the split in its two headline rows:
-*Capital, paid once* and *Running, over 5 years*. Over the horizon, the running cost is several
-times the capital cost.
 
 Capital arrives as one invoice with a signature on it. So it gets a meeting, a comparison and a
 negotiation. Running cost arrives in pieces, every month, from several directions: an electricity

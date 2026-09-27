@@ -17,12 +17,7 @@ This chapter puts them together, arrives at a number, and then makes the number 
 
 ### What the host count is built from
 
-```{image} _figures/the-sizing-model-graph.svg
-:alt: Everything that feeds the recommended host count
-:width: 100%
-```
-
-The figure draws the whole model, but colours only the boxes that feed *hosts the model
+The figure below draws the whole model, but colours only the boxes that feed *hosts the model
 recommends*. Every other box is pale grey, and every coloured box has appeared in an earlier
 chapter:
 
@@ -33,6 +28,11 @@ chapter:
 - the disk chain ([ch09](#capacity));
 - a margin per chain, declared where its ceiling was; and
 - the largest of the three at the end ([ch10](#bandwidth-and-the-binding-constraint)).
+
+```{image} _figures/the-sizing-model-graph.svg
+:alt: Everything that feeds the recommended host count
+:width: 100%
+```
 
 The pale boxes include every ceiling, the queue, ch07's coordination terms and *hosts in the
 fleet* itself. From the ceilings the recommended count takes only the three margins, one per chain.

@@ -16,13 +16,13 @@ The gap always runs one way: you buy more than you can use. Four terms separate 
 
 ### The chain
 
+Four terms stand between an application's storage requirement and a purchase order. Two multiply
+what you must buy. One divides it. One is a surcharge.
+
 ```{image} _figures/capacity-graph.svg
 :alt: The chain from the records held to how many hosts their disks need
 :width: 100%
 ```
-
-Four terms stand between an application's storage requirement and a purchase order. Two multiply
-what you must buy. One divides it. One is a surcharge.
 
 Here is that chain on its own: the nodes that feed *hosts for storage*, from the records and
 growth rate through the four terms. The interactive graph below is the same chain with the rest of
