@@ -246,6 +246,10 @@ Put a plausible wrong answer to each problem in a folder outside the repository,
 `--attempts`, and read what the page says back: that is the feedback a reader who got it wrong
 gets.
 
+To review many pages, or the whole book, use the `editorial-review` skill
+(`.claude/skills/editorial-review/`). It runs `make review`, gives each page to its own reader
+with the brief in `reviewer.md`, and merges the reviews into one report.
+
 ## Figures
 
 Two kinds, both declared in `bench/figures.py` and both rendered by `scripts/render-figures.py`:
