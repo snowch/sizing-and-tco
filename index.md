@@ -139,6 +139,22 @@ python3 -m pytest tests/point_estimates/ -m problem
 
 Nothing in this book needs a datacentre, a cloud account, or a licence.
 
+## How this book was made
+
+Chris Snow wrote this book with Claude, an AI model made by Anthropic. Claude drafted much of the
+prose, the models and the toolkit. The author set the book's rules, chose what it covers, and
+decided what stays.
+
+No number in this book comes from Claude's own knowledge. Every figure is a stamped result that the
+build computes again on every change, every quoted line of code is read from its file, and a figure
+nobody has measured is shown as not yet measured. The rules that hold the models to evidence hold
+the writing too. The build refuses a page with a number typed into its prose, and a quote that no
+longer matches its file fails the build.
+
+Claude also ran the editorial reviews. One reader checked each page's claims against the code, and a
+script opened every page in a browser and pressed every control. You can check any number the same
+way the build does: each table's *Source* line names the result it came from.
+
 ## Where to start
 
 Read [ch01](#point-estimates) first. It shows what a single number leaves out when you answer

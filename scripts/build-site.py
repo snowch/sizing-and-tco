@@ -1909,6 +1909,11 @@ LICENCES = {
 }
 
 
+#: How the book was written, said the same way on the cover and at the foot of every page. The
+#: preface's "How this book was made" says what it means.
+WRITTEN_WITH = "written with Claude (Anthropic)"
+
+
 def colophon() -> str:
     """The foot of every page: who wrote the book, and the terms each part of it is under.
 
@@ -1925,7 +1930,7 @@ def colophon() -> str:
         return f'<a href="{repo}/blob/main/{file}">{html.escape(name)}</a>'
 
     return (
-        f'<footer class="colophon">By {html.escape(author)} · Prose and figures: '
+        f'<footer class="colophon">By {html.escape(author)}, {WRITTEN_WITH} · Prose and figures: '
         f"{terms(config['license']['content'])} · Code and models: "
         f"{terms(config['license']['code'])}</footer>"
     )

@@ -58,5 +58,8 @@ about.
 
 ## Licence
 
+Written by Chris Snow with Claude (Anthropic). The preface's *How this book was made* says what that
+means for what you can trust.
+
 Prose and figures: [CC BY-NC 4.0](LICENSE). Code, models and tooling:
 [Apache 2.0](LICENSE-CODE).

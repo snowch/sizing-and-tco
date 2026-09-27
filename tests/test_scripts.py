@@ -1573,3 +1573,5 @@ def test_every_page_names_the_licences_the_book_declares():
         assert (ROOT / file).exists(), f"{file}, the text of {spdx}, is not in the repository"
         assert name in build.COLOPHON, f"the foot of every page does not name {name}"
         assert name in cover and file in cover, f"the cover does not name {name}, or its file"
+    # And how it was written, in the same words in both places.
+    assert build.WRITTEN_WITH in build.COLOPHON and build.WRITTEN_WITH in cover
