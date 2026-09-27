@@ -126,6 +126,8 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   if (url.origin === self.location.origin) {
     if (!url.pathname.startsWith(BASE)) return;
+    // A chapter's video streams in ranges, which the cache cannot hold, and is too large to keep.
+    if (url.pathname.startsWith(BASE + "videos/")) return;
     const page = request.mode === "navigate" || url.pathname.endsWith(".html") || url.pathname.endsWith("/");
     event.respondWith(page ? networkFirst(request) : cacheFirst(request, SITE));
   } else if (RUNTIME_HOSTS.includes(url.hostname)) {

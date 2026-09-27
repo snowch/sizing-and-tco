@@ -21,6 +21,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # The chapter videos live in Git LFS (.gitattributes). Fetched through a cache keyed on
+      # which objects the commit names, so a deploy that changes no video downloads none: LFS
+      # bandwidth is metered, and every deploy would otherwise fetch every video again.
+      - name: List the LFS objects this commit needs
+        run: git lfs ls-files --long | cut -d ' ' -f1 | sort > .lfs-objects
+
+      - name: Restore the LFS objects
+        uses: actions/cache@v4
+        with:
+          path: .git/lfs
+          key: lfs-${{ hashFiles('.lfs-objects') }}
+
+      - name: Fetch the LFS objects
+        run: git lfs pull
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
@@ -115,6 +130,18 @@ jobs:
         env:
           BASE_URL: ${{ steps.pages.outputs.base_path == '/' && '' || steps.pages.outputs.base_path }}
         run: python3 scripts/check-built-links.py _build/html "$BASE_URL"
+
+      # A Pages site may be no larger than 1 GB, and the videos are most of this one. Stopped
+      # here with the size named, rather than failing later in the deploy with a message about
+      # an artifact.
+      - name: Check the site fits in GitHub Pages
+        run: |
+          size=$(du -sb _build/html | cut -f1)
+          echo "site: $((size / 1000000)) MB"
+          if [ "$size" -gt 950000000 ]; then
+            echo "The site is over 950 MB; GitHub Pages refuses a site over 1 GB. Host the videos elsewhere, or re-encode them smaller." >&2
+            exit 1
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

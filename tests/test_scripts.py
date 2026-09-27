@@ -224,6 +224,24 @@ def test_a_chapter_says_what_it_builds_on_from_the_outline():
     assert build_site.builds_on("index.md") == ""
 
 
+def test_a_chapter_shows_its_video_only_when_the_file_is_really_there(tmp_path, monkeypatch):
+    """A video is matched by slug, and a Git LFS pointer is not a video: a checkout that did not
+    fetch LFS files builds a site with no video rather than one with a broken player."""
+    build_site = site()
+    monkeypatch.setattr(build_site, "VIDEOS", tmp_path)
+    assert build_site.video_for("chapters/point_estimates.md") is None
+    (tmp_path / "ch01-point-estimates.mp4").write_text(
+        "version https://git-lfs.github.com/spec/v1\noid sha256:0\nsize 1\n"
+    )
+    assert build_site.video_for("chapters/point_estimates.md") is None
+    (tmp_path / "ch01-point-estimates.mp4").write_bytes(b"\0\0\0\x18ftypmp42")
+    found = build_site.video_for("chapters/point_estimates.md")
+    assert found == tmp_path / "ch01-point-estimates.mp4"
+    assert build_site.video_for("chapters/estimates.md") is None, "a slug, not a suffix of one"
+    assert build_site.video_for("index.md") is None
+    assert 'src="videos/ch01-point-estimates.mp4"' in build_site.video_html(found)
+
+
 def _page_with(*paragraphs: str) -> dict:
     return {
         "type": "root",
@@ -758,6 +776,8 @@ def test_the_offline_worker_lists_exactly_what_the_build_produced(tmp_path):
     (site / "search.json").write_text("[]")
     (site / "favicon.svg").write_text("<svg/>")
     (site / "sitemap.xml").write_text("<urlset/>")  # not a page: not kept
+    (site / "videos").mkdir()
+    (site / "videos" / "ch01-point-estimates.mp4").write_bytes(b"\0")  # too large to keep
 
     def run():
         return subprocess.run(
@@ -771,6 +791,9 @@ def test_the_offline_worker_lists_exactly_what_the_build_produced(tmp_path):
     assert first.returncode == 0, first.stdout + first.stderr
     worker = (site / "sw.js").read_text()
     assert '"/b/"' in worker, "the base path the site is served from"
+    assert 'url.pathname.startsWith(BASE + "videos/")) return;' in worker, (
+        "a video streams in ranges, which the cache refuses, so the worker leaves it alone"
+    )
     kept = re.search(r"const PRECACHE = (\[.*?\]);", worker, re.S).group(1)
     assert json.loads(kept) == [
         "capacity.html",

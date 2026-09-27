@@ -24,3 +24,4 @@ node_modules/
 # Written at build time by scripts/build-stamp.py: it names the commit it was built
 # from, so a committed copy would be stale the moment it was committed.
 chapters/_generated/build.md
+.lfs-objects

@@ -30,6 +30,7 @@ import argparse
 import html
 import json
 import re
+import shutil
 import sys
 from pathlib import Path
 
@@ -113,6 +114,36 @@ def problem_set(slug: str) -> str:
         {"modules": sources(), "files": problem_files(slug)},
         ensure_ascii=False,
         separators=(",", ":"),
+    )
+
+
+#: Where each chapter's video summary is kept: ``<label>-<slug>.mp4``, stored in Git LFS
+#: (``.gitattributes``). A chapter with no file there, or with only an LFS pointer because the
+#: checkout did not fetch LFS files, shows no video.
+VIDEOS = ROOT / "chapters" / "notebooklm"
+
+
+def video_for(source: str) -> Path | None:
+    """The chapter's video, if there is a real one: matched by slug, never by chapter number."""
+    if not source.startswith("chapters/"):
+        return None
+    slug = Path(source).stem.replace("_", "-")
+    for path in sorted(VIDEOS.glob("*.mp4")):
+        if re.fullmatch(rf"(?:ch\d+-)?{re.escape(slug)}", path.stem):
+            with path.open("rb") as head:
+                if head.read(40).startswith(b"version https://git-lfs"):
+                    return None  # a pointer: the LFS object was not fetched
+            return path
+    return None
+
+
+def video_html(path: Path) -> str:
+    """The video under a chapter's title, said to be generated, and said to need the network."""
+    return (
+        '<figure class="video"><video controls preload="none" '
+        f'src="videos/{html.escape(path.name)}"></video><figcaption>A video summary of this '
+        "chapter, generated from the page by an AI tool. The page is the authority; the video "
+        "needs a network connection.</figcaption></figure>"
     )
 
 
@@ -1728,6 +1759,10 @@ button.primary:hover:not(:disabled) { color: var(--on-accent); filter: brightnes
 /* Carrying on reading. Two targets at the foot of every page, because the contents list is a
    place to look something up and this is the one a reader going front to back actually uses. */
 /* Who wrote it and the terms it is under, on every page: small, and below the reading. */
+/* A chapter's video summary, at the prose's width, under its title. */
+.video { margin: 0 0 1.6rem; }
+.video video { width: 100%; border-radius: 6px; background: #000; }
+.video figcaption { font: 13px/1.5 var(--chrome); color: var(--muted); margin-top: .4rem; }
 .colophon { margin: 2.5rem 0 0; padding-top: 1rem; border-top: 1px solid var(--edge);
             font: 13px/1.5 var(--chrome); color: var(--muted); }
 .colophon a { color: inherit; }
@@ -1846,6 +1881,11 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         body = anchor_glossary_rows(body)
     if builds_on(source):
         body = body.replace("</h1>", "</h1>" + builds_on(source), 1)
+    if video_for(source):
+        # After the heading and its "builds on" line, where it is the first thing under the title.
+        at = body.find("</p>", body.find('class="builds-on"')) + 4 if builds_on(source) else -1
+        at = at if at > 3 else body.find("</h1>") + 5
+        body = body[:at] + video_html(video_for(source)) + body[at:]
     if source not in TITLED_PAGES:
         # The introduction and the part pages carry their name in the front matter and nowhere
         # in the text, so the page opens on a blockquote with nothing above it saying where
@@ -2047,6 +2087,11 @@ def main() -> int:
     favicon = ROOT / "public" / "favicon.svg"
     if favicon.exists():
         (args.out / "favicon.svg").write_text(favicon.read_text())
+    # Each chapter's video, copied beside the pages. The offline worker does not keep them.
+    for source in wanted:
+        if video := video_for(source):
+            (args.out / "videos").mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(video, args.out / "videos" / video.name)
     # Appendix H's model checker, which the appendix embeds from /models/.
     (args.out / "models").mkdir(parents=True, exist_ok=True)
     (args.out / "models" / "custom-model-viewer.html").write_text(checker_page())

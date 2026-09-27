@@ -1,0 +1,3 @@
+# Chapter video summaries are large binaries: Git LFS keeps them out of the history every clone
+# downloads, and the deploy workflow fetches them and copies them into the site.
+chapters/notebooklm/*.mp4 filter=lfs diff=lfs merge=lfs -text
