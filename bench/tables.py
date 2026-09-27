@@ -2537,7 +2537,7 @@ def mixed_pool_ceilings(name: str) -> str:
         # The book's own verdict words, never the evaluator's: "inside headroom" reads as
         # reassurance, and here it sits on a pool a hair under its limit.
         cells = [
-            f"{row[column]:.0%} · {VERDICT_MARK[row['verdict_' + column]]}"
+            f"{row[column]:.0%}; plan: {VERDICT_MARK[row['verdict_' + column]]}"
             for column in ("kept", "retired", "all_new")
         ]
         rows.append(f"| {row['label']} | " + " | ".join(cells) + " |")

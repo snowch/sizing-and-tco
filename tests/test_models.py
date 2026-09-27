@@ -532,3 +532,28 @@ outputs: [per_host]
     with pytest.raises(ModelError, match="'per_host' declares no unit") as refused:
         load_model(tmp_path / "model.yaml")
     assert "None" not in str(refused.value)
+
+
+@pytest.mark.parametrize("old_cores", [8, 16, 24, 32, 64])
+@pytest.mark.parametrize("old_hosts", [0, 10, 30, 40, 120])
+def test_the_mixed_pool_buys_what_equal_routing_can_carry(old_hosts, old_cores):
+    """Buy what the model recommends for equal routing, and the pool is inside its margin.
+
+    The third review found a purchase the model's own ceiling rejected: old hosts larger than the
+    new carried the requests alone, so the request chain asked for none, but the disk chain bought
+    new hosts, and once one is in the pool every host is held to its cores.
+    """
+    from dataclasses import replace
+
+    model = MODELS["mixed_pool"]
+    base = load_scenario("models/mixed_pool/scenarios/reference.yaml")
+    ask = {**base.overrides, "old_hosts": old_hosts, "cores_per_old_host": old_cores}
+    bought = point(model, replace(base, overrides=ask))["new_hosts_equal"]
+    if bought < 2:
+        return  # the new_hosts input starts at two, so a smaller purchase is not a pool it can hold
+    pool = point(model, replace(base, overrides={**ask, "new_hosts": bought}))
+    allowed = 1 - pool["queueing_margin"]
+    assert pool["utilisation_smallest_equal"] <= allowed + 1e-9, (
+        f"with {old_hosts} old hosts of {old_cores} cores, buying the {bought:.0f} new hosts "
+        "the model recommends for equal routing leaves the smallest host past its margin"
+    )

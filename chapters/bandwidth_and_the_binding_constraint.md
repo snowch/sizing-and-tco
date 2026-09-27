@@ -210,8 +210,7 @@ disk. How many old hosts stay in service to the horizon is a decision in the fil
 
 Each chain first counts what the old hosts already give: cores, memory or disk. It takes that
 from what the chain needs, and divides what is left by what one new host gives below its margin.
-If the old hosts cover the whole need, that chain asks for no new hosts. You still buy the
-largest of the chains.
+If the old hosts cover the whole need, that chain asks for no new hosts. Routed by capacity, you buy the largest of the chains, as before. Routed equally, the chains are not independent: once any chain buys a new host, that host is in the pool, every host is held to the smallest host's cores, and the request chain has to be worked out again on that basis.
 
 ```{literalinclude} ../models/mixed_pool/model.yaml
 :language: yaml
@@ -345,8 +344,7 @@ The function `new_hosts_for_requests` receives the cores the busy hour keeps bus
 hosts stay in service, the cores on each old host, the cores on each new host, the queueing margin,
 and a routing: `"capacity"` or `"equal"`. It returns how many new hosts the request chain needs.
 
-Routed by capacity, the two generations' cores add up. Routed equally, the smallest host in the pool sets the pace. With no old hosts left, the smallest host is a new one. If the old hosts already carry the load, the answer is no new hosts, not a
-negative number.
+Routed by capacity, the two generations' cores add up. Routed equally, the smallest host in the pool sets the pace. With no old hosts left, the smallest host is a new one. Routed equally, the old hosts carry the load if, on their own, each held to its own cores, they serve the busy hour below the margin; then the answer is no new hosts. The smallest host is a new one only once a new host exists. Either routing, the answer is never a negative number.
 
 The test checks your answer against the mixed pool model's own nodes: with no old hosts, with some,
 with the book's pool, with more old hosts than the load needs, and with old hosts that have more cores than the new ones.

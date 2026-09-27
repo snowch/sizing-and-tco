@@ -70,8 +70,9 @@ def new_hosts_for_requests(
       every host is equally busy and the two generations' cores add up;
     * ``"equal"``: every host gets the same share of the requests, so the smallest host in the
       pool is the busiest and reaches its margin first. With no old hosts, every host is a new
-      one.
-
-    If the old hosts already carry the load, the answer is no new hosts, not a negative number.
+      one.    Routed equally, the old hosts carry the load if, on their own, each held to
+    its own cores, they serve the busy hour below the margin; then the answer is
+    no new hosts. The smallest host is a new one only once a new host exists.
+    Either routing, the answer is never a negative number.
     """
     raise NotImplementedError("problem 10.3")

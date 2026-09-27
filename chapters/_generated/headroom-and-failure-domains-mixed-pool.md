@@ -2,11 +2,11 @@
 
 | Ceiling | Over allowed, old hosts kept | Over allowed, old hosts retired | Over allowed, all new hosts |
 |---|---:|---:|---:|
-| utilisation at the busy hour, routed by capacity | 49% · ok | 65% · into the margin | 46% · ok |
-| the smallest host's utilisation, routed equally | 69% · **over** | 65% · into the margin | 46% · ok |
-| utilisation with the host with the most cores down | 50% · into the margin | 67% · **over** | 46% · ok |
-| working set against memory | 23% · ok | 69% · **over** | 49% · ok |
-| disk fill at horizon | 34% · ok | 68% · **over** | 44% · ok |
-| largest shard against the smallest host's disk | 2% · ok | 2% · ok | 2% · ok |
+| utilisation at the busy hour, routed by capacity | 49%; plan: ok | 65%; plan: into the margin | 46%; plan: ok |
+| the smallest host's utilisation, routed equally | 69%; plan: **over** | 65%; plan: into the margin | 46%; plan: ok |
+| utilisation with the host with the most cores down | 50%; plan: into the margin | 67%; plan: **over** | 46%; plan: ok |
+| working set against memory | 23%; plan: ok | 69%; plan: **over** | 49%; plan: ok |
+| disk fill at horizon | 34%; plan: ok | 68%; plan: **over** | 44%; plan: ok |
+| largest shard against the smallest host's disk | 2%; plan: ok | 2%; plan: ok | 2%; plan: ok |
 
 *Source — [`mixed-pool`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/mixed-pool.json), [`mixed_pool-reference`](/models/mixed_pool-reference.html), [`mixed_pool-old_retired`](/models/mixed_pool-old_retired.html) and [`mixed_pool-replace`](/models/mixed_pool-replace.html) · `sizing.evaluate`*

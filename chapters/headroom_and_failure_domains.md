@@ -146,20 +146,27 @@ as well: working set against memory, and disk fill at horizon.
 ```
 
 On the day the old hosts retire, three ceilings are **over** at the plan: memory, disk, and losing
-the host with the most cores. Memory is the one the old hosts were covering: their extra memory held
-the whole working set in [ch10](#bandwidth-and-the-binding-constraint), where memory asked for no
-new hosts. The new hosts alone cannot hold the working set or the data.
+the host with the most cores. The old hosts held all of the working set and much of the data. In
+[ch10](#bandwidth-and-the-binding-constraint), with them kept, memory asked for no new hosts and
+disk for fewer. When they retire, the new hosts hold both alone. At the plan, they have too little
+of either. The table's shares are of futures past the allowed line; it does not show how often the
+retired pool runs out altogether.
 
 With the old hosts kept, routing requests equally is **over** at the plan, so the pool bought for
 routing by capacity does not survive equal routing. Once the old hosts retire, the two routing rows
 agree, because every host in the pool is then the same size.
 
 The shard row does not move, because both generations have the same disk, so the smallest disk is
-the same whichever generation remains. The all-new fleet is *ok* at the plan on every ceiling. It is
-what buying for the day the old hosts retire would leave on that day.
+the same whichever generation remains. It reads *ok* even where the disks are full, because it asks
+whether one shard fits on an empty host, not whether any host has room left.
 
-Buy for the day the old hosts retire, or plan the next purchase for that day. The model shows the
-gap; it does not choose between them.
+The all-new fleet is *ok* at the plan on every ceiling. It is what buying for the day the old hosts
+retire comes to. It is the web service's own count of new hosts, more than the kept pool buys.
+Keeping the old hosts then saves no purchase.
+
+Buy for the day the old hosts retire, or keep the smaller purchase and plan the next one for that
+day. The model shows the gap; it does not choose between the two. [ch22](#comparing-two-tcos) prices
+them.
 
 ### Margins do not add
 

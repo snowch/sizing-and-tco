@@ -448,17 +448,32 @@ nodes:
       no new hosts at all.
     formula: min(max(ceil(busy_cores / (cores_per_old_host * (1 - queueing_margin))) - old_hosts, 0) / one_host, 1)
 
+  requests_with_new_equal:
+    kind: derived
+    unit: host
+    label: new hosts the requests need once any new host is in the pool, routed equally
+    note: >-
+      Once one new host joins the pool, the smallest host is the smaller generation, and every
+      host is held to its cores.
+    formula: max(ceil(busy_cores / (smallest_cores * (1 - queueing_margin))), old_hosts) - old_hosts
+
   new_for_requests_equal:
     kind: derived
     unit: host
     label: new hosts the requests need, routed equally
-    formula: old_short_equal * (max(ceil(busy_cores / (smallest_cores * (1 - queueing_margin))), old_hosts) - old_hosts)
+    formula: old_short_equal * requests_with_new_equal
 
   new_hosts_equal:
     kind: derived
     unit: host
     label: new hosts to buy, requests routed equally
-    formula: max(new_for_requests_equal, new_for_memory, new_for_storage)
+    note: >-
+      If memory or disk buys any new host, that host is in the pool and requests are held to the
+      smallest host, even where the old hosts alone would have carried them.
+    formula: >-
+      max(new_for_memory, new_for_storage,
+      min(old_short_equal + min(max(new_for_memory, new_for_storage) / one_host, 1), 1)
+      * requests_with_new_equal)
 
   # -- the pool as bought ------------------------------------------------------------------------
 

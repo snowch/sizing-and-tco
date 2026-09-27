@@ -266,9 +266,7 @@ The difference can be taken future by future. Each total counts the new hosts bo
 licences and support over the horizon. People are left out because they cancel, as this chapter
 showed earlier; network is left out too.
 
-The table's last two rows show the same comparison with requests routed equally. Keeping means
-buying the larger number of new hosts that [ch10](#bandwidth-and-the-binding-constraint)'s third
-column asks for.
+The table's last two rows show the same comparison with requests routed equally. Keeping means buying the number of new hosts in ch10's third column.
 
 ```{include} _generated/comparing-two-tcos-keep-or-replace.md
 ```
@@ -278,8 +276,7 @@ zero across its middle nine in ten. Keeping the old hosts is cheaper in nearly e
 
 Routing equally: every host is held to the old host's cores. Keeping then means buying more new
 hosts than replacing them all ([ch10](#bandwidth-and-the-binding-constraint)). The last two rows of
-the keep-or-replace table show keeping is then dearer in every future. Across the futures the model
-draws, the difference stays on one side of zero. The router moves it to the other.
+the keep-or-replace table show keeping is then dearer in every future. When routed by capacity, keeping is cheaper in almost every future the model draws. When routed equally, it is dearer in every one.
 
 The lines show where the capacity-routed difference comes from.
 
@@ -292,13 +289,15 @@ keeping too. Licences favour keeping even though the old hosts' cores pay licenc
 pool has fewer cores in total. Energy runs the other way: an old host draws nearly as much power as
 a new one for half the cores.
 
-Keeping saves money and buys a pool nearer its limits. [ch11](#headroom-and-failure-domains)'s table
-shows the kept pool *into the margin* at the plan with the host with the most cores down. It runs
-**over** if requests are routed equally. The all-new fleet is *ok* on both.
+Keeping costs less and leaves less room for processing. [ch11](#headroom-and-failure-domains)'s
+table shows the kept pool *into the margin* at the plan with the host with the most cores down, and
+**over** if requests are routed equally. The all-new fleet is *ok* on both. On memory and disk, it
+goes the other way: the old hosts bring extra memory and much of the disk, so the kept pool has more
+room than the all-new fleet.
 
-Keeping is cheaper only if the old hosts last to the horizon. If they leave early,
-[ch11](#headroom-and-failure-domains) says to buy for that day or plan the next purchase for it.
-That purchase is a cost this model does not count. Keep's total has none of it.
+Keeping's saving assumes the old hosts last to the horizon. If they leave earlier, the purchase
+[ch11](#headroom-and-failure-domains) shows for that day, for memory and disk as well as for cores,
+comes out of the saving. This model does not price it.
 
 ### What a competitive comparison has to show
 
