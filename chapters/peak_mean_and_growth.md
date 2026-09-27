@@ -6,10 +6,6 @@ short_title: "ch04 Peak, mean and growth"
 (peak-mean-and-growth)=
 # ch04 · Peak, mean and growth
 
-:::{note}
-**Draft.** Content drafted. This chapter is undergoing final review and polish.
-:::
-
 ## The question
 
 Which number in a demand curve sizes you, and what is a five-year growth rate a claim about?

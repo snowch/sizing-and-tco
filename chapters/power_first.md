@@ -6,10 +6,6 @@ short_title: "ch16 Power first"
 (power-first)=
 # ch16 · Power first
 
-:::{note}
-**Draft.** Content drafted. This chapter is undergoing final review and polish.
-:::
-
 ## The question
 
 What changes when watts are the binding constraint rather than money?

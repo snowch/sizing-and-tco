@@ -6,10 +6,6 @@ short_title: "ch14 Correlation and convergence"
 (correlation-and-convergence)=
 # ch14 · Correlation and convergence
 
-:::{note}
-**Draft.** Content drafted. This chapter is undergoing final review and polish.
-:::
-
 ## The question
 
 [ch13](#monte-carlo) drew two pairs of inputs together (a host's price with the network's price,

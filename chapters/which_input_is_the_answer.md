@@ -6,10 +6,6 @@ short_title: "ch19 Which input to go and measure"
 (which-input-is-the-answer)=
 # ch19 · Which input to go and measure
 
-:::{note}
-**Draft.** Content drafted. This chapter is undergoing final review and polish.
-:::
-
 ## The question
 
 Which input should you go and measure first, and how would the model tell you?

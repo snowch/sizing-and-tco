@@ -6,10 +6,6 @@ short_title: "ch03 Where the numbers come from"
 (where-the-numbers-come-from)=
 # ch03 · Where the numbers come from
 
-:::{note}
-**Draft.** Content drafted. This chapter is undergoing final review and polish.
-:::
-
 ## The question
 
 What is the difference between a number you measured, a number you were told, and a number you

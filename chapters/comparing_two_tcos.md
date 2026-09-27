@@ -6,10 +6,6 @@ short_title: "ch22 Comparing two TCOs"
 (comparing-two-tcos)=
 # ch22 · Comparing two TCOs
 
-:::{note}
-**Draft.** Content drafted. This chapter is undergoing final review and polish.
-:::
-
 ## The question
 
 Two quotes for the same workload, each with an interval on it. Which is cheaper, and how often

@@ -6,10 +6,6 @@ short_title: "ch08 Regime changes"
 (regime-changes)=
 # ch08 · Regime changes
 
-:::{note}
-**Draft.** Content drafted. This chapter is undergoing final review and polish.
-:::
-
 ## The question
 
 When does a chain of multiplications stop describing a system?

@@ -6,10 +6,6 @@ short_title: "ch17 Unit economics"
 (unit-economics)=
 # ch17 · Unit economics
 
-:::{note}
-**Draft.** Content drafted. This chapter is undergoing final review and polish.
-:::
-
 ## The question
 
 What does a cost per unit have to have before it means anything?

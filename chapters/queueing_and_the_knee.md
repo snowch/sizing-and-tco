@@ -6,10 +6,6 @@ short_title: "ch06 Queueing, and the knee"
 (queueing-and-the-knee)=
 # ch06 · Queueing, and the knee
 
-:::{note}
-**Draft.** Content drafted. This chapter is undergoing final review and polish.
-:::
-
 ## The question
 
 Why does response time climb long before a device is busy, and what does headroom buy?

@@ -6,10 +6,6 @@ short_title: "ch05 Little's law"
 (littles-law)=
 # ch05 · Little's law
 
-:::{note}
-**Draft.** Content drafted. This chapter is undergoing final review and polish.
-:::
-
 ## The question
 
 What can you infer from the law when the system is steady, with as many requests leaving as

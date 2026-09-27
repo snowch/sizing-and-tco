@@ -6,10 +6,6 @@ short_title: "ch18 The five-year model"
 (the-five-year-model)=
 # ch18 · The five-year model
 
-:::{note}
-**Draft.** Content drafted. This chapter is undergoing final review and polish.
-:::
-
 ## The question
 
 How does one model use a figure another model computed, without losing its uncertainty?

@@ -6,10 +6,6 @@ short_title: "ch15 Capex, opex and where the total stops"
 (capex-opex-and-lifecycle)=
 # ch15 · Capex, opex and where the total stops
 
-:::{note}
-**Draft.** Content drafted. This chapter is undergoing final review and polish.
-:::
-
 ## The question
 
 What do you pay once, what do you pay every month, and what does this book deliberately not model?
