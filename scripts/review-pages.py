@@ -52,6 +52,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import json
+import os
 import re
 import sys
 import time
@@ -1090,6 +1091,12 @@ def main() -> int:
         help="load everything through Python rather than the browser's own network, for a "
         "proxy the browser cannot use",
     )
+    parser.add_argument(
+        "--chromium",
+        default=os.environ.get("CHROMIUM"),
+        metavar="PATH",
+        help="the Chromium to drive, where Playwright's own is not installed (default $CHROMIUM)",
+    )
     parser.add_argument("--list", action="store_true", help="print the pages and stop")
     args = parser.parse_args()
     args.base = args.base.rstrip("/") + "/"
@@ -1123,7 +1130,9 @@ def main() -> int:
     fetcher = Fetcher()
     done: list[Page] = []
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch()
+        # A Chromium of the environment's own, where Playwright's download is not the one
+        # installed: a cloud container ships one at a fixed path and blocks the download.
+        browser = playwright.chromium.launch(executable_path=args.chromium or None)
         reviewer = Reviewer(browser, args, fetcher)
         for n, (source, name) in enumerate(chosen, 1):
             page = Page(source, name)
