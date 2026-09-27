@@ -69,7 +69,7 @@ in a different size, which is the error that looks right.
 % word-ok: a sample here is one reading a scrape takes, a counting unit, not one of the model's draws
 The build's unit registry treats things that are counted as units of their own, not as plain
 numbers: requests, spans, samples, series, log lines, queries, hosts, nodes, cores, labels, drives,
-failures, and US dollars.
+failures, and money, in each of the currencies the toolkit knows, each one a unit of its own.
 
 ```{literalinclude} ../sizing/units.py
 :language: python
@@ -83,8 +83,8 @@ pair and you get a plausible answer with no complaint. With them, the formula
 three is well formed.
 
 % word-ok: a sample here is one reading a scrape takes, a counting unit, not one of the model's draws
-Dollars are on the list for the same reason: a model that adds dollars to terabytes is broken, and
-nothing else in the registry would notice. The cost is a node. Going from one counting unit to
+Currencies are on the list for the same reason: a model that adds dollars to terabytes is broken,
+and so is one that adds dollars to euros, and nothing else in the registry would notice either. The cost is a node. Going from one counting unit to
 another requires a node whose unit is the conversion itself — spans per request, samples per series,
 log lines per request, cores per host. That node is an input like any other, so it must say where
 its number came from:
@@ -117,12 +117,13 @@ terabyte per year and dollars per terabyte per month have identical dimensions. 
 compared dimensions alone would pass a unit cost twelve times too large — the cost per stored TB per
 month that [ch17](#unit-economics) works with, a figure likely to be quoted in a meeting.
 
-Because data has no dimension in the registry, a check on dimensions alone would treat a plain
-number and a terabyte as the same. The build counts bits and bytes in each unit as well, so it
-refuses both a formula that makes a pure number for a node declared in TB and a ceiling in TB with a
-plain number for its limit.
+The units library the build uses ships with data as a plain number: a bit is defined as
+dimensionless. The build's registry changes that one definition, so an amount of data is a dimension
+of its own, counted in bits. So the dimension check refuses a formula that makes a plain number for
+a node declared in TB, a ceiling in TB with a plain number for its limit, and terabytes used as an
+exponent or inside a logarithm.
 
-## Five places a unit goes wrong
+## Six places a unit goes wrong
 
 **Decimal against binary.** A drive is sold in decimal terabytes. An operating system reports
 tebibytes, which are larger, so the same drive shows fewer of them. The gap is nearly a tenth of the
@@ -157,6 +158,11 @@ not grow over a longer horizon. It is smaller than the model's other errors, and
 needs the horizon divided by one period first, which is why both reference models carry a node that
 is just `one year`. It looks like ceremony until the build refuses a growth factor raised to the
 power of five *years*.
+
+**Scales that do not start at zero are refused.** The build converts a node by multiplying by one
+factor. A temperature in Celsius has an offset (nought degrees is not no heat), and a decibel is a
+logarithm; neither converts by one factor. So the build refuses both as units. A model that needs
+one works in a unit that does convert that way, such as kelvin, or a plain ratio.
 
 ## Where Pint runs, and where it does not
 

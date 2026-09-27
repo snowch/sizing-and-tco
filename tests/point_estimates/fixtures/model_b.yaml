@@ -2,6 +2,7 @@
 # time replaced by a constant measured on one version of one backend. No result by that name is
 # stamped, on purpose, so the node reads as not yet measured; the kind of model does not depend
 # on whether the measurement has landed.
+dsl: 1
 model: problem_1_3_b
 title: Model B (exercise fixture)
 

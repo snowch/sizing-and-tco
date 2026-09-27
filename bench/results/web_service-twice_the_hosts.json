@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "25927bb50be4b68f",
+  "code_fingerprint": "78502951959b98bb",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-26T21:35:00+00:00",
-  "git_revision": "39f1b8b",
+  "generated_at": "2026-09-27T02:41:11+00:00",
+  "git_revision": "a8802b6",
   "kind": "model",
   "name": "web_service-twice_the_hosts",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-26T21:34:59+00:00",
+    "generated_at": "2026-09-27T02:41:09+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {

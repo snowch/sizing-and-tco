@@ -4,23 +4,29 @@
     python3 scripts/verify-models.py                      # every model under models/
     python3 scripts/verify-models.py path/to/model.yaml   # a file of your own, wherever it is
 
-Eight rules. The last one is the reason this script exists rather than being folded into the test
-suite: it is where the book's central claim stops being a paragraph in the front matter and
+Nine rules, counted from nought. The last one is the reason this script exists rather than being
+folded into the test suite: it is where the book's central claim stops being a paragraph in the front matter and
 becomes something the build enforces.
 
+0. **The file says which rules it is written against.** A `dsl:` line naming the version this
+   toolkit reads; the loader refuses any other. And a model counts money in one currency, named
+   in `currency:` (dollars when it is absent): a node priced in another does not build.
 1. **Every formula typechecks.** Units are checked dimensionally, and each node's declared unit is
    compared with what its formula produces. A model that multiplies series by requests and calls
    the answer bytes does not build. Quantities in different units of one dimension may not meet
    in `+`, `-`, `min` or `max`, because the build converts a formula's result once, into the
-   node's unit; `TB + TiB` will not typecheck. A plain number is not an amount of data: a node
-   declared in bytes, or a ceiling limit in bytes, whose formula gives a plain number does not
-   build.
+   node's unit; `TB + TiB` will not typecheck. A literal `0` is the one exception: it meets
+   anything, so `max(0, need - held)` is what is left over, or nothing. Data is a dimension of
+   its own, so terabytes cannot be an exponent or sit inside a logarithm. A unit that does not
+   convert by one factor, such as a temperature or a decibel, is refused.
 2. **Every input declares a provenance kind and a source, and every correlation a reason.** Not
    "has a provenance field": a non-empty source string, from the three kinds. A number nobody
    will admit to is the commonest defect in a spreadsheet and the cheapest one to make
    impossible. Every input also declares who decides it: `decided:` is `you`, `outside` or
    `definition`. A correlation's `because` may not be empty: a coefficient with no reason cannot
-   be argued with.
+   be argued with, and it names two quantities that vary (an input with a shape, or a measured
+   constant), with a coefficient between -1 and 1.
+   An input with a shape names that shape, and no other, in its source.
 3. **A `fact` cites something.** The strongest provenance kind has to point at a stamped result,
    a file, a specification or a document. An assumption wearing a better label is worse than an
    assumption.
@@ -42,6 +48,7 @@ becomes something the build enforces.
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -54,6 +61,7 @@ from bench.stamp import RESULTS_DIR, code_fingerprint, load_result, shown  # noq
 from sizing import mc  # noqa: E402
 from sizing.dsl import (  # noqa: E402
     DECIDED_BY,
+    DSL_VERSION,
     PROVENANCE_KINDS,
     Ceiling,
     Input,
@@ -66,6 +74,8 @@ from sizing.dsl import (  # noqa: E402
     scenarios_for,
 )
 from sizing.evaluate import check_units, evaluate  # noqa: E402
+from sizing.units import CURRENCIES  # noqa: E402
+from sizing.units import parse as parse_unit  # noqa: E402
 
 #: A `fact` has to point at something. Any of these in the source string counts as pointing.
 CITATION_MARKERS = ("bench/results/", ".json", ".yaml", "definition", "invoice", "@", "http")
@@ -78,6 +88,31 @@ def _shown(model: Model) -> str:
 
 def check_model(model: Model, problems: list[str]) -> None:
     where = _shown(model)
+
+    # 0 — which rules the file is written against, and which money it counts in
+    if model.dsl is None:
+        problems.append(
+            f"{where}: does not say which rules it is written against. Its first line is "
+            f"`dsl: {DSL_VERSION}`."
+        )
+    if model.currency not in CURRENCIES:
+        problems.append(
+            f"{where}: declares currency {model.currency!r}; expected an ISO code the registry "
+            f"defines: {', '.join(CURRENCIES)}"
+        )
+    own = f"[currency_{model.currency.lower()}]"
+    for name in sorted(model.nodes):
+        money = [
+            dimension
+            for dimension in parse_unit(model.nodes[name].unit).dimensionality
+            if dimension.startswith("[currency_") and dimension != own
+        ]
+        if money:
+            problems.append(
+                f"{where}: node {name!r} counts money in {model.nodes[name].unit!r}, and the model "
+                f"declares `currency: {model.currency}`. A model prices in one currency; a rate "
+                "between two is a node of its own, with a source."
+            )
 
     # 1 — units
     unit_problems, _ = check_units(model)
@@ -111,10 +146,14 @@ def check_model(model: Model, problems: list[str]) -> None:
                     f"{where}: input {name!r} has an empty provenance source. Every number in a "
                     "model says where it came from, including the ones somebody decided."
                 )
-            elif node.is_uncertain and not any(
-                shape in provenance.source.lower() for shape in mc.SHAPES
+            elif (
+                node.is_uncertain
+                and (shape := _one_shape(node, where, name, problems))
+                and not (re.search(rf"\b{shape}\b", provenance.source.lower()))
             ):
-                shape, _ = mc.one_shape(node.distribution)
+                # Its own shape, as a word: any shape's name used to pass, so a triangular input
+                # whose source mentioned "a normal busy hour" passed, and so did every lognormal
+                # one, because "lognormal" contains "normal".
                 problems.append(
                     f"{where}: input {name!r} is sampled as a {shape} and its provenance never "
                     f"says so. The shape is a claim about what can happen — that a price cannot "
@@ -171,8 +210,26 @@ def check_model(model: Model, problems: list[str]) -> None:
                     "for."
                 )
 
-    # 2 (continued) — a pair of inputs said to move together gives its reason too
+    # 2 (continued) — a pair of inputs said to move together names two of them, says how
+    # strongly, and gives its reason. A pair naming anything else was dropped at evaluation
+    # without a word.
     for pair in model.correlations:
+        for side in ("a", "b"):
+            node = model.nodes.get(str(pair.get(side)))
+            if not isinstance(node, Measured) and not (
+                isinstance(node, Input) and node.is_uncertain
+            ):
+                problems.append(
+                    f"{where}: a correlation names {pair.get(side)!r}, which is neither an input "
+                    "with a shape nor a measured constant. Only quantities that vary can move "
+                    "together."
+                )
+        rho = pair.get("rho")
+        if isinstance(rho, bool) or not isinstance(rho, (int, float)) or not -1 <= rho <= 1:
+            problems.append(
+                f"{where}: the correlation between {pair.get('a')!r} and {pair.get('b')!r} has "
+                f"rho {rho!r}; it is a number between -1 and 1"
+            )
         if not str(pair.get("because") or "").strip():
             problems.append(
                 f"{where}: the correlation between {pair.get('a')!r} and {pair.get('b')!r} gives "
@@ -206,10 +263,25 @@ def check_model(model: Model, problems: list[str]) -> None:
         problems.append(f"{where}: classified as a definitional model but declares ceilings")
 
 
+def _one_shape(node: Input, where: str, name: str, problems: list[str]) -> str | None:
+    """The input's one shape, or a problem saying why it has not got one."""
+    try:
+        shape, _ = mc.one_shape(node.distribution)
+    except (ValueError, TypeError, AttributeError) as exc:
+        problems.append(f"{where}: input {name!r} — {exc}")
+        return None
+    return shape
+
+
 def check_scenarios(model: Model, problems: list[str]) -> None:
     """Every scenario evaluates, and every override names a real input."""
     where = _shown(model)
-    for scenario in scenarios_for(model):
+    try:
+        scenarios = scenarios_for(model)
+    except ModelError as exc:
+        problems.append(f"{where}: a scenario file does not load — {exc}")
+        return
+    for scenario in scenarios:
         for name in sorted(scenario.overrides):
             if name not in model.nodes:
                 problems.append(

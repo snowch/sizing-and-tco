@@ -11,6 +11,7 @@
 # Your repair: a node with a unit, a formula or a band, and a provenance source.
 # Make the source say what you would measure to confirm the size, not just where
 # the figure comes from. Add the line that prices what the node names.
+dsl: 1
 model: incomplete_service
 title: A hosted service, monthly (exercise fixture — incomplete)
 currency: USD

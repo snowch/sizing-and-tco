@@ -6,6 +6,7 @@
 # tests/ rather than models/ so that it can never be mistaken for a figure the book publishes.
 #
 # The copy you repair is fixtures/repaired.yaml; this file stays as it is.
+dsl: 1
 model: incomplete_service
 title: A hosted service, monthly (exercise fixture — incomplete)
 currency: USD

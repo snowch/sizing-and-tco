@@ -3,6 +3,7 @@
 # of ch04 removed, so that a reader can see it at 13 nodes. Not a model
 # anybody would ship. Do not edit: say which chapter introduces a node in
 # build-order.yaml instead.
+dsl: 1
 model: web_service_uncertainty
 title: >-
   A web service and its data, on a fleet of Linux hosts — The

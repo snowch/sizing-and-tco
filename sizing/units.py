@@ -37,17 +37,45 @@ are a gate, not a tax.
 
 from __future__ import annotations
 
+import re
+from importlib import resources
+
 import pint
 from pint.util import to_units_container
 
+#: The currencies a model may price in, by ISO 4217 code. Each is a dimension of its own, so a
+#: model that adds dollars to terabytes is refused, and so is one that adds dollars to euros: there
+#: is no exchange rate in the registry, and a model that needs one declares it as a node in its own
+#: unit (``USD/EUR``) with a source, like any other conversion. A model's ``currency:`` field names
+#: the one it prices in, and ``scripts/verify-models.py`` refuses money in any other.
+CURRENCIES: tuple[str, ...] = (
+    "USD",
+    "EUR",
+    "GBP",
+    "JPY",
+    "CHF",
+    "CAD",
+    "AUD",
+    "NZD",
+    "CNY",
+    "HKD",
+    "SGD",
+    "INR",
+    "KRW",
+    "SEK",
+    "NOK",
+    "DKK",
+    "PLN",
+    "CZK",
+    "BRL",
+    "MXN",
+    "ZAR",
+)
+
 #: Quantities that are counted rather than measured, each its own dimension.
-#:
-#: ``currency`` is here for the same reason: a model that adds dollars to terabytes is broken,
-#: and nothing else in the registry would notice. The registry defines one currency, ``USD``. A
-#: unit in any other currency is unknown, so a model that uses one does not load. A model's
-#: ``currency:`` field is a label; no check reads it.
 COUNTING_UNITS: tuple[str, ...] = (
-    "USD = [currency] = usd = dollar",
+    "USD = [currency_usd] = usd = dollar",
+    *(f"{code} = [currency_{code.lower()}]" for code in CURRENCIES if code != "USD"),
     "request = [request] = req",
     "span = [span]",
     "sample = [sample]",
@@ -63,14 +91,34 @@ COUNTING_UNITS: tuple[str, ...] = (
 )
 
 
+def _definitions() -> list[str]:
+    """Pint's own definitions, with one line changed: a bit is a dimension, not a pure number.
+
+    Pint defines ``bit = []``, so a byte, a terabyte and every storage unit are dimensionless, and
+    wherever a formula wants a pure number (an exponent, a logarithm) a terabyte passed. A growth
+    factor raised to fifteen terabytes typechecked. With a dimension of its own, information is
+    refused there by Pint itself, and a byte meets a pure number only through a node that says how.
+    Pint's file imports its constants from beside itself, so they are read in here the same way.
+    """
+    package = resources.files("pint")
+    text = (package / "default_en.txt").read_text()
+    constants = (package / "constants_en.txt").read_text()
+    text = re.sub(r"(?m)^@import constants_en\.txt\s*$", lambda _: constants, text)
+    patched = re.sub(r"(?m)^bit = \[\]", "bit = [information]", text)
+    if patched == text:
+        raise RuntimeError("Pint's definitions no longer say `bit = []`; units.py needs revisiting")
+    return patched.splitlines()
+
+
 def registry() -> pint.UnitRegistry:
     """The book's unit registry.
 
-    ``autoconvert_offset_to_baseunit`` is off and no temperature units are defined: this book has
-    no use for a scale with an offset, and a model that tried to multiply by one would be wrong in
-    a way that is tedious to explain. Everything here is a ratio scale.
+    Everything a model may declare is a ratio scale. Pint also defines scales with an offset
+    (degrees Celsius) and logarithmic ones (decibels); :func:`parse` refuses both, because a node
+    converts by one factor and neither converts that way.
     """
-    ureg = pint.UnitRegistry()
+    ureg = pint.UnitRegistry(None)
+    ureg.load_definitions(_definitions())
     for definition in COUNTING_UNITS:
         ureg.define(definition)
     return ureg
@@ -98,9 +146,17 @@ def parse(unit: str):
     second is the one worth catching.
     """
     try:
-        return UNITS.Unit(unit)
+        parsed = UNITS.Unit(unit)
     except Exception as exc:  # pint raises several unrelated types here
         raise UnitError(f"unknown unit {unit!r}: {exc}") from exc
+    for name in to_units_container(parsed):
+        converter = UNITS._units[name].converter
+        if not converter.is_multiplicative or getattr(converter, "is_logarithmic", False):
+            raise UnitError(
+                f"unit {unit!r} is not a ratio scale: {name} converts with an offset or a "
+                "logarithm, and a node converts by one factor"
+            )
+    return parsed
 
 
 def quantity(value: float, unit: str):
@@ -116,20 +172,7 @@ def compatible(left: str, right: str) -> bool:
     between them silently and correctly, and the reader still has to know which one the vendor
     meant.
     """
-    return parse(left).dimensionality == parse(right).dimensionality and _bits(left) == _bits(right)
-
-
-def _bits(unit: str) -> float:
-    """How many times bits or bytes appear in a unit, net of any that cancel.
-
-    Pint gives bits no dimension, so on dimensions alone a plain number and a terabyte are the
-    same kind of thing, and converting one to the other quietly multiplies by 1.25e-13. A node
-    declared in ``TB`` whose formula produced a pure number, or a ceiling in ``TB`` with a bare
-    limit, typechecked and then compared against a number thirteen orders of magnitude too
-    small. Counting the bits in each unit is what tells an amount of data from a ratio.
-    """
-    root = UNITS.Quantity(1.0, parse(unit)).to_root_units().units
-    return float(dict(to_units_container(root)).get("bit", 0))
+    return parse(left).dimensionality == parse(right).dimensionality
 
 
 def dimensionality(unit: str) -> str:
@@ -140,8 +183,8 @@ def dimensionality(unit: str) -> str:
 def described(unit: str) -> str:
     """What kind of quantity a unit makes, in the words ch02 teaches, for an error message.
 
-    Not its dimensions: bytes carry none in this registry, so a message built from dimensions
-    told a reader who had just learnt that a terabyte is a stock that ``TB`` was dimensionless.
+    Not its dimensions: a message built from them tells a reader who has just learnt that a
+    terabyte is a stock that ``TB`` is ``[information]``, which is true and no help.
     """
     parsed = parse(unit)
     time = parsed.dimensionality.get("[time]", 0)

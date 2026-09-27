@@ -65,6 +65,12 @@ MODELS_DIR = ROOT / "models"
 #: argue with it.
 PROVENANCE_KINDS = ("fact", "vendor_claim", "assumption")
 
+#: The version of the rules a model file is written against, declared on its first line as
+#: ``dsl: 1``. The loader refuses a file that names another, so a tool that writes model files can
+#: tell which rules it is being held to, and a file cannot be read under rules it was not written
+#: for. Raise it when a change makes a file that loaded before stop loading.
+DSL_VERSION = 1
+
 PROVENANCE_MEANING = {
     "fact": "traceable to a stamped measurement, an invoice or a published specification",
     "vendor_claim": "stated by someone selling it; plausible, unverified, and never promoted",
@@ -229,6 +235,8 @@ class Model:
     correlations: tuple[dict, ...] = ()
     description: str = ""
     path: Path | None = None
+    #: The rules the file says it was written against, or None where it does not say.
+    dsl: int | None = None
 
     # -- shape -------------------------------------------------------------------------
 
@@ -356,6 +364,49 @@ def _text(mapping: dict, key: str, default: str = "") -> str:
     return default if value is None else str(value)
 
 
+class _Refusing(yaml.SafeLoader):
+    """PyYAML's safe loader, refusing a key written twice in one mapping.
+
+    PyYAML keeps the second of two keys without a word, so a node declared twice in a model file
+    was silently the second declaration, and whoever edited the first never saw it take effect.
+    """
+
+
+def _refuse_duplicates(loader: yaml.SafeLoader, node: yaml.MappingNode) -> dict:
+    seen: set = set()
+    for key_node, _ in node.value:
+        key = loader.construct_object(key_node)
+        if key in seen:
+            raise ModelError(
+                f"line {key_node.start_mark.line + 1}: {key!r} is written twice in the same "
+                "mapping, and only the second would count"
+            )
+        seen.add(key)
+    return loader.construct_mapping(node)
+
+
+_Refusing.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _refuse_duplicates)
+
+
+def read_yaml(text: str, where: str) -> Any:
+    """A model or scenario file's text as data, refusing duplicate keys and naming the file."""
+    try:
+        return yaml.load(text, Loader=_Refusing)
+    except ModelError as exc:
+        raise ModelError(f"{where}: {exc}") from None
+
+
+def _number(value: Any, what: str) -> float:
+    """A number from the file, refusing a YAML 1.1 boolean.
+
+    PyYAML reads `yes`, `no`, `on` and `off` as booleans, and `float(True)` is one, so `value: yes`
+    loaded as 1.0 and nothing said so.
+    """
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ModelError(f"{what} is {value!r}, which is not a number")
+    return float(value)
+
+
 def _require(mapping: dict, key: str, where: str) -> Any:
     if key not in mapping:
         raise ModelError(f"{where}: missing required field {key!r}")
@@ -391,15 +442,23 @@ def _node_from(name: str, spec: dict, where: str) -> Node:
 
     if kind == "input":
         provenance = spec.get("provenance") or {}
+        at = f"{where}: node {name!r}"
+        distribution = spec.get("distribution")
+        if isinstance(distribution, dict):
+            for shape, parameters in distribution.items():
+                for parameter, value in (parameters or {}).items():
+                    _number(value, f"{at}: {shape} {parameter}")
         return Input(
             **common,
-            value=None if spec.get("value") is None else float(spec["value"]),
-            distribution=spec.get("distribution"),
+            value=None if spec.get("value") is None else _number(spec["value"], f"{at}: value"),
+            distribution=distribution,
             provenance=Provenance(
                 kind=_text(provenance, "kind"),
                 source=_text(provenance, "source"),
             ),
-            slider=tuple(float(v) for v in spec["range"]) if spec.get("range") else None,
+            slider=tuple(_number(v, f"{at}: range") for v in spec["range"])
+            if spec.get("range")
+            else None,
             decided=_text(spec, "decided"),
         )
 
@@ -450,9 +509,13 @@ def load_model(path: str | Path) -> Model:
         where = path.relative_to(ROOT)
     except ValueError:
         where = path
-    raw = yaml.safe_load(path.read_text())
+    raw = read_yaml(path.read_text(), str(where))
     if not isinstance(raw, dict):
         raise ModelError(f"{where}: is not a mapping")
+    if "dsl" in raw and raw["dsl"] != DSL_VERSION:
+        raise ModelError(
+            f"{where}: is written for dsl {raw['dsl']!r}, and this toolkit reads dsl {DSL_VERSION}"
+        )
 
     nodes_spec = _require(raw, "nodes", str(where))
     nodes = {name: _node_from(name, spec, str(where)) for name, spec in nodes_spec.items()}
@@ -474,7 +537,8 @@ def load_model(path: str | Path) -> Model:
     model = Model(
         name=str(_require(raw, "model", str(where))),
         title=str(raw.get("title", raw["model"])),
-        currency=str(raw.get("currency", "USD")),
+        currency=_text(raw, "currency", "USD"),
+        dsl=raw.get("dsl"),
         nodes=nodes,
         outputs=outputs,
         correlations=tuple(raw.get("correlations", ())),
@@ -487,14 +551,20 @@ def load_model(path: str | Path) -> Model:
 
 def load_scenario(path: str | Path) -> Scenario:
     path = Path(path)
-    raw = yaml.safe_load(path.read_text())
+    raw = read_yaml(path.read_text(), str(path))
+    if not isinstance(raw, dict):
+        raise ModelError(f"{path}: is not a mapping")
+    name = str(_require(raw, "scenario", str(path)))
     return Scenario(
-        name=str(_require(raw, "scenario", str(path))),
-        title=str(raw.get("title", raw["scenario"])),
-        overrides={str(k): float(v) for k, v in (raw.get("overrides") or {}).items()},
+        name=name,
+        title=_text(raw, "title", name),
+        overrides={
+            str(k): _number(v, f"{path}: override {k!r}")
+            for k, v in (raw.get("overrides") or {}).items()
+        },
         because=_text(raw, "because").strip(),
-        samples=int(raw.get("samples", DEFAULT_SAMPLES)),
-        seed=int(raw.get("seed", 20260916)),
+        samples=int(_number(raw.get("samples", DEFAULT_SAMPLES), f"{path}: samples")),
+        seed=int(_number(raw.get("seed", 20260916), f"{path}: seed")),
         path=path,
     )
 

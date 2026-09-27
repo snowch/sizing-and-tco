@@ -129,9 +129,9 @@ builder should follow the book rather than lead it. The outline:
 
 - the question becomes how many *new* hosts to buy, given the ones already owned:
   `ceil((max(need, existing) - existing) / per_new_host)` per chain, with the need already
-  divided by one minus the margin, then `max`. Not `max(0, need - existing)`: the book's operand
-  rule refuses a pure zero meeting a unit, which the builder found (`edge/max-with-zero`). Written
-  this way in `models/mixed_pool/model.yaml`;
+  divided by one minus the margin, then `max`. Written this way in
+  `models/mixed_pool/model.yaml`. `max(0, need - existing)` now works too: a literal `0` meets any
+  unit, since the builder found the operand rule refused it (`edge/max-with-zero`);
 - **the balancing policy decides whether capacity adds.** Weighted by capacity, it sums.
   Round-robin sends every host the same share, so the weakest reaches the knee first and the
   pool behaves like `all_hosts * min(old, new)`. Both are expressible; a ceiling checks the
@@ -199,10 +199,10 @@ suite to maintain, at the cost of the download and the latency above.
 
 ### A format version
 
-The model file gains a top-level `dsl: <version>` line, which the loader checks. A model then says
-which rules it was written against, the conformance suite is released per version, and the builder
-refuses a file newer or older than the suite it passed. This is a change to `sizing/dsl.py`, so
-every stamped result is regenerated with it.
+Every model file starts with a top-level `dsl: <version>` line (`DSL_VERSION` in `sizing/dsl.py`,
+now `1`). The loader refuses any other version, and `verify-models.py` refuses a file with none. A
+model says which rules it was written against, the conformance suite is released per version, and
+the builder refuses a file newer or older than the suite it passed.
 
 ### The builder's own tests
 

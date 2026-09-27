@@ -28,25 +28,30 @@ reads.
 
 ```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
-:start-at: model: web_service
+:start-at: dsl: 1
 :end-before: nodes:
 ```
 
-The quoted lines are the top of the running example's file. A model file has seven top-level keys.
+The quoted lines are the top of the running example's file. A model file has eight top-level keys.
 
 | Key | What it holds | If you leave it out |
 |---|---|---|
+| `dsl` | which version of the file format's rules the file is written against | the file loads, but the build refuses it |
 | `model` | the model's identifier; its results are named `<model>-<scenario>` | the file does not load |
 | `title` | the name a reader sees | the model's identifier |
 | `description` | prose saying what the model is *for*, the one thing the graph cannot show | nothing is shown |
-| `currency` | a label for the money | `USD` |
+| `currency` | the one currency the model counts money in, as a three-letter ISO code | `USD` |
 | `nodes` | every quantity in the model, by name | the file does not load |
 | `outputs` | which nodes are answers | the file loads but the build refuses it |
 | `correlations` | pairs of inputs that move together | every uncertain input is independent |
 
-`currency` is only a label. No check reads it; the loader writes `USD` when you leave it out. `USD`
-is the only currency unit the toolkit defines, so a model whose units are in any other currency does
-not load.
+`currency` names the one currency the model counts money in, as a three-letter ISO code such as
+`EUR` or `GBP`. When you leave it out, the loader uses `USD`. The toolkit knows a fixed list of
+codes, in `CURRENCIES` in `sizing/units.py`; a code not on it is refused by the build. Every unit in
+the model that contains money must be in that currency; a node priced in another currency is
+refused by the build. Dollars and euros do not add: each currency is a kind of quantity of its own.
+To use a price quoted in another currency, the exchange rate is a node of its own, an input with a
+source like any other.
 
 By convention, the identifier is also the name of its folder under `models/`. Nothing checks that
 the two match. The nodes follow these keys, under `nodes:`.
@@ -218,8 +223,10 @@ not a sizing rule but a comparison, and the build refuses it; an empty `because`
 
 Every input has a `provenance` mapping with two keys: `kind`, one of the three shown above, and
 `source`, text saying where the number came from. The build refuses an input with an invalid kind or
-an empty source. For a sampled input, the source must also name the distribution shape:
-`triangular`, `lognormal`, `uniform`, or `normal`.
+an empty source. For a sampled input, the source must also name its own distribution shape,
+as a word: `triangular`, `lognormal`, `uniform` or `normal`. Naming a different shape does not
+count: a triangular input whose source mentions "a normal week" is refused. A word containing the
+name does not count either: "lognormal" does not name `normal`.
 
 A `fact` has to cite something. The build counts a source as citing when it contains one of these
 strings:
@@ -278,13 +285,14 @@ two nodes; `rho`, how strongly they move together; and `because`, the reason:
 
 % number-ok: the range a rank correlation is defined on
 `rho` is a rank correlation, between −1 and 1; [ch14](#correlation-and-convergence) explains why
-ranks rather than values. A value outside that range on a used pair stops the model from being
-worked out, as do pairs that cannot all hold at once. `a` and `b` must name nodes that are drawn at
-random: inputs with a distribution, or measured constants with a standard error.
+ranks rather than values. The build refuses a `rho` that is not a number or is outside that range.
+Pairs that cannot all hold at once stop the model from being worked out.
 
-A pair naming anything else is dropped without a message: a misspelt name, an input with no
-distribution, or an input a scenario has pinned. The model still builds and runs as though the pair
-were not there; the misspelling is the case to watch for. The build refuses a correlation whose
+`a` and `b` must each name an input with a distribution or a measured constant. The build refuses a
+pair naming anything else: a misspelt name, a derived node, an input with no distribution. One case
+is still dropped without a message: an input that a scenario pins to one number. In that scenario
+the pair is ignored, because a number that does not vary cannot move with anything. The build
+refuses a correlation whose
 `because` is missing or empty: it is part of the rule that every input says where it came from. A
 coefficient with no reason attached is a number the next modeller copies without knowing what it was
 for.
@@ -337,6 +345,14 @@ The loader refuses these:
   and the functions quoted under `derived` is refused, so a model file cannot run code.
 - **A name that is not a node**: a formula that refers to one, or an output that lists one.
 - **A cycle.**
+- **A `dsl` line naming a version other than the one the toolkit reads.**
+- **A key written twice in one mapping**, such as a node declared twice. Before, the second copy
+  won and the first was lost without a word.
+- **A value that should be a number and is not.** YAML reads `yes` as true; the loader refuses it
+  rather than treating it as one.
+- **`min` or `max` with fewer than two arguments.**
+- **A unit that does not convert by multiplying by one factor**: a temperature, whose scale has an
+  offset, or decibels, which are logarithmic. [Appendix D](#appendix-d-units) has the reason.
 
 ### When the verifier runs
 
@@ -345,21 +361,28 @@ The build refuses these:
 - **A unit that does not follow.** Every formula is evaluated in units as well as in numbers. A
   declared unit that disagrees with what the formula produces is an error. One that agrees
   dimensionally but differs by a factor, dollars per TB per *year* against per *month*, is converted
-  and applied, not waved through ([Appendix D](#appendix-d-units)). A plain number is not an amount
-  of data, so a `TB` node or limit whose formula gives one is refused.
+  and applied, not waved through ([Appendix D](#appendix-d-units)). An amount of data is a kind of
+  quantity of its own, not a plain number. So a `TB` node or limit whose formula gives a plain
+  number is refused, and terabytes cannot be an exponent, or sit inside `log` or `exp`.
 - **Quantities in different units meeting in a sum, a difference, a `min` or a `max`.** The
   conversion is applied once, to the whole formula's result, so it cannot fix two operands that were
   never in one unit. `a + b` with `a` in `TB` and `b` in `TiB` is refused. Declare them in one unit,
-  or convert one in a node of its own.
+  or convert one in a node of its own. A literal `0` is the exception: it meets any unit.
+  `max(0, need - held)` is what is left over, or nothing, in the unit of `need`.
 - **A `ceil` or `floor` over a number not yet in the node's unit.** It would round the wrong number,
   since the conversion comes after.
 - **A ceiling whose `limit` is a different kind of quantity from its `unit`, or whose `headroom` is
   not a plain number.**
+- **A file with no `dsl` line.**
+- **A `currency` the toolkit does not know, or a node priced in a currency other than the model's.**
 - **An input with no `decided` line**, or one that is not `you`, `outside` or `definition`.
 - **An input with no provenance, a kind that is not one of the three, an empty source, a correlation
   with no `because`, or a `fact` that cites nothing.** *Provenance*, above, says what counts as
   citing.
-- **An input that is sampled and does not name its shape in its source.** The distribution is a
+% number-ok: the range a rank correlation is defined on
+- **A correlation naming something other than an input with a distribution or a measured constant,
+  or with a `rho` outside −1 to 1.**
+- **An input that is sampled and does not name its own shape in its source.** The distribution is a
   claim about what can happen, and it is the claim to argue with first
   ([Appendix C](#appendix-c-distributions)).
 - **A measured node that names no result; whose result has no value, or reports no uncertainty; or
@@ -387,8 +410,7 @@ The build accepts all of these without a word:
 
 - **A key the loader does not know.** It is ignored. *The four node kinds*, above, explains where
   this matters.
-- **`currency`.** Only a label. *The file*, above, says more.
-- **Whether a correlation's two names are drawn at random.** A pair naming anything else is dropped.
+- **A correlation whose input a scenario pins.** It is dropped in that scenario without a message.
   *Correlations*, above, has the details.
 - **A scenario's `because`, and an override on a ceiling**, which changes nothing. *Scenarios*,
   above, explains both.

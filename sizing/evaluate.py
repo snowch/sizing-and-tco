@@ -286,7 +286,13 @@ def _mixed_operands(tree: dict, quantities: dict[str, Any], text: str, wanted: s
     problems: list[str] = []
     for arg in args:
         problems.extend(_mixed_operands(arg, quantities, text, wanted))
-    produced = [_unit_name(_walk(arg, quantities, UNIT_FUNCTIONS)) for arg in args]
+    # A literal zero is the one number that means the same in every unit, so it may meet any of
+    # them: `max(0, need - held)` is how a model says "what is left over, or nothing".
+    produced = [
+        _unit_name(_walk(arg, quantities, UNIT_FUNCTIONS))
+        for arg in args
+        if not (arg["op"] == "const" and arg["value"] == 0)
+    ]
     meets = op in ("+", "-") or (op == "call" and tree["fn"] in ("min", "max"))
     if meets and len(set(produced)) > 1:
         named = " and ".join(repr(unit) for unit in dict.fromkeys(produced))

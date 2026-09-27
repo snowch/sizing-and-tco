@@ -97,6 +97,11 @@ def _convert(node: ast.AST, formula: str, where: str) -> dict:
             )
         if node.keywords:
             raise FormulaError(f"{where}: {node.func.id}() takes positional arguments only")
+        if node.func.id in ("min", "max") and len(node.args) < 2:
+            raise FormulaError(
+                f"{where}: {formula!r} takes the {node.func.id} of fewer than two things, which is "
+                "either a mistake or the thing itself"
+            )
         return {
             "op": "call",
             "fn": node.func.id,

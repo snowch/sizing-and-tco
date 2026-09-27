@@ -1,3 +1,4 @@
+dsl: 1
 model: web_service
 title: A web service and its data, on a fleet of Linux hosts
 currency: USD

@@ -78,7 +78,7 @@ def fmt(value: float | None, unit: str = "dimensionless") -> str:
     if isinstance(value, bool):
         return str(value)
     dimensions = str(parse_unit(unit).dimensionality)
-    if "[currency]" in dimensions:
+    if "[currency_" in dimensions:
         # Anything with money in it gets a currency mark, including a rate like USD/year and a
         # unit cost like USD/TB/month — the "per what" lives in the column heading, and a table
         # of costs where some cells are marked and some are not reads as an error.
@@ -127,7 +127,7 @@ def _with_unit(label: str, unit: str) -> str:
         not shown
         or unit in ("node", "drive", "core", "host")
         or shown in label
-        or "[currency]" in str(parse_unit(unit).dimensionality)
+        or "[currency_" in str(parse_unit(unit).dimensionality)
     ):
         return label
     return f"{label} ({shown})"
@@ -137,7 +137,7 @@ def _value_with_unit(value: float, unit: str) -> str:
     """A value with its unit after it, unless `fmt` has already marked it as money."""
     shown = fmt(value, unit)
     label = unit_label(unit)
-    if not label or "[currency]" in str(parse_unit(unit).dimensionality):
+    if not label or "[currency_" in str(parse_unit(unit).dimensionality):
         return shown
     return f"{shown} {label}"
 

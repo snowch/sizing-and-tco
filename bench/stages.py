@@ -271,6 +271,7 @@ def build(stage: Stage) -> dict:
         nodes[name] = spec
 
     return {
+        "dsl": raw["dsl"],
         "model": stage.name,
         "title": f"{raw['title']} — {stage.title}",
         "currency": raw["currency"],
