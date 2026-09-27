@@ -199,6 +199,56 @@ chains are three demands of one workload on the same hosts. What carries over is
 three tiers carry four ceilings, each checked on its own. No single number summarises them, and a
 model that produced one would hide the thing you needed.
 
+### Two generations in one pool
+
+The web service model buys one kind of host. In practice, the fleet you plan often joins hosts
+you already run: last generation's machines, bought for the same job and still in service. The
+question changes. You no longer ask how many hosts; you ask how many new hosts, given that the
+old ones remain.
+
+A second model file, `models/mixed_pool/model.yaml`, asks that question. Its demand is the
+web service's own chain, copied node for node with the same ranges, so its answers sit beside
+this chapter's. The old hosts have fewer cores and more memory than the new ones, and the same
+disk. How many old hosts stay in service to the horizon is a decision in the file.
+
+Each chain first counts what the old hosts already give: cores, memory or disk. It takes that
+from what the chain needs, and divides what is left by what one new host gives below its margin.
+If the old hosts cover the whole need, that chain asks for no new hosts. You still buy the
+largest of the chains.
+
+```{literalinclude} ../models/mixed_pool/model.yaml
+:language: yaml
+:start-at: new_for_requests:
+:end-before: new_for_memory:
+```
+
+```{include} _generated/bandwidth-and-the-binding-constraint-mixed-pool.md
+```
+
+The first column shows an all-new fleet, which is this chapter's answer. The second shows the
+mixed pool with requests routed by capacity. In the first column memory asks for the most new
+hosts. In the second, the old hosts' extra memory covers the working set, so memory asks for no
+new hosts, and requests decide instead. Old hosts rich in one resource move the binding
+constraint to another.
+
+The third column changes one thing: how requests are spread across the hosts. Routed by capacity,
+the load balancer sends each host requests in proportion to its cores, so every host is equally
+busy and the old and new hosts' cores add up. Routed equally, every host gets the same share.
+A host's utilisation is its share of the busy cores divided by its own cores
+([ch05](#littles-law)), so the lowest-capacity host is the busiest. It reaches its margin
+first while the new hosts still have cores to spare. The pool then carries only as much as all
+its hosts times the smallest host's cores, and the request chain asks for more new hosts.
+
+Which routing you run is a fact about your load balancer, not a choice the model can make for
+you. Find out before you buy. Data is placed by capacity in both columns; only requests change.
+[ch11](#headroom-and-failure-domains) checks the pool as bought against both.
+
+```{iframe} /models/mixed_pool-reference.html
+:width: 100%
+The mixed pool, with the old hosts kept. Drag *old hosts still in service at the horizon* to zero
+and watch which chain asks for the most.
+```
+
 ## What this cannot tell you
 
 **Whether there are only three chains.** This model has the three chains the book chose. A chain
@@ -232,6 +282,12 @@ running through the sizing arithmetic.
 stated workload. A service that serves small records to many users and one that holds large
 records for a few are the same model with different inputs and opposite answers.
 
+**Pools of more than two generations, or hosts shared by containers.** The mixed pool holds an
+old generation and a new, each host doing the whole job. Pools with additional generations would
+require each generation's nodes to be written out separately, because a model file has no lists.
+Hosts carved into containers of different sizes pose a packing problem, and this model does not
+pack them.
+
 ## Key takeaways
 
 :::{div}
@@ -254,8 +310,8 @@ records for a few are the same model with different inputs and opposite answers.
 
 ## Problems
 
-Three, in `tests/bandwidth_and_the_binding_constraint/`. The first two have tests. The last does
-not, and says why.
+Five, in `tests/bandwidth_and_the_binding_constraint/`. The first three have tests. The last two
+do not, and say why.
 
 **10.1 — Three chains, one purchase.**
 The function `size_for_all` receives the three chains' host counts, one count per future in each. It
@@ -279,7 +335,23 @@ The second is the median shortfall, in hosts, *in those futures only*. The first
 python3 -m pytest tests/bandwidth_and_the_binding_constraint/test_problem_2_cost.py -m problem
 ```
 
-**10.3 — Which chain binds for you.** No test: which chain binds depends on quantities only you
+**10.3 — Old hosts and new, routed two ways.**
+The function `new_hosts_for_requests` receives the cores the busy hour keeps busy, how many old
+hosts stay in service, the cores on each old host, the cores on each new host, the queueing margin,
+and a routing: `"capacity"` or `"equal"`. It returns how many new hosts the request chain needs.
+
+Routed by capacity, the two generations' cores add up. Routed equally, the host with the fewest
+cores sets the pace. If the old hosts already carry the load, the answer is no new hosts, not a
+negative number.
+
+The test checks your answer against the mixed pool model's own nodes: with no old hosts, with some,
+with the book's pool, and with more old hosts than the load needs.
+
+```bash
+python3 -m pytest tests/bandwidth_and_the_binding_constraint/test_problem_3_mixed_pool.py -m problem
+```
+
+**10.4 — Which chain binds for you.** No test: which chain binds depends on quantities only you
 have.
 
 This chapter has three chains because this model has three. Work out the ones for your system:
@@ -293,6 +365,23 @@ the argument you rehearsed about the first chain stops applying.
 
 A good answer names at least two chains, says which binds, and by how much. If you can only find
 one chain, you have found an assumption rather than a fact.
+
+**10.5 — Your own mixed pool.** No test: how your load balancer spreads requests and when your old
+hosts retire are facts only you have.
+
+List the generations of hosts in service for one job, with each one's cores, memory and disk per
+host. Find out how your load balancer spreads requests, by capacity or equally, from its
+configuration rather than from memory. Name the smallest host for each resource. For each old
+generation, write down the date it leaves.
+
+Work out the new hosts each chain asks for under the routing you actually run, twice: with the old
+hosts in service, and on the day the oldest generation retires.
+
+A good answer names the routing and how you confirmed it, the smallest host for each resource, the
+retirement dates, and the purchase that still holds on the worst day.
+
+What would show it wrong: the load balancer's configuration says the other policy; a kind of host
+you left off the list; a retirement date earlier than the one you planned for.
 
 ## Where to go next
 

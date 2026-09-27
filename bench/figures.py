@@ -550,6 +550,13 @@ FIGURES: dict[str, Table | Diagram] = {
         args=("hosts_for_storage",),
         alt="The host count the data on disk asks for",
     ),
+    # Two generations in one pool: what the old hosts change, chain by chain, and what routing
+    # requests equally costs.
+    "bandwidth-and-the-binding-constraint-mixed-pool": Table(
+        render=tables.mixed_pool_chains,
+        result="mixed-pool",
+        also=("mixed_pool-reference", "mixed_pool-replace"),
+    ),
     # -- ch11 Headroom and failure domains --------------------------------------------------------
     "headroom-and-failure-domains-service": Table(
         render=tables.ceilings_table, result="web_service_headroom-reference"
@@ -559,6 +566,12 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     "headroom-and-failure-domains-margins": Table(
         render=tables.margins_table, result="web_service_headroom-reference"
+    ),
+    # The mixed pool as bought, checked with the old hosts kept and after they retire.
+    "headroom-and-failure-domains-mixed-pool": Table(
+        render=tables.mixed_pool_ceilings,
+        result="mixed-pool",
+        also=("mixed_pool-reference", "mixed_pool-old_retired"),
     ),
     # -- ch12 The sizing model --------------------------------------------------------------------
     # The answer, the decision, and the three chains the answer was the largest of.
@@ -825,6 +838,12 @@ FIGURES: dict[str, Table | Diagram] = {
     ),
     "comparing-two-tcos-break-even": Table(
         render=tables.comparison_break_even, result="comparison"
+    ),
+    # Keep the old generation or replace it: the same subtraction, on the mixed pool model.
+    "comparing-two-tcos-keep-or-replace": Table(
+        render=tables.mixed_pool_keep_vs_replace,
+        result="mixed-pool",
+        also=("mixed_pool-reference", "mixed_pool-replace"),
     ),
     "comparing-two-tcos-tornado": Diagram(
         draw=diagrams.tornado_chart,

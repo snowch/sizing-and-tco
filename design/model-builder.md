@@ -128,7 +128,10 @@ doing the same job. It is on the list to add to the book (ch10, ch11, ch18, ch22
 builder should follow the book rather than lead it. The outline:
 
 - the question becomes how many *new* hosts to buy, given the ones already owned:
-  `ceil(max(0, need - existing_capacity) / (per_new_host * (1 - margin)))` per chain, then `max`;
+  `ceil((max(need, existing) - existing) / per_new_host)` per chain, with the need already
+  divided by one minus the margin, then `max`. Not `max(0, need - existing)`: the book's operand
+  rule refuses a pure zero meeting a unit, which the builder found (`edge/max-with-zero`). Written
+  this way in `models/mixed_pool/model.yaml`;
 - **the balancing policy decides whether capacity adds.** Weighted by capacity, it sums.
   Round-robin sends every host the same share, so the weakest reaches the knee first and the
   pool behaves like `all_hosts * min(old, new)`. Both are expressible; a ceiling checks the

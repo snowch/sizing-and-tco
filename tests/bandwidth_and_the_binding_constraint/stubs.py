@@ -49,3 +49,28 @@ def cost_of_sizing_on_one(
     wins by a lot.
     """
     raise NotImplementedError("problem 10.2")
+
+
+def new_hosts_for_requests(
+    busy_cores: float,
+    old_hosts: int,
+    cores_per_old_host: float,
+    cores_per_new_host: float,
+    margin: float,
+    routing: str,
+) -> int:
+    """Problem 10.3 - how many new hosts the requests need, when some old ones stay.
+
+    ``busy_cores`` is how many cores the busy hour keeps busy. ``old_hosts`` are already in
+    service, each with ``cores_per_old_host`` cores; every new host has ``cores_per_new_host``.
+    ``margin`` is the queueing margin: a share of every host's cores the fleet keeps free, between
+    0 and 1. Return the number of new hosts to buy, as a whole number, for ``routing``:
+
+    * ``"capacity"``: the load balancer sends each host requests in proportion to its cores, so
+      every host is equally busy and the two generations' cores add up;
+    * ``"equal"``: every host gets the same share of the requests, so the host with the fewest
+      cores is the busiest and reaches its margin first.
+
+    If the old hosts already carry the load, the answer is no new hosts, not a negative number.
+    """
+    raise NotImplementedError("problem 10.3")

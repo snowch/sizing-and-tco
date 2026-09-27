@@ -118,6 +118,11 @@ echo "== the two quotes still differ by what the book says they differ by =="
 # say what would flip the ordering. Re-derived rather than trusted, like everything else here.
 python3 -m bench.run_comparison --check
 
+echo "== two generations in one pool still need what the book says they need =="
+# ch10, ch11, ch22: new hosts per chain three ways, the pool's ceilings kept and retired, and keep
+# versus replace subtracted future by future.
+python3 -m bench.run_mixed_pool --check
+
 echo "== the post-mortem still attributes what the book says it attributes =="
 # ch23, and the half of it that matters: the same method on a model with a known hole in it,
 # which has to keep blaming the inputs that are present.

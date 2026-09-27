@@ -253,6 +253,32 @@ difference is sensitive to the quoted lines and to three shared inputs, and to n
 
 Problem 22.2 finds one of those break-evens by hand.
 
+### Keep the old hosts, or replace them
+
+The same subtraction answers a question teams face at every refresh: keep last generation's hosts
+in service, or retire them now and buy an all-new fleet. The mixed pool model from
+[ch10](#bandwidth-and-the-binding-constraint) has both as scenarios. `reference` keeps the old
+hosts and buys the new hosts they cannot cover. `replace` retires them and buys the all-new
+fleet the web service recommends.
+
+The old hosts' purchase price is already spent, so it is in neither total. Keeping them still
+costs energy, licences on every core, and a maintenance contract, and those are in keep's total.
+Replacing buys more new hosts and pays for those hosts and for running them.
+
+Both scenarios change only decisions, so every uncertain input is drawn once and reaches both.
+The difference can be taken future by future.
+
+```{include} _generated/comparing-two-tcos-keep-or-replace.md
+```
+
+The two totals overlap. The difference, taken future by future, does not reach zero: keeping the
+old hosts is cheaper in nearly every future.
+
+Cheaper at what risk: the kept pool is bought on the assumption that the old hosts stay to the
+horizon. [ch11](#headroom-and-failure-domains)'s table shows what happens to it when they retire
+early. The price question is settled; the question left is when the old hosts go, and whether
+the fleet can cover that day.
+
 ### What a competitive comparison has to show
 
 A comparison somebody else built arrives with one column already won. This is what it has to

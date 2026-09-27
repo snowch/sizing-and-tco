@@ -2492,3 +2492,75 @@ def comparison_break_even(name: str) -> str:
             whose = "shared by both"
         rows.append(f"| {row['label']} | {whose} | {at} | {tie} | {verdict} |")
     return "\n".join(rows)
+
+
+# -- two generations in one pool (ch10, ch11, ch22) ---------------------------------------------
+
+
+def mixed_pool_chains(name: str) -> str:
+    """New hosts each chain asks for, three ways: all new, and the mixed pool routed two ways.
+
+    The point of the table is the row that changes hands. An all-new fleet is bound by one chain;
+    old hosts that are rich in one resource move the binding to another, and routing requests
+    equally moves the answer again, because the smallest host sets the pace (ch10).
+    """
+    rows = [
+        "| Chain | All new hosts | Old hosts kept, routed by capacity "
+        "| Old hosts kept, routed equally |",
+        "|---|---:|---:|---:|",
+    ]
+    chains = load_result(name)["summary"]["chains"]
+    for i, row in enumerate(chains):
+        label = f"**{row['label']}**" if i == len(chains) - 1 else row["label"]
+        rows.append(
+            f"| {label} | {fmt(row['all_new'], 'host')} | {fmt(row['by_capacity'], 'host')} "
+            f"| {fmt(row['equally'], 'host')} |"
+        )
+    return "\n".join(rows)
+
+
+def mixed_pool_ceilings(name: str) -> str:
+    """How often the pool as bought crosses each margin, with the old hosts kept and retired.
+
+    Bought for capacity-weighted routing with the old hosts in it, the pool is checked twice: as
+    planned, and after the old hosts have gone and demand has not stopped growing (ch11).
+    """
+    rows = [
+        "| Ceiling | Futures over the margin, old hosts kept "
+        "| Futures over the margin, old hosts retired |",
+        "|---|---:|---:|",
+    ]
+    for row in load_result(name)["summary"]["ceilings"]:
+        rows.append(f"| {row['label']} | {row['kept']:.0%} | {row['retired']:.0%} |")
+    return "\n".join(rows)
+
+
+def _share_of_futures(share: float) -> str:
+    """A share of futures, never rounded to all or none: 99.997% is not a certainty."""
+    if 0.0 < share < 0.005:
+        return "less than 1%"
+    if 0.995 <= share < 1.0:
+        return "more than 99%"
+    return f"{share:.0%}"
+
+
+def mixed_pool_keep_vs_replace(name: str) -> str:
+    """Keep the old hosts or replace them: each total, and the difference future by future.
+
+    The two totals overlap; the difference, taken on shared futures, does not straddle zero.
+    Subtracting the two intervals' ends instead would count the shared uncertainty twice (ch22).
+    """
+    k = load_result(name)["summary"]["keep_vs_replace"]
+    rows = [
+        "| | At the point estimate | 90% interval |",
+        "|---|---:|---:|",
+        f"| Keep the old hosts, buy {fmt(k['new_hosts']['keep'], 'host')} new "
+        f"| {_money(k['keep']['point'])} | {_money(k['keep']['p5'])} to {_money(k['keep']['p95'])} |",
+        f"| Replace them, buy {fmt(k['new_hosts']['replace'], 'host')} new "
+        f"| {_money(k['replace']['point'])} "
+        f"| {_money(k['replace']['p5'])} to {_money(k['replace']['p95'])} |",
+        f"| Keep minus replace, future by future | {signed_money(k['difference']['point'])} "
+        f"| {signed_money(k['difference']['p5'])} to {signed_money(k['difference']['p95'])} |",
+        f"| Futures in which keeping is cheaper | | {_share_of_futures(k['share_keep_cheaper'])} |",
+    ]
+    return "\n".join(rows)

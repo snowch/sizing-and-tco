@@ -65,6 +65,10 @@ information:  ## What knowing each uncertain input exactly would buy (ch19)
 comparison:  ## Subtract two quotes for one workload, future by future (ch22)
 	$(PYTHON) -m bench.run_comparison
 
+.PHONY: mixed-pool
+mixed-pool:  ## Two generations in one pool: new hosts per chain, and keep versus replace (ch10, ch22)
+	$(PYTHON) -m bench.run_mixed_pool
+
 .PHONY: postmortem
 postmortem:  ## Attribute the running example's own failures (ch23)
 	$(PYTHON) -m bench.run_postmortem

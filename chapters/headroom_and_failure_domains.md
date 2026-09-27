@@ -115,6 +115,36 @@ The graph as ch11 leaves it, with every margin the model declares. Click any cei
 reason.
 ```
 
+### Two generations: the largest host and the last day
+
+The mixed pool from [ch10](#bandwidth-and-the-binding-constraint) is bought for requests routed
+by capacity, with some old hosts kept to the horizon. Several of this chapter's margins take on
+different meaning in it.
+
+Surviving the loss of one host means surviving the loss of the largest host, because that is the
+most capacity one fault can take away. In a pool of one kind of host every host is the largest.
+In the mixed pool it is a new one, and the model's failure ceiling subtracts the largest host's
+cores from the pool's total.
+
+A shard has to sit whole on one host, and it can land on the smallest. The pool's total disk
+says nothing about whether a shard fits on the smallest host, so the smallest host's disk sets a
+ceiling of its own, which is checked against the disk margin.
+
+The old hosts retire on their own schedule, which need not match the purchase. The check has to
+hold at the worst point: after they go, while demand is still growing. The model's `old_retired`
+scenario is that point: the same new hosts, and no old ones.
+
+```{include} _generated/headroom-and-failure-domains-mixed-pool.md
+```
+
+Compare the columns row by row. Every ceiling is crossed in more futures once the old hosts
+retire, except the shard, which depends only on the smallest disk. The row for requests routed
+equally is crossed in more futures than the row for routing by capacity, in both columns: the
+pool bought for routing by capacity does not survive equal routing.
+
+What to do with this: buy for the day the old hosts retire, or plan the next purchase for that
+day. The model shows the gap; it does not choose between them.
+
 ### Margins do not add
 
 A sizing conversation collects margins. Rebuild wants some. Queueing wants some. Growth between
