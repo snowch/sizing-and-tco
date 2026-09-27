@@ -1,0 +1,11 @@
+scenario: replace
+title: Replace the old hosts
+because: >-
+  The other half of keep versus replace (ch22): every old host is retired now and the fleet is all
+  new, sized as the web service sizes it. Its purchase count is the web service model's own
+  recommendation at the point estimates, hosts_recommended (ch10).
+samples: 100000
+seed: 20260916
+overrides:
+  old_hosts: 0
+  new_hosts: 54

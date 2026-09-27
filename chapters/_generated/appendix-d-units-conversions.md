@@ -2,6 +2,9 @@
 
 | Model | Node | Formula produces | Node declares | The build |
 |---|---|---|---|---|
+| `mixed_pool` | energy per year | `USD*hour*watt/kilowatt_hour/year` | `USD/year` | divides by 1,000 |
+| `mixed_pool` | memory the service can use, per new host | `gibibyte/host` | `TB/host` | multiplies by 0.00107374 |
+| `mixed_pool` | memory the service can use, per old host | `gibibyte/host` | `TB/host` | multiplies by 0.00107374 |
 | `observability` | logs ingest | `byte/second` | `MB/s` | divides by 1,000,000 |
 | `observability` | logs stored | `day*megabyte/second` | `TB` | multiplies by 0.0864 |
 | `observability` | metrics ingest | `byte/second` | `MB/s` | divides by 1,000,000 |

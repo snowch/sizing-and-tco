@@ -1,0 +1,9 @@
+scenario: old_retired
+title: The old hosts retire before the horizon
+because: >-
+  The worst point for a pool bought on the assumption that the old hosts stay: they have gone, and
+  demand has not stopped growing. The new hosts are the ones bought for the reference case.
+samples: 100000
+seed: 20260916
+overrides:
+  old_hosts: 0

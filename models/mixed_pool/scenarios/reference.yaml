@@ -1,0 +1,9 @@
+scenario: reference
+title: Keep the old hosts
+because: >-
+  Thirty of last generation's hosts stay in service to the horizon, and the new hosts are bought
+  for what they cannot cover, with requests routed by capacity. Every figure the book quotes for
+  this model comes from here unless it says otherwise.
+samples: 100000
+seed: 20260916
+overrides: {}

@@ -1,0 +1,726 @@
+model: mixed_pool
+title: Two generations in one pool
+currency: USD
+
+description: >-
+  The web service's fleet as ch10 sizes it, with one change: some of last generation's hosts are
+  still in service, doing the same job as the new ones. The question stops being how many hosts
+  and becomes how many new hosts, given the old ones. The demand is ch10's, at its point
+  estimates, so this model has no ranges: its lessons are in its structure. How requests are
+  spread decides whether the two generations' capacity adds. Data is placed by capacity in both
+  cases; only the routing of requests changes.
+
+nodes:
+  # -- the demand: the web service's own chain, node for node (ch02 - ch09) -------------------------
+  # Copied with its shapes, sources and correlation, so busy cores, working set and data on disk
+  # carry the running example's ranges rather than a second, made-up copy of them.
+
+  peak_request_rate_t0:
+    kind: input
+    decided: outside
+    unit: request/second
+    label: peak request rate, day one
+    distribution: {triangular: {minimum: 3000.0, likely: 8000.0, maximum: 20000.0}}
+    provenance:
+      kind: assumption
+      source: >-
+        ch04 — the busy hour, not the daily mean. Triangular, because this is an engineer's lowest,
+        most likely and highest values; claiming more precision would be invention.
+    range: [500, 40000]
+
+  stored_data_t0:
+    kind: input
+    decided: outside
+    unit: TB
+    value: 15
+    label: records held, day one
+    note: >-
+      This one keeps its single number. You can go and count how much you hold today. Nobody can
+      count next quarter's busy hour. What is uncertain about the records is how fast they grow,
+      and annual_growth carries that for the rate and the level alike.
+    provenance:
+      kind: assumption
+      source: >-
+        The service owners estimate what the service holds today: its database and the objects users
+        have uploaded, before replication, indexes or compression. It has not been counted yet, and
+        counting it would turn the estimate into a fact.
+    range: [1, 200]
+
+  annual_growth:
+    kind: input
+    decided: outside
+    unit: dimensionless
+    label: annual growth factor
+    distribution: {lognormal: {p10: 1.12, p90: 1.60}}
+    provenance:
+      kind: assumption
+      source: >-
+        ch04 — lognormal because growth compounds and the factor cannot be zero or less. One future
+        in ten grows by less than 12% a year, and one in ten by more than 60%; outside that range
+        you would be surprised. One factor for requests and for records, because users drive both.
+    range: [1.0, 2.0]
+
+  one_year:
+    kind: input
+    decided: definition
+    unit: year
+    value: 1
+    label: one year
+    note: >-
+      Here because a duration cannot be an exponent. In (1+r)^n the n is a pure number, so the
+      horizon has to be divided by something with the same units before it can be used as one.
+      Appendix D has the rest of the conversions that bite.
+    provenance: {kind: fact, source: "definition"}
+
+  horizon_periods:
+    kind: derived
+    unit: dimensionless
+    formula: horizon / one_year
+
+  peak_request_rate:
+    kind: derived
+    unit: request/second
+    label: peak request rate at horizon
+    formula: peak_request_rate_t0 * annual_growth ** horizon_periods
+
+  stored_data:
+    kind: derived
+    unit: TB
+    label: records held at horizon
+    formula: stored_data_t0 * annual_growth ** horizon_periods
+
+  service_demand:
+    kind: input
+    decided: outside
+    unit: second * core / request
+    label: CPU time per request
+    note: >-
+      Core-seconds of work one request costs, which is not how long a request takes. A request
+      that occupies one core for twelve milliseconds has a service demand of twelve milliseconds
+      whether it returns in twelve milliseconds or in twelve seconds — the difference is
+      queueing, and Part II is about that difference.
+
+      This is the model's one rate constant and it belongs on a rig (ch03). No rig is declared,
+      so it is held here as an assumption whose source says what would replace it, rather than
+      as a measured node with nothing behind it.
+    distribution: {triangular: {minimum: 0.008, likely: 0.012, maximum: 0.020}}
+    provenance:
+      kind: assumption
+      source: >-
+        The lowest, likeliest and highest values are this book's own choice for the running example:
+        not measured on any machine, not taken from any product. It is held as an assumption because
+        no reference machine is declared in `rig/machine.yml`; `make measure-rig` on a declared
+        machine replaces it with a measured one. It is triangular, with three values, because it has
+        not been measured. Once it is, it becomes a normal spread around the measurement, which is a
+        change of claim and not only of numbers (ch13).
+    range: [0.002, 0.05]
+
+  busy_cores:
+    kind: derived
+    unit: core
+    label: cores busy at the busy hour
+    note: >-
+      Arrival rate times service demand. It is a count of cores doing work, it has nothing to do
+      with how many you own, and it is the numerator of every utilisation figure below.
+    formula: peak_request_rate * service_demand
+
+  hot_fraction:
+    kind: input
+    decided: outside
+    unit: dimensionless
+    label: share of records touched in a busy hour
+    distribution: {triangular: {minimum: 0.01, likely: 0.03, maximum: 0.08}}
+    provenance:
+      kind: assumption
+      source: "ch08 — the working set as a share of everything held. Triangular; nobody measures
+        this and everybody has an opinion, and the maximum is a service whose users all look at
+        the same week's data"
+    range: [0.005, 0.3]
+
+  working_set:
+    kind: derived
+    unit: TB
+    label: working set at horizon
+    formula: stored_data * hot_fraction
+
+  record_compression:
+    kind: measured
+    unit: dimensionless
+    label: record compression ratio
+    result: records-compression
+
+  replication_factor:
+    kind: input
+    decided: you
+    unit: dimensionless
+    value: 3
+    provenance:
+      kind: assumption
+      source: "three copies of every record, so that a host can die and take its disks with it.
+        A different durability scheme substitutes its own factor here and the rest of the model
+        is unchanged, which is the point of it being a node"
+    range: [1, 4]
+
+  index_overhead:
+    kind: input
+    decided: outside
+    unit: dimensionless
+    distribution: {triangular: {minimum: 1.15, likely: 1.30, maximum: 1.60}}
+    provenance:
+      kind: assumption
+      source: "indexes, the write-ahead log and journals as a multiplier on stored bytes.
+        Triangular, and the bounds are for a service with a few indexes per table — a
+        search-heavy one is off the top of this range"
+
+  raw_per_stored:
+    kind: derived
+    unit: dimensionless
+    label: raw bytes per stored byte
+    formula: replication_factor * index_overhead / record_compression
+
+  raw_data:
+    kind: derived
+    unit: TB
+    label: raw disk needed at horizon
+    formula: stored_data * raw_per_stored
+
+
+
+
+
+  os_reserve:
+    kind: input
+    decided: outside
+    unit: dimensionless
+    distribution: {triangular: {minimum: 0.06, likely: 0.10, maximum: 0.18}}
+    label: memory the operating system keeps
+    provenance:
+      kind: assumption
+      source: "Triangular, as in the web service model's os_reserve at its point estimate (ch10). The same share on
+        both generations"
+
+  # -- the two generations ----------------------------------------------------------------------
+
+  cores_per_new_host:
+    kind: input
+    decided: you
+    unit: core/host
+    value: 16
+    label: cores per new host
+    provenance:
+      kind: vendor_claim
+      source: "the web service model's host (ch10): spec sheet, physical cores"
+    range: [4, 128]
+
+  ram_per_new_host:
+    kind: input
+    decided: you
+    unit: GiB/host
+    value: 64
+    label: memory per new host
+    provenance:
+      kind: vendor_claim
+      source: "the web service model's host (ch10): spec sheet, the modules fitted"
+    range: [8, 1024]
+
+  disk_per_new_host:
+    kind: input
+    decided: you
+    unit: TB/host
+    value: 2
+    label: disk per new host
+    provenance:
+      kind: vendor_claim
+      source: "the web service model's host (ch10): spec sheet, one local drive"
+    range: [1, 60]
+
+  cores_per_old_host:
+    kind: input
+    decided: outside
+    unit: core/host
+    value: 8
+    label: cores per old host
+    note: >-
+      One number: the old hosts are already bought, and you can read their specification off the hosts themselves.
+    provenance:
+      kind: assumption
+      source: "this worked example's premise: last generation's hosts have half the cores of this
+        generation's. Fixed, because the hosts are already bought"
+    range: [2, 64]
+
+  ram_per_old_host:
+    kind: input
+    decided: outside
+    unit: GiB/host
+    value: 128
+    label: memory per old host
+    note: >-
+      One number: the old hosts are already bought, and you can read their specification off the hosts themselves.
+    provenance:
+      kind: assumption
+      source: "this worked example's premise: last generation's hosts were bought memory-heavy, with
+        twice this generation's memory and half its cores"
+    range: [8, 1024]
+
+  disk_per_old_host:
+    kind: input
+    decided: outside
+    unit: TB/host
+    value: 2
+    label: disk per old host
+    note: >-
+      One number: the old hosts are already bought, and you can read their specification off the hosts themselves.
+    provenance:
+      kind: assumption
+      source: "this worked example's premise: the same drive as the new hosts"
+    range: [1, 60]
+
+  old_hosts:
+    kind: input
+    decided: you
+    unit: host
+    value: 30
+    label: old hosts still in service at the horizon
+    note: >-
+      Not how many old hosts there are today: how many are still running at the horizon. Old
+      hosts retire on their own schedule, and the check has to hold at the worst point, after
+      they leave and before demand stops growing. The old_retired scenario is that point.
+    provenance:
+      kind: assumption
+      source: "this worked example's premise: thirty of last generation's hosts are kept in service
+        to the horizon. A decision, because keeping them is a choice"
+    range: [0, 120]
+
+  new_hosts:
+    kind: input
+    decided: you
+    unit: host
+    value: 35
+    label: new hosts to buy
+    note: >-
+      The purchase, decided the usual way: the count the model recommends when requests are
+      routed by capacity, at the point estimates. Held as an input, as the web service holds
+      its fleet, so the ceilings can ask how the pool as bought fares.
+    provenance:
+      kind: assumption
+      source: "the sizing decision: new_hosts_weighted at the point estimates (ch10, ch12)"
+    range: [2, 120]
+
+  one_host:
+    kind: input
+    decided: definition
+    unit: host
+    value: 1
+    label: one host
+    provenance:
+      kind: fact
+      source: definition
+
+  # -- margins, as the web service declares them ------------------------------------------------
+
+  queueing_margin:
+    kind: input
+    decided: you
+    unit: dimensionless
+    value: 0.3
+    label: queueing margin
+    provenance:
+      kind: assumption
+      source: "the web service model's queueing margin (ch06, ch11): how far under the knee the
+        fleet runs at the busy hour"
+    range: [0.0, 0.6]
+
+  cache_margin:
+    kind: input
+    decided: you
+    unit: dimensionless
+    value: 0.25
+    label: cache margin
+    provenance:
+      kind: assumption
+      source: "the web service model's cache margin (ch08, ch11): room for the working set to grow
+        before it spills out of memory"
+    range: [0.0, 0.5]
+
+  disk_margin:
+    kind: input
+    decided: you
+    unit: dimensionless
+    value: 0.25
+    label: disk margin
+    provenance:
+      kind: assumption
+      source: "the web service model's disk margin (ch11): room to re-replicate a dead host's
+        records onto the survivors"
+    range: [0.0, 0.45]
+
+  # -- memory each generation gives the service -------------------------------------------------
+
+  ram_for_service_new:
+    kind: derived
+    unit: TB/host
+    label: memory the service can use, per new host
+    formula: ram_per_new_host * (1 - os_reserve)
+
+  ram_for_service_old:
+    kind: derived
+    unit: TB/host
+    label: memory the service can use, per old host
+    formula: ram_per_old_host * (1 - os_reserve)
+
+  # -- what the old hosts already give, per chain ------------------------------------------------
+
+  old_cores:
+    kind: derived
+    unit: core
+    label: cores the old hosts give
+    formula: old_hosts * cores_per_old_host
+
+  old_ram:
+    kind: derived
+    unit: TB
+    label: memory the old hosts give the service
+    formula: old_hosts * ram_for_service_old
+
+  old_disk:
+    kind: derived
+    unit: TB
+    label: disk the old hosts give
+    formula: old_hosts * disk_per_old_host
+
+  # -- routed by capacity: each generation adds its share ---------------------------------------
+  # What each chain still needs once the old hosts have given theirs: max(need, old) - old is
+  # the need left over, or nothing, in the chain's own unit.
+
+  new_for_requests:
+    kind: derived
+    unit: host
+    label: new hosts the requests need, routed by capacity
+    formula: ceil((max(busy_cores / (1 - queueing_margin), old_cores) - old_cores) / cores_per_new_host)
+
+  new_for_memory:
+    kind: derived
+    unit: host
+    label: new hosts the working set needs
+    formula: ceil((max(working_set / (1 - cache_margin), old_ram) - old_ram) / ram_for_service_new)
+
+  new_for_storage:
+    kind: derived
+    unit: host
+    label: new hosts the data needs
+    formula: ceil((max(raw_data / (1 - disk_margin), old_disk) - old_disk) / disk_per_new_host)
+
+  new_hosts_weighted:
+    kind: derived
+    unit: host
+    label: new hosts to buy, requests routed by capacity
+    formula: max(new_for_requests, new_for_memory, new_for_storage)
+
+  # -- routed equally: every host takes the same share ------------------------------------------
+  # Each host is sent the same share of the requests, so the smallest host reaches its margin
+  # first, and the pool can take no more than every host times the smallest host's cores.
+
+  smallest_cores:
+    kind: derived
+    unit: core/host
+    label: cores on the smallest host
+    formula: min(cores_per_old_host, cores_per_new_host)
+
+  new_for_requests_equal:
+    kind: derived
+    unit: host
+    label: new hosts the requests need, routed equally
+    formula: max(ceil(busy_cores / (smallest_cores * (1 - queueing_margin))), old_hosts) - old_hosts
+
+  new_hosts_equal:
+    kind: derived
+    unit: host
+    label: new hosts to buy, requests routed equally
+    formula: max(new_for_requests_equal, new_for_memory, new_for_storage)
+
+  # -- the pool as bought ------------------------------------------------------------------------
+
+  all_hosts:
+    kind: derived
+    unit: host
+    label: hosts in the pool
+    formula: old_hosts + new_hosts
+
+  pool_cores:
+    kind: derived
+    unit: core
+    label: cores in the pool
+    formula: old_cores + new_hosts * cores_per_new_host
+
+  utilisation_weighted:
+    kind: derived
+    unit: dimensionless
+    label: utilisation, requests routed by capacity
+    formula: busy_cores / pool_cores
+
+  utilisation_smallest_equal:
+    kind: derived
+    unit: dimensionless
+    label: the smallest host's utilisation, requests routed equally
+    formula: busy_cores / (all_hosts * smallest_cores)
+
+  queueing_headroom_weighted:
+    kind: ceiling
+    unit: dimensionless
+    label: utilisation at the busy hour, routed by capacity
+    of: utilisation_weighted
+    limit: 1
+    headroom: queueing_margin
+    because: >-
+      The web service's queueing ceiling (ch06), for a pool whose router sends each host requests
+      in proportion to its cores. Then every host is equally busy and the pool's cores add up.
+
+  queueing_headroom_equal:
+    kind: ceiling
+    unit: dimensionless
+    label: the smallest host's utilisation, routed equally
+    of: utilisation_smallest_equal
+    limit: 1
+    headroom: queueing_margin
+    because: >-
+      The same ceiling for a router that sends every host the same share. The old hosts have
+      fewer cores, so they are the busiest, and they reach the knee first while the new hosts
+      have cores to spare. The pool bought for capacity-weighted routing is checked here too.
+
+  # -- a shard lives on one host ------------------------------------------------------------------
+
+  shards:
+    kind: input
+    decided: you
+    unit: dimensionless
+    value: 64
+    label: shards the data is split into
+    provenance:
+      kind: assumption
+      source: "this worked example's premise: the records are split into sixty-four shards, each
+        held whole by one host and copied to others"
+    range: [8, 512]
+
+  largest_shard:
+    kind: derived
+    unit: TB
+    label: one copy of one shard at the horizon
+    note: >-
+      One copy of the stored data, with its indexes and after compression, split into equal
+      shards. Real shards are rarely equal, so the largest is at least this big.
+    formula: stored_data * index_overhead / record_compression / shards
+
+
+  smallest_disk:
+    kind: derived
+    unit: TB/host
+    label: disk on the smallest host
+    formula: min(disk_per_old_host, disk_per_new_host)
+
+  shard_fit:
+    kind: ceiling
+    unit: dimensionless
+    label: largest shard against the smallest host's disk
+    of: largest_shard / (smallest_disk * one_host)
+    limit: 1
+    headroom: disk_margin
+    because: >-
+      A shard has to fit on one host, and it can land on the smallest. The pool's total disk says
+      nothing about that, so the smallest host sets the limit. The margin is the disk margin,
+      because the host still has to take a dead host's records.
+
+  # -- a host is lost at the busy hour ---------------------------------------------------------
+
+  largest_host_cores:
+    kind: derived
+    unit: core/host
+    label: cores on the largest host
+    formula: max(cores_per_old_host, cores_per_new_host)
+
+  utilisation_after_losing_largest:
+    kind: derived
+    unit: dimensionless
+    label: utilisation after losing the largest host
+    formula: busy_cores / (pool_cores - largest_host_cores * one_host)
+
+  failure_headroom:
+    kind: ceiling
+    unit: dimensionless
+    label: utilisation with the largest host down
+    of: utilisation_after_losing_largest
+    limit: 1
+    headroom: queueing_margin
+    because: >-
+      N+1 in a mixed pool means surviving the loss of the largest host, not an average one: that
+      is the most capacity one fault can take away (ch11).
+
+  # -- what it costs over the horizon ------------------------------------------------------------
+  # The old hosts' purchase is spent, and stays out. What they cost to run does not.
+
+  horizon:
+    kind: input
+    decided: you
+    unit: year
+    value: 5
+    label: horizon
+    provenance:
+      kind: assumption
+      source: "the web service model's horizon (ch02): the refresh cycle the fleet is bought
+        against"
+
+  host_price:
+    kind: input
+    decided: outside
+    unit: USD/host
+    distribution: {lognormal: {p10: 4500, p90: 9500}}
+    label: price of a new host
+    provenance:
+      kind: assumption
+      source: "Lognormal, as in the web service model's host price at its point estimate (ch15)"
+
+  new_capex:
+    kind: derived
+    unit: USD
+    label: capital spent on new hosts
+    formula: new_hosts * host_price
+
+  new_host_power:
+    kind: input
+    decided: outside
+    unit: W/host
+    distribution: {triangular: {minimum: 220, likely: 300, maximum: 420}}
+    label: power per new host
+    provenance:
+      kind: assumption
+      source: "Triangular, as in the web service model's host power at its point estimate (ch16)"
+
+  old_host_power:
+    kind: input
+    decided: outside
+    unit: W/host
+    value: 280
+    label: power per old host
+    note: >-
+      One number: a premise of this worked example, not an estimate of any real host, so a range would be a claim nobody made.
+    provenance:
+      kind: assumption
+      source: "this worked example's premise: an older host draws nearly as much as a new one for
+        half the cores"
+
+  pue:
+    kind: input
+    decided: outside
+    unit: dimensionless
+    distribution: {triangular: {minimum: 1.15, likely: 1.35, maximum: 1.75}}
+    label: PUE
+    provenance:
+      kind: assumption
+      source: "Triangular, as in the web service model's PUE at its point estimate (ch16)"
+
+  hours_per_year:
+    kind: input
+    decided: definition
+    unit: hour/year
+    value: 8766
+    label: hours in a year
+    provenance:
+      kind: fact
+      source: "definition: 365.25 days of 24 hours"
+
+  electricity_price:
+    kind: input
+    decided: outside
+    unit: USD/kWh
+    distribution: {lognormal: {p10: 0.085, p90: 0.21}}
+    label: electricity price
+    provenance:
+      kind: assumption
+      source: "Lognormal, as in the web service model's electricity price at its point estimate (ch16)"
+
+  annual_energy_cost:
+    kind: derived
+    unit: USD/year
+    label: energy per year
+    formula: (old_hosts * old_host_power + new_hosts * new_host_power) * pue * hours_per_year * electricity_price
+
+  licence_per_core:
+    kind: input
+    decided: outside
+    unit: USD/core/year
+    distribution: {lognormal: {p10: 40, p90: 160}}
+    label: licence per core per year
+    provenance:
+      kind: assumption
+      source: "Lognormal, as in the web service model's licence per core (ch15). Charged on every core running,
+        old or new"
+
+  annual_licences:
+    kind: derived
+    unit: USD/year
+    label: licences per year
+    formula: pool_cores * licence_per_core
+
+  support_rate:
+    kind: input
+    decided: outside
+    unit: 1/year
+    distribution: {triangular: {minimum: 0.07, likely: 0.11, maximum: 0.18}}
+    label: support rate on new hosts
+    provenance:
+      kind: assumption
+      source: "Triangular, as in the web service model's support rate at its point estimate (ch15): a yearly share of
+        the capital cost"
+
+  old_support_per_host:
+    kind: input
+    decided: outside
+    unit: USD/host/year
+    value: 300
+    label: support per old host per year
+    note: >-
+      One number: a premise of this worked example, not an estimate of any real host, so a range would be a claim nobody made.
+    provenance:
+      kind: assumption
+      source: "this worked example's premise: a maintenance contract on hosts whose purchase is
+        long paid for. A share of a capital cost no longer counted would not describe it"
+
+  annual_support:
+    kind: derived
+    unit: USD/year
+    label: support per year
+    formula: new_capex * support_rate + old_hosts * old_support_per_host
+
+  annual_running:
+    kind: derived
+    unit: USD/year
+    label: running cost per year
+    formula: annual_energy_cost + annual_licences + annual_support
+
+  total_cost:
+    kind: derived
+    unit: USD
+    label: cost over the horizon
+    formula: new_capex + annual_running * horizon
+
+outputs:
+  - new_hosts_weighted
+  - new_hosts_equal
+  - new_for_requests
+  - new_for_memory
+  - new_for_storage
+  - new_for_requests_equal
+  - total_cost
+  - new_capex
+  - annual_running
+  - queueing_headroom_weighted
+  - queueing_headroom_equal
+  - shard_fit
+  - failure_headroom
+
+correlations:
+  - a: peak_request_rate_t0
+    b: service_demand
+    rho: 0.4
+    because: >-
+      As in the web service model (ch14): a busier service is usually a slower one per request, so
+      the two rise together, and treating them as independent understates the tail.
