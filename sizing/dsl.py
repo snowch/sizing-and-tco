@@ -66,10 +66,11 @@ MODELS_DIR = ROOT / "models"
 PROVENANCE_KINDS = ("fact", "vendor_claim", "assumption")
 
 #: The version of the rules a model file is written against, declared on its first line as
-#: ``dsl: 1``. The loader refuses a file that names another, so a tool that writes model files can
+#: ``dsl: 2``. The loader refuses a file that names another, so a tool that writes model files can
 #: tell which rules it is being held to, and a file cannot be read under rules it was not written
-#: for. Raise it when a change makes a file that loaded before stop loading.
-DSL_VERSION = 1
+#: for. Raise it when a change makes a file that loaded before stop loading. Version 2 refuses
+#: a key the loader does not read, and a uniform whose bounds are reversed; both loaded under 1.
+DSL_VERSION = 2
 
 PROVENANCE_MEANING = {
     "fact": "traceable to a stamped measurement, an invoice or a published specification",
@@ -447,7 +448,7 @@ def _known(mapping: dict, allowed: tuple[str, ...], where: str) -> None:
     for key in mapping:
         if key not in allowed:
             near = difflib.get_close_matches(str(key), allowed, n=1)
-            hint = f"; did you mean {near[0]!r}?" if near else ""
+            hint = f"; did you mean {near[0]!r}?" if near else "."
             raise ModelError(
                 f"{where}: {key!r} is not a key this file may hold{hint} Expected one of "
                 f"{', '.join(allowed)}."

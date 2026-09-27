@@ -3,7 +3,7 @@
 # of ch02 removed, so that a reader can see it at 8 nodes. Not a model
 # anybody would ship. Do not edit: say which chapter introduces a node in
 # build-order.yaml instead.
-dsl: 1
+dsl: 2
 model: web_service_demand
 title: >-
   A web service and its data, on a fleet of Linux hosts — What

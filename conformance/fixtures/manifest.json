@@ -143,7 +143,7 @@
   "edge/unit-conversions",
   "edge/value-and-shape"
  ],
- "dsl": 1,
+ "dsl": 2,
  "fixture_format": 2,
  "rules": {
   "causes": [

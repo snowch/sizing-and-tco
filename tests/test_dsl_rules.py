@@ -47,7 +47,9 @@ SHAPED = """
     provenance: {{kind: assumption, source: "{source}"}}"""
 
 
-def model_file(tmp_path: Path, body: str, head: str = "dsl: 1\n", outputs: str = "[x]") -> Path:
+def model_file(
+    tmp_path: Path, body: str, head: str = f"dsl: {DSL_VERSION}\n", outputs: str = "[x]"
+) -> Path:
     text = f"{head}model: case\ntitle: a case\nnodes:{body}\noutputs: {outputs}\n"
     path = tmp_path / "case" / "model.yaml"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -95,13 +97,13 @@ def test_a_scale_with_an_offset_or_a_logarithm_is_refused(unit):
 def test_a_model_may_price_in_euros(tmp_path):
     """The unit probes EUR and GBP: a reader who prices in another currency could not build."""
     body = INPUT.format(name="x", unit="EUR/host", value=5000)
-    path = model_file(tmp_path, body, head="dsl: 1\ncurrency: EUR\n")
+    path = model_file(tmp_path, body, head=f"dsl: {DSL_VERSION}\ncurrency: EUR\n")
     assert not [p for p in problems_of(path) if "currency" in p]
 
 
 def test_an_answer_in_another_currency_is_refused(tmp_path):
     body = INPUT.format(name="x", unit="EUR/host", value=5000)
-    path = model_file(tmp_path, body, head="dsl: 1\ncurrency: USD\n")
+    path = model_file(tmp_path, body, head=f"dsl: {DSL_VERSION}\ncurrency: USD\n")
     assert any("A model answers in its own currency" in p for p in problems_of(path))
 
 
@@ -116,7 +118,7 @@ def test_a_price_in_another_currency_converts_by_a_rate(tmp_path):
     unit: USD/host
     formula: price * rate"""
     )
-    path = model_file(tmp_path, body, head="dsl: 1\ncurrency: USD\n")
+    path = model_file(tmp_path, body, head=f"dsl: {DSL_VERSION}\ncurrency: USD\n")
     assert not [p for p in problems_of(path) if "currency" in p]
 
 

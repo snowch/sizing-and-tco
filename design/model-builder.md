@@ -201,7 +201,7 @@ suite to maintain, at the cost of the download and the latency above.
 ### A format version
 
 Every model file starts with a top-level `dsl: <version>` line (`DSL_VERSION` in `sizing/dsl.py`,
-now `1`). The loader refuses any other version, and `verify-models.py` refuses a file with none. A
+now `2`). The loader refuses any other version, and `verify-models.py` refuses a file with none. A
 model says which rules it was written against, the conformance suite is released per version, and
 the builder refuses a file newer or older than the suite it passed.
 

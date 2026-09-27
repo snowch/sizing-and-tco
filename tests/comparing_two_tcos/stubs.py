@@ -52,8 +52,8 @@ def break_even_migration(difference_at: Callable[[float], float]) -> float:
     ``difference_at(migration)`` is the model's own point evaluation. Hand it a one-off cost of
     moving and it returns the challenger's five-year total minus the incumbent's at the point
     estimate, with the incumbent on the fleet the test is grading and everything else as the two
-    scenarios hold it. Return the cost of moving at which that difference is zero: the cost at
-    which the two five-year totals are equal.
+    scenarios hold it. Return the cost of moving at which that difference is zero, to within a
+    dollar: the cost at which the two five-year totals are equal.
 
     The fleet is the test's to choose because the chapter prints the tie for the fleet the
     incumbent runs. The test builds one ``difference_at`` for that fleet and two for fleets the

@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "e6de7561319867f2",
+  "code_fingerprint": "53af74b4db82c47d",
   "code_sources": [
     "bench/run_mixed_pool.py"
   ],
@@ -9,8 +9,8 @@
     "old_purchase_is_sunk": "the old hosts' purchase is spent and appears in neither total; their energy, licences and support appear in keep's",
     "shared_futures": "keep and replace pin only decisions, so every sampled input is drawn once and reaches both. The runner checks the shared columns are identical before subtracting"
   },
-  "generated_at": "2026-09-27T10:22:55+00:00",
-  "git_revision": "cdaebe2",
+  "generated_at": "2026-09-27T11:04:24+00:00",
+  "git_revision": "6c61c97",
   "kind": "measurement",
   "name": "mixed-pool",
   "produced_by": {
@@ -54,11 +54,31 @@
       {
         "all_new": 0.46375,
         "kept": 0.50047,
-        "label": "utilisation with the largest host down",
+        "label": "utilisation with the host with the most cores down",
         "node": "failure_headroom",
         "retired": 0.6663,
         "verdict_all_new": "ok",
         "verdict_kept": "inside headroom",
+        "verdict_retired": "over"
+      },
+      {
+        "all_new": 0.489,
+        "kept": 0.23037,
+        "label": "working set against memory",
+        "node": "cache_fill",
+        "retired": 0.69412,
+        "verdict_all_new": "ok",
+        "verdict_kept": "ok",
+        "verdict_retired": "over"
+      },
+      {
+        "all_new": 0.43875,
+        "kept": 0.3371,
+        "label": "disk fill at horizon",
+        "node": "disk_fill",
+        "retired": 0.68015,
+        "verdict_all_new": "ok",
+        "verdict_kept": "ok",
         "verdict_retired": "over"
       },
       {

@@ -7,4 +7,4 @@
 | Licences over the horizon | $320,000 | $345,600 | −$25,600 |
 | Support over the horizon | $179,962 | $208,226 | −$28,265 |
 
-*Source — [`mixed-pool`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/mixed-pool.json) and [`mixed_pool-reference`](/models/mixed_pool-reference.html) and [`mixed_pool-replace`](/models/mixed_pool-replace.html) · `sizing.evaluate`*
+*Source — [`mixed-pool`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/mixed-pool.json), [`mixed_pool-reference`](/models/mixed_pool-reference.html) and [`mixed_pool-replace`](/models/mixed_pool-replace.html) · `sizing.evaluate`*

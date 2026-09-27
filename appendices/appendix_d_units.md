@@ -51,13 +51,18 @@ when the formula makes exactly the unit declared. It converts when the formula m
 of quantity as declared, in a different size — one factor is recorded for the node, and the whole
 result is converted by it.
 
-A formula that the unit check can work through is still refused for two reasons. The rest of this page names the other refusals: units the build does not accept at all, and quantities used where only a plain number will do. The formula may make a different kind of quantity from the one declared:
-a rate where the node declares an amount. No factor turns one into the other, and the refusal names
-both kinds. Or two numbers of the same kind, in different units, meet in a sum, a difference, a `min` or a `max`. A `ceil` or `floor` is refused when what it rounds is not yet in the node's unit, because the build rounds first and converts after, so it would round the wrong number. One factor applied to a whole result works
-for products and quotients, where factors multiply through. It cannot work for a sum: adding a
-number in terabytes to a number in tebibytes adds them as if the units matched, and scaling the
-total afterwards does not repair it. The refusal tells you to declare both in one unit, or convert
-one of them in a node of its own.
+A formula that the unit check can work through is still refused for one of two reasons. First, it
+may make a different kind of quantity from the one declared: a rate where the node declares an
+amount. No factor turns one into the other, and the refusal names both kinds. Second, two numbers of
+the same kind in different units may meet in a sum, a difference, a `min` or a `max`, or one may be
+rounded by `ceil` or `floor` before it is converted, so the build would round the wrong number. The
+rest of this page names the refusals that come before the formula: units the build does not accept
+at all, and quantities used where only a plain number will do.
+
+One factor applied to a whole result works for products and quotients, where factors multiply
+through. It cannot work for a sum. Adding a number in terabytes to a number in tebibytes adds them
+as if the units matched. Scaling the total afterwards does not repair it. The refusal tells you to
+declare both in one unit, or convert one of them in a node of its own.
 
 The first two rows are ch02's example and its mistake. The last two rows are the second kind of
 refusal. The converted rows are what the rest of this appendix is about: the same kind of quantity
@@ -68,7 +73,7 @@ in a different size, which is the error that looks right.
 % word-ok: a sample here is one reading a scrape takes, a counting unit, not one of the model's draws
 The build's unit registry treats things that are counted as units of their own, not as plain
 numbers: requests, spans, samples, series, log lines, queries, hosts, nodes, cores, labels, drives,
-failures, and money, in each of the currencies the toolkit knows, each one a unit of its own.
+failures, and money in each currency the toolkit knows.
 
 ```{literalinclude} ../sizing/units.py
 :language: python
@@ -119,12 +124,12 @@ terabyte per year and dollars per terabyte per month have identical dimensions. 
 compared dimensions alone would pass a unit cost twelve times too large — the cost per stored TB per
 month that [ch17](#unit-economics) works with, a figure likely to be quoted in a meeting.
 
-Before this change a growth factor raised to the power of fifteen terabytes passed the unit check.
-The units library the build uses defines a bit as a plain number, so every amount of data was a
-plain number too. The build's registry changes that one definition, so an amount of data is a kind
-of quantity of its own, counted in bits. The unit check now refuses a formula that makes a plain
-number for a node declared in TB, a ceiling in TB with a plain number for its limit, and terabytes
-used as an exponent or inside a logarithm.
+The units library the build uses defines a bit as a plain number, so every amount of data would be a
+plain number too. A growth factor raised to the power of fifteen terabytes would then pass the unit
+check. The build's registry changes that one definition, making an amount of data a kind of quantity
+of its own, counted in bits. The unit check refuses a formula that makes a plain number for a node
+declared in TB, a ceiling in TB with a plain number for its limit, and terabytes used as an exponent
+or inside a logarithm.
 
 ## Six places a unit goes wrong
 
@@ -137,9 +142,7 @@ disk-per-host input says *decimal* in its provenance for this reason.
 Memory runs the other way. A spec sheet says gigabytes and means gibibytes. The web service model
 declares memory per host in `GiB/host`, and its provenance says so; the build converts it to decimal
 terabytes per host where memory meets the data. The unit tells the build which of the two you meant.
-It cannot tell you which one the vendor meant. The build converts a TiB result into a TB node
-without complaint, and it will not add a number in TB to a number in TiB: that sum is refused, and
-you declare both in one unit first.
+It cannot tell you which one the vendor meant. The build converts a TiB result into a TB node without complaint.
 
 **Bits against bytes.** Network is quoted in bits per second and storage in bytes per second, and
 the factor of eight between them sits at the boundary between two teams. A model that
@@ -181,7 +184,7 @@ Pint is kept out of the arithmetic for two reasons. First, the toolkit reruns ea
 to see how far the answer can move, and numbers that carry units are slow to work with at that
 scale. Second, the code that reruns the model (`sizing/mc.py`) is written to be read end to end,
 and [Appendix B](#appendix-b-monte-carlo-module) reads it. A units library inside it would add code
-with nothing to do with what that module is for. The unit check runs once before any number is computed and costs nothing while the model runs, so it stops wrong models without slowing right ones.
+with nothing to do with what that module is for. The check runs once per evaluation, before the reruns begin, so it stops a wrong model without slowing a right one.
 
 ## Why the check needs a magnitude
 
@@ -207,5 +210,5 @@ nothing. A node that still cannot be worked out is reported for what it is, not 
 
 ```bash
 python3 scripts/verify-models.py       # every formula, in units, on every model
-python3 -m pytest tests/test_models.py # the registry, the conversions, and both models
+python3 -m pytest tests/test_models.py tests/test_dsl_rules.py tests/test_mixed_units.py  # every model typechecks, and each rule on this page
 ```

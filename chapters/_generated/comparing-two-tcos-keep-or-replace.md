@@ -9,4 +9,4 @@
 | Keep minus replace, routed equally, buying 70 new | +$519,579 | +$375,803 to +$846,309 |
 | Futures in which keeping is cheaper, routed equally | | 0% |
 
-*Source — [`mixed-pool`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/mixed-pool.json) and [`mixed_pool-reference`](/models/mixed_pool-reference.html) and [`mixed_pool-replace`](/models/mixed_pool-replace.html) and [`mixed_pool-keep_routed_equally`](/models/mixed_pool-keep_routed_equally.html) · `sizing.evaluate`*
+*Source — [`mixed-pool`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/mixed-pool.json), [`mixed_pool-reference`](/models/mixed_pool-reference.html), [`mixed_pool-replace`](/models/mixed_pool-replace.html) and [`mixed_pool-keep_routed_equally`](/models/mixed_pool-keep_routed_equally.html) · `sizing.evaluate`*

@@ -165,8 +165,7 @@ shortfall look harmless, but "averaged over every future" does not.
 At the point estimates in the first section, the three chains ask for nearly the same count. So
 which chain wins changes with small moves in the inputs, and there is nothing unusual about a
 neglected chain winning. When it does, it can win by a lot: each chain's count has a long upper
-tail, with a small share of futures running on to a count far past the rest. The row "Gap exceeded
-in one future in twenty" shows how wide the gap between the winner and the runner-up gets.
+tail, with a small share of futures running on to a count far past the rest.
 
 Count only the futures where the fleet is short, and the zeros drop out. Problem 10.2 asks for the
 median counted that way. The summary of sizing on one chain is two numbers: how often it is wrong,
@@ -233,7 +232,7 @@ The third column changes one thing: how requests are spread across the hosts. Ro
 the load balancer sends each host requests in proportion to its cores, so every host is equally
 busy and the old and new hosts' cores add up. Routed equally, every host gets the same share.
 A host's utilisation is its share of the busy cores divided by its own cores
-([ch05](#littles-law)), so the lowest-capacity host is the busiest. It reaches its margin
+([ch05](#littles-law)), so the smallest host is the busiest. It reaches its margin
 first while the new hosts still have cores to spare. The pool then carries only as much as all
 its hosts times the smallest host's cores, and the request chain asks for more new hosts.
 
@@ -243,7 +242,7 @@ column. Every host, including every new one, is held to the old host's cores, so
 counts for less.
 
 Which routing you run is a fact about your load balancer, not a choice the model can make for
-you. Find out before you buy. Data is placed by capacity in both columns; only requests change.
+you. Find out before you buy. Data is placed by capacity in both mixed-pool columns; only requests change.
 [ch11](#headroom-and-failure-domains) checks the pool as bought against both.
 
 ```{iframe} /models/mixed_pool-reference.html
@@ -310,7 +309,7 @@ pack them.
   and the fleet is too small more often than not.
 - **The summary of sizing on one chain is two numbers.** How often it is wrong, and by how
   much when it is. Either one alone is a way of not answering.
-- **Old hosts rich in one resource move which chain binds.** Whether the old hosts' cores count in full or only as the smallest host's depends on how your load balancer routes requests. Find out which routing you run before you buy.
+- **Old hosts rich in one resource move which chain binds.** Routed equally, every host counts only up to the smallest host's cores, so the new hosts' extra cores are wasted, and keeping the old hosts can mean buying more new hosts than replacing them. Find out which routing you run before you buy.
 - **More chains mean more chances to be caught out.** The chance that some constraint binds
   unexpectedly rises with their number, even while each one's chance stays small.
 :::
@@ -350,7 +349,7 @@ Routed by capacity, the two generations' cores add up. Routed equally, the small
 negative number.
 
 The test checks your answer against the mixed pool model's own nodes: with no old hosts, with some,
-with the book's pool, and with more old hosts than the load needs.
+with the book's pool, with more old hosts than the load needs, and with old hosts that have more cores than the new ones.
 
 ```bash
 python3 -m pytest tests/bandwidth_and_the_binding_constraint/test_problem_3_mixed_pool.py -m problem

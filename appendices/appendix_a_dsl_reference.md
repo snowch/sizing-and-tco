@@ -28,7 +28,7 @@ reads.
 
 ```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
-:start-at: dsl: 1
+:start-at: dsl: 2
 :end-before: nodes:
 ```
 
@@ -40,7 +40,7 @@ The quoted lines are the top of the running example's file. A model file has eig
 | `model` | the model's identifier; its results are named `<model>-<scenario>` | the file does not load |
 | `title` | the name a reader sees | the model's identifier |
 | `description` | prose saying what the model is *for*, the one thing the graph cannot show | nothing is shown |
-| `currency` | the one currency the model counts money in, as a three-letter ISO code | `USD` |
+| `currency` | the currency the model's answers are in, as a three-letter ISO code | `USD` |
 | `nodes` | every quantity in the model, by name | the file does not load |
 | `outputs` | which nodes are answers | the file loads but the build refuses it |
 | `correlations` | pairs of inputs that move together | every uncertain input is independent |
@@ -95,9 +95,7 @@ but the build fails when evaluating scenarios.
 
 The loader reads these keys and no others. It refuses any other key, anywhere in a model file or
 scenario file: in a node, at the top, in a provenance, in a correlation or in a scenario. When it
-refuses a key, it names the nearest key it knows, so `lable:` is reported with `label` beside it. A
-misspelt key used to be ignored. Two of those silently changed the answer: `correlation:` left every
-input independent, and `override:` ran a scenario on the model's own values.
+refuses a key, it names the nearest key it knows, so `lable:` is reported with `label` beside it. If the loader ignored them, two misspellings would change the answer without a word: `correlation:` would leave every input independent, and `override:` would run a scenario on the model's own values.
 
 ### `input` — a number the model is given
 
@@ -105,7 +103,9 @@ An input carries a `value`, a `distribution`, or both. If you give both, the `va
 number the tables and interactive page use to start, and the distribution is what the sampler draws
 from. With only a distribution, the single number is its median.
 
-A scenario can pin an input to one number. That number replaces both the input's value and its distribution in that scenario. Every input must also have
+A scenario can pin an input to one number. That number replaces both the input's value and its distribution in that scenario.
+
+Every input must also have
 a `decided` line, saying who settles the number:
 
 - `outside`: outside your control, whether or not it has been given a shape yet; the busy hour, the
@@ -284,7 +284,7 @@ their keys, read from the sampler's own code so it cannot drift from what a file
 ```
 
 A distribution naming no shape, two shapes, or keys its shape does not take cannot be worked out;
-the build fails when evaluating scenarios. The same applies to values out of order: a `uniform` whose `minimum` is above its `maximum`, a `likely` outside `minimum` and `maximum`, or a `p10` above the `p90`. A fifth shape needs a percentile function and a line in `SHAPES` in two files: `sizing/mc.py` and `sizing/viewer/sample.js`. The latter is the copy the published pages sample with. A test holds the two tables to each other.
+the build fails when evaluating scenarios. The same applies to values out of order: a `uniform` whose `minimum` is above its `maximum`, a `likely` outside `minimum` and `maximum`, a `p10` of nought or less, or a `p10` above the `p90`. A fifth shape needs a percentile function and a line in `SHAPES` in two files: `sizing/mc.py` and `sizing/viewer/sample.js`. The latter is the copy the published pages sample with. A test holds the two tables to each other for every shape a model uses.
 
 [Appendix C](#appendix-c-distributions) is one page each on what they assume and how they lie.
 
@@ -404,7 +404,7 @@ The build refuses these:
 - **A ceiling whose `limit` is a different kind of quantity from its `unit`, or whose `headroom` is
   not a plain number.**
 - **A file with no `dsl` line.**
-- **A `currency` the toolkit does not know, or a node priced in a currency other than the model's.**
+- **A `currency` the toolkit does not know, or an output in a currency other than the model's.**
 - **An input with no `decided` line**, or one that is not `you`, `outside` or `definition`.
 - **An input with no provenance, a kind that is not one of the three, an empty source, a correlation
   with no `because`, or a `fact` that cites nothing.** *Provenance*, above, says what counts as

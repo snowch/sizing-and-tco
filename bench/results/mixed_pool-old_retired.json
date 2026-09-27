@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "5580575ca4db8ce8",
+  "code_fingerprint": "6aa8411805e6c723",
   "code_sources": [
     "bench/run_models.py",
     "models/mixed_pool/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-27T09:54:56+00:00",
-  "git_revision": "cdaebe2",
+  "generated_at": "2026-09-27T11:03:21+00:00",
+  "git_revision": "6c61c97",
   "kind": "model",
   "name": "mixed_pool-old_retired",
   "produced_by": {
@@ -53,6 +53,12 @@
       "annual_running": 1.0,
       "annual_support": 1.0,
       "busy_cores": 1.0,
+      "cache_fill": 1.0,
+      "cache_fill.headroom": 1.0,
+      "cache_fill.limit": 1.0,
+      "disk_fill": 1.0,
+      "disk_fill.headroom": 1.0,
+      "disk_fill.limit": 1.0,
       "failure_headroom": 1.0,
       "failure_headroom.headroom": 1.0,
       "failure_headroom.limit": 1.0,
@@ -70,8 +76,11 @@
       "old_disk": 1.0,
       "old_in_service": 1.0,
       "old_ram": 1.0,
+      "old_short_equal": 1.0,
       "peak_request_rate": 1.0,
       "pool_cores": 1.0,
+      "pool_disk": 1.0,
+      "pool_ram": 1.0,
       "queueing_headroom_equal": 1.0,
       "queueing_headroom_equal.headroom": 1.0,
       "queueing_headroom_equal.limit": 1.0,
@@ -94,7 +103,7 @@
       "utilisation_weighted": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-27T09:54:56+00:00",
+    "generated_at": "2026-09-27T11:03:21+00:00",
     "model": "mixed_pool",
     "nodes": {
       "all_hosts": {
@@ -121,7 +130,7 @@
         "layer": 3,
         "note": null,
         "point": 35.0,
-        "row": 10,
+        "row": 9,
         "unit": "host"
       },
       "annual_energy_cost": {
@@ -502,7 +511,7 @@
           "kind": "assumption",
           "source": "ch04 \u2014 lognormal because growth compounds and the factor cannot be zero or less. One future in ten grows by less than 12% a year, and one in ten by more than 60%; outside that range you would be surprised. One factor for requests and for records, because users drive both."
         },
-        "row": 8,
+        "row": 7,
         "slider": {
           "max": 2.0,
           "min": 1.0
@@ -1232,7 +1241,7 @@
         "layer": 3,
         "note": "Arrival rate times service demand. It is a count of cores doing work, it has nothing to do with how many you own, and it is the numerator of every utilisation figure below.",
         "point": 556.3360618821654,
-        "row": 11,
+        "row": 7,
         "summary": {
           "max": 26010.703839958245,
           "mean": 773.3530673912215,
@@ -1245,6 +1254,193 @@
           "sd": 762.8950835565726
         },
         "unit": "core"
+      },
+      "cache_fill": {
+        "ast": {
+          "args": [
+            {
+              "name": "working_set",
+              "op": "ref"
+            },
+            {
+              "name": "pool_ram",
+              "op": "ref"
+            }
+          ],
+          "op": "/"
+        },
+        "ceiling": {
+          "allowed": 0.75,
+          "because": "The web service's memory ceiling (ch08), on the pool as bought. Past the limit, memory cannot hold the whole working set and some reads go to disk, which the service time per request does not include. The old hosts carry more memory than the new, so this is the ceiling their retirement moves most.",
+          "headroom": 0.25,
+          "headroom_text": "cache_margin",
+          "limit": 1.0,
+          "limit_text": "1",
+          "p_over_allowed": 0.69412,
+          "p_over_limit": 0.56138,
+          "value": 1.150633134976713,
+          "verdict": "over"
+        },
+        "depends_on": [
+          "cache_margin",
+          "pool_ram",
+          "working_set"
+        ],
+        "formula": "working_set / pool_ram",
+        "histogram": {
+          "counts": [
+            17664,
+            27713,
+            19227,
+            12219,
+            7680,
+            4825,
+            3213,
+            2155,
+            1416,
+            985,
+            722,
+            513,
+            394,
+            283,
+            223,
+            150,
+            121,
+            114,
+            61,
+            61,
+            43,
+            30,
+            27,
+            24,
+            25,
+            18,
+            17,
+            12,
+            9,
+            10,
+            8,
+            6,
+            3,
+            7,
+            2,
+            3,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            1
+          ],
+          "edges": [
+            0.032936072129712377,
+            0.532114469979161,
+            1.0312928678286095,
+            1.5304712656780581,
+            2.0296496635275068,
+            2.5288280613769554,
+            3.028006459226404,
+            3.5271848570758526,
+            4.026363254925301,
+            4.525541652774749,
+            5.0247200506241985,
+            5.5238984484736475,
+            6.023076846323096,
+            6.522255244172544,
+            7.021433642021993,
+            7.520612039871442,
+            8.019790437720891,
+            8.51896883557034,
+            9.018147233419787,
+            9.517325631269237,
+            10.016504029118686,
+            10.515682426968134,
+            11.014860824817584,
+            11.514039222667032,
+            12.01321762051648,
+            12.512396018365928,
+            13.011574416215376,
+            13.510752814064826,
+            14.009931211914274,
+            14.509109609763723,
+            15.008288007613173,
+            15.50746640546262,
+            16.006644803312067,
+            16.505823201161515,
+            17.005001599010964,
+            17.50417999686041,
+            18.00335839470986,
+            18.50253679255931,
+            19.00171519040876,
+            19.500893588258208,
+            20.000071986107656,
+            20.499250383957104,
+            20.998428781806552,
+            21.497607179656,
+            21.996785577505452,
+            22.4959639753549,
+            22.99514237320435,
+            23.494320771053797,
+            23.993499168903245,
+            24.492677566752693,
+            24.99185596460214,
+            25.49103436245159,
+            25.990212760301038,
+            26.48939115815049,
+            26.988569555999938,
+            27.487747953849386,
+            27.986926351698834,
+            28.486104749548282,
+            28.98528314739773,
+            29.48446154524718,
+            29.98363994309663,
+            30.48281834094608,
+            30.981996738795527,
+            31.481175136644975,
+            31.980353534494423
+          ],
+          "spacing": "linear"
+        },
+        "kind": "ceiling",
+        "label": "working set against memory",
+        "layer": 4,
+        "note": null,
+        "point": 1.150633134976713,
+        "row": 4,
+        "summary": {
+          "max": 31.980353534494423,
+          "mean": 1.5406896332706348,
+          "min": 0.032936072129712377,
+          "p25": 0.6546284179331716,
+          "p5": 0.29740081156425074,
+          "p50": 1.1334554047200045,
+          "p75": 1.937573757587472,
+          "p95": 4.111427917361818,
+          "sd": 1.4230014702893983
+        },
+        "unit": "dimensionless"
       },
       "cache_margin": {
         "decided": "you",
@@ -1299,12 +1495,199 @@
           "kind": "assumption",
           "source": "this worked example's premise: last generation's hosts have half the cores of this generation's. Fixed, because the hosts are already bought"
         },
-        "row": 2,
+        "row": 4,
         "slider": {
           "max": 64.0,
           "min": 2.0
         },
         "unit": "core/host"
+      },
+      "disk_fill": {
+        "ast": {
+          "args": [
+            {
+              "name": "raw_data",
+              "op": "ref"
+            },
+            {
+              "name": "pool_disk",
+              "op": "ref"
+            }
+          ],
+          "op": "/"
+        },
+        "ceiling": {
+          "allowed": 0.75,
+          "because": "The web service's disk ceiling, on the pool as bought. A pool whose disks are full cannot take a dead host's records, and the margin is the same node the sizing used (ch11).",
+          "headroom": 0.25,
+          "headroom_text": "disk_margin",
+          "limit": 1.0,
+          "limit_text": "1",
+          "p_over_allowed": 0.68015,
+          "p_over_limit": 0.52235,
+          "value": 1.0337100930063452,
+          "verdict": "over"
+        },
+        "depends_on": [
+          "disk_margin",
+          "pool_disk",
+          "raw_data"
+        ],
+        "formula": "raw_data / pool_disk",
+        "histogram": {
+          "counts": [
+            9460,
+            25047,
+            21758,
+            14928,
+            9504,
+            6290,
+            4095,
+            2706,
+            1798,
+            1213,
+            807,
+            636,
+            424,
+            295,
+            241,
+            196,
+            125,
+            113,
+            78,
+            67,
+            30,
+            38,
+            25,
+            32,
+            23,
+            9,
+            12,
+            5,
+            11,
+            4,
+            5,
+            3,
+            2,
+            4,
+            5,
+            0,
+            0,
+            3,
+            0,
+            1,
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "edges": [
+            0.039119369199380444,
+            0.4127620469857535,
+            0.7864047247721265,
+            1.1600474025584997,
+            1.5336900803448728,
+            1.9073327581312458,
+            2.2809754359176186,
+            2.6546181137039917,
+            3.0282607914903648,
+            3.401903469276738,
+            3.775546147063111,
+            4.149188824849484,
+            4.522831502635857,
+            4.8964741804222305,
+            5.2701168582086035,
+            5.643759535994977,
+            6.01740221378135,
+            6.391044891567723,
+            6.764687569354096,
+            7.138330247140469,
+            7.511972924926842,
+            7.885615602713215,
+            8.259258280499587,
+            8.63290095828596,
+            9.006543636072333,
+            9.380186313858706,
+            9.75382899164508,
+            10.127471669431452,
+            10.501114347217825,
+            10.874757025004198,
+            11.248399702790572,
+            11.622042380576945,
+            11.995685058363318,
+            12.36932773614969,
+            12.742970413936064,
+            13.116613091722437,
+            13.49025576950881,
+            13.863898447295183,
+            14.237541125081556,
+            14.611183802867929,
+            14.984826480654302,
+            15.358469158440675,
+            15.732111836227048,
+            16.105754514013423,
+            16.479397191799794,
+            16.853039869586166,
+            17.22668254737254,
+            17.600325225158915,
+            17.973967902945287,
+            18.347610580731658,
+            18.721253258518033,
+            19.094895936304408,
+            19.46853861409078,
+            19.84218129187715,
+            20.215823969663525,
+            20.5894666474499,
+            20.96310932523627,
+            21.336752003022642,
+            21.710394680809017,
+            22.084037358595392,
+            22.457680036381763,
+            22.831322714168135,
+            23.20496539195451,
+            23.578608069740884,
+            23.952250747527255
+          ],
+          "spacing": "linear"
+        },
+        "kind": "ceiling",
+        "label": "disk fill at horizon",
+        "layer": 4,
+        "note": null,
+        "point": 1.0337100930063452,
+        "row": 9,
+        "summary": {
+          "max": 23.952250747527255,
+          "mean": 1.32544649191638,
+          "min": 0.039119369199380444,
+          "p25": 0.6484695793964805,
+          "p5": 0.32934909477921487,
+          "p50": 1.0385154019653684,
+          "p75": 1.6643340591465878,
+          "p95": 3.258263382113959,
+          "sd": 1.0516558694969942
+        },
+        "unit": "dimensionless"
       },
       "disk_margin": {
         "decided": "you",
@@ -1319,7 +1702,7 @@
           "kind": "assumption",
           "source": "the web service model's disk margin (ch11): room to re-replicate a dead host's records onto the survivors"
         },
-        "row": 13,
+        "row": 12,
         "slider": {
           "max": 0.45,
           "min": 0.0
@@ -1339,7 +1722,7 @@
           "kind": "vendor_claim",
           "source": "the web service model's host (ch10): spec sheet, one local drive"
         },
-        "row": 17,
+        "row": 19,
         "slider": {
           "max": 60.0,
           "min": 1.0
@@ -1352,14 +1735,14 @@
         "distribution": null,
         "kind": "input",
         "label": "disk per old host",
-        "layer": 2,
+        "layer": 1,
         "note": "One number: the old hosts are already bought, and you can read their specification off the hosts themselves.",
         "point": 2.0,
         "provenance": {
           "kind": "assumption",
           "source": "this worked example's premise: the same drive as the new hosts"
         },
-        "row": 18,
+        "row": 12,
         "slider": {
           "max": 60.0,
           "min": 1.0
@@ -1693,7 +2076,7 @@
           "spacing": "linear"
         },
         "kind": "ceiling",
-        "label": "utilisation with the largest host down",
+        "label": "utilisation with the host with the most cores down",
         "layer": 5,
         "note": null,
         "point": 1.0226765843422159,
@@ -1724,7 +2107,7 @@
           "kind": "assumption",
           "source": "the web service model's horizon (ch02): the refresh cycle the fleet is bought against"
         },
-        "row": 0,
+        "row": 3,
         "unit": "year"
       },
       "horizon_periods": {
@@ -1751,7 +2134,7 @@
         "layer": 1,
         "note": null,
         "point": 5.0,
-        "row": 9,
+        "row": 8,
         "unit": "dimensionless"
       },
       "host_price": {
@@ -2266,7 +2649,7 @@
           "kind": "assumption",
           "source": "indexes, the write-ahead log and journals as a multiplier on stored bytes. Triangular, and the bounds are for a service with a few indexes per table \u2014 a search-heavy one is off the top of this range"
         },
-        "row": 11,
+        "row": 13,
         "summary": {
           "max": 1.599525500218204,
           "mean": 1.3498834697576332,
@@ -2315,7 +2698,7 @@
         "layer": 3,
         "note": null,
         "point": 16.0,
-        "row": 14,
+        "row": 11,
         "unit": "core/host"
       },
       "largest_shard": {
@@ -2498,7 +2881,7 @@
         "layer": 3,
         "note": "One copy of the stored data, with its indexes and after compression, split into equal shards. Real shards are rarely equal, so the largest is at least this big.",
         "point": 0.3768734714085634,
-        "row": 15,
+        "row": 14,
         "summary": {
           "max": 8.732591418369314,
           "mean": 0.4832357001778469,
@@ -3278,7 +3661,7 @@
         "layer": 4,
         "note": null,
         "point": 50.0,
-        "row": 4,
+        "row": 5,
         "summary": {
           "max": 2323.0,
           "mean": 69.55039,
@@ -3296,42 +3679,56 @@
         "ast": {
           "args": [
             {
+              "name": "old_short_equal",
+              "op": "ref"
+            },
+            {
               "args": [
                 {
                   "args": [
                     {
                       "args": [
                         {
-                          "name": "busy_cores",
-                          "op": "ref"
-                        },
-                        {
                           "args": [
                             {
-                              "name": "smallest_cores",
+                              "name": "busy_cores",
                               "op": "ref"
                             },
                             {
                               "args": [
                                 {
-                                  "op": "const",
-                                  "value": 1.0
+                                  "name": "smallest_cores",
+                                  "op": "ref"
                                 },
                                 {
-                                  "name": "queueing_margin",
-                                  "op": "ref"
+                                  "args": [
+                                    {
+                                      "op": "const",
+                                      "value": 1.0
+                                    },
+                                    {
+                                      "name": "queueing_margin",
+                                      "op": "ref"
+                                    }
+                                  ],
+                                  "op": "-"
                                 }
                               ],
-                              "op": "-"
+                              "op": "*"
                             }
                           ],
-                          "op": "*"
+                          "op": "/"
                         }
                       ],
-                      "op": "/"
+                      "fn": "ceil",
+                      "op": "call"
+                    },
+                    {
+                      "name": "old_hosts",
+                      "op": "ref"
                     }
                   ],
-                  "fn": "ceil",
+                  "fn": "max",
                   "op": "call"
                 },
                 {
@@ -3339,23 +3736,19 @@
                   "op": "ref"
                 }
               ],
-              "fn": "max",
-              "op": "call"
-            },
-            {
-              "name": "old_hosts",
-              "op": "ref"
+              "op": "-"
             }
           ],
-          "op": "-"
+          "op": "*"
         },
         "depends_on": [
           "busy_cores",
           "old_hosts",
+          "old_short_equal",
           "queueing_margin",
           "smallest_cores"
         ],
-        "formula": "max(ceil(busy_cores / (smallest_cores * (1 - queueing_margin))), old_hosts) - old_hosts",
+        "formula": "old_short_equal * (max(ceil(busy_cores / (smallest_cores * (1 - queueing_margin))), old_hosts) - old_hosts)",
         "histogram": {
           "counts": [
             37055,
@@ -3494,10 +3887,10 @@
         },
         "kind": "derived",
         "label": "new hosts the requests need, routed equally",
-        "layer": 4,
+        "layer": 5,
         "note": null,
         "point": 50.0,
-        "row": 1,
+        "row": 0,
         "summary": {
           "max": 2323.0,
           "mean": 69.55039,
@@ -3912,7 +4305,7 @@
           "kind": "assumption",
           "source": "the sizing decision: new_hosts_weighted at the point estimates (ch10, ch12)"
         },
-        "row": 1,
+        "row": 5,
         "slider": {
           "max": 120.0,
           "min": 2.0
@@ -4082,10 +4475,10 @@
         },
         "kind": "derived",
         "label": "new hosts to buy, requests routed equally",
-        "layer": 5,
+        "layer": 6,
         "note": null,
         "point": 54.0,
-        "row": 1,
+        "row": 0,
         "summary": {
           "max": 2323.0,
           "mean": 89.66605,
@@ -4303,7 +4696,7 @@
         "layer": 1,
         "note": null,
         "point": 0.0,
-        "row": 5,
+        "row": 4,
         "unit": "core"
       },
       "old_disk": {
@@ -4327,10 +4720,10 @@
         "formula": "old_hosts * disk_per_old_host",
         "kind": "derived",
         "label": "disk the old hosts give",
-        "layer": 3,
+        "layer": 2,
         "note": null,
         "point": 0.0,
-        "row": 4,
+        "row": 15,
         "unit": "TB"
       },
       "old_host_power": {
@@ -4362,7 +4755,7 @@
           "kind": "assumption",
           "source": "this worked example's premise: thirty of last generation's hosts are kept in service to the horizon. A decision, because keeping them is a choice"
         },
-        "row": 1,
+        "row": 2,
         "slider": {
           "max": 120.0,
           "min": 0.0
@@ -4407,9 +4800,9 @@
         "kind": "derived",
         "label": "any old hosts left",
         "layer": 2,
-        "note": "One while any old host is in service, nought once they have all gone. A generation with no hosts in the pool cannot be its smallest or its largest host. The new hosts are always there: the purchase is at least two.",
+        "note": "One while any old host is in service, nought once they have all gone. A generation with no hosts in the pool cannot be its smallest or its largest host. The new hosts are always there: *new hosts to buy* starts at two.",
         "point": 0.0,
-        "row": 19,
+        "row": 18,
         "unit": "dimensionless"
       },
       "old_ram": {
@@ -4569,10 +4962,10 @@
         },
         "kind": "derived",
         "label": "memory the old hosts give the service",
-        "layer": 3,
+        "layer": 2,
         "note": null,
         "point": 0.0,
-        "row": 5,
+        "row": 10,
         "summary": {
           "max": 0.0,
           "mean": 0.0,
@@ -4585,6 +4978,245 @@
           "sd": 0.0
         },
         "unit": "TB"
+      },
+      "old_short_equal": {
+        "ast": {
+          "args": [
+            {
+              "args": [
+                {
+                  "args": [
+                    {
+                      "args": [
+                        {
+                          "args": [
+                            {
+                              "args": [
+                                {
+                                  "name": "busy_cores",
+                                  "op": "ref"
+                                },
+                                {
+                                  "args": [
+                                    {
+                                      "name": "cores_per_old_host",
+                                      "op": "ref"
+                                    },
+                                    {
+                                      "args": [
+                                        {
+                                          "op": "const",
+                                          "value": 1.0
+                                        },
+                                        {
+                                          "name": "queueing_margin",
+                                          "op": "ref"
+                                        }
+                                      ],
+                                      "op": "-"
+                                    }
+                                  ],
+                                  "op": "*"
+                                }
+                              ],
+                              "op": "/"
+                            }
+                          ],
+                          "fn": "ceil",
+                          "op": "call"
+                        },
+                        {
+                          "name": "old_hosts",
+                          "op": "ref"
+                        }
+                      ],
+                      "op": "-"
+                    },
+                    {
+                      "op": "const",
+                      "value": 0.0
+                    }
+                  ],
+                  "fn": "max",
+                  "op": "call"
+                },
+                {
+                  "name": "one_host",
+                  "op": "ref"
+                }
+              ],
+              "op": "/"
+            },
+            {
+              "op": "const",
+              "value": 1.0
+            }
+          ],
+          "fn": "min",
+          "op": "call"
+        },
+        "depends_on": [
+          "busy_cores",
+          "cores_per_old_host",
+          "old_hosts",
+          "one_host",
+          "queueing_margin"
+        ],
+        "formula": "min(max(ceil(busy_cores / (cores_per_old_host * (1 - queueing_margin))) - old_hosts, 0) / one_host, 1)",
+        "histogram": {
+          "counts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            100000,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "edges": [
+            0.5,
+            0.515625,
+            0.53125,
+            0.546875,
+            0.5625,
+            0.578125,
+            0.59375,
+            0.609375,
+            0.625,
+            0.640625,
+            0.65625,
+            0.671875,
+            0.6875,
+            0.703125,
+            0.71875,
+            0.734375,
+            0.75,
+            0.765625,
+            0.78125,
+            0.796875,
+            0.8125,
+            0.828125,
+            0.84375,
+            0.859375,
+            0.875,
+            0.890625,
+            0.90625,
+            0.921875,
+            0.9375,
+            0.953125,
+            0.96875,
+            0.984375,
+            1.0,
+            1.015625,
+            1.03125,
+            1.046875,
+            1.0625,
+            1.078125,
+            1.09375,
+            1.109375,
+            1.125,
+            1.140625,
+            1.15625,
+            1.171875,
+            1.1875,
+            1.203125,
+            1.21875,
+            1.234375,
+            1.25,
+            1.265625,
+            1.28125,
+            1.296875,
+            1.3125,
+            1.328125,
+            1.34375,
+            1.359375,
+            1.375,
+            1.390625,
+            1.40625,
+            1.421875,
+            1.4375,
+            1.453125,
+            1.46875,
+            1.484375,
+            1.5
+          ],
+          "spacing": "linear"
+        },
+        "kind": "derived",
+        "label": "the old hosts alone fall short, routed equally",
+        "layer": 4,
+        "note": "One if the old hosts on their own cannot carry the busy hour below the margin, nought if they can. The smallest host is a new one only once a new host is bought, so the question is asked of the old hosts alone first: old hosts with more cores than the new ones may need no new hosts at all.",
+        "point": 1.0,
+        "row": 1,
+        "summary": {
+          "max": 1.0,
+          "mean": 1.0,
+          "min": 1.0,
+          "p25": 1.0,
+          "p5": 1.0,
+          "p50": 1.0,
+          "p75": 1.0,
+          "p95": 1.0,
+          "sd": 0.0
+        },
+        "unit": "dimensionless"
       },
       "old_support_per_host": {
         "decided": "outside",
@@ -4615,7 +5247,7 @@
           "kind": "fact",
           "source": "definition"
         },
-        "row": 13,
+        "row": 10,
         "unit": "host"
       },
       "one_year": {
@@ -4631,7 +5263,7 @@
           "kind": "fact",
           "source": "definition"
         },
-        "row": 3,
+        "row": 5,
         "unit": "year"
       },
       "os_reserve": {
@@ -4782,14 +5414,14 @@
         },
         "kind": "input",
         "label": "memory the operating system keeps",
-        "layer": 1,
+        "layer": 0,
         "note": null,
         "point": 0.11071796769724492,
         "provenance": {
           "kind": "assumption",
           "source": "Triangular, the same range as the web service model's os_reserve. The same share on both generations"
         },
-        "row": 2,
+        "row": 0,
         "summary": {
           "max": 0.17975047050832355,
           "mean": 0.11335426088366654,
@@ -4973,7 +5605,7 @@
         "layer": 2,
         "note": null,
         "point": 42560.029939471824,
-        "row": 13,
+        "row": 12,
         "summary": {
           "max": 1604760.187651341,
           "mean": 56509.611131593665,
@@ -5142,7 +5774,7 @@
           "kind": "assumption",
           "source": "ch04 \u2014 the busy hour, not the daily mean. Triangular, because this is an engineer's lowest, most likely and highest values; claiming more precision would be invention."
         },
-        "row": 7,
+        "row": 3,
         "slider": {
           "max": 40000.0,
           "min": 500.0
@@ -5196,6 +5828,227 @@
         "point": 560.0,
         "row": 14,
         "unit": "core"
+      },
+      "pool_disk": {
+        "ast": {
+          "args": [
+            {
+              "name": "old_disk",
+              "op": "ref"
+            },
+            {
+              "args": [
+                {
+                  "name": "new_hosts",
+                  "op": "ref"
+                },
+                {
+                  "name": "disk_per_new_host",
+                  "op": "ref"
+                }
+              ],
+              "op": "*"
+            }
+          ],
+          "op": "+"
+        },
+        "depends_on": [
+          "disk_per_new_host",
+          "new_hosts",
+          "old_disk"
+        ],
+        "formula": "old_disk + new_hosts * disk_per_new_host",
+        "kind": "derived",
+        "label": "disk in the pool",
+        "layer": 3,
+        "note": null,
+        "point": 70.0,
+        "row": 13,
+        "unit": "TB"
+      },
+      "pool_ram": {
+        "ast": {
+          "args": [
+            {
+              "name": "old_ram",
+              "op": "ref"
+            },
+            {
+              "args": [
+                {
+                  "name": "new_hosts",
+                  "op": "ref"
+                },
+                {
+                  "name": "ram_for_service_new",
+                  "op": "ref"
+                }
+              ],
+              "op": "*"
+            }
+          ],
+          "op": "+"
+        },
+        "depends_on": [
+          "new_hosts",
+          "old_ram",
+          "ram_for_service_new"
+        ],
+        "formula": "old_ram + new_hosts * ram_for_service_new",
+        "histogram": {
+          "counts": [
+            53,
+            121,
+            201,
+            272,
+            336,
+            408,
+            494,
+            567,
+            608,
+            699,
+            792,
+            838,
+            935,
+            928,
+            1099,
+            1172,
+            1142,
+            1286,
+            1390,
+            1426,
+            1525,
+            1575,
+            1610,
+            1687,
+            1792,
+            1910,
+            2037,
+            2008,
+            2023,
+            2169,
+            2234,
+            2205,
+            2367,
+            2453,
+            2517,
+            2517,
+            2604,
+            2673,
+            2769,
+            2899,
+            3000,
+            2971,
+            3082,
+            2981,
+            2807,
+            2701,
+            2516,
+            2402,
+            2305,
+            2166,
+            1924,
+            1959,
+            1711,
+            1558,
+            1414,
+            1236,
+            1130,
+            1001,
+            834,
+            654,
+            544,
+            383,
+            271,
+            109
+          ],
+          "edges": [
+            1.972849146086637,
+            1.9773361181823292,
+            1.9818230902780214,
+            1.9863100623737135,
+            1.9907970344694057,
+            1.9952840065650979,
+            1.99977097866079,
+            2.0042579507564824,
+            2.0087449228521743,
+            2.0132318949478667,
+            2.0177188670435586,
+            2.022205839139251,
+            2.026692811234943,
+            2.0311797833306353,
+            2.0356667554263272,
+            2.0401537275220196,
+            2.0446406996177116,
+            2.049127671713404,
+            2.053614643809096,
+            2.0581016159047882,
+            2.06258858800048,
+            2.0670755600961725,
+            2.0715625321918645,
+            2.076049504287557,
+            2.080536476383249,
+            2.085023448478941,
+            2.089510420574633,
+            2.0939973926703255,
+            2.0984843647660174,
+            2.10297133686171,
+            2.107458308957402,
+            2.111945281053094,
+            2.116432253148786,
+            2.1209192252444784,
+            2.1254061973401708,
+            2.1298931694358627,
+            2.134380141531555,
+            2.138867113627247,
+            2.1433540857229394,
+            2.1478410578186313,
+            2.1523280299143237,
+            2.1568150020100156,
+            2.161301974105708,
+            2.1657889462014,
+            2.1702759182970923,
+            2.1747628903927843,
+            2.1792498624884766,
+            2.1837368345841686,
+            2.188223806679861,
+            2.192710778775553,
+            2.1971977508712452,
+            2.201684722966937,
+            2.2061716950626296,
+            2.2106586671583215,
+            2.215145639254014,
+            2.219632611349706,
+            2.224119583445398,
+            2.22860655554109,
+            2.2330935276367825,
+            2.2375804997324744,
+            2.242067471828167,
+            2.246554443923859,
+            2.251041416019551,
+            2.255528388115243,
+            2.2600153602109354
+          ],
+          "spacing": "linear"
+        },
+        "kind": "derived",
+        "label": "memory the pool gives the service",
+        "layer": 3,
+        "note": null,
+        "point": 2.138884857570019,
+        "row": 6,
+        "summary": {
+          "max": 2.2600153602109354,
+          "mean": 2.132544093479744,
+          "min": 1.972849146086637,
+          "p25": 2.0897840600770476,
+          "p5": 2.0246172398969553,
+          "p50": 2.1388633400061354,
+          "p75": 2.1776622686786604,
+          "p95": 2.223879278065322,
+          "sd": 0.0601908365447627
+        },
+        "unit": "TB"
       },
       "pue": {
         "decided": "outside",
@@ -5733,7 +6586,7 @@
           "kind": "assumption",
           "source": "the web service model's queueing margin (ch06, ch11): how far under the knee the fleet runs at the busy hour"
         },
-        "row": 12,
+        "row": 8,
         "slider": {
           "max": 0.6,
           "min": 0.0
@@ -5906,10 +6759,10 @@
         },
         "kind": "derived",
         "label": "memory the service can use, per new host",
-        "layer": 3,
+        "layer": 2,
         "note": null,
         "point": 0.061110995930571975,
-        "row": 6,
+        "row": 11,
         "summary": {
           "max": 0.06457186743459815,
           "mean": 0.060929831242278396,
@@ -6089,10 +6942,10 @@
         },
         "kind": "derived",
         "label": "memory the service can use, per old host",
-        "layer": 2,
+        "layer": 1,
         "note": null,
         "point": 0.12222199186114395,
-        "row": 10,
+        "row": 1,
         "summary": {
           "max": 0.1291437348691963,
           "mean": 0.12185966248455679,
@@ -6112,14 +6965,14 @@
         "distribution": null,
         "kind": "input",
         "label": "memory per new host",
-        "layer": 2,
+        "layer": 1,
         "note": null,
         "point": 64.0,
         "provenance": {
           "kind": "vendor_claim",
           "source": "the web service model's host (ch10): spec sheet, the modules fitted"
         },
-        "row": 11,
+        "row": 2,
         "slider": {
           "max": 1024.0,
           "min": 8.0
@@ -6132,14 +6985,14 @@
         "distribution": null,
         "kind": "input",
         "label": "memory per old host",
-        "layer": 1,
+        "layer": 0,
         "note": "One number: the old hosts are already bought, and you can read their specification off the hosts themselves.",
         "point": 128.0,
         "provenance": {
           "kind": "assumption",
           "source": "this worked example's premise: last generation's hosts were bought memory-heavy, with twice this generation's memory and half its cores"
         },
-        "row": 3,
+        "row": 1,
         "slider": {
           "max": 1024.0,
           "min": 8.0
@@ -6306,7 +7159,7 @@
         "layer": 3,
         "note": null,
         "point": 72.35970651044417,
-        "row": 7,
+        "row": 10,
         "summary": {
           "max": 1676.657552326908,
           "mean": 92.78125443414659,
@@ -6490,7 +7343,7 @@
         "layer": 2,
         "note": null,
         "point": 1.1221748324066343,
-        "row": 12,
+        "row": 16,
         "summary": {
           "max": 1.3393194524141427,
           "mean": 1.1302893213823533,
@@ -6657,7 +7510,7 @@
         "note": null,
         "point": 3.5828437962482282,
         "result": "records-compression",
-        "row": 12,
+        "row": 14,
         "summary": {
           "max": 3.5867090942948985,
           "mean": 3.5828442960149025,
@@ -6684,7 +7537,7 @@
           "kind": "assumption",
           "source": "three copies of every record, so that a host can die and take its disks with it. A different durability scheme substitutes its own factor here and the rest of the model is unchanged, which is the point of it being a node"
         },
-        "row": 4,
+        "row": 9,
         "slider": {
           "max": 4.0,
           "min": 1.0
@@ -6846,7 +7699,7 @@
           "kind": "assumption",
           "source": "The lowest, likeliest and highest values are this book's own choice for the running example: not measured on any machine, not taken from any product. It is held as an assumption because no reference machine is declared in `rig/machine.yml`; `make measure-rig` on a declared machine replaces it with a measured one. It is triangular, with three values, because it has not been measured. Once it is, it becomes a normal spread around the measurement, which is a change of claim and not only of numbers (ch13)."
         },
-        "row": 15,
+        "row": 13,
         "slider": {
           "max": 0.05,
           "min": 0.002
@@ -7047,7 +7900,7 @@
         "layer": 4,
         "note": null,
         "point": 0.1884367357042817,
-        "row": 8,
+        "row": 10,
         "summary": {
           "max": 4.366295709184657,
           "mean": 0.24161785008892345,
@@ -7143,7 +7996,7 @@
         "layer": 3,
         "note": null,
         "point": 16.0,
-        "row": 9,
+        "row": 4,
         "unit": "core/host"
       },
       "smallest_disk": {
@@ -7208,7 +8061,7 @@
         "layer": 3,
         "note": null,
         "point": 2.0,
-        "row": 16,
+        "row": 15,
         "unit": "TB/host"
       },
       "stored_data": {
@@ -7381,7 +8234,7 @@
         "layer": 2,
         "note": null,
         "point": 64.48166936275017,
-        "row": 16,
+        "row": 17,
         "summary": {
           "max": 1301.5979753623335,
           "mean": 82.10239494878911,
@@ -7408,7 +8261,7 @@
           "kind": "assumption",
           "source": "The service owners estimate what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression. It has not been counted yet, and counting it would turn the estimate into a fact."
         },
-        "row": 10,
+        "row": 11,
         "slider": {
           "max": 200.0,
           "min": 1.0
@@ -7754,7 +8607,7 @@
         "layer": 5,
         "note": null,
         "point": 677113.3537632284,
-        "row": 0,
+        "row": 1,
         "summary": {
           "max": 3118090.593992521,
           "mean": 738777.9425507324,
@@ -7944,11 +8797,11 @@
           "spacing": "linear"
         },
         "kind": "derived",
-        "label": "utilisation after losing the largest host",
+        "label": "utilisation after losing the host with the most cores",
         "layer": 4,
         "note": null,
         "point": 1.0226765843422159,
-        "row": 7,
+        "row": 8,
         "summary": {
           "max": 47.813793823452656,
           "mean": 1.4216049032926865,
@@ -8132,7 +8985,7 @@
         "layer": 4,
         "note": null,
         "point": 0.9934572533610097,
-        "row": 5,
+        "row": 6,
         "summary": {
           "max": 46.44768542849687,
           "mean": 1.380987620341467,
@@ -8306,7 +9159,7 @@
         "layer": 4,
         "note": null,
         "point": 0.9934572533610097,
-        "row": 6,
+        "row": 7,
         "summary": {
           "max": 46.44768542849687,
           "mean": 1.380987620341467,
@@ -8480,7 +9333,7 @@
         "layer": 3,
         "note": null,
         "point": 2.461071789020011,
-        "row": 8,
+        "row": 5,
         "summary": {
           "max": 71.93331149159381,
           "mean": 3.282988006540297,
@@ -8529,6 +9382,7 @@
       "peak_request_rate",
       "pool_cores",
       "annual_licences",
+      "pool_disk",
       "pue",
       "annual_energy_cost",
       "queueing_margin",
@@ -8537,12 +9391,14 @@
       "ram_per_old_host",
       "ram_for_service_old",
       "old_ram",
+      "pool_ram",
       "record_compression",
       "replication_factor",
       "raw_per_stored",
       "service_demand",
       "busy_cores",
       "new_for_requests",
+      "old_short_equal",
       "shards",
       "smallest_cores",
       "new_for_requests_equal",
@@ -8551,6 +9407,7 @@
       "stored_data",
       "largest_shard",
       "raw_data",
+      "disk_fill",
       "new_for_storage",
       "shard_fit",
       "support_rate",
@@ -8564,6 +9421,7 @@
       "utilisation_weighted",
       "queueing_headroom_weighted",
       "working_set",
+      "cache_fill",
       "new_for_memory",
       "new_hosts_equal",
       "new_hosts_weighted"
@@ -8581,7 +9439,9 @@
       "queueing_headroom_weighted",
       "queueing_headroom_equal",
       "shard_fit",
-      "failure_headroom"
+      "failure_headroom",
+      "cache_fill",
+      "disk_fill"
     ],
     "scenario": {
       "because": "The worst point for a pool bought on the assumption that the old hosts stay: they have gone, and demand has not stopped growing. The new hosts are the ones bought for the reference case.",
@@ -8743,6 +9603,296 @@
           "low": 89654.23184546862,
           "low_input": 0.010190890230020665,
           "node": "service_demand",
+          "span": 0.0
+        }
+      ],
+      "cache_fill": [
+        {
+          "base": 1.150633134976713,
+          "high": 2.806672738310795,
+          "high_input": 1.6,
+          "kind": "input",
+          "label": "annual growth factor",
+          "low": 0.4717174871278954,
+          "low_input": 1.12,
+          "node": "annual_growth",
+          "span": 2.3349552511828997
+        },
+        {
+          "base": 1.150633134976713,
+          "high": 1.8477815496327568,
+          "high_input": 0.06129171306613029,
+          "kind": "input",
+          "label": "share of records touched in a busy hour",
+          "low": 0.6581813367091813,
+          "low_input": 0.02183215956619923,
+          "node": "hot_fraction",
+          "span": 1.1896002129235754
+        },
+        {
+          "base": 1.150633134976713,
+          "high": 1.202416887867919,
+          "high_input": 0.14901613323034066,
+          "kind": "input",
+          "label": "memory the operating system keeps",
+          "low": 1.1145270608446418,
+          "low_input": 0.08190890230020664,
+          "node": "os_reserve",
+          "span": 0.08788982702327708
+        },
+        {
+          "base": 1.150633134976713,
+          "high": 1.150633134976713,
+          "high_input": 0.20999999999999996,
+          "kind": "input",
+          "label": "electricity price",
+          "low": 1.150633134976713,
+          "low_input": 0.08499999999999996,
+          "node": "electricity_price",
+          "span": 0.0
+        },
+        {
+          "base": 1.150633134976713,
+          "high": 1.150633134976713,
+          "high_input": 9499.999999999995,
+          "kind": "input",
+          "label": "price of a new host",
+          "low": 1.150633134976713,
+          "low_input": 4500.000000000001,
+          "node": "host_price",
+          "span": 0.0
+        },
+        {
+          "base": 1.150633134976713,
+          "high": 1.150633134976713,
+          "high_input": 1.4838104996137775,
+          "kind": "input",
+          "label": "index overhead",
+          "low": 1.150633134976713,
+          "low_input": 1.2321583836257748,
+          "node": "index_overhead",
+          "span": 0.0
+        },
+        {
+          "base": 1.150633134976713,
+          "high": 1.150633134976713,
+          "high_input": 159.99999999999994,
+          "kind": "input",
+          "label": "licence per core per year",
+          "low": 1.150633134976713,
+          "low_input": 39.99999999999998,
+          "node": "licence_per_core",
+          "span": 0.0
+        },
+        {
+          "base": 1.150633134976713,
+          "high": 1.150633134976713,
+          "high_input": 371.01020514433645,
+          "kind": "input",
+          "label": "power per new host",
+          "low": 1.150633134976713,
+          "low_input": 260.0,
+          "node": "new_host_power",
+          "span": 0.0
+        },
+        {
+          "base": 1.150633134976713,
+          "high": 1.150633134976713,
+          "high_input": 15483.364083745513,
+          "kind": "input",
+          "label": "peak request rate, day one",
+          "low": 1.150633134976713,
+          "low_input": 5915.47594742265,
+          "node": "peak_request_rate_t0",
+          "span": 0.0
+        },
+        {
+          "base": 1.150633134976713,
+          "high": 1.150633134976713,
+          "high_input": 1.5950806661517034,
+          "kind": "input",
+          "label": "PUE",
+          "low": 1.150633134976713,
+          "low_input": 1.259544511501033,
+          "node": "pue",
+          "span": 0.0
+        },
+        {
+          "base": 1.150633134976713,
+          "high": 1.150633134976713,
+          "high_input": 3.5839391810428465,
+          "kind": "measured",
+          "label": "record compression ratio",
+          "low": 1.150633134976713,
+          "low_input": 3.58174841145361,
+          "node": "record_compression",
+          "span": 0.0
+        },
+        {
+          "base": 1.150633134976713,
+          "high": 1.150633134976713,
+          "high_input": 0.016901613323034068,
+          "kind": "input",
+          "label": "CPU time per request",
+          "low": 1.150633134976713,
+          "low_input": 0.010190890230020665,
+          "node": "service_demand",
+          "span": 0.0
+        },
+        {
+          "base": 1.150633134976713,
+          "high": 1.150633134976713,
+          "high_input": 0.1522511261489768,
+          "kind": "input",
+          "label": "support rate on new hosts",
+          "low": 1.150633134976713,
+          "low_input": 0.09097617696340304,
+          "node": "support_rate",
+          "span": 0.0
+        }
+      ],
+      "disk_fill": [
+        {
+          "base": 1.0337100930063452,
+          "high": 2.521469136569184,
+          "high_input": 1.6,
+          "kind": "input",
+          "label": "annual growth factor",
+          "low": 0.42378331778318284,
+          "low_input": 1.12,
+          "node": "annual_growth",
+          "span": 2.0976858187860015
+        },
+        {
+          "base": 1.0337100930063452,
+          "high": 1.144484861836716,
+          "high_input": 1.4838104996137775,
+          "kind": "input",
+          "label": "index overhead",
+          "low": 0.950381883543724,
+          "low_input": 1.2321583836257748,
+          "node": "index_overhead",
+          "span": 0.19410297829299206
+        },
+        {
+          "base": 1.0337100930063452,
+          "high": 1.0333941528464476,
+          "high_input": 3.5839391810428465,
+          "kind": "measured",
+          "label": "record compression ratio",
+          "low": 1.0340262264104396,
+          "low_input": 3.58174841145361,
+          "node": "record_compression",
+          "span": 0.000632073563991975
+        },
+        {
+          "base": 1.0337100930063452,
+          "high": 1.0337100930063452,
+          "high_input": 0.20999999999999996,
+          "kind": "input",
+          "label": "electricity price",
+          "low": 1.0337100930063452,
+          "low_input": 0.08499999999999996,
+          "node": "electricity_price",
+          "span": 0.0
+        },
+        {
+          "base": 1.0337100930063452,
+          "high": 1.0337100930063452,
+          "high_input": 9499.999999999995,
+          "kind": "input",
+          "label": "price of a new host",
+          "low": 1.0337100930063452,
+          "low_input": 4500.000000000001,
+          "node": "host_price",
+          "span": 0.0
+        },
+        {
+          "base": 1.0337100930063452,
+          "high": 1.0337100930063452,
+          "high_input": 0.06129171306613029,
+          "kind": "input",
+          "label": "share of records touched in a busy hour",
+          "low": 1.0337100930063452,
+          "low_input": 0.02183215956619923,
+          "node": "hot_fraction",
+          "span": 0.0
+        },
+        {
+          "base": 1.0337100930063452,
+          "high": 1.0337100930063452,
+          "high_input": 159.99999999999994,
+          "kind": "input",
+          "label": "licence per core per year",
+          "low": 1.0337100930063452,
+          "low_input": 39.99999999999998,
+          "node": "licence_per_core",
+          "span": 0.0
+        },
+        {
+          "base": 1.0337100930063452,
+          "high": 1.0337100930063452,
+          "high_input": 371.01020514433645,
+          "kind": "input",
+          "label": "power per new host",
+          "low": 1.0337100930063452,
+          "low_input": 260.0,
+          "node": "new_host_power",
+          "span": 0.0
+        },
+        {
+          "base": 1.0337100930063452,
+          "high": 1.0337100930063452,
+          "high_input": 0.14901613323034066,
+          "kind": "input",
+          "label": "memory the operating system keeps",
+          "low": 1.0337100930063452,
+          "low_input": 0.08190890230020664,
+          "node": "os_reserve",
+          "span": 0.0
+        },
+        {
+          "base": 1.0337100930063452,
+          "high": 1.0337100930063452,
+          "high_input": 15483.364083745513,
+          "kind": "input",
+          "label": "peak request rate, day one",
+          "low": 1.0337100930063452,
+          "low_input": 5915.47594742265,
+          "node": "peak_request_rate_t0",
+          "span": 0.0
+        },
+        {
+          "base": 1.0337100930063452,
+          "high": 1.0337100930063452,
+          "high_input": 1.5950806661517034,
+          "kind": "input",
+          "label": "PUE",
+          "low": 1.0337100930063452,
+          "low_input": 1.259544511501033,
+          "node": "pue",
+          "span": 0.0
+        },
+        {
+          "base": 1.0337100930063452,
+          "high": 1.0337100930063452,
+          "high_input": 0.016901613323034068,
+          "kind": "input",
+          "label": "CPU time per request",
+          "low": 1.0337100930063452,
+          "low_input": 0.010190890230020665,
+          "node": "service_demand",
+          "span": 0.0
+        },
+        {
+          "base": 1.0337100930063452,
+          "high": 1.0337100930063452,
+          "high_input": 0.1522511261489768,
+          "kind": "input",
+          "label": "support rate on new hosts",
+          "low": 1.0337100930063452,
+          "low_input": 0.09097617696340304,
+          "node": "support_rate",
           "span": 0.0
         }
       ],
@@ -10518,9 +11668,11 @@
           "annual_running": 3203.0989625982074,
           "annual_support": 1542.4177293340524,
           "busy_cores": 1.0,
+          "cache_fill": 0.32727334410851266,
           "cache_margin": 0.0,
           "cores_per_new_host": 4.0,
           "cores_per_old_host": 2.0,
+          "disk_fill": 0.18702913873443905,
           "disk_margin": 0.0,
           "disk_per_new_host": 1.0,
           "disk_per_old_host": 1.0,
@@ -10550,6 +11702,7 @@
           "old_hosts": 0.0,
           "old_in_service": 0.0,
           "old_ram": 0.0,
+          "old_short_equal": 1.0,
           "old_support_per_host": 300.0,
           "one_host": 1.0,
           "one_year": 1.0,
@@ -10557,6 +11710,8 @@
           "peak_request_rate": 500.0,
           "peak_request_rate_t0": 500.0,
           "pool_cores": 8.0,
+          "pool_disk": 2.0,
+          "pool_ram": 0.015277748982642994,
           "pue": 1.4035898384862247,
           "queueing_headroom_equal": 0.125,
           "queueing_headroom_weighted": 0.125,
@@ -10613,9 +11768,11 @@
           "annual_running": 193377.10433781942,
           "annual_support": 33293.07923701132,
           "busy_cores": 443.267822265625,
+          "cache_fill": 0.7927219422458269,
           "cache_margin": 0.125,
           "cores_per_new_host": 35.0,
           "cores_per_old_host": 17.5,
+          "disk_fill": 0.10466651306728822,
           "disk_margin": 0.1125,
           "disk_per_new_host": 15.75,
           "disk_per_old_host": 15.75,
@@ -10645,6 +11802,7 @@
           "old_hosts": 30.0,
           "old_in_service": 1.0,
           "old_ram": 7.5051941877233705,
+          "old_short_equal": 0.0,
           "old_support_per_host": 300.0,
           "one_host": 1.0,
           "one_year": 1.0,
@@ -10652,6 +11810,8 @@
           "peak_request_rate": 31661.9873046875,
           "peak_request_rate_t0": 10375.0,
           "pool_cores": 1627.5,
+          "pool_disk": 968.625,
+          "pool_ram": 15.38564808483291,
           "pue": 1.4035898384862247,
           "queueing_headroom_equal": 0.4118632494918699,
           "queueing_headroom_weighted": 0.2723611811155914,
@@ -10708,9 +11868,11 @@
           "annual_running": 604271.1097130405,
           "annual_support": 65043.74074468859,
           "busy_cores": 3998.1093750000005,
+          "cache_fill": 1.952170480019174,
           "cache_margin": 0.25,
           "cores_per_new_host": 66.0,
           "cores_per_old_host": 33.0,
+          "disk_fill": 0.19338216838856118,
           "disk_margin": 0.225,
           "disk_per_new_host": 30.5,
           "disk_per_old_host": 30.5,
@@ -10740,6 +11902,7 @@
           "old_hosts": 60.0,
           "old_in_service": 1.0,
           "old_ram": 29.562444281414194,
+          "old_short_equal": 1.0,
           "old_support_per_host": 300.0,
           "one_host": 1.0,
           "one_year": 1.0,
@@ -10747,6 +11910,8 @@
           "peak_request_rate": 153773.4375,
           "peak_request_rate_t0": 20250.0,
           "pool_cores": 6006.0,
+          "pool_disk": 3690.5,
+          "pool_ram": 59.617595967518625,
           "pue": 1.4035898384862247,
           "queueing_headroom_equal": 1.0012795830202856,
           "queueing_headroom_weighted": 0.6656858766233767,
@@ -10803,9 +11968,11 @@
           "annual_running": 1720799.1183133945,
           "annual_support": 115844.79915697222,
           "busy_cores": 40347.042765399994,
+          "cache_fill": 6.334824907080284,
           "cache_margin": 0.45,
           "cores_per_new_host": 115.60000000000001,
           "cores_per_old_host": 57.800000000000004,
+          "disk_fill": 0.5276789339028485,
           "disk_margin": 0.405,
           "disk_per_new_host": 54.1,
           "disk_per_old_host": 54.1,
@@ -10835,6 +12002,7 @@
           "old_hosts": 108.0,
           "old_in_service": 1.0,
           "old_ram": 95.1223207157318,
+          "old_short_equal": 1.0,
           "old_support_per_host": 300.0,
           "one_host": 1.0,
           "one_year": 1.0,
@@ -10842,6 +12010,8 @@
           "peak_request_rate": 892633.6894999997,
           "peak_request_rate_t0": 36050.0,
           "pool_cores": 18750.320000000003,
+          "pool_disk": 11696.42,
+          "pool_ram": 190.42079387723348,
           "pue": 1.4035898384862247,
           "queueing_headroom_equal": 3.2287036197260637,
           "queueing_headroom_weighted": 2.1518055566731653,
@@ -10898,9 +12068,11 @@
           "annual_running": 2088219.1204634826,
           "annual_support": 128545.06376004315,
           "busy_cores": 64000.0,
+          "cache_fill": 8.181833602712818,
           "cache_margin": 0.5,
           "cores_per_new_host": 128.0,
           "cores_per_old_host": 64.0,
+          "disk_fill": 0.6649924932780055,
           "disk_margin": 0.45,
           "disk_per_new_host": 60.0,
           "disk_per_old_host": 60.0,
@@ -10930,6 +12102,7 @@
           "old_hosts": 120.0,
           "old_in_service": 1.0,
           "old_ram": 117.33311218669819,
+          "old_short_equal": 1.0,
           "old_support_per_host": 300.0,
           "one_host": 1.0,
           "one_year": 1.0,
@@ -10937,6 +12110,8 @@
           "peak_request_rate": 1280000.0,
           "peak_request_rate_t0": 40000.0,
           "pool_cores": 23040.0,
+          "pool_disk": 14400.0,
+          "pool_ram": 234.66622437339637,
           "pue": 1.4035898384862247,
           "queueing_headroom_equal": 4.166666666666667,
           "queueing_headroom_weighted": 2.7777777777777777,
@@ -10975,9 +12150,11 @@
     "annual_running": "USD/year",
     "annual_support": "USD/year",
     "busy_cores": "core",
+    "cache_fill": "dimensionless",
     "cache_margin": "dimensionless",
     "cores_per_new_host": "core/host",
     "cores_per_old_host": "core/host",
+    "disk_fill": "dimensionless",
     "disk_margin": "dimensionless",
     "disk_per_new_host": "TB/host",
     "disk_per_old_host": "TB/host",
@@ -11007,6 +12184,7 @@
     "old_hosts": "host",
     "old_in_service": "dimensionless",
     "old_ram": "TB",
+    "old_short_equal": "dimensionless",
     "old_support_per_host": "USD/host/year",
     "one_host": "host",
     "one_year": "year",
@@ -11014,6 +12192,8 @@
     "peak_request_rate": "request/second",
     "peak_request_rate_t0": "request/second",
     "pool_cores": "core",
+    "pool_disk": "TB",
+    "pool_ram": "TB",
     "pue": "dimensionless",
     "queueing_headroom_equal": "dimensionless",
     "queueing_headroom_weighted": "dimensionless",

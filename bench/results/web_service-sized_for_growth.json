@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "807d3b5e3cc9d743",
+  "code_fingerprint": "d66793743639e425",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-27T09:55:08+00:00",
-  "git_revision": "cdaebe2",
+  "generated_at": "2026-09-27T11:03:34+00:00",
+  "git_revision": "6c61c97",
   "kind": "model",
   "name": "web_service-sized_for_growth",
   "produced_by": {
@@ -123,7 +123,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-27T09:55:07+00:00",
+    "generated_at": "2026-09-27T11:03:32+00:00",
     "model": "web_service",
     "nodes": {
       "achievable_throughput": {

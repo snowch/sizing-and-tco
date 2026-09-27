@@ -123,8 +123,8 @@ def check_model(model: Model, problems: list[str]) -> None:
         if money:
             problems.append(
                 f"{where}: output {name!r} is in {model.nodes[name].unit!r}, and the model "
-                f"declares `currency: {model.currency}`. A model answers in its own currency: "
-                "convert a price quoted in another with a rate, a node of its own with a source."
+                f"declares `currency: {model.currency}`. A model answers in its own currency. A "
+                "price quoted in another is an input, converted by a rate that is an input too."
             )
 
     # 1 — units

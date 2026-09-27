@@ -2,7 +2,7 @@
 # and nothing in it is one of the book's models. The test asks the toolkit what kind of model
 # each of the three files is, and grades the reader's answer against that; it lives under tests/
 # so that it can never be mistaken for a figure the book publishes.
-dsl: 1
+dsl: 2
 model: problem_1_3_a
 title: Model A (exercise fixture)
 

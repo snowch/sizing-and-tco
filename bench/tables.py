@@ -222,7 +222,8 @@ def source(
 
     names = (name, *also)
     links = [f"[`{one}`]({_where(one)})" for one in names]
-    parts = [" and ".join(links)]
+    # A list, not a chain of "and"s: a table drawn from four results read as a run-on.
+    parts = [links[0] if len(links) == 1 else ", ".join(links[:-1]) + " and " + links[-1]]
 
     if load_result(name).get("kind") == "model":
         # Said plainly, because on a model result *Source* now names something a reader can do
@@ -2528,12 +2529,15 @@ def mixed_pool_ceilings(name: str) -> str:
     the fleet that replaced them outright (ch22).
     """
     rows = [
-        "| Ceiling | Old hosts kept | Old hosts retired | All new hosts |",
+        "| Ceiling | Over allowed, old hosts kept | Over allowed, old hosts retired "
+        "| Over allowed, all new hosts |",
         "|---|---:|---:|---:|",
     ]
     for row in load_result(name)["summary"]["ceilings"]:
+        # The book's own verdict words, never the evaluator's: "inside headroom" reads as
+        # reassurance, and here it sits on a pool a hair under its limit.
         cells = [
-            f"{row[column]:.0%}, {row['verdict_' + column]} at the plan"
+            f"{row[column]:.0%} · {VERDICT_MARK[row['verdict_' + column]]}"
             for column in ("kept", "retired", "all_new")
         ]
         rows.append(f"| {row['label']} | " + " | ".join(cells) + " |")

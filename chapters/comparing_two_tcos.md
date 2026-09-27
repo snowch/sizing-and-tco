@@ -261,39 +261,44 @@ The old hosts' purchase price is already spent, so it is in neither total. Keepi
 costs energy, licences on every core, and a maintenance contract, and those are in keep's total.
 Replacing buys more new hosts and pays for those hosts and for running them.
 
-Both scenarios change only decisions, so every uncertain input is drawn once and reaches both.
-The difference can be taken future by future.
+The scenarios change only decisions, so every uncertain input is drawn once and reaches all of them.
+The difference can be taken future by future. Each total counts the new hosts bought, energy,
+licences and support over the horizon. People are left out because they cancel, as this chapter
+showed earlier; network is left out too.
+
+The table's last two rows show the same comparison with requests routed equally. Keeping means
+buying the larger number of new hosts that [ch10](#bandwidth-and-the-binding-constraint)'s third
+column asks for.
 
 ```{include} _generated/comparing-two-tcos-keep-or-replace.md
 ```
 
-The two totals overlap. The difference, taken future by future, stays below zero across its middle
-nine in ten. With requests routed by capacity, keeping the old hosts is cheaper in nearly every
-future.
+Routing by capacity: the two totals overlap. The difference, taken future by future, stays below
+zero across its middle nine in ten. Keeping the old hosts is cheaper in nearly every future.
 
-The lines show where the difference comes from. Keeping buys fewer new hosts, so the purchase is the
-line that decides it. Licences and support also favour keeping, because the kept pool has fewer
-cores and fewer new hosts under contract. Energy runs the other way: an old host draws nearly as
-much power as a new one for half the cores. The table below shows each line on both sides.
+Routing equally: every host is held to the old host's cores. Keeping then means buying more new
+hosts than replacing them all ([ch10](#bandwidth-and-the-binding-constraint)). The last two rows of
+the keep-or-replace table show keeping is then dearer in every future. Across the futures the model
+draws, the difference stays on one side of zero. The router moves it to the other.
+
+The lines show where the capacity-routed difference comes from.
 
 ```{include} _generated/comparing-two-tcos-keep-or-replace-lines.md
 ```
 
-Keeping is cheaper under two conditions: the load balancer routes requests by capacity, and the old
-hosts last to the horizon.
+The purchase line is most of the difference, because keeping buys fewer new hosts. But not all of
+the difference comes from the purchase. Without it, keeping would still be cheaper. Support favours
+keeping too. Licences favour keeping even though the old hosts' cores pay licences, because the kept
+pool has fewer cores in total. Energy runs the other way: an old host draws nearly as much power as
+a new one for half the cores.
 
-If requests are routed equally, every host is held to the old host's cores. Keeping then means
-buying more new hosts than replacing them all ([ch10](#bandwidth-and-the-binding-constraint)). The
-last two rows of the first table show keeping is then dearer in every future.
+Keeping saves money and buys a pool nearer its limits. [ch11](#headroom-and-failure-domains)'s table
+shows the kept pool *into the margin* at the plan with the host with the most cores down. It runs
+**over** if requests are routed equally. The all-new fleet is *ok* on both.
 
-If the old hosts leave early, [ch11](#headroom-and-failure-domains) says to buy for that day or plan
-the next purchase for it. That purchase is a cost, and keep's total has none of it.
-
-[ch11](#headroom-and-failure-domains)'s mixed pool table also has an *All new hosts* column. The
-all-new fleet is *ok* at the plan on every ceiling. It is past its allowed line in fewer futures
-than the kept pool, on every ceiling but the shard's.
-
-Whether keeping is cheaper depends more on your load balancer and retirement dates than on price.
+Keeping is cheaper only if the old hosts last to the horizon. If they leave early,
+[ch11](#headroom-and-failure-domains) says to buy for that day or plan the next purchase for it.
+That purchase is a cost this model does not count. Keep's total has none of it.
 
 ### What a competitive comparison has to show
 
@@ -357,10 +362,11 @@ the choice turns out wrong, which is the risk the buyer takes on. Only a model o
 over shared futures produces it, so the presenter has to run one and show the result. A
 checklist held against a finished document cannot.
 
-**What keeping or replacing leaves out.** Four costs are in neither total. Two bear on replacing:
-what the old hosts would fetch if sold lowers the cost, and moving the data off them raises it. Two
-would raise the cost of keeping: the purchase needed when the old hosts retire, and the old hosts
-failing more often as they age.
+**What keeping or replacing leaves out.** Five costs are in neither total. Two bear on replacing:
+what the old hosts would fetch if sold lowers the cost, and moving the data off them raises it.
+Three would raise the cost of keeping: the purchase needed when the old hosts retire, the old hosts
+failing more often as they age, and network. The kept pool has more hosts in all than the all-new
+fleet, and each host needs a port.
 
 ## Key takeaways
 

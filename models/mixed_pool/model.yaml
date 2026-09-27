@@ -1,4 +1,4 @@
-dsl: 1
+dsl: 2
 model: mixed_pool
 title: Two generations in one pool
 currency: USD
@@ -428,7 +428,7 @@ nodes:
     note: >-
       One while any old host is in service, nought once they have all gone. A generation with no
       hosts in the pool cannot be its smallest or its largest host. The new hosts are always
-      there: the purchase is at least two.
+      there: *new hosts to buy* starts at two.
     formula: min(ceil(old_hosts / one_host), 1)
 
   smallest_cores:
@@ -437,11 +437,22 @@ nodes:
     label: cores on the smallest host
     formula: old_in_service * min(cores_per_old_host, cores_per_new_host) + (1 - old_in_service) * cores_per_new_host
 
+  old_short_equal:
+    kind: derived
+    unit: dimensionless
+    label: the old hosts alone fall short, routed equally
+    note: >-
+      One if the old hosts on their own cannot carry the busy hour below the margin, nought if
+      they can. The smallest host is a new one only once a new host is bought, so the question
+      is asked of the old hosts alone first: old hosts with more cores than the new ones may need
+      no new hosts at all.
+    formula: min(max(ceil(busy_cores / (cores_per_old_host * (1 - queueing_margin))) - old_hosts, 0) / one_host, 1)
+
   new_for_requests_equal:
     kind: derived
     unit: host
     label: new hosts the requests need, routed equally
-    formula: max(ceil(busy_cores / (smallest_cores * (1 - queueing_margin))), old_hosts) - old_hosts
+    formula: old_short_equal * (max(ceil(busy_cores / (smallest_cores * (1 - queueing_margin))), old_hosts) - old_hosts)
 
   new_hosts_equal:
     kind: derived
@@ -540,6 +551,46 @@ nodes:
       nothing about that, so the smallest host sets the limit. The margin is the disk margin,
       because the host still has to take a dead host's records.
 
+  # -- memory and disk, when the old hosts are gone ---------------------------------------------
+  # The old hosts carry much of the pool's memory and disk. The web service's two capacity
+  # ceilings, on the pool as bought, show what their retirement leaves the new hosts to hold.
+
+  pool_ram:
+    kind: derived
+    unit: TB
+    label: memory the pool gives the service
+    formula: old_ram + new_hosts * ram_for_service_new
+
+  pool_disk:
+    kind: derived
+    unit: TB
+    label: disk in the pool
+    formula: old_disk + new_hosts * disk_per_new_host
+
+  cache_fill:
+    kind: ceiling
+    unit: dimensionless
+    label: working set against memory
+    of: working_set / pool_ram
+    limit: 1
+    headroom: cache_margin
+    because: >-
+      The web service's memory ceiling (ch08), on the pool as bought. Past the limit, memory
+      cannot hold the whole working set and some reads go to disk, which the service time per
+      request does not include. The old hosts carry more memory than the new, so this is the
+      ceiling their retirement moves most.
+
+  disk_fill:
+    kind: ceiling
+    unit: dimensionless
+    label: disk fill at horizon
+    of: raw_data / pool_disk
+    limit: 1
+    headroom: disk_margin
+    because: >-
+      The web service's disk ceiling, on the pool as bought. A pool whose disks are full cannot
+      take a dead host's records, and the margin is the same node the sizing used (ch11).
+
   # -- a host is lost at the busy hour ---------------------------------------------------------
 
   largest_host_cores:
@@ -551,13 +602,13 @@ nodes:
   utilisation_after_losing_largest:
     kind: derived
     unit: dimensionless
-    label: utilisation after losing the largest host
+    label: utilisation after losing the host with the most cores
     formula: busy_cores / (pool_cores - largest_host_cores * one_host)
 
   failure_headroom:
     kind: ceiling
     unit: dimensionless
-    label: utilisation with the largest host down
+    label: utilisation with the host with the most cores down
     of: utilisation_after_losing_largest
     limit: 1
     headroom: queueing_margin
@@ -727,6 +778,8 @@ outputs:
   - queueing_headroom_equal
   - shard_fit
   - failure_headroom
+  - cache_fill
+  - disk_fill
 
 correlations:
   - a: peak_request_rate_t0

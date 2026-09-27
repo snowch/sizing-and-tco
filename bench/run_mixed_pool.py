@@ -46,6 +46,8 @@ CEILINGS = (
     "queueing_headroom_weighted",
     "queueing_headroom_equal",
     "failure_headroom",
+    "cache_fill",
+    "disk_fill",
     "shard_fit",
 )
 

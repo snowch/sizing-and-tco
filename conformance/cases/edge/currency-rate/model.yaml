@@ -1,4 +1,4 @@
-dsl: 1
+dsl: 2
 model: tiny
 title: A price in euros, converted
 currency: USD

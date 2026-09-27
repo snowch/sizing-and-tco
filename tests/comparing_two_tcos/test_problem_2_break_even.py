@@ -76,7 +76,8 @@ def test_the_totals_tie_there(answer, fleet):
     assert abs(gap) < TOLERANCE, (
         f"with the incumbent on {fleet} hosts and the move costing {answer:,.0f}, the challenger's "
         f"total is still {'above' if gap > 0 else 'below'} the incumbent's at the point estimate. "
-        "Two evaluations fix the line; solve it for zero."
+        "The test wants the tie to within a dollar. Two evaluations fix the line; solve it for "
+        "zero."
     )
 
 

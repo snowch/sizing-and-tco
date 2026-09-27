@@ -7,4 +7,4 @@
 | Disk | 49 | 19 | 19 |
 | **New hosts to buy** | 54 | 35 | 70 |
 
-*Source — [`mixed-pool`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/mixed-pool.json) and [`mixed_pool-reference`](/models/mixed_pool-reference.html) and [`mixed_pool-replace`](/models/mixed_pool-replace.html) · `sizing.evaluate`*
+*Source — [`mixed-pool`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/mixed-pool.json), [`mixed_pool-reference`](/models/mixed_pool-reference.html) and [`mixed_pool-replace`](/models/mixed_pool-replace.html) · `sizing.evaluate`*

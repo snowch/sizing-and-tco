@@ -115,10 +115,11 @@ The graph as ch11 leaves it, with every margin the model declares. Click any cei
 reason.
 ```
 
-### Two generations: the largest host and the last day
+### Two generations: the host with the most cores, and the last day
 
-The mixed pool from [ch10](#bandwidth-and-the-binding-constraint) is bought for requests routed
-by capacity, with some old hosts kept to the horizon. Several of this chapter's ceilings mean something different in the mixed pool.
+The mixed pool from [ch10](#bandwidth-and-the-binding-constraint) is bought for requests routed by
+capacity, with some old hosts kept to the horizon. In it, some of this chapter's ceilings mean
+something different, and one is new.
 
 Surviving the loss of one host means surviving the loss of the host with the most cores, because
 that is the most processing one fault can take away. In a pool of one kind of host every host has
@@ -126,32 +127,39 @@ the most cores. In the mixed pool it is a new host. The model's failure ceiling 
 host's cores from the pool's total. The old hosts have more memory, so for memory the biggest loss
 is an old host, and the model has no ceiling for that loss.
 
-A shard has to sit whole on one host, and it can land on the smallest. The pool's total disk
-says nothing about whether a shard fits on the smallest host, so the smallest host's disk sets a
-ceiling of its own, which is checked against the disk margin.
+A shard has to sit whole on one host, and it can land on the smallest. The pool's total disk says
+nothing about whether a shard fits on the smallest host, so the smallest host's disk sets a ceiling
+of its own, checked against the disk margin.
 
-The old hosts retire on their own schedule, which need not match the purchase. The check has to
-hold at the worst point: after they go, while demand is still growing. The model's `old_retired`
-scenario is that point: the same new hosts, and no old ones.
+The old hosts retire on their own schedule, which need not match the purchase. The check has to hold
+at the worst point: after they go, while demand is still growing. The model's `old_retired` scenario
+is that point: the same new hosts, and no old ones.
+
+The table checks the pool three ways: as bought, with the old hosts kept; on the day they retire;
+and against the all-new fleet from [ch10](#bandwidth-and-the-binding-constraint)'s first column, the
+purchase the web service model recommends for this workload with no old hosts. Each cell gives the
+share of futures past the allowed line (*Over allowed*), then what the plan says at the point
+estimate: *ok*, *into the margin* or **over**. The table has the web service's two capacity ceilings
+as well: working set against memory, and disk fill at horizon.
 
 ```{include} _generated/headroom-and-failure-domains-mixed-pool.md
 ```
 
-Read each row across: the share of futures past the allowed line, and what the plan says at the
-point estimate. Once the old hosts retire, the ceiling for routing by capacity and the ceiling for
-losing a host are each past the allowed line in more futures than with the old hosts kept. The
-equal-routing row goes the other way, because with the old hosts gone the smallest host is a new
-one. Nothing in the shard check counts hosts, so retiring them cannot move it.
+On the day the old hosts retire, three ceilings are **over** at the plan: memory, disk, and losing
+the host with the most cores. Memory is the one the old hosts were covering: their extra memory held
+the whole working set in [ch10](#bandwidth-and-the-binding-constraint), where memory asked for no
+new hosts. The new hosts alone cannot hold the working set or the data.
 
-With the old hosts retired, losing the host with the most cores takes the pool past its limit even
-at the plan: the verdict is *over*. With the old hosts kept, routing requests equally is *over* at
-the plan: the pool bought for routing by capacity does not survive equal routing. Once the old hosts
-retire, the two routing rows agree, because every host in the pool is then the same size. The
-all-new fleet is *ok* at the plan on every ceiling, and past the allowed line in fewer futures than
-the kept pool on every ceiling but the shard's.
+With the old hosts kept, routing requests equally is **over** at the plan, so the pool bought for
+routing by capacity does not survive equal routing. Once the old hosts retire, the two routing rows
+agree, because every host in the pool is then the same size.
 
-What to do with this: buy for the day the old hosts retire, or plan the next purchase for that
-day. The model shows the gap; it does not choose between them.
+The shard row does not move, because both generations have the same disk, so the smallest disk is
+the same whichever generation remains. The all-new fleet is *ok* at the plan on every ceiling. It is
+what buying for the day the old hosts retire would leave on that day.
+
+Buy for the day the old hosts retire, or plan the next purchase for that day. The model shows the
+gap; it does not choose between them.
 
 ### Margins do not add
 
@@ -188,7 +196,7 @@ The toolkit refuses a ceiling without a reason. It cannot check that the reason 
 
 Not a verdict. A probability.
 
-The two ceiling tables at the top of *The material* end with two columns that answer two questions: *Over allowed* shows how often the
+The two ceiling tables at the top of *The material* end with two columns that answer two questions. *Over allowed* shows how often the
 design ends up past the allowed line (the limit less the margin), and *Over limit* shows how often
 it ends up past the limit itself. A verdict at the plan describes one future, but these columns
 describe all the futures the model thinks could happen.
@@ -222,10 +230,10 @@ busy hour. The model has no term for two hosts down at once. A reserve that cove
 one of them, and the ceiling reports on a fleet that is one host larger than the one serving
 requests.
 
-**Whether the mixed pool's checks are all the checks it needs.** The model checks the loss of the
-host with the most cores, with requests routed by capacity. It has no check for losing the host with
-the most memory, which is an old one, and none for a loss when requests are routed equally. It
-treats retirement as every old host leaving on one day, where real hosts leave a few at a time.
+**Whether the mixed pool's checks are all the checks it needs.** It checks losing the host with the
+most cores, with requests routed by capacity. It has no check for losing the host with the most
+memory, which is an old one, and none for a loss when requests are routed equally. It treats
+retirement as every old host leaving on one day, where real hosts leave a few at a time.
 
 ## Key takeaways
 
@@ -235,9 +243,13 @@ treats retirement as every old host leaving on one day, where real hosts leave a
 - **Headroom is a rule because the right number differs for every ceiling.** A capacity margin
   protects against a cliff, a queueing margin against a slope, a scaling margin against a budget,
   and one percentage cannot serve all three.
-- **The failure reserve is the one margin you can compute, and it is for a loss, not a failure.** A host drained for an upgrade removes the same capacity as one that has died. In a pool of mixed hosts the host to keep free is the one with the most cores, and the check has to hold on the day the old hosts retire. Every fleet keeps
-  one host free for each it plans to lose: a small fleet keeps a large share of itself free and a
-  large fleet a small share.
+- **The failure reserve is the one margin you can compute, and it is for a loss, not a failure.** A
+host drained for an upgrade removes the same capacity as one that has died. Every fleet keeps one
+host free for each it plans to lose: a small fleet keeps a large share of itself free and a large
+fleet a small share.
+- **In a mixed pool, check the biggest loss and the last day.** For processing, the host to keep
+free is the one with the most cores. The check has to hold on the day the old hosts retire, when
+memory and disk can be the first to break.
 - **Margins multiply. They do not add.** Each takes its share of what the one before left, so
   adding reserves more than the margins call for. A fleet sized by adding buys hosts none of the
   margins asked for, and for large margins addition reserves more than the whole fleet.
