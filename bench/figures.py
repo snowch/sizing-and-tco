@@ -571,7 +571,7 @@ FIGURES: dict[str, Table | Diagram] = {
     "headroom-and-failure-domains-mixed-pool": Table(
         render=tables.mixed_pool_ceilings,
         result="mixed-pool",
-        also=("mixed_pool-reference", "mixed_pool-old_retired"),
+        also=("mixed_pool-reference", "mixed_pool-old_retired", "mixed_pool-replace"),
     ),
     # -- ch12 The sizing model --------------------------------------------------------------------
     # The answer, the decision, and the three chains the answer was the largest of.
@@ -842,6 +842,11 @@ FIGURES: dict[str, Table | Diagram] = {
     # Keep the old generation or replace it: the same subtraction, on the mixed pool model.
     "comparing-two-tcos-keep-or-replace": Table(
         render=tables.mixed_pool_keep_vs_replace,
+        result="mixed-pool",
+        also=("mixed_pool-reference", "mixed_pool-replace", "mixed_pool-keep_routed_equally"),
+    ),
+    "comparing-two-tcos-keep-or-replace-lines": Table(
+        render=tables.mixed_pool_keep_vs_replace_lines,
         result="mixed-pool",
         also=("mixed_pool-reference", "mixed_pool-replace"),
     ),

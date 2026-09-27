@@ -9,8 +9,9 @@ folded into the test suite: it is where the book's central claim stops being a p
 becomes something the build enforces.
 
 0. **The file says which rules it is written against.** A `dsl:` line naming the version this
-   toolkit reads; the loader refuses any other. And a model counts money in one currency, named
-   in `currency:` (dollars when it is absent): a node priced in another does not build.
+   toolkit reads; the loader refuses any other. And a model answers in one currency, named in
+   `currency:` (dollars when it is absent): an output in another does not build. A price quoted
+   in another currency is converted by a rate, a node of its own.
 1. **Every formula typechecks.** Units are checked dimensionally, and each node's declared unit is
    compared with what its formula produces. A model that multiplies series by requests and calls
    the answer bytes does not build. Quantities in different units of one dimension may not meet
@@ -108,8 +109,12 @@ def check_model(model: Model, problems: list[str]) -> None:
             f"{where}: declares currency {model.currency!r}; expected an ISO code the registry "
             f"defines: {', '.join(CURRENCIES)}"
         )
+    # A price may be quoted in another currency, and the rate that converts it is a node of its
+    # own. What the model answers in is its own currency: an output in any other is refused.
     own = f"[currency_{model.currency.lower()}]"
-    for name in sorted(model.nodes):
+    for name in model.outputs:
+        if name not in model.nodes:
+            continue
         money = [
             dimension
             for dimension in parse_unit(model.nodes[name].unit).dimensionality
@@ -117,9 +122,9 @@ def check_model(model: Model, problems: list[str]) -> None:
         ]
         if money:
             problems.append(
-                f"{where}: node {name!r} counts money in {model.nodes[name].unit!r}, and the model "
-                f"declares `currency: {model.currency}`. A model prices in one currency; a rate "
-                "between two is a node of its own, with a source."
+                f"{where}: output {name!r} is in {model.nodes[name].unit!r}, and the model "
+                f"declares `currency: {model.currency}`. A model answers in its own currency: "
+                "convert a price quoted in another with a rate, a node of its own with a source."
             )
 
     # 1 — units
@@ -199,7 +204,7 @@ def check_model(model: Model, problems: list[str]) -> None:
                         "cannot estimate one, say so in `conditions` and set it deliberately."
                     )
                 unit = payload.get("units", {}).get("value")
-                if unit and unit != node.unit:
+                if unit and not _same_unit(unit, node.unit):
                     problems.append(
                         f"{where}: node {name!r} declares {node.unit!r} but "
                         f"{node.result}.json measured {unit!r}"
@@ -271,6 +276,14 @@ def check_model(model: Model, problems: list[str]) -> None:
             )
     elif ceilings:  # pragma: no cover - unreachable by construction, kept as a tripwire
         problems.append(f"{where}: classified as a definitional model but declares ceilings")
+
+
+def _same_unit(a: str, b: str) -> bool:
+    """Two spellings of one unit: `terabyte` and `TB` are the same, and were refused as text."""
+    try:
+        return parse_unit(a) == parse_unit(b)
+    except Exception:  # an unknown unit in a result is reported as differing, not as a crash
+        return a == b
 
 
 def _own_result_problems(node: Measured) -> list[str]:

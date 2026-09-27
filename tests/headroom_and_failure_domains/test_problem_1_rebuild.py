@@ -46,8 +46,8 @@ def test_it_agrees_with_the_models_own_two_utilisations():
     right = agrees(failure_reserve(int(values["hosts"]), int(lost)), from_the_model)
     assert right, (
         "the web service model's utilisation before and after losing a host implies a different "
-        "share from the one your function returns. The load a loss adds to the survivors is the "
-        "capacity it took away."
+        "share from the one your function returns. It is the share of the fleet's capacity the lost "
+        "hosts took away, not the extra load each survivor picks up."
     )
 
 

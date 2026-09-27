@@ -1,0 +1,4 @@
+about: >-
+  A uniform whose minimum is above its maximum. It used to be sampled as though the bounds were the other way round.
+expect:
+  - scenario.does-not-evaluate

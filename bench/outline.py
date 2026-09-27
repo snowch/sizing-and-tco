@@ -298,8 +298,12 @@ CHAPTERS: tuple[Chapter, ...] = (
         PARTS[2],
         "Why is headroom a rule rather than a number?",
         owes="Each ceiling's declared margin and the reason for it, from both models.",
-        consumes=("web_service_headroom-reference", "observability-reference"),
-        needs=("queueing_and_the_knee", "when_adding_servers_stops_helping"),
+        consumes=("web_service_headroom-reference", "observability-reference", "mixed-pool"),
+        needs=(
+            "queueing_and_the_knee",
+            "when_adding_servers_stops_helping",
+            "bandwidth_and_the_binding_constraint",
+        ),
     ),
     Chapter(
         12,

@@ -1,0 +1,11 @@
+scenario: keep_routed_equally
+title: Keep the old hosts, requests routed equally
+because: >-
+  Keep versus replace depends on the router (ch22). If it sends every host the same share, the
+  pool is held to the smallest host, and keeping the old hosts means buying what new_hosts_equal
+  asks for at the point estimates rather than new_hosts_weighted. The runner checks that this
+  purchase still matches that node.
+samples: 100000
+seed: 20260916
+overrides:
+  new_hosts: 70

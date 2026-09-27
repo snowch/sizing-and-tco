@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "1a6a651a2c6648ba",
+  "code_fingerprint": "438d7315467113d2",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/04-demand_horizon_exponent/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-27T08:09:19+00:00",
-  "git_revision": "156e02b",
+  "generated_at": "2026-09-27T09:55:11+00:00",
+  "git_revision": "cdaebe2",
   "kind": "model",
   "name": "web_service_demand_horizon_exponent-reference",
   "produced_by": {
@@ -42,7 +42,7 @@
     "factors": {
       "horizon_periods": 1.0
     },
-    "generated_at": "2026-09-27T08:09:19+00:00",
+    "generated_at": "2026-09-27T09:55:11+00:00",
     "model": "web_service_demand_horizon_exponent",
     "nodes": {
       "annual_growth": {

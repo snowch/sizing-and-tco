@@ -131,9 +131,7 @@ file, press **Expand** and choose **Model file**: three nodes ask for a host cou
 *hosts the model recommends*, takes the largest. Drag *CPU time per request* **up** and watch the
 Outputs list: at the book's value the memory chain asks for the most. As you drag up, only *hosts
 for requests* rises, and a little above the book's value it passes *hosts for memory*, pulling
-*hosts the model recommends* with it. Dragging down changes nothing, because the memory chain
-already asks for more; the viewer greys the rows it cannot move, *hosts for memory* and *hosts for
-storage*.
+*hosts the model recommends* with it. Dragging down lowers *hosts for requests*, but *hosts the model recommends* stays where it is, because the memory chain already asks for more. The viewer greys the rows the input cannot move: *hosts for memory* and *hosts for storage*.
 
 ```{iframe} /models/web_service_binding-reference.html
 :width: 100%
@@ -239,14 +237,22 @@ A host's utilisation is its share of the busy cores divided by its own cores
 first while the new hosts still have cores to spare. The pool then carries only as much as all
 its hosts times the smallest host's cores, and the request chain asks for more new hosts.
 
+Routed equally, keeping the old hosts means you buy more new hosts than replacing them all. The
+table shows it: the last row of the third column asks for more than the last row of the first
+column. Every host, including every new one, is held to the old host's cores, so each new host
+counts for less.
+
 Which routing you run is a fact about your load balancer, not a choice the model can make for
 you. Find out before you buy. Data is placed by capacity in both columns; only requests change.
 [ch11](#headroom-and-failure-domains) checks the pool as bought against both.
 
 ```{iframe} /models/mixed_pool-reference.html
 :width: 100%
-The mixed pool, with the old hosts kept. Drag *old hosts still in service at the horizon* to zero
-and watch which chain asks for the most.
+The mixed pool model, with the old hosts kept. Drag *old hosts still in service at the horizon* to
+zero and watch the Outputs list under the graph. With no old hosts the two routings ask for the same
+count, because every host in the pool is then the same size. The graph also holds the ceilings
+[ch11](#headroom-and-failure-domains) checks and the costs [ch22](#comparing-two-tcos) compares;
+those come later.
 ```
 
 ## What this cannot tell you
@@ -304,14 +310,14 @@ pack them.
   and the fleet is too small more often than not.
 - **The summary of sizing on one chain is two numbers.** How often it is wrong, and by how
   much when it is. Either one alone is a way of not answering.
+- **Old hosts rich in one resource move which chain binds.** Whether the old hosts' cores count in full or only as the smallest host's depends on how your load balancer routes requests. Find out which routing you run before you buy.
 - **More chains mean more chances to be caught out.** The chance that some constraint binds
   unexpectedly rises with their number, even while each one's chance stays small.
 :::
 
 ## Problems
 
-Five, in `tests/bandwidth_and_the_binding_constraint/`. The first three have tests. The last two
-do not, and say why.
+Five problems. The first three have tests, in `tests/bandwidth_and_the_binding_constraint/`. The last two have no test, and each says why.
 
 **10.1 — Three chains, one purchase.**
 The function `size_for_all` receives the three chains' host counts, one count per future in each. It
@@ -340,8 +346,7 @@ The function `new_hosts_for_requests` receives the cores the busy hour keeps bus
 hosts stay in service, the cores on each old host, the cores on each new host, the queueing margin,
 and a routing: `"capacity"` or `"equal"`. It returns how many new hosts the request chain needs.
 
-Routed by capacity, the two generations' cores add up. Routed equally, the host with the fewest
-cores sets the pace. If the old hosts already carry the load, the answer is no new hosts, not a
+Routed by capacity, the two generations' cores add up. Routed equally, the smallest host in the pool sets the pace. With no old hosts left, the smallest host is a new one. If the old hosts already carry the load, the answer is no new hosts, not a
 negative number.
 
 The test checks your answer against the mixed pool model's own nodes: with no old hosts, with some,
@@ -371,14 +376,13 @@ hosts retire are facts only you have.
 
 List the generations of hosts in service for one job, with each one's cores, memory and disk per
 host. Find out how your load balancer spreads requests, by capacity or equally, from its
-configuration rather than from memory. Name the smallest host for each resource. For each old
+configuration rather than from memory. Name the host with the fewest cores and the host with the least disk. Under equal routing the one with the fewest cores sets the pace, and every shard has to fit on the one with the least disk. For each old
 generation, write down the date it leaves.
 
 Work out the new hosts each chain asks for under the routing you actually run, twice: with the old
 hosts in service, and on the day the oldest generation retires.
 
-A good answer names the routing and how you confirmed it, the smallest host for each resource, the
-retirement dates, and the purchase that still holds on the worst day.
+A good answer names the routing and how you confirmed it, the host with the fewest cores and the host with the least disk, the retirement dates, and the purchase that still holds on the worst day.
 
 What would show it wrong: the load balancer's configuration says the other policy; a kind of host
 you left off the list; a retirement date earlier than the one you planned for.

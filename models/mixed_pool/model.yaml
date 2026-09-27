@@ -6,8 +6,8 @@ currency: USD
 description: >-
   The web service's fleet as ch10 sizes it, with one change: some of last generation's hosts are
   still in service, doing the same job as the new ones. The question stops being how many hosts
-  and becomes how many new hosts, given the old ones. The demand is ch10's, at its point
-  estimates, so this model has no ranges: its lessons are in its structure. How requests are
+  and becomes how many new hosts, given the old ones. The demand is the web service's own chain,
+  copied node for node with the same ranges. How requests are
   spread decides whether the two generations' capacity adds. Data is placed by capacity in both
   cases; only the routing of requests changes.
 
@@ -197,7 +197,7 @@ nodes:
     label: memory the operating system keeps
     provenance:
       kind: assumption
-      source: "Triangular, as in the web service model's os_reserve at its point estimate (ch10). The same share on
+      source: "Triangular, the same range as the web service model's os_reserve. The same share on
         both generations"
 
   # -- the two generations ----------------------------------------------------------------------
@@ -285,7 +285,7 @@ nodes:
     note: >-
       Not how many old hosts there are today: how many are still running at the horizon. Old
       hosts retire on their own schedule, and the check has to hold at the worst point, after
-      they leave and before demand stops growing. The old_retired scenario is that point.
+      they leave and before demand stops growing. Set it to nought to see that point.
     provenance:
       kind: assumption
       source: "this worked example's premise: thirty of last generation's hosts are kept in service
@@ -421,11 +421,21 @@ nodes:
   # Each host is sent the same share of the requests, so the smallest host reaches its margin
   # first, and the pool can take no more than every host times the smallest host's cores.
 
+  old_in_service:
+    kind: derived
+    unit: dimensionless
+    label: any old hosts left
+    note: >-
+      One while any old host is in service, nought once they have all gone. A generation with no
+      hosts in the pool cannot be its smallest or its largest host. The new hosts are always
+      there: the purchase is at least two.
+    formula: min(ceil(old_hosts / one_host), 1)
+
   smallest_cores:
     kind: derived
     unit: core/host
     label: cores on the smallest host
-    formula: min(cores_per_old_host, cores_per_new_host)
+    formula: old_in_service * min(cores_per_old_host, cores_per_new_host) + (1 - old_in_service) * cores_per_new_host
 
   new_for_requests_equal:
     kind: derived
@@ -516,7 +526,7 @@ nodes:
     kind: derived
     unit: TB/host
     label: disk on the smallest host
-    formula: min(disk_per_old_host, disk_per_new_host)
+    formula: old_in_service * min(disk_per_old_host, disk_per_new_host) + (1 - old_in_service) * disk_per_new_host
 
   shard_fit:
     kind: ceiling
@@ -536,7 +546,7 @@ nodes:
     kind: derived
     unit: core/host
     label: cores on the largest host
-    formula: max(cores_per_old_host, cores_per_new_host)
+    formula: max(old_in_service * cores_per_old_host, cores_per_new_host)
 
   utilisation_after_losing_largest:
     kind: derived
@@ -577,7 +587,7 @@ nodes:
     label: price of a new host
     provenance:
       kind: assumption
-      source: "Lognormal, as in the web service model's host price at its point estimate (ch15)"
+      source: "Lognormal, the same range as the web service model's host price"
 
   new_capex:
     kind: derived
@@ -593,7 +603,7 @@ nodes:
     label: power per new host
     provenance:
       kind: assumption
-      source: "Triangular, as in the web service model's host power at its point estimate (ch16)"
+      source: "Triangular, the same range as the web service model's host power"
 
   old_host_power:
     kind: input
@@ -616,7 +626,7 @@ nodes:
     label: PUE
     provenance:
       kind: assumption
-      source: "Triangular, as in the web service model's PUE at its point estimate (ch16)"
+      source: "Triangular, the same range as the web service model's PUE"
 
   hours_per_year:
     kind: input
@@ -636,7 +646,7 @@ nodes:
     label: electricity price
     provenance:
       kind: assumption
-      source: "Lognormal, as in the web service model's electricity price at its point estimate (ch16)"
+      source: "Lognormal, the same range as the web service model's electricity price"
 
   annual_energy_cost:
     kind: derived
@@ -652,7 +662,7 @@ nodes:
     label: licence per core per year
     provenance:
       kind: assumption
-      source: "Lognormal, as in the web service model's licence per core (ch15). Charged on every core running,
+      source: "Lognormal, the same range as the web service model's licence per core. Charged on every core running,
         old or new"
 
   annual_licences:
@@ -669,7 +679,7 @@ nodes:
     label: support rate on new hosts
     provenance:
       kind: assumption
-      source: "Triangular, as in the web service model's support rate at its point estimate (ch15): a yearly share of
+      source: "Triangular, the same range as the web service model's support rate: a yearly share of
         the capital cost"
 
   old_support_per_host:

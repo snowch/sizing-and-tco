@@ -1,0 +1,5 @@
+about: >-
+  A price quoted in euros, converted to the model's dollars by a rate that is a node of its own.
+  The rate and the euro price build; only an answer must be in the model's currency.
+expect:
+  - valid

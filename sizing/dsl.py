@@ -415,6 +415,45 @@ def _require(mapping: dict, key: str, where: str) -> Any:
     return mapping[key]
 
 
+#: Every key a file may hold, by where it sits. Anything else is refused rather than ignored: a
+#: misspelt `correlations:` left every input independent, and a misspelt `overrides:` ran the
+#: scenario on the model's own values, and both files built without a word.
+MODEL_KEYS = (
+    "dsl",
+    "model",
+    "title",
+    "description",
+    "currency",
+    "nodes",
+    "outputs",
+    "correlations",
+)
+NODE_KEYS = {
+    "input": ("decided", "provenance", "value", "distribution", "range"),
+    "derived": ("formula",),
+    "measured": ("result",),
+    "ceiling": ("of", "limit", "headroom", "because"),
+}
+COMMON_NODE_KEYS = ("kind", "unit", "label", "note")
+PROVENANCE_KEYS = ("kind", "source")
+CORRELATION_KEYS = ("a", "b", "rho", "because")
+SCENARIO_KEYS = ("scenario", "title", "because", "overrides", "samples", "seed")
+
+
+def _known(mapping: dict, allowed: tuple[str, ...], where: str) -> None:
+    """Refuse a key the loader does not read, naming the nearest one it does."""
+    import difflib
+
+    for key in mapping:
+        if key not in allowed:
+            near = difflib.get_close_matches(str(key), allowed, n=1)
+            hint = f"; did you mean {near[0]!r}?" if near else ""
+            raise ModelError(
+                f"{where}: {key!r} is not a key this file may hold{hint} Expected one of "
+                f"{', '.join(allowed)}."
+            )
+
+
 def _node_from(name: str, spec: dict, where: str, folder: Path | None = None) -> Node:
     if not isinstance(spec, dict):
         raise ModelError(f"{where}: node {name!r} is not a mapping")
@@ -423,6 +462,7 @@ def _node_from(name: str, spec: dict, where: str, folder: Path | None = None) ->
         raise ModelError(
             f"{where}: node {name!r} has kind {kind!r}; expected one of {', '.join(KINDS)}"
         )
+    _known(spec, COMMON_NODE_KEYS + NODE_KEYS[kind], f"{where}: node {name!r}")
     unit = _text(spec, "unit").strip()
     if not unit:
         raise ModelError(
@@ -445,6 +485,8 @@ def _node_from(name: str, spec: dict, where: str, folder: Path | None = None) ->
     if kind == "input":
         provenance = spec.get("provenance") or {}
         at = f"{where}: node {name!r}"
+        if isinstance(provenance, dict):
+            _known(provenance, PROVENANCE_KEYS, f"{at} provenance")
         distribution = spec.get("distribution")
         if isinstance(distribution, dict):
             for shape, parameters in distribution.items():
@@ -515,6 +557,10 @@ def load_model(path: str | Path) -> Model:
     raw = read_yaml(path.read_text(), str(where))
     if not isinstance(raw, dict):
         raise ModelError(f"{where}: is not a mapping")
+    _known(raw, MODEL_KEYS, str(where))
+    for pair in raw.get("correlations") or ():
+        if isinstance(pair, dict):
+            _known(pair, CORRELATION_KEYS, f"{where}: a correlation")
     if "dsl" in raw and raw["dsl"] != DSL_VERSION:
         raise ModelError(
             f"{where}: is written for dsl {raw['dsl']!r}, and this toolkit reads dsl {DSL_VERSION}"
@@ -559,6 +605,7 @@ def load_scenario(path: str | Path) -> Scenario:
     raw = read_yaml(path.read_text(), str(path))
     if not isinstance(raw, dict):
         raise ModelError(f"{path}: is not a mapping")
+    _known(raw, SCENARIO_KEYS, str(path))
     name = str(_require(raw, "scenario", str(path)))
     return Scenario(
         name=name,

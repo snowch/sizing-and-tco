@@ -71,10 +71,12 @@ def test_it_is_a_positive_amount_of_money(answer, fleet):
 def test_the_totals_tie_there(answer, fleet):
     assert isinstance(answer, int | float), "return one number, the cost of the move in dollars"
     gap = difference_at(fleet, answer)
+    # The direction of the miss, not its size: a dollar of move is a dollar of total, so the
+    # size of the gap and a wrong answer together give the right one.
     assert abs(gap) < TOLERANCE, (
-        f"with the incumbent on {fleet} hosts and the move costing {answer:,.0f}, the challenger "
-        f"is still {gap:+,.0f} away from the incumbent at the point estimate. Two evaluations fix "
-        "the line; solve it for zero."
+        f"with the incumbent on {fleet} hosts and the move costing {answer:,.0f}, the challenger's "
+        f"total is still {'above' if gap > 0 else 'below'} the incumbent's at the point estimate. "
+        "Two evaluations fix the line; solve it for zero."
     )
 
 

@@ -19,7 +19,7 @@ A sizing model is a chain of multiplications. One way for it to be wrong is to m
 quantities that should never have met: series by requests, bytes by seconds, a per-node figure by a
 per-core one. A spreadsheet cannot see any of these: a cell holds a number, and the number
 carries no unit. Every node in this book's models declares its unit, and the build works out the
-unit each formula produces and compares it with what was declared; it converts or refuses. This
+unit each formula produces and compares it with what was declared. It accepts a unit that matches, converts one that differs only in size, and refuses one that is a different kind of quantity. This
 check is why the book has a build step.
 
 ## How units combine and cancel
@@ -51,10 +51,9 @@ when the formula makes exactly the unit declared. It converts when the formula m
 of quantity as declared, in a different size — one factor is recorded for the node, and the whole
 result is converted by it.
 
-It refuses for two reasons. The formula may make a different kind of quantity from the one declared:
+A formula that the unit check can work through is still refused for two reasons. The rest of this page names the other refusals: units the build does not accept at all, and quantities used where only a plain number will do. The formula may make a different kind of quantity from the one declared:
 a rate where the node declares an amount. No factor turns one into the other, and the refusal names
-both kinds. Or two numbers of the same kind, in different units, meet in a sum, a difference, a
-`min` or a `max`, or are rounded before the conversion. One factor applied to a whole result works
+both kinds. Or two numbers of the same kind, in different units, meet in a sum, a difference, a `min` or a `max`. A `ceil` or `floor` is refused when what it rounds is not yet in the node's unit, because the build rounds first and converts after, so it would round the wrong number. One factor applied to a whole result works
 for products and quotients, where factors multiply through. It cannot work for a sum: adding a
 number in terabytes to a number in tebibytes adds them as if the units matched, and scaling the
 total afterwards does not repair it. The refusal tells you to declare both in one unit, or convert
@@ -73,8 +72,8 @@ failures, and money, in each of the currencies the toolkit knows, each one a uni
 
 ```{literalinclude} ../sizing/units.py
 :language: python
-:start-at: COUNTING_UNITS: tuple[str, ...] = (
-:end-before: def registry()
+:start-at: #: The currencies a model may price in
+:end-before: def _definitions() -> list[str]:
 ```
 
 Without these units, spans per request and bytes per span are both plain numbers. Multiply the wrong
@@ -83,11 +82,15 @@ pair and you get a plausible answer with no complaint. With them, the formula
 three is well formed.
 
 % word-ok: a sample here is one reading a scrape takes, a counting unit, not one of the model's draws
-Currencies are on the list for the same reason: a model that adds dollars to terabytes is broken,
-and so is one that adds dollars to euros, and nothing else in the registry would notice either. The cost is a node. Going from one counting unit to
-another requires a node whose unit is the conversion itself — spans per request, samples per series,
-log lines per request, cores per host. That node is an input like any other, so it must say where
-its number came from:
+Currencies are on the list for the same reason. Adding dollars to euros is as wrong as adding spans
+to requests, and without a unit for each currency nothing in the registry would notice. A model
+answers in one currency, the one its `currency:` line names, and the build refuses an output in any
+other. A price quoted in another currency is converted by an exchange rate: an input of its own, in
+a unit such as `USD/EUR`, with a source.
+
+Each conversion between two counting units costs you one node, whose unit is the conversion itself:
+spans per request, samples per series, log lines per request, cores per host. That node is an input
+like any other, so it must say where its number came from:
 
 % word-ok: a sample here is one reading a scrape takes, a counting unit, not one of the model's draws
 - **spans per request** (observability model): a measured constant, belonging to one instrumented
@@ -106,8 +109,7 @@ node with a stated source. A rule in a style guide cannot make you do that.
 
 Most of what the check does is not refusing. It is converting: two units of the same kind with
 different sizes. A unit's dimensions are the kind of thing it measures (a length of time, or money)
-without its size; terabytes and tebibytes have the same dimensions. The table below lists every
-conversion the build applies in the book's two models.
+without its size; terabytes and tebibytes have the same dimensions. The table below lists every conversion the build applies in the book's models.
 
 ```{include} ../chapters/_generated/appendix-d-units-conversions.md
 ```
@@ -117,11 +119,12 @@ terabyte per year and dollars per terabyte per month have identical dimensions. 
 compared dimensions alone would pass a unit cost twelve times too large — the cost per stored TB per
 month that [ch17](#unit-economics) works with, a figure likely to be quoted in a meeting.
 
-The units library the build uses ships with data as a plain number: a bit is defined as
-dimensionless. The build's registry changes that one definition, so an amount of data is a dimension
-of its own, counted in bits. So the dimension check refuses a formula that makes a plain number for
-a node declared in TB, a ceiling in TB with a plain number for its limit, and terabytes used as an
-exponent or inside a logarithm.
+Before this change a growth factor raised to the power of fifteen terabytes passed the unit check.
+The units library the build uses defines a bit as a plain number, so every amount of data was a
+plain number too. The build's registry changes that one definition, so an amount of data is a kind
+of quantity of its own, counted in bits. The unit check now refuses a formula that makes a plain
+number for a node declared in TB, a ceiling in TB with a plain number for its limit, and terabytes
+used as an exponent or inside a logarithm.
 
 ## Six places a unit goes wrong
 
@@ -159,10 +162,11 @@ needs the horizon divided by one period first, which is why both reference model
 is just `one year`. It looks like ceremony until the build refuses a growth factor raised to the
 power of five *years*.
 
-**Scales that do not start at zero are refused.** The build converts a node by multiplying by one
-factor. A temperature in Celsius has an offset (nought degrees is not no heat), and a decibel is a
-logarithm; neither converts by one factor. So the build refuses both as units. A model that needs
-one works in a unit that does convert that way, such as kelvin, or a plain ratio.
+**Offset and logarithmic scales are refused.** The build converts a node by multiplying by one
+factor. Nought degrees Celsius is not zero temperature, so Celsius converts with an offset as well
+as a factor. A decibel is a logarithm of a ratio. Neither converts by one factor, so the build
+refuses both as units. A model that needs one works in a unit that does, such as kelvin, or a plain
+ratio.
 
 ## Where Pint runs, and where it does not
 
@@ -177,9 +181,7 @@ Pint is kept out of the arithmetic for two reasons. First, the toolkit reruns ea
 to see how far the answer can move, and numbers that carry units are slow to work with at that
 scale. Second, the code that reruns the model (`sizing/mc.py`) is written to be read end to end,
 and [Appendix B](#appendix-b-monte-carlo-module) reads it. A units library inside it would add code
-with nothing to do with what that module is for.
-
-**Units are a gate, not a tax.**
+with nothing to do with what that module is for. The unit check runs once before any number is computed and costs nothing while the model runs, so it stops wrong models without slowing right ones.
 
 ## Why the check needs a magnitude
 

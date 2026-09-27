@@ -12,7 +12,7 @@ short_title: "Appendix A · The DSL"
 | | |
 |---|---|
 | **Purpose** | Every node kind, every field, every distribution, and what the build checks |
-| **Source** | `sizing/dsl.py`, `sizing/expr.py`, `sizing/evaluate.py`, `sizing/mc.py`, `scripts/verify-models.py` |
+| **Source** | `sizing/dsl.py`, `sizing/expr.py`, `sizing/evaluate.py`, `sizing/mc.py`, `sizing/units.py`, `sizing/results.py`, `scripts/verify-models.py` |
 :::
 
 A model is a YAML file. It declares named quantities, each with a unit, and how they depend on
@@ -45,13 +45,12 @@ The quoted lines are the top of the running example's file. A model file has eig
 | `outputs` | which nodes are answers | the file loads but the build refuses it |
 | `correlations` | pairs of inputs that move together | every uncertain input is independent |
 
-`currency` names the one currency the model counts money in, as a three-letter ISO code such as
-`EUR` or `GBP`. When you leave it out, the loader uses `USD`. The toolkit knows a fixed list of
-codes, in `CURRENCIES` in `sizing/units.py`; a code not on it is refused by the build. Every unit in
-the model that contains money must be in that currency; a node priced in another currency is
-refused by the build. Dollars and euros do not add: each currency is a kind of quantity of its own.
-To use a price quoted in another currency, the exchange rate is a node of its own, an input with a
-source like any other.
+Dollars and euros do not add: each currency is a kind of quantity of its own. A model answers in one
+currency, the one named in `currency`. When you leave it out, the build uses `USD`. The toolkit
+knows a fixed set of codes in `CURRENCIES` in `sizing/units.py`. A `currency` not on that list is
+refused. An output whose unit is in another currency is refused. A price quoted in another currency
+can still go in the model. Convert it with an exchange rate: an input of its own, in a unit such as
+`USD/EUR`, with a source like any other.
 
 By convention, the identifier is also the name of its folder under `models/`. Nothing checks that
 the two match. The nodes follow these keys, under `nodes:`.
@@ -94,9 +93,11 @@ the file does not load (use `dimensionless` for a pure number). [Appendix D](#ap
 lists the unit names. An input needs a `value`, `distribution`, or both; with neither the file loads
 but the build fails when evaluating scenarios.
 
-The loader reads these keys and no others; any other key in a node is ignored without warning. A
-misspelt key is lost silently: `lable:` leaves the node with no label, `slider:` written for
-`range:` leaves the input with no slider. Both files load and pass the build.
+The loader reads these keys and no others. It refuses any other key, anywhere in a model file or
+scenario file: in a node, at the top, in a provenance, in a correlation or in a scenario. When it
+refuses a key, it names the nearest key it knows, so `lable:` is reported with `label` beside it. A
+misspelt key used to be ignored. Two of those silently changed the answer: `correlation:` left every
+input independent, and `override:` ran a scenario on the model's own values.
 
 ### `input` — a number the model is given
 
@@ -104,7 +105,7 @@ An input carries a `value`, a `distribution`, or both. If you give both, the `va
 number the tables and interactive page use to start, and the distribution is what the sampler draws
 from. With only a distribution, the single number is its median.
 
-A scenario can override the value or the distribution; an override wins. Every input must also have
+A scenario can pin an input to one number. That number replaces both the input's value and its distribution in that scenario. Every input must also have
 a `decided` line, saying who settles the number:
 
 - `outside`: outside your control, whether or not it has been given a shape yet; the busy hour, the
@@ -115,9 +116,7 @@ a `decided` line, saying who settles the number:
 
 The build refuses an input without a `decided` line or with any other value. An input decided by
 `you` is marked with a bar on its left edge in the graph and interactive page; that is the legend's
-"you decide". The quoted input, annual growth, is `outside`: it has a distribution, and nobody in
-the model chose it. An input also has a provenance kind and a source the build will not let you
-leave empty:
+"you decide". Every input also has a provenance kind and a source the build will not let you leave empty. The input quoted below, annual growth, is `outside`: it has a distribution, and nobody in the model chose it.
 
 ```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
@@ -176,16 +175,22 @@ looks there first. If the file is not found, it falls back to the book's folder.
 measurements specific to your system go: spans per request on your application, or how well your
 data compresses.
 
-Without this folder, a constant that only your system can measure has no home. The alternatives are
-both poor: name a result that does not exist, leaving the chain unmeasured; or declare the number as
-an input with provenance `fact`, which makes the model definitional when it is not. A result file in
-your folder with the same name as one of the book's replaces it. Your compression ratio overrides
-the one the book measured on its corpus.
+Without the folder, you have two poor choices. Name a result that does not exist, and the chain
+stays not yet measured. Or declare the number as an input with provenance `fact`. Then it loses its
+standard error, the implementation it was measured on, and its mark as measured. If it was the
+model's only conditional element, the model turns definitional.
 
-The result name must be a plain file name. A name with a folder in it, such as `../x`, finds
-nothing. The node stays unmeasured. Nobody else can repeat your measurement. The build cannot
-re-derive it. Every file is held to the rules for an `estate` result: disclosure is the only check
-there is.
+A result file in your folder with the same name as one of the book's replaces it. Your compression
+ratio overrides the one the book measured on its corpus.
+
+The file is the node's `result` plus `.json`. A node with `result: records-compression` reads
+`results/records-compression.json`. The name must be a plain file name. A name with a folder in it,
+such as `../x`, finds nothing, and the node stays not yet measured.
+
+A result file in your folder is held to the rules for an `estate` result. Nobody else can take your
+measurement again, and the build cannot re-derive it. The build checks what it can: the value, a
+standard error above nought, a unit that matches the node, and a named implementation. Whether the
+measurement was taken as the file says is for a reader of its disclosure to judge.
 
 The file must record:
 
@@ -211,9 +216,7 @@ A quantity, a limit, a margin, and a reason:
 formula). `limit` is where arithmetic stops; it must match the ceiling's `unit`. `headroom` is the
 margin below the limit as a fraction of it; it must be a plain number. In the quoted ceiling, `of`
 is fleet utilisation at busy hour, `limit` is full utilisation, and `headroom` is `queueing_margin`.
-Every ceiling in the book uses this pattern with plain-number limits, so it suits only
-`dimensionless` units. The build refuses a plain-number limit in any other unit, `TB` included; any
-other unit takes its limit from a node.
+A plain-number limit works only for a `dimensionless` ceiling, and every ceiling in the book is one. The build refuses a plain-number limit in any other unit, `TB` included. A ceiling in any other unit takes its limit from a node.
 
 The ceiling allows the limit less the headroom's share of it:
 
@@ -247,7 +250,7 @@ not a sizing rule but a comparison, and the build refuses it; an empty `because`
 ```{literalinclude} ../sizing/dsl.py
 :language: python
 :start-at: #: How much a modeller is claiming when they write a number down.
-:end-before: PROVENANCE_MEANING
+:end-before: #: The version of the rules a model file is written against
 ```
 
 Every input has a `provenance` mapping with two keys: `kind`, one of the three shown above, and
@@ -281,9 +284,7 @@ their keys, read from the sampler's own code so it cannot drift from what a file
 ```
 
 A distribution naming no shape, two shapes, or keys its shape does not take cannot be worked out;
-the build fails when evaluating scenarios. The same applies to out-of-order values, such as a
-`likely` outside `minimum` and `maximum`, or a `p10` above the `p90`. Adding a fifth shape requires
-a percentile function and a line in `SHAPES` in `sizing/mc.py`.
+the build fails when evaluating scenarios. The same applies to values out of order: a `uniform` whose `minimum` is above its `maximum`, a `likely` outside `minimum` and `maximum`, or a `p10` above the `p90`. A fifth shape needs a percentile function and a line in `SHAPES` in two files: `sizing/mc.py` and `sizing/viewer/sample.js`. The latter is the copy the published pages sample with. A test holds the two tables to each other.
 
 [Appendix C](#appendix-c-distributions) is one page each on what they assume and how they lie.
 
@@ -375,8 +376,8 @@ The loader refuses these:
 - **A name that is not a node**: a formula that refers to one, or an output that lists one.
 - **A cycle.**
 - **A `dsl` line naming a version other than the one the toolkit reads.**
-- **A key written twice in one mapping**, such as a node declared twice. Before, the second copy
-  won and the first was lost without a word.
+- **A key written twice in one mapping**, such as a node declared twice. Otherwise one copy would be lost without a word.
+- **A key it does not read**, anywhere in a model or scenario file. The refusal names the nearest key it knows.
 - **A value that should be a number and is not.** YAML reads `yes` as true; the loader refuses it
   rather than treating it as one.
 - **`min` or `max` with fewer than two arguments.**
@@ -429,7 +430,7 @@ The build refuses these:
 - **A scenario that cannot be worked out.** The verifier evaluates the model under every scenario,
   and this is where problems surface: an input with neither a value nor a distribution, a
   distribution naming no shape or two, parameters out of order, and correlations that cannot hold.
-- **A stamped model result older than the model.** Every result under `bench/results/` from a model
+- **A stamped model result that no longer matches the model.** Every result under `bench/results/` from a model
   run carries a fingerprint of the code and the model file that produced it. Edit either, and the
   build refuses the old result until you re-run `python3 -m bench.run_models`.
 
@@ -437,8 +438,6 @@ The build refuses these:
 
 The build accepts all of these without a word:
 
-- **A key the loader does not know.** It is ignored. *The four node kinds*, above, explains where
-  this matters.
 - **A correlation whose input a scenario pins.** It is dropped in that scenario without a message.
   *Correlations*, above, has the details.
 - **A scenario's `because`, and an override on a ceiling**, which changes nothing. *Scenarios*,

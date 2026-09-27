@@ -47,7 +47,7 @@ from pint.util import to_units_container
 #: model that adds dollars to terabytes is refused, and so is one that adds dollars to euros: there
 #: is no exchange rate in the registry, and a model that needs one declares it as a node in its own
 #: unit (``USD/EUR``) with a source, like any other conversion. A model's ``currency:`` field names
-#: the one it prices in, and ``scripts/verify-models.py`` refuses money in any other.
+#: the one its answers are in, and ``scripts/verify-models.py`` refuses an output in any other.
 CURRENCIES: tuple[str, ...] = (
     "USD",
     "EUR",

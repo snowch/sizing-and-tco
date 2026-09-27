@@ -150,7 +150,11 @@ def book_modules():
 PROBLEMS: tuple[tuple[str, str, str], ...] = (
     ("dsl.not-declared", "0", r"does not say which rules it is written against\. "),
     ("currency.unknown", "0", r"declares currency .*; expected an ISO code the registry defines: "),
-    ("currency.another", "0", r"node '(?P<node>[^']+)' counts money in "),
+    (
+        "currency.another",
+        "0",
+        r"output '(?P<node>[^']+)' is in '[^']*', and the model declares `currency: ",
+    ),
     (
         "units.does-not-typecheck",
         "1",
@@ -258,7 +262,7 @@ CAUSES: tuple[tuple[str, str], ...] = (
     ("no-measured-value", r"does not evaluate — 'value'$"),
     (
         "distribution",
-        r"_ppf\(\) (?:got an unexpected keyword argument|missing \d+ required positional argument)|triangular needs|lognormal needs|normal needs|a distribution declares exactly one shape",
+        r"_ppf\(\) (?:got an unexpected keyword argument|missing \d+ required positional argument)|uniform needs|triangular needs|lognormal needs|normal needs|a distribution declares exactly one shape",
     ),
     # A pair missing `a`, `b` or `rho`: the book indexes it and gets a KeyError, whose text is the key.
     (
@@ -276,6 +280,7 @@ CAUSES: tuple[tuple[str, str], ...] = (
 #: Why the loader refused a file, by exception type and text.
 REFUSALS: tuple[tuple[str, str], ...] = (
     ("load.not-a-mapping", r": is not a mapping$"),
+    ("load.unknown-key", r": '(?P<key>[^']*)' is not a key this file may hold"),
     ("load.dsl-version", r": is written for dsl .*, and this toolkit reads dsl \d+$"),
     ("load.duplicate-key", r": line \d+: (?P<key>.*) is written twice in the same mapping"),
     (

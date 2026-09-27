@@ -1,0 +1,4 @@
+about: >-
+  A model whose correlations are written under `correlation:`. Refused, not ignored: ignored, every input was independent.
+expect:
+  - load.unknown-key

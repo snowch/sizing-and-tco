@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "6468d4e8c7f70010",
+  "code_fingerprint": "e6de7561319867f2",
   "code_sources": [
     "bench/run_mixed_pool.py"
   ],
@@ -9,15 +9,15 @@
     "old_purchase_is_sunk": "the old hosts' purchase is spent and appears in neither total; their energy, licences and support appear in keep's",
     "shared_futures": "keep and replace pin only decisions, so every sampled input is drawn once and reaches both. The runner checks the shared columns are identical before subtracting"
   },
-  "generated_at": "2026-09-27T00:21:31+00:00",
-  "git_revision": "db493d0",
+  "generated_at": "2026-09-27T10:22:55+00:00",
+  "git_revision": "cdaebe2",
   "kind": "measurement",
   "name": "mixed-pool",
   "produced_by": {
     "method": "new hosts per chain at the point estimate for three scenarios; ceilings from each scenario's own run; keep and replace evaluated on the same draws and subtracted sample by sample",
     "model": "mixed_pool",
     "samples": 100000,
-    "scenario": "reference, replace and old_retired",
+    "scenario": "reference, replace, old_retired and keep_routed_equally",
     "seed": 20260916,
     "stack": "sizing.evaluate"
   },
@@ -32,28 +32,44 @@
   "summary": {
     "ceilings": [
       {
+        "all_new": 0.45531,
         "kept": 0.49095,
         "label": "utilisation at the busy hour, routed by capacity",
         "node": "queueing_headroom_weighted",
-        "retired": 0.6538
+        "retired": 0.6538,
+        "verdict_all_new": "ok",
+        "verdict_kept": "ok",
+        "verdict_retired": "inside headroom"
       },
       {
+        "all_new": 0.45531,
         "kept": 0.68541,
         "label": "the smallest host's utilisation, routed equally",
         "node": "queueing_headroom_equal",
-        "retired": 0.88704
+        "retired": 0.6538,
+        "verdict_all_new": "ok",
+        "verdict_kept": "over",
+        "verdict_retired": "inside headroom"
       },
       {
+        "all_new": 0.46375,
         "kept": 0.50047,
         "label": "utilisation with the largest host down",
         "node": "failure_headroom",
-        "retired": 0.6663
+        "retired": 0.6663,
+        "verdict_all_new": "ok",
+        "verdict_kept": "inside headroom",
+        "verdict_retired": "over"
       },
       {
+        "all_new": 0.02464,
         "kept": 0.02464,
         "label": "largest shard against the smallest host's disk",
         "node": "shard_fit",
-        "retired": 0.02464
+        "retired": 0.02464,
+        "verdict_all_new": "ok",
+        "verdict_kept": "ok",
+        "verdict_retired": "ok"
       }
     ],
     "chains": [
@@ -94,6 +110,28 @@
         "p95": 1436569.5505053627,
         "point": 887154.8321477169
       },
+      "lines": [
+        {
+          "keep": 228842.19453588533,
+          "label": "New hosts bought",
+          "replace": 353070.81442679453
+        },
+        {
+          "keep": 158351.08629510208,
+          "label": "Energy over the horizon",
+          "replace": 137791.9664906609
+        },
+        {
+          "keep": 319999.9999999999,
+          "label": "Licences over the horizon",
+          "replace": 345599.9999999999
+        },
+        {
+          "keep": 179961.5513167296,
+          "label": "Support over the horizon",
+          "replace": 208226.39346009705
+        }
+      ],
       "new_hosts": {
         "keep": 35.0,
         "replace": 54.0
@@ -102,6 +140,13 @@
         "p5": 737081.2728977352,
         "p95": 1693658.893143792,
         "point": 1044689.1743775524
+      },
+      "routed_equally": {
+        "new_hosts": 70.0,
+        "p5": 375802.92025334894,
+        "p95": 846308.872170828,
+        "point": 519579.01153339294,
+        "share_keep_cheaper": 0.0
       },
       "share_keep_cheaper": 0.99997,
       "shared_inputs": 13
@@ -113,8 +158,14 @@
     "chains": "host",
     "keep_vs_replace.difference": "USD",
     "keep_vs_replace.keep": "USD",
+    "keep_vs_replace.lines": "USD",
     "keep_vs_replace.new_hosts": "host",
     "keep_vs_replace.replace": "USD",
+    "keep_vs_replace.routed_equally.new_hosts": "host",
+    "keep_vs_replace.routed_equally.p5": "USD",
+    "keep_vs_replace.routed_equally.p95": "USD",
+    "keep_vs_replace.routed_equally.point": "USD",
+    "keep_vs_replace.routed_equally.share_keep_cheaper": "dimensionless",
     "keep_vs_replace.share_keep_cheaper": "dimensionless",
     "keep_vs_replace.shared_inputs": "dimensionless"
   }

@@ -45,12 +45,14 @@ def yours(values: dict[str, float], old_hosts: int, routing: str) -> float:
 @pytest.mark.parametrize("old_hosts", OLD_HOSTS)
 def test_routed_by_capacity(model, old_hosts):
     values = model_says(model, old_hosts)
-    assert yours(values, old_hosts, "capacity") == pytest.approx(values[NODES["capacity"]]), (
-        f"with {old_hosts} old hosts routed by capacity, the model buys "
-        f"{values[NODES['capacity']]:.0f} new hosts. Routed by capacity, the old hosts' cores and "
-        "the new hosts' cores add up: take what the old hosts give from what the requests need "
-        "below the margin, and divide what is left by one new host's cores. Round up, and never "
-        "below none."
+    answer = yours(values, old_hosts, "capacity")
+    # Compared outside the assert, so that a failure shows the reader's figure and not the model's.
+    right = answer == pytest.approx(values[NODES["capacity"]])
+    assert right, (
+        f"with {old_hosts} old hosts routed by capacity, you buy {answer} new hosts, and the model "
+        "buys a different number. Routed by capacity, the old hosts' cores and the new hosts' "
+        "cores add up: take what the old hosts give from what the requests need below the margin, "
+        "and divide what is left by one new host's cores. Round up, and never below none."
     )
 
 
@@ -58,11 +60,14 @@ def test_routed_by_capacity(model, old_hosts):
 @pytest.mark.parametrize("old_hosts", OLD_HOSTS)
 def test_routed_equally(model, old_hosts):
     values = model_says(model, old_hosts)
-    assert yours(values, old_hosts, "equal") == pytest.approx(values[NODES["equal"]]), (
-        f"with {old_hosts} old hosts routed equally, the model buys "
-        f"{values[NODES['equal']]:.0f} new hosts. Routed equally, every host carries the same "
-        "share, so the pool is held to the smallest host's cores: work out how many hosts of that "
-        "size the requests need below the margin, then subtract the old hosts you already have."
+    answer = yours(values, old_hosts, "equal")
+    right = answer == pytest.approx(values[NODES["equal"]])
+    assert right, (
+        f"with {old_hosts} old hosts routed equally, you buy {answer} new hosts, and the model "
+        "buys a different number. Routed equally, every host carries the same share, so the pool "
+        "is held to the cores of the smallest host in it, and with no old hosts left that is a new "
+        "one: work out how many hosts of that size the requests need below the margin, then "
+        "subtract the old hosts you already have. Round up, and never below none."
     )
 
 

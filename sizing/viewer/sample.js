@@ -72,6 +72,9 @@ const Z90 = normalPpf(0.9);
  */
 
 export function uniformPpf(u, minimum, maximum) {
+  if (!(minimum <= maximum)) {
+    throw new RangeError(`uniform needs minimum <= maximum, got ${minimum}, ${maximum}`);
+  }
   return minimum + u * (maximum - minimum);
 }
 

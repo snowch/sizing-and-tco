@@ -68,8 +68,7 @@ does not have is a cost that side never pays, and a comparison with a line missi
 column is won by omission.
 
 You have met both lines before. The full web service model carries a per-host licence and a
-one-off cost of moving, and [ch21](#a-tco-for-finance)'s provenance table lists both, with their
-sources. On the single design earlier chapters priced, both lines were zero and moved nothing.
+one-off cost of moving, and [ch21](#a-tco-for-finance)'s provenance table lists the licence, with its source. The move cost is one of the inputs that table does not list. On the single design earlier chapters priced, both lines were zero and moved nothing.
 This chapter is the first in which either carries a figure. On the incumbent's side both are
 still zero. The zero is declared, with a source, rather than left out:
 
@@ -256,10 +255,7 @@ Problem 22.2 finds one of those break-evens by hand.
 ### Keep the old hosts, or replace them
 
 The same subtraction answers a question teams face at every refresh: keep last generation's hosts
-in service, or retire them now and buy an all-new fleet. The mixed pool model from
-[ch10](#bandwidth-and-the-binding-constraint) has both as scenarios. `reference` keeps the old
-hosts and buys the new hosts they cannot cover. `replace` retires them and buys the all-new
-fleet the web service recommends.
+in service, or retire them now and buy an all-new fleet. The mixed pool model from [ch10](#bandwidth-and-the-binding-constraint) holds both as scenarios. *Keep the old hosts* buys the new hosts the old ones cannot cover, with requests routed by capacity. *Replace them* retires the old hosts and buys the all-new fleet the web service model recommends.
 
 The old hosts' purchase price is already spent, so it is in neither total. Keeping them still
 costs energy, licences on every core, and a maintenance contract, and those are in keep's total.
@@ -271,13 +267,33 @@ The difference can be taken future by future.
 ```{include} _generated/comparing-two-tcos-keep-or-replace.md
 ```
 
-The two totals overlap. The difference, taken future by future, does not reach zero: keeping the
-old hosts is cheaper in nearly every future.
+The two totals overlap. The difference, taken future by future, stays below zero across its middle
+nine in ten. With requests routed by capacity, keeping the old hosts is cheaper in nearly every
+future.
 
-Cheaper at what risk: the kept pool is bought on the assumption that the old hosts stay to the
-horizon. [ch11](#headroom-and-failure-domains)'s table shows what happens to it when they retire
-early. The price question is settled; the question left is when the old hosts go, and whether
-the fleet can cover that day.
+The lines show where the difference comes from. Keeping buys fewer new hosts, so the purchase is the
+line that decides it. Licences and support also favour keeping, because the kept pool has fewer
+cores and fewer new hosts under contract. Energy runs the other way: an old host draws nearly as
+much power as a new one for half the cores. The table below shows each line on both sides.
+
+```{include} _generated/comparing-two-tcos-keep-or-replace-lines.md
+```
+
+Keeping is cheaper under two conditions: the load balancer routes requests by capacity, and the old
+hosts last to the horizon.
+
+If requests are routed equally, every host is held to the old host's cores. Keeping then means
+buying more new hosts than replacing them all ([ch10](#bandwidth-and-the-binding-constraint)). The
+last two rows of the first table show keeping is then dearer in every future.
+
+If the old hosts leave early, [ch11](#headroom-and-failure-domains) says to buy for that day or plan
+the next purchase for it. That purchase is a cost, and keep's total has none of it.
+
+[ch11](#headroom-and-failure-domains)'s mixed pool table also has an *All new hosts* column. The
+all-new fleet is *ok* at the plan on every ceiling. It is past its allowed line in fewer futures
+than the kept pool, on every ceiling but the shard's.
+
+Whether keeping is cheaper depends more on your load balancer and retirement dates than on price.
 
 ### What a competitive comparison has to show
 
@@ -340,6 +356,11 @@ number: the share of futures in which the presenter's own design loses. That sha
 the choice turns out wrong, which is the risk the buyer takes on. Only a model of both designs
 over shared futures produces it, so the presenter has to run one and show the result. A
 checklist held against a finished document cannot.
+
+**What keeping or replacing leaves out.** Four costs are in neither total. Two bear on replacing:
+what the old hosts would fetch if sold lowers the cost, and moving the data off them raises it. Two
+would raise the cost of keeping: the purchase needed when the old hosts retire, and the old hosts
+failing more often as they age.
 
 ## Key takeaways
 

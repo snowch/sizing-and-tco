@@ -68,8 +68,9 @@ def new_hosts_for_requests(
 
     * ``"capacity"``: the load balancer sends each host requests in proportion to its cores, so
       every host is equally busy and the two generations' cores add up;
-    * ``"equal"``: every host gets the same share of the requests, so the host with the fewest
-      cores is the busiest and reaches its margin first.
+    * ``"equal"``: every host gets the same share of the requests, so the smallest host in the
+      pool is the busiest and reaches its margin first. With no old hosts, every host is a new
+      one.
 
     If the old hosts already carry the load, the answer is no new hosts, not a negative number.
     """

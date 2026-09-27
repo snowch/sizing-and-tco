@@ -118,13 +118,13 @@ reason.
 ### Two generations: the largest host and the last day
 
 The mixed pool from [ch10](#bandwidth-and-the-binding-constraint) is bought for requests routed
-by capacity, with some old hosts kept to the horizon. Several of this chapter's margins take on
-different meaning in it.
+by capacity, with some old hosts kept to the horizon. Several of this chapter's ceilings mean something different in the mixed pool.
 
-Surviving the loss of one host means surviving the loss of the largest host, because that is the
-most capacity one fault can take away. In a pool of one kind of host every host is the largest.
-In the mixed pool it is a new one, and the model's failure ceiling subtracts the largest host's
-cores from the pool's total.
+Surviving the loss of one host means surviving the loss of the host with the most cores, because
+that is the most processing one fault can take away. In a pool of one kind of host every host has
+the most cores. In the mixed pool it is a new host. The model's failure ceiling subtracts that
+host's cores from the pool's total. The old hosts have more memory, so for memory the biggest loss
+is an old host, and the model has no ceiling for that loss.
 
 A shard has to sit whole on one host, and it can land on the smallest. The pool's total disk
 says nothing about whether a shard fits on the smallest host, so the smallest host's disk sets a
@@ -137,10 +137,18 @@ scenario is that point: the same new hosts, and no old ones.
 ```{include} _generated/headroom-and-failure-domains-mixed-pool.md
 ```
 
-Compare the columns row by row. Every ceiling is crossed in more futures once the old hosts
-retire, except the shard, which depends only on the smallest disk. The row for requests routed
-equally is crossed in more futures than the row for routing by capacity, in both columns: the
-pool bought for routing by capacity does not survive equal routing.
+Read each row across: the share of futures past the allowed line, and what the plan says at the
+point estimate. Once the old hosts retire, the ceiling for routing by capacity and the ceiling for
+losing a host are each past the allowed line in more futures than with the old hosts kept. The
+equal-routing row goes the other way, because with the old hosts gone the smallest host is a new
+one. Nothing in the shard check counts hosts, so retiring them cannot move it.
+
+With the old hosts retired, losing the host with the most cores takes the pool past its limit even
+at the plan: the verdict is *over*. With the old hosts kept, routing requests equally is *over* at
+the plan: the pool bought for routing by capacity does not survive equal routing. Once the old hosts
+retire, the two routing rows agree, because every host in the pool is then the same size. The
+all-new fleet is *ok* at the plan on every ceiling, and past the allowed line in fewer futures than
+the kept pool on every ceiling but the shard's.
 
 What to do with this: buy for the day the old hosts retire, or plan the next purchase for that
 day. The model shows the gap; it does not choose between them.
@@ -162,7 +170,7 @@ the composition.
 
 Push the margins up and addition stops describing anything. Three margins of ninety per cent add
 to nearly three whole fleets, and no system has negative capacity. Taking nine tenths three times
-over leaves a sliver. That is severe, and at least it is a quantity that exists.
+over leaves a sliver. Multiplying still leaves a fleet with some capacity, where adding said it had less than none.
 
 ### What a margin is for, written down
 
@@ -174,14 +182,13 @@ when the reason goes away. A margin that is just a number gets carried into the 
 the one after that, by people who were not in the room. Ten years later an organisation has a
 thirty-per-cent rule that everybody follows and nobody can source.
 
-The toolkit refuses a ceiling without one. That is the only enforcement available, and it is
-better than none.
+The toolkit refuses a ceiling without a reason. It cannot check that the reason is true; a reviewer reading it can.
 
 ### The output a margin produces
 
 Not a verdict. A probability.
 
-The last two columns of the tables above answer two questions: *Over allowed* shows how often the
+The two ceiling tables at the top of *The material* end with two columns that answer two questions: *Over allowed* shows how often the
 design ends up past the allowed line (the limit less the margin), and *Over limit* shows how often
 it ends up past the limit itself. A verdict at the plan describes one future, but these columns
 describe all the futures the model thinks could happen.
@@ -215,6 +222,11 @@ busy hour. The model has no term for two hosts down at once. A reserve that cove
 one of them, and the ceiling reports on a fleet that is one host larger than the one serving
 requests.
 
+**Whether the mixed pool's checks are all the checks it needs.** The model checks the loss of the
+host with the most cores, with requests routed by capacity. It has no check for losing the host with
+the most memory, which is an old one, and none for a loss when requests are routed equally. It
+treats retirement as every old host leaving on one day, where real hosts leave a few at a time.
+
 ## Key takeaways
 
 :::{div}
@@ -223,8 +235,7 @@ requests.
 - **Headroom is a rule because the right number differs for every ceiling.** A capacity margin
   protects against a cliff, a queueing margin against a slope, a scaling margin against a budget,
   and one percentage cannot serve all three.
-- **The failure reserve is the one margin you can compute, and it is for a loss, not a failure.** A
-  host drained for an upgrade removes the same capacity as one that has died. Every fleet keeps
+- **The failure reserve is the one margin you can compute, and it is for a loss, not a failure.** A host drained for an upgrade removes the same capacity as one that has died. In a pool of mixed hosts the host to keep free is the one with the most cores, and the check has to hold on the day the old hosts retire. Every fleet keeps
   one host free for each it plans to lose: a small fleet keeps a large share of itself free and a
   large fleet a small share.
 - **Margins multiply. They do not add.** Each takes its share of what the one before left, so
@@ -307,6 +318,6 @@ sizes the system next.
 [ch12](#the-sizing-model) assembles Part III: every chain, every margin, and a number at the end of
 it.
 
-[ch13](#monte-carlo) shows how the last two columns of every table in this chapter are computed: the
+[ch13](#monte-carlo) shows how the *Over allowed* and *Over limit* columns, and the shares in the mixed pool's table, are computed: the
 model is worked out many times with its inputs drawn at random, and each column is the share of
 those runs past a line.

@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "5ad07d3047c2cb00",
+  "code_fingerprint": "6f12642376eb57f0",
   "code_sources": [
     "bench/run_models.py",
     "models/mixed_pool/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-27T08:09:05+00:00",
-  "git_revision": "156e02b",
+  "generated_at": "2026-09-27T09:54:57+00:00",
+  "git_revision": "cdaebe2",
   "kind": "model",
   "name": "mixed_pool-reference",
   "produced_by": {
@@ -45,7 +45,7 @@
       }
     ],
     "currency": "USD",
-    "description": "The web service's fleet as ch10 sizes it, with one change: some of last generation's hosts are still in service, doing the same job as the new ones. The question stops being how many hosts and becomes how many new hosts, given the old ones. The demand is ch10's, at its point estimates, so this model has no ranges: its lessons are in its structure. How requests are spread decides whether the two generations' capacity adds. Data is placed by capacity in both cases; only the routing of requests changes.",
+    "description": "The web service's fleet as ch10 sizes it, with one change: some of last generation's hosts are still in service, doing the same job as the new ones. The question stops being how many hosts and becomes how many new hosts, given the old ones. The demand is the web service's own chain, copied node for node with the same ranges. How requests are spread decides whether the two generations' capacity adds. Data is placed by capacity in both cases; only the routing of requests changes.",
     "factors": {
       "all_hosts": 1.0,
       "annual_energy_cost": 0.001,
@@ -68,6 +68,7 @@
       "new_hosts_weighted": 1.0,
       "old_cores": 1.0,
       "old_disk": 1.0,
+      "old_in_service": 1.0,
       "old_ram": 1.0,
       "peak_request_rate": 1.0,
       "pool_cores": 1.0,
@@ -93,7 +94,7 @@
       "utilisation_weighted": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-27T08:09:05+00:00",
+    "generated_at": "2026-09-27T09:54:57+00:00",
     "model": "mixed_pool",
     "nodes": {
       "all_hosts": {
@@ -1517,7 +1518,7 @@
         "point": 0.13360389215887386,
         "provenance": {
           "kind": "assumption",
-          "source": "Lognormal, as in the web service model's electricity price at its point estimate (ch16)"
+          "source": "Lognormal, the same range as the web service model's electricity price"
         },
         "row": 0,
         "summary": {
@@ -1723,7 +1724,7 @@
           "kind": "assumption",
           "source": "the web service model's horizon (ch02): the refresh cycle the fleet is bought against"
         },
-        "row": 1,
+        "row": 0,
         "unit": "year"
       },
       "horizon_periods": {
@@ -1905,7 +1906,7 @@
         "point": 6538.348415311009,
         "provenance": {
           "kind": "assumption",
-          "source": "Lognormal, as in the web service model's host price at its point estimate (ch15)"
+          "source": "Lognormal, the same range as the web service model's host price"
         },
         "row": 0,
         "summary": {
@@ -2283,8 +2284,17 @@
         "ast": {
           "args": [
             {
-              "name": "cores_per_old_host",
-              "op": "ref"
+              "args": [
+                {
+                  "name": "old_in_service",
+                  "op": "ref"
+                },
+                {
+                  "name": "cores_per_old_host",
+                  "op": "ref"
+                }
+              ],
+              "op": "*"
             },
             {
               "name": "cores_per_new_host",
@@ -2296,9 +2306,10 @@
         },
         "depends_on": [
           "cores_per_new_host",
-          "cores_per_old_host"
+          "cores_per_old_host",
+          "old_in_service"
         ],
-        "formula": "max(cores_per_old_host, cores_per_new_host)",
+        "formula": "max(old_in_service * cores_per_old_host, cores_per_new_host)",
         "kind": "derived",
         "label": "cores on the largest host",
         "layer": 3,
@@ -2487,7 +2498,7 @@
         "layer": 3,
         "note": "One copy of the stored data, with its indexes and after compression, split into equal shards. Real shards are rarely equal, so the largest is at least this big.",
         "point": 0.3768734714085634,
-        "row": 16,
+        "row": 15,
         "summary": {
           "max": 8.732591418369314,
           "mean": 0.4832357001778469,
@@ -2653,7 +2664,7 @@
         "point": 79.99999999999997,
         "provenance": {
           "kind": "assumption",
-          "source": "Lognormal, as in the web service model's licence per core (ch15). Charged on every core running, old or new"
+          "source": "Lognormal, the same range as the web service model's licence per core. Charged on every core running, old or new"
         },
         "row": 2,
         "summary": {
@@ -3872,7 +3883,7 @@
         "point": 310.45548849896676,
         "provenance": {
           "kind": "assumption",
-          "source": "Triangular, as in the web service model's host power at its point estimate (ch16)"
+          "source": "Triangular, the same range as the web service model's host power"
         },
         "row": 4,
         "summary": {
@@ -4345,18 +4356,61 @@
         "kind": "input",
         "label": "old hosts still in service at the horizon",
         "layer": 0,
-        "note": "Not how many old hosts there are today: how many are still running at the horizon. Old hosts retire on their own schedule, and the check has to hold at the worst point, after they leave and before demand stops growing. The old_retired scenario is that point.",
+        "note": "Not how many old hosts there are today: how many are still running at the horizon. Old hosts retire on their own schedule, and the check has to hold at the worst point, after they leave and before demand stops growing. Set it to nought to see that point.",
         "point": 30.0,
         "provenance": {
           "kind": "assumption",
           "source": "this worked example's premise: thirty of last generation's hosts are kept in service to the horizon. A decision, because keeping them is a choice"
         },
-        "row": 0,
+        "row": 1,
         "slider": {
           "max": 120.0,
           "min": 0.0
         },
         "unit": "host"
+      },
+      "old_in_service": {
+        "ast": {
+          "args": [
+            {
+              "args": [
+                {
+                  "args": [
+                    {
+                      "name": "old_hosts",
+                      "op": "ref"
+                    },
+                    {
+                      "name": "one_host",
+                      "op": "ref"
+                    }
+                  ],
+                  "op": "/"
+                }
+              ],
+              "fn": "ceil",
+              "op": "call"
+            },
+            {
+              "op": "const",
+              "value": 1.0
+            }
+          ],
+          "fn": "min",
+          "op": "call"
+        },
+        "depends_on": [
+          "old_hosts",
+          "one_host"
+        ],
+        "formula": "min(ceil(old_hosts / one_host), 1)",
+        "kind": "derived",
+        "label": "any old hosts left",
+        "layer": 2,
+        "note": "One while any old host is in service, nought once they have all gone. A generation with no hosts in the pool cannot be its smallest or its largest host. The new hosts are always there: the purchase is at least two.",
+        "point": 1.0,
+        "row": 19,
+        "unit": "dimensionless"
       },
       "old_ram": {
         "ast": {
@@ -4554,14 +4608,14 @@
         "distribution": null,
         "kind": "input",
         "label": "one host",
-        "layer": 3,
+        "layer": 1,
         "note": null,
         "point": 1.0,
         "provenance": {
           "kind": "fact",
           "source": "definition"
         },
-        "row": 15,
+        "row": 13,
         "unit": "host"
       },
       "one_year": {
@@ -4733,7 +4787,7 @@
         "point": 0.11071796769724492,
         "provenance": {
           "kind": "assumption",
-          "source": "Triangular, as in the web service model's os_reserve at its point estimate (ch10). The same share on both generations"
+          "source": "Triangular, the same range as the web service model's os_reserve. The same share on both generations"
         },
         "row": 2,
         "summary": {
@@ -5296,7 +5350,7 @@
         "point": 1.4035898384862247,
         "provenance": {
           "kind": "assumption",
-          "source": "Triangular, as in the web service model's PUE at its point estimate (ch16)"
+          "source": "Triangular, the same range as the web service model's PUE"
         },
         "row": 7,
         "summary": {
@@ -7020,7 +7074,7 @@
           "kind": "assumption",
           "source": "this worked example's premise: the records are split into sixty-four shards, each held whole by one host and copied to others"
         },
-        "row": 19,
+        "row": 20,
         "slider": {
           "max": 512.0,
           "min": 8.0
@@ -7031,22 +7085,59 @@
         "ast": {
           "args": [
             {
-              "name": "cores_per_old_host",
-              "op": "ref"
+              "args": [
+                {
+                  "name": "old_in_service",
+                  "op": "ref"
+                },
+                {
+                  "args": [
+                    {
+                      "name": "cores_per_old_host",
+                      "op": "ref"
+                    },
+                    {
+                      "name": "cores_per_new_host",
+                      "op": "ref"
+                    }
+                  ],
+                  "fn": "min",
+                  "op": "call"
+                }
+              ],
+              "op": "*"
             },
             {
-              "name": "cores_per_new_host",
-              "op": "ref"
+              "args": [
+                {
+                  "args": [
+                    {
+                      "op": "const",
+                      "value": 1.0
+                    },
+                    {
+                      "name": "old_in_service",
+                      "op": "ref"
+                    }
+                  ],
+                  "op": "-"
+                },
+                {
+                  "name": "cores_per_new_host",
+                  "op": "ref"
+                }
+              ],
+              "op": "*"
             }
           ],
-          "fn": "min",
-          "op": "call"
+          "op": "+"
         },
         "depends_on": [
           "cores_per_new_host",
-          "cores_per_old_host"
+          "cores_per_old_host",
+          "old_in_service"
         ],
-        "formula": "min(cores_per_old_host, cores_per_new_host)",
+        "formula": "old_in_service * min(cores_per_old_host, cores_per_new_host) + (1 - old_in_service) * cores_per_new_host",
         "kind": "derived",
         "label": "cores on the smallest host",
         "layer": 3,
@@ -7059,28 +7150,65 @@
         "ast": {
           "args": [
             {
-              "name": "disk_per_old_host",
-              "op": "ref"
+              "args": [
+                {
+                  "name": "old_in_service",
+                  "op": "ref"
+                },
+                {
+                  "args": [
+                    {
+                      "name": "disk_per_old_host",
+                      "op": "ref"
+                    },
+                    {
+                      "name": "disk_per_new_host",
+                      "op": "ref"
+                    }
+                  ],
+                  "fn": "min",
+                  "op": "call"
+                }
+              ],
+              "op": "*"
             },
             {
-              "name": "disk_per_new_host",
-              "op": "ref"
+              "args": [
+                {
+                  "args": [
+                    {
+                      "op": "const",
+                      "value": 1.0
+                    },
+                    {
+                      "name": "old_in_service",
+                      "op": "ref"
+                    }
+                  ],
+                  "op": "-"
+                },
+                {
+                  "name": "disk_per_new_host",
+                  "op": "ref"
+                }
+              ],
+              "op": "*"
             }
           ],
-          "fn": "min",
-          "op": "call"
+          "op": "+"
         },
         "depends_on": [
           "disk_per_new_host",
-          "disk_per_old_host"
+          "disk_per_old_host",
+          "old_in_service"
         ],
-        "formula": "min(disk_per_old_host, disk_per_new_host)",
+        "formula": "old_in_service * min(disk_per_old_host, disk_per_new_host) + (1 - old_in_service) * disk_per_new_host",
         "kind": "derived",
         "label": "disk on the smallest host",
         "layer": 3,
         "note": null,
         "point": 2.0,
-        "row": 17,
+        "row": 16,
         "unit": "TB/host"
       },
       "stored_data": {
@@ -7440,7 +7568,7 @@
         "point": 0.11795163177004572,
         "provenance": {
           "kind": "assumption",
-          "source": "Triangular, as in the web service model's support rate at its point estimate (ch15): a yearly share of the capital cost"
+          "source": "Triangular, the same range as the web service model's support rate: a yearly share of the capital cost"
         },
         "row": 8,
         "summary": {
@@ -8381,7 +8509,6 @@
       "hot_fraction",
       "hours_per_year",
       "index_overhead",
-      "largest_host_cores",
       "licence_per_core",
       "new_host_power",
       "new_hosts",
@@ -8393,6 +8520,8 @@
       "old_disk",
       "old_support_per_host",
       "one_host",
+      "old_in_service",
+      "largest_host_cores",
       "one_year",
       "horizon_periods",
       "os_reserve",
@@ -8463,6 +8592,7 @@
       "title": "Keep the old hosts"
     },
     "scenarios": [
+      "keep_routed_equally",
       "old_retired",
       "reference",
       "replace"
@@ -10416,6 +10546,7 @@
           "old_disk": 0.0,
           "old_host_power": 280.0,
           "old_hosts": 0.0,
+          "old_in_service": 0.0,
           "old_ram": 0.0,
           "old_support_per_host": 300.0,
           "one_host": 1.0,
@@ -10425,7 +10556,7 @@
           "peak_request_rate_t0": 500.0,
           "pool_cores": 8.0,
           "pue": 1.4035898384862247,
-          "queueing_headroom_equal": 0.25,
+          "queueing_headroom_equal": 0.125,
           "queueing_headroom_weighted": 0.125,
           "queueing_margin": 0.0,
           "ram_for_service_new": 0.007638874491321497,
@@ -10439,14 +10570,14 @@
           "service_demand": 0.002,
           "shard_fit": 0.04675728468360976,
           "shards": 8.0,
-          "smallest_cores": 2.0,
+          "smallest_cores": 4.0,
           "smallest_disk": 1.0,
           "stored_data": 1.0,
           "stored_data_t0": 1.0,
           "support_rate": 0.11795163177004572,
           "total_cost": 29092.191643613056,
           "utilisation_after_losing_largest": 0.25,
-          "utilisation_smallest_equal": 0.25,
+          "utilisation_smallest_equal": 0.125,
           "utilisation_weighted": 0.125,
           "working_set": 0.005
         }
@@ -10510,6 +10641,7 @@
           "old_disk": 472.5,
           "old_host_power": 280.0,
           "old_hosts": 30.0,
+          "old_in_service": 1.0,
           "old_ram": 7.5051941877233705,
           "old_support_per_host": 300.0,
           "one_host": 1.0,
@@ -10604,6 +10736,7 @@
           "old_disk": 1830.0,
           "old_host_power": 280.0,
           "old_hosts": 60.0,
+          "old_in_service": 1.0,
           "old_ram": 29.562444281414194,
           "old_support_per_host": 300.0,
           "one_host": 1.0,
@@ -10698,6 +10831,7 @@
           "old_disk": 5842.8,
           "old_host_power": 280.0,
           "old_hosts": 108.0,
+          "old_in_service": 1.0,
           "old_ram": 95.1223207157318,
           "old_support_per_host": 300.0,
           "one_host": 1.0,
@@ -10792,6 +10926,7 @@
           "old_disk": 7200.0,
           "old_host_power": 280.0,
           "old_hosts": 120.0,
+          "old_in_service": 1.0,
           "old_ram": 117.33311218669819,
           "old_support_per_host": 300.0,
           "one_host": 1.0,
@@ -10868,6 +11003,7 @@
     "old_disk": "TB",
     "old_host_power": "W/host",
     "old_hosts": "host",
+    "old_in_service": "dimensionless",
     "old_ram": "TB",
     "old_support_per_host": "USD/host/year",
     "one_host": "host",

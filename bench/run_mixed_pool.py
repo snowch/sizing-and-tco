@@ -51,12 +51,22 @@ CEILINGS = (
 
 TOTAL = "total_cost"
 
+#: The lines of each total, as the model adds them: the purchase, then each running cost for the
+#: length of the horizon.
+LINES = (
+    ("New hosts bought", "new_capex", False),
+    ("Energy over the horizon", "annual_energy_cost", True),
+    ("Licences over the horizon", "annual_licences", True),
+    ("Support over the horizon", "annual_support", True),
+)
+
 
 def run(write: bool = True) -> dict:
     model = load_model(MODEL)
     keep = load_scenario(f"{SCENARIOS}/reference.yaml")
     replace = load_scenario(f"{SCENARIOS}/replace.yaml")
     retired = load_scenario(f"{SCENARIOS}/old_retired.yaml")
+    equal = load_scenario(f"{SCENARIOS}/keep_routed_equally.yaml")
 
     at_keep, at_replace = point(model, keep), point(model, replace)
     chains = [
@@ -69,13 +79,27 @@ def run(write: bool = True) -> dict:
         for label, weighted, equal in CHAINS
     ]
 
-    kept, replaced, gone = (evaluate(model, s) for s in (keep, replace, retired))
+    # The equal-routing purchase is a scenario with a number in it, so it can go stale when the
+    # model changes. It is checked against the node that decides it rather than trusted.
+    at_equal = point(model, equal)
+    if at_equal["new_hosts"] != at_keep["new_hosts_equal"]:
+        raise ValueError(
+            f"keep_routed_equally buys {at_equal['new_hosts']} new hosts; new_hosts_equal says "
+            f"{at_keep['new_hosts_equal']}. Update the scenario."
+        )
+
+    kept, replaced, gone, kept_equal = (evaluate(model, s) for s in (keep, replace, retired, equal))
     ceilings = [
         {
             "node": name,
             "label": model.nodes[name].display,
             "kept": kept.ceilings[name]["p_over_allowed"],
             "retired": gone.ceilings[name]["p_over_allowed"],
+            "all_new": replaced.ceilings[name]["p_over_allowed"],
+            # What the plan itself says, before any future is drawn: ok, inside headroom, or over.
+            "verdict_kept": kept.ceilings[name]["verdict"],
+            "verdict_retired": gone.ceilings[name]["verdict"],
+            "verdict_all_new": replaced.ceilings[name]["verdict"],
         }
         for name in CEILINGS
     ]
@@ -85,6 +109,11 @@ def run(write: bool = True) -> dict:
         if not np.array_equal(kept.samples[name], replaced.samples[name]):
             raise ValueError(f"{name} was drawn differently for keep and replace")
     difference = kept.samples[TOTAL] - replaced.samples[TOTAL]
+    for name in shared:
+        if not np.array_equal(kept_equal.samples[name], replaced.samples[name]):
+            raise ValueError(f"{name} was drawn differently for keep_routed_equally and replace")
+    difference_equal = kept_equal.samples[TOTAL] - replaced.samples[TOTAL]
+    e5, e95 = np.percentile(difference_equal, [5, 95])
     p5, p50, p95 = np.percentile(difference, [5, 50, 95])
     keep_vs_replace = {
         "keep": {
@@ -104,6 +133,25 @@ def run(write: bool = True) -> dict:
             "p95": float(p95),
         },
         "share_keep_cheaper": float(np.mean(difference < 0)),
+        # The same comparison with the router sending every host the same share, which is the
+        # condition the verdict above rests on.
+        "routed_equally": {
+            "new_hosts": at_equal["new_hosts"],
+            "point": at_equal[TOTAL] - at_replace[TOTAL],
+            "p5": float(e5),
+            "p95": float(e95),
+            "share_keep_cheaper": float(np.mean(difference_equal < 0)),
+        },
+        # Which lines the difference is made of, at the point estimate: the purchase, and each
+        # running cost over the horizon.
+        "lines": [
+            {
+                "label": label,
+                "keep": at_keep[node] * (at_keep["horizon"] if running else 1.0),
+                "replace": at_replace[node] * (at_replace["horizon"] if running else 1.0),
+            }
+            for label, node, running in LINES
+        ],
         "new_hosts": {"keep": at_keep["new_hosts"], "replace": at_replace["new_hosts"]},
         "shared_inputs": len(shared),
     }
@@ -116,6 +164,12 @@ def run(write: bool = True) -> dict:
         "keep_vs_replace.difference": "USD",
         "keep_vs_replace.share_keep_cheaper": "dimensionless",
         "keep_vs_replace.new_hosts": "host",
+        "keep_vs_replace.routed_equally.new_hosts": "host",
+        "keep_vs_replace.routed_equally.point": "USD",
+        "keep_vs_replace.routed_equally.p5": "USD",
+        "keep_vs_replace.routed_equally.p95": "USD",
+        "keep_vs_replace.routed_equally.share_keep_cheaper": "dimensionless",
+        "keep_vs_replace.lines": "USD",
         "keep_vs_replace.shared_inputs": "dimensionless",
     }
     return build_result(
@@ -127,7 +181,7 @@ def run(write: bool = True) -> dict:
             "from each scenario's own run; keep and replace evaluated on the same draws and "
             "subtracted sample by sample",
             "model": model.name,
-            "scenario": f"{keep.name}, {replace.name} and {retired.name}",
+            "scenario": f"{keep.name}, {replace.name}, {retired.name} and {equal.name}",
             "seed": keep.seed,
             "samples": keep.samples,
             "stack": "sizing.evaluate",

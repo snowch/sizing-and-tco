@@ -2520,18 +2520,23 @@ def mixed_pool_chains(name: str) -> str:
 
 
 def mixed_pool_ceilings(name: str) -> str:
-    """How often the pool as bought crosses each margin, with the old hosts kept and retired.
+    """Each ceiling of the pool as bought, kept and retired, beside an all-new fleet.
 
-    Bought for capacity-weighted routing with the old hosts in it, the pool is checked twice: as
-    planned, and after the old hosts have gone and demand has not stopped growing (ch11).
+    Each cell is two readings: the share of futures past the allowed line, and what the plan
+    itself says at the point estimates. The pool bought for capacity-weighted routing is checked
+    as planned, after the old hosts have gone and before demand stops growing (ch11), and against
+    the fleet that replaced them outright (ch22).
     """
     rows = [
-        "| Ceiling | Futures over the margin, old hosts kept "
-        "| Futures over the margin, old hosts retired |",
-        "|---|---:|---:|",
+        "| Ceiling | Old hosts kept | Old hosts retired | All new hosts |",
+        "|---|---:|---:|---:|",
     ]
     for row in load_result(name)["summary"]["ceilings"]:
-        rows.append(f"| {row['label']} | {row['kept']:.0%} | {row['retired']:.0%} |")
+        cells = [
+            f"{row[column]:.0%}, {row['verdict_' + column]} at the plan"
+            for column in ("kept", "retired", "all_new")
+        ]
+        rows.append(f"| {row['label']} | " + " | ".join(cells) + " |")
     return "\n".join(rows)
 
 
@@ -2549,10 +2554,13 @@ def mixed_pool_keep_vs_replace(name: str) -> str:
 
     The two totals overlap; the difference, taken on shared futures, does not straddle zero.
     Subtracting the two intervals' ends instead would count the shared uncertainty twice (ch22).
+    The last two rows are the same subtraction with requests routed equally, which is the
+    condition the first verdict rests on.
     """
     k = load_result(name)["summary"]["keep_vs_replace"]
+    e = k["routed_equally"]
     rows = [
-        "| | At the point estimate | 90% interval |",
+        "| | At the point estimate | Middle nine in ten |",
         "|---|---:|---:|",
         f"| Keep the old hosts, buy {fmt(k['new_hosts']['keep'], 'host')} new "
         f"| {_money(k['keep']['point'])} | {_money(k['keep']['p5'])} to {_money(k['keep']['p95'])} |",
@@ -2562,5 +2570,23 @@ def mixed_pool_keep_vs_replace(name: str) -> str:
         f"| Keep minus replace, future by future | {signed_money(k['difference']['point'])} "
         f"| {signed_money(k['difference']['p5'])} to {signed_money(k['difference']['p95'])} |",
         f"| Futures in which keeping is cheaper | | {_share_of_futures(k['share_keep_cheaper'])} |",
+        f"| Keep minus replace, routed equally, buying {fmt(e['new_hosts'], 'host')} new "
+        f"| {signed_money(e['point'])} | {signed_money(e['p5'])} to {signed_money(e['p95'])} |",
+        f"| Futures in which keeping is cheaper, routed equally | "
+        f"| {_share_of_futures(e['share_keep_cheaper'])} |",
     ]
+    return "\n".join(rows)
+
+
+def mixed_pool_keep_vs_replace_lines(name: str) -> str:
+    """Which lines the keep-or-replace difference is made of, at the point estimate (ch22)."""
+    rows = [
+        "| Line | Keep the old hosts | Replace them | Keep minus replace |",
+        "|---|---:|---:|---:|",
+    ]
+    for line in load_result(name)["summary"]["keep_vs_replace"]["lines"]:
+        rows.append(
+            f"| {line['label']} | {_money(line['keep'])} | {_money(line['replace'])} "
+            f"| {signed_money(line['keep'] - line['replace'])} |"
+        )
     return "\n".join(rows)

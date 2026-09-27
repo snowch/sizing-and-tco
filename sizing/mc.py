@@ -76,6 +76,8 @@ def uniform_ppf(u: np.ndarray, minimum: float, maximum: float) -> np.ndarray:
     window somebody will choose from a range. Dishonest as a default, because it says the bounds
     are as likely as the middle, and almost nothing real is like that.
     """
+    if not minimum <= maximum:
+        raise ValueError(f"uniform needs minimum <= maximum, got {minimum}, {maximum}")
     return minimum + u * (maximum - minimum)
 
 

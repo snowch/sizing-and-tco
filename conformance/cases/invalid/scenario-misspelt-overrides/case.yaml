@@ -1,0 +1,4 @@
+about: >-
+  A scenario whose overrides are written under `override:`. Refused, not ignored: ignored, it ran on the model's own values.
+expect:
+  - scenario.does-not-load

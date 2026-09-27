@@ -12,6 +12,7 @@ import importlib.util
 import textwrap
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 from sizing.dsl import DSL_VERSION, ModelError, load_model
@@ -98,10 +99,25 @@ def test_a_model_may_price_in_euros(tmp_path):
     assert not [p for p in problems_of(path) if "currency" in p]
 
 
-def test_money_in_another_currency_is_refused(tmp_path):
+def test_an_answer_in_another_currency_is_refused(tmp_path):
     body = INPUT.format(name="x", unit="EUR/host", value=5000)
     path = model_file(tmp_path, body, head="dsl: 1\ncurrency: USD\n")
-    assert any("counts money in" in p for p in problems_of(path))
+    assert any("A model answers in its own currency" in p for p in problems_of(path))
+
+
+def test_a_price_in_another_currency_converts_by_a_rate(tmp_path):
+    """The review found the rate refused along with the price it converts."""
+    body = (
+        INPUT.format(name="price", unit="EUR/host", value=5000)
+        + INPUT.format(name="rate", unit="USD/EUR", value=1.1)
+        + """
+  x:
+    kind: derived
+    unit: USD/host
+    formula: price * rate"""
+    )
+    path = model_file(tmp_path, body, head="dsl: 1\ncurrency: USD\n")
+    assert not [p for p in problems_of(path) if "currency" in p]
 
 
 def test_dollars_do_not_add_to_euros():
@@ -307,3 +323,42 @@ def test_an_own_result_discloses_what_an_estate_result_does(tmp_path, missing, s
 def test_a_result_name_cannot_reach_outside_the_folder(tmp_path):
     path = model_file(tmp_path, MEASURED.format(result="../results/records-compression"))
     assert not load_model(path).nodes["x"].is_measured
+
+
+# -- the second review ---------------------------------------------------------------------------
+
+
+def test_a_misspelt_key_is_refused_not_ignored(tmp_path):
+    """`correlation:` for `correlations:` left every input independent, and built."""
+    path = model_file(tmp_path, INPUT.format(name="x", unit="host", value=1))
+    path.write_text(path.read_text() + "correlation: []\n")
+    with pytest.raises(ModelError, match="did you mean 'correlations'"):
+        load_model(path)
+
+
+def test_a_misspelt_node_key_is_refused(tmp_path):
+    body = INPUT.format(name="x", unit="host", value=1) + "\n    lable: a typo"
+    with pytest.raises(ModelError, match="did you mean 'label'"):
+        load_model(model_file(tmp_path, body))
+
+
+def test_a_misspelt_override_is_refused(tmp_path):
+    """`override:` for `overrides:` ran the scenario on the model's own values."""
+    from sizing.dsl import load_scenario
+
+    path = tmp_path / "s.yaml"
+    path.write_text("scenario: s\noverride: {x: 3}\n")
+    with pytest.raises(ModelError, match="did you mean 'overrides'"):
+        load_scenario(path)
+
+
+def test_a_reversed_uniform_is_refused():
+    from sizing.mc import uniform_ppf
+
+    with pytest.raises(ValueError, match="uniform needs minimum <= maximum"):
+        uniform_ppf(np.array([0.5]), 5, 1)
+
+
+def test_a_measured_unit_spelt_another_way_is_the_same_unit():
+    assert verify_models._same_unit("terabyte", "TB")
+    assert not verify_models._same_unit("TB", "TiB")
