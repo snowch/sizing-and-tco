@@ -993,6 +993,13 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     assert 'localStorage.getItem("toc") === "closed"' in opening
 
 
+def test_the_chapter_list_starts_at_the_cover():
+    """The cover is the book's first page, and the list of its pages starts there."""
+    first, second = site().nav()[:2]
+    assert (first["title"], first["href"]) == ("Cover", "index.html")
+    assert (second["title"], second["href"]) == ("Preface", "preface.html")
+
+
 def test_the_chapter_list_on_a_phone_opens_where_the_reader_can_see_it():
     """On a phone the chapter list sits above the chapter, so ☰ pressed partway down a page
     opened it thousands of pixels out of sight and appeared to do nothing. Opening now jumps to

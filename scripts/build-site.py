@@ -172,11 +172,14 @@ def nav() -> list[dict]:
     means a chapter cannot appear in the navigation without appearing in the tests that check it.
     """
     out = [
+        # The cover is where the book starts, so the list starts there too. It was the one page a
+        # reader could reach only by the title in the header, which does not look like a link.
+        {"title": "Cover", "href": href_for("cover.md"), "children": []},
         {
             "title": "Preface",
             "href": href_for("index.md"),
             "children": [],
-        }
+        },
     ]
     for part in PART_PAGES:
         out.append(
