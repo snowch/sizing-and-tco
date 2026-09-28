@@ -149,8 +149,9 @@ def video_html(path: Path, source: str = "") -> str:
         "A short video overview of the book, generated from its pages by an AI tool. The pages "
         "are the authority"
         if source == PREFACE
-        else "A video summary of this chapter, generated from the page by an AI tool. The page "
-        "is the authority"
+        else "A video summary of this chapter, generated from the page by an AI tool (<a "
+        'href="preface.html#how-this-book-was-made">how it was made</a>). The page is the '
+        "authority"
     )
     return (
         '<figure class="video"><video controls preload="none" '
