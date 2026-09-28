@@ -819,6 +819,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const shown = () =>
     wide.matches ? !root.classList.contains("nav-closed") : nav.classList.contains("open");
   const reflect = () => menu.setAttribute("aria-expanded", String(shown()));
+  let away = null;
   menu.addEventListener("click", () => {
     if (wide.matches) {
       const closed = root.classList.toggle("nav-closed");
@@ -826,7 +827,16 @@ document.addEventListener("DOMContentLoaded", () => {
         if (closed) localStorage.setItem("nav", "closed"); else localStorage.removeItem("nav");
       } catch (e) {}
     } else {
-      nav.classList.toggle("open");
+      // On a phone the list sits above the chapter, so opening it partway down a page would
+      // change nothing the reader can see. Opening takes them to it; closing puts them back.
+      const here = scrollY;
+      if (nav.classList.toggle("open")) {
+        away = here;
+        nav.scrollIntoView({ block: "start", behavior: "instant" });
+      } else if (away !== null) {
+        scrollTo({ top: away, behavior: "instant" });
+        away = null;
+      }
     }
     reflect();
     reflectOutline();
@@ -1406,7 +1416,7 @@ mark { background: var(--wash); color: inherit; border-radius: 2px; padding: 0 .
    by order rather than by !important. Below the first breakpoint the chapter list opens over
    the page from the ☰ button. */
 .nav, .toc { display: none; font: 14px/1.45 var(--chrome); padding: 1.4rem 1rem 3rem; }
-.nav.open { display: block; }
+.nav.open { display: block; scroll-margin-top: var(--top); }
 /* Two steps, not one. A column of 41rem needs 58rem beside the navigation and 72rem beside both
    sidebars, and a single breakpoint at the larger of those left a 1024px tablet with no
    navigation and a third of its width empty. */

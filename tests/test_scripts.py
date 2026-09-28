@@ -993,6 +993,24 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     assert 'localStorage.getItem("toc") === "closed"' in opening
 
 
+def test_the_chapter_list_on_a_phone_opens_where_the_reader_can_see_it():
+    """On a phone the chapter list sits above the chapter, so ☰ pressed partway down a page
+    opened it thousands of pixels out of sight and appeared to do nothing. Opening now jumps to
+    it and closing jumps back. Both jumps are instant: the page scrolls smoothly, and a smooth
+    scroll across a whole chapter was still under way when the reader looked. The place to come
+    back to is read before the list opens, because opening it pushes the chapter down and the
+    browser moves the scroll to follow."""
+    menu = site().MENU
+    narrow = menu[menu.index("} else {", menu.index('menu.addEventListener("click"')) :]
+    narrow = narrow[: narrow.index("reflect();")]
+    assert narrow.index("const here = scrollY;") < narrow.index('nav.classList.toggle("open")')
+    assert 'nav.scrollIntoView({ block: "start", behavior: "instant" })' in narrow
+    assert 'scrollTo({ top: away, behavior: "instant" })' in narrow
+    assert ".nav.open { display: block; scroll-margin-top: var(--top); }" in site().CSS, (
+        "the header stays at the top of the window, and the list's first entry would open under it"
+    )
+
+
 def test_the_rails_take_the_room_as_it_appears():
     """A chapter list that wraps is hard to scan, and the room to fix it arrives gradually.
 
