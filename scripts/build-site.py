@@ -143,6 +143,21 @@ def video_for(source: str) -> Path | None:
     return None
 
 
+def with_video(body: str, video: str) -> str:
+    """The video as the first thing under the title: after the "builds on" line if the page has
+    one, else after its heading. The Preface has neither in its body, because its heading is
+    added later from the front matter, and looking for one there put the video inside the
+    tagline's opening tag."""
+    line = body.find('class="builds-on"')
+    if line >= 0:
+        at = body.index("</p>", line) + len("</p>")
+    elif "</h1>" in body:
+        at = body.index("</h1>") + len("</h1>")
+    else:
+        at = 0
+    return body[:at] + video + body[at:]
+
+
 def video_html(path: Path, source: str = "") -> str:
     """The video under a page's title, said to be generated, and said to need the network."""
     what = (
@@ -1907,11 +1922,8 @@ def render_page(source: str, page: dict, before: Neighbour, after: Neighbour) ->
         body = anchor_glossary_rows(body)
     if builds_on(source):
         body = body.replace("</h1>", "</h1>" + builds_on(source), 1)
-    if video_for(source):
-        # After the heading and its "builds on" line, where it is the first thing under the title.
-        at = body.find("</p>", body.find('class="builds-on"')) + 4 if builds_on(source) else -1
-        at = at if at > 3 else body.find("</h1>") + 5
-        body = body[:at] + video_html(video_for(source), source) + body[at:]
+    if video := video_for(source):
+        body = with_video(body, video_html(video, source))
     if source not in TITLED_PAGES:
         # The introduction and the part pages carry their name in the front matter and nowhere
         # in the text, so the page opens on a blockquote with nothing above it saying where

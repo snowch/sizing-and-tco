@@ -993,6 +993,17 @@ def test_each_rail_has_a_control_and_the_chapter_takes_the_room_back():
     assert 'localStorage.getItem("toc") === "closed"' in opening
 
 
+def test_a_video_goes_under_the_title_and_never_inside_a_tag():
+    """The Preface's body has no heading, because its title is added from the front matter
+    afterwards. Looking for a heading that was not there put the video four characters in,
+    between the "<" and "em>" of the tagline, and the page showed both halves as text."""
+    place = site().with_video
+    assert place("<p><em>Tagline.</em></p>", "[V]") == "[V]<p><em>Tagline.</em></p>"
+    assert place("<h1>ch01</h1><p>Text</p>", "[V]") == "<h1>ch01</h1>[V]<p>Text</p>"
+    chapter = '<h1>ch05</h1><p class="builds-on">Builds on ch04.</p><p>Text</p>'
+    assert place(chapter, "[V]") == chapter.replace("</p><p>Text", "</p>[V]<p>Text")
+
+
 def test_the_chapter_list_starts_at_the_cover():
     """The cover is the book's first page, and the list of its pages starts there."""
     first, second = site().nav()[:2]
