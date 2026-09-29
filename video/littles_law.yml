@@ -1,0 +1,158 @@
+# ch05's video: what each slide shows and what is said over it. Built by scripts/build-video.py.
+# A figure is a placeholder, {node.stat}, read from `result`; the script refuses a typed digit.
+# Slide text is quoted from the chapter; definitions are the chapter's own boxes.
+result: web_service_littles_law-reference
+voice: bm_george
+
+scenes:
+  - slide: {kind: title}
+    say: >-
+      This is chapter five, which asks: what can Little's law tell you about a system in a steady
+      state, where as many requests leave as arrive, and what can it not? The chapter before this
+      one ended with a rate: how much work arrives at the busy hour. This chapter turns that rate
+      into a count of requests currently in flight, and turns that count back into the time each
+      request spent in the system, queues included.
+
+  - slide:
+      kind: statement
+      title: The law
+      text: Requests in the system equal the arrival rate times the time each one stays.
+    say: >-
+      The law is this: the number of requests in a system equals the rate they arrive at times
+      their residence time. It is one multiplication. It assumes nothing about how requests
+      arrive, nothing about the order they are served in, and nothing about the shape of anything.
+
+  - slide: {kind: definition, term: Residence time}
+    say: >-
+      Residence time is the time a request spends in the system, from arriving to leaving,
+      including any time it waits in a queue. In this chapter's model, residence time is set equal
+      to the service time, because nothing in the model waits yet. The next chapter adds the
+      waiting.
+
+  - slide:
+      kind: statement
+      title: The one condition
+      text: >-
+        A steady state over the window you look at: as many requests leave as arrive. Count the
+        requests in flight at the start and at the end of the window.
+    say: >-
+      The law has one condition: the system must be in a steady state over the window you look
+      at, with as many requests leaving as arrive. You can test this by counting the requests in
+      flight at the start and at the end of the window. If the count at the end is close to where
+      it started, the window balanced and the law applies.
+
+  - slide: {kind: definition, term: Service demand}
+    say: >-
+      Service demand is the processor time one request costs, measured in core-seconds: not how
+      long the request takes, but how much processor it consumes. It belongs to one build of the
+      software on one kind of machine and is the first input in the model that belongs to the
+      service itself rather than to the workload. Nobody has measured it here because no
+      reference machine is declared, so the model declares it an assumption with a stated range.
+      Every figure worked out from it carries that range too.
+
+  - slide: {kind: definition, term: service time}
+    say: >-
+      Service time is what you get when you divide the core out of service demand. It is how long
+      one request takes when it waits for nothing, measured in seconds.
+
+  - slide:
+      kind: statement
+      title: The fleet is an input, not a result
+      text: The model recommends a fleet, a person decides one.
+    say: >-
+      The fleet is an input you set, not a result the model works out. If the model worked out
+      the fleet from the demand, it would grow and shrink with the demand in every future, and
+      could never show a fleet that is too small. Held fixed, it can. The model recommends a
+      fleet, but a person decides one.
+
+  - slide: {kind: definition, term: Utilisation}
+    say: >-
+      Utilisation is the cores busy divided by the cores the fleet has. A utilisation above one
+      means the busy hour needs more cores than the fleet has and the fleet cannot keep up. What
+      this model cannot yet say is how close to one is too close.
+
+  - slide:
+      kind: statement
+      title: Running the law backwards
+      text: >-
+        Divide the requests in flight by the arrival rate. Two hundred requests in flight while a
+        thousand arrive a second is a fifth of a second each.
+    say: >-
+      An application's own timer starts after any queueing in front of it, so it does not measure
+      residence time. But every system can count requests and expose a gauge of how many are in
+      flight. Divide the requests in flight by the arrival rate and you get the true residence
+      time, including every queue in front of the timer. Two hundred requests in flight while a
+      thousand arrive a second is a fifth of a second each. If the application's timer reports
+      less, either requests queued before the timer started or the window did not balance.
+
+  - slide:
+      kind: table
+      title: What the fleet says
+      table: littles-law-outputs
+      rows: [cores busy at the busy hour, "requests in flight, if none waited"]
+    say: >-
+      At the point estimate, the cores busy at the busy hour are {busy_cores.point}, and the
+      middle nine in ten of the model's futures run from {busy_cores.p5} to {busy_cores.p95}. The
+      requests in flight, if none waited, are identical in every column. That is not a mistake:
+      when no request waits, each request in flight holds one core for the whole time it is in the
+      system. Neither depends on the fleet.
+
+  - slide:
+      kind: table
+      title: A utilisation above one
+      table: [littles-law-outputs, littles-law-over-capacity]
+      rows: [utilisation, "utilisation above one: the busy hour needs more cores than the fleet has"]
+    say: >-
+      Utilisation at the point estimate is {utilisation.point}, but its range runs from
+      {utilisation.p5} to {utilisation.p95}, above one. In more than a quarter and no more than
+      half of the model's futures, the busy hour needs more cores than the fleet has. There
+      nothing is steady, the law's one condition breaks, and the count of requests in flight
+      describes nothing.
+
+  - slide: {kind: figure, figure: littles-law-in-flight}
+    say: >-
+      Look at the shape of requests in flight, not its numbers. The width is not the law's doing:
+      one multiplication passes an ordinary spread straight through. It comes from what is
+      multiplied: a busy hour five years out, which the previous chapter gave a wide band, and a
+      service demand nobody has measured. The model also declares that a busier service is slower
+      per request, so the two tend to be high together, which widens the product further.
+
+  - slide:
+      kind: points
+      title: Three things the law lets you catch
+      items:
+        - "**A latency that is not the latency.**"
+        - "**A capacity claim that cannot be true.**"
+        - "**A queue nobody declared.**"
+    say: >-
+      Little's law lets you catch three things. A latency that is not the latency: divide
+      in-flight by arrival rate and compare with what your service reports. A capacity claim that
+      cannot be true: a claimed rate and concurrency imply a residence time, and if that is below
+      the service time the claim contains an arithmetic error. A queue nobody declared: if
+      requests in flight grow while the arrival rate is flat, something downstream has slowed.
+
+  - slide:
+      kind: points
+      title: What this cannot tell you
+      items:
+        - "**Anything about a system that is not in a steady state.**"
+        - "**Which of the three quantities moved.**"
+        - "**What the average is hiding.**"
+        - "**Anything about the tail.**"
+    say: >-
+      What the law cannot tell you: anything about a system that is not steady, such as during an
+      incident when arrivals exceed departures. Which of the three quantities moved: the law
+      relates three numbers but has no mechanism. What the average is hiding. And anything about
+      the tail, such as the slowest one request in a hundred.
+
+  - slide:
+      kind: points
+      title: Key takeaways
+      items:
+        - "**Requests in the system equal the arrival rate times the time each one stays.**"
+        - "**Run the law backwards to get the residence time your application's timer cannot see.**"
+        - "**The law relates three numbers and has no opinion about which one moved.**"
+    say: >-
+      Requests in the system equal the arrival rate times the time each one stays: one
+      multiplication, true of any steady system. Run it backwards to find the residence time your
+      timer cannot see. Outside a steady state, or about the tail, the law says nothing at all.

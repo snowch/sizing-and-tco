@@ -1638,3 +1638,41 @@ def test_every_page_names_the_licences_the_book_declares():
         assert name in cover and file in cover, f"the cover does not name {name}, or its file"
     # And how it was written, in the same words in both places.
     assert build.WRITTEN_WITH in build.COLOPHON and build.WRITTEN_WITH in cover
+
+
+def video():
+    from importlib import util
+
+    spec = util.spec_from_file_location("build_video", ROOT / "scripts" / "build-video.py")
+    module = util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_a_video_says_each_figure_as_the_table_prints_it():
+    """The narration reads a figure from the stamped result and says it in British English, so the
+    voice and the table beside it cannot disagree."""
+    build_video = video()
+    assert build_video.spoken("556") == "five hundred and fifty-six"
+    assert build_video.spoken("2,147") == "two thousand, one hundred and forty-seven"
+    assert build_video.spoken("0.644") == "nought point six four four"
+    assert build_video.spoken("$1,508,230") == (
+        "one million, five hundred and eight thousand, two hundred and thirty dollars"
+    )
+    assert build_video.spoken("69%") == "sixty-nine per cent"
+    assert build_video.whole(1_000_005) == "one million and five"
+
+
+def test_every_talk_track_types_no_figure_and_reads_its_own():
+    """A typed digit in a talk track is a number nobody will regenerate, as it is on a page; and
+    every placeholder must name a node the chapter's stamped result has."""
+    build_video = video()
+    tracks = sorted((ROOT / "video").glob("*.yml"))
+    assert tracks, "the talk tracks the chapter videos are built from"
+    for path in tracks:
+        track = build_video.load_track(path.stem)
+        assert build_video.typed_digits(track) == [], path.name
+        for scene in track["scenes"]:
+            build_video.fill(scene["say"], track["nodes"], say=True)
+    bad = {"result": "x", "nodes": {}, "scenes": [{"say": "It holds 54 hosts.", "slide": {}}]}
+    assert build_video.typed_digits(bad), "a typed figure is refused"
