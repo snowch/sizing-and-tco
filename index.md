@@ -155,7 +155,7 @@ Claude also ran the editorial reviews. One reader checked each page's claims aga
 script opened every page in a browser and pressed every control. You can check any number the same
 way the build does: each table's *Source* line names the result it came from.
 
-Most chapter pages open with a short video summary. Gemini Notebook, an AI tool, created these
+Each chapter page opens with a short video summary. Gemini Notebook, an AI tool, created these
 summaries one chapter at a time directly from each chapter's text. The instructions told it to use
 only the chapter's text, to state no number that the chapter does not state, and to name no
 product. The build checks every number on the pages; it does not check the videos, so where a
