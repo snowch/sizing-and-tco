@@ -784,10 +784,14 @@ def test_a_route_teaches_every_term_its_destination_uses(route):
 
     page = ROOT / BY_SLUG[route.destination].path
     text = " ".join(line for _, line in prose_lines(page)).lower()
+    explained = dict(route.explained_there)
+    assert all(reason.strip() for reason in explained.values()), "an exemption needs its reason"
     missing = {
         term: home
         for term, (home, *_) in GLOSSARY.items()
-        if re.search(rf"\b{re.escape(term.lower())}", text) and home not in route.chapters
+        if re.search(rf"\b{re.escape(term.lower())}", text)
+        and home not in route.chapters
+        and term not in explained
     }
     assert not missing, (
         f"the {route.slug} route skips the chapter that teaches {sorted(missing)}, which "

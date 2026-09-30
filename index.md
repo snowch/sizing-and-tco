@@ -176,3 +176,11 @@ Some readers only need to build or judge a sales TCO: the one a seller builds to
 Start with [ch01](#point-estimates), which teaches the distinction the rest of the book relies on. Then read [ch02](#what-a-workload-is), which shows how a model file reads. Next, [ch03](#where-the-numbers-come-from) covers where each number comes from, and how to mark a vendor's claim, an assumption and a figure observed on a running system. [ch04](#peak-mean-and-growth) teaches you to run a model through futures and to read a tornado chart. [ch22](#comparing-two-tcos) shows two quotes compared line by line and the checklist a buyer uses. Finally, [ch23](#the-sellers-tco) teaches the seller's model itself.
 
 The chapters between these six size the fleet: queueing, capacity, headroom, where a fleet hits limits. The seller's TCO leaves all of that out. You will know that blind spot exists, but not what is inside it.
+
+### If you need to present a TCO to finance
+
+Some readers need a TCO for a finance audience: to present one, or to read one as the person who approves the spend. You can read nine chapters instead of the whole book.
+
+Start with [ch01](#point-estimates), which teaches the difference between a model that is right whenever its inputs are right and one that can be wrong even then. Then read [ch02](#what-a-workload-is), which shows how a model file reads. Next, [ch03](#where-the-numbers-come-from) covers where each number comes from, and how each is marked. [ch04](#peak-mean-and-growth) teaches you the busy hour, and the futures a model runs through. [ch13](#monte-carlo) shows how the model runs through many futures at once, and the range of totals that comes out. [ch15](#capex-opex-and-lifecycle) explains what is bought once and what is paid every year, and over what horizon. [ch18](#the-five-year-model) presents the five-year model the finance chapter uses. [ch19](#which-input-is-the-answer) names which input the answer rests on. Finally, [ch21](#a-tco-for-finance) teaches which number to put in front of the room, and the sentence that goes beside it.
+
+Most of the chapters between these nine size the fleet: queueing, capacity, headroom, where a fleet hits limits. The finance chapter takes that fleet as given. If someone in the room asks why the fleet is that size, those chapters are where the answer is.

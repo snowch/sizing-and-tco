@@ -525,6 +525,10 @@ class Route:
     reader: str
     #: In reading order, ending at the chapter the route is for.
     chapters: tuple[str, ...]
+    #: Glossary terms the destination uses whose home chapter the route skips, because the page
+    #: explains each one where it uses it. Each carries its reason, like `% word-ok:`, so the
+    #: exception sits where a reviewer reads it.
+    explained_there: tuple[tuple[str, str], ...] = ()
 
     @property
     def destination(self) -> str:
@@ -542,6 +546,31 @@ ROUTES = (
             "peak_mean_and_growth",
             "comparing_two_tcos",
             "the_sellers_tco",
+        ),
+    ),
+    Route(
+        "finance",
+        "a reader who needs to present a TCO to finance, or read one as finance",
+        (
+            "point_estimates",
+            "what_a_workload_is",
+            "where_the_numbers_come_from",
+            "peak_mean_and_growth",
+            "monte_carlo",
+            "capex_opex_and_lifecycle",
+            "the_five_year_model",
+            "which_input_is_the_answer",
+            "a_tco_for_finance",
+        ),
+        explained_there=(
+            (
+                "median",
+                "the chapter says what it is where it first uses it: half the futures cost more",
+            ),
+            (
+                "utilisation",
+                "used once, to say a ceiling should be written as what fails rather than as one",
+            ),
         ),
     ),
 )

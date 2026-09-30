@@ -14,6 +14,10 @@ Every chapter so far has been about getting the answer right. This one is about 
 minutes in which it is either used or ignored. Those are not the same skill. A model that nobody
 acts on has the same value as a model that was never built.
 
+:::{note} Arriving here directly?
+If you arrived here directly, you do not need the whole book to follow this chapter. Read [ch01](#point-estimates), [ch02](#what-a-workload-is), [ch03](#where-the-numbers-come-from), [ch04](#peak-mean-and-growth), [ch13](#monte-carlo), [ch15](#capex-opex-and-lifecycle), [ch18](#the-five-year-model), and [ch19](#which-input-is-the-answer) first; the preface says what each gives you. The chapters between them size the fleet, which this chapter takes as given.
+:::
+
 ## The material
 
 ### The two things the room wants
