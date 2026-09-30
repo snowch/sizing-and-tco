@@ -200,6 +200,9 @@ slider leaves the others alone, because no node is worked out from another yet.
 `one_year` is a year you do not choose, because it is true by definition. It is there because growth
 compounds, so the horizon becomes an exponent, and an exponent has no unit, as the note in the file
 says.
+An exponent counts how many times the yearly growth factor is applied. "Apply it five times" means
+something; "apply it five years" does not. The divisor is one year because the growth factor is per
+year; using months would count months instead of years.
 
 `horizon / one_year` divides a length of time by a length of time; the years cancel, and what is
 left is a count with no unit. A spreadsheet holds the horizon as a bare number and assumes it is in

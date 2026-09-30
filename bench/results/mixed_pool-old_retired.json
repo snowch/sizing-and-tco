@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "2f4928c0af9d0431",
+  "code_fingerprint": "96958b5309a34f62",
   "code_sources": [
     "bench/run_models.py",
     "models/mixed_pool/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-27T11:46:31+00:00",
-  "git_revision": "90b94b8",
+  "generated_at": "2026-09-30T12:59:30+00:00",
+  "git_revision": "f9ccc25",
   "kind": "model",
   "name": "mixed_pool-old_retired",
   "produced_by": {
@@ -31,7 +31,7 @@
     "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
-    "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+    "os": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39",
     "python": "3.11.15"
   },
   "summary": {
@@ -104,7 +104,7 @@
       "utilisation_weighted": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-27T11:46:31+00:00",
+    "generated_at": "2026-09-30T12:59:30+00:00",
     "model": "mixed_pool",
     "nodes": {
       "all_hosts": {
@@ -5262,7 +5262,7 @@
         "kind": "input",
         "label": "one year",
         "layer": 0,
-        "note": "Here because a duration cannot be an exponent. In (1+r)^n the n is a pure number, so the horizon has to be divided by something with the same units before it can be used as one. Appendix D has the rest of the conversions that bite.",
+        "note": "The model multiplies demand by `annual_growth ** horizon_periods`. Because `annual_growth` is applied once per year, the exponent must count years, not a length of time. Dividing the horizon by `one_year` produces that count. Appendix D has the rest of the conversions that bite.",
         "point": 1.0,
         "provenance": {
           "kind": "fact",

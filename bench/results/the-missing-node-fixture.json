@@ -16,8 +16,8 @@
     "the_invoice_is_invented_too": "the average of twelve invoices that do not exist, kept in the problem's test so it is never mistaken for an observation of anything",
     "what_an_interval_here_is": "a statement about this file's declared inputs, and nothing about whether the file has every cost line (ch20)"
   },
-  "generated_at": "2026-09-27T11:04:21+00:00",
-  "git_revision": "6c61c97",
+  "generated_at": "2026-09-30T13:00:40+00:00",
+  "git_revision": "f9ccc25",
   "kind": "measurement",
   "name": "the-missing-node-fixture",
   "produced_by": {
@@ -34,7 +34,7 @@
     "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
-    "os": "Linux-6.18.44-fc-v37-x86_64-with-glibc2.39",
+    "os": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39",
     "python": "3.11.15"
   },
   "summary": {

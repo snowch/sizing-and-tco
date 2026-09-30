@@ -82,10 +82,11 @@ nodes:
     value: 1
     label: one year
     note: >-
-      Here because a duration cannot be an exponent. In (1+r)^n
-      the n is a pure number, so the horizon has to be divided
-      by something with the same units before it can be used as
-      one. Appendix D has the rest of the conversions that bite.
+      The model multiplies demand by `annual_growth ** horizon_periods`.
+      Because `annual_growth` is applied once per year, the exponent
+      must count years, not a length of time. Dividing the horizon
+      by `one_year` produces that count. Appendix D has the rest
+      of the conversions that bite.
     provenance:
       kind: fact
       source: definition
