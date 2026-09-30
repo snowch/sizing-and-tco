@@ -1517,3 +1517,289 @@ def seller_transfer(result: str) -> str:
         f'text-anchor="middle" fill="#455a64">share of the benchmark that carries over</text>'
     )
     return _svg(width, height, "".join(body), "The seller's saving against the transfer factor")
+
+
+def seller_by_year(result: str) -> str:
+    """Each option's spend added up year by year, for one customer, with the paybacks (ch23).
+
+    The chart a sales TCO leads with, drawn from the same model as the rest of the chapter. The
+    customer's own spend starts at nothing; each proposal starts at the cost of the move and
+    climbs more slowly, or does not. Where a proposal crosses the customer's line is its payback,
+    a break-even in time. The lines are straight because the model is linear in time: a real
+    move, with a period of running both systems, bends them.
+    """
+    from bench.outline import label_of
+
+    summary = load_result(result)["summary"]["by_year"]
+    years, current, options = summary["years"], summary["current"], summary["options"]
+    ch22 = label_of("comparing_two_tcos")
+
+    width, height = 440.0, 380.0
+    left, right, top, bottom = 20.0, width - 20, 146.0, height - 44
+    last = years[-1]
+    tallest = max([*current, *(v for o in options for v in o["cumulative"])])
+
+    def at(year: float, spend: float) -> tuple[float, float]:
+        return (
+            left + year / last * (right - left),
+            bottom - spend / tallest * (bottom - top),
+        )
+
+    def path(values: list[float]) -> str:
+        return " L".join(
+            f"{x:.1f},{y:.1f}" for x, y in (at(t, v) for t, v in zip(years, values, strict=True))
+        )
+
+    body = [
+        f'<text x="{MARGIN}" y="22" font-size="15" fill="#263238">Spend added up year by year, '
+        f"{_esc(ch22)}'s customer</text>",
+        f'<text x="{MARGIN}" y="42" font-size="13.5" fill="#546e7a">each proposal starts at the '
+        f"cost of the move</text>",
+    ]
+    legend = [("#263238", "", "the customer as it is")] + [
+        (SELLER_CURVES[o["key"]][0], SELLER_CURVES[o["key"]][1], _seller_payback_label(o, ch22))
+        for o in options
+    ]
+    for i, (colour, dash, label) in enumerate(legend):
+        y = 64 + i * 18
+        dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
+        body.append(
+            f'<line x1="{MARGIN}" y1="{y - 4}" x2="{MARGIN + 22}" y2="{y - 4}" stroke="{colour}" '
+            f'stroke-width="2"{dash_attr}/>'
+            f'<text x="{MARGIN + 28}" y="{y}" font-size="13.5" fill="#37474f">{_esc(label)}</text>'
+        )
+    body.append(f'<path d="M{path(current)}" fill="none" stroke="#263238" stroke-width="2"/>')
+    for option in options:
+        colour, dash, _ = SELLER_CURVES[option["key"]]
+        dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
+        body.append(
+            f'<path d="M{path(option["cumulative"])}" fill="none" stroke="{colour}" '
+            f'stroke-width="2"{dash_attr}/>'
+        )
+        payback = option["payback"]
+        if 0 < payback <= last:
+            x, y = at(payback, current[1] * payback)
+            body.append(
+                f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="#ffffff" stroke="{colour}" '
+                f'stroke-width="1.6"/>'
+            )
+    body.append(f'<line x1="{left}" y1="{bottom}" x2="{right}" y2="{bottom}" stroke="#90a4ae"/>')
+    for year in years:
+        x, _ = at(year, 0)
+        anchor = "start" if year == 0 else "end" if year == last else "middle"
+        body.append(
+            f'<line x1="{x:.1f}" y1="{bottom}" x2="{x:.1f}" y2="{bottom + 5}" stroke="#90a4ae"/>'
+            f'<text x="{x:.1f}" y="{bottom + 21}" font-size="13.5" text-anchor="{anchor}" '
+            f'fill="#546e7a">{year}</text>'
+        )
+    _, top_y = at(0, tallest)
+    body.append(
+        f'<text x="{left:.1f}" y="{top_y + 4:.1f}" font-size="13.5" fill="#546e7a">'
+        f"{_esc(fmt(tallest, 'USD'))}</text>"
+        f'<text x="{(left + right) / 2:.0f}" y="{height - 6:.0f}" font-size="13.5" '
+        f'text-anchor="middle" fill="#455a64">years after the move</text>'
+    )
+    return _svg(width, height, "".join(body), "Spend added up year by year, with the paybacks")
+
+
+def _seller_payback_label(option: dict, ch22: str) -> str:
+    """A proposal's legend entry: whose assumptions, and when it pays back, or that it never does."""
+    who = {
+        "brochure": "the brochure",
+        "bottom_up_assumptions": f"{ch22}'s two assumptions",
+        "sellers_guesses": "the seller's guesses",
+    }[option["key"]]
+    payback = option["payback"]
+    if payback <= 0:
+        return f"{who}: never pays back"
+    return f"{who}: pays back after {payback:.1f} years"
+
+
+#: The parts of a proposal's five-year spend, bottom to top, and their fills.
+SELLER_PARTS = (
+    ("stays", "#bdbdbd", "today's spend that stays"),
+    ("proposed_hosts", "#5b8fb9", "the proposed hosts"),
+    ("move", "#c98a6b", "the move"),
+)
+
+
+def seller_breakdown(result: str) -> str:
+    """Where each proposal's five-year spend goes, against the customer's own total (ch23).
+
+    One bar per setting of the two hidden assumptions. The line across is what the customer
+    spends as it is, so a bar below it is a saving and the gap is its size. The brochure's bar
+    has no grey block: it scaled the whole bill, people included, and so assumed they go away.
+    """
+    from bench.outline import label_of
+
+    summary = load_result(result)["summary"]["breakdown"]
+    current, options = summary["current"], summary["options"]
+    ch22 = label_of("comparing_two_tcos")
+    names = {
+        "brochure": ("the", "brochure"),
+        "bottom_up_assumptions": (f"{ch22}'s", "assumptions"),
+        "sellers_guesses": ("the seller's", "guesses"),
+    }
+
+    width, height = 440.0, 380.0
+    left, right, top, bottom = 20.0, width - 20, 140.0, height - 50
+    totals = [sum(o[p] for p, _, _ in SELLER_PARTS) for o in options]
+    tallest = max([current, *totals]) * 1.08
+
+    def y_of(value: float) -> float:
+        return bottom - value / tallest * (bottom - top)
+
+    body = [
+        f'<text x="{MARGIN}" y="22" font-size="15" fill="#263238">Five-year spend, '
+        f"{_esc(ch22)}'s customer</text>",
+    ]
+    for i, (_, fill, label) in enumerate(SELLER_PARTS):
+        y = 46 + i * 18
+        body.append(
+            f'<rect x="{MARGIN}" y="{y - 10}" width="11" height="11" fill="{fill}"/>'
+            f'<text x="{MARGIN + 17}" y="{y}" font-size="13.5" fill="#37474f">{_esc(label)}</text>'
+        )
+    y = 46 + len(SELLER_PARTS) * 18
+    body.append(
+        f'<line x1="{MARGIN}" y1="{y - 4}" x2="{MARGIN + 11}" y2="{y - 4}" stroke="#263238" '
+        f'stroke-width="1.4" stroke-dasharray="5 3"/>'
+        f'<text x="{MARGIN + 17}" y="{y}" font-size="13.5" fill="#37474f">'
+        f"the customer as it is, {_esc(fmt(current, 'USD'))}</text>"
+    )
+    slot = (right - left) / len(options)
+    bar = slot * 0.46
+    for i, (option, total) in enumerate(zip(options, totals, strict=True)):
+        x = left + slot * i + (slot - bar) / 2
+        base = 0.0
+        for part, fill, _ in SELLER_PARTS:
+            value = option[part]
+            if value <= 0:
+                continue
+            body.append(
+                f'<rect x="{x:.1f}" y="{y_of(base + value):.1f}" width="{bar:.1f}" '
+                f'height="{y_of(base) - y_of(base + value) - 2:.1f}" fill="{fill}"/>'
+            )
+            base += value
+        gap = current - total
+        body.append(
+            f'<text x="{x + bar / 2:.1f}" y="{y_of(total) - 6:.1f}" font-size="13.5" '
+            f'text-anchor="middle" fill="#263238">{_esc(signed_money(gap))}</text>'
+        )
+        first, second = names[option["key"]]
+        for j, word in enumerate((first, second)):
+            body.append(
+                f'<text x="{x + bar / 2:.1f}" y="{bottom + 18 + 16 * j}" font-size="13.5" '
+                f'text-anchor="middle" fill="#455a64">{_esc(word)}</text>'
+            )
+    line_y = y_of(current)
+    body.append(
+        f'<line x1="{left}" y1="{line_y:.1f}" x2="{right}" y2="{line_y:.1f}" stroke="#263238" '
+        f'stroke-width="1.4" stroke-dasharray="5 3"/>'
+        f'<line x1="{left}" y1="{bottom}" x2="{right}" y2="{bottom}" stroke="#90a4ae"/>'
+    )
+    return _svg(width, height, "".join(body), "Where each proposal's five-year spend goes")
+
+
+#: The break-even map's three marked settings: colour, and the legend's words.
+SELLER_POINTS = {
+    "brochure": ("#c8791a", "the brochure"),
+    "bottom_up_assumptions": ("#4a7ba7", "{ch22}'s two assumptions"),
+    "sellers_guesses": ("#b3413a", "the seller's guesses, at their middle"),
+}
+
+
+def seller_plane(result: str) -> str:
+    """The two hidden assumptions as a plane, split where the saving is zero (ch23).
+
+    Right of the line the product pays for ch22's customer; left of it, it loses. The dots are
+    a few hundred of the seller's own futures, so the share of them on the paying side is how
+    often the seller's own guesses say the product pays. The break-even is a line, not a number:
+    any pair of assumptions on it ties.
+    """
+    from bench.outline import label_of
+
+    plane = load_result(result)["summary"]["plane"]
+    ch22 = label_of("comparing_two_tcos")
+    width, height = 440.0, 420.0
+    left, right, top, bottom = 76.0, width - 20, 118.0, height - 56
+    x_low, x_high, y_low, y_high = 0.4, 1.2, 0.2, 1.0
+
+    def at(transfer: float, share: float) -> tuple[float, float]:
+        return (
+            left + (transfer - x_low) / (x_high - x_low) * (right - left),
+            bottom - (share - y_low) / (y_high - y_low) * (bottom - top),
+        )
+
+    body = [
+        f'<text x="{MARGIN}" y="22" font-size="15" fill="#263238">Where the product pays, '
+        f"{_esc(ch22)}'s customer</text>",
+    ]
+    for i, (colour, label) in enumerate(SELLER_POINTS.values()):
+        y = 46 + i * 18
+        body.append(
+            f'<circle cx="{MARGIN + 5}" cy="{y - 4}" r="5" fill="{colour}"/>'
+            f'<text x="{MARGIN + 17}" y="{y}" font-size="13.5" fill="#37474f">'
+            f"{_esc(label.format(ch22=ch22))}</text>"
+        )
+    # The paying side: every point right of the boundary, clipped to the plot.
+    edge = [
+        at(min(max(p["break_even_transfer"], x_low), x_high), p["scaling_share"])
+        for p in plane["boundary"]
+        if p["break_even_transfer"] > 0
+    ]
+    region = [*edge, at(x_high, y_high), at(x_high, plane["boundary"][0]["scaling_share"])]
+    body.append(
+        '<polygon points="' + " ".join(f"{x:.1f},{y:.1f}" for x, y in region) + '" fill="#dde5ec"/>'
+    )
+    line = [
+        at(p["break_even_transfer"], p["scaling_share"])
+        for p in plane["boundary"]
+        if x_low <= p["break_even_transfer"] <= x_high
+    ]
+    body.append(
+        '<path d="M'
+        + " L".join(f"{x:.1f},{y:.1f}" for x, y in line)
+        + '" fill="none" stroke="#263238" stroke-width="1.6"/>'
+    )
+    cloud = plane["cloud"]
+    for transfer, share in zip(cloud["transfer_factor"], cloud["scaling_share"], strict=True):
+        x, y = at(transfer, share)
+        body.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="1.6" fill="#78909c"/>')
+    for point in plane["points"]:
+        colour, _ = SELLER_POINTS[point["key"]]
+        x, y = at(point["transfer_factor"], point["scaling_share"])
+        body.append(
+            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="6" fill="{colour}" stroke="#ffffff" '
+            f'stroke-width="1.5"/>'
+        )
+    lx, ly = at(1.18, 0.92)
+    body.append(
+        f'<text x="{lx:.1f}" y="{ly:.1f}" font-size="13.5" text-anchor="end" fill="#263238">'
+        f"pays</text>"
+    )
+    lx, ly = at(0.42, 0.23)
+    body.append(
+        f'<text x="{lx:.1f}" y="{ly:.1f}" font-size="13.5" fill="#263238">loses</text>'
+        f'<line x1="{left}" y1="{bottom}" x2="{right}" y2="{bottom}" stroke="#90a4ae"/>'
+        f'<line x1="{left}" y1="{top}" x2="{left}" y2="{bottom}" stroke="#90a4ae"/>'
+    )
+    for value, anchor in ((x_low, "start"), (0.8, "middle"), (x_high, "end")):
+        x, _ = at(value, y_low)
+        body.append(
+            f'<text x="{x:.1f}" y="{bottom + 18}" font-size="13.5" text-anchor="{anchor}" '
+            f'fill="#546e7a">{value:.0%}</text>'
+        )
+    for value in (y_low, 0.6, y_high):
+        _, y = at(x_low, value)
+        body.append(
+            f'<text x="{left - 4}" y="{y + 4:.1f}" font-size="13.5" text-anchor="end" '
+            f'fill="#546e7a">{value:.0%}</text>'
+        )
+    body.append(
+        f'<text x="{(left + right) / 2:.0f}" y="{height - 16:.0f}" font-size="13.5" '
+        f'text-anchor="middle" fill="#455a64">share of the benchmark that carries over</text>'
+        f'<text transform="rotate(-90 16 {(top + bottom) / 2:.0f})" x="16" '
+        f'y="{(top + bottom) / 2:.0f}" font-size="13.5" text-anchor="middle" fill="#455a64">'
+        f"share of the spend that scales</text>"
+    )
+    return _svg(width, height, "".join(body), "Where the product pays, by the two assumptions")

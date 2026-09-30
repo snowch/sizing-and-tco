@@ -48,6 +48,12 @@ PINNED_TOLERANCE = 1e-6
 #: The transfer factors the figure draws the saving at.
 TRANSFERS = tuple(round(0.4 + 0.02 * i, 2) for i in range(31))
 
+#: The shares of the spend that scale the break-even map draws its boundary at.
+SHARES = tuple(round(0.2 + 0.02 * i, 2) for i in range(41))
+
+#: How many of the model's futures the break-even map draws as a cloud.
+CLOUD = 400
+
 
 def ch22_figures() -> dict:
     """What ch22's two stamped quotes say per host-year, and the incumbent's scaling share."""
@@ -184,6 +190,86 @@ def seller(write: bool = True) -> dict:
             }
         )
 
+    # The chart a sales TCO leads with: each option's spend added up year by year, on ch22's
+    # customer. The move is paid in year zero; every year after adds that option's yearly spend.
+    # Where a proposal's line crosses the customer's own is its payback.
+    options = {
+        "brochure": as_brochure,
+        "bottom_up_assumptions": as_bottom_up,
+        "sellers_guesses": guessed,
+    }
+    horizon = guessed["horizon"]
+    years = list(range(int(horizon) + 1))
+    by_year = {
+        "years": years,
+        "current": [guessed["current_per_year"] * t for t in years],
+        "options": [
+            {
+                "key": key,
+                "cumulative": [
+                    values["move_cost"] + values["proposed_per_year"] * t for t in years
+                ],
+                "payback": values["payback"],
+            }
+            for key, values in options.items()
+        ],
+    }
+
+    # Where each proposal's five-year spend goes, on ch22's customer: the part of today's spend
+    # that stays, the proposed hosts, and the move. The customer's own total is the line the
+    # bars are read against, so the saving is the gap and the brochure's missing first block is
+    # the people it scaled away.
+    breakdown = {
+        "current": guessed["current_total"],
+        "options": [
+            {
+                "key": key,
+                "stays": values["current_total"] * (1 - values["scaling_share"]),
+                "proposed_hosts": values["proposed_hosts"]
+                * values["proposed_cost_per_host"]
+                * values["horizon"],
+                "move": values["move_cost"],
+            }
+            for key, values in options.items()
+        ],
+    }
+
+    # The two hidden assumptions as a plane: for each share of the spend that scales, the
+    # transfer factor at which the saving is zero. Right of that line the product pays. The
+    # seller's guesses are drawn over it as a cloud, a few hundred of the model's futures, so
+    # the share of the cloud on the paying side is the share of futures with a saving.
+    customer_run_full = evaluate(model, customer)
+    cloud_every = max(1, customer.samples // CLOUD)
+    boundary = [
+        {"scaling_share": share, "break_even_transfer": at(1.0, share)["break_even_transfer"]}
+        for share in SHARES
+    ]
+    plane = {
+        "boundary": boundary,
+        "cloud": {
+            "transfer_factor": customer_run_full.samples["transfer_factor"][::cloud_every][
+                :CLOUD
+            ].tolist(),
+            "scaling_share": customer_run_full.samples["scaling_share"][::cloud_every][
+                :CLOUD
+            ].tolist(),
+        },
+        "points": [
+            {"key": "brochure", "transfer_factor": 1.0, "scaling_share": 1.0},
+            {
+                "key": "bottom_up_assumptions",
+                "transfer_factor": 1.0,
+                "scaling_share": bottom_up_share,
+            },
+            {
+                "key": "sellers_guesses",
+                "transfer_factor": guessed["transfer_factor"],
+                "scaling_share": guessed["scaling_share"],
+            },
+        ],
+        "share_paying": shares(model, customer)["saving_positive"],
+    }
+
     scenarios = {}
     for scenario in (reference, brochure, customer):
         values = point(model, scenario)
@@ -193,6 +279,7 @@ def seller(write: bool = True) -> dict:
             "break_even_transfer": values["break_even_transfer"],
             "break_even_usage": values["break_even_usage"],
             "margin_per_host_year": values["margin_per_host_year"],
+            "payback": values["payback"],
             **shares(model, scenario),
         }
 
@@ -226,11 +313,25 @@ def seller(write: bool = True) -> dict:
         units[f"curves[{i}].scaling_share"] = "dimensionless"
         units[f"curves[{i}].saving"] = "USD"
         units[f"curves[{i}].break_even_transfer"] = "dimensionless"
+    units["breakdown.current"] = "USD"
+    for i, _ in enumerate(breakdown["options"]):
+        for part in ("stays", "proposed_hosts", "move"):
+            units[f"breakdown.options[{i}].{part}"] = "USD"
+    units["plane.boundary"] = "dimensionless"
+    units["plane.cloud"] = "dimensionless"
+    units["plane.points"] = "dimensionless"
+    units["plane.share_paying"] = "dimensionless"
+    units["by_year.years"] = "year"
+    units["by_year.current"] = "USD"
+    for i, _ in enumerate(by_year["options"]):
+        units[f"by_year.options[{i}].cumulative"] = "USD"
+        units[f"by_year.options[{i}].payback"] = "year"
     for name in scenarios:
         units[f"scenarios.{name}.saving"] = "USD"
         units[f"scenarios.{name}.break_even_transfer"] = "dimensionless"
         units[f"scenarios.{name}.break_even_usage"] = "host"
         units[f"scenarios.{name}.margin_per_host_year"] = "USD/host/year"
+        units[f"scenarios.{name}.payback"] = "year"
         units[f"scenarios.{name}.saving_positive"] = "dimensionless"
         units[f"scenarios.{name}.margin_positive"] = "dimensionless"
 
@@ -253,6 +354,9 @@ def seller(write: bool = True) -> dict:
             "transfers": list(TRANSFERS),
             "curves": curves,
             "scenarios": scenarios,
+            "by_year": by_year,
+            "breakdown": breakdown,
+            "plane": plane,
         },
         units=units,
         conditions={

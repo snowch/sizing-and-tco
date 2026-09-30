@@ -865,6 +865,30 @@ FIGURES: dict[str, Table | Diagram] = {
         result="seller",
         also=("sellers_tco-reference", "sellers_tco-brochure"),
     ),
+    "the-sellers-tco-by-year": Diagram(
+        draw=diagrams.seller_by_year,
+        result="seller",
+        alt="Each option's spend added up year by year for one customer, starting from the cost "
+        "of the move, with the year each proposal pays back marked",
+    ),
+    "the-sellers-tco-breakdown": Diagram(
+        draw=diagrams.seller_breakdown,
+        result="seller",
+        alt="Each proposal's five-year spend split into the part of today's spend that stays, "
+        "the proposed hosts and the move, against the customer's own total",
+    ),
+    "the-sellers-tco-plane": Diagram(
+        draw=diagrams.seller_plane,
+        result="seller",
+        alt="The transfer factor against the share of the spend that scales, split by the line "
+        "where the saving is zero, with the seller's futures as dots and three settings marked",
+    ),
+    "the-sellers-tco-tornado": Diagram(
+        draw=diagrams.tornado_chart,
+        result="sellers_tco-reference",
+        args=("saving",),
+        alt="Which input moves the seller's saving most, for a customer the seller has not met",
+    ),
     "the-sellers-tco-ladder": Table(
         render=tables.seller_ladder,
         result="seller",

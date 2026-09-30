@@ -70,6 +70,17 @@ In the model's reference scenario, the customer's hosts and the customer's spend
 
 A sales TCO often shows both kinds of figure the same way: the seller's guess about a typical customer and this customer's own count. It should mark which is which. A guess shown as the customer's own figure is a claim the customer cannot check against anything.
 
+For a customer the seller has not met, the input that moves the seller's saving most is the customer's spend per host-year. The transfer factor and the share of the spend that scales come next.
+
+The chart below shows it: each bar is how far the saving moves when that one input runs across its range and the others stay where they are. This is a tornado—a chart you learned in an earlier chapter.
+
+```{image} _figures/the-sellers-tco-tornado.svg
+:alt: Which input moves the seller's saving most, for a customer the seller has not met
+:width: 100%
+```
+
+The customer knows the top bar. Asking for it removes the widest bar. What is left are the two assumptions neither side can read off an invoice.
+
 The scenario below pins the two figures to [ch22](#comparing-two-tcos)'s incumbent: the hosts it runs and its spend per host-year, everything in, both worked out from ch22's stamped quote. The share that scales and the transfer factor stay the seller's guesses. Neither is on an invoice: the share needs the bill broken into lines, and the transfer factor needs a measurement.
 
 ```{literalinclude} ../models/sellers_tco/scenarios/ch22_customer.yaml
@@ -96,6 +107,42 @@ The lesson: a seller cannot know the saving for a customer it has not met. It ca
 ```
 
 About the figure: it is [ch22](#comparing-two-tcos)'s customer, from the previous section. It draws the saving against the transfer factor for three guesses at the share that scales: the brochure's (all of it), the share implied by ch22's comparison, and the seller's own guess. Where each line crosses no saving is that guess's break-even. The less of the bill moves with the hosts, the further right the crossing moves: more of the benchmark has to survive. For the seller's own guess the crossing is off the right-hand edge. The lines bend because the proposed fleet is the customer's hosts divided by the transfer factor, so a small transfer factor makes the proposed fleet grow fast. The dot is ch22's bottom-up answer, drawn at a transfer factor of one; the last section says why it sits there.
+
+The figure below draws the same two assumptions as a plane, for the same customer: the transfer factor across, the share of the spend that scales up. The line is where the saving is zero. On the shaded side the product pays; on the other it loses.
+
+```{image} _figures/the-sellers-tco-plane.svg
+:alt: The transfer factor against the share of the spend that scales, split by the line where the saving is zero, with the seller's futures as dots and three settings marked
+:width: 100%
+```
+
+The break-even is a line, not a number. Any pair of assumptions on it ties. A larger share that scales lets a smaller transfer factor pay.
+
+The brochure sits on the top edge, deep in the paying side. [ch22](#comparing-two-tcos)'s two assumptions sit just on the paying side. The middle of the seller's own guesses sits well on the losing side.
+
+The dots are a few hundred of the seller's own futures. The share of them on the paying side is how often the seller's guesses say the product pays, and it is a minority: the same share the table below gives as futures with a saving.
+
+A seller can show this plane before the customer has given any number. The customer can then place themselves on it.
+
+### The chart a sales TCO leads with
+
+Most sales TCOs lead with one chart. It shows each option's spend added up year by year. The customer's own line starts at nothing. Each proposal's line starts at the cost of the move, and then climbs more slowly if the product saves money each year.
+
+The point where a proposal's line crosses the customer's line is its payback. This is the year in which the savings add up to the cost of the move. It is a break-even in time, the same kind of claim as the break-evens above.
+
+The model has a node for it, `payback`: the cost of the move divided by the saving a year.
+
+```{image} _figures/the-sellers-tco-by-year.svg
+:alt: Each option's spend added up year by year for one customer, starting from the cost of the move, with the year each proposal pays back marked
+:width: 100%
+```
+
+The figure shows [ch22](#comparing-two-tcos)'s customer, drawn with three settings of the two hidden assumptions from the figure above: the brochure's, ch22's, and the seller's guesses. The brochure pays back early. With ch22's two assumptions, the proposal pays back just inside the horizon, so a horizon a little shorter would lose money. With the seller's guesses, the line never crosses: each year the proposal spends more than the customer does today, so the move is never paid back.
+
+The same chart, drawn three ways, tells three stories. What decides which story a buyer sees is the same two numbers the chapter keeps returning to, and the chart does not show them. A seller's per-year chart should say which transfer factor and which share that scales drew it.
+
+The payback row in the table above gives the same comparison for a customer the seller has not met. The brochure pays back quickly. The honest model never does.
+
+The lines are straight because the model is linear in time. A real move has a period of running both systems, which puts a bend in the early years that this chart cannot show. The totals are undiscounted, as everywhere in the book ([ch15](#capex-opex-and-lifecycle)): a finance reader will place the years and apply their own rate.
 
 ### What the buyer will do with it
 
@@ -133,6 +180,19 @@ Row two sets the two hidden assumptions as [ch22](#comparing-two-tcos)'s compari
 Why a transfer factor of one for [ch22](#comparing-two-tcos): ch22 sized the challenger by its cores, with one processor time per request on both hosts, because it is the same software on different hosts. So ch22's bottom-up comparison had the transfer assumption inside it too. ch22 said as much where it said its comparison could not speak to performance; here the assumption has a name and a value.
 
 Row three, the seller's own guesses: a loss at the point estimate, and a saving in few of its futures. Its transfer factor is below one, so it needs more proposed hosts (the column shows it), and its share that scales is a little below [ch22](#comparing-two-tcos)'s. Its middle nine in ten is wide, much wider than the bottom-up row. That width is the seller's not knowing the transfer factor and the share that scales.
+
+The figure below splits each proposal's five-year spend into three parts: the part of today's spend that stays, the proposed hosts, and the move. The dashed line is what the customer spends as it is, so the gap between a bar's top and the line is the saving, printed above each bar.
+
+```{image} _figures/the-sellers-tco-breakdown.svg
+:alt: Each proposal's five-year spend split into the part of today's spend that stays, the proposed hosts and the move, against the customer's own total
+:width: 100%
+```
+
+The brochure's bar has no grey block. Scaling the whole bill assumes all of today's spend goes away with the hosts, the people included. That missing block is most of the brochure's saving.
+
+With [ch22](#comparing-two-tcos)'s two assumptions, the grey block is the people, and the bar lands just under the line.
+
+With the seller's guesses, the grey block is larger, because less of the spend scales, and the blue block is taller, because a smaller transfer factor needs more hosts. The bar ends above the line.
 
 The conclusion: the top-down structure is not what makes a sales TCO wrong. Given the right two numbers, it reproduces the bottom-up answer to within rounding. What makes a sales TCO wrong is the two numbers it hides. The runner that builds this table (`bench/run_seller.py`) checks that the seller's model is still pinned to [ch22](#comparing-two-tcos)'s quotes, and refuses to stamp the table if it is not.
 

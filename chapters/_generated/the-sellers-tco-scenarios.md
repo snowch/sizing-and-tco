@@ -7,6 +7,7 @@
 | Futures with a saving | 97% | 18% |
 | Saving per current host a year, before the move | +$4,229 | −$499 |
 | Benchmark that must carry over to break even | 50% | 110% |
+| Years until the move is paid back | 1.2 years | never |
 | Customer size at which the move pays for itself | 11.8 hosts | none: no size of customer pays for the move |
 
 *Source — [`seller`](https://github.com/snowch/sizing-and-tco/blob/main/bench/results/seller.json), [`sellers_tco-reference`](/models/sellers_tco-reference.html) and [`sellers_tco-brochure`](/models/sellers_tco-brochure.html) · `sizing.evaluate`*

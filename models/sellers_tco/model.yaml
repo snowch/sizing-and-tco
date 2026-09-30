@@ -185,6 +185,34 @@ nodes:
       is zero or less, no amount of usage pays for the move.
     formula: current_cost_per_host * scaling_share - proposed_cost_per_host / effective_advantage
 
+  current_per_year:
+    kind: derived
+    unit: USD/year
+    label: customer's spend a year, as it is
+    formula: usage_hosts * current_cost_per_host
+
+  proposed_per_year:
+    kind: derived
+    unit: USD/year
+    label: customer's spend a year, with the product
+    formula: current_per_year * (1 - scaling_share) + proposed_hosts * proposed_cost_per_host
+
+  saving_per_year:
+    kind: derived
+    unit: USD/year
+    label: saving a year, before the move
+    formula: current_per_year - proposed_per_year
+
+  payback:
+    kind: derived
+    unit: year
+    label: years until the move is paid back
+    note: >-
+      A break-even in time: the year in which the savings add up to the cost of the move. Only
+      a payback while the saving a year is positive; otherwise the move is never paid back, and
+      the figure is negative.
+    formula: move_cost / saving_per_year
+
   break_even_transfer:
     kind: derived
     unit: dimensionless
@@ -211,3 +239,5 @@ outputs:
   - margin_per_host_year
   - break_even_transfer
   - break_even_usage
+  - saving_per_year
+  - payback

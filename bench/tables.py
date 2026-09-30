@@ -2708,6 +2708,12 @@ def seller_scenarios(name: str) -> str:
             lambda k: _break_even_transfer(summary[k]["break_even_transfer"]),
         ),
         line(
+            "Years until the move is paid back",
+            lambda k: (
+                "never" if summary[k]["payback"] <= 0 else f"{summary[k]['payback']:.1f} years"
+            ),
+        ),
+        line(
             "Customer size at which the move pays for itself",
             lambda k: _break_even_usage(
                 summary[k]["break_even_usage"], summary[k]["margin_per_host_year"]
