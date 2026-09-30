@@ -1,0 +1,279 @@
+{
+ "appendices": [
+  {
+   "label": "Appendix A",
+   "letter": "A",
+   "page": "appendix-a-dsl-reference.html",
+   "slug": "appendix_a_dsl_reference",
+   "title": "The DSL, in full"
+  },
+  {
+   "label": "Appendix B",
+   "letter": "B",
+   "page": "appendix-b-monte-carlo-module.html",
+   "slug": "appendix_b_monte_carlo_module",
+   "title": "The Monte Carlo module, read end to end"
+  },
+  {
+   "label": "Appendix C",
+   "letter": "C",
+   "page": "appendix-c-distributions.html",
+   "slug": "appendix_c_distributions",
+   "title": "Distributions, and when each is honest"
+  },
+  {
+   "label": "Appendix D",
+   "letter": "D",
+   "page": "appendix-d-units.html",
+   "slug": "appendix_d_units",
+   "title": "Units, and the conversions that bite"
+  },
+  {
+   "label": "Appendix E",
+   "letter": "E",
+   "page": "appendix-e-web-service-model.html",
+   "slug": "appendix_e_web_service_model",
+   "title": "The web service model, in full"
+  },
+  {
+   "label": "Appendix F",
+   "letter": "F",
+   "page": "appendix-f-observability-model.html",
+   "slug": "appendix_f_observability_model",
+   "title": "The observability model, in full"
+  },
+  {
+   "label": "Appendix G",
+   "letter": "G",
+   "page": "appendix-g-glossary.html",
+   "slug": "appendix_g_glossary",
+   "title": "Glossary"
+  },
+  {
+   "label": "Appendix H",
+   "letter": "H",
+   "page": "appendix-h-running-the-toolkit.html",
+   "slug": "appendix_h_running_the_toolkit",
+   "title": "Running the toolkit"
+  }
+ ],
+ "chapters": [
+  {
+   "label": "ch01",
+   "number": 1,
+   "page": "point-estimates.html",
+   "part": "Part I — What you are sizing",
+   "question": "What is a single number worth, and what can it not tell you even when the arithmetic is right?",
+   "slug": "point_estimates",
+   "title": "Point estimates"
+  },
+  {
+   "label": "ch02",
+   "number": 2,
+   "page": "what-a-workload-is.html",
+   "part": "Part I — What you are sizing",
+   "question": "Which quantities actually size a system, and which ones only look as though they do?",
+   "slug": "what_a_workload_is",
+   "title": "What a workload is"
+  },
+  {
+   "label": "ch03",
+   "number": 3,
+   "page": "where-the-numbers-come-from.html",
+   "part": "Part I — What you are sizing",
+   "question": "What is the difference between a number you measured, a number you were told and a number you decided?",
+   "slug": "where_the_numbers_come_from",
+   "title": "Where the numbers come from"
+  },
+  {
+   "label": "ch04",
+   "number": 4,
+   "page": "peak-mean-and-growth.html",
+   "part": "Part I — What you are sizing",
+   "question": "Which number in a demand curve sizes the fleet, and what is a five-year growth rate actually a claim about?",
+   "slug": "peak_mean_and_growth",
+   "title": "Peak, mean and growth"
+  },
+  {
+   "label": "ch05",
+   "number": 5,
+   "page": "littles-law.html",
+   "part": "Part II — Ceilings",
+   "question": "What can you infer from the law when the system is steady, with as many requests leaving as arriving, and what can you not?",
+   "slug": "littles_law",
+   "title": "Little's law"
+  },
+  {
+   "label": "ch06",
+   "number": 6,
+   "page": "queueing-and-the-knee.html",
+   "part": "Part II — Ceilings",
+   "question": "Why does response time climb long before a device is busy, and what does headroom actually buy?",
+   "slug": "queueing_and_the_knee",
+   "title": "Queueing, and the knee"
+  },
+  {
+   "label": "ch07",
+   "number": 7,
+   "page": "when-adding-servers-stops-helping.html",
+   "part": "Part II — Ceilings",
+   "question": "How far does a system scale, and how would you find out from the two measurements you actually have?",
+   "slug": "when_adding_servers_stops_helping",
+   "title": "When adding servers stops helping"
+  },
+  {
+   "label": "ch08",
+   "number": 8,
+   "page": "regime-changes.html",
+   "part": "Part II — Ceilings",
+   "question": "When does a chain of multiplications stop describing a system?",
+   "slug": "regime_changes",
+   "title": "Regime changes"
+  },
+  {
+   "label": "ch09",
+   "number": 9,
+   "page": "capacity.html",
+   "part": "Part III — Sizing",
+   "question": "How far is what you buy from what you can use?",
+   "slug": "capacity",
+   "title": "Capacity"
+  },
+  {
+   "label": "ch10",
+   "number": 10,
+   "page": "bandwidth-and-the-binding-constraint.html",
+   "part": "Part III — Sizing",
+   "question": "When three chains each demand a different size, which one are you buying?",
+   "slug": "bandwidth_and_the_binding_constraint",
+   "title": "Three chains, and the binding constraint"
+  },
+  {
+   "label": "ch11",
+   "number": 11,
+   "page": "headroom-and-failure-domains.html",
+   "part": "Part III — Sizing",
+   "question": "Why is headroom a rule rather than a number?",
+   "slug": "headroom_and_failure_domains",
+   "title": "Headroom and failure domains"
+  },
+  {
+   "label": "ch12",
+   "number": 12,
+   "page": "the-sizing-model.html",
+   "part": "Part III — Sizing",
+   "question": "What does the whole chain produce, and how much of it would you defend?",
+   "slug": "the_sizing_model",
+   "title": "The sizing model"
+  },
+  {
+   "label": "ch13",
+   "number": 13,
+   "page": "monte-carlo.html",
+   "part": "Part IV — Uncertainty",
+   "question": "The sizing model has produced a host count. How sure are we?",
+   "slug": "monte_carlo",
+   "title": "Monte Carlo"
+  },
+  {
+   "label": "ch14",
+   "number": 14,
+   "page": "correlation-and-convergence.html",
+   "part": "Part IV — Uncertainty",
+   "question": "ch13's figures already paired some inputs to move together and ran the arithmetic a fixed number of times. What did the pairing change, and how many runs are enough?",
+   "slug": "correlation_and_convergence",
+   "title": "Correlation and convergence"
+  },
+  {
+   "label": "ch15",
+   "number": 15,
+   "page": "capex-opex-and-lifecycle.html",
+   "part": "Part V — Cost",
+   "question": "What do you pay once, what do you pay every month, and what does this book deliberately not model?",
+   "slug": "capex_opex_and_lifecycle",
+   "title": "Capex, opex and where the total stops"
+  },
+  {
+   "label": "ch16",
+   "number": 16,
+   "page": "power-first.html",
+   "part": "Part V — Cost",
+   "question": "What changes when watts are the binding constraint rather than money?",
+   "slug": "power_first",
+   "title": "Power first"
+  },
+  {
+   "label": "ch17",
+   "number": 17,
+   "page": "unit-economics.html",
+   "part": "Part V — Cost",
+   "question": "What does a cost per unit have to have before it means anything?",
+   "slug": "unit_economics",
+   "title": "Unit economics"
+  },
+  {
+   "label": "ch18",
+   "number": 18,
+   "page": "the-five-year-model.html",
+   "part": "Part V — Cost",
+   "question": "How does one model use a figure another model computed, without losing its uncertainty?",
+   "slug": "the_five_year_model",
+   "title": "The five-year model"
+  },
+  {
+   "label": "ch19",
+   "number": 19,
+   "page": "which-input-is-the-answer.html",
+   "part": "Part VI — What the answer rests on",
+   "question": "Which input should you go and measure first, and how would the model tell you?",
+   "slug": "which_input_is_the_answer",
+   "title": "Which input to go and measure"
+  },
+  {
+   "label": "ch20",
+   "number": 20,
+   "page": "the-missing-node.html",
+   "part": "Part VI — What the answer rests on",
+   "question": "How do you find the error that no amount of sampling can see?",
+   "slug": "the_missing_node",
+   "title": "The missing node"
+  },
+  {
+   "label": "ch21",
+   "number": 21,
+   "page": "a-tco-for-finance.html",
+   "part": "Part VII — Presenting an interval",
+   "question": "How do you present an interval to somebody who has asked you for a number?",
+   "slug": "a_tco_for_finance",
+   "title": "A TCO for a finance audience"
+  },
+  {
+   "label": "ch22",
+   "number": 22,
+   "page": "comparing-two-tcos.html",
+   "part": "Part VII — Presenting an interval",
+   "question": "Two quotes for the same workload, each with an interval on it. Which is cheaper, and how often would that turn out to be wrong?",
+   "slug": "comparing_two_tcos",
+   "title": "Comparing two TCOs"
+  },
+  {
+   "label": "ch23",
+   "number": 23,
+   "page": "the-sellers-tco.html",
+   "part": "Part VII — Presenting an interval",
+   "question": "You are selling a system too large to size in detail, to a customer whose workload you cannot see. What can a TCO built from a benchmark and an assumed usage honestly claim?",
+   "slug": "the_sellers_tco",
+   "title": "The seller's TCO"
+  },
+  {
+   "label": "ch24",
+   "number": 24,
+   "page": "what-the-model-got-wrong.html",
+   "part": "Part VIII — Afterwards",
+   "question": "The design failed. Can the model say why, and what can it never say?",
+   "slug": "what_the_model_got_wrong",
+   "title": "What the model got wrong"
+  }
+ ],
+ "site": "https://snowch.github.io/sizing-and-tco/"
+}

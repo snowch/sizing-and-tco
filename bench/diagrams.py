@@ -1519,6 +1519,11 @@ def seller_transfer(result: str) -> str:
     return _svg(width, height, "".join(body), "The seller's saving against the transfer factor")
 
 
+#: The customer's own spend: a wide light line, the baseline the proposals are read against,
+#: so it cannot be mistaken for the blue of ch22's assumptions.
+CUSTOMER_LINE = "#bdbdbd"
+
+
 def seller_by_year(result: str) -> str:
     """Each option's spend added up year by year, for one customer, with the paybacks (ch23).
 
@@ -1556,7 +1561,7 @@ def seller_by_year(result: str) -> str:
         f'<text x="{MARGIN}" y="42" font-size="13.5" fill="#546e7a">each proposal starts at the '
         f"cost of the move</text>",
     ]
-    legend = [("#263238", "", "the customer as it is")] + [
+    legend = [(CUSTOMER_LINE, "", "the customer as it is")] + [
         (SELLER_CURVES[o["key"]][0], SELLER_CURVES[o["key"]][1], _seller_payback_label(o, ch22))
         for o in options
     ]
@@ -1565,10 +1570,12 @@ def seller_by_year(result: str) -> str:
         dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
         body.append(
             f'<line x1="{MARGIN}" y1="{y - 4}" x2="{MARGIN + 22}" y2="{y - 4}" stroke="{colour}" '
-            f'stroke-width="2"{dash_attr}/>'
+            f'stroke-width="{4 if colour == CUSTOMER_LINE else 2}"{dash_attr}/>'
             f'<text x="{MARGIN + 28}" y="{y}" font-size="13.5" fill="#37474f">{_esc(label)}</text>'
         )
-    body.append(f'<path d="M{path(current)}" fill="none" stroke="#263238" stroke-width="2"/>')
+    body.append(
+        f'<path d="M{path(current)}" fill="none" stroke="{CUSTOMER_LINE}" stroke-width="4"/>'
+    )
     for option in options:
         colour, dash, _ = SELLER_CURVES[option["key"]]
         dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
