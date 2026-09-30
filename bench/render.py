@@ -283,6 +283,20 @@ def render(node: dict) -> str:
         classes = " ".join(
             ["admonition", *str(node.get("kind", "")).split(), *node.get("class", "").split()]
         )
+        # `:class: dropdown` is MyST's word for "collapsed until asked", and the book uses it for
+        # a box a reader opens only when the paragraphs above did not land. Rendered as a div it
+        # was always open, so every dropdown in the book was a box nobody could close. A
+        # <details> collapses without script, which the offline copy needs; the title becomes
+        # the summary a reader clicks.
+        if "dropdown" in node.get("class", "").split():
+            parts = node.get("children", [])
+            title = next((c for c in parts if c.get("type") == "admonitionTitle"), None)
+            body = "".join(render(c) for c in parts if c is not title)
+            summary = "".join(render(c) for c in title.get("children", [])) if title else "More"
+            return (
+                f'<details class="{classes}"><summary class="admonition-title">{summary}</summary>'
+                f"{body}</details>"
+            )
         return f'<div class="{classes}">{children()}</div>'
     if kind == "admonitionTitle":
         return f'<p class="admonition-title">{children()}</p>'

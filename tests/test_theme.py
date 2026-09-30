@@ -176,3 +176,26 @@ def test_the_control_does_nothing_without_a_script_so_it_is_not_shown():
     """Like Search and the offline control: written `hidden`, revealed by the script."""
     assert " hidden " in BUTTON, "the attribute, not aria-hidden on a drawing inside it"
     assert "button.hidden = false" in PARENT
+
+
+def test_a_dropdown_box_starts_closed():
+    """`:class: dropdown` renders as a <details> with no `open`, its title as the summary.
+
+    It used to render as a div, so a box the page offered as optional reading was always open.
+    """
+    from bench.render import render
+
+    node = {
+        "type": "admonition",
+        "kind": "note",
+        "class": "dropdown",
+        "children": [
+            {"type": "admonitionTitle", "children": [{"type": "text", "value": "Why?"}]},
+            {"type": "paragraph", "children": [{"type": "text", "value": "Because."}]},
+        ],
+    }
+    out = render(node)
+    assert out.startswith('<details class="admonition note dropdown">'), out
+    assert " open" not in out.split(">", 1)[0]
+    assert '<summary class="admonition-title">Why?</summary>' in out
+    assert "Because." in out and out.count("Why?") == 1

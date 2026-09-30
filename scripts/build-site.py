@@ -1626,6 +1626,14 @@ figure img { background: #fff; border-radius: 4px; }
 .definition { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 5.5c3-1.2 6-1 9 1 3-2 6-2.2 9-1v13.5c-3-1.2-6-1-9 1-3-2-6-2.2-9-1z' fill='none' stroke='black' stroke-width='1.8' stroke-linejoin='round'/%3E%3Cpath d='M12 6.5v13.5' stroke='black' stroke-width='1.8'/%3E%3C/svg%3E"); }
 .takeaways { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.5 18h5M10.5 21h3M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
 .example { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='black' stroke-width='1.8'/%3E%3Cpath d='M15.8 8.2 13.5 13.5 8.2 15.8l2.3-5.3z' fill='black'/%3E%3C/svg%3E"); }
+/* A dropdown box: a <details>, closed until the reader opens it. The summary is the box's
+   title, with a chevron that turns when it opens, so it reads as something to press. */
+details.admonition > summary { cursor: pointer; list-style: none; margin: 0; }
+details.admonition > summary::-webkit-details-marker { display: none; }
+details.admonition > summary::after { content: "▸"; display: inline-block; margin-left: .4em;
+  transition: transform .15s; }
+details.admonition[open] > summary::after { transform: rotate(90deg); }
+details.admonition[open] > summary { margin-bottom: .4rem; }
 .admonition.tip { border-left-color: var(--go); }
 .admonition.important { border-left-color: var(--stop); }
 
