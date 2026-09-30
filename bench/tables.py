@@ -2727,31 +2727,106 @@ def seller_scenarios(name: str) -> str:
 
 
 def horizon_three_ways(name: str) -> str:
-    """The same horizon typed three ways, and how many times each applies the yearly factor (ch02).
+    """The same horizon written three ways, and how many annual applications each gives (ch02).
 
     In years, divided by one year; in months, converted to years first; and as a bare number in a
-    spreadsheet cell, where the unit is gone and a formula has to guess. The growth factor and the
-    horizon are the model's point values; the months come from the unit registry.
+    spreadsheet cell, where nothing records the unit. The third row claims nothing about what a
+    spreadsheet computes: its arithmetic is sound, and what the cell cannot say is what it counts.
+    The horizon is the model's point value; the months come from the unit registry.
     """
     from sizing.units import UNITS
 
-    nodes = load_result(name)["summary"]["nodes"]
-    growth, horizon = nodes["annual_growth"]["point"], nodes["horizon"]["point"]
+    horizon = load_result(name)["summary"]["nodes"]["horizon"]["point"]
     months = UNITS.Quantity(horizon, "year").to("month").magnitude
     years = f"{horizon:g} years"
-
-    def grows(times: float) -> str:
-        value = growth**times
-        return f"×{value:,.1f}" if value < 100 else f"×{value:,.0f}"
-
     rows = [
-        "| The horizon, typed as | Before counting | Times the yearly factor is applied "
-        "| Demand grows |",
-        "|---|---|---:|---:|",
-        f"| {years} | divided by one year | {horizon:g} | {grows(horizon)} |",
-        f"| {months:g} months | converted to {years}, then divided by one year | {horizon:g} "
-        f"| {grows(horizon)} |",
-        f"| a bare {months:g}, in a spreadsheet cell | nothing: the unit is gone "
-        f"| {months:g}, if the formula assumes years | {grows(months)} |",
+        "| The horizon, as written | Before counting | Annual applications |",
+        "|---|---|---:|",
+        f"| {years} | divided by one year | {horizon:g} |",
+        f"| {months:g} months | converted to {years}, then divided by one year | {horizon:g} |",
+        f"| {months:g}, in a spreadsheet cell | nothing records what the {months:g} is "
+        "| not knowable from the cell |",
     ]
     return "\n".join(rows)
+
+
+#: The growth explorer's teaching choices, which are not figures the book claims: a starting
+#: demand the arithmetic can be done from in the head, and slider bounds that include a one-year
+#: horizon, where the exponent is one. Its defaults are the model's own point values.
+GROWTH_EXPLORER_START = 100
+GROWTH_EXPLORER_FACTOR = (1.0, 1.5, 0.01)
+GROWTH_EXPLORER_HORIZON = (1, 10, 1)
+
+
+def growth_explorer(name: str) -> str:
+    """The ch02 explorer: the horizon sets how many times the annual growth factor is applied.
+
+    Raw HTML with its script inside, on consecutive lines, so MyST parses it as one block and the
+    renderer passes it through (`bench/render.py` accepts raw HTML for this figure and nothing
+    else). The values shown before the script runs are worked out here from the stamped result,
+    the same way the script works them out, so a page read with no script still says something
+    true.
+    """
+    from bench.stamp import ROOT
+
+    nodes = load_result(name)["summary"]["nodes"]
+    growth = nodes["annual_growth"]["point"]
+    horizon = int(round(nodes["horizon"]["point"]))
+    start = GROWTH_EXPLORER_START
+    f_lo, f_hi, f_step = GROWTH_EXPLORER_FACTOR
+    h_lo, h_hi, h_step = GROWTH_EXPLORER_HORIZON
+    end = start * growth**horizon
+    years = f"{horizon} year{'' if horizon == 1 else 's'}"
+    script = "\n".join(
+        line
+        for line in (ROOT / "sizing" / "viewer" / "growth-explorer.js").read_text().splitlines()
+        if line.strip()
+    )
+    html_lines = [
+        f'<div class="explorer growth" role="group" data-start="{start}" aria-label="Growth explorer: '
+        'the horizon sets how many times the annual growth factor is applied">',
+        '<p class="ge-title">Growth, one year at a time</p>',
+        '<div class="ge-controls">',
+        '<div class="ge-control"><label>Annual growth factor '
+        f'<output data-show="factor">{growth:.2f}×</output>'
+        f'<input class="ge-factor" type="range" min="{f_lo}" max="{f_hi}" step="{f_step}" '
+        f'value="{growth}"></label><small>applied once per year</small></div>',
+        '<div class="ge-control"><label>Horizon '
+        f'<output data-show="horizon">{years}</output>'
+        f'<input class="ge-horizon" type="range" min="{h_lo}" max="{h_hi}" step="{h_step}" '
+        f'value="{horizon}"></label><small>a length of time</small></div>',
+        "</div>",
+        '<div class="ge-chain" aria-live="polite">',
+        f'<div><small>horizon</small><b data-show="chain-horizon">{years}</b>'
+        "<span>a length of time</span></div>",
+        f'<div><small>horizon / one_year</small><b data-show="chain-divide">{years} ÷ 1 year'
+        "</b><span>years ÷ year cancel</span></div>",
+        f'<div class="count"><small>horizon_periods</small><b data-show="chain-count">{horizon}'
+        "</b><span>annual applications: a count, no unit</span></div>",
+        '<div class="power"><small>annual_growth ** horizon_periods</small>'
+        f'<b data-show="chain-power">{growth:.2f}<sup>{horizon}</sup></b>'
+        f'<span data-show="chain-growth">= ×{growth**horizon:.2f}</span></div>',
+        f'<div><small>future demand</small><b data-show="chain-demand">{end:,.0f}</b>'
+        f'<span data-show="start">from {start} today</span></div>',
+        "</div>",
+        '<svg class="ge-chart" viewBox="0 0 560 246" role="img" aria-label="Demand in each '
+        'year from today to the horizon, with one chip for each application of the factor">'
+        "</svg>",
+        '<p class="ge-caption" data-show="caption"></p>',
+        '<details class="ge-linear"><summary>Why isn\'t this a straight line?</summary>',
+        "<p>Because each year multiplies the grown number, not the starting one. Adding the "
+        "first year's rise every year instead would reach the dashed marks on the chart:</p>",
+        '<div class="ge-lines">',
+        '<div><span class="tag">Adding</span><span class="line" data-show="adding"></span></div>',
+        '<div><span class="tag">Compounding</span><span class="line" data-show="compounding">'
+        "</span></div>",
+        "</div>",
+        "<p>Adding needs only a multiplication by the count. Compounding is the factor times "
+        "itself once per year, and an exponent is how you write that.</p>",
+        "</details>",
+        "<script>",
+        script,
+        "</script>",
+        "</div>",
+    ]
+    return "\n".join(html_lines)

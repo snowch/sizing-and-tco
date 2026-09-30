@@ -22,7 +22,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from bench.figures import FIGURES, Diagram, Table  # noqa: E402
+from bench.figures import FIGURES, Diagram, Explorer, Table  # noqa: E402
 from bench.stamp import shown  # noqa: E402
 from bench.tables import source  # noqa: E402
 
@@ -74,6 +74,9 @@ def main() -> int:
         try:
             if isinstance(figure, Diagram):
                 target, rendered = DIAGRAMS / f"{name}.svg", figure.render()
+            elif isinstance(figure, Explorer):
+                target = FRAGMENTS / f"{name}.html"
+                rendered = figure.render(figure.result, *figure.args) + "\n"
             else:
                 target, rendered = FRAGMENTS / f"{name}.md", render_table(figure)
         except FileNotFoundError as exc:
@@ -97,7 +100,12 @@ def main() -> int:
     # to it, and nothing regenerates it ever again. That is worse than a missing file: the page
     # goes on showing a frozen copy and the build stays green, because the include still resolves.
     expected = {
-        f"{name}.svg" if isinstance(FIGURES[name], Diagram) else f"{name}.md" for name in FIGURES
+        f"{name}.svg"
+        if isinstance(FIGURES[name], Diagram)
+        else f"{name}.html"
+        if isinstance(FIGURES[name], Explorer)
+        else f"{name}.md"
+        for name in FIGURES
     }
     # Written by scripts/build-stamp.py rather than rendered from a result, because it names the
     # commit being built and a committed copy would be stale on arrival. It is gitignored, so it

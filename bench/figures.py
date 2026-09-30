@@ -63,6 +63,27 @@ class Table:
 
 
 @dataclass(frozen=True)
+class Explorer:
+    """An interactive figure, written as HTML with its script inside, and placed on a page by an
+    empty ``{div}`` whose classes are ``explorer`` and the figure's name.
+
+    It is generated for the same reason every other figure is: its defaults are a stamped
+    result's values, and a copy typed into the page would drift from them. MyST converts raw HTML
+    into its own nodes, so the page cannot carry the markup; the renderer reads the generated file
+    in place of the empty box (`bench/render.py`).
+    """
+
+    render: Callable[..., str]
+    result: str
+    args: tuple = ()
+    pending: str | None = None
+
+    @property
+    def sources(self) -> tuple[str, ...]:
+        return (self.result,)
+
+
+@dataclass(frozen=True)
 class Diagram:
     """An SVG drawn by :mod:`bench.diagrams`, deterministically.
 
@@ -296,17 +317,15 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.node_kinds_table, result="web_service-reference"
     ),
     # -- ch02 What a workload is ------------------------------------------------------------------
-    # The page's spine: a length of time divided by one year is a count, and the count is the
-    # exponent. Then the same horizon three ways, as a table: years, months, a bare number.
+    # The growth explorer: the horizon sets how many times the yearly factor is applied, and the
+    # same horizon typed three ways. Its defaults are the stage's own point values.
+    "what-a-workload-is-growth": Explorer(
+        render=tables.growth_explorer,
+        result="web_service_demand_horizon_exponent-reference",
+    ),
     "what-a-workload-is-three-ways": Table(
         render=tables.horizon_three_ways,
         result="web_service_demand_horizon_exponent-reference",
-    ),
-    "what-a-workload-is-exponent": Diagram(
-        draw=diagrams.horizon_exponent,
-        result="web_service_demand_horizon_exponent-reference",
-        alt="The horizon, a length of time, divided by one year to give a count of years, and "
-        "the yearly growth factor applied that many times",
     ),
     "what-a-workload-is-stage": Table(
         render=tables.stage_outputs, result="web_service_demand-reference"

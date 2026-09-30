@@ -199,7 +199,12 @@ def test_every_declared_figure_is_included_somewhere():
         for path in ROOT.glob(pattern)
     )
     orphaned = sorted(
-        name for name in DECLARED if f"{name}.md" not in pages and f"{name}.svg" not in pages
+        name
+        for name in DECLARED
+        if f"{name}.md" not in pages
+        and f"{name}.svg" not in pages
+        # An explorer is placed by an empty box that names it (bench/render.py).
+        and f":class: explorer {name}" not in pages
     )
     assert not orphaned, (
         f"declared in bench/figures.py and included by no page: {orphaned}. Either a page should "

@@ -199,3 +199,48 @@ def test_a_dropdown_box_starts_closed():
     assert " open" not in out.split(">", 1)[0]
     assert '<summary class="admonition-title">Why?</summary>' in out
     assert "Because." in out and out.count("Why?") == 1
+
+
+def test_an_explorer_box_is_replaced_by_its_generated_figure():
+    """An empty ``{div}`` classed ``explorer`` and a figure's name becomes that figure's HTML; a
+    box naming no generated explorer, or with content inside, fails rather than going blank."""
+    from bench.render import EXPLORER, UnknownNodeError, render
+
+    box = {"type": "div", "class": "explorer what-a-workload-is-growth", "children": []}
+    assert render(box).startswith(EXPLORER)
+    with pytest.raises(UnknownNodeError):
+        render({"type": "div", "class": "explorer no-such-explorer", "children": []})
+    with pytest.raises(UnknownNodeError):
+        render(
+            {
+                "type": "div",
+                "class": "explorer what-a-workload-is-growth",
+                "children": [{"type": "text", "value": "typed inside"}],
+            }
+        )
+
+
+def test_the_growth_explorer_starts_at_the_model_s_own_values():
+    """Its defaults are the stage's point values, inside the sliders' bounds, and what it shows
+    before its script runs is the model's arithmetic, not a typed figure."""
+    import re as regex
+
+    from bench.stamp import load_result
+    from bench.tables import (
+        GROWTH_EXPLORER_FACTOR,
+        GROWTH_EXPLORER_HORIZON,
+        GROWTH_EXPLORER_START,
+        growth_explorer,
+    )
+
+    name = "web_service_demand_horizon_exponent-reference"
+    nodes = load_result(name)["summary"]["nodes"]
+    growth, horizon = nodes["annual_growth"]["point"], nodes["horizon"]["point"]
+    page = growth_explorer(name)
+    assert "\n\n" not in page, "a blank line would end MyST's HTML block early"
+    assert f'class="ge-factor" type="range" min="{GROWTH_EXPLORER_FACTOR[0]}"' in page
+    assert f'value="{growth}"' in page and f'value="{int(round(horizon))}"' in page
+    assert GROWTH_EXPLORER_FACTOR[0] <= growth <= GROWTH_EXPLORER_FACTOR[1]
+    assert GROWTH_EXPLORER_HORIZON[0] <= horizon <= GROWTH_EXPLORER_HORIZON[1]
+    shown = regex.search(r'data-show="chain-demand">([\d,]+)<', page).group(1)
+    assert shown == f"{GROWTH_EXPLORER_START * growth**horizon:,.0f}"

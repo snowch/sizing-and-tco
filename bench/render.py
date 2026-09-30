@@ -85,6 +85,33 @@ class UnknownNodeError(Exception):
 #: each sort needs a height of its own and the address is the thing that cannot be forgotten.
 FRAME_KINDS = {"models": "viewer", "futures": "futures", "playground": "playground"}
 
+#: How a generated explorer's HTML begins. The page carries an empty ``{div}`` classed
+#: ``explorer`` and the figure's name; the renderer puts the generated file in its place.
+EXPLORER = '<div class="explorer '
+EXPLORERS = ROOT / "chapters" / "_generated"
+
+
+def _explorer(node: dict) -> str:
+    """The generated HTML for an explorer's empty box, or an error naming what is wrong.
+
+    The box must be empty: anything written inside it would be content the page seems to show and
+    the reader never sees. The file must exist and be an explorer, so a typo in a class name fails
+    the build rather than leaving a blank space where the figure should be.
+    """
+    names = [c for c in str(node.get("class", "")).split() if c != "explorer"]
+    if len(names) != 1:
+        raise UnknownNodeError(f"an explorer box names one figure; this one has {names!r}")
+    if node.get("children"):
+        raise UnknownNodeError(f"the explorer box for {names[0]!r} must be empty")
+    path = EXPLORERS / f"{names[0]}.html"
+    if not path.exists():
+        raise UnknownNodeError(f"no generated explorer {shown(path)}; run render-figures.py")
+    body = path.read_text()
+    if not body.startswith(EXPLORER):
+        raise UnknownNodeError(f"{shown(path)} is not an explorer")
+    return body
+
+
 #: What the site calls each page, keyed by the slug a site-root URL ends in. The site build fills
 #: it in before it renders anything; while it is empty, a cross-reference renders as its text.
 PAGES: dict[str, str] = {}
@@ -308,6 +335,8 @@ def render(node: dict) -> str:
         return children()
     if kind == "comment":
         return ""
+    if kind == "div" and "explorer" in str(node.get("class", "")).split():
+        return _explorer(node)
     if kind == "div":
         cls = node.get("class")
         class_attr = f' class="{html.escape(cls)}"' if cls else ""

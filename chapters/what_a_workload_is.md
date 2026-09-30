@@ -197,33 +197,28 @@ slider leaves the others alone, because no node is worked out from another yet.
 
 `annual_growth` is the factor demand is multiplied by each year; a factor above one means growth. The horizon is the time until the next refresh: the period you are sizing for. It is your choice.
 
-A growth factor is applied a number of times. A horizon is a length of time. The two are not the same kind of thing, and growth needs the first.
+Growth compounds. Each year the factor multiplies the previous year's demand. When the factor is greater than one, each year's increase is larger than the previous year's.
 
-`one_year` bridges them. It is a year you do not choose, because it is true by definition. Dividing the horizon by one year asks how many years fit in it: the years cancel, and what is left is a count with no unit.
+The explorer below starts from a round demand, so the arithmetic is easy to follow. Drag the horizon and watch the chain under the sliders.
 
-That count is the exponent in `annual_growth ** horizon_periods`: the yearly factor, applied once for each year.
+::::{div}
+:class: explorer what-a-workload-is-growth
+::::
 
-An exponent is a count, not a length of time, so it has no unit.
+The horizon slider sets a length of time. The chain turns it into a count: the number of chips on the chart, one for each time the factor is applied, and that count is the exponent. The exponent is not the horizon in years; it is how many times the annual growth factor is applied.
 
-```{image} _figures/what-a-workload-is-exponent.svg
-:alt: The horizon, a length of time, divided by one year to give a count of years, and the yearly growth factor applied that many times
-:width: 100%
-```
+**An exponent is a count, not a length of time, so it has no unit.**
 
-The divisor sets which period is being counted. Because `annual_growth` is a yearly factor, the divisor has to be one year. Dividing by one month would give a count of months, but the growth factor is not applied monthly.
+Growth is applied once per year, so the formula needs a count of annual periods. Dividing `horizon` by `one_year` converts the duration into that count: the years cancel, and what is left has no unit. That count is `horizon_periods`. Because `annual_growth` is a yearly factor, the divisor is one year; dividing by a month would count months, and the factor is not applied monthly.
 
 #### Why this matters in practice
 
-A spreadsheet cell holding a bare number cannot tell you whether it means years, months or days. The number has lost its unit.
-
-So a spreadsheet formula has to assume the horizon is in years. That works until a colleague types the horizon in months, and then growth is applied once a month, and nothing warns you.
-
-The toolkit keeps the unit with the number. A horizon typed in months is converted to years before it is divided, so the count comes out the same.
+The same horizon can be written in different units. The toolkit keeps the unit with the number, so it converts before it counts.
 
 ```{include} _generated/what-a-workload-is-three-ways.md
 ```
 
-The first two rows count the same years, while the third has lost the unit, so nothing can tell what it counts.
+The spreadsheet's arithmetic is not the problem; raised to a power, a factor compounds correctly there too. What a cell holding a bare number cannot say is whether it means months, years or something else. Unless the unit is stored somewhere else, every formula that reads the cell carries a hidden assumption about it.
 
 ### The first derived quantity
 
