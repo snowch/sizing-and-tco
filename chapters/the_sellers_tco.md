@@ -14,6 +14,10 @@ You are selling a system too large to size in detail, to a customer whose worklo
 
 A seller cannot build it bottom up, so the seller's model works top down: start from what the customer spends per host, and scale it by a benchmark and an assumed usage.
 
+:::{note} Arriving here directly?
+If you came here directly, you do not need the whole book to follow this chapter. Read [ch01](#point-estimates), [ch02](#what-a-workload-is), [ch03](#where-the-numbers-come-from), [ch04](#peak-mean-and-growth) and [ch22](#comparing-two-tcos) first. The chapters between them size a fleet, which this chapter's model leaves out.
+:::
+
 ## The material
 
 ### What the seller cannot see

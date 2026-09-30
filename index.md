@@ -168,3 +168,11 @@ Read [ch01](#point-estimates) first. It shows what a single number leaves out wh
 on: between a model that is right whenever every input is right, and a model that can be wrong
 even then. It can be wrong when it rests on a number measured on one piece of software,
 or when it runs into a limit.
+
+### If you only need the seller's TCO
+
+Some readers only need to build or judge a sales TCO: the one a seller builds to show a customer what its product saves. You can read six chapters instead of the whole book.
+
+Start with [ch01](#point-estimates), which teaches the distinction the rest of the book relies on. Then read [ch02](#what-a-workload-is), which shows how a model file reads. Next, [ch03](#where-the-numbers-come-from) covers where each number comes from, and how to mark a vendor's claim, an assumption and a figure observed on a running system. [ch04](#peak-mean-and-growth) teaches you to run a model through futures and to read a tornado chart. [ch22](#comparing-two-tcos) shows two quotes compared line by line and the checklist a buyer uses. Finally, [ch23](#the-sellers-tco) teaches the seller's model itself.
+
+The chapters between these six size the fleet: queueing, capacity, headroom, where a fleet hits limits. The seller's TCO leaves all of that out. You will know that blind spot exists, but not what is inside it.

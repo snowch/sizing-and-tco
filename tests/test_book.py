@@ -19,9 +19,11 @@ from bench.outline import (
     CHAPTER_SHAPE,
     CHAPTERS,
     PART_PAGES,
+    ROUTES,
     Appendix,
     Chapter,
 )
+from bench.outline import BY_SLUG as BY_SLUG
 from bench.stamp import ROOT, result_exists
 
 MYST = yaml.safe_load((ROOT / "myst.yml").read_text())
@@ -759,3 +761,50 @@ def test_every_glossary_term_is_defined_in_a_box_in_its_home_chapter():
         + ", ".join(missing)
         + ". Put the sentence that says what it means in a :::{div} with :class: definition."
     )
+
+
+# -- routes: a short way through the book, held to the page it leads to ----------------------------
+
+
+@pytest.mark.parametrize("route", ROUTES, ids=lambda r: r.slug)
+def test_a_route_is_in_reading_order_and_ends_where_it_says(route):
+    order = [c.slug for c in CHAPTERS]
+    assert all(slug in order for slug in route.chapters), route.chapters
+    positions = [order.index(slug) for slug in route.chapters]
+    assert positions == sorted(positions), f"{route.slug}: not in reading order"
+    assert len(set(route.chapters)) == len(route.chapters)
+
+
+@pytest.mark.parametrize("route", ROUTES, ids=lambda r: r.slug)
+def test_a_route_teaches_every_term_its_destination_uses(route):
+    """A term the destination page uses, and whose home chapter the route skips, is a word the
+    route's reader meets without its definition. The route grows, or the page stops using it."""
+    from bench.tables import GLOSSARY
+    from tests.test_vocabulary import prose_lines
+
+    page = ROOT / BY_SLUG[route.destination].path
+    text = " ".join(line for _, line in prose_lines(page)).lower()
+    missing = {
+        term: home
+        for term, (home, *_) in GLOSSARY.items()
+        if re.search(rf"\b{re.escape(term.lower())}", text) and home not in route.chapters
+    }
+    assert not missing, (
+        f"the {route.slug} route skips the chapter that teaches {sorted(missing)}, which "
+        f"{route.destination} uses: {missing}"
+    )
+
+
+@pytest.mark.parametrize("route", ROUTES, ids=lambda r: r.slug)
+def test_a_route_is_offered_where_its_reader_looks(route):
+    """In the preface, where a reader plans, and at the top of the page, where one lands from a
+    search. Each links every chapter on the route."""
+    destination = BY_SLUG[route.destination]
+    page = (ROOT / destination.path).read_text()
+    top = page.split("## The material", 1)[0]
+    preface = (ROOT / "index.md").read_text()
+    for where, text in (("the preface", preface), (destination.path, top)):
+        for slug in route.chapters[:-1]:
+            assert f"(#{BY_SLUG[slug].anchor})" in text, (
+                f"{where} offers the {route.slug} route without linking {BY_SLUG[slug].label}"
+            )

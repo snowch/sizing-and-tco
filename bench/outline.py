@@ -505,3 +505,43 @@ def chapter(slug: str) -> Chapter:
 
 def label_of(slug: str) -> str:
     return BY_SLUG[slug].label
+
+
+@dataclass(frozen=True)
+class Route:
+    """A short way through the book for a reader who needs one chapter and not the rest.
+
+    The outline's ``needs`` say what each chapter builds on, and followed to the end they send a
+    reader after the seller's TCO through eighteen chapters, because they run through ch22 and
+    ch22 through nearly everything. A reader who only has to build or judge a sales TCO does not
+    use most of that. A route names what they do use, and `tests/test_book.py` holds it to the
+    destination page: every term the page uses from the glossary must be taught on the route, and
+    the route must be offered in the preface and at the top of the page, so it cannot go stale
+    when the chapter changes.
+    """
+
+    slug: str
+    #: Who it is for, as the preface and the page say it.
+    reader: str
+    #: In reading order, ending at the chapter the route is for.
+    chapters: tuple[str, ...]
+
+    @property
+    def destination(self) -> str:
+        return self.chapters[-1]
+
+
+ROUTES = (
+    Route(
+        "seller",
+        "a reader who only needs to build or judge a seller's TCO",
+        (
+            "point_estimates",
+            "what_a_workload_is",
+            "where_the_numbers_come_from",
+            "peak_mean_and_growth",
+            "comparing_two_tcos",
+            "the_sellers_tco",
+        ),
+    ),
+)
