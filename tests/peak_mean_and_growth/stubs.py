@@ -10,7 +10,7 @@ import numpy as np
 
 
 def busy_hour_rate(hourly_shape: np.ndarray, daily_total: float) -> float:
-    """Problem 4.1 - the number that sizes you is not the daily mean.
+    """Problem 4.1 - the number that sizes the fleet is not the daily mean.
 
     ``hourly_shape`` is twenty-four relative weights describing how a day's demand is distributed:
     a flat day is twenty-four equal numbers, a spiky one is not. ``daily_total`` is how much

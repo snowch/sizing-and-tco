@@ -494,4 +494,4 @@ that asks for each line in turn.
 written a quantity down, what are you claiming about it?
 
 [ch04](#peak-mean-and-growth) takes up the other question this chapter raised: demand moves, so
-which value of it sizes you?
+which value of it sizes the fleet?

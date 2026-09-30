@@ -223,7 +223,7 @@ CHAPTERS: tuple[Chapter, ...] = (
         "peak_mean_and_growth",
         "Peak, mean and growth",
         PARTS[0],
-        "Which number in a demand curve sizes you, and what is a five-year growth rate actually "
+        "Which number in a demand curve sizes the fleet, and what is a five-year growth rate actually "
         "a claim about?",
         owes="The growth sensitivity of the web service model, as a swing across the declared range.",
         needs=("what_a_workload_is", "where_the_numbers_come_from"),

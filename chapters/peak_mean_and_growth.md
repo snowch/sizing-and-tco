@@ -8,13 +8,13 @@ short_title: "ch04 Peak, mean and growth"
 
 ## The question
 
-Which number in a demand curve sizes you, and what is a five-year growth rate a claim about?
+Which number in a demand curve sizes the fleet, and what is a five-year growth rate a claim about?
 
 [ch02](#what-a-workload-is) established that a workload is a set of quantities, each varying over
 time. It reduced each to one number: for requests, the peak request rate in the busy hour on day
-one. This raised two questions: how long a busy period must last to size you, and how the busy hour
-relates to the daily mean. The growth rate was also reduced to one; this chapter replaces it with a
-spread.
+one. This raised two questions: how long a busy period must last to size the fleet, and how the
+busy hour relates to the daily mean. The growth rate was also reduced to one; this chapter
+replaces it with a spread.
 
 ## The material
 
@@ -27,7 +27,7 @@ day.
 :::{div}
 :class: definition
 
-The number that sizes you is the **busy hour**. Or the busy minute, or the busy Tuesday, depending on
+The number that sizes the fleet is the **busy hour**. Or the busy minute, or the busy Tuesday, depending on
 how long your system takes to fail and how long your users will wait for it to recover. Which of
 those to use is yours to decide, from your traffic and your tolerance, and the model cannot make
 the choice for you.
@@ -185,7 +185,7 @@ otherwise: the input's provenance is `assumption`.
 ### What a demand figure needs before you can size from it
 
 **A single peak.** "We do forty thousand requests a second at peak" is a rate with no duration.
-Forty thousand for ten seconds and forty thousand for four hours size you differently. A ten-second
+Forty thousand for ten seconds and forty thousand for four hours size the fleet differently. A ten-second
 burst can wait: requests hold briefly while the fleet works through them. A four-hour peak cannot be
 deferred: the requests pile up for hours, so your fleet must handle that rate as it arrives.
 
@@ -228,7 +228,7 @@ shape, and the busy hour moves.
   fleet runs, is the requests it serves in total, and a cost per request divides by that. The mean
   is not a level the fleet sits at.
 - **The peak-to-mean ratio is an observation of your own traffic.** It belongs to your users, so
-  borrowing one from another workload sizes you for a daily profile you do not have. It is an
+  borrowing one from another workload sizes the fleet for a daily profile you do not have. It is an
   input, not a measured constant, so the model remains definitional.
 - **In this model, growth is the one input raised to a power, so it tops the tornado.** Over a
   horizon, an uncertainty in the rate becomes a much larger uncertainty in the demand.

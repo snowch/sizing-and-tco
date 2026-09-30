@@ -86,4 +86,4 @@ def test_the_three_days_size_differently():
     """Scaffolding: three shapes, three answers, or the problem is one case repeated."""
     answers = [expected(shape, 1000.0) for shape in (FLAT, DIURNAL, SPIKY)]
     assert len({round(a, 6) for a in answers}) == 3, answers
-    assert answers[2] > answers[1] > answers[0], "a spikier day must size you harder"
+    assert answers[2] > answers[1] > answers[0], "a spikier day must size the fleet larger"
