@@ -210,6 +210,23 @@ years, but that works only until a colleague types the horizon in months. Growth
 twelve times as many periods, and nothing warns you. The toolkit converts months to years before it
 divides, so the answer stays right.
 
+:::{note} Why divide by one year?
+:class: dropdown
+
+Growth multiplies demand by the factor each year. To apply it the right number of times, you need to count the years, and the exponent in `annual_growth ** horizon_periods` is that count. An exponent is a count, not a length of time, so it has no unit.
+
+The horizon is a length of time. Divide it by one year and you convert it to a count of years—the exponent you need. A horizon already in years divided by one year stays the same number. But that division matters: it removes the unit, so the toolkit can check that an exponent is unitless. It also means the toolkit converts a horizon typed in months to years before dividing it.
+
+The divisor must be one year because the growth factor is per year. Divide by a month and you would count months, not years, and the factor would apply once per month.
+
+```{image} _figures/what-a-workload-is-exponent.svg
+:alt: The same horizon three ways: in years divided by one year, in months converted then divided, and as a bare number in a spreadsheet, with how many times each applies the yearly growth factor and what demand grows by
+:width: 100%
+```
+
+The first two rows count the same years and give the same answer, but the third applies the yearly factor once each month, and nothing warns you.
+:::
+
 ### The first derived quantity
 
 The file now has five inputs. Next, the toolkit works out its first quantity from a formula over two

@@ -1810,3 +1810,80 @@ def seller_plane(result: str) -> str:
         f"share of the spend that scales</text>"
     )
     return _svg(width, height, "".join(body), "Where the product pays, by the two assumptions")
+
+
+def horizon_exponent(result: str) -> str:
+    """One horizon three ways, and how many times each applies the yearly growth factor (ch02).
+
+    The exponent in ``annual_growth ** horizon_periods`` is a count: how many times the yearly
+    factor is applied. Each row is the same horizon. In years, divided by one year, it counts
+    years. In months, the toolkit converts to years before dividing, so it counts the same years.
+    A spreadsheet cell holding the months as a bare number is not divided at all, and applies a
+    yearly factor once a month. The growth factor and the horizon are the model's point values;
+    the months come from the unit registry, not from a typed twelve.
+    """
+    from sizing.units import UNITS
+
+    nodes = load_result(result)["summary"]["nodes"]
+    growth, horizon = nodes["annual_growth"]["point"], nodes["horizon"]["point"]
+    years = int(round(horizon))
+    months = int(round(UNITS.Quantity(horizon, "year").to("month").magnitude))
+    per_year = months // years
+
+    width, height = 440.0, 336.0
+    left, right = 20.0, width - 20
+    strip = right - left
+    ok, wrong = "#4a7ba7", "#b3413a"
+    rows = (
+        (f"the horizon typed as {years} years, divided by one year", years, 1, years, ok),
+        (
+            f"typed as {months} months: converted to years, then divided",
+            months,
+            per_year,
+            years,
+            ok,
+        ),
+        (
+            f"typed as a bare {months} in a spreadsheet cell: nothing divides it",
+            months,
+            1,
+            months,
+            wrong,
+        ),
+    )
+    body = [
+        f'<text x="{MARGIN}" y="22" font-size="15" fill="#263238">The same horizon, three ways</text>',
+        f'<text x="{MARGIN}" y="42" font-size="13.5" fill="#546e7a">each block applies the '
+        f"yearly growth factor once, ×{growth:g}</text>",
+    ]
+    top = 70.0
+    for i, (label, ticks, group, count, colour) in enumerate(rows):
+        y = top + i * 96
+        body.append(
+            f'<text x="{left}" y="{y}" font-size="13.5" fill="#37474f">{_esc(label)}</text>'
+        )
+        bar_y = y + 12
+        # Every tick drawn, grouped into blocks: one block per application of the factor.
+        blocks = ticks // group
+        for b in range(blocks):
+            x1 = left + strip * b / blocks
+            x2 = left + strip * (b + 1) / blocks
+            body.append(
+                f'<rect x="{x1 + 1:.1f}" y="{bar_y}" width="{max(x2 - x1 - 2, 0.8):.1f}" '
+                f'height="22" fill="{colour}" fill-opacity="0.85"/>'
+            )
+        if group > 1:
+            for t in range(1, ticks):
+                if t % group:
+                    x = left + strip * t / ticks
+                    body.append(
+                        f'<line x1="{x:.1f}" y1="{bar_y + 15}" x2="{x:.1f}" y2="{bar_y + 22}" '
+                        f'stroke="#ffffff" stroke-width="0.8"/>'
+                    )
+        multiplier = growth**count
+        text = f"×{multiplier:,.1f}" if multiplier < 100 else f"×{multiplier:,.0f}"
+        body.append(
+            f'<text x="{left}" y="{bar_y + 44}" font-size="13.5" fill="{colour}">'
+            f"applied {count} times: demand grows {_esc(text)}</text>"
+        )
+    return _svg(width, height, "".join(body), "The same horizon, three ways")
