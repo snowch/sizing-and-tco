@@ -100,6 +100,7 @@ project:
       children:
         - file: chapters/a_tco_for_finance.md
         - file: chapters/comparing_two_tcos.md
+        - file: chapters/the_sellers_tco.md
 
     - file: parts/afterwards.md
       children:

@@ -1,0 +1,213 @@
+dsl: 2
+model: sellers_tco
+title: The seller's TCO
+currency: USD
+
+description: >-
+  A TCO built by the seller of a system, not by its buyer. The seller cannot see the customer's
+  workload or its bill, so the model starts from the customer's spend per host and scales it
+  three ways: by how many hosts the customer runs, by the share of that spend that moves with
+  the number of hosts, and by the product's benchmark advantage, discounted for how much of it
+  carries over to this customer's work. It is top down and linear in hosts. It has no measured
+  constant and no ceiling, so it is a definitional model: what a seller can honestly build
+  before a customer opens their books (ch23).
+
+nodes:
+  # -- the customer, as the seller has to guess them -------------------------------------------------
+
+  horizon:
+    kind: input
+    decided: you
+    unit: year
+    value: 5
+    label: horizon
+    provenance:
+      kind: assumption
+      source: "The web service model's horizon (ch02), the refresh cycle the fleet is bought
+        against"
+    range: [3, 8]
+
+  usage_hosts:
+    kind: input
+    decided: outside
+    unit: host
+    label: hosts the customer runs today
+    value: 50
+    note: >-
+      One number: a count, which the customer can give the seller by asking. The chapter's answer
+      about customer size is the break-even usage below, and a band here would only blur it.
+    provenance:
+      kind: assumption
+      source: >-
+        The seller's picture of a customer in its market, not a count of any one customer's
+        hosts. The customer can replace it with a count, and then it is the customer's figure,
+        not the seller's.
+    range: [5, 300]
+
+  current_cost_per_host:
+    kind: input
+    decided: outside
+    unit: USD/host/year
+    label: customer's spend per host-year, everything in
+    distribution: {lognormal: {p10: 5000, p90: 11000}}
+    provenance:
+      kind: assumption
+      source: >-
+        What the seller supposes a customer spends a year for each host it runs, staff included:
+        the whole bill divided by the hosts. Lognormal, because a spend cannot be zero or less and
+        its high side runs further than its low. The customer knows this figure; the seller
+        does not.
+    range: [2000, 20000]
+
+  scaling_share:
+    kind: input
+    decided: outside
+    unit: dimensionless
+    label: share of the spend that moves with hosts
+    distribution: {triangular: {minimum: 0.3, likely: 0.5, maximum: 0.8}}
+    provenance:
+      kind: assumption
+      source: >-
+        How much of that spend goes away when a host does. Hardware, power, licences and support
+        move with the host count; staff and anything bought per site largely do not. A brochure
+        that scales the whole bill has set this to one without saying so. Triangular, because it
+        is a lowest, most likely and highest guess, and a share has hard ends.
+    range: [0.1, 1]
+
+  # -- the product, as the seller describes it -------------------------------------------------------
+
+  benchmark_advantage:
+    kind: input
+    decided: outside
+    unit: dimensionless
+    value: 4
+    label: benchmark advantage per host
+    note: >-
+      One number: the vendor publishes one figure, and a range here would put words in its
+      mouth. The doubt about it lives in the transfer factor.
+    provenance:
+      kind: vendor_claim
+      source: >-
+        The seller's own benchmark: how much more work one proposed host did than one of the
+        customer's current hosts, on the benchmark's workload. Here it is the ratio of the two
+        hosts' cores in ch22 (sixty-four against sixteen), standing in for a published result.
+    range: [1, 10]
+
+  transfer_factor:
+    kind: input
+    decided: outside
+    unit: dimensionless
+    label: share of the benchmark advantage that carries over
+    distribution: {triangular: {minimum: 0.4, likely: 0.75, maximum: 1.0}}
+    provenance:
+      kind: assumption
+      source: >-
+        How much of the benchmark's advantage survives on this customer's work rather than on the
+        benchmark's. Nobody has measured it for any customer: that would take running the
+        customer's own workload on both hosts. One means the benchmark is the customer's workload.
+        Triangular, because it is a lowest, most likely and highest guess, and a seller who
+        claimed a more precise shape would be inventing it.
+    range: [0.2, 1.2]
+
+  proposed_cost_per_host:
+    kind: input
+    decided: outside
+    unit: USD/host/year
+    value: 12747.123866259795
+    label: proposed spend per host-year, staff and move excluded
+    note: >-
+      One number: the seller's own price, which it states as one figure.
+    provenance:
+      kind: vendor_claim
+      source: >-
+        The seller's price for running one proposed host for a year: the host spread over the
+        horizon, its licence, support and power, and no staff. Here it is the challenger's quote
+        in ch22, worked out per host-year; tests/the_sellers_tco and bench/run_seller.py check
+        it against the stamped result.
+    range: [5000, 30000]
+
+  move_cost:
+    kind: input
+    decided: outside
+    unit: USD
+    value: 250000
+    label: cost of the move
+    note: >-
+      One number: ch22's estimate of the move, held as ch22 holds it, so the two chapters
+      price the same move.
+    provenance:
+      kind: assumption
+      source: "The challenger's migration cost in ch22: the one-off cost of moving to the
+        proposed system"
+    range: [50000, 1000000]
+
+  # -- the arithmetic ----------------------------------------------------------------------------------
+
+  effective_advantage:
+    kind: derived
+    unit: dimensionless
+    label: advantage on the customer's work
+    formula: benchmark_advantage * transfer_factor
+
+  proposed_hosts:
+    kind: derived
+    unit: host
+    label: proposed hosts, capacity-equivalent
+    note: >-
+      Not rounded up. A top-down model counts capacity, not boxes, and rounding here would make
+      the break-evens approximate instead of exact.
+    formula: usage_hosts / effective_advantage
+
+  current_total:
+    kind: derived
+    unit: USD
+    label: customer's spend over the horizon, as it is
+    formula: usage_hosts * current_cost_per_host * horizon
+
+  proposed_total:
+    kind: derived
+    unit: USD
+    label: customer's spend over the horizon, with the product
+    formula: current_total * (1 - scaling_share) + proposed_hosts * proposed_cost_per_host * horizon + move_cost
+
+  saving:
+    kind: derived
+    unit: USD
+    label: saving over the horizon
+    formula: current_total - proposed_total
+
+  margin_per_host_year:
+    kind: derived
+    unit: USD/host/year
+    label: saving per current host-year, before the move
+    note: >-
+      What each host the customer runs today saves a year, before the move is paid for. If it
+      is zero or less, no amount of usage pays for the move.
+    formula: current_cost_per_host * scaling_share - proposed_cost_per_host / effective_advantage
+
+  break_even_transfer:
+    kind: derived
+    unit: dimensionless
+    label: transfer factor at which the saving is zero
+    note: >-
+      A break-even only while the part of the spend that scales is larger than the cost of the
+      move. Below that no transfer factor pays, and the figure is negative.
+    formula: usage_hosts * proposed_cost_per_host * horizon / (benchmark_advantage * (current_total * scaling_share - move_cost))
+
+  break_even_usage:
+    kind: derived
+    unit: host
+    label: hosts at which the saving is zero
+    note: >-
+      A break-even only while the margin per host-year is positive. Otherwise no usage pays, and
+      the figure is negative.
+    formula: move_cost / (horizon * margin_per_host_year)
+
+outputs:
+  - saving
+  - current_total
+  - proposed_total
+  - proposed_hosts
+  - margin_per_host_year
+  - break_even_transfer
+  - break_even_usage

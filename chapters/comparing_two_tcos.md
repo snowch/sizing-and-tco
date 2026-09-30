@@ -444,5 +444,7 @@ compare on the same draws, so that what they share cancels. Wright and Ramsay @w
 show when it fails. The shared draws have to reach both designs the same way, and a design that
 responds to a draw in the opposite direction gets a wider difference, not a narrower one.
 
-[ch23](#what-the-model-got-wrong) is what happens after one of the two quotes is chosen, and the
+[ch23](#the-sellers-tco) builds a comparison from the other side, as a seller who cannot see the customer's workload, and finds the transfer assumption that [ch22](#comparing-two-tcos)'s own comparison made without naming it.
+
+[ch24](#what-the-model-got-wrong) is what happens after one of the two quotes is chosen, and the
 future that arrives is one of the ones in which it was the wrong choice.

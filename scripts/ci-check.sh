@@ -118,6 +118,11 @@ echo "== the two quotes still differ by what the book says they differ by =="
 # say what would flip the ordering. Re-derived rather than trusted, like everything else here.
 python3 -m bench.run_comparison --check
 
+echo "== the seller's TCO still lands where the book says it lands =="
+# ch23: the top-down model on ch22's customer, its hidden assumptions set three ways, beside the
+# bottom-up difference. Refuses to run if the model's pinned figures drift from ch22's quotes.
+python3 -m bench.run_seller --check
+
 echo "== two generations in one pool still need what the book says they need =="
 # ch10, ch11, ch22: new hosts per chain three ways, the pool's ceilings kept and retired, and keep
 # versus replace subtracted future by future.

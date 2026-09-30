@@ -12,7 +12,7 @@ import numpy as np
 
 
 def attribute(draws: dict[str, np.ndarray], failed: np.ndarray) -> list[tuple[str, float]]:
-    """Problem 23.1 - which input was doing something unusual when the design failed?
+    """Problem 24.1 - which input was doing something unusual when the design failed?
 
     ``draws`` is one array per uncertain input, all the same length: the values that were drawn
     together, sample by sample. ``failed`` is a boolean array of the same length, true in the
@@ -30,13 +30,13 @@ def attribute(draws: dict[str, np.ndarray], failed: np.ndarray) -> list[tuple[st
     must not raise. And the ordering is by *size* of shift, not by sign: an input that is unusually
     low in the failures is exactly as much of a cause as one that is unusually high.
     """
-    raise NotImplementedError("problem 23.1")
+    raise NotImplementedError("problem 24.1")
 
 
 def share_with_nothing_extreme(
     draws: dict[str, np.ndarray], failed: np.ndarray, percentile: float = 90.0
 ) -> float:
-    """Problem 23.2 - how often the story afterwards is allowed to be about one dramatic thing.
+    """Problem 24.2 - how often the story afterwards is allowed to be about one dramatic thing.
 
     Same arguments as ``attribute``. Return the fraction of the failing samples in which *no*
     input was above its own ``percentile``, taken across all the draws and not the failing ones
@@ -44,7 +44,7 @@ def share_with_nothing_extreme(
     which something was. The attribution table prints the other one.
 
     Only the upper end counts. A value is extreme when it is above the percentile; a value below
-    the 10th percentile does not count, however unusual. This differs from problem 23.1, where a
+    the 10th percentile does not count, however unusual. This differs from problem 24.1, where a
     low shift counted as much as a high one.
 
     These are the failures with no culprit to point at, because every input involved was merely
@@ -58,4 +58,4 @@ def share_with_nothing_extreme(
     rather than of the world. The margin was too thin to absorb an ordinary week, and you fix that
     by changing the margin, not by blaming an input.
     """
-    raise NotImplementedError("problem 23.2")
+    raise NotImplementedError("problem 24.2")

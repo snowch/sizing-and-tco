@@ -281,7 +281,7 @@ beside the number says what the model does not contain, and [ch21](#a-tco-for-fi
 this cannot tell you* names this chapter: a limitation that does not stop applying when the
 audience changes.
 
-[ch23](#what-the-model-got-wrong) runs a post-mortem on the book's own models. On the observability
+[ch24](#what-the-model-got-wrong) runs a post-mortem on the book's own models. On the observability
 model, where the ingest total leaves out traces, the method blames the inputs that are present,
 showing this chapter's failure in action rather than escaping it.
 

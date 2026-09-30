@@ -1409,3 +1409,111 @@ def seam(result: str, other: str) -> str:
         "Two models' distributions for one price on a shared axis, and the single number that "
         "crosses between them",
     )
+
+
+#: The seller's figure: each curve's colour and dash, by provenance, because that is what each
+#: one rests on. The brochure is the vendor's claim; the seller's guesses are assumptions.
+SELLER_CURVES = {
+    "brochure": ("#c8791a", PROVENANCE_DASH["vendor_claim"], "the brochure: every dollar scales"),
+    "bottom_up_assumptions": ("#4a7ba7", "", "the share that scales in {ch22}'s comparison"),
+    "sellers_guesses": ("#b3413a", PROVENANCE_DASH["assumption"], "the seller's guess at it"),
+}
+
+
+def seller_transfer(result: str) -> str:
+    """The saving for one customer against how much of the benchmark carries over (ch23).
+
+    One line per guess at the share of the spend that scales. Where each line crosses zero is
+    that guess's break-even, and it moves further right as the share falls: the less of the bill
+    moves with the hosts, the more of the benchmark has to survive. ch22's bottom-up answer is
+    the dot, at a transfer of one, because that comparison sized the challenger by its cores.
+    """
+    from bench.outline import label_of
+
+    summary = load_result(result)["summary"]
+    transfers, curves = summary["transfers"], summary["curves"]
+    bottom_up = next(row for row in summary["ladder"] if row["key"] == "bottom_up")
+    ch22 = label_of("comparing_two_tcos")
+
+    width, height = 440.0, 360.0
+    left, right, top, bottom = 20.0, width - 20, 128.0, height - 44
+    low_x, high_x = transfers[0], transfers[-1]
+    values = [v for curve in curves for v in curve["saving"]] + [0.0, bottom_up["point"]]
+    low_y, high_y = min(values), max(values)
+    span_y = (high_y - low_y) or 1.0
+
+    def at(transfer: float, saving: float) -> tuple[float, float]:
+        return (
+            left + (transfer - low_x) / (high_x - low_x) * (right - left),
+            bottom - (saving - low_y) / span_y * (bottom - top),
+        )
+
+    body = [
+        f'<text x="{MARGIN}" y="22" font-size="15" fill="#263238">Five-year saving for '
+        f"{_esc(ch22)}'s customer</text>",
+        f'<text x="{MARGIN}" y="42" font-size="13.5" fill="#546e7a">against the share of the '
+        f"benchmark that carries over</text>",
+    ]
+    for i, curve in enumerate(curves):
+        colour, dash, label = SELLER_CURVES[curve["key"]]
+        y = 64 + i * 18
+        dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
+        body.append(
+            f'<line x1="{MARGIN}" y1="{y - 4}" x2="{MARGIN + 22}" y2="{y - 4}" stroke="{colour}" '
+            f'stroke-width="2"{dash_attr}/>'
+            f'<text x="{MARGIN + 28}" y="{y}" font-size="13.5" fill="#37474f">'
+            f"{_esc(label.format(ch22=ch22))}, {curve['scaling_share']:.0%}</text>"
+        )
+        path = " L".join(
+            f"{x:.1f},{yy:.1f}"
+            for x, yy in (at(t, s) for t, s in zip(transfers, curve["saving"], strict=True))
+        )
+        body.append(
+            f'<path d="M{path}" fill="none" stroke="{colour}" stroke-width="2"{dash_attr}/>'
+        )
+        even = curve["break_even_transfer"]
+        if low_x <= even <= high_x:
+            x, zy = at(even, 0.0)
+            body.append(
+                f'<circle cx="{x:.1f}" cy="{zy:.1f}" r="3.5" fill="#ffffff" stroke="{colour}" '
+                f'stroke-width="1.5"/>'
+            )
+    # Labels sit where the curves are not: "no saving" above the line at the middle, where every
+    # curve but the brochure's is below it and the brochure's is far above.
+    _, zy = at(low_x, 0.0)
+    mid, _ = at(0.7, 0.0)
+    body.append(
+        f'<line x1="{left}" y1="{zy:.1f}" x2="{right}" y2="{zy:.1f}" stroke="#263238" '
+        f'stroke-width="1"/>'
+        f'<text x="{mid:.1f}" y="{zy - 6:.1f}" font-size="13.5" text-anchor="middle" '
+        f'fill="#263238">no saving</text>'
+    )
+    bx, by = at(1.0, bottom_up["point"])
+    body.append(
+        f'<circle cx="{bx:.1f}" cy="{by:.1f}" r="4.5" fill="#263238"/>'
+        f'<text x="{bx - 8:.1f}" y="{by - 10:.1f}" font-size="13.5" text-anchor="end" '
+        f'fill="#263238">{_esc(ch22)} bottom-up</text>'
+    )
+    body.append(f'<line x1="{left}" y1="{bottom}" x2="{right}" y2="{bottom}" stroke="#90a4ae"/>')
+    for value, anchor in ((low_x, "start"), (0.7, "middle"), (high_x, "end")):
+        x, _ = at(value, low_y)
+        body.append(
+            f'<line x1="{x:.1f}" y1="{bottom}" x2="{x:.1f}" y2="{bottom + 5}" stroke="#90a4ae"/>'
+            f'<text x="{x:.1f}" y="{bottom + 21}" font-size="13.5" text-anchor="{anchor}" '
+            f'fill="#546e7a">{value:.0%}</text>'
+        )
+    # The highest saving at the top left, where every curve is low; the lowest at the bottom
+    # right, where every curve is near zero.
+    _, top_y = at(low_x, high_y)
+    _, bottom_y = at(low_x, low_y)
+    body.append(
+        f'<text x="{left:.1f}" y="{top_y + 4:.1f}" font-size="13.5" fill="#546e7a">'
+        f"{_esc(signed_money(high_y))}</text>"
+        f'<text x="{right:.1f}" y="{bottom_y - 5:.1f}" font-size="13.5" text-anchor="end" '
+        f'fill="#546e7a">{_esc(signed_money(low_y))}</text>'
+    )
+    body.append(
+        f'<text x="{(left + right) / 2:.0f}" y="{height - 6:.0f}" font-size="13.5" '
+        f'text-anchor="middle" fill="#455a64">share of the benchmark that carries over</text>'
+    )
+    return _svg(width, height, "".join(body), "The seller's saving against the transfer factor")

@@ -420,6 +420,18 @@ CHAPTERS: tuple[Chapter, ...] = (
     ),
     Chapter(
         23,
+        "the_sellers_tco",
+        "The seller's TCO",
+        PARTS[6],
+        "You are selling a system too large to size in detail, to a customer whose workload you "
+        "cannot see. What can a TCO built from a benchmark and an assumed usage honestly claim?",
+        owes="A top-down TCO with the benchmark's transfer to the customer as an explicit input, "
+        "its break-evens, and how far it lands from the bottom-up comparison of the same customer.",
+        consumes=("seller", "sellers_tco-reference", "sellers_tco-ch22_customer"),
+        needs=("comparing_two_tcos", "which_input_is_the_answer"),
+    ),
+    Chapter(
+        24,
         "what_the_model_got_wrong",
         "What the model got wrong",
         PARTS[7],

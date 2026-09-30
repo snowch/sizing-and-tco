@@ -27,3 +27,5 @@ on: two quotes for the same workload, each with an interval, and a reader who ca
 apart. It subtracts the two totals future by future, because both designs face the same future,
 and the difference comes out far narrower than either total. It ends with what a comparison
 somebody else built has to show before you believe it.
+
+**[ch23 · The seller's TCO](#the-sellers-tco)** is the other side of [ch22](#comparing-two-tcos)'s comparison. A seller who cannot see the customer's workload builds a TCO top down, from a benchmark and an assumed usage. The chapter separates the benchmark from how much of it carries over to the customer's work, and says what the seller can defend: the break-even rather than the saving. It then runs the seller's model on [ch22](#comparing-two-tcos)'s customer and sets it beside [ch22](#comparing-two-tcos)'s answer.

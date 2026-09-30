@@ -857,6 +857,26 @@ FIGURES: dict[str, Table | Diagram] = {
         alt="Which shared input moves the difference between the two totals, and how many "
         "do not move it at all",
     ),
+    # -- ch23 The seller's TCO ---------------------------------------------------------------------
+    # The seller's model for a customer it has not met, as a brochure and as it should be built;
+    # then the same model on ch22's customer, beside ch22's bottom-up answer.
+    "the-sellers-tco-scenarios": Table(
+        render=tables.seller_scenarios,
+        result="seller",
+        also=("sellers_tco-reference", "sellers_tco-brochure"),
+    ),
+    "the-sellers-tco-ladder": Table(
+        render=tables.seller_ladder,
+        result="seller",
+        also=("sellers_tco-ch22_customer", "comparison", "web_service-incumbent"),
+    ),
+    "the-sellers-tco-transfer": Diagram(
+        draw=diagrams.seller_transfer,
+        result="seller",
+        alt="The five-year saving for one customer against the share of the benchmark that "
+        "carries over, for three guesses at the share of the spend that scales, with the "
+        "bottom-up answer marked",
+    ),
     # -- appendices ------------------------------------------------------------------------------------
     # The web service model: every model file the page quotes is that one.
     "appendix-a-dsl-reference-kinds": Table(

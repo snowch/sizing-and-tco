@@ -1,0 +1,12 @@
+scenario: ch22_customer
+title: The seller's model, on ch22's customer
+because: >-
+  The two figures a seller can learn by asking, pinned to ch22's incumbent: the hosts it runs and
+  what it spends per host-year, everything in, at the point estimates. The share that scales and
+  the transfer factor stay the seller's guesses, so the result can be set beside ch22's bottom-up
+  comparison of the same customer.
+samples: 100000
+seed: 20260916
+overrides:
+  usage_hosts: 54
+  current_cost_per_host: 7415.122854685757

@@ -1,0 +1,9 @@
+scenario: reference
+title: The seller's honest model
+because: >-
+  Every guess about the customer is left as the seller's, and the benchmark is discounted
+  by a transfer factor nobody has measured. Every figure the book quotes for this model comes
+  from here unless it says otherwise.
+samples: 100000
+seed: 20260916
+overrides: {}

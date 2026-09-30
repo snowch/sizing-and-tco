@@ -1,10 +1,10 @@
 ---
 title: "What the model got wrong"
-short_title: "ch23 What the model got wrong"
+short_title: "ch24 What the model got wrong"
 ---
 
 (what-the-model-got-wrong)=
-# ch23 · What the model got wrong
+# ch24 · What the model got wrong
 
 ## The question
 
@@ -230,7 +230,7 @@ service's failures, not on the model with a hole in it. 23.1 ranks the inputs th
 attribution table does; 23.2 counts the failures in which nothing was extreme. The last has no
 test, and says why.
 
-**23.1 — Attribute the failure.**
+**24.1 — Attribute the failure.**
 Given the draws and which of them failed, rank the inputs by how far each one had to be from its
 ordinary self. Use a median, and order by the size of the shift rather than its sign. An input
 that is unusually *low* in the failures is just as much of a cause.
@@ -239,7 +239,7 @@ that is unusually *low* in the failures is just as much of a cause.
 python3 -m pytest tests/what_the_model_got_wrong/test_problem_1_attribute.py -m problem
 ```
 
-**23.2 — How often is there a culprit?**
+**24.2 — How often is there a culprit?**
 Work out the share of failures in which no input was above its own ninetieth percentile. Each
 input's percentile comes from all the draws, not from the failing ones alone. Only the upper end
 counts: a value is extreme when it is above the percentile; a value below the tenth percentile is
@@ -260,7 +260,7 @@ function on the web service's own futures and holds it to the figure the build p
 python3 -m pytest tests/what_the_model_got_wrong/test_problem_2_extreme.py -m problem
 ```
 
-**23.3 — A post-mortem on one of yours.** No test: it is your history, and nobody else has it.
+**24.3 — A post-mortem on one of yours.** No test: it is your history, and nobody else has it.
 
 Find an estimate you or your team made that turned out badly: a fleet that went over its limit
 early, a budget that overran, a tier that needed replacing sooner than planned. Reconstruct what was

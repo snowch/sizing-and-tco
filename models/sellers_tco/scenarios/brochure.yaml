@@ -1,0 +1,10 @@
+scenario: brochure
+title: The brochure
+because: >-
+  The same model with the two assumptions a brochure makes without writing them down: the
+  benchmark carries over whole, and every dollar the customer spends moves with the host count.
+samples: 100000
+seed: 20260916
+overrides:
+  transfer_factor: 1
+  scaling_share: 1

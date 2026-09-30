@@ -319,7 +319,7 @@ whether a document like this works, so the only test is handing it to the person
 rather than two sizes of one fleet, the difference between them is what the person who signs is
 deciding, and it has an interval of its own.
 
-[ch23](#what-the-model-got-wrong) is what happens afterwards: at the model's horizon, when one of
+[ch24](#what-the-model-got-wrong) is what happens afterwards: at the model's horizon, when one of
 the futures in that table turned out to be the one you got.
 
 What remains after it is reference material:

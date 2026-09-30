@@ -32,6 +32,7 @@
 | **stock** | [ch02](#what-a-workload-is) | a level — terabytes held, series alive, requests in flight | how much there is right now |
 | **structural error** | [ch13](#monte-carlo) | a model that is wrong in shape rather than in its numbers | something is missing |
 | **tornado** | [ch04](#peak-mean-and-growth) | a chart showing which input moves an answer most; each uncertain input swings from a low to a high end of its range whilst every other input stays at its central value; the bars are sorted longest first, into a funnel | chart of what matters most |
+| **transfer factor** | [ch23](#the-sellers-tco) | the share of a benchmark's advantage that carries over to the customer's own workload | how much of the benchmark applies to you |
 | **unit economics** | [ch17](#unit-economics) | a cost divided by a denominator you can defend | cost per something |
 | **utilisation** | [ch05](#littles-law) | the fraction of a system that is busy | how busy it is |
 

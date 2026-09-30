@@ -2178,6 +2178,11 @@ GLOSSARY: dict[str, tuple[str, str, str]] = {
         "are sorted longest first, into a funnel",
         "chart of what matters most",
     ),
+    "transfer factor": (
+        "the_sellers_tco",
+        "the share of a benchmark's advantage that carries over to the customer's own workload",
+        "how much of the benchmark applies to you",
+    ),
     "unit economics": (
         "unit_economics",
         "a cost divided by a denominator you can defend",
@@ -2593,4 +2598,120 @@ def mixed_pool_keep_vs_replace_lines(name: str) -> str:
             f"| {line['label']} | {_money(line['keep'])} | {_money(line['replace'])} "
             f"| {signed_money(line['keep'] - line['replace'])} |"
         )
+    return "\n".join(rows)
+
+
+# -- ch23 The seller's TCO ------------------------------------------------------------------------
+
+
+#: The ladder's rows, in the order the page reads them: from the brochure down to the bottom-up.
+#: Chapter labels come from the outline, so a renumbering cannot leave a stale one in a table.
+def _seller_ladder_labels() -> dict[str, str]:
+    from bench.outline import label_of
+
+    ch22 = label_of("comparing_two_tcos")
+    return {
+        "brochure": "The brochure",
+        "bottom_up_assumptions": f"Top down, with {ch22}'s two assumptions",
+        "sellers_guesses": "Top down, with the seller's guesses",
+        "bottom_up": f"{ch22}'s bottom-up comparison",
+    }
+
+
+def _saving(value: float) -> str:
+    """A saving: a loss is written as a negative saving, never as a positive cost."""
+    return signed_money(value)
+
+
+def seller_ladder(name: str) -> str:
+    """One customer, four answers: what each version of the seller's TCO says it saves (ch23).
+
+    Every row is ch22's incumbent. The two columns in the middle are the two assumptions a
+    top-down TCO hides; the bottom row has neither, because it priced every line instead.
+    """
+    from bench.outline import label_of
+
+    labels = _seller_ladder_labels()
+    rows = [
+        f"| Five-year saving for {label_of('comparing_two_tcos')}'s customer "
+        "| Benchmark that carries over "
+        "| Share of the spend that scales | Proposed hosts | At the point estimate "
+        "| Middle nine in ten | Futures with a saving |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+    ]
+    for row in load_result(name)["summary"]["ladder"]:
+        transfer = "—" if row["transfer_factor"] is None else f"{row['transfer_factor']:.0%}"
+        share = "—" if row["scaling_share"] is None else f"{row['scaling_share']:.0%}"
+        spread = (
+            f"{_saving(row['p5'])} to {_saving(row['p95'])}" if row.get("p5") is not None else "—"
+        )
+        futures = (
+            _share_of_futures(row["share_positive"])
+            if row.get("share_positive") is not None
+            else "—"
+        )
+        hosts = row["proposed_hosts"]
+        hosts_text = f"{hosts:,.0f}" if float(hosts).is_integer() else f"{hosts:,.1f}"
+        rows.append(
+            f"| {labels[row['key']]} | {transfer} | {share} | {hosts_text} "
+            f"| {_saving(row['point'])} | {spread} | {futures} |"
+        )
+    return "\n".join(rows)
+
+
+def _break_even_usage(value: float, margin: float) -> str:
+    """Hosts at which the saving is zero, or the plain fact that none exists."""
+    if margin <= 0:
+        return "none: no size of customer pays for the move"
+    return f"{value:,.1f} hosts"
+
+
+def _break_even_transfer(value: float) -> str:
+    if value < 0:
+        return "none: no transfer pays for the move"
+    return f"{value:.0%}"
+
+
+def seller_scenarios(name: str) -> str:
+    """The seller's model for a customer it has not met, as a brochure and as it should be (ch23).
+
+    Point, spread and share of futures from the stamped scenario runs; the break-evens at the
+    point, where the seller's own guesses sit.
+    """
+    summary = load_result(name)["summary"]["scenarios"]
+    columns = (("brochure", "The brochure"), ("reference", "The seller's honest model"))
+    runs = {key: load_result(f"sellers_tco-{key}")["summary"]["nodes"] for key, _ in columns}
+    rows = [
+        "| For a customer the seller has not met | " + " | ".join(t for _, t in columns) + " |",
+        "|---|---:|---:|",
+    ]
+
+    def line(label: str, cell) -> str:
+        return f"| {label} | " + " | ".join(cell(key) for key, _ in columns) + " |"
+
+    rows += [
+        line("Five-year saving, at the point estimate", lambda k: _saving(summary[k]["saving"])),
+        line(
+            "Middle nine in ten",
+            lambda k: (
+                f"{_saving(runs[k]['saving']['summary']['p5'])} to "
+                f"{_saving(runs[k]['saving']['summary']['p95'])}"
+            ),
+        ),
+        line("Futures with a saving", lambda k: _share_of_futures(summary[k]["saving_positive"])),
+        line(
+            "Saving per current host a year, before the move",
+            lambda k: _saving(summary[k]["margin_per_host_year"]),
+        ),
+        line(
+            "Benchmark that must carry over to break even",
+            lambda k: _break_even_transfer(summary[k]["break_even_transfer"]),
+        ),
+        line(
+            "Customer size at which the move pays for itself",
+            lambda k: _break_even_usage(
+                summary[k]["break_even_usage"], summary[k]["margin_per_host_year"]
+            ),
+        ),
+    ]
     return "\n".join(rows)

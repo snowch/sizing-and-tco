@@ -13,7 +13,7 @@ reported, the decision is taken. This part follows the design to the model's hor
 refresh cycle the fleet was bought against, and asks what the model has to say when the design fails
 at that point.
 
-**[ch23 · What the model got wrong](#what-the-model-got-wrong)** is what happens next. It takes the
+**[ch24 · What the model got wrong](#what-the-model-got-wrong)** is what happens next. It takes the
 fleet [ch12](#the-sizing-model) recommended and the futures at the horizon in which the utilisation
 at the busy hour went past its limit—the model's own futures, not an observed incident. It asks the
 two questions a team asks afterwards: *what went wrong*, and *could we have known*.
