@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "be013d82ac183cdc",
+  "code_fingerprint": "251a9a8ae2d12777",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/11-regime/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-09-30T12:59:55+00:00",
-  "git_revision": "f9ccc25",
+  "generated_at": "2026-09-30T19:36:17+00:00",
+  "git_revision": "3bfb2b4",
   "kind": "model",
   "name": "web_service_regime-reference",
   "produced_by": {
@@ -85,7 +85,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-09-30T12:59:55+00:00",
+    "generated_at": "2026-09-30T19:36:17+00:00",
     "model": "web_service_regime",
     "nodes": {
       "achievable_throughput": {
@@ -3000,7 +3000,7 @@
         "kind": "input",
         "label": "one year",
         "layer": 0,
-        "note": "The model multiplies demand by `annual_growth ** horizon_periods`. Because `annual_growth` is applied once per year, the exponent must count years, not a length of time. Dividing the horizon by `one_year` produces that count. Appendix D has the rest of the conversions that bite.",
+        "note": "An exponent is a count, not a length of time, so it has no unit. Dividing the horizon by one year gives the count of years, and `annual_growth` is applied once for each. Appendix D has the rest of the conversions that bite.",
         "point": 1.0,
         "provenance": {
           "kind": "fact",

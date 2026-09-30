@@ -1813,77 +1813,54 @@ def seller_plane(result: str) -> str:
 
 
 def horizon_exponent(result: str) -> str:
-    """One horizon three ways, and how many times each applies the yearly growth factor (ch02).
+    """From a length of time to a count, and the count used as an exponent (ch02).
 
-    The exponent in ``annual_growth ** horizon_periods`` is a count: how many times the yearly
-    factor is applied. Each row is the same horizon. In years, divided by one year, it counts
-    years. In months, the toolkit converts to years before dividing, so it counts the same years.
-    A spreadsheet cell holding the months as a bare number is not divided at all, and applies a
-    yearly factor once a month. The growth factor and the horizon are the model's point values;
-    the months come from the unit registry, not from a typed twelve.
+    The spine of the page: the horizon is a duration, one year is a duration, and dividing one
+    by the other cancels the years and leaves a count. The count is how many times the yearly
+    growth factor is applied. Every value is the model's point value from the stamped result.
     """
-    from sizing.units import UNITS
-
     nodes = load_result(result)["summary"]["nodes"]
     growth, horizon = nodes["annual_growth"]["point"], nodes["horizon"]["point"]
-    years = int(round(horizon))
-    months = int(round(UNITS.Quantity(horizon, "year").to("month").magnitude))
-    per_year = months // years
+    one = nodes["one_year"]["point"]
+    count = horizon / one
 
-    width, height = 440.0, 336.0
-    left, right = 20.0, width - 20
-    strip = right - left
-    ok, wrong = "#4a7ba7", "#b3413a"
-    rows = (
-        (f"the horizon typed as {years} years, divided by one year", years, 1, years, ok),
-        (
-            f"typed as {months} months: converted to years, then divided",
-            months,
-            per_year,
-            years,
-            ok,
-        ),
-        (
-            f"typed as a bare {months} in a spreadsheet cell: nothing divides it",
-            months,
-            1,
-            months,
-            wrong,
-        ),
-    )
+    width = 440.0
+    left, right = 40.0, width - 40
+    box_h = 62.0
+    ink, faint, count_fill = "#263238", "#546e7a", "#dbe7f3"
+
+    def box(y: float, name: str, value: str, what: str, fill: str = "#ffffff") -> str:
+        return (
+            f'<rect x="{left}" y="{y}" width="{right - left}" height="{box_h}" rx="6" '
+            f'fill="{fill}" stroke="#90a4ae"/>'
+            f'<text x="{left + 14}" y="{y + 24}" font-size="13.5" fill="{faint}">{_esc(name)}</text>'
+            f'<text x="{right - 14}" y="{y + 26}" font-size="17" text-anchor="end" '
+            f'fill="{ink}">{_esc(value)}</text>'
+            f'<text x="{left + 14}" y="{y + 48}" font-size="13.5" fill="{ink}">{_esc(what)}</text>'
+        )
+
+    def join(y: float, text: str) -> str:
+        mid = width / 2
+        return (
+            f'<line x1="{mid}" y1="{y}" x2="{mid}" y2="{y + 30}" stroke="#90a4ae"/>'
+            f'<text x="{mid + 12}" y="{y + 20}" font-size="13.5" fill="{faint}">{_esc(text)}</text>'
+        )
+
+    years = "year" if horizon == 1 else "years"
     body = [
-        f'<text x="{MARGIN}" y="22" font-size="15" fill="#263238">The same horizon, three ways</text>',
-        f'<text x="{MARGIN}" y="42" font-size="13.5" fill="#546e7a">each block applies the '
-        f"yearly growth factor once, ×{growth:g}</text>",
+        f'<text x="{MARGIN}" y="22" font-size="15" fill="{ink}">From a length of time to a '
+        f"count</text>",
+        box(40, "horizon", f"{horizon:g} {years}", "a length of time"),
+        join(40 + box_h, "divided by"),
+        box(132, "one_year", f"{one:g} year", "a length of time, true by definition"),
+        join(132 + box_h, "years ÷ years cancel"),
+        box(224, "horizon_periods", f"{count:g}", "a count, with no unit", count_fill),
+        join(224 + box_h, "used as the exponent"),
+        box(
+            316,
+            "annual_growth ** horizon_periods",
+            f"×{growth**count:,.1f}",
+            f"the yearly factor, ×{growth:g}, applied {count:g} times",
+        ),
     ]
-    top = 70.0
-    for i, (label, ticks, group, count, colour) in enumerate(rows):
-        y = top + i * 96
-        body.append(
-            f'<text x="{left}" y="{y}" font-size="13.5" fill="#37474f">{_esc(label)}</text>'
-        )
-        bar_y = y + 12
-        # Every tick drawn, grouped into blocks: one block per application of the factor.
-        blocks = ticks // group
-        for b in range(blocks):
-            x1 = left + strip * b / blocks
-            x2 = left + strip * (b + 1) / blocks
-            body.append(
-                f'<rect x="{x1 + 1:.1f}" y="{bar_y}" width="{max(x2 - x1 - 2, 0.8):.1f}" '
-                f'height="22" fill="{colour}" fill-opacity="0.85"/>'
-            )
-        if group > 1:
-            for t in range(1, ticks):
-                if t % group:
-                    x = left + strip * t / ticks
-                    body.append(
-                        f'<line x1="{x:.1f}" y1="{bar_y + 15}" x2="{x:.1f}" y2="{bar_y + 22}" '
-                        f'stroke="#ffffff" stroke-width="0.8"/>'
-                    )
-        multiplier = growth**count
-        text = f"×{multiplier:,.1f}" if multiplier < 100 else f"×{multiplier:,.0f}"
-        body.append(
-            f'<text x="{left}" y="{bar_y + 44}" font-size="13.5" fill="{colour}">'
-            f"applied {count} times: demand grows {_esc(text)}</text>"
-        )
-    return _svg(width, height, "".join(body), "The same horizon, three ways")
+    return _svg(width, 400.0, "".join(body), "From a length of time to a count")

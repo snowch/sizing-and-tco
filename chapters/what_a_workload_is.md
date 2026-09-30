@@ -195,37 +195,35 @@ Interactive viewer: five inputs, none derived from another. Drag a slider to cha
 **All five nodes are blue and independent.** They are numbers the model is given. Dragging any
 slider leaves the others alone, because no node is worked out from another yet.
 
-`annual_growth` is the factor demand multiplies by each year; a factor above one means growth.
-`horizon` is how long until you buy again (the refresh cycle you size for), and it is your choice.
-`one_year` is a year you do not choose, because it is true by definition. It is there because growth
-compounds, so the horizon becomes an exponent, and an exponent has no unit, as the note in the file
-says.
-An exponent counts how many times the yearly growth factor is applied. "Apply it five times" means
-something; "apply it five years" does not. The divisor is one year because the growth factor is per
-year; using months would count months instead of years.
+`annual_growth` is the factor demand is multiplied by each year; a factor above one means growth. The horizon is the time until the next refresh: the period you are sizing for. It is your choice.
 
-`horizon / one_year` divides a length of time by a length of time; the years cancel, and what is
-left is a count with no unit. A spreadsheet holds the horizon as a bare number and assumes it is in
-years, but that works only until a colleague types the horizon in months. Growth then compounds over
-twelve times as many periods, and nothing warns you. The toolkit converts months to years before it
-divides, so the answer stays right.
+A growth factor is applied a number of times. A horizon is a length of time. The two are not the same kind of thing, and growth needs the first.
 
-:::{note} Why divide by one year?
-:class: dropdown
+`one_year` bridges them. It is a year you do not choose, because it is true by definition. Dividing the horizon by one year asks how many years fit in it: the years cancel, and what is left is a count with no unit.
 
-Growth multiplies demand by the factor each year. To apply it the right number of times, you need to count the years, and the exponent in `annual_growth ** horizon_periods` is that count. An exponent is a count, not a length of time, so it has no unit.
+That count is the exponent in `annual_growth ** horizon_periods`: the yearly factor, applied once for each year.
 
-The horizon is a length of time. Divide it by one year and you convert it to a count of years—the exponent you need. A horizon already in years divided by one year stays the same number. But that division matters: it removes the unit, so the toolkit can check that an exponent is unitless. It also means the toolkit converts a horizon typed in months to years before dividing it.
-
-The divisor must be one year because the growth factor is per year. Divide by a month and you would count months, not years, and the factor would apply once per month.
+An exponent is a count, not a length of time, so it has no unit.
 
 ```{image} _figures/what-a-workload-is-exponent.svg
-:alt: The same horizon three ways: in years divided by one year, in months converted then divided, and as a bare number in a spreadsheet, with how many times each applies the yearly growth factor and what demand grows by
+:alt: The horizon, a length of time, divided by one year to give a count of years, and the yearly growth factor applied that many times
 :width: 100%
 ```
 
-The first two rows count the same years and give the same answer, but the third applies the yearly factor once each month, and nothing warns you.
-:::
+The divisor sets which period is being counted. Because `annual_growth` is a yearly factor, the divisor has to be one year. Dividing by one month would give a count of months, but the growth factor is not applied monthly.
+
+#### Why this matters in practice
+
+A spreadsheet cell holding a bare number cannot tell you whether it means years, months or days. The number has lost its unit.
+
+So a spreadsheet formula has to assume the horizon is in years. That works until a colleague types the horizon in months, and then growth is applied once a month, and nothing warns you.
+
+The toolkit keeps the unit with the number. A horizon typed in months is converted to years before it is divided, so the count comes out the same.
+
+```{include} _generated/what-a-workload-is-three-ways.md
+```
+
+The first two rows count the same years, while the third has lost the unit, so nothing can tell what it counts.
 
 ### The first derived quantity
 
@@ -252,7 +250,7 @@ see the formula in Details.
 ### Growing the demand to the horizon
 
 Now take the two quantities you started with, the rate and the stock at day one, and grow them
-to the end of the purchase cycle. That takes two more derived quantities:
+to the horizon. That takes two more derived quantities:
 
 ```{literalinclude} ../models/web_service/stages/05-demand/model.yaml
 :language: yaml

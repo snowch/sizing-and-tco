@@ -16,8 +16,8 @@
     "the_invoice_is_invented_too": "the average of twelve invoices that do not exist, kept in the problem's test so it is never mistaken for an observation of anything",
     "what_an_interval_here_is": "a statement about this file's declared inputs, and nothing about whether the file has every cost line (ch20)"
   },
-  "generated_at": "2026-09-30T13:00:40+00:00",
-  "git_revision": "f9ccc25",
+  "generated_at": "2026-09-30T19:27:39+00:00",
+  "git_revision": "3bfb2b4",
   "kind": "measurement",
   "name": "the-missing-node-fixture",
   "produced_by": {

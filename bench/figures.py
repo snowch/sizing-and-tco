@@ -296,14 +296,17 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.node_kinds_table, result="web_service-reference"
     ),
     # -- ch02 What a workload is ------------------------------------------------------------------
-    # The exponent is a count, drawn: the same horizon in years, in months, and as a bare
-    # number in a spreadsheet cell, with how many times each applies the yearly factor.
+    # The page's spine: a length of time divided by one year is a count, and the count is the
+    # exponent. Then the same horizon three ways, as a table: years, months, a bare number.
+    "what-a-workload-is-three-ways": Table(
+        render=tables.horizon_three_ways,
+        result="web_service_demand_horizon_exponent-reference",
+    ),
     "what-a-workload-is-exponent": Diagram(
         draw=diagrams.horizon_exponent,
         result="web_service_demand_horizon_exponent-reference",
-        alt="The same horizon three ways: in years divided by one year, in months converted "
-        "then divided, and as a bare number in a spreadsheet, with how many times each "
-        "applies the yearly growth factor and what demand grows by",
+        alt="The horizon, a length of time, divided by one year to give a count of years, and "
+        "the yearly growth factor applied that many times",
     ),
     "what-a-workload-is-stage": Table(
         render=tables.stage_outputs, result="web_service_demand-reference"

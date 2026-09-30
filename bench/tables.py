@@ -2721,3 +2721,37 @@ def seller_scenarios(name: str) -> str:
         ),
     ]
     return "\n".join(rows)
+
+
+# -- ch02 What a workload is: one horizon, three ways ---------------------------------------------
+
+
+def horizon_three_ways(name: str) -> str:
+    """The same horizon typed three ways, and how many times each applies the yearly factor (ch02).
+
+    In years, divided by one year; in months, converted to years first; and as a bare number in a
+    spreadsheet cell, where the unit is gone and a formula has to guess. The growth factor and the
+    horizon are the model's point values; the months come from the unit registry.
+    """
+    from sizing.units import UNITS
+
+    nodes = load_result(name)["summary"]["nodes"]
+    growth, horizon = nodes["annual_growth"]["point"], nodes["horizon"]["point"]
+    months = UNITS.Quantity(horizon, "year").to("month").magnitude
+    years = f"{horizon:g} years"
+
+    def grows(times: float) -> str:
+        value = growth**times
+        return f"×{value:,.1f}" if value < 100 else f"×{value:,.0f}"
+
+    rows = [
+        "| The horizon, typed as | Before counting | Times the yearly factor is applied "
+        "| Demand grows |",
+        "|---|---|---:|---:|",
+        f"| {years} | divided by one year | {horizon:g} | {grows(horizon)} |",
+        f"| {months:g} months | converted to {years}, then divided by one year | {horizon:g} "
+        f"| {grows(horizon)} |",
+        f"| a bare {months:g}, in a spreadsheet cell | nothing: the unit is gone "
+        f"| {months:g}, if the formula assumes years | {grows(months)} |",
+    ]
+    return "\n".join(rows)

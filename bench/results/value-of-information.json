@@ -8,8 +8,8 @@
     "what_it_cannot_say": "whether the input can be measured at all. The web service's total rests on how many people it takes and what a licence costs, which are decided and negotiated rather than measured; its host count and the observability model's store both rest on a growth rate, which belongs to no target. The honest response to those is to decide them rather than to commission a measurement (ch04)",
     "where_the_measurement_lands": "each figure is the share of today's interval that knowing this input exactly would remove, if the knowledge landed at the low end the tornado swings it between, at its median, or at the high end (its 10th and 90th percentiles). A negative share means the interval widened instead, because an input that multiplies others, found high, scales up their spread. A real measurement also leaves a standard error behind, which these figures do not account for"
   },
-  "generated_at": "2026-09-30T13:01:36+00:00",
-  "git_revision": "f9ccc25",
+  "generated_at": "2026-09-30T19:28:28+00:00",
+  "git_revision": "3bfb2b4",
   "kind": "measurement",
   "name": "value-of-information",
   "produced_by": {
