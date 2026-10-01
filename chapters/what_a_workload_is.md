@@ -240,7 +240,7 @@ The explorer below starts from a round demand, so the arithmetic is easy to foll
 :class: explorer what-a-workload-is-growth
 ::::
 
-On the explorer's chart, each chip is one multiplication by the growth factor. There is one chip for each year of the horizon, so the number of chips is `horizon_periods`. Writing the factor out once per year gets long. Mathematics has a short form for repeating multiplication: an exponent, the small raised number in the chain. That number tells how many times the factor is applied, and it is `horizon_periods`.
+On the explorer's chart, each chip is one multiplication by the growth factor. There is one chip for each year of the horizon, so the number of chips is `horizon_periods`. Writing the factor out once per year gets long. Mathematics has a short form for repeating multiplication: an exponent, the small raised number in the chain. That number tells how many times the factor is applied, and it is `horizon_periods`. The label above the raised number writes the same thing in code, with `**`, which means raised to the power of.
 
 **An exponent is a count, not a length of time, so it has no unit.**
 
@@ -252,7 +252,7 @@ A `grown` node is not a new idea: it is the compounding from the explorer, writt
 :end-before: outputs:
 ```
 
-`peak_request_rate` is the request flow at the horizon, in requests per second; `stored_data` is the data held at the horizon, in terabytes. Each key is a piece from the explorer: `start` is the day-one value, `rate` is the growth factor, `over` is the count of years, and `shape: compound` says the factor multiplies each year. From these, the toolkit works out the start times `annual_growth ** horizon_periods`: `**` means raised to the power of, and this is the exponent from the chain. The shape is written as a word so you can see it and argue with it. [ch04](#peak-mean-and-growth) says when another shape works better.
+`peak_request_rate` is the request flow at the horizon, in requests per second; `stored_data` is the data held at the horizon, in terabytes. Each key is a piece from the explorer: `start` is the day-one value, `rate` is the growth factor, `over` is the count of years, and `shape: compound` says the factor multiplies each year. From these, the toolkit works out the start times `annual_growth ** horizon_periods`, the exponent from the chain. The shape is written as a word so you can see it and argue with it. [ch04](#peak-mean-and-growth) says when another shape works better.
 
 You now have eight quantities: three outside your control (busy-hour
 rate, data held, growth factor), one you choose (horizon), one true by definition (`one_year`), and
