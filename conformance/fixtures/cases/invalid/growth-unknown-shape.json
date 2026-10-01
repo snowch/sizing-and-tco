@@ -8,7 +8,7 @@
  "load": {
   "code": "load.unknown-shape",
   "exception": "ModelError",
-  "message": "_build/conformance/growth-unknown-shape/model.yaml: node 'added' has shape 'stepped'; expected one of compound, linear",
+  "message": "_build/conformance/growth-unknown-shape/model.yaml: node 'added' has shape 'stepped'; expected one of compound, linear, levelling",
   "node": "added",
   "ok": false
  },

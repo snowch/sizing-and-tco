@@ -156,7 +156,13 @@ class Derived(Node):
 GROWTH_SHAPES = {
     "compound": "{start} * {rate} ** {over}",
     "linear": "{start} + {rate} * {over}",
+    # The logistic curve: compounds at `rate` while demand is far below `ceiling`, and flattens as
+    # it nears it. Written in the factor, so the same rate means the same early growth as compound.
+    "levelling": "{ceiling} / (1 + ({ceiling} / {start} - 1) * {rate} ** -{over})",
 }
+
+#: The shapes that need a ceiling: the level demand approaches and does not pass.
+NEEDS_CEILING = ("levelling",)
 
 
 @dataclass(frozen=True)
@@ -174,6 +180,8 @@ class Grown(Derived):
     start: str = ""
     rate: str = ""
     over: str = ""
+    #: Only for `levelling`: the level the quantity approaches, in the start's unit.
+    ceiling: str = ""
 
 
 @dataclass(frozen=True)
@@ -460,7 +468,7 @@ MODEL_KEYS = (
 NODE_KEYS = {
     "input": ("decided", "provenance", "value", "distribution", "range"),
     "derived": ("formula",),
-    "grown": ("shape", "start", "rate", "over"),
+    "grown": ("shape", "start", "rate", "over", "ceiling"),
     "measured": ("result",),
     "ceiling": ("of", "limit", "headroom", "because"),
 }
@@ -554,6 +562,13 @@ def _node_from(name: str, spec: dict, where: str, folder: Path | None = None) ->
             "rate": str(_require(spec, "rate", at)).strip(),
             "over": str(_require(spec, "over", at)).strip(),
         }
+        if shape in NEEDS_CEILING:
+            parts["ceiling"] = str(_require(spec, "ceiling", at)).strip()
+        elif spec.get("ceiling") is not None:
+            raise ModelError(
+                f"{at}: a ceiling belongs to the levelling shape, and this node's shape is "
+                f"{shape!r}. A {shape} quantity has no level it stops at."
+            )
         for key, value in parts.items():
             if not value.isidentifier():
                 raise ModelError(

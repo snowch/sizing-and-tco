@@ -194,11 +194,11 @@ The two need different inputs, not different values of one input. A compounding 
 
 How to tell from your own history: if the yearly increases have stayed about the same size, growth is an amount. If they have grown along with the demand, growth is a share.
 
-Two refinements work on either shape: a step, when a known event such as a launch or a large customer adds demand at once; and a ceiling, when a market fills and growth slows as demand nears it.
+A ceiling has a shape of its own, `levelling`, where demand grows by a share of itself while far from the ceiling and slows as it nears it, as a market fills. A step, when a known event such as a launch or a large customer adds demand at once, remains a refinement the toolkit has no shape for.
 
 The shape is a choice about the model's structure, not a number. No band on the growth rate covers it, because the model's futures vary the inputs and never the formula.
 
-In a model file, a `grown` node declares the shape by name: `compound` or `linear`. The build checks that its rate is the right kind for that shape, and [Appendix A](#appendix-a-dsl-reference) lists its keys.
+In a model file, a `grown` node declares the shape by name: `compound`, `linear`, or `levelling`. Levelling also names its ceiling. The build checks that its rate is the right kind for that shape, and [Appendix A](#appendix-a-dsl-reference) lists its keys.
 
 ### What a demand figure needs before you can size from it
 
@@ -237,7 +237,7 @@ that.
 its daily profile. A workload that grows by adding a different kind of user grows in a different
 shape, and the busy hour moves.
 
-**Which shape growth takes.** The model assumes compounding: each year multiplies the demand. A workload that grows by the same amount each year, in steps, or towards a ceiling needs a different formula, and no band on the growth rate covers it.
+**Which shape growth takes.** The model assumes compounding: each year multiplies the demand. A workload that grows by the same amount each year, or towards a ceiling, needs a different shape, and no band on the growth rate covers it. A ceiling is an estimate of where a market stops, and nothing here measures it. A workload that grows in steps needs a structure the toolkit has no shape for.
 
 ## Key takeaways
 

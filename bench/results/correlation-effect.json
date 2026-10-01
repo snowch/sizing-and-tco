@@ -6,8 +6,8 @@
   "conditions": {
     "what_widening_means": "assuming independence is not neutral. It is a claim, and where it is wrong it makes the interval narrower than the evidence supports \u2014 which is the direction that gets a plan approved"
   },
-  "generated_at": "2026-10-01T11:48:49+00:00",
-  "git_revision": "41cac00",
+  "generated_at": "2026-10-01T12:11:10+00:00",
+  "git_revision": "92089ed",
   "kind": "measurement",
   "name": "correlation-effect",
   "produced_by": {

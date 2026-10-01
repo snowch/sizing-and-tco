@@ -1,7 +1,7 @@
 {
  "about": "Both growth shapes: compounding by a factor with no unit, and linear by an amount in the starting value's unit.",
  "files": {
-  "model.yaml": "dsl: 2\nmodel: growth_shapes\ntitle: Growth shapes\ncurrency: USD\ndescription: Both growth shapes, from one starting rate over one count of periods.\nnodes:\n  start_rate:\n    kind: input\n    decided: outside\n    unit: request/second\n    value: 100\n    provenance: {kind: assumption, source: a test value}\n  factor:\n    kind: input\n    decided: outside\n    unit: dimensionless\n    value: 1.3\n    provenance: {kind: assumption, source: a test value}\n  rise:\n    kind: input\n    decided: outside\n    unit: request/second\n    value: 30\n    provenance: {kind: assumption, source: a test value}\n  periods:\n    kind: input\n    decided: definition\n    unit: dimensionless\n    value: 5\n    provenance: {kind: fact, source: definition}\n  compounded:\n    kind: grown\n    unit: request/second\n    shape: compound\n    start: start_rate\n    rate: factor\n    over: periods\n  added:\n    kind: grown\n    unit: request/second\n    shape: linear\n    start: start_rate\n    rate: rise\n    over: periods\noutputs: [compounded, added]\n",
+  "model.yaml": "dsl: 2\nmodel: growth_shapes\ntitle: Growth shapes\ncurrency: USD\ndescription: The three growth shapes, from one starting rate over one count of periods.\nnodes:\n  start_rate:\n    kind: input\n    decided: outside\n    unit: request/second\n    value: 100\n    provenance: {kind: assumption, source: a test value}\n  factor:\n    kind: input\n    decided: outside\n    unit: dimensionless\n    value: 1.3\n    provenance: {kind: assumption, source: a test value}\n  rise:\n    kind: input\n    decided: outside\n    unit: request/second\n    value: 30\n    provenance: {kind: assumption, source: a test value}\n  market_ceiling:\n    kind: input\n    decided: outside\n    unit: request/second\n    value: 400\n    provenance: {kind: assumption, source: a test value}\n  periods:\n    kind: input\n    decided: definition\n    unit: dimensionless\n    value: 5\n    provenance: {kind: fact, source: definition}\n  compounded:\n    kind: grown\n    unit: request/second\n    shape: compound\n    start: start_rate\n    rate: factor\n    over: periods\n  added:\n    kind: grown\n    unit: request/second\n    shape: linear\n    start: start_rate\n    rate: rise\n    over: periods\n  levelled:\n    kind: grown\n    unit: request/second\n    shape: levelling\n    start: start_rate\n    rate: factor\n    over: periods\n    ceiling: market_ceiling\noutputs: [compounded, added, levelled]\n",
   "scenarios/reference.yaml": "scenario: reference\ntitle: Reference\nbecause: the model as declared\nsamples: 1000\nseed: 20260916\noverrides: {}\n"
  },
  "id": "edge/growth-shapes",
@@ -12,19 +12,22 @@
   "classification": "definitional",
   "correlations": [],
   "currency": "USD",
-  "description": "Both growth shapes, from one starting rate over one count of periods.",
+  "description": "The three growth shapes, from one starting rate over one count of periods.",
   "name": "growth_shapes",
   "order": [
    "factor",
+   "market_ceiling",
    "periods",
    "rise",
    "start_rate",
    "added",
-   "compounded"
+   "compounded",
+   "levelled"
   ],
   "outputs": [
    "compounded",
-   "added"
+   "added",
+   "levelled"
   ],
   "title": "Growth shapes",
   "unit_problems": 0,
@@ -109,6 +112,96 @@
    "unit": "dimensionless",
    "value": 1.3
   },
+  "levelled": {
+   "dimensionality": {
+    "[request]": 1.0,
+    "[time]": -1.0
+   },
+   "factor": 1.0,
+   "formula": {
+    "args": [
+     {
+      "name": "market_ceiling",
+      "op": "ref"
+     },
+     {
+      "args": [
+       {
+        "op": "const",
+        "value": 1.0
+       },
+       {
+        "args": [
+         {
+          "args": [
+           {
+            "args": [
+             {
+              "name": "market_ceiling",
+              "op": "ref"
+             },
+             {
+              "name": "start_rate",
+              "op": "ref"
+             }
+            ],
+            "op": "/"
+           },
+           {
+            "op": "const",
+            "value": 1.0
+           }
+          ],
+          "op": "-"
+         },
+         {
+          "args": [
+           {
+            "name": "factor",
+            "op": "ref"
+           },
+           {
+            "args": [
+             {
+              "name": "periods",
+              "op": "ref"
+             }
+            ],
+            "op": "neg"
+           }
+          ],
+          "op": "**"
+         }
+        ],
+        "op": "*"
+       }
+      ],
+      "op": "+"
+     }
+    ],
+    "op": "/"
+   },
+   "kind": "derived",
+   "magnitude": 221.2405015395662,
+   "unit": "request/second"
+  },
+  "market_ceiling": {
+   "decided": "outside",
+   "dimensionality": {
+    "[request]": 1.0,
+    "[time]": -1.0
+   },
+   "distribution": null,
+   "kind": "input",
+   "magnitude": 400.0,
+   "provenance": {
+    "kind": "assumption",
+    "source": "a test value"
+   },
+   "range": null,
+   "unit": "request/second",
+   "value": 400.0
+  },
   "periods": {
    "decided": "definition",
    "dimensionality": {},
@@ -168,6 +261,8 @@
     "added": 250.0,
     "compounded": 371.29300000000006,
     "factor": 1.3,
+    "levelled": 221.2405015395662,
+    "market_ceiling": 400.0,
     "periods": 5.0,
     "rise": 30.0,
     "start_rate": 100.0

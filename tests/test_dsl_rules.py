@@ -376,14 +376,20 @@ def test_a_grown_node_declares_its_shape_and_is_held_to_it():
     model = load_model(cases / "edge" / "growth-shapes" / "model.yaml")
     values = point(model)
     start, factor, rise, n = (values[k] for k in ("start_rate", "factor", "rise", "periods"))
+    cap = values["market_ceiling"]
     assert values["compounded"] == pytest.approx(start * factor**n)
     assert values["added"] == pytest.approx(start + rise * n)
-    assert set(GROWTH_SHAPES) == {"compound", "linear"}
+    assert values["levelled"] == pytest.approx(cap / (1 + (cap / start - 1) * factor**-n))
+    # Levelling grows as compounding does at first, and never passes its ceiling.
+    assert start < values["levelled"] < min(cap, values["compounded"])
+    assert set(GROWTH_SHAPES) == {"compound", "linear", "levelling"}
     assert not check_units(model)[0]
     for name, words in (
         ("growth-compound-rate-has-unit", "must be a factor with no unit"),
         ("growth-linear-rate-no-unit", "is an amount added each period"),
         ("growth-over-has-unit", "is a count of periods, with no unit"),
+        ("growth-levelling-ceiling-wrong-unit", "a ceiling is in the unit of"),
+        ("growth-levelling-rate-has-unit", "levels off, so its rate"),
     ):
         problems = check_units(load_model(cases / "invalid" / name / "model.yaml"))[0]
         assert any(words in p for p in problems), (name, problems)

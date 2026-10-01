@@ -1,0 +1,4 @@
+about: >-
+  A levelling node with no ceiling.
+expect:
+  - load.missing-field

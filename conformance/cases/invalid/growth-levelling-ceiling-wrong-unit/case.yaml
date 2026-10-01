@@ -1,0 +1,4 @@
+about: >-
+  A ceiling in a different unit from the quantity it caps.
+expect:
+  - units.growth-ceiling-unit

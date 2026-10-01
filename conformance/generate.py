@@ -173,7 +173,12 @@ PROBLEMS: tuple[tuple[str, str, str], ...] = (
     (
         "units.growth-rate-kind",
         "1",
-        r"node '(?P<node>[^']+)' (?:compounds|grows linearly), so its rate ",
+        r"node '(?P<node>[^']+)' (?:compounds|grows linearly|levels off), so its rate ",
+    ),
+    (
+        "units.growth-ceiling-unit",
+        "1",
+        r"node '(?P<node>[^']+)' levels off at '[^']*', which is in ",
     ),
     (
         "units.growth-over-not-a-count",
@@ -307,6 +312,7 @@ REFUSALS: tuple[tuple[str, str], ...] = (
     ("load.node-not-a-mapping", r"node '(?P<node>[^']+)' is not a mapping$"),
     ("load.unknown-kind", r"node '(?P<node>[^']+)' has kind "),
     ("load.unknown-shape", r"node '(?P<node>[^']+)' has shape "),
+    ("load.ceiling-not-levelling", r": a ceiling belongs to the levelling shape, and this node's shape is "),
     ("load.grown-not-a-name", r": (?:start|rate|over) names a node, and '[^']*' is not a node's name"),
     ("load.unknown-unit", r"node '(?P<node>[^']+)' declares an unknown unit — unknown unit "),
     ("load.formula-syntax", r"does not parse \("),

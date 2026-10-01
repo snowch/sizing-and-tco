@@ -2,7 +2,7 @@ dsl: 2
 model: growth_shapes
 title: Growth shapes
 currency: USD
-description: Both growth shapes, from one starting rate over one count of periods.
+description: The three growth shapes, from one starting rate over one count of periods.
 nodes:
   start_rate:
     kind: input
@@ -21,6 +21,12 @@ nodes:
     decided: outside
     unit: request/second
     value: 30
+    provenance: {kind: assumption, source: a test value}
+  market_ceiling:
+    kind: input
+    decided: outside
+    unit: request/second
+    value: 400
     provenance: {kind: assumption, source: a test value}
   periods:
     kind: input
@@ -42,4 +48,12 @@ nodes:
     start: start_rate
     rate: rise
     over: periods
-outputs: [compounded, added]
+  levelled:
+    kind: grown
+    unit: request/second
+    shape: levelling
+    start: start_rate
+    rate: factor
+    over: periods
+    ceiling: market_ceiling
+outputs: [compounded, added, levelled]

@@ -1,0 +1,4 @@
+about: >-
+  A levelling node whose rate has a unit.
+expect:
+  - units.growth-rate-kind

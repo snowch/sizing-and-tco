@@ -52,7 +52,11 @@
   "invalid/formula-keywords",
   "invalid/formula-min-of-one",
   "invalid/formula-syntax",
+  "invalid/growth-ceiling-on-compound",
   "invalid/growth-compound-rate-has-unit",
+  "invalid/growth-levelling-ceiling-wrong-unit",
+  "invalid/growth-levelling-no-ceiling",
+  "invalid/growth-levelling-rate-has-unit",
   "invalid/growth-linear-rate-no-unit",
   "invalid/growth-over-has-unit",
   "invalid/growth-rate-not-a-name",
@@ -228,6 +232,10 @@
     "rule": "1"
    },
    {
+    "code": "units.growth-ceiling-unit",
+    "rule": "1"
+   },
+   {
     "code": "units.growth-over-not-a-count",
     "rule": "1"
    },
@@ -363,6 +371,7 @@
    "load.node-not-a-mapping",
    "load.unknown-kind",
    "load.unknown-shape",
+   "load.ceiling-not-levelling",
    "load.grown-not-a-name",
    "load.unknown-unit",
    "load.formula-syntax",

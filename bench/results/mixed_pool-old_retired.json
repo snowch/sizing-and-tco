@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "8cbdc715854c06da",
+  "code_fingerprint": "462cdb072d91b4cb",
   "code_sources": [
     "bench/run_models.py",
     "models/mixed_pool/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-10-01T11:47:37+00:00",
-  "git_revision": "41cac00",
+  "generated_at": "2026-10-01T12:09:57+00:00",
+  "git_revision": "92089ed",
   "kind": "model",
   "name": "mixed_pool-old_retired",
   "produced_by": {
@@ -104,7 +104,7 @@
       "utilisation_weighted": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-10-01T11:47:36+00:00",
+    "generated_at": "2026-10-01T12:09:57+00:00",
     "model": "mixed_pool",
     "nodes": {
       "all_hosts": {

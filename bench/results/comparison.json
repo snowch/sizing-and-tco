@@ -10,8 +10,8 @@
     "shared_futures": "both scenarios pin the same inputs and share a seed, so every input neither quote fixes is drawn once and reaches both designs. The runner checks the shared columns are identical before subtracting",
     "the_move_is_an_estimate": "migration_cost on the challenger's side is the team's own figure, marked as an assumption; the incumbent's is a declared zero"
   },
-  "generated_at": "2026-10-01T11:49:48+00:00",
-  "git_revision": "41cac00",
+  "generated_at": "2026-10-01T12:12:14+00:00",
+  "git_revision": "92089ed",
   "kind": "measurement",
   "name": "comparison",
   "produced_by": {

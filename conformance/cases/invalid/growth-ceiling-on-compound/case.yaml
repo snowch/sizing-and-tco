@@ -1,0 +1,4 @@
+about: >-
+  A ceiling on a node that compounds, which has no level it stops at.
+expect:
+  - load.ceiling-not-levelling

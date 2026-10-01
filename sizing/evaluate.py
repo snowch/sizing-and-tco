@@ -290,6 +290,20 @@ def _wrong_kind_of_rate(model: Model, name: str, node: Grown) -> str | None:
             f"with no unit; it is in {model.nodes[node.rate].unit!r}. An amount added each "
             "period is the `linear` shape."
         )
+    if node.shape == "levelling" and rate.dimensionality:
+        return (
+            f"{model.name}: node {name!r} levels off, so its rate {node.rate!r} must be a factor "
+            f"with no unit, the growth while it is far from its ceiling; it is in "
+            f"{model.nodes[node.rate].unit!r}."
+        )
+    if node.shape == "levelling":
+        ceiling = parse_unit(model.nodes[node.ceiling].unit)
+        if ceiling.dimensionality != start.dimensionality:
+            return (
+                f"{model.name}: node {name!r} levels off at {node.ceiling!r}, which is in "
+                f"{model.nodes[node.ceiling].unit!r}; a ceiling is in the unit of "
+                f"{node.start!r} ({model.nodes[node.start].unit!r}), the quantity it caps."
+            )
     if node.shape == "linear" and rate.dimensionality != start.dimensionality:
         return (
             f"{model.name}: node {name!r} grows linearly, so its rate {node.rate!r} is an amount "

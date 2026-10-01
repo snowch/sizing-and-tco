@@ -83,6 +83,7 @@ Every node is a mapping under its name, and holds these keys.
 | `range` | `input` | no slider |
 | `formula` | `derived` | the file does not load |
 | `shape`, `start`, `rate`, `over` | `grown` | the file does not load |
+| `ceiling` | `grown`, `levelling` shape only | the file does not load |
 | `result` | `measured` | the file does not load |
 | `of` | `ceiling` | the file does not load |
 | `limit` | `ceiling` | the file does not load |
@@ -153,9 +154,11 @@ running a stranger's model is reading their arithmetic rather than executing the
 
 ### `grown` — a quantity grown over periods, in a declared shape
 
-A `grown` node grows a starting value over a count of periods, in a shape it names. The reader picks the shape by name rather than writing the formula. It has four keys: `start`, `rate`, `over`, each the name of another node, and `shape`.
+A `grown` node grows a starting value over a count of periods, in a shape it names. The reader picks the shape by name rather than writing the formula. It has four keys: `start`, `rate`, `over`, each the name of another node, and `shape`; the `levelling` shape adds a fifth.
 
 Two shapes govern how the rate applies. `compound` is where the rate is a factor applied once per period; `linear` is where the rate is an amount added once per period. Each shape needs its own kind of rate, and the build holds it to that. A compounding rate must be a factor with no unit. A linear rate must be in the starting value's unit. `over` must be a count with no unit: divide the horizon by one period in a node of its own, as the running example's `horizon_periods` does.
+
+A third shape, `levelling`, grows like `compound` while the quantity is far below its `ceiling`, then slows as it nears it, never passing it. Its rate is a factor with no unit: the growth while far from the ceiling. A levelling node needs a fifth key, `ceiling`, naming a node in the starting value's unit; any other shape refuses a ceiling.
 
 A rate of the wrong kind is refused with a message naming the shape and the kind of rate it needs, and pointing to the other shape. `start`, `rate` and `over` take a node's name, not arithmetic: work a value out in a node of its own and name that.
 
@@ -163,7 +166,7 @@ A `grown` node exists because the shape is a choice about the model's structure,
 
 In every other respect a `grown` node is a `derived` node: the build fills in the shape's formula, checks its unit, and the interactive page and the graph show it as derived.
 
-Here both shapes grow from one starting rate:
+Here all three shapes grow from one starting rate:
 
 ```{literalinclude} ../conformance/cases/edge/growth-shapes/model.yaml
 :language: yaml
