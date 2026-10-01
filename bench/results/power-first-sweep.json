@@ -7,8 +7,8 @@
     "one_slice": "the host count moves and nothing else does; a fleet of denser or leaner machines is a different line on both axes",
     "the_allocation": "a single figure for what the building supplies. Contracted power, breaker capacity, cooling and what the facility will sustain are four different numbers, and this sweep takes one"
   },
-  "generated_at": "2026-10-01T12:11:11+00:00",
-  "git_revision": "92089ed",
+  "generated_at": "2026-10-01T12:52:15+00:00",
+  "git_revision": "8bf923b",
   "kind": "measurement",
   "name": "power-first-sweep",
   "produced_by": {

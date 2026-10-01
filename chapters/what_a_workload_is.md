@@ -220,6 +220,8 @@ The same horizon can be written in different units. The toolkit keeps the unit w
 
 The spreadsheet's arithmetic is not the problem; raised to a power, a factor compounds correctly there too. What a cell holding a bare number cannot say is whether it means months, years or something else. Unless the unit is stored somewhere else, every formula that reads the cell carries a hidden assumption about it.
 
+The model file builds the explorer's chain in two steps, over the next two sections. First, a `horizon_periods` node computes the count from `horizon` and `one_year`. Second, two `grown` nodes, `peak_request_rate` and `stored_data`, multiply the day-one values by `annual_growth` once for each of those periods. Every `grown` node names the count it grows over, so the count has to exist in the file before you can build a node that uses it.
+
 ### The first derived quantity
 
 The file now has five inputs. Next, the toolkit works out its first quantity from a formula over two

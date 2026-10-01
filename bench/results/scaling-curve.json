@@ -7,8 +7,8 @@
     "coefficients_are_assumptions": "contention and crosstalk are fitted in practice, and in this model they are assumptions. The shape is the claim, not the position",
     "swept_and_predicted": "the peak found by sweeping and the peak the two coefficients predict are computed independently and must agree; if they ever stop agreeing, one of them is wrong"
   },
-  "generated_at": "2026-10-01T12:11:11+00:00",
-  "git_revision": "92089ed",
+  "generated_at": "2026-10-01T12:52:14+00:00",
+  "git_revision": "8bf923b",
   "kind": "measurement",
   "name": "scaling-curve",
   "produced_by": {

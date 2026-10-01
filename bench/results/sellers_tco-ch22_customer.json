@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-10-01T12:10:02+00:00",
-  "git_revision": "92089ed",
+  "generated_at": "2026-10-01T12:51:03+00:00",
+  "git_revision": "8bf923b",
   "kind": "model",
   "name": "sellers_tco-ch22_customer",
   "produced_by": {
@@ -53,7 +53,7 @@
       "saving": 1.0,
       "saving_per_year": 1.0
     },
-    "generated_at": "2026-10-01T12:10:02+00:00",
+    "generated_at": "2026-10-01T12:51:03+00:00",
     "model": "sellers_tco",
     "nodes": {
       "benchmark_advantage": {

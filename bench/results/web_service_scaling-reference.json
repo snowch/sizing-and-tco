@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "270c393175076f58",
+  "code_fingerprint": "9b30a26572cd8f54",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/10-scaling/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-10-01T12:10:23+00:00",
-  "git_revision": "92089ed",
+  "generated_at": "2026-10-01T12:51:24+00:00",
+  "git_revision": "8bf923b",
   "kind": "model",
   "name": "web_service_scaling-reference",
   "produced_by": {
@@ -80,7 +80,7 @@
       "utilisation_including_coordination": 1.0,
       "waiting_time": 1.0
     },
-    "generated_at": "2026-10-01T12:10:23+00:00",
+    "generated_at": "2026-10-01T12:51:24+00:00",
     "model": "web_service_scaling",
     "nodes": {
       "achievable_throughput": {
@@ -2441,7 +2441,7 @@
         "kind": "input",
         "label": "one year",
         "layer": 0,
-        "note": "An exponent is a count, not a length of time, so it has no unit. Dividing the horizon by one year gives the count of years, and `annual_growth` is applied once for each. Appendix D has the rest of the conversions that bite.",
+        "note": "`one_year` is one year as a quantity with a unit; dividing `horizon` by it gives a count of annual periods with no unit. A node that grows over time takes this count, not a length of time. Appendix D covers the other unit conversions that catch people out.",
         "point": 1.0,
         "provenance": {
           "kind": "fact",
