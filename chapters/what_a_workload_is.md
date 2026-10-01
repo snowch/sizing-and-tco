@@ -199,7 +199,7 @@ slider leaves the others alone, because no node is worked out from another yet.
 
 ### The first derived quantity
 
-The factor `annual_growth` is applied once per year. Growing demand across the horizon requires the model to count those years: to turn a duration into a dimensionless count. Dividing the horizon by one year gives that count: the years cancel, leaving a plain number. Because `annual_growth` is a yearly factor, the divisor is one year; dividing by a month would count months, and the factor is not applied monthly. That number is `horizon_periods`, which the toolkit works out from two inputs:
+Each year's demand is the previous year's multiplied by `annual_growth`. Over the horizon, the model applies it again and again, once for every year; to do that, it must know how many times to apply the factor. The horizon is a length of time in years, but the model needs a count: a plain number with no unit. You can multiply something a number of times, but not a span of time; a horizon of five years means five multiplications, so the model needs the five, not the years. Dividing the horizon by one year cancels the years, leaving a plain number; the divisor is one year because the factor is applied yearly, and dividing by a month would count months when the factor is not applied monthly. That number is `horizon_periods`, the toolkit's first quantity worked out from others:
 
 ```{literalinclude} ../models/web_service/stages/04-demand_horizon_exponent/model.yaml
 :language: yaml
