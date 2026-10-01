@@ -199,7 +199,7 @@ slider leaves the others alone, because no node is worked out from another yet.
 
 ### The first derived quantity
 
-Each year's demand is the previous year's multiplied by `annual_growth`. Over the horizon, the model applies it again and again, once for every year; to do that, it must know how many times to apply the factor. The horizon is a length of time in years, but the model needs a count: a plain number with no unit. You can multiply something a number of times, but not a span of time; a horizon of five years means five multiplications, so the model needs the five, not the years. Dividing the horizon by one year cancels the years, leaving a plain number; the divisor is one year because the factor is applied yearly, and dividing by a month would count months when the factor is not applied monthly. That number is `horizon_periods`, the toolkit's first quantity worked out from others:
+In this model, each year's demand is the previous year's multiplied by `annual_growth`. Over the horizon, the model applies it again and again, once for every year; to do that, it must know how many times to apply the factor. The horizon is a length of time in years, but the model needs a count: a plain number with no unit. You can multiply something a number of times, but not a span of time; a horizon of five years means five multiplications, so the model needs the five, not the years. Dividing the horizon by one year cancels the years, leaving a plain number; the divisor is one year because the factor is applied yearly, and dividing by a month would count months when the factor is not applied monthly. That number is `horizon_periods`, the toolkit's first quantity worked out from others:
 
 ```{literalinclude} ../models/web_service/stages/04-demand_horizon_exponent/model.yaml
 :language: yaml
@@ -229,7 +229,7 @@ The spreadsheet's arithmetic is not the problem. What a cell holding a bare numb
 
 ### Growing the demand to the horizon
 
-Growth compounds. Each year the factor multiplies the previous year's demand. When the factor is greater than one, each year's increase is larger than the previous year's.
+This model assumes growth compounds: each year the factor multiplies the previous year's demand. When the factor is greater than one, each year's increase is larger than the previous year's. Not every workload grows this way; [ch04](#peak-mean-and-growth) shows how to tell from your own history.
 
 % number-ok: an illustration of what a growth factor is, not a figure from the book's model
 If demand grows by 20% a year, the factor is 1.2, and each year's demand is the previous year's multiplied by 1.2.
