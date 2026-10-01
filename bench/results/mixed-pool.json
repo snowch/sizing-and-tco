@@ -9,8 +9,8 @@
     "old_purchase_is_sunk": "the old hosts' purchase is spent and appears in neither total; their energy, licences and support appear in keep's",
     "shared_futures": "keep and replace pin only decisions, so every sampled input is drawn once and reaches both. The runner checks the shared columns are identical before subtracting"
   },
-  "generated_at": "2026-09-30T19:28:36+00:00",
-  "git_revision": "3bfb2b4",
+  "generated_at": "2026-10-01T08:06:07+00:00",
+  "git_revision": "c2af8d1",
   "kind": "measurement",
   "name": "mixed-pool",
   "produced_by": {

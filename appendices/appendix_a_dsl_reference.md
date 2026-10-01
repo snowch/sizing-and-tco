@@ -55,7 +55,7 @@ can still go in the model. Convert it with an exchange rate: an input of its own
 By convention, the identifier is also the name of its folder under `models/`. Nothing checks that
 the two match. The nodes follow these keys, under `nodes:`.
 
-## The four node kinds
+## The node kinds
 
 ```{include} ../chapters/_generated/appendix-a-dsl-reference-kinds.md
 ```
@@ -82,14 +82,14 @@ Every node is a mapping under its name, and holds these keys.
 | `distribution` | `input` | one number, not randomised |
 | `range` | `input` | no slider |
 | `formula` | `derived` | the file does not load |
+| `shape`, `start`, `rate`, `over` | `grown` | the file does not load |
 | `result` | `measured` | the file does not load |
 | `of` | `ceiling` | the file does not load |
 | `limit` | `ceiling` | the file does not load |
 | `headroom` | `ceiling` | the build refuses it |
 | `because` | `ceiling` | the build refuses it |
 
-`kind` is one of `input`, `derived`, `measured`, or `ceiling`; `unit` must be known to the build or
-the file does not load (use `dimensionless` for a pure number). [Appendix D](#appendix-d-units)
+`kind` is one of `input`, `derived`, `grown`, `measured`, or `ceiling`; `unit` must be known to the build or the file does not load (use `dimensionless` for a pure number). [Appendix D](#appendix-d-units)
 lists the unit names. An input needs a `value`, `distribution`, or both; with neither the file loads
 but the build fails when evaluating scenarios.
 
@@ -150,6 +150,28 @@ walked, and only these functions survive the walk:
 Arithmetic is `+ - * / **` and unary minus. There is no name lookup other than other nodes, no
 attribute access, no calls to anything not in that dictionary. A model file cannot do anything, so
 running a stranger's model is reading their arithmetic rather than executing their code.
+
+### `grown` — a quantity grown over periods, in a declared shape
+
+A `grown` node grows a starting value over a count of periods, in a shape it names. The reader picks the shape by name rather than writing the formula. It has four keys: `start`, `rate`, `over`, each the name of another node, and `shape`.
+
+Two shapes govern how the rate applies. `compound` is where the rate is a factor applied once per period; `linear` is where the rate is an amount added once per period. Each shape needs its own kind of rate, and the build holds it to that. A compounding rate must be a factor with no unit. A linear rate must be in the starting value's unit. `over` must be a count with no unit: divide the horizon by one period in a node of its own, as the running example's `horizon_periods` does.
+
+A rate of the wrong kind is refused with a message naming the shape and the kind of rate it needs, and pointing to the other shape. `start`, `rate` and `over` take a node's name, not arithmetic: work a value out in a node of its own and name that.
+
+A `grown` node exists because the shape is a choice about the model's structure, and the model's futures vary the inputs, never the structure. Written as a word in the file, the shape is where a reviewer reads it and can argue with it.
+
+In every other respect a `grown` node is a `derived` node: the build fills in the shape's formula, checks its unit, and the interactive page and the graph show it as derived.
+
+Here both shapes grow from one starting rate:
+
+```{literalinclude} ../conformance/cases/edge/growth-shapes/model.yaml
+:language: yaml
+:start-at: compounded:
+:end-before: outputs:
+```
+
+This model is a case in the conformance suite, which holds any other implementation of these rules to the same answers and the same refusals.
 
 ### `measured` — a constant somebody measured
 

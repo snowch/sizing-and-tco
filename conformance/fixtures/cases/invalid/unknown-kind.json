@@ -8,7 +8,7 @@
  "load": {
   "code": "load.unknown-kind",
   "exception": "ModelError",
-  "message": "_build/conformance/unknown-kind/model.yaml: node 'cores' has kind 'constant'; expected one of input, derived, measured, ceiling",
+  "message": "_build/conformance/unknown-kind/model.yaml: node 'cores' has kind 'constant'; expected one of input, derived, grown, measured, ceiling",
   "node": "cores",
   "ok": false
  },

@@ -149,6 +149,33 @@ class Derived(Node):
         return expr.refs(self.formula)
 
 
+#: The shapes a `grown` node can declare, and the formula each one stands for. Written out so
+#: the shape is something a reader picks, not algebra they write: a factor applied once per
+#: period compounds; an amount added once per period is linear. Both take `over`, a count of
+#: periods with no unit, so the horizon is divided into periods once, in its own node.
+GROWTH_SHAPES = {
+    "compound": "{start} * {rate} ** {over}",
+    "linear": "{start} + {rate} * {over}",
+}
+
+
+@dataclass(frozen=True)
+class Grown(Derived):
+    """A quantity grown from a starting value over a count of periods, in a declared shape.
+
+    The shape is structure, and structure is the one thing a model's futures cannot vary, so it is
+    written where a reviewer reads it rather than left implicit in a formula. The node is a
+    derived node in every other respect: its formula is the shape's, filled in, and the unit check
+    holds each shape to its own rate. A compounding rate must be a factor with no unit; a linear
+    rate must be in the starting value's unit, or the addition does not check.
+    """
+
+    shape: str = ""
+    start: str = ""
+    rate: str = ""
+    over: str = ""
+
+
 @dataclass(frozen=True)
 class Measured(Node):
     result: str = ""
@@ -223,6 +250,7 @@ class Ceiling(Node):
 KINDS: dict[str, type[Node]] = {
     "input": Input,
     "derived": Derived,
+    "grown": Grown,
     "measured": Measured,
     "ceiling": Ceiling,
 }
@@ -432,6 +460,7 @@ MODEL_KEYS = (
 NODE_KEYS = {
     "input": ("decided", "provenance", "value", "distribution", "range"),
     "derived": ("formula",),
+    "grown": ("shape", "start", "rate", "over"),
     "measured": ("result",),
     "ceiling": ("of", "limit", "headroom", "because"),
 }
@@ -511,6 +540,29 @@ def _node_from(name: str, spec: dict, where: str, folder: Path | None = None) ->
         text = str(_require(spec, "formula", f"{where}: node {name!r}"))
         return Derived(
             **common, formula=expr.parse(text, where=f"{where}: node {name!r}"), formula_text=text
+        )
+
+    if kind == "grown":
+        at = f"{where}: node {name!r}"
+        shape = str(_require(spec, "shape", at))
+        if shape not in GROWTH_SHAPES:
+            raise ModelError(
+                f"{at} has shape {shape!r}; expected one of {', '.join(GROWTH_SHAPES)}"
+            )
+        parts = {
+            "start": str(_require(spec, "start", at)).strip(),
+            "rate": str(_require(spec, "rate", at)).strip(),
+            "over": str(_require(spec, "over", at)).strip(),
+        }
+        for key, value in parts.items():
+            if not value.isidentifier():
+                raise ModelError(
+                    f"{at}: {key} names a node, and {value!r} is not a node's name. Work the "
+                    "value out in a node of its own and name that."
+                )
+        text = GROWTH_SHAPES[shape].format(**parts)
+        return Grown(
+            **common, formula=expr.parse(text, where=at), formula_text=text, shape=shape, **parts
         )
 
     if kind == "measured":

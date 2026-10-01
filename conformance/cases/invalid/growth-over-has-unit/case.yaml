@@ -1,0 +1,4 @@
+about: >-
+  Growth over a length of time rather than a count of periods.
+expect:
+  - units.growth-over-not-a-count

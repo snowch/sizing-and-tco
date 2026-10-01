@@ -171,6 +171,16 @@ PROBLEMS: tuple[tuple[str, str, str], ...] = (
         r"node '(?P<node>[^']+)'(?P<part> limit| headroom)? (?:adds|subtracts|takes the (?:min|max) of) quantities in ",
     ),
     (
+        "units.growth-rate-kind",
+        "1",
+        r"node '(?P<node>[^']+)' (?:compounds|grows linearly), so its rate ",
+    ),
+    (
+        "units.growth-over-not-a-count",
+        "1",
+        r"node '(?P<node>[^']+)' grows over '[^']*', which is in ",
+    ),
+    (
         "units.rounds-in-wrong-unit",
         "1",
         r"node '(?P<node>[^']+)'(?P<part> limit| headroom)? rounds a number in ",
@@ -296,6 +306,8 @@ REFUSALS: tuple[tuple[str, str], ...] = (
     ("load.missing-field", r"missing required field '(?P<field>[^']+)'$"),
     ("load.node-not-a-mapping", r"node '(?P<node>[^']+)' is not a mapping$"),
     ("load.unknown-kind", r"node '(?P<node>[^']+)' has kind "),
+    ("load.unknown-shape", r"node '(?P<node>[^']+)' has shape "),
+    ("load.grown-not-a-name", r": (?:start|rate|over) names a node, and '[^']*' is not a node's name"),
     ("load.unknown-unit", r"node '(?P<node>[^']+)' declares an unknown unit — unknown unit "),
     ("load.formula-syntax", r"does not parse \("),
     ("load.formula-function", r"calls '[^']*'\. A formula may call only"),

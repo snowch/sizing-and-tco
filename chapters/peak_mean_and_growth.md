@@ -182,6 +182,24 @@ only one future in ten falls beyond. Stated that way, the band is a sentence you
 argued with and a bare number cannot. It is not a measurement, and the model does not pretend
 otherwise: the input's provenance is `assumption`.
 
+### An amount a year, or a share a year
+
+Before you choose a band for the growth rate, choose what kind of growth it is. One question decides it: does demand grow by about the same amount each year, or by about the same share of itself?
+
+The same share is compounding: each year multiplies the grown demand. This is what the book's model does. The annual growth factor is raised to the power of the count of years. [ch02](#what-a-workload-is) showed how that works.
+
+The same amount is linear growth: a fixed number of customers or sites added each year, or a contract that adds a set volume. The count of years then multiplies the yearly rise instead of being an exponent.
+
+The two need different inputs, not different values of one input. A compounding rate is a factor with no unit. A linear rate is an amount each year, in the demand's own unit.
+
+How to tell from your own history: if the yearly increases have stayed about the same size, growth is an amount. If they have grown along with the demand, growth is a share.
+
+Two refinements work on either shape: a step, when a known event such as a launch or a large customer adds demand at once; and a ceiling, when a market fills and growth slows as demand nears it.
+
+The shape is a choice about the model's structure, not a number. No band on the growth rate covers it, because the model's futures vary the inputs and never the formula.
+
+In a model file, a `grown` node declares the shape by name: `compound` or `linear`. The build checks that its rate is the right kind for that shape, and [Appendix A](#appendix-a-dsl-reference) lists its keys.
+
 ### What a demand figure needs before you can size from it
 
 **A single peak.** "We do forty thousand requests a second at peak" is a rate with no duration.
@@ -219,6 +237,8 @@ that.
 its daily profile. A workload that grows by adding a different kind of user grows in a different
 shape, and the busy hour moves.
 
+**Which shape growth takes.** The model assumes compounding: each year multiplies the demand. A workload that grows by the same amount each year, in steps, or towards a ceiling needs a different formula, and no band on the growth rate covers it.
+
 ## Key takeaways
 
 :::{div}
@@ -242,7 +262,7 @@ shape, and the busy hour moves.
 
 ## Problems
 
-Three, in `tests/peak_mean_and_growth/`. The first two have tests. The third does not, and says why.
+Four, in `tests/peak_mean_and_growth/`. The first two have tests. The last two do not, and say why.
 
 **4.1 — The busy hour.**
 Given a day's shape as relative weights and a daily total, return the rate during the busiest
@@ -279,6 +299,12 @@ estimate nobody will defend.
 A good answer names the mechanism, not just the trend, and its band is wide enough to be
 uncomfortable. If the band is narrow and comfortable, you have described the last three years
 rather than the next three.
+
+**4.4 — An amount or a share?** No test. The history is yours, and nothing here has seen it.
+
+Take the demand history of a system you run, the longer the better. Work out each year's increase. Say whether the increases have stayed about the same size or grown with the demand, and so which shape the model should use.
+
+A good answer names the mechanism behind the growth, not only the pattern. It is falsified if the increases are growing while you chose an amount, or flat while you chose a share; or if the period you looked at is too short to tell the two apart.
 
 ## Where to go next
 

@@ -1,0 +1,4 @@
+about: >-
+  A growth shape the language does not have.
+expect:
+  - load.unknown-shape

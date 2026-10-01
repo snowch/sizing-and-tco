@@ -1,0 +1,45 @@
+dsl: 2
+model: growth_shapes
+title: Growth shapes
+currency: USD
+description: Both growth shapes, from one starting rate over one count of periods.
+nodes:
+  start_rate:
+    kind: input
+    decided: outside
+    unit: request/second
+    value: 100
+    provenance: {kind: assumption, source: a test value}
+  factor:
+    kind: input
+    decided: outside
+    unit: dimensionless
+    value: 1.3
+    provenance: {kind: assumption, source: a test value}
+  rise:
+    kind: input
+    decided: outside
+    unit: request/second
+    value: 30
+    provenance: {kind: assumption, source: a test value}
+  periods:
+    kind: input
+    decided: definition
+    unit: year
+    value: 5
+    provenance: {kind: fact, source: definition}
+  compounded:
+    kind: grown
+    unit: request/second
+    shape: compound
+    start: start_rate
+    rate: factor
+    over: periods
+  added:
+    kind: grown
+    unit: request/second
+    shape: linear
+    start: start_rate
+    rate: rise
+    over: periods
+outputs: [compounded, added]

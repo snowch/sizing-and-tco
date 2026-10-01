@@ -1,0 +1,4 @@
+about: >-
+  Both growth shapes: compounding by a factor with no unit, and linear by an amount in the starting value's unit.
+expect:
+  - valid

@@ -1,0 +1,4 @@
+about: >-
+  A linear node whose rate is a factor with no unit.
+expect:
+  - units.growth-rate-kind

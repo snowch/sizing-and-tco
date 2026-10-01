@@ -2767,8 +2767,10 @@ def growth_explorer(name: str) -> str:
     the same way the script works them out, so a page read with no script still says something
     true.
     """
+    from bench.outline import label_of
     from bench.stamp import ROOT
 
+    ch04 = label_of("peak_mean_and_growth")
     nodes = load_result(name)["summary"]["nodes"]
     growth = nodes["annual_growth"]["point"]
     horizon = int(round(nodes["horizon"]["point"]))
@@ -2813,16 +2815,14 @@ def growth_explorer(name: str) -> str:
         'year from today to the horizon, with one chip for each application of the factor">'
         "</svg>",
         '<p class="ge-caption" data-show="caption"></p>',
-        '<details class="ge-linear"><summary>Why isn\'t this a straight line?</summary>',
-        "<p>Because each year multiplies the grown number, not the starting one. Adding the "
-        "first year's rise every year instead would reach the dashed marks on the chart:</p>",
+        '<details class="ge-linear"><summary>Compounding is an assumption</summary>',
+        "<p>The model assumes demand compounds: each year multiplies the grown demand. Some workloads grow by the same amount each year instead, and would trace the dashed marks on the chart rather than the curve.</p>",
         '<div class="ge-lines">',
         '<div><span class="tag">Adding</span><span class="line" data-show="adding"></span></div>',
         '<div><span class="tag">Compounding</span><span class="line" data-show="compounding">'
         "</span></div>",
         "</div>",
-        "<p>Adding needs only a multiplication by the count. Compounding is the factor times "
-        "itself once per year, and an exponent is how you write that.</p>",
+        f'<p>Adding uses the count of years as a multiplier; compounding uses it as an exponent. Either way, the horizon has to become a count. <a href="peak-mean-and-growth.html">{ch04}</a> says how to tell which your workload does.</p>',
         "</details>",
         "<script>",
         script,

@@ -52,6 +52,11 @@
   "invalid/formula-keywords",
   "invalid/formula-min-of-one",
   "invalid/formula-syntax",
+  "invalid/growth-compound-rate-has-unit",
+  "invalid/growth-linear-rate-no-unit",
+  "invalid/growth-over-has-unit",
+  "invalid/growth-rate-not-a-name",
+  "invalid/growth-unknown-shape",
   "invalid/input-no-value",
   "invalid/measured-missing-result",
   "invalid/measured-no-result-name",
@@ -120,6 +125,7 @@
   "edge/currency-euro",
   "edge/currency-rate",
   "edge/functions-at-the-edges",
+  "edge/growth-shapes",
   "edge/limit-divides-by-zero",
   "edge/max-picks-its-unit",
   "edge/max-with-zero",
@@ -215,6 +221,14 @@
    },
    {
     "code": "units.mixed-operands",
+    "rule": "1"
+   },
+   {
+    "code": "units.growth-rate-kind",
+    "rule": "1"
+   },
+   {
+    "code": "units.growth-over-not-a-count",
     "rule": "1"
    },
    {
@@ -348,6 +362,8 @@
    "load.missing-field",
    "load.node-not-a-mapping",
    "load.unknown-kind",
+   "load.unknown-shape",
+   "load.grown-not-a-name",
    "load.unknown-unit",
    "load.formula-syntax",
    "load.formula-function",

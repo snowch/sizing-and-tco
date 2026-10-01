@@ -1,0 +1,4 @@
+about: >-
+  A growth rate written as arithmetic rather than a node's name.
+expect:
+  - load.grown-not-a-name

@@ -364,3 +364,26 @@ def test_a_reversed_uniform_is_refused():
 def test_a_measured_unit_spelt_another_way_is_the_same_unit():
     assert verify_models._same_unit("terabyte", "TB")
     assert not verify_models._same_unit("TB", "TiB")
+
+
+def test_a_grown_node_declares_its_shape_and_is_held_to_it():
+    """`kind: grown` fills in its shape's formula, and refuses a rate of the wrong kind in the
+    shape's own words. The conformance cases hold the same rules for other implementations."""
+    from sizing.dsl import GROWTH_SHAPES, load_model
+    from sizing.evaluate import check_units, point
+
+    cases = ROOT / "conformance" / "cases"
+    model = load_model(cases / "edge" / "growth-shapes" / "model.yaml")
+    values = point(model)
+    start, factor, rise, n = (values[k] for k in ("start_rate", "factor", "rise", "periods"))
+    assert values["compounded"] == pytest.approx(start * factor**n)
+    assert values["added"] == pytest.approx(start + rise * n)
+    assert set(GROWTH_SHAPES) == {"compound", "linear"}
+    assert not check_units(model)[0]
+    for name, words in (
+        ("growth-compound-rate-has-unit", "must be a factor with no unit"),
+        ("growth-linear-rate-no-unit", "is an amount added each period"),
+        ("growth-over-has-unit", "is a count of periods, with no unit"),
+    ):
+        problems = check_units(load_model(cases / "invalid" / name / "model.yaml"))[0]
+        assert any(words in p for p in problems), (name, problems)

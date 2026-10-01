@@ -198,4 +198,4 @@ def test_the_dsl_has_no_node_kind_for_this():
     """
     from sizing.dsl import KINDS
 
-    assert set(KINDS) == {"input", "derived", "measured", "ceiling"}, sorted(KINDS)
+    assert set(KINDS) == {"input", "derived", "grown", "measured", "ceiling"}, sorted(KINDS)

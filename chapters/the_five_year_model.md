@@ -101,13 +101,13 @@ own inputs.
 
 ### The gap in this book's own toolkit
 
-The model file format has four node kinds. None of them is *"a distribution that came from
+The model file format has five node kinds. None of them is *"a distribution that came from
 another model"*.
 
 Problem 18.1 walks you into the gap. The downstream model cannot be handed the upstream model's
 draws, because no node in a model file can hold them. So the join is arithmetic on two arrays,
 outside `sizing.evaluate`: the terabytes one model stores and the price the other computes,
-multiplied draw by draw. A test asserts the gap is still there. Adding a fifth node kind fails
+multiplied draw by draw. A test asserts the gap is still there. Adding a node kind for it fails
 that test, and the problem gets rewritten.
 
 Whether the format *should* have one is an open question. The case for: it would make the join

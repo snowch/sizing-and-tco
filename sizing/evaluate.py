@@ -38,6 +38,7 @@ from sizing import mc
 from sizing.dsl import (  # noqa: F401
     Ceiling,
     Derived,
+    Grown,
     Input,
     Measured,
     Model,
@@ -218,6 +219,10 @@ def check_units(model: Model) -> tuple[list[str], dict[str, float]]:
         quantities[name] = UNITS.Quantity(magnitudes[name], declared)
         if not isinstance(node, Derived | Ceiling):
             continue
+        if isinstance(node, Grown) and (problem := _wrong_kind_of_rate(model, name, node)):
+            # Said in the shape's own terms, ahead of the algebra the formula would fail with.
+            problems.append(problem)
+            continue
 
         parts = [
             (
@@ -260,6 +265,39 @@ def check_units(model: Model) -> tuple[list[str], dict[str, float]]:
                 problems.append(f"{model.name}: node {name!r}{suffix} {rounding}")
 
     return problems, factors
+
+
+def _wrong_kind_of_rate(model: Model, name: str, node: Grown) -> str | None:
+    """A grown node whose rate is the wrong kind of quantity for its shape, said plainly.
+
+    Each shape needs its own kind of rate: compounding multiplies by a factor, which has no unit;
+    linear growth adds an amount, which has the starting value's unit. A rate of the wrong kind
+    still fails the formula's check, but as algebra about powers and conversions, and the fix the
+    reader needs is a different input, not a different unit.
+    """
+    over = parse_unit(model.nodes[node.over].unit)
+    if over.dimensionality:
+        return (
+            f"{model.name}: node {name!r} grows over {node.over!r}, which is in "
+            f"{model.nodes[node.over].unit!r}. `over` is a count of periods, with no unit: "
+            "divide the horizon by one period in a node of its own."
+        )
+    rate = parse_unit(model.nodes[node.rate].unit)
+    start = parse_unit(model.nodes[node.start].unit)
+    if node.shape == "compound" and rate.dimensionality:
+        return (
+            f"{model.name}: node {name!r} compounds, so its rate {node.rate!r} must be a factor "
+            f"with no unit; it is in {model.nodes[node.rate].unit!r}. An amount added each "
+            "period is the `linear` shape."
+        )
+    if node.shape == "linear" and rate.dimensionality != start.dimensionality:
+        return (
+            f"{model.name}: node {name!r} grows linearly, so its rate {node.rate!r} is an amount "
+            f"added each period, in the unit of {node.start!r} ({model.nodes[node.start].unit!r}); "
+            f"it is in {model.nodes[node.rate].unit!r}. A factor with no unit is the `compound` "
+            "shape."
+        )
+    return None
 
 
 def _unit_name(walked: Any) -> str:
