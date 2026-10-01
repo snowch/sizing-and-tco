@@ -199,13 +199,16 @@ slider leaves the others alone, because no node is worked out from another yet.
 
 Growth compounds. Each year the factor multiplies the previous year's demand. When the factor is greater than one, each year's increase is larger than the previous year's.
 
+% number-ok: an illustration of what a growth factor is, not a figure from the book's model
+If demand grows by 20% a year, the factor is 1.2, and each year's demand is the previous year's multiplied by 1.2. A quantity that grows like this is written as a `grown` node in the model file. What `grown` means in plain words: take the starting value and multiply it by the growth factor once for each year up to the horizon. The chapter shows how a `grown` node works and writes two of them once the file has the pieces they need.
+
 The explorer below starts from a round demand, so the arithmetic is easy to follow. Drag the horizon and watch the chain under the sliders.
 
 ::::{div}
 :class: explorer what-a-workload-is-growth
 ::::
 
-The horizon slider sets a length of time. The chain turns it into a count: the number of chips on the chart, one for each time the factor is applied, and that count is the exponent. The exponent is not the horizon in years; it is how many times the annual growth factor is applied.
+The explorer has a chip on the chart for each year of the horizon; each chip is one multiplication by the growth factor. Writing the factor out once per year gets long as the horizon grows. Mathematics has a short form for multiplying the same number repeatedly: an exponent, shown as the small raised number in the chain under the sliders. It tells how many times the factor is applied: the number of chips. The horizon slider sets a length of time, but the exponent is not that length; it is a count of how many times the factor is multiplied.
 
 **An exponent is a count, not a length of time, so it has no unit.**
 
@@ -220,7 +223,7 @@ The same horizon can be written in different units. The toolkit keeps the unit w
 
 The spreadsheet's arithmetic is not the problem; raised to a power, a factor compounds correctly there too. What a cell holding a bare number cannot say is whether it means months, years or something else. Unless the unit is stored somewhere else, every formula that reads the cell carries a hidden assumption about it.
 
-The model file builds the explorer's chain in two steps, over the next two sections. First, a `horizon_periods` node computes the count from `horizon` and `one_year`. Second, two `grown` nodes, `peak_request_rate` and `stored_data`, multiply the day-one values by `annual_growth` once for each of those periods. Every `grown` node names the count it grows over, so the count has to exist in the file before you can build a node that uses it.
+To grow a quantity by compounding, the model needs two things: how many years and how much it grows each year. The file already has the second, `annual_growth`. The first, `horizon_periods`, comes next in the file, and the `grown` nodes that bring them together come after. A `grown` node names the count it grows over, so that count must exist in the file first.
 
 ### The first derived quantity
 
@@ -255,7 +258,7 @@ to the horizon. That takes two more quantities, each grown from its day-one valu
 :end-before: outputs:
 ```
 
-`peak_request_rate` is the flow at the horizon, in requests per second; `stored_data` is the stock at the horizon, in terabytes. Both are `grown` nodes. Each names where it starts, the rate it grows at, the count of periods it grows over, and its shape. `shape: compound` is the shape the explorer above showed: the start multiplied by the growth factor once for each year, which the toolkit writes as `annual_growth ** horizon_periods`. In a formula, `**` means raised to the power of. The shape is written as a word so you can see it and argue with it. [ch04](#peak-mean-and-growth) says when the other shape, `linear`, fits instead.
+`peak_request_rate` is the flow at the horizon, in requests per second; `stored_data` is the stock at the horizon, in terabytes. These are the two `grown` nodes the chapter promised: each takes its starting value and multiplies it by the growth factor once for each year. Each key names a piece you have already met: `start` is the day-one value, `rate` is how much it grows each year, `over` is how many years, and `shape: compound` says the growth factor multiplies rather than adds. From these, the toolkit computes the start times `annual_growth ** horizon_periods` (where `**` means raised to the power of): the same chain the explorer drew, with `horizon_periods` as the exponent. The shape is written as a word so you can see it and argue with it. [ch04](#peak-mean-and-growth) says when another shape works better.
 
 You now have eight quantities: three outside your control (busy-hour
 rate, data held, growth factor), one you choose (horizon), one true by definition (`one_year`), and
