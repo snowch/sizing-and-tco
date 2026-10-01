@@ -64,7 +64,9 @@ nodes:
         cannot be zero or less. One future in ten grows by less
         than 12% a year, and one in ten by more than 60%; outside
         that range you would be surprised. One factor for requests
-        and for records, because users drive both.
+        and for records, because users drive both. It is a share
+        a year, not an amount, which is the model's assumption
+        about how this service grows.
     range: [1.0, 2.0]
   horizon:
     kind: input
@@ -94,15 +96,21 @@ nodes:
     unit: dimensionless
     formula: horizon / one_year
   peak_request_rate:
-    kind: derived
+    kind: grown
     unit: request/second
     label: peak request rate at horizon
-    formula: peak_request_rate_t0 * annual_growth ** horizon_periods
+    shape: compound
+    start: peak_request_rate_t0
+    rate: annual_growth
+    over: horizon_periods
   stored_data:
-    kind: derived
+    kind: grown
     unit: TB
     label: records held at horizon
-    formula: stored_data_t0 * annual_growth ** horizon_periods
+    shape: compound
+    start: stored_data_t0
+    rate: annual_growth
+    over: horizon_periods
   ram_per_host:
     kind: input
     decided: you

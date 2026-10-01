@@ -2,7 +2,7 @@
 
 | | Input | Provenance | Source |
 |---|---|---|---|
-| ○ | annual growth factor<br>`annual_growth` | assumption | ch04 — lognormal because growth compounds and the factor cannot be zero or less. One future in ten grows by less than 12% a year, and one in ten by more than 60%; outside that range you would be surprised. One factor for requests and for records, because users drive both. |
+| ○ | annual growth factor<br>`annual_growth` | assumption | ch04 — lognormal because growth compounds and the factor cannot be zero or less. One future in ten grows by less than 12% a year, and one in ten by more than 60%; outside that range you would be surprised. One factor for requests and for records, because users drive both. It is a share a year, not an amount, which is the model's assumption about how this service grows. |
 | ○ | cache margin<br>`cache_margin` | assumption | ch08 — how much of the fleet's memory is kept free of the working set, for its own daily swing and for the process heaps. Declared once, the ceiling on the working set checks against it (ch08), and from ch10 so does the chain that sizes the fleet for memory, so the two cannot drift apart. |
 | ○ | contention<br>`contention` | assumption | ch07 — an assumption: it has not been fitted for this service; a fit from throughput measured at three fleet sizes, one a single host, would replace it. Triangular, because a fit gives a central value and a range rather than a shape. Its maximum is the end to distrust: a serial fraction can always be worse than the one you measured. |
 | ◐ | cores per host<br>`cores_per_host` | vendor claim | spec sheet: physical cores. A hyperthread is not a core, and a sheet that counts threads doubles this number without doubling the work a host does |

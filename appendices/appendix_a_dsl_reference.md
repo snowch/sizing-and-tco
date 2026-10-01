@@ -134,8 +134,8 @@ A formula over other nodes, and a unit that has to agree with what the formula p
 
 ```{literalinclude} ../models/web_service/model.yaml
 :language: yaml
-:start-at: peak_request_rate:
-:end-before: stored_data:
+:start-at: horizon_periods:
+:end-before: peak_request_rate:
 ```
 
 The formula language is deliberately not Python. It is parsed with Python's own parser and then

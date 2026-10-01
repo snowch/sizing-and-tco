@@ -9,8 +9,8 @@
     "old_purchase_is_sunk": "the old hosts' purchase is spent and appears in neither total; their energy, licences and support appear in keep's",
     "shared_futures": "keep and replace pin only decisions, so every sampled input is drawn once and reaches both. The runner checks the shared columns are identical before subtracting"
   },
-  "generated_at": "2026-10-01T08:06:07+00:00",
-  "git_revision": "c2af8d1",
+  "generated_at": "2026-10-01T11:49:51+00:00",
+  "git_revision": "41cac00",
   "kind": "measurement",
   "name": "mixed-pool",
   "produced_by": {
@@ -23,7 +23,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39",

@@ -2,7 +2,7 @@
 
 | | Input | Provenance | Source |
 |---|---|---|---|
-| ○ | annual growth factor<br>`annual_growth` | assumption | Not measured. The service owners estimate how fast demand grows each year. One number cannot say how sure they are of it, so ch04 replaces it with a spread. |
+| ○ | annual growth factor<br>`annual_growth` | assumption | Not measured. The service owners estimate the factor demand is multiplied by each year. It is a share of the demand, not a fixed amount: the model assumes this service grows by a share of itself. One number cannot say how sure they are of it, so ch04 replaces it with a spread. |
 | ○ | horizon<br>`horizon` | assumption | the refresh cycle this fleet is bought against |
 | ● | one year<br>`one_year` | fact | definition |
 | ○ | os reserve<br>`os_reserve` | assumption | The share of memory the kernel, the agents and the page cache floor keep before the service sees any. One number for now: it differs from host to host and has not been measured on these hosts, so ch04 replaces it with a spread. |

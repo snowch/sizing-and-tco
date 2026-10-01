@@ -13,8 +13,8 @@
     "one_model": "ch22's bottom-up row is as complete as the web service model, and no more (ch20)",
     "pinned_from_ch22": "the proposed spend per host-year and the move are the challenger's quote in ch22, and the runner refuses to stamp if they drift"
   },
-  "generated_at": "2026-10-01T08:06:10+00:00",
-  "git_revision": "c2af8d1",
+  "generated_at": "2026-10-01T11:49:55+00:00",
+  "git_revision": "41cac00",
   "kind": "measurement",
   "name": "seller",
   "produced_by": {
@@ -27,7 +27,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39",

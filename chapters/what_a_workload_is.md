@@ -245,19 +245,15 @@ see the formula in Details.
 ### Growing the demand to the horizon
 
 Now take the two quantities you started with, the rate and the stock at day one, and grow them
-to the horizon. That takes two more derived quantities:
+to the horizon. That takes two more quantities, each grown from its day-one value:
 
 ```{literalinclude} ../models/web_service/stages/05-demand/model.yaml
 :language: yaml
 :start-at:   peak_request_rate:
-:end-at:     formula: stored_data_t0 * annual_growth ** horizon_periods
+:end-before: outputs:
 ```
 
-`peak_request_rate` is the flow at the horizon, in requests per second; `stored_data` is the stock
-at the horizon, in terabytes. Both multiply the day-one value by the growth factor raised to
-`horizon_periods`, the number of years from day one to the horizon. In a formula, `**` means raised
-to the power of. `annual_growth ** horizon_periods` is the growth factor multiplied by itself once
-for each year to the horizon.
+`peak_request_rate` is the flow at the horizon, in requests per second; `stored_data` is the stock at the horizon, in terabytes. Both are `grown` nodes. Each names where it starts, the rate it grows at, the count of periods it grows over, and its shape. `shape: compound` is the shape the explorer above showed: the start multiplied by the growth factor once for each year, which the toolkit writes as `annual_growth ** horizon_periods`. In a formula, `**` means raised to the power of. The shape is written as a word so you can see it and argue with it. [ch04](#peak-mean-and-growth) says when the other shape, `linear`, fits instead.
 
 You now have eight quantities: three outside your control (busy-hour
 rate, data held, growth factor), one you choose (horizon), one true by definition (`one_year`), and

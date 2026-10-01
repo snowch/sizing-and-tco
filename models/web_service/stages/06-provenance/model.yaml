@@ -53,9 +53,11 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        Not measured. The service owners estimate how fast demand
-        grows each year. One number cannot say how sure they are
-        of it, so ch04 replaces it with a spread.
+        Not measured. The service owners estimate the factor demand
+        is multiplied by each year. It is a share of the demand,
+        not a fixed amount: the model assumes this service grows
+        by a share of itself. One number cannot say how sure they
+        are of it, so ch04 replaces it with a spread.
     range: [1.0, 2.0]
   horizon:
     kind: input
@@ -85,15 +87,21 @@ nodes:
     unit: dimensionless
     formula: horizon / one_year
   peak_request_rate:
-    kind: derived
+    kind: grown
     unit: request/second
     label: peak request rate at horizon
-    formula: peak_request_rate_t0 * annual_growth ** horizon_periods
+    shape: compound
+    start: peak_request_rate_t0
+    rate: annual_growth
+    over: horizon_periods
   stored_data:
-    kind: derived
+    kind: grown
     unit: TB
     label: records held at horizon
-    formula: stored_data_t0 * annual_growth ** horizon_periods
+    shape: compound
+    start: stored_data_t0
+    rate: annual_growth
+    over: horizon_periods
   ram_per_host:
     kind: input
     decided: you

@@ -95,7 +95,7 @@ become nodes to define. From `models/web_service/model.yaml`:
 |---|---|---|
 | Needed ÷ one host's share below a margin, rounded up | `ceil(busy_cores / (cores_per_host * (1 - queueing_margin)))` | ch09, ch11 |
 | The resource that binds | `max(hosts_for_requests, hosts_for_memory, hosts_for_storage)` | ch10 |
-| Today's figure grown to the horizon | `x_t0 * annual_growth ** horizon_periods` | ch02, ch04 |
+| Today's figure grown to the horizon | a `grown` node, `shape: compound` (the toolkit fills in `x_t0 * annual_growth ** horizon_periods`) | ch02, ch04 |
 | A length of time as a number of years | `horizon / one_year` | ch02 |
 | Work arriving × what each piece costs | `peak_request_rate * service_demand` | ch05, ch09 |
 | Held × copies ÷ compression | `stored_data * replication_factor / record_compression` | ch09 |

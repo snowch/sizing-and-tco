@@ -1,5 +1,5 @@
 {
-  "code_fingerprint": "fe5857e04537fc56",
+  "code_fingerprint": "41213ff3f8ba2dc4",
   "code_sources": [
     "bench/run_models.py",
     "models/web_service/stages/15-sizing/model.yaml",
@@ -12,8 +12,8 @@
     "unmeasured": "figures downstream of a constant nobody has measured are absent rather than estimated",
     "what_an_interval_here_is": "a statement about this model's declared inputs, and nothing about whether the model has the right structure (ch14, ch19)"
   },
-  "generated_at": "2026-10-01T08:04:40+00:00",
-  "git_revision": "c2af8d1",
+  "generated_at": "2026-10-01T11:48:10+00:00",
+  "git_revision": "41cac00",
   "kind": "model",
   "name": "web_service_sizing-reference",
   "produced_by": {
@@ -28,7 +28,7 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
     "kind": "other",
     "numpy": "2.4.6",
     "os": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39",
@@ -100,7 +100,7 @@
       "waiting_time": 1.0,
       "working_set": 1.0
     },
-    "generated_at": "2026-10-01T08:04:40+00:00",
+    "generated_at": "2026-10-01T11:48:09+00:00",
     "model": "web_service_sizing",
     "nodes": {
       "achievable_throughput": {
@@ -494,7 +494,7 @@
         "point": 1.338656042454521,
         "provenance": {
           "kind": "assumption",
-          "source": "ch04 \u2014 lognormal because growth compounds and the factor cannot be zero or less. One future in ten grows by less than 12% a year, and one in ten by more than 60%; outside that range you would be surprised. One factor for requests and for records, because users drive both."
+          "source": "ch04 \u2014 lognormal because growth compounds and the factor cannot be zero or less. One future in ten grows by less than 12% a year, and one in ten by more than 60%; outside that range you would be surprised. One factor for requests and for records, because users drive both. It is a share a year, not an amount, which is the model's assumption about how this service grows."
         },
         "row": 8,
         "slider": {

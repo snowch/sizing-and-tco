@@ -53,9 +53,11 @@ nodes:
     provenance:
       kind: assumption
       source: >-
-        Not measured. The service owners estimate how fast demand
-        grows each year. One number cannot say how sure they are
-        of it, so ch04 replaces it with a spread.
+        Not measured. The service owners estimate the factor demand
+        is multiplied by each year. It is a share of the demand,
+        not a fixed amount: the model assumes this service grows
+        by a share of itself. One number cannot say how sure they
+        are of it, so ch04 replaces it with a spread.
     range: [1.0, 2.0]
   horizon:
     kind: input
