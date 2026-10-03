@@ -148,7 +148,7 @@ in the Outputs list updates; the other node's row is greyed out because it does 
 connect these nodes yet. Once you add arithmetic later in this chapter, dragging one input will
 move others.
 
-Look at the two nodes quoted above. Five lines in each matter most: `kind`, `decided`, `unit`,
+Look at the two nodes quoted above. Each line names a key, the word before the colon, and gives its value. Five keys in each node matter most: `kind`, `decided`, `unit`,
 `value` and `provenance`. `kind` says what sort of node it is: `input` is a number the model is
 given. `decided` says who settles the number—`outside` for your users or the world, `you` for your
 choice, `definition` for things true whoever asks; both nodes here are `outside`. `unit` lets the
@@ -168,11 +168,11 @@ optional and nobody checks it, but here the build refuses an input without a `de
 `provenance` source. You can read the source in the viewer's Details panel. A number without
 provenance is a rumour.
 
-Three lines are optional: `label`, `note` and `range`. `label` reads better in a table than
+Three keys are optional: `label`, `note` and `range`. `label` reads better in a table than
 `stored_data_t0` does. `note` answers what a reader of the file would otherwise have to ask you; the
 note on `stored_data_t0` explains why it stays a single number when the busy-hour figure will not.
 `range` sets how far the slider can drag the value. [Appendix A](#appendix-a-dsl-reference) lists
-every line a node can have.
+every key a node can have.
 
 ### Adding growth and time
 
@@ -213,7 +213,7 @@ The first derived node.
 ```
 
 **Hollow means derived.** `horizon_periods` is drawn as an outline because the toolkit works it out
-from the formula `horizon / one_year`. The `kind: derived` line says its value is not stated, only
+from the formula `horizon / one_year`. The `kind: derived` key says its value is not stated, only
 computed. The toolkit checked that the formula's units give the unit the node declares,
 `dimensionless`. Drag the horizon slider and `horizon_periods` changes with it. Click the node to
 see the formula in Details.
@@ -234,17 +234,17 @@ This model assumes growth compounds: each year the factor multiplies the previou
 % number-ok: an illustration of what a growth factor is, not a figure from the book's model
 If demand grows by 20% a year, the factor is 1.2, and each year's demand is the previous year's multiplied by 1.2.
 
-The calculator below, *Growth, one year at a time*, starts from a round demand, so the arithmetic is easy to follow. Drag the horizon and watch the chain under the sliders.
+The calculator below, *Growth, one year at a time*, starts from a round demand, so the arithmetic is easy to follow. Drag the horizon and watch the row of boxes under the sliders, which works from the horizon to the future demand one step at a time.
 
 ::::{div}
 :class: explorer what-a-workload-is-growth
 ::::
 
-On the calculator's chart, each chip is one multiplication by the growth factor. There is one chip for each year of the horizon, so the number of chips is `horizon_periods`. Writing the factor out once per year gets long. Mathematics has a short form for repeating multiplication: an exponent, the small raised number in the chain. That number tells how many times the factor is applied, and it is `horizon_periods`. The label above the raised number writes the same thing in code, with `**`, which means raised to the power of.
+On the calculator's chart, each chip is one multiplication by the growth factor. There is one chip for each year of the horizon, so the number of chips is `horizon_periods`. Writing the factor out once per year gets long. Mathematics has a short form for repeating multiplication: an exponent, the small raised number in that row of boxes. That number tells how many times the factor is applied, and it is `horizon_periods`. The label above the raised number writes the same thing in code, with `**`, which means raised to the power of.
 
 **An exponent is a count, not a length of time, so it has no unit.**
 
-A `grown` node is not a new idea: it is a quantity grown from a starting value over the horizon, in a shape the node names. The two in this model name `compound`, the shape the calculator drew: each takes its starting value and multiplies it by the growth factor once for each year of the horizon. The demand model has two quantities to grow, from their day-one values to the horizon:
+A `grown` node is not a new idea: it grows a quantity from a starting value over the horizon. Its shape, which you choose when you define the node, determines how it grows: the pattern the growth follows over the years. The toolkit provides three ready-made shapes, each a formula it fills in so you do not write it: `compound` multiplies by the growth factor each year, `linear` adds the same amount each year, and `levelling` grows like `compound` at first before slowing as it nears a ceiling it never passes. The two nodes in this model use `compound`, the pattern the calculator drew: each multiplies its starting value by the growth factor once per year. The demand model has two quantities to grow, the busy-hour request rate and the data held, each from its day-one value to the horizon:
 
 ```{literalinclude} ../models/web_service/stages/05-demand/model.yaml
 :language: yaml
@@ -252,7 +252,7 @@ A `grown` node is not a new idea: it is a quantity grown from a starting value o
 :end-before: outputs:
 ```
 
-`peak_request_rate` is the request flow at the horizon, in requests per second; `stored_data` is the data held at the horizon, in terabytes. Each key is a piece from the calculator: `start` is the day-one value, `rate` is the growth factor, `over` is the count of years, and `shape: compound` says the factor multiplies each year. From these, the toolkit works out the start times `annual_growth ** horizon_periods`, the exponent from the chain. The shape is written as a word so you can see it and argue with it. [ch04](#peak-mean-and-growth) says when another shape works better.
+`peak_request_rate` is the request flow at the horizon, in requests per second; `stored_data` is the data held at the horizon, in terabytes. Each key is a piece from the calculator: `start` is the day-one value, `rate` is the growth factor, `over` is the count of years, and `shape: compound` says the factor multiplies each year. From these, the toolkit works out the start times `annual_growth ** horizon_periods`, the exponent from the calculator's row of boxes. The shape is written as a word so you can see it and argue with it. [ch04](#peak-mean-and-growth) says when another shape works better.
 
 You now have eight quantities: three outside your control (busy-hour
 rate, data held, growth factor), one you choose (horizon), one true by definition (`one_year`), and
@@ -286,14 +286,14 @@ users send and how much data they create. Separate them first, in any model, inc
 ```{include} _generated/what-a-workload-is-service.md
 ```
 
-The table groups the inputs as the file does, on each input's `decided:` line. A year is true by
+The table groups the inputs as the file does, by each input's `decided` key. A year is true by
 definition because it is a year whoever asks. Each input also carries a second line: `provenance`,
 which says how the value is known. The Claim column's symbol comes from this line: ● marks a fact, ◐
 marks a vendor's claim, and ○ marks an assumption.
 
 :::{important}
 A value you cannot control, such as the growth rate, looks as settled as a decision you made, such
-as the horizon. Two lines answer two different questions: `decided` says who settles the number;
+as the horizon. Two keys answer two different questions: `decided` says who settles the number;
 `provenance` says how well it is known. They are independent. In the table above, annual growth
 factor and horizon sit in different groups, and both carry ○.
 
@@ -456,7 +456,7 @@ python3 -m pytest tests/what_a_workload_is/test_problem_2_daily_volume.py -m pro
 **2.3 — The smallest model that builds.**
 Write a model file of your own with one input and one derived node. It must pass the loader, the
 unit check, and every rule the build applies to a model. [Appendix A](#appendix-a-dsl-reference)
-lists the keys a file needs, under *The file*; the lines a node can have, under *The four node
+lists the keys a file needs, under *The file*; the keys a node can have, under *The node
 kinds*; and the rules the build applies, under *What the build checks*. Read them before you
 start: the refusals are the point. At a desk, the same rules appear at the top of
 `scripts/verify-models.py`.
@@ -491,7 +491,7 @@ A good answer fits on one page, has a unit against every line, and leaves you le
 least one quantity than you were before you wrote it down.
 
 To write it as a model file rather than notes, [Your own model](#your-own-model) describes a tool
-that asks for each line in turn.
+that asks for each key in turn.
 
 ## Where to go next
 
