@@ -160,6 +160,14 @@ Two shapes govern how the rate applies. `compound` is where the rate is a factor
 
 A third shape, `levelling`, grows like `compound` while the quantity is far below its `ceiling`, then slows as it nears it, never passing it. Its rate is a factor with no unit: the growth while far from the ceiling. A levelling node needs a fifth key, `ceiling`, naming a node in the starting value's unit; any other shape refuses a ceiling.
 
+Below is the loader's list of shapes and their formulas, where a name in braces stands for the value of the key of that name: `start` (starting demand), `rate` (the growth factor, or for `linear` the amount added each period), `over` (the count of periods), `ceiling` (maximum for `levelling` only). The notation `**` means raised to the power of:
+
+```{literalinclude} ../sizing/dsl.py
+:language: python
+:start-at: GROWTH_SHAPES = {
+:end-before: #: The shapes that need a ceiling
+```
+
 A rate of the wrong kind is refused with a message naming the shape and the kind of rate it needs, and pointing to the other shape. `start`, `rate` and `over` take a node's name, not arithmetic: work a value out in a node of its own and name that.
 
 A `grown` node exists because the shape is a choice about the model's structure, and the model's futures vary the inputs, never the structure. Written as a word in the file, the shape is where a reviewer reads it and can argue with it.

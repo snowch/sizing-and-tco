@@ -244,3 +244,50 @@ def test_the_growth_explorer_starts_at_the_model_s_own_values():
     assert GROWTH_EXPLORER_HORIZON[0] <= horizon <= GROWTH_EXPLORER_HORIZON[1]
     shown = regex.search(r'data-show="chain-demand">([\d,]+)<', page).group(1)
     assert shown == f"{GROWTH_EXPLORER_START * growth**horizon:,.0f}"
+
+
+def test_the_shapes_calculator_uses_the_loader_s_formulas_and_the_model_s_values():
+    """It carries `GROWTH_SHAPES` itself, starts at the stage's point values inside its sliders'
+    bounds, and what it shows before its script runs is each formula worked out, not a typed
+    figure."""
+    import html as markup
+    import json
+    import re as regex
+
+    from bench.stamp import load_result
+    from bench.tables import (
+        GROWTH_EXPLORER_FACTOR,
+        GROWTH_EXPLORER_START,
+        GROWTH_SHAPES_AMOUNT,
+        GROWTH_SHAPES_CEILING,
+        GROWTH_SHAPES_CEILING_RANGE,
+        GROWTH_SHAPES_HORIZON,
+        growth_shapes_explorer,
+    )
+    from sizing.dsl import GROWTH_SHAPES
+
+    name = "web_service_demand_horizon_exponent-reference"
+    nodes = load_result(name)["summary"]["nodes"]
+    growth, horizon = nodes["annual_growth"]["point"], int(round(nodes["horizon"]["point"]))
+    page = growth_shapes_explorer(name)
+    assert "\n\n" not in page, "a blank line would end MyST's HTML block early"
+    carried = regex.search(r'data-shapes="([^"]*)"', page).group(1)
+    assert json.loads(markup.unescape(carried)) == GROWTH_SHAPES
+    assert f'class="gs-factor" type="range" min="{GROWTH_EXPLORER_FACTOR[0]}"' in page
+    assert GROWTH_EXPLORER_FACTOR[0] <= growth <= GROWTH_EXPLORER_FACTOR[1]
+    assert GROWTH_SHAPES_HORIZON[0] <= horizon <= GROWTH_SHAPES_HORIZON[1]
+    amount = round(GROWTH_EXPLORER_START * (growth - 1))
+    assert GROWTH_SHAPES_AMOUNT[0] <= amount <= GROWTH_SHAPES_AMOUNT[1]
+    assert GROWTH_SHAPES_CEILING_RANGE[0] <= GROWTH_SHAPES_CEILING <= GROWTH_SHAPES_CEILING_RANGE[1]
+    start, ceiling = GROWTH_EXPLORER_START, GROWTH_SHAPES_CEILING
+    expected = {
+        "compound": start * growth**horizon,
+        "linear": start + amount * horizon,
+        "levelling": ceiling / (1 + (ceiling / start - 1) * growth**-horizon),
+    }
+    for shape, value in expected.items():
+        shown = regex.search(rf'data-show="worked-{shape}">[^<]* = ([\d,]+)<', page).group(1)
+        assert shown == f"{value:,.0f}", shape
+    # The shapes keep their order against one another at the defaults: levelling below compound,
+    # both above the start, which is what the calculator is there to show.
+    assert start < expected["levelling"] < min(expected["compound"], ceiling)

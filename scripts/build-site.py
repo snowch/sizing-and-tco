@@ -1675,6 +1675,51 @@ figure img { background: #fff; border-radius: 4px; }
 .explorer .ge-lines .tag { font: 600 12px/1.3 var(--chrome); text-transform: uppercase;
   letter-spacing: .04em; color: var(--muted); min-width: 7.5rem; }
 .explorer .ge-lines .line { font: 1.02rem/1.3 var(--mono); }
+/* The shapes calculator (ch04), driven by sizing/viewer/growth-shapes.js. One colour and one line
+   style per shape, and every line labelled at its end, so no shape is told apart by colour alone:
+   compound in the book's data blue, linear dashed in ink as ch02 draws adding, levelling in the
+   second-series amber. */
+.explorer.shapes { --compound: var(--accent); --linear: var(--ink); --levelling: var(--warn); }
+.explorer .gs-picks { display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; margin: .1rem 0 .4rem; }
+.explorer .gs-pick { display: inline-flex; align-items: center; gap: .4rem; cursor: pointer;
+  font-weight: 600; }
+.explorer .gs-key { display: inline-block; width: 1.4rem; border-top: 2.5px solid; }
+.explorer .compound .gs-key { border-color: var(--compound); }
+.explorer .linear .gs-key { border-color: var(--linear); border-top-style: dashed; }
+.explorer .levelling .gs-key { border-color: var(--levelling); }
+.explorer .gs-plot { position: relative; }
+.explorer .gs-chart { width: 100%; height: 260px; display: block; touch-action: pan-y; }
+.explorer .gs-chart text { font-family: var(--chrome); fill: var(--ink); }
+.explorer .gs-chart .grid { stroke: var(--edge); }
+.explorer .gs-chart .tick { font-size: 11px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.explorer .gs-chart .line { fill: none; stroke-width: 2; stroke-linejoin: round; }
+.explorer .gs-chart .line.compound, .explorer .gs-chart .dot.compound { stroke: var(--compound); }
+.explorer .gs-chart .line.linear, .explorer .gs-chart .dot.linear { stroke: var(--linear); }
+.explorer .gs-chart .line.levelling, .explorer .gs-chart .dot.levelling { stroke: var(--levelling); }
+.explorer .gs-chart .line.linear { stroke-dasharray: 5 4; }
+.explorer .gs-chart .dot { fill: var(--panel); stroke-width: 2; }
+.explorer .gs-chart line.ceiling { stroke: var(--levelling); stroke-dasharray: 2 4; opacity: .8; }
+.explorer .gs-chart .end { font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.explorer .gs-chart .end.ceiling { fill: var(--muted); }
+.explorer .gs-chart .hit { fill: transparent; }
+.explorer .gs-chart .cursor { stroke: var(--rule); stroke-width: 1; }
+.explorer .gs-tip { position: absolute; top: .4rem; display: grid; gap: .1rem;
+  background: var(--bg); border: 1px solid var(--edge); border-radius: 6px; padding: .35rem .55rem;
+  font-size: 12.5px; font-variant-numeric: tabular-nums; pointer-events: none;
+  box-shadow: 0 2px 8px var(--raise); }
+.explorer .gs-formulas { display: grid; gap: .45rem; margin: .5rem 0 .4rem; }
+.explorer .gs-row { display: grid; grid-template-columns: 8.5rem 1fr; gap: .1rem .8rem;
+  align-items: baseline; }
+.explorer .gs-row.off { opacity: .45; }
+.explorer .gs-tag { display: inline-flex; align-items: center; gap: .4rem; font-weight: 600;
+  grid-row: span 3; }
+.explorer .gs-row code { font: .95rem/1.35 var(--mono); overflow-wrap: anywhere; }
+.explorer .gs-worked { font: .95rem/1.35 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.explorer .gs-row small { color: var(--faint); }
+@media (max-width: 640px) {
+  .explorer .gs-row { grid-template-columns: 1fr; }
+  .explorer .gs-tag { grid-row: auto; }
+}
 @media (max-width: 640px) {
   .explorer .ge-chain { grid-template-columns: 1fr; }
   .explorer .ge-chain div + div::before { content: "↓"; left: 50%; top: -1.2rem;

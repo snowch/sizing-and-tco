@@ -2830,3 +2830,168 @@ def growth_explorer(name: str) -> str:
         "</div>",
     ]
     return "\n".join(html_lines)
+
+
+#: The shapes calculator's teaching choices (ch04), which are not figures the book claims. It
+#: starts from the growth explorer's round demand; a ceiling four times that, so the levelling
+#: curve bends inside the horizon; and slider bounds wide enough to make each shape overtake
+#: another. The growth factor and the horizon default to the model's own point values, and the
+#: amount added each year to the first year's compound rise, so the two agree after one year.
+GROWTH_SHAPES_CEILING = 400
+GROWTH_SHAPES_AMOUNT = (0, 60, 1)
+GROWTH_SHAPES_CEILING_RANGE = (150, 1000, 10)
+#: Longer than the growth explorer's, because levelling only shows its bend over enough years.
+GROWTH_SHAPES_HORIZON = (1, 15, 1)
+
+#: What each shape's `rate` is, in the calculator's words, and how its line is drawn.
+GROWTH_SHAPES_SHOWN = {
+    "compound": "the growth factor, each year",
+    "linear": "the amount added each year",
+    "levelling": "the growth factor, until the ceiling",
+}
+
+
+def _shape_values(
+    shape: str, start: float, factor: float, amount: float, years: float, ceiling: float
+) -> float:
+    """One shape's value after `years`, from the loader's own formula for it."""
+    from sizing.dsl import GROWTH_SHAPES
+
+    rate = amount if shape == "linear" else factor
+    text = GROWTH_SHAPES[shape].format(start=start, rate=rate, over=years, ceiling=ceiling)
+    # The formula is the loader's, not the reader's: numbers and arithmetic only.
+    return float(eval(text, {"__builtins__": {}}, {}))  # noqa: S307
+
+
+def _shape_worked(
+    shape: str, start: float, factor: float, amount: float, years: int, ceiling: float
+) -> str:
+    from sizing.dsl import GROWTH_SHAPES
+
+    rate = f"{amount:g}" if shape == "linear" else f"{factor:.2f}"
+    text = GROWTH_SHAPES[shape].format(
+        start=f"{start:g}", rate=rate, over=years, ceiling=f"{ceiling:g}"
+    )
+    value = _shape_values(shape, start, factor, amount, years, ceiling)
+    return f"{text} = {value:,.0f}"
+
+
+def growth_shapes_explorer(name: str) -> str:
+    """The ch04 calculator: compound, linear and levelling growth drawn from the same start.
+
+    Its formulas are `sizing.dsl.GROWTH_SHAPES`, carried into the page as data, so the calculator
+    computes exactly what a `grown` node computes and cannot drift from it. Like the growth
+    explorer it is one block of raw HTML with no blank line, and what it shows before its script
+    runs is worked out here from the same formulas.
+    """
+    import html
+    import json
+
+    from sizing.dsl import GROWTH_SHAPES
+
+    nodes = load_result(name)["summary"]["nodes"]
+    factor = nodes["annual_growth"]["point"]
+    horizon = int(round(nodes["horizon"]["point"]))
+    start = GROWTH_EXPLORER_START
+    amount = round(start * (factor - 1))
+    ceiling = GROWTH_SHAPES_CEILING
+    f_lo, f_hi, f_step = GROWTH_EXPLORER_FACTOR
+    a_lo, a_hi, a_step = GROWTH_SHAPES_AMOUNT
+    c_lo, c_hi, c_step = GROWTH_SHAPES_CEILING_RANGE
+    h_lo, h_hi, h_step = GROWTH_SHAPES_HORIZON
+    years = f"{horizon} year{'' if horizon == 1 else 's'}"
+    script = "\n".join(
+        line
+        for line in (ROOT / "sizing" / "viewer" / "growth-shapes.js").read_text().splitlines()
+        if line.strip()
+    )
+
+    def control(cls: str, label: str, shown: str, lo, hi, step, value, note: str) -> str:
+        return (
+            f'<div class="ge-control"><label>{label} <output data-show="{cls}">{shown}</output>'
+            f'<input class="gs-{cls}" type="range" min="{lo}" max="{hi}" step="{step}" '
+            f'value="{value}"></label><small>{note}</small></div>'
+        )
+
+    rows = []
+    for shape in GROWTH_SHAPES:
+        written = GROWTH_SHAPES[shape].replace("{", "").replace("}", "")
+        worked = _shape_worked(shape, start, factor, amount, horizon, ceiling)
+        rows.append(
+            f'<div class="gs-row {shape}"><span class="gs-tag"><i class="gs-key"></i>{shape}</span>'
+            f"<code>{html.escape(written)}</code>"
+            f'<span class="gs-worked" data-show="worked-{shape}">{html.escape(worked)}</span>'
+            f"<small>rate: {GROWTH_SHAPES_SHOWN[shape]}</small></div>"
+        )
+    picks = "".join(
+        f'<label class="gs-pick {shape}"><input type="checkbox" value="{shape}" checked>'
+        f'<i class="gs-key"></i>{shape}</label>'
+        for shape in GROWTH_SHAPES
+    )
+    html_lines = [
+        f'<div class="explorer shapes" role="group" data-start="{start}" '
+        f'data-shapes="{html.escape(json.dumps(GROWTH_SHAPES))}" '
+        'aria-label="Growth shapes calculator: compound, linear and levelling growth from the '
+        'same starting demand">',
+        '<p class="ge-title">Three shapes of growth</p>',
+        '<div class="ge-controls">',
+        control(
+            "factor",
+            "Growth factor",
+            f"{factor:.2f}×",
+            f_lo,
+            f_hi,
+            f_step,
+            factor,
+            "rate for compound and levelling",
+        ),
+        control(
+            "amount",
+            "Amount added each year",
+            f"+{amount:g}",
+            a_lo,
+            a_hi,
+            a_step,
+            amount,
+            "rate for linear, in the demand's unit",
+        ),
+        control(
+            "ceiling",
+            "Ceiling",
+            f"{ceiling:g}",
+            c_lo,
+            c_hi,
+            c_step,
+            ceiling,
+            "levelling only: the level it never passes",
+        ),
+        control(
+            "horizon",
+            "Years",
+            years,
+            h_lo,
+            h_hi,
+            h_step,
+            horizon,
+            "over: how many years it grows for",
+        ),
+        "</div>",
+        f'<div class="gs-picks" aria-label="Shapes to draw">{picks}</div>',
+        '<div class="gs-plot">',
+        '<svg class="gs-chart" viewBox="0 0 560 260" role="img" aria-label="Demand each year '
+        'under each shape, from the same starting demand"></svg>',
+        '<div class="gs-tip" hidden></div>',
+        "</div>",
+        f'<div class="gs-formulas">{"".join(rows)}</div>',
+        f'<p class="ge-caption">Every shape starts from {start} today, a round number so the '
+        "arithmetic is easy to follow. The formulas are the ones the toolkit fills in for a "
+        "<code>grown</code> node, with each key&#8217;s name standing for its value. The amount "
+        "added each year starts equal to the first year&#8217;s compound rise, so those two agree "
+        "after one year until you move it. Lengthen the years or lower the ceiling to watch levelling "
+        "flatten.</p>",
+        "<script>",
+        script,
+        "</script>",
+        "</div>",
+    ]
+    return "\n".join(html_lines)

@@ -196,6 +196,12 @@ How to tell from your own history: if the yearly increases have stayed about the
 
 A ceiling has a shape of its own, `levelling`, where demand grows by a share of itself while far from the ceiling and slows as it nears it, as a market fills. A step, when a known event such as a launch or a large customer adds demand at once, remains a refinement the toolkit has no shape for.
 
+The calculator below draws the three shapes `compound`, `linear` and `levelling` from the same starting demand. Adjust the sliders for the growth factor, the amount added each year, the ceiling and the number of years, and watch where one shape overtakes another. Under the chart, the toolkit fills in the formula for each shape with your values.
+
+::::{div}
+:class: explorer peak-mean-and-growth-shapes
+::::
+
 The shape is a choice about the model's structure, not a number. No band on the growth rate covers it, because the model's futures vary the inputs and never the formula.
 
 In a model file, a `grown` node declares the shape by name: `compound`, `linear`, or `levelling`. Levelling also names its ceiling. The build checks that its rate is the right kind for that shape, and [Appendix A](#appendix-a-dsl-reference) lists its keys.

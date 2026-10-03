@@ -385,6 +385,12 @@ FIGURES: dict[str, Table | Diagram] = {
         pending=f"Collector throughput per core is a timing: {RIG}.{NO_RIG}",
     ),
     # -- ch04 Peak, mean and growth ---------------------------------------------------------------
+    # The shapes calculator: compound, linear and levelling from one start, computed with the
+    # loader's own formulas. Its factor and horizon are the same stage's point values as ch02's.
+    "peak-mean-and-growth-shapes": Explorer(
+        render=tables.growth_shapes_explorer,
+        result="web_service_demand_horizon_exponent-reference",
+    ),
     # This page's own output, from this page's own model: the one embedded lower on the page,
     # so the Source link and the viewer agree. Not the finished model's host count, whose
     # ordering is what problem 19.1 asks the reader to build.
