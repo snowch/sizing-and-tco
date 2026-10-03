@@ -305,7 +305,7 @@ factor and horizon sit in different groups, and both carry ○.
 A ○ under *Outside your control* is a number to go and measure. Here all three are. Measuring
 narrows how far off the value could be; arguing about it does not. The horizon's ○ is settled by
 deciding, not by measuring: its source says it is the refresh cycle the fleet is bought against.
-Only decisions are yours to change.
+An input under *What you decide* is yours to change; your choice shapes the plan. One under *Outside your control* is not yours to change; only the world or a measurement can move it, and typing a different number changes only the answer on paper.
 :::
 
 ### What the file computes, and what kind of model it is
