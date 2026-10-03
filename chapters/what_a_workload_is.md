@@ -310,10 +310,7 @@ An input under *What you decide* is yours to change; your choice shapes the plan
 
 ### What the file computes, and what kind of model it is
 
-Every number in the demand model above came from running this file. `sizing`, the toolkit, reads
-the file, checks that every formula produces the unit its node declares, and works each node out
-from its dependencies. That is all running a model means. The table that follows shows what it
-produced:
+Every number in the demand model above came from running this file through the toolkit. The toolkit is a program called `sizing`. Running a model means handing it the file. `sizing` does three things, in this order. First, it reads the file. Second, it checks the units of every formula: a node declared in terabytes must come out in terabytes, or it refuses the file. Third, it works out each derived or grown node from the nodes it names, starting from the inputs. A node is only worked out once everything it uses has a value. The table that follows shows what it produced:
 
 ```{include} _generated/what-a-workload-is-stage.md
 ```
