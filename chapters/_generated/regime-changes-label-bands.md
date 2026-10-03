@@ -2,8 +2,8 @@
 
 | Quantity | 1 future in 20 is below | 1 in 20 is above | Top ÷ bottom |
 |---|---:|---:|---:|
-| label values endpoint | 3.92 | 16.5 | 4.2x |
-| label values status | 2.44 | 5.22 | 2.1x |
+| different endpoint label values | 3.92 | 16.5 | 4.2x |
+| different status label values | 2.44 | 5.22 | 2.1x |
 | accidental label values | 1.30 | 8.18 | 6.3x |
 | label cardinality | 25.3 | 309 | 12.2x |
 

@@ -9,8 +9,8 @@
     "no_observation_was_used": "nothing here is a measurement of a real outcome. It is the model's own futures, filtered to the ones in which the design failed \u2014 which is what makes it reproducible and also what bounds what it can say",
     "read_the_base_rate": "`something_extreme_share` must be read against `something_extreme_everywhere`. Even with three uncertain inputs feeding a ceiling, one of them is beyond its own p90 in a fair share of all futures, failure or not, and the share rises with every input added. A post-mortem that does not say so has discovered the number of inputs"
   },
-  "generated_at": "2026-10-01T12:53:26+00:00",
-  "git_revision": "8bf923b",
+  "generated_at": "2026-10-03T22:59:28+00:00",
+  "git_revision": "d228825",
   "kind": "measurement",
   "name": "postmortem",
   "produced_by": {
@@ -22,10 +22,10 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
-    "os": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39",
+    "os": "Linux-6.18.44-fc-v64-x86_64-with-glibc2.39",
     "python": "3.11.15"
   },
   "summary": {
@@ -107,7 +107,7 @@
           "extreme_in_failures": 0.11402899356213236,
           "in_failures": 9.200711195473469,
           "input": "label_values_endpoint",
-          "label": "label values endpoint",
+          "label": "different endpoint label values",
           "overall": 8.776252690376067,
           "shift": 0.048364435263225536
         },
@@ -115,7 +115,7 @@
           "extreme_in_failures": 0.11273215691723404,
           "in_failures": 3.6013543134938177,
           "input": "label_values_status",
-          "label": "label values status",
+          "label": "different status label values",
           "overall": 3.5492131327039242,
           "shift": 0.014690912841903714
         },

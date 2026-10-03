@@ -92,6 +92,7 @@ nodes:
     kind: input
     decided: outside
     unit: dimensionless
+    label: different endpoint label values
     distribution: {triangular: {minimum: 2.0, likely: 6.0, maximum: 20.0}}
     provenance:
       kind: assumption
@@ -103,6 +104,7 @@ nodes:
     kind: input
     decided: outside
     unit: dimensionless
+    label: different status label values
     distribution: {triangular: {minimum: 2.0, likely: 3.0, maximum: 6.0}}
     provenance:
       kind: assumption
@@ -356,6 +358,7 @@ nodes:
     kind: input
     decided: outside
     unit: MB/s/core
+    label: collector throughput, as quoted
     value: 6
     note: >-
       No band, and giving a quote one would be inventing a range nobody quoted. A vendor states a
@@ -417,6 +420,7 @@ nodes:
     kind: input
     decided: you
     unit: TB/node
+    label: usable TB per store node
     value: 40
     provenance: {kind: assumption, source: "usable capacity per storage node after replication"}
     range: [20, 400]
@@ -504,6 +508,7 @@ nodes:
     kind: input
     decided: outside
     unit: series/second/node
+    label: query scan rate, as quoted
     value: 90000
     note: >-
       No band, for the same reason as the collector's quoted throughput: a quote is one number,

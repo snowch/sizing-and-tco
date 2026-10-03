@@ -5,14 +5,14 @@
 | **Outside your control** | | | |
 | annual growth | 1.40 |  | ○ |
 | metric names per host | 60.0 | series/host | ○ |
-| collector throughput quoted | 6.00 | MB/s/core | ◐ |
+| collector throughput, as quoted | 6.00 | MB/s/core | ◐ |
 | hosts | 1,200 | host | ○ |
 | extra accidental label values | 1.45 |  | ○ |
-| label values endpoint | 8.78 |  | ○ |
-| label values status | 3.55 |  | ○ |
+| different endpoint label values | 8.78 |  | ○ |
+| different status label values | 3.55 |  | ○ |
 | lines per request | 13.2 | line/request | ○ |
 | queries per second | 22.7 | query/second | ○ |
-| query scan rate quoted | 90,000 | series/second/node | ◐ |
+| query scan rate, as quoted | 90,000 | series/second/node | ◐ |
 | request rate | 38,376 | request/second | ○ |
 | series per query, before labels | 709 | series/query | ○ |
 | storage price | $14.70 | USD / TB / month | ○ |
@@ -27,7 +27,7 @@
 | store nodes | 12 | node | ○ |
 | trace sampling rate | 0.0500 |  | ○ |
 | traces retention | 14.0 | day | ○ |
-| usable tb per node | 40.0 | TB/node | ○ |
+| usable TB per store node | 40.0 | TB/node | ○ |
 | **True by definition** | | | |
 | one sample per series | 1.00 | sample/series | ● |
 | one year | 1.00 | year | ● |

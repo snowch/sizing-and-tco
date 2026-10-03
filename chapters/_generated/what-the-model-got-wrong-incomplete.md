@@ -6,8 +6,8 @@
 | request rate (request/second) | 38,412 | 57,274 | +49% | 29% of them |
 | lines per request (line/request) | 13.1 | 19.1 | +45% | 28% of them |
 | annual growth | 1.40 | 1.59 | +14% | 30% of them |
-| label values endpoint | 8.78 | 9.20 | +5% | 11% of them |
-| label values status | 3.55 | 3.60 | +1% | 11% of them |
+| different endpoint label values | 8.78 | 9.20 | +5% | 11% of them |
+| different status label values | 3.55 | 3.60 | +1% | 11% of them |
 | bytes per sample, compressed (bytes / sample) | 9.37 | 9.37 | none | 10% of them |
 | bytes per log line, compressed (bytes / line) | 32.4 | 32.4 | none | 10% of them |
 | **8 inputs** | | *22% of futures ended here* | | *something was beyond its p90 in 85% of them, against 55% of futures generally* |

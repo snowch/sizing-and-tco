@@ -2,10 +2,10 @@
 
 | | Input | Provenance | Source |
 |---|---|---|---|
-| ◐ | collector throughput quoted<br>`collector_throughput_quoted` | vendor claim | throughput per core as documented by the collector. Unverified here, and marked as a claim in every figure it appears in |
+| ◐ | collector throughput, as quoted<br>`collector_throughput_quoted` | vendor claim | throughput per core as documented by the collector. Unverified here, and marked as a claim in every figure it appears in |
 | ● | one sample per series<br>`one_sample_per_series` | fact | definition |
 | ● | one year<br>`one_year` | fact | definition |
-| ◐ | query scan rate quoted<br>`query_scan_rate_quoted` | vendor claim | series scanned per second per query node, quoted |
+| ◐ | query scan rate, as quoted<br>`query_scan_rate_quoted` | vendor claim | series scanned per second per query node, quoted |
 | ○ | *22 more, not listed here* | assumption | |
 | | **26 inputs** | | **2 fact, 2 vendor claim, 22 assumption** |
 

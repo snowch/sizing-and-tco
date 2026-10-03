@@ -342,7 +342,7 @@ carrying metrics, logs and traces:
 The *At the reference point* column shows the one value the model uses for each input. For an input
 stated as one number, it is that number. Many of this model's inputs are declared as a spread
 instead; for those, the column shows the middle of the spread, with half the values below it and
-half above. *label values endpoint* is the number of different routes the service exposes as values of a metric's endpoint label. The model declares this count as a spread, from low to high, because the exact count has not been measured. The middle of that spread can fall between two whole numbers, so the column shows a fraction: not a real count, but the middle of the range of counts the model allows.
+half above. *different endpoint label values* is the number of different routes the service exposes as values of a metric's endpoint label. The model declares this count as a spread, from low to high, because the exact count has not been measured. The middle of that spread can fall between two whole numbers, so the column shows a fraction: not a real count, but the middle of the range of counts the model allows.
 
 % word-ok: a scrape interval is a length of time and a sampling rate is a trace setting
 Six rows of the *What you decide* group are the platform's knobs, four kinds of setting: the scrape

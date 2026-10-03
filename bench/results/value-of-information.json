@@ -8,8 +8,8 @@
     "what_it_cannot_say": "whether the input can be measured at all. The web service's total rests on how many people it takes and what a licence costs, which are decided and negotiated rather than measured; its host count and the observability model's store both rest on a growth rate, which belongs to no target. The honest response to those is to decide them rather than to commission a measurement (ch04)",
     "where_the_measurement_lands": "each figure is the share of today's interval that knowing this input exactly would remove, if the knowledge landed at the low end the tornado swings it between, at its median, or at the high end (its 10th and 90th percentiles). A negative share means the interval widened instead, because an input that multiplies others, found high, scales up their spread. A real measurement also leaves a standard error behind, which these figures do not account for"
   },
-  "generated_at": "2026-10-01T12:53:14+00:00",
-  "git_revision": "8bf923b",
+  "generated_at": "2026-10-03T22:59:18+00:00",
+  "git_revision": "d228825",
   "kind": "measurement",
   "name": "value-of-information",
   "produced_by": {
@@ -21,10 +21,10 @@
   },
   "recorded_on": {
     "arch": "x86_64",
-    "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+    "cpu": "Intel(R) Xeon(R) Processor @ 2.10GHz",
     "kind": "other",
     "numpy": "2.4.6",
-    "os": "Linux-6.18.44-fc-v50-x86_64-with-glibc2.39",
+    "os": "Linux-6.18.44-fc-v64-x86_64-with-glibc2.39",
     "python": "3.11.15"
   },
   "summary": {
@@ -288,7 +288,7 @@
         "if_known_low": 381.1123045876503,
         "input": "label_values_endpoint",
         "kind": "input",
-        "label": "label values endpoint",
+        "label": "different endpoint label values",
         "model": "observability",
         "output": "known_stored",
         "removed": 0.08016322408294174,
@@ -302,7 +302,7 @@
         "if_known_low": 483.1727380391311,
         "input": "label_values_status",
         "kind": "input",
-        "label": "label values status",
+        "label": "different status label values",
         "model": "observability",
         "output": "known_stored",
         "removed": 0.03676665610452845,

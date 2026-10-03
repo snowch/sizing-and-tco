@@ -394,7 +394,7 @@ def test_the_provenance_and_measured_tables_name_each_node_under_its_label():
     """Formulas and problems use the identifier; the tables show the label; one cell has both."""
     from bench import tables
 
-    assert "collector throughput quoted<br>`collector_throughput_quoted`" in (
+    assert "collector throughput, as quoted<br>`collector_throughput_quoted`" in (
         tables.provenance_table("observability-reference")
     )
     measured = tables.measured_table("observability-reference")

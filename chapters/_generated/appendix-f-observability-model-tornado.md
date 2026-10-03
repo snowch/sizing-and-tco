@@ -4,8 +4,8 @@
 |---|---|---:|---:|---:|
 | extra accidental label values | input | 8,707,235 | 36,791,133 | 28,083,898 |
 | annual growth | input | 8,355,616 | 26,991,793 | 18,636,177 |
-| label values endpoint | input | 8,015,062 | 25,637,140 | 17,622,078 |
-| label values status | input | 11,134,620 | 20,745,024 | 9,610,404 |
+| different endpoint label values | input | 8,015,062 | 25,637,140 | 17,622,078 |
+| different status label values | input | 11,134,620 | 20,745,024 | 9,610,404 |
 | *8 more with a range, which do not reach it* | | | | 0 |
 
 *Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***

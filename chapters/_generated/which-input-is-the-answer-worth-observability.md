@@ -4,10 +4,10 @@
 |---|---:|---:|---:|
 | annual growth | 69% | 45% | 0% |
 | extra accidental label values | 56% | 44% | 0% |
-| label values endpoint | 39% | 8% | −41% |
+| different endpoint label values | 39% | 8% | −41% |
 | request rate | 13% | 5% | −8% |
 | lines per request | 12% | 5% | −7% |
-| label values status | 22% | 4% | −25% |
+| different status label values | 22% | 4% | −25% |
 | bytes per sample, compressed | 0% | 0% | 0% |
 | bytes per log line, compressed | 0% | 0% | 0% |
 | **every one of them** | | **100%** | |

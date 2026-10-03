@@ -2,7 +2,7 @@
 
 | | Quantity | What the model says | Unit | Where it comes from |
 |---|---|---:|---|---|
-| ◐ | collector throughput quoted | 6.00 | MB/s/core | vendor claim |
+| ◐ | collector throughput, as quoted | 6.00 | MB/s/core | vendor claim |
 |  | collector throughput per core, measured | *not yet measured* | MB/s/core | measured: `bench/results/collector-throughput-per-core.json` does not exist |
 |  | quoted pipeline capacity | 96.0 | MB/s | `collector_cores * collector_throughput_quoted` |
 |  | measured pipeline capacity | *not yet measured* | MB/s | `collector_cores * collector_throughput_measured` |
