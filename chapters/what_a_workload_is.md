@@ -244,7 +244,7 @@ On the explorer's chart, each chip is one multiplication by the growth factor. T
 
 **An exponent is a count, not a length of time, so it has no unit.**
 
-A `grown` node is not a new idea: it is the compounding from the explorer, written as one quantity in the model file. It takes a starting value and multiplies it by the growth factor once for each year of the horizon. The demand model has two quantities to grow, from their day-one values to the horizon:
+A `grown` node is not a new idea: it is a quantity grown from a starting value over the horizon, in a shape the node names. The two in this model name `compound`, the shape the explorer drew: each takes its starting value and multiplies it by the growth factor once for each year of the horizon. The demand model has two quantities to grow, from their day-one values to the horizon:
 
 ```{literalinclude} ../models/web_service/stages/05-demand/model.yaml
 :language: yaml
