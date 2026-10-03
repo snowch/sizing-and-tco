@@ -245,9 +245,21 @@ def source(
         }
     )
     if blocked:
-        parts.append(f"**{blocked} constant(s) not yet measured**")
+        parts.append(_unmeasured_note(blocked))
 
     return "*Source — " + " · ".join(parts) + "*"
+
+
+def _unmeasured_note(count: int) -> str:
+    """The Source line's warning, said so a reader who has not met the term can follow it: how
+    many measured constants have no measurement, what that does to the table, and where the book
+    explains it. Plain text inside the line's italics, because a nested emphasis would close it."""
+    one = count == 1
+    return (
+        f"**{count} measured constant{'' if one else 's'} {'has' if one else 'have'} no "
+        f"measurement yet**, so figures that depend on {'it' if one else 'them'} say not yet "
+        "measured ([why](#not-yet-measured))"
+    )
 
 
 # -- model tables -----------------------------------------------------------------------------

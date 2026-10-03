@@ -7,4 +7,4 @@
 | ingest utilisation, quoted | 0.51 | 40% | 0.60 | 1.00 | ok | 44% | 22% |
 | retention store fill | 0.58 | 30% | 0.70 | 1.00 | ok | 46% | 30% |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 measured constants have no measurement yet**, so figures that depend on them say not yet measured ([why](#not-yet-measured))*

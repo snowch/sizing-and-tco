@@ -30,4 +30,4 @@
 | ○ | usable TB per store node<br>`usable_tb_per_node` | assumption | usable capacity per storage node after replication |
 | | **26 inputs** | | **2 fact, 2 vendor claim, 22 assumption** |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 measured constants have no measurement yet**, so figures that depend on them say not yet measured ([why](#not-yet-measured))*

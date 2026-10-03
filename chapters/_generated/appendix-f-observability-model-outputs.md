@@ -16,4 +16,4 @@
 | query path utilisation | 0.569 | 0.0747 to 3.44 |  |
 | ingest utilisation, measured | *not yet measured* | *not yet measured* |  |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 measured constants have no measurement yet**, so figures that depend on them say not yet measured ([why](#not-yet-measured))*

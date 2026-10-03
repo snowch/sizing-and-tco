@@ -188,6 +188,7 @@ When a page uses an `estate` figure, it says so where it uses it, not in a footn
 tell which numbers rest on someone's word. Some quantities can only be known by watching a real
 system. The book discloses them; it does not claim they can be checked.
 
+(not-yet-measured)=
 ### When nobody has measured it
 
 Two rows of the constants table above say *not yet measured*. The first is collector throughput

@@ -182,7 +182,7 @@ def test_two_scenarios_of_one_model_count_its_missing_constants_once():
 
     one = load_result("observability-reference")["produced_by"]["unmeasured"]
     both = source("observability-reference", "observability-knobs_turned_down")
-    assert one and f"**{len(one)} constant(s) not yet measured**" in both, both
+    assert one and f"**{len(one)} measured constants have no measurement yet**" in both, both
 
 
 def test_every_declared_figure_is_included_somewhere():

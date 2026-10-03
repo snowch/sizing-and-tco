@@ -7,4 +7,4 @@
 | **Observability model**: annual growth | | 1.15 | 1.70 |
 | stored, metrics and logs only | TB | 155 | 499 |
 
-*Source — [`observability-reference`](/models/observability-reference.html) and [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) and [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider · **2 measured constants have no measurement yet**, so figures that depend on them say not yet measured ([why](#not-yet-measured))*

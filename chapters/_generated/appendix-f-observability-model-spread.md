@@ -7,4 +7,4 @@
 | accidental label values<br>`label_values_accidental` | 1.30 to 8.18 | 6.3x |
 | label cardinality<br>`label_cardinality` | 25.3 to 309 | 12.2x |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 measured constants have no measurement yet**, so figures that depend on them say not yet measured ([why](#not-yet-measured))*

@@ -7,4 +7,4 @@
 | traces ingest | *not yet measured* | *not yet measured* | MB/s |
 | ingest, metrics and logs only | 49.4 | 12.8 to 183 | MB/s |
 
-*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 measured constants have no measurement yet**, so figures that depend on them say not yet measured ([why](#not-yet-measured))*

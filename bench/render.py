@@ -152,7 +152,13 @@ def _walk(node):
 
 
 def heading_id(node: dict) -> str:
-    """A heading's anchor, from its text, so a page's own contents can link to it."""
+    """A heading's anchor, from its text, so a page's own contents can link to it.
+
+    A heading with a label written above it, ``(name)=``, keeps that name instead: another page
+    links to it by the label, and MyST resolves the link to the label, not to the text.
+    """
+    if node.get("html_id") and not node.get("implicit"):
+        return str(node["html_id"])
     words = []
 
     def text_of(n):

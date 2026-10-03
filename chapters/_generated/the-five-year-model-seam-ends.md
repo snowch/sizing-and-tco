@@ -9,4 +9,4 @@
 | stored, metrics and logs only | TB | 309 | 86.0 to 1,330 |
 | retention cost, metrics and logs only | USD/month | $4,557 | $1,094 to $22,248 |
 
-*Source — [`observability-reference`](/models/observability-reference.html) and [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) and [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider · **2 measured constants have no measurement yet**, so figures that depend on them say not yet measured ([why](#not-yet-measured))*

@@ -9,4 +9,4 @@
 6 node(s) downstream of those cannot be computed. In the book's tables they are shown as *not yet measured*; on the interactive model page their boxes show —. Nothing is estimated in their place: this book publishes measurements or it publishes nothing.
 :::
 
-*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 constant(s) not yet measured***
+*Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 measured constants have no measurement yet**, so figures that depend on them say not yet measured ([why](#not-yet-measured))*
