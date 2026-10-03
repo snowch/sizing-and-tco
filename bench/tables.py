@@ -2785,7 +2785,7 @@ def growth_explorer(name: str) -> str:
         if line.strip()
     )
     html_lines = [
-        f'<div class="explorer growth" role="group" data-start="{start}" aria-label="Growth explorer: '
+        f'<div class="explorer growth" role="group" data-start="{start}" aria-label="Growth calculator: '
         'the horizon sets how many times the annual growth factor is applied">',
         '<p class="ge-title">Growth, one year at a time</p>',
         '<div class="ge-controls">',

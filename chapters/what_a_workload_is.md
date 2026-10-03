@@ -234,17 +234,17 @@ This model assumes growth compounds: each year the factor multiplies the previou
 % number-ok: an illustration of what a growth factor is, not a figure from the book's model
 If demand grows by 20% a year, the factor is 1.2, and each year's demand is the previous year's multiplied by 1.2.
 
-The explorer below starts from a round demand, so the arithmetic is easy to follow. Drag the horizon and watch the chain under the sliders.
+The calculator below, *Growth, one year at a time*, starts from a round demand, so the arithmetic is easy to follow. Drag the horizon and watch the chain under the sliders.
 
 ::::{div}
 :class: explorer what-a-workload-is-growth
 ::::
 
-On the explorer's chart, each chip is one multiplication by the growth factor. There is one chip for each year of the horizon, so the number of chips is `horizon_periods`. Writing the factor out once per year gets long. Mathematics has a short form for repeating multiplication: an exponent, the small raised number in the chain. That number tells how many times the factor is applied, and it is `horizon_periods`. The label above the raised number writes the same thing in code, with `**`, which means raised to the power of.
+On the calculator's chart, each chip is one multiplication by the growth factor. There is one chip for each year of the horizon, so the number of chips is `horizon_periods`. Writing the factor out once per year gets long. Mathematics has a short form for repeating multiplication: an exponent, the small raised number in the chain. That number tells how many times the factor is applied, and it is `horizon_periods`. The label above the raised number writes the same thing in code, with `**`, which means raised to the power of.
 
 **An exponent is a count, not a length of time, so it has no unit.**
 
-A `grown` node is not a new idea: it is a quantity grown from a starting value over the horizon, in a shape the node names. The two in this model name `compound`, the shape the explorer drew: each takes its starting value and multiplies it by the growth factor once for each year of the horizon. The demand model has two quantities to grow, from their day-one values to the horizon:
+A `grown` node is not a new idea: it is a quantity grown from a starting value over the horizon, in a shape the node names. The two in this model name `compound`, the shape the calculator drew: each takes its starting value and multiplies it by the growth factor once for each year of the horizon. The demand model has two quantities to grow, from their day-one values to the horizon:
 
 ```{literalinclude} ../models/web_service/stages/05-demand/model.yaml
 :language: yaml
@@ -252,7 +252,7 @@ A `grown` node is not a new idea: it is a quantity grown from a starting value o
 :end-before: outputs:
 ```
 
-`peak_request_rate` is the request flow at the horizon, in requests per second; `stored_data` is the data held at the horizon, in terabytes. Each key is a piece from the explorer: `start` is the day-one value, `rate` is the growth factor, `over` is the count of years, and `shape: compound` says the factor multiplies each year. From these, the toolkit works out the start times `annual_growth ** horizon_periods`, the exponent from the chain. The shape is written as a word so you can see it and argue with it. [ch04](#peak-mean-and-growth) says when another shape works better.
+`peak_request_rate` is the request flow at the horizon, in requests per second; `stored_data` is the data held at the horizon, in terabytes. Each key is a piece from the calculator: `start` is the day-one value, `rate` is the growth factor, `over` is the count of years, and `shape: compound` says the factor multiplies each year. From these, the toolkit works out the start times `annual_growth ** horizon_periods`, the exponent from the chain. The shape is written as a word so you can see it and argue with it. [ch04](#peak-mean-and-growth) says when another shape works better.
 
 You now have eight quantities: three outside your control (busy-hour
 rate, data held, growth factor), one you choose (horizon), one true by definition (`one_year`), and
