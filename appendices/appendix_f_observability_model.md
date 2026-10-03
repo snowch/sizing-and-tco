@@ -134,7 +134,7 @@ rather than one margin for the whole model.
 Two of the three ceilings that can be computed divide a total with traces left out. The quoted
 ingest ceiling divides the ingest of metrics and logs only. The store ceiling divides the data
 stored for metrics and logs only. The query ceiling does not involve traces in its formula. Each
-ceiling carries its reason in the model file, in a `because` line. Here are the two ingest ceilings
+ceiling carries its reason in the model file, in a `because` key. Here are the two ingest ceilings
 as the file writes them:
 
 ```{literalinclude} ../models/observability/model.yaml
@@ -167,7 +167,7 @@ and not a regime change.
 
 Each bar swings one input from the low end of its band to the high end, with every other input
 held at its point value. Only inputs the model draws at random get a bar: those given a
-distribution in the file (a `distribution:` line), and the measured constants, which carry a
+distribution in the file (a `distribution` key), and the measured constants, which carry a
 standard error. An input given as one number has no bar, however much it matters. Two of those
 multiply the active series count directly: *hosts* and *metric names per host*. Each is given as
 one value (`value:`), with no distribution, so neither appears in the tornado. A slider range does

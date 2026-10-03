@@ -89,7 +89,7 @@ three is well formed.
 % word-ok: a sample here is one reading a scrape takes, a counting unit, not one of the model's draws
 Currencies are on the list for the same reason. Adding dollars to euros is as wrong as adding spans
 to requests, and without a unit for each currency nothing in the registry would notice. A model
-answers in one currency, the one its `currency:` line names, and the build refuses an output in any
+answers in one currency, the one its `currency` key names, and the build refuses an output in any
 other. A price quoted in another currency is converted by an exchange rate: an input of its own, in
 a unit such as `USD/EUR`, with a source.
 

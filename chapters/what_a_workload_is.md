@@ -164,7 +164,7 @@ estimates.
 :::
 
 The bar on an input marked `you` comes from the `decided` field. In a spreadsheet a source is
-optional and nobody checks it, but here the build refuses an input without a `decided` line or a
+optional and nobody checks it, but here the build refuses an input without a `decided` key or a
 `provenance` source. You can read the source in the viewer's Details panel. A number without
 provenance is a rumour.
 
@@ -286,10 +286,15 @@ users send and how much data they create. Separate them first, in any model, inc
 ```{include} _generated/what-a-workload-is-service.md
 ```
 
-The table groups the inputs as the file does, by each input's `decided` key. A year is true by
-definition because it is a year whoever asks. Each input also carries a second line: `provenance`,
-which says how the value is known. The Claim column's symbol comes from this line: ● marks a fact, ◐
-marks a vendor's claim, and ○ marks an assumption.
+The table groups the inputs by each input's `decided` key. Here is the horizon input as the model file writes it, to show the two keys the table reads:
+
+```{literalinclude} ../models/web_service/model.yaml
+:language: yaml
+:start-at:   horizon:
+:end-before:   one_year:
+```
+
+Its `decided: you` puts the horizon under *What you decide*, and the other values are `outside` for *Outside your control* and `definition` for *True by definition*. A year is true by definition because it is a year whoever asks. The second key the table reads is `provenance`, which says how each value is known. The Claim column's symbol comes from the `kind` under `provenance`: ● marks a fact, ◐ marks a vendor's claim, and ○ marks an assumption. The horizon has `kind: assumption`, so it carries ○.
 
 :::{important}
 A value you cannot control, such as the growth rate, looks as settled as a decision you made, such
@@ -446,7 +451,7 @@ amount in terabytes. Start from `known_ingest`, the rate at which metrics and lo
 in megabytes a second. Traces are left out because the traces chain has no value—spans per request
 has not been measured. A rate times a plain number is still a rate, and the toolkit refuses the
 formula until something in it carries a length of time. The test adds every node you declare to the
-observability model and makes `daily_ingest` an output. Any input you add must have a `decided` line
+observability model and makes `daily_ingest` an output. Any input you add must have a `decided` key
 and a provenance with a source, like every input in the book.
 
 ```bash

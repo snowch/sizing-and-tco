@@ -107,7 +107,7 @@ from. With only a distribution, the single number is its median.
 A scenario can pin an input to one number. That number replaces both the input's value and its distribution in that scenario.
 
 Every input must also have
-a `decided` line, saying who settles the number:
+a `decided` key, saying who settles the number:
 
 - `outside`: outside your control, whether or not it has been given a shape yet; the busy hour, the
   records held, a price
@@ -115,7 +115,7 @@ a `decided` line, saying who settles the number:
 - `definition`: an identity nobody chooses and the world does not vary; a year in seconds, one host,
   one request
 
-The build refuses an input without a `decided` line or with any other value. An input decided by
+The build refuses an input without a `decided` key or with any other value. An input decided by
 `you` is marked with a bar on its left edge in the graph and interactive page; that is the legend's
 "you decide". Every input also has a provenance kind and a source the build will not let you leave empty. The input quoted below, annual growth, is `outside`: it has a distribution, and nobody in the model chose it.
 
@@ -408,7 +408,7 @@ The loader refuses these:
   and the functions quoted under `derived` is refused, so a model file cannot run code.
 - **A name that is not a node**: a formula that refers to one, or an output that lists one.
 - **A cycle.**
-- **A `dsl` line naming a version other than the one the toolkit reads.**
+- **A `dsl` key naming a version other than the one the toolkit reads.**
 - **A key written twice in one mapping**, such as a node declared twice. Otherwise one copy would be lost without a word.
 - **A key it does not read**, anywhere in a model or scenario file. The refusal names the nearest key it knows.
 - **A value that should be a number and is not.** YAML reads `yes` as true; the loader refuses it
@@ -436,9 +436,9 @@ The build refuses these:
   since the conversion comes after.
 - **A ceiling whose `limit` is a different kind of quantity from its `unit`, or whose `headroom` is
   not a plain number.**
-- **A file with no `dsl` line.**
+- **A file with no `dsl` key.**
 - **A `currency` the toolkit does not know, or an output in a currency other than the model's.**
-- **An input with no `decided` line**, or one that is not `you`, `outside` or `definition`.
+- **An input with no `decided` key**, or one that is not `you`, `outside` or `definition`.
 - **An input with no provenance, a kind that is not one of the three, an empty source, a correlation
   with no `because`, or a `fact` that cites nothing.** *Provenance*, above, says what counts as
   citing.
