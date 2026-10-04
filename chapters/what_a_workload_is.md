@@ -338,6 +338,20 @@ The second model describes an observability platform: the system that collects w
 ```{include} _generated/what-a-workload-is-observability.md
 ```
 
+:::{note} The platform's terms
+:class: dropdown
+
+% word-ok: a sample here is one stored reading of a series, and a scrape interval is a length of time
+- **metric names per host:** How many different metrics each host sends out. Each series is one metric name, on one host, for one combination of label values, so the series total is hosts times metric names times label combinations.
+- **one sample per series:** Each collection cycle, the platform takes one sample, one stored reading, from every series. The scrape interval controls how many samples each series adds per day, and samples are what the store holds.
+- **extra accidental label values:** Label values that turn up by accident, like a user's identity in a label. Nothing caps them, so they can multiply the series without limit.
+- **lines per request:** How many log lines the application writes for each request it serves.
+- **queries per second:** How many questions the platform answers each second, from dashboards and alerts.
+- **series per query, before labels:** How many metric-and-host combinations one dashboard panel or alert covers. Each label value multiplies it, because a query that matches a label reads every series behind it.
+- **collector throughput, as quoted:** How many megabytes per second one collector core can process, as the supplier states it. The mark ◐ shows this is a supplier claim, not a measurement.
+- **query scan rate, as quoted:** How many series one query node can read each second while answering questions, as the supplier states it. The mark ◐ shows this is a supplier claim, not a measurement.
+:::
+
 The *At the reference point* column shows the one value the model uses for each input. For an input
 stated as one number, it is that number. Many of this model's inputs are declared as a spread
 instead; for those, the column shows the middle of the spread, with half the values below it and
