@@ -333,8 +333,7 @@ you three model descriptions and asks which kind each one is.
 
 ### The same split, on a model that is finished
 
-Here is the same table for a finished model of a different system: an observability platform,
-carrying metrics, logs and traces:
+The second model describes an observability platform: the system that collects what your running services report about themselves, stores those reports and answers questions about them. The platform keeps three kinds of report. Metrics are numbers counted over time, such as how many requests each endpoint served. Logs are lines of text that the code writes. Traces record the path one request took through your services. Here is the same table for its model:
 
 ```{include} _generated/what-a-workload-is-observability.md
 ```
@@ -345,17 +344,9 @@ instead; for those, the column shows the middle of the spread, with half the val
 half above. For example, *different endpoint label values* is a count, so any real value of it is a whole number. The model declares this count as a spread, from low to high, because the exact count has not been measured. The middle of that spread can fall between two whole numbers, so the column shows a fraction: not a real count, but the middle of the range of counts the model allows.
 
 % word-ok: a scrape interval is a length of time and a sampling rate is a trace setting
-Six rows of the *What you decide* group are the platform's knobs, four kinds of setting: the scrape
-interval; a retention period for each of metrics, logs and traces; the trace sampling rate; and the
-fraction of log lines kept. The rest is the fleet you buy to run it (collector cores, store nodes,
-usable terabytes per node, query nodes) and the horizon.
-[Appendix F](#appendix-f-observability-model) turns one of each kind down and shows what that saves.
+Six rows of *What you decide* are settings you control on the platform itself, falling into four kinds. The scrape interval is how often the platform collects the metrics. You choose how long it keeps each of metrics, logs and traces—three separate retention periods. You choose what share of your requests it records a full trace for—the trace sampling rate. And you choose what share of the log lines it keeps. The rest of *What you decide* is the machines you buy to run it: cores in the collectors that receive the reports, nodes in the store that hold them and the usable terabytes on each node, and nodes in the query layer that answer questions. And the horizon. [Appendix F](#appendix-f-observability-model) turns one setting of each kind down and shows what that saves.
 
-The number of label values is not among the decisions. A label is a tag on each metric, such as the
-endpoint or the status code, and each distinct value multiplies the number of series the platform
-stores. It dominates the model. No platform knob reaches it: turn every knob down and the label
-count stays where it was. The only lever is the application code that emits the labels, which
-belongs to the developers who wrote it, not to the team running the platform.
+The input that drives this model's size most is not among the decisions you make: how many different values each label takes. A label is a tag on a metric—for example, which endpoint handled the request, or what status code it returned. The platform keeps a separate running count, called a series, for every combination of label values. Each new value multiplies the number of series it stores. None of the platform settings reach this input. Turn every knob down to its minimum and the number of label values stays where it was. The only way to change it is to change the application code that attaches the labels, which belongs to the developers who wrote your services, not to the team that runs the platform.
 
 ### A workload can be described badly in three ways
 
