@@ -342,6 +342,10 @@ The second model describes an observability platform: the system that collects w
 ```{include} _generated/what-a-workload-is-observability.md
 ```
 
+Many of this model's inputs are declared as a spread instead of one number; for those, the
+*At the reference point* column shows the middle of the spread, with half the values below it and
+half above. For example, *different endpoint label values* is a count, so any real value of it is a whole number. The model declares this count as a spread, from low to high, because the exact count has not been measured. The middle of that spread can fall between two whole numbers, so the column shows a fraction: not a real count, but the middle of the range of counts the model allows.
+
 :::{note} Observability platform terms
 :class: dropdown
 
@@ -363,10 +367,6 @@ The second model describes an observability platform: the system that collects w
 - **collector throughput, as quoted**: how many megabytes a second one collector core accepts, according to the supplier (◐).
 - **query scan rate, as quoted**: how many series one query node reads a second, according to the supplier (◐).
 :::
-
-Many of this model's inputs are declared as a spread instead of one number; for those, the
-*At the reference point* column shows the middle of the spread, with half the values below it and
-half above. For example, *different endpoint label values* is a count, so any real value of it is a whole number. The model declares this count as a spread, from low to high, because the exact count has not been measured. The middle of that spread can fall between two whole numbers, so the column shows a fraction: not a real count, but the middle of the range of counts the model allows.
 
 % word-ok: a scrape interval is a length of time and a sampling rate is a trace setting
 Six rows of *What you decide* are settings you control on the platform itself, falling into four kinds. The scrape interval is how often the platform collects the metrics. You choose how long it keeps each of metrics, logs and traces—three separate retention periods. You choose what share of your requests it records a full trace for—the trace sampling rate. And you choose what share of the log lines it keeps. The rest of *What you decide* is the machines you buy to run it: cores in the collectors that receive the metrics, logs and traces; nodes in the store that hold them, and the usable terabytes on each node; and nodes in the query layer that answer questions. And the horizon. [Appendix F](#appendix-f-observability-model) shows how much smaller the platform gets if you collect metrics less often, keep them for less time, keep fewer log lines and record fewer traces.
