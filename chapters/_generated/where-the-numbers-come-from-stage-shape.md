@@ -3,7 +3,8 @@
 | | |
 |---|---:|
 | `input` nodes | 7 |
-| `derived` nodes | 4 |
+| `derived` nodes | 2 |
+| `grown` nodes | 2 |
 | **What the toolkit calls it** | **definitional model** |
 
 *Source — [`web_service_provenance-reference`](/models/web_service_provenance-reference.html) · the model to explore; each input with a range has a slider*

@@ -419,9 +419,19 @@ def stage_shape(name: str) -> str:
     result = load_result(name)
     payload = result["summary"]
     kinds = Counter(node.get("kind") for node in payload["nodes"].values())
+    # A grown node is stamped as derived, since that is what it is to everything downstream, but
+    # the page beside this table quotes it as `kind: grown`. Counted from the file the result
+    # names, so the table says what the reader sees in the file.
+    from sizing.dsl import Grown, load_model
+
+    model = load_model(ROOT / result["produced_by"]["model_file"])
+    grown = sum(isinstance(node, Grown) for node in model.nodes.values())
+    if grown:
+        kinds["derived"] -= grown
+        kinds["grown"] = grown
     classification = result["produced_by"]["classification"]
     rows = ["| | |", "|---|---:|"]
-    for kind in ("input", "derived", "measured", "ceiling"):
+    for kind in ("input", "derived", "grown", "measured", "ceiling"):
         if kinds.get(kind):
             rows.append(f"| `{kind}` nodes | {kinds[kind]} |")
     rows.append(f"| **What the toolkit calls it** | **{classification} model** |")

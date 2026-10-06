@@ -411,8 +411,8 @@ from each other: a busy hour of cheap reads and one of expensive writes are the 
 it. The observability model has no notion of query shape. Each omission is defensible, and each
 one is a place the answer could be wrong in a way nothing here would show.
 
-**Where the numbers come from.** Every figure in the tables above is an input the model's author
-wrote down. This chapter marked each one's claim, but has not shown how to judge a claim or improve
+**Where the numbers come from.** Every input in the tables above is a number the model's author
+wrote down, and every output is worked out from them. This chapter marked each one's claim, but has not shown how to judge a claim or improve
 one. [ch03](#where-the-numbers-come-from) does, and whether you can trust these answers depends on
 it.
 
@@ -440,7 +440,7 @@ range this book reports too narrow ([ch14](#correlation-and-convergence)).
   and the toolkit checks every formula against the units.
 - **Growth compounds, so the horizon has to become a pure number.** Dividing the duration by a
   declared year turns it into an exponent with no unit. A spreadsheet does no division—it takes the
-  bare number as years, so when a colleague types months, growth compounds over twelve times as many
+  bare number as years, so when a colleague types months, growth compounds over the wrong number of
   periods with no warning.
 - **Separate what is outside your control from what you decided.** A value for something you
   cannot control looks like a decision and stops being questioned.

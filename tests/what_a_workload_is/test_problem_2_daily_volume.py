@@ -119,8 +119,8 @@ def test_it_is_one_day_of_metrics_and_logs(extended, scenario):
     one_day_of_it = values["daily_ingest"] == pytest.approx(expected, rel=1e-6)
     assert one_day_of_it, (
         f"daily_ingest is {values['daily_ingest']:,.3f} TB, which is not one day of metrics and "
-        "logs arriving at known_ingest's rate. Check how long your duration node says it is, "
-        "and which rate the formula starts from."
+        "logs arriving at known_ingest's rate. Check the length of time your formula multiplies "
+        "the rate by, which should be exactly one day, and which rate the formula starts from."
     )
 
 
