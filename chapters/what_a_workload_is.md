@@ -481,7 +481,7 @@ A spreadsheet cannot see that class of error at all.
 python3 -m pytest tests/what_a_workload_is/test_problem_4_broken.py -m problem
 ```
 
-**2.5 — Your own workload, written down.** No test: this is about a system you run, and there is
+**2.5 — Your own workload.** No test: this is about a system you run, and there is
 no oracle for it.
 
 Take something you operate and write down the quantities that describe what it has to do. Not the
