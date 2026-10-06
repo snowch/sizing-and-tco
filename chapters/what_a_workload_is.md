@@ -70,7 +70,8 @@ formula by its units, and every node in this book declares a unit.
   something other than time: terabytes per node, bytes per sample, series per host.
 
 A count that multiplies something else has no unit—it is a pure number, not a stock. A replication
-factor counts copies; the number of values a label takes multiplies the number of series. A price
+factor counts copies; the number of values a label takes multiplies the number of series. Labels and series come up
+again, explained, with the observability platform later in this chapter. A price
 per month has time in its denominator, so it is a flow of money: storage at so much per terabyte per
 month.
 
@@ -286,6 +287,9 @@ users send and how much data they create. Separate them first, in any model, inc
 ```{include} _generated/what-a-workload-is-service.md
 ```
 
+The *At the reference point* column shows the one value the model uses for each input. For an input
+stated as one number, it is that number.
+
 The table groups the inputs by each input's `decided` key. Here is the horizon input as the model file writes it, to show the two keys the table reads:
 
 ```{literalinclude} ../models/web_service/model.yaml
@@ -342,19 +346,26 @@ The second model describes an observability platform: the system that collects w
 :class: dropdown
 
 % word-ok: a sample here is one stored reading of a series, and a scrape interval is a length of time
-- **metric names per host:** How many different metrics each host sends out. A series is one running count the platform keeps: one metric name, on one host, for one combination of label values (the text below the table explains labels, and its grid draws one square per series). So the number of series is hosts times metric names times label combinations, grown over the horizon.
-- **one sample per series:** Each collection cycle, the platform takes one sample, one stored reading, from every series. The scrape interval controls how many samples each series adds per day, and samples are what the store holds.
-- **extra accidental label values:** Label values that turn up by accident, like a user's identity in a label. Nothing caps them, so they can multiply the series without limit.
-- **lines per request:** How many log lines the application writes for each request it serves.
-- **queries per second:** How many questions the platform answers each second, from dashboards and alerts.
-- **series per query, before labels:** How many metric-and-host combinations one dashboard panel or alert covers. Each label multiplies it, because a query that matches a label reads every series behind it.
-- **collector throughput, as quoted:** How many megabytes per second one collector core can process, as the supplier states it. The mark ◐ shows this is a supplier claim, not a measurement.
-- **query scan rate, as quoted:** How many series one query node can read each second while answering questions, as the supplier states it. The mark ◐ shows this is a supplier claim, not a measurement.
+- **label**: a tag a service attaches to a metric, such as which endpoint handled the request or what status code it returned.
+- **series**: one count the platform keeps for one metric name on one host and one combination of label values. The number of series is hosts times metric names times label combinations, grown over the horizon. The grid below the table draws one square per series.
+- **sample**: one stored reading of one series, taken each time the platform collects metrics. The scrape interval sets how many samples each series adds a day.
+- **host**: a machine running your services that send reports to the platform.
+- **node**: a machine in the platform itself, as opposed to a host.
+- **collector**: the platform's ingest tier that receives metrics, logs and traces. Its capacity is the collector cores times the collector throughput.
+- **store**: the nodes that hold samples, log lines and traces for their retention periods.
+- **query**: a question a dashboard or alert asks the platform, answered by the query nodes.
+- **metric names per host**: how many different metrics each host sends.
+- **one sample per series**: each collection takes one sample from every series.
+- **extra accidental label values**: label values that appear by mistake, such as a user's identity ending up in a label. Nothing caps them.
+- **lines per request**: how many log lines the application writes for each request it serves.
+- **queries per second**: how many queries dashboards and alerts send the platform each second.
+- **series per query, before labels**: how many metric-and-host combinations one dashboard panel or alert covers; each label multiplies it.
+- **collector throughput, as quoted**: how many megabytes a second one collector core accepts, according to the supplier (◐).
+- **query scan rate, as quoted**: how many series one query node reads a second, according to the supplier (◐).
 :::
 
-The *At the reference point* column shows the one value the model uses for each input. For an input
-stated as one number, it is that number. Many of this model's inputs are declared as a spread
-instead; for those, the column shows the middle of the spread, with half the values below it and
+Many of this model's inputs are declared as a spread instead of one number; for those, the
+*At the reference point* column shows the middle of the spread, with half the values below it and
 half above. For example, *different endpoint label values* is a count, so any real value of it is a whole number. The model declares this count as a spread, from low to high, because the exact count has not been measured. The middle of that spread can fall between two whole numbers, so the column shows a fraction: not a real count, but the middle of the range of counts the model allows.
 
 % word-ok: a scrape interval is a length of time and a sampling rate is a trace setting
