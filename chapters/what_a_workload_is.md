@@ -342,7 +342,7 @@ The second model describes an observability platform: the system that collects w
 :class: dropdown
 
 % word-ok: a sample here is one stored reading of a series, and a scrape interval is a length of time
-- **metric names per host:** How many different metrics each host sends out. A series is one running count the platform keeps: one metric name, on one host, for one combination of label values (the text below the table explains labels). So the number of series is hosts times metric names times label combinations, grown over the horizon.
+- **metric names per host:** How many different metrics each host sends out. A series is one running count the platform keeps: one metric name, on one host, for one combination of label values (the text below the table explains labels, and its grid draws one square per series). So the number of series is hosts times metric names times label combinations, grown over the horizon.
 - **one sample per series:** Each collection cycle, the platform takes one sample, one stored reading, from every series. The scrape interval controls how many samples each series adds per day, and samples are what the store holds.
 - **extra accidental label values:** Label values that turn up by accident, like a user's identity in a label. Nothing caps them, so they can multiply the series without limit.
 - **lines per request:** How many log lines the application writes for each request it serves.
