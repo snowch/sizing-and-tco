@@ -347,7 +347,7 @@ The second model describes an observability platform: the system that collects w
 - **extra accidental label values:** Label values that turn up by accident, like a user's identity in a label. Nothing caps them, so they can multiply the series without limit.
 - **lines per request:** How many log lines the application writes for each request it serves.
 - **queries per second:** How many questions the platform answers each second, from dashboards and alerts.
-- **series per query, before labels:** How many metric-and-host combinations one dashboard panel or alert covers. Each label value multiplies it, because a query that matches a label reads every series behind it.
+- **series per query, before labels:** How many metric-and-host combinations one dashboard panel or alert covers. Each label multiplies it, because a query that matches a label reads every series behind it.
 - **collector throughput, as quoted:** How many megabytes per second one collector core can process, as the supplier states it. The mark ◐ shows this is a supplier claim, not a measurement.
 - **query scan rate, as quoted:** How many series one query node can read each second while answering questions, as the supplier states it. The mark ◐ shows this is a supplier claim, not a measurement.
 :::
@@ -360,11 +360,22 @@ half above. For example, *different endpoint label values* is a count, so any re
 % word-ok: a scrape interval is a length of time and a sampling rate is a trace setting
 Six rows of *What you decide* are settings you control on the platform itself, falling into four kinds. The scrape interval is how often the platform collects the metrics. You choose how long it keeps each of metrics, logs and traces—three separate retention periods. You choose what share of your requests it records a full trace for—the trace sampling rate. And you choose what share of the log lines it keeps. The rest of *What you decide* is the machines you buy to run it: cores in the collectors that receive the metrics, logs and traces; nodes in the store that hold them, and the usable terabytes on each node; and nodes in the query layer that answer questions. And the horizon. [Appendix F](#appendix-f-observability-model) shows how much smaller the platform gets if you collect metrics less often, keep them for less time, keep fewer log lines and record fewer traces.
 
-When a service reports a metric to the observability platform, it attaches labels. A label is a tag saying, for example, which endpoint handled the request or what status code it returned. The platform keeps a separate running count for every combination of label values, called a series. Each new label value multiplies the number of series it stores.
+When a service reports a metric to the observability platform, it attaches labels. A label is a tag saying, for example, which endpoint handled the request or what status code it returned. The platform keeps a separate running count for every combination of label values, called a series. Each new label multiplies the number of series it stores; each new value of a label adds another set of them. The grid below draws this for one metric on one host.
 
-One input determines this platform's size more than any other: how many different values each label takes. The table lists these under *Outside your control*, not *What you decide*, as *different endpoint label values* and *different status label values*.
+::::{div}
+:class: explorer what-a-workload-is-label-grid
+::::
+
+One input decides how many series this platform stores, and how much each query has to read, more than any other: how many different values each label takes. The table lists these under *Outside your control*, not *What you decide*, as *different endpoint label values* and *different status label values*.
 
 None of the platform's settings can change how many label values there are. Turn every setting down as far as it goes and that number stays the same. The only way to change it is to change the application code that attaches the labels. That code belongs to the developers who wrote the services, not to the team that runs the platform.
+
+The figure below draws, from the model's own formulas, what each setting, each label count and each machine reaches:
+
+```{image} _figures/what-a-workload-is-settings-reach.svg
+:alt: The platform's settings reach ingest and storage but not the series queries read; the label counts reach all three; the machines you buy add only to capacity
+:width: 100%
+```
 
 ### A workload can be described badly in three ways
 
@@ -441,7 +452,8 @@ Five, in `tests/what_a_workload_is/`. The first four have tests. The last does n
 
 **2.1 — Levels and rates.**
 Classify every node in the observability model as a stock, a flow or neither, by reading what each
-means: its label, its note, or its name. The test classifies each node by the rule under *Four
+means: its label, its note, or its name. The table above shows only the inputs;
+[Appendix F](#appendix-f-observability-model) lists the rest, each with its label and unit. The test classifies each node by the rule under *Four
 kinds of quantity*, using its declared unit. Every unit in this model typechecks, so where your
 answer and a unit disagree, your reading missed something the unit records. Find what it missed
 before you change your answer. A failed Check lists the nodes that disagree, each with its unit.

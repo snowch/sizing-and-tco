@@ -323,6 +323,19 @@ FIGURES: dict[str, Table | Diagram] = {
         render=tables.growth_explorer,
         result="web_service_demand_horizon_exponent-reference",
     ),
+    # Which demand each setting reaches, which the label counts reach, and what the machines add
+    # to: every arrow is an ancestry in the observability model, not a drawing choice.
+    "what-a-workload-is-settings-reach": Diagram(
+        draw=diagrams.settings_reach,
+        result="observability-reference",
+        alt="The platform's settings reach ingest and storage but not the series queries read; "
+        "the label counts reach all three; the machines you buy add only to capacity",
+    ),
+    # One series per combination of label values, drawn as a grid the reader can grow.
+    "what-a-workload-is-label-grid": Explorer(
+        render=tables.label_grid_explorer,
+        result="observability-reference",
+    ),
     "what-a-workload-is-three-ways": Table(
         render=tables.horizon_three_ways,
         result="web_service_demand_horizon_exponent-reference",

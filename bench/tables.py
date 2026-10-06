@@ -3007,3 +3007,69 @@ def growth_shapes_explorer(name: str) -> str:
         "</div>",
     ]
     return "\n".join(html_lines)
+
+
+#: The label grid's teaching choices (ch02), which are not figures the book claims: counts small
+#: enough to draw one cell per series. The model's own counts are spreads, in the inputs table
+#: above the grid, and the caption sends the reader there.
+LABEL_GRID_ENDPOINT = (1, 8, 4)
+LABEL_GRID_STATUS = (1, 5, 3)
+LABEL_GRID_ACCIDENTAL = (1, 4, 1)
+
+
+def label_grid_explorer(_name: str) -> str:
+    """The ch02 label grid: one cell per series, for one metric on one host.
+
+    Endpoint values across, status values down, and each value of an accidental label as one more
+    copy of the whole grid behind it. It shows the rule the prose states: a new value of a label
+    adds a row or a column, and a new label multiplies the lot. What it shows before its script
+    runs is the default grid's count, worked out here.
+    """
+    from bench.stamp import ROOT
+
+    e_lo, e_hi, e = LABEL_GRID_ENDPOINT
+    s_lo, s_hi, s = LABEL_GRID_STATUS
+    a_lo, a_hi, a = LABEL_GRID_ACCIDENTAL
+    script = "\n".join(
+        line
+        for line in (ROOT / "sizing" / "viewer" / "label-grid.js").read_text().splitlines()
+        if line.strip()
+    )
+
+    def control(cls: str, label: str, lo: int, hi: int, value: int, note: str) -> str:
+        return (
+            f'<div class="ge-control"><label>{label} <output data-show="{cls}">{value}</output>'
+            f'<input class="lg-{cls}" type="range" min="{lo}" max="{hi}" step="1" '
+            f'value="{value}" aria-label="{label}"></label><small>{note}</small></div>'
+        )
+
+    html_lines = [
+        '<div class="explorer labels" role="group" aria-label="Label grid: one series for each '
+        'combination of label values">',
+        '<p class="ge-title">One series per combination of labels</p>',
+        '<div class="ge-controls">',
+        control("endpoint", "Endpoint values", e_lo, e_hi, e, "one more adds a column"),
+        control("status", "Status values", s_lo, s_hi, s, "one more adds a row"),
+        control(
+            "accidental",
+            "Values of an accidental label",
+            a_lo,
+            a_hi,
+            a,
+            "one means none leaked; each more adds a copy of the whole grid",
+        ),
+        "</div>",
+        '<svg class="lg-chart" viewBox="0 0 560 230" role="img" aria-label="One square for each '
+        "series: endpoint values across, status values down, a copy of the grid for each value "
+        'of an accidental label"></svg>',
+        f'<p class="lg-sum" data-show="sum">{e} endpoint values × {s} status values × {a} = '
+        f"{e * s * a} series</p>",
+        '<p class="ge-caption">For one metric on one host: the platform keeps this many for every '
+        "metric name on every host. The counts here are small enough to draw; the model&#8217;s own "
+        "are the label rows in the table above.</p>",
+        "<script>",
+        script,
+        "</script>",
+        "</div>",
+    ]
+    return "\n".join(html_lines)

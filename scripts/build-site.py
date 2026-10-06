@@ -1675,6 +1675,13 @@ figure img { background: #fff; border-radius: 4px; }
 .explorer .ge-lines .tag { font: 600 12px/1.3 var(--chrome); text-transform: uppercase;
   letter-spacing: .04em; color: var(--muted); min-width: 7.5rem; }
 .explorer .ge-lines .line { font: 1.02rem/1.3 var(--mono); }
+/* The label grid (ch02), driven by sizing/viewer/label-grid.js: one square per series. The
+   front grid in the data blue, the copies an accidental label makes in a paler tint behind it. */
+.explorer .lg-chart { width: 100%; height: 190px; display: block; }
+.explorer .lg-chart .cell { fill: var(--bg); stroke: var(--accent); stroke-width: 1.6; }
+.explorer .lg-chart .cell.copy { fill: var(--panel); stroke: var(--faint); stroke-width: 1.2; stroke-dasharray: 3 2; }
+.explorer .lg-chart .axis { font: 11px var(--mono); fill: var(--muted); }
+.explorer .lg-sum { font: 600 1rem/1.4 var(--mono); margin: .3rem 0 .2rem; }
 /* The shapes calculator (ch04), driven by sizing/viewer/growth-shapes.js. One colour and one line
    style per shape, and every line labelled at its end, so no shape is told apart by colour alone:
    compound in the book's data blue, linear dashed in ink as ch02 draws adding, levelling in the

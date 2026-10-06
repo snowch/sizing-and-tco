@@ -1810,3 +1810,150 @@ def seller_plane(result: str) -> str:
         f"share of the spend that scales</text>"
     )
     return _svg(width, height, "".join(body), "Where the product pays, by the two assumptions")
+
+
+# -- where the settings reach (ch02) -----------------------------------------------------------
+
+#: The three things the observability platform must handle, each against the capacity that has to
+#: hold it. A demand is the union of the nodes listed, so "data stored" is all three stores.
+SETTINGS_REACH_DEMANDS = (
+    ("ingest arriving", ("total_ingest",), "quoted_pipeline_capacity", "collector capacity"),
+    (
+        "data stored",
+        ("metrics_stored", "logs_stored", "traces_stored"),
+        "installed_usable",
+        "store capacity",
+    ),
+    ("series queries read", ("query_series_rate",), "query_capacity", "query capacity"),
+)
+
+
+def settings_reach(result: str) -> str:
+    """Which demand each of your decisions acts on, and which the label counts act on.
+
+    Every arrow is an ancestry in the model, not a drawing choice: an input points at a demand
+    only if that demand is computed from it. The inputs you decide fall into two groups by what
+    they reach -- those that reach a demand are settings, those that reach only a capacity are
+    machines -- so nothing here is sorted by hand. Of the inputs outside your control only the
+    label counts are drawn, because they are the ones the page is about; the caption says so.
+    """
+    payload = load_result(result)["summary"]
+    nodes = payload["nodes"]
+    demand_reach = {
+        title: set().union(*(_ancestry(payload, n) for n in names))
+        for title, names, _, _ in SETTINGS_REACH_DEMANDS
+    }
+    capacity_reach = {
+        cap_title: _ancestry(payload, cap) for _, _, cap, cap_title in SETTINGS_REACH_DEMANDS
+    }
+    yours = sorted(
+        (n for n, v in nodes.items() if v["kind"] == "input" and v.get("decided") == "you"),
+        key=lambda n: nodes[n]["label"],
+    )
+    reaches_demand = {n for n in yours if any(n in r for r in demand_reach.values())}
+    settings = [n for n in yours if n in reaches_demand]
+    machines = [n for n in yours if n not in reaches_demand]
+    labels = sorted(
+        (n for n, v in nodes.items() if v["kind"] == "input" and n.startswith("label_values")),
+        key=lambda n: nodes[n]["label"],
+    )
+
+    box_w, box_h, row = 200, 26, 32
+    xa, xb, xc, xd = 16, 296, 556, 770
+    width = xd + 170 + 16
+    head = 30
+    parts, edges = [], []
+
+    def box(x, y, text, fill, stroke, bar=False, w=box_w):
+        out = (
+            f'<rect x="{x}" y="{y}" width="{w}" height="{box_h}" rx="3" fill="{fill}" '
+            f'stroke="{stroke}" stroke-width="1.2"/>'
+        )
+        if bar:
+            out += (
+                f'<rect x="{x}" y="{y + 3}" width="3" height="{box_h - 6}" rx="1.5" '
+                f'fill="{DECIDED_BAR}"/>'
+            )
+        return out + (
+            f'<text x="{x + 8}" y="{y + 17}" font-size="{TEXT + 1}" fill="#263238">'
+            f"{_esc(text)}</text>"
+        )
+
+    def heading(x, y, text):
+        return (
+            f'<text x="{x}" y="{y}" font-size="{TEXT + 1}" font-weight="600" '
+            f'fill="#455a64">{_esc(text)}</text>'
+        )
+
+    def arrow(x1, y1, x2, y2, colour, dash=""):
+        mid = (x1 + x2) / 2
+        end = x2 - ARROW_LENGTH if x2 > x1 else x2 + ARROW_LENGTH
+        pattern = f' stroke-dasharray="{dash}"' if dash else ""
+        return (
+            f'<path d="M{x1:.1f},{y1:.1f} C{mid:.1f},{y1:.1f} {mid:.1f},{y2:.1f} '
+            f'{end:.1f},{y2:.1f}" fill="none" stroke="{colour}" stroke-width="1.1"{pattern}/>'
+            f'<polygon points="{x2:.1f},{y2:.1f} {end:.1f},{y2 - ARROW_HALF_WIDTH:.1f} '
+            f'{end:.1f},{y2 + ARROW_HALF_WIDTH:.1f}" fill="{colour}"/>'
+        )
+
+    # Column A: your settings, then the label counts.
+    y = head + 22
+    parts.append(heading(xa, y - 8, "Settings you decide"))
+    where = {}
+    for n in settings:
+        parts.append(box(xa, y, nodes[n]["label"], KIND_FILL["input"], KIND_STROKE["input"], True))
+        where[n] = y + box_h / 2
+        y += row
+    y += 22
+    parts.append(heading(xa, y - 8, "Outside your control: labels"))
+    for n in labels:
+        parts.append(box(xa, y, nodes[n]["label"], KIND_FILL["input"], KIND_STROKE["input"]))
+        where[n] = y + box_h / 2
+        y += row
+    bottom = y
+
+    # Columns B and C: the demands, and the capacity each must fit in, spread down the height.
+    span = bottom - (head + 22)
+    centres = [head + 22 + span * (i + 0.5) / len(SETTINGS_REACH_DEMANDS) for i in range(3)]
+    parts.append(heading(xb, head + 14, "What the platform must handle"))
+    parts.append(heading(xc, head + 14, "What the machines provide"))
+    parts.append(heading(xd, head + 14, "Machines you buy"))
+    for (title, _, _, cap_title), cy in zip(SETTINGS_REACH_DEMANDS, centres, strict=True):
+        top = cy - box_h / 2
+        parts.append(box(xb, top, title, KIND_FILL["derived"], KIND_STROKE["derived"], w=170))
+        parts.append(box(xc, top, cap_title, KIND_FILL["derived"], KIND_STROKE["derived"], w=150))
+        edges.append(arrow(xb + 170, cy, xc, cy, "#b3413a", "3 3"))
+        parts.append(
+            f'<text x="{(xb + 170 + xc) / 2:.0f}" y="{cy - 8:.0f}" font-size="{TEXT}" '
+            f'text-anchor="middle" fill="#b3413a">must fit in</text>'
+        )
+        for n, ny in where.items():
+            if n in demand_reach[title]:
+                colour = "#4a7ba7" if n in labels else "#607d8b"
+                edges.append(arrow(xa + box_w, ny, xb, cy, colour))
+
+    # Column D: each machine beside the capacity it builds, pointing back at it.
+    for (_, _, _, cap_title), cy in zip(SETTINGS_REACH_DEMANDS, centres, strict=True):
+        mine = [n for n in machines if n in capacity_reach[cap_title]]
+        start = cy - (len(mine) - 1) * row / 2 - box_h / 2
+        for i, n in enumerate(mine):
+            top = start + i * row
+            parts.append(
+                box(
+                    xd,
+                    top,
+                    nodes[n]["label"],
+                    KIND_FILL["input"],
+                    KIND_STROKE["input"],
+                    True,
+                    w=170,
+                )
+            )
+            edges.append(arrow(xd, top + box_h / 2, xc + 150, cy, "#607d8b"))
+
+    height = bottom + 12
+    title = (
+        "Which demand each setting reaches, which the label counts reach, and what the machines "
+        "you buy add to"
+    )
+    return _svg(width, height, "".join(edges) + "".join(parts), title)

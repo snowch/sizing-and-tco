@@ -291,3 +291,22 @@ def test_the_shapes_calculator_uses_the_loader_s_formulas_and_the_model_s_values
     # The shapes keep their order against one another at the defaults: levelling below compound,
     # both above the start, which is what the calculator is there to show.
     assert start < expected["levelling"] < min(expected["compound"], ceiling)
+
+
+def test_the_label_grid_starts_inside_its_sliders_and_counts_what_it_draws():
+    """Its defaults sit inside its sliders, and the sum it shows before its script runs is the
+    product of the three counts it draws."""
+    from bench.tables import (
+        LABEL_GRID_ACCIDENTAL,
+        LABEL_GRID_ENDPOINT,
+        LABEL_GRID_STATUS,
+        label_grid_explorer,
+    )
+
+    page = label_grid_explorer("observability-reference")
+    assert "\n\n" not in page, "a blank line would end MyST's HTML block early"
+    counts = [LABEL_GRID_ENDPOINT, LABEL_GRID_STATUS, LABEL_GRID_ACCIDENTAL]
+    for low, high, default in counts:
+        assert low <= default <= high
+    e, s, a = (default for _, _, default in counts)
+    assert f"× {a} = {e * s * a} series" in page
