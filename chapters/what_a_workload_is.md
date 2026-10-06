@@ -360,9 +360,9 @@ half above. For example, *different endpoint label values* is a count, so any re
 % word-ok: a scrape interval is a length of time and a sampling rate is a trace setting
 Six rows of *What you decide* are settings you control on the platform itself, falling into four kinds. The scrape interval is how often the platform collects the metrics. You choose how long it keeps each of metrics, logs and traces—three separate retention periods. You choose what share of your requests it records a full trace for—the trace sampling rate. And you choose what share of the log lines it keeps. The rest of *What you decide* is the machines you buy to run it: cores in the collectors that receive the reports, nodes in the store that hold them and the usable terabytes on each node, and nodes in the query layer that answer questions. And the horizon. [Appendix F](#appendix-f-observability-model) shows how much smaller the platform gets if you collect metrics less often, keep them for less time, keep fewer log lines and record fewer traces.
 
-One input determines this platform's size more than any other: how many different values each label takes. The table lists these under *Outside your control*, not *What you decide*, as *different endpoint label values* and *different status label values*.
-
 When a service reports a metric to the platform, it attaches labels. A label is a tag saying, for example, which endpoint handled the request or what status code it returned. The platform keeps a separate running count for every combination of label values, called a series. Each new label value multiplies the number of series it stores.
+
+One input determines this platform's size more than any other: how many different values each label takes. The table lists these under *Outside your control*, not *What you decide*, as *different endpoint label values* and *different status label values*.
 
 None of the platform's settings reaches this input. Turn every knob down as far as it goes and the number of label values stays the same. The only way to change it is to change the application code that attaches the labels. That code belongs to the developers who wrote the services, not to the team that runs the platform.
 
