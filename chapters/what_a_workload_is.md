@@ -338,7 +338,7 @@ The second model describes an observability platform: the system that collects w
 ```{include} _generated/what-a-workload-is-observability.md
 ```
 
-:::{note} The platform's terms
+:::{note} Observability platform terms
 :class: dropdown
 
 % word-ok: a sample here is one stored reading of a series, and a scrape interval is a length of time
