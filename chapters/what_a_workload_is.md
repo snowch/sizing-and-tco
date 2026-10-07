@@ -444,11 +444,13 @@ range this book reports too narrow ([ch14](#correlation-and-convergence)).
 - **A flow is a rate, a stock is a level, and the unit tells them apart.** A flow has time
   underneath it; a stock is how much there is now, with no *per* in its unit. Ratios, prices and
   pure numbers like replication factors have no time in them at all.
-- **One sizing error turns a flow into a stock by multiplying it by a plain number.** A rate times
-  a number is still a rate. Only a duration makes it an amount, and the toolkit refuses the other.
+- **A common sizing error multiplies a flow by a plain number and calls the result a stock.** A rate
+  times a plain number is still a rate; only a length of time turns it into an amount. When the
+  toolkit reads the model file, it refuses a formula that tries, because its units do not match the
+  unit the node declares.
 - **A model is a file of named quantities, each with a unit and a source.** A spreadsheet can hold
-  both, but does not require either and does not check them. The file requires both on every input,
-  and the toolkit checks every formula against the units.
+  both, but does not require either and does not check them. The model file must give every input
+  both, and the toolkit checks every formula against the units.
 - **Growth compounds, so the horizon has to become a pure number.** Dividing the duration by a
   declared year turns it into an exponent with no unit. A spreadsheet does no division—it takes the
   bare number as years, so when a colleague types months, growth compounds over the wrong number of
