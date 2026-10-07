@@ -224,7 +224,7 @@ is a model whose structure nobody has checked, however good its interval looks.
 
 ## Problems
 
-Four, in `tests/the_missing_node/`. The first three have tests. The last does not, and says why.
+Four, in `tests/the_missing_node/`. The first three have tests. The last does not.
 
 **20.1 — What would count as evidence?**
 Some observations fall outside the interval. Decide what it would take to call the model refuted,

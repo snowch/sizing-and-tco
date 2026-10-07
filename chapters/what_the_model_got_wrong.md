@@ -228,7 +228,7 @@ the system afterwards, and a book can do neither for you.
 Three, in `tests/what_the_model_got_wrong/`. The first two have tests, and both work on the web
 service's failures, not on the model with a hole in it. 23.1 ranks the inputs the way the
 attribution table does; 23.2 counts the failures in which nothing was extreme. The last has no
-test, and says why.
+test.
 
 **24.1 — Attribute the failure.**
 Given the draws and which of them failed, rank the inputs by how far each one had to be from its

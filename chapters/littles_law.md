@@ -275,7 +275,7 @@ incident.
 
 ## Problems
 
-Three, in `tests/littles_law/`. The first two have tests. The last does not, and says why.
+Three, in `tests/littles_law/`. The first two have tests. The last does not.
 
 **5.1 — The law.**
 One multiplication, checked against the model's own node: the one [ch06](#queueing-and-the-knee)

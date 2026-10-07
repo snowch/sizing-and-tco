@@ -185,7 +185,7 @@ now two structures, and the lines missing from each are invisible to the other.
 
 ## Problems
 
-Two, in `tests/the_five_year_model/`. The first has a test. The second does not, and says why.
+Two, in `tests/the_five_year_model/`. The first has a test. The second does not.
 
 **18.1 — What a point estimate costs at the seam.**
 The test evaluates both models and hands you the two sides of the seam: the terabytes the

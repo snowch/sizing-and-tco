@@ -219,8 +219,7 @@ step, the curve above describes a queue in front of the real problem.
 
 ## Problems
 
-Four, in `tests/when_adding_servers_stops_helping/`. The first three have tests. The last does not,
-and says why.
+Four, in `tests/when_adding_servers_stops_helping/`. The first three have tests. The last does not.
 
 **7.1 — Write the law.**
 Two terms in the denominator, behaving differently. The tests check that contention alone flattens

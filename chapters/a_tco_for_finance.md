@@ -266,7 +266,7 @@ the book arguing from experience rather than from a stamped result.
 ## Problems
 
 Three, in `tests/a_tco_for_finance/`. The first two have tests and neither is arithmetic. The last
-has no test, and says why.
+has no test.
 
 **21.1 — The decision table.**
 The test hands you the stamped result of each design. Build the decision table from them: one row

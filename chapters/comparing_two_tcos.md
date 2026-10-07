@@ -389,7 +389,7 @@ fleet, and each host needs a port.
 
 ## Problems
 
-Three, in `tests/comparing_two_tcos/`. The first two have tests. The last does not, and says why.
+Three, in `tests/comparing_two_tcos/`. The first two have tests. The last does not.
 
 **22.1 — Subtract futures, not intervals.**
 The test evaluates both quotes on the same draws and hands you the two five-year totals, one

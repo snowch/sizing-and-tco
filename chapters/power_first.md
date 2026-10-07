@@ -250,7 +250,7 @@ and [ch21](#a-tco-for-finance) is about putting one to the people who pay for it
 
 ## Problems
 
-Three, in `tests/power_first/`. The first two have tests. The last does not, and says why.
+Three, in `tests/power_first/`. The first two have tests. The last does not.
 
 **16.1 — Sizing backwards.**
 From an allocation to a machine count. Three things to get right: the allocation is in kilowatts

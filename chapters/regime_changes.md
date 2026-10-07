@@ -223,7 +223,7 @@ load moves and how long you take to notice, neither of which this book can see.
 
 ## Problems
 
-Three, in `tests/regime_changes/`. The first two have tests. The last does not, and says why.
+Three, in `tests/regime_changes/`. The first two have tests. The last does not.
 
 **8.1 — Do what a spreadsheet would do.**
 Fit a straight line to the healthy points, nothing above half utilisation, and extrapolate it

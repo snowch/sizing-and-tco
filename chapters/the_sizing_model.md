@@ -240,7 +240,7 @@ they were computed. [ch13](#monte-carlo) computes them.
 
 ## Problems
 
-Three, in `tests/the_sizing_model/`. The first two have tests. The last does not, and says why.
+Three, in `tests/the_sizing_model/`. The first two have tests. The last does not.
 
 **12.1 — Size to a risk, not to a point estimate.**
 Find the smallest number of hosts for which the *utilisation at the busy hour* row in the ceilings

@@ -461,7 +461,7 @@ range this book reports too narrow ([ch14](#correlation-and-convergence)).
 
 ## Problems
 
-Five, in `tests/what_a_workload_is/`. The first four have tests. The last does not, and says why.
+Five, in `tests/what_a_workload_is/`. The first four have tests. The last does not.
 
 **2.1 — Levels and rates.**
 Classify every node in the observability model as a stock, a flow or neither, by reading what each

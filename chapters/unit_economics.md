@@ -238,7 +238,7 @@ average spreads that step evenly over every request, so no average can express i
 ## Problems
 
 Three problems are on this page. The first two have tests, in `tests/unit_economics/`. The third has
-no test, and says why.
+no test.
 
 **17.1 — A total, a quantity, a period.**
 Divide the total by the quantity and then by the period in months. If your answer is out by twelve,

@@ -189,7 +189,7 @@ the three decides.
 
 ## Problems
 
-Five, in `tests/capacity/`. The first four have tests. The last does not, and says why.
+Five, in `tests/capacity/`. The first four have tests. The last does not.
 
 **9.1 — The chain.**
 The amount you must keep and the three terms that turn it into the disk you buy, one of which
