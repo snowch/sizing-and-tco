@@ -151,6 +151,21 @@ def _walk(node):
             yield from _walk(item)
 
 
+#: How long a table cell's text must be, in characters, to be laid out as prose rather than as a
+#: value: longer than any number, name or short label the book's tables carry.
+PROSE_CELL = 60
+
+
+def _plain_text(node) -> str:
+    """The text of a node and everything under it, without markup."""
+    if isinstance(node, dict):
+        own = str(node.get("value", "")) if node.get("type") in ("text", "inlineCode") else ""
+        return own + "".join(_plain_text(c) for c in node.get("children", []))
+    if isinstance(node, list):
+        return "".join(_plain_text(c) for c in node)
+    return ""
+
+
 def heading_id(node: dict) -> str:
     """A heading's anchor, from its text, so a page's own contents can link to it.
 
@@ -254,6 +269,12 @@ def render(node: dict) -> str:
         return f"<tr>{children()}</tr>"
     if kind == "tableCell":
         tag = "th" if node.get("header") else "td"
+        # A cell holding a sentence or more gets a wrapper with a width of its own. A table cell
+        # takes whatever width the table's layout gives it, so a long source squeezed to one word
+        # a line on a phone and, once expanded, ran across two thousand pixels on one line. The
+        # wrapper keeps it readable closed, so the table scrolls instead, and wraps it open.
+        if tag == "td" and len(_plain_text(node)) > PROSE_CELL:
+            return f'<td><div class="prose-cell">{children()}</div></td>'
         return f"<{tag}>{children()}</{tag}>"
     if kind == "caption":
         return f"<figcaption>{children()}</figcaption>"

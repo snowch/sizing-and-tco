@@ -9,6 +9,6 @@
 | ○ | peak request rate, day one<br>`peak_request_rate_t0` | assumption | The service owners estimate the request rate in the busy hour. They have a spread of plausible rates in mind and round it to one number; ch04 replaces it with the spread. |
 | ◐ | ram per host<br>`ram_per_host` | vendor claim | spec sheet: the modules fitted. The sheet says 64 GB and means GiB — appendix D — and the operating system will report less than either, which is os_reserve's job |
 | ○ | records held, day one<br>`stored_data_t0` | assumption | The service owners estimate what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression. It has not been counted yet, and counting it would turn the estimate into a fact. |
-| | **7 inputs** | | **1 fact, 1 vendor claim, 5 assumption** |
+| | **7 inputs** | | **1 fact, 1 vendor claim, 5 assumptions** |
 
 *Source — [`web_service_provenance-reference`](/models/web_service_provenance-reference.html) · the model to explore; each input with a range has a slider*

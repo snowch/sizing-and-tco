@@ -28,6 +28,6 @@
 | ○ | trace sampling rate<br>`trace_keep_rate` | assumption | a control knob, and the one with the widest range: head sampling at 1% and at 100% are two different platforms |
 | ○ | traces retention<br>`traces_retention` | assumption | a control knob |
 | ○ | usable TB per store node<br>`usable_tb_per_node` | assumption | usable capacity per storage node after replication |
-| | **26 inputs** | | **2 fact, 2 vendor claim, 22 assumption** |
+| | **26 inputs** | | **2 facts, 2 vendor claims, 22 assumptions** |
 
 *Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 measured constants have no measurement yet**, so figures that depend on them say not yet measured ([why](#not-yet-measured))*

@@ -1586,6 +1586,10 @@ th, td { text-align: left; padding: .42rem .7rem; border-bottom: 1px solid var(-
 th { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
      color: var(--faint); border-bottom: 1px solid var(--rule); padding-bottom: .3rem; }
 tr:last-child td { border-bottom: 1px solid var(--rule); }
+/* A cell that holds a sentence (bench/render.py marks it). Closed, it keeps a readable width and
+   the table scrolls sideways, instead of the column shrinking to a word a line; expanded, it
+   wraps at a line length a reader can follow, instead of running the width of the screen twice. */
+.prose-cell { min-width: min(15rem, 70vw); max-width: min(34rem, 85vw); }
 /* A table or a code block wider than the screen scrolls sideways, and on a phone nothing said
    so: ch02's Claim column, the one its prose sends the reader to, sat out of sight with no sign
    it was there. A shade at each edge that has more beyond it says so, and goes when the reader

@@ -39,6 +39,6 @@
 | ○ | records held, day one<br>`stored_data_t0` | assumption | The service owners estimate what the service holds today: its database and the objects users have uploaded, before replication, indexes or compression. It has not been counted yet, and counting it would turn the estimate into a fact. |
 | ◐ | support rate<br>`support_rate` | vendor claim | annual support as a fraction of capital cost. Triangular because it is negotiated inside a band the market sets rather than drawn from one: the spread is what different buyers get, not what varies from year to year |
 | ○ | utilisation the model will admit to<br>`utilisation_cap` | assumption | where this model stops being about queues (ch06) |
-| | **37 inputs** | | **6 fact, 8 vendor claim, 23 assumption** |
+| | **37 inputs** | | **6 facts, 8 vendor claims, 23 assumptions** |
 
 *Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*

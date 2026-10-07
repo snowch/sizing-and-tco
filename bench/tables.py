@@ -631,7 +631,9 @@ def provenance_table(name: str, *kinds: str) -> str:
             )
     total = sum(counts.values())
     tally = ", ".join(
-        f"{counts.get(kind, 0)} {kind.replace('_', ' ')}" for kind in PROVENANCE_MEANING
+        f"{n} {kind.replace('_', ' ')}{'' if n == 1 else 's'}"
+        for kind in PROVENANCE_MEANING
+        for n in [counts.get(kind, 0)]
     )
     rows.append(f"| | **{total} inputs** | | **{tally}** |")
     return "\n".join(rows)

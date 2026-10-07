@@ -7,6 +7,6 @@
 | ● | one year<br>`one_year` | fact | definition |
 | ◐ | query scan rate, as quoted<br>`query_scan_rate_quoted` | vendor claim | series scanned per second per query node, quoted |
 | ○ | *22 more, not listed here* | assumption | |
-| | **26 inputs** | | **2 fact, 2 vendor claim, 22 assumption** |
+| | **26 inputs** | | **2 facts, 2 vendor claims, 22 assumptions** |
 
 *Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 measured constants have no measurement yet**, so figures that depend on them say not yet measured ([why](#not-yet-measured))*

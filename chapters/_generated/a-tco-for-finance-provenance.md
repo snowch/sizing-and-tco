@@ -12,6 +12,6 @@
 | ◐ | support rate<br>`support_rate` | vendor claim | annual support as a fraction of capital cost. Triangular because it is negotiated inside a band the market sets rather than drawn from one: the spread is what different buyers get, not what varies from year to year |
 | ● | *6 more, not listed here* | fact | |
 | ○ | *23 more, not listed here* | assumption | |
-| | **37 inputs** | | **6 fact, 8 vendor claim, 23 assumption** |
+| | **37 inputs** | | **6 facts, 8 vendor claims, 23 assumptions** |
 
 *Source — [`web_service-reference`](/models/web_service-reference.html) · the model to explore; each input with a range has a slider*
