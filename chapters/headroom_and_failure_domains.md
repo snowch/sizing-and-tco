@@ -266,8 +266,7 @@ memory and disk can be the first to break.
 
 ## Problems
 
-Four, in `tests/headroom_and_failure_domains/`. The first three have tests. The last does not, and
-says why.
+Four, in `tests/headroom_and_failure_domains/`. The first three have tests. The last does not.
 
 **11.1 — What a host loss costs.**
 The one piece of headroom that is arithmetic rather than judgement. Then notice what it says about

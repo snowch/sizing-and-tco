@@ -308,8 +308,7 @@ A model can be all assumptions, all sourced, all defensible-sounding, and comple
 
 ## Problems
 
-Three, in `tests/where_the_numbers_come_from/`. The first two have tests. The third does not, and
-says why.
+Three, in `tests/where_the_numbers_come_from/`. The first two have tests. The third does not.
 
 **3.1 — Take a constant, and stamp it so somebody else could check it.**
 Pick a quantity a codec decides and measure it over a corpus you generate deterministically, in

@@ -311,7 +311,7 @@ pack them.
 
 ## Problems
 
-Five problems. The first three have tests, in `tests/bandwidth_and_the_binding_constraint/`. The last two have no test, and each says why.
+Five problems. The first three have tests, in `tests/bandwidth_and_the_binding_constraint/`. The last two have no test.
 
 **10.1 — Three chains, one purchase.**
 The function `size_for_all` receives the three chains' host counts, one count per future in each. It
