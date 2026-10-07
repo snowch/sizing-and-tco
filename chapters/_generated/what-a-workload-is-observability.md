@@ -32,6 +32,6 @@
 | one sample per series | 1.00 | sample/series | ● |
 | one year | 1.00 | year | ● |
 
-**Claim:** ● traceable to a measurement or a definition · ◐ supplied by the vendor selling it · ○ an assumption
+**Claim:** ● traceable to a stated source · ◐ supplied by the vendor selling it · ○ an assumption
 
 *Source — [`observability-reference`](/models/observability-reference.html) · the model to explore; each input with a range has a slider · **2 measured constants have no measurement yet**, so figures that depend on them say not yet measured ([why](#not-yet-measured))*

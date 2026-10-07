@@ -11,6 +11,6 @@
 | **True by definition** | | | |
 | one year | 1.00 | year | ● |
 
-**Claim:** ● traceable to a measurement or a definition · ◐ supplied by the vendor selling it · ○ an assumption
+**Claim:** ● traceable to a stated source · ◐ supplied by the vendor selling it · ○ an assumption
 
 *Source — [`web_service_demand-reference`](/models/web_service_demand-reference.html) · the model to explore; each input with a range has a slider*

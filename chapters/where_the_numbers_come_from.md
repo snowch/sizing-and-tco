@@ -149,9 +149,13 @@ whereas a production format that packs bits uses fewer bytes per sample. The fig
 it describes that encoder. If you copied it into a model of a real system, your model would be
 wrong by an amount this page does not measure.
 
+A `fact` is a number with a traceable source, not a number true everywhere: a stamped measurement, an invoice, or a published specification. A measured constant is traceable to its stamped result, but it is true only of the data and software it was measured from.
+
 The method transfers. The number does not.
 
 ### Four targets, and who can check each
+
+A measurement means something only against what it was taken from: a body of data, a machine, a running system, or one of this book's own model files.
 
 :::{div}
 :class: definition
@@ -165,7 +169,7 @@ check the result.
 | `corpus` | a codec or an encoder over a declared body of data | you, with the repository |
 | `model` | a model file evaluated in this repository | you, with the repository |
 | `rig` | a throughput or a latency, on the reference machine | whoever has that machine |
-| `estate` | an observation of a running system | **nobody** |
+| `estate` | an observation of a running system | only those who run the system; not this repository |
 
 A corpus result may carry no rate and no duration. CI re-derives every one on every push. A model
 result is evidence about what the book's own models say, and about nothing else. The toolkit
@@ -173,7 +177,7 @@ refuses a rig measurement on any machine but the reference one: a throughput mea
 machine was free is indistinguishable from a real one once it is a number in a table. The *Target*
 column of the constants table above shows each measured constant's target.
 
-### The target that cannot be checked, only disclosed
+### The target this repository cannot check, only disclose
 
 An observation of a running system cannot be repeated by you or anyone else, because there is no
 corpus to re-run and no machine to re-run it on—the system has moved on. The observability model
@@ -216,6 +220,18 @@ instead of filling the gap. No placeholder, no estimate, no number borrowed from
 and quietly rounded. This gap stays visible on purpose: after one copy-paste, a placeholder cannot
 be distinguished from a measurement.
 
+### Three questions, not one label
+
+The chapter has asked three separate questions of a number. They do not collapse into one label. Each gets its own answer.
+
+| Question | What answers it | The possible answers |
+|---|---|---|
+| Who stands behind it? | the input's `provenance`, in the model file | `fact`, `vendor_claim`, `assumption` |
+| What was it measured against? | the stamped result's `target` | `corpus`, `model`, `rig`, `estate` |
+| Has this repository measured it? | whether the stamped result exists | yes, or *not yet measured* |
+
+The observability model's collector throughput appears twice and shows all three questions apart. The quoted figure is an input whose `provenance` is a `vendor_claim`. The measured figure is a measured constant whose `target` is `rig`, the reference machine. It has not been measured, so it reads *not yet measured*. The same quantity gets a different answer to each question.
+
 ### The rig, and why the book will not let you fake it
 
 ```{include} _generated/where-the-numbers-come-from-rig.md
@@ -233,7 +249,8 @@ accident.
 
 ### What a measurement is worth
 
-One measurement is a number. It says nothing about how far it would move if you took it again. So
+One measurement is a number. On its own it gives no measured idea of how far it would move if you took it
+again. So
 every constant in this book is measured over several shards: independently generated pieces of its
 corpus, each from its own starting number, which the result records. The result reports the mean
 of the shards' figures, with the standard error of that mean beside it.
@@ -290,12 +307,12 @@ A model can be all assumptions, all sourced, all defensible-sounding, and comple
 :::{div}
 :class: takeaways
 
-- **Every input says how much its author was claiming.** A fact is traceable to something, a
+- **Every input says what kind of claim supports its value.** A fact is traceable to something, a
   vendor's claim was stated by the vendor and is never quietly promoted, and an assumption is a
   decision a reviewer can argue with.
 - **A measured constant belongs to some data and some software at some version.** The method
   transfers. The number does not.
-- **Four targets, and nobody can check the fourth.** You can re-derive a `corpus` or a `model`
+- **Four targets, and this repository cannot check the fourth.** You can re-derive a `corpus` or a `model`
   result with the repository. A `rig` timing can be taken only on the reference machine a file
   declares, and the toolkit refuses it anywhere else. An `estate` observation of a running system
   is someone's word, with a disclosure attached: what system, over what window, when.

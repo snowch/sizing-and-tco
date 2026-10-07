@@ -47,7 +47,7 @@ PROVENANCE_MARK = {"fact": "●", "vendor_claim": "◐", "assumption": "○"}
 
 #: The short form of each mark, for the key under a table. PROVENANCE_MEANING is the long form.
 CLAIM_KEY = {
-    "fact": "traceable to a measurement or a definition",
+    "fact": "traceable to a stated source",
     "vendor_claim": "supplied by the vendor selling it",
     "assumption": "an assumption",
 }
