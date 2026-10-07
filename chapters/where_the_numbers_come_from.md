@@ -11,7 +11,10 @@ short_title: "ch03 Where the numbers come from"
 What is the difference between a number you measured, a number you were told, and a number you
 decided?
 
-Once they are all cells in the same column, none. That is the problem.
+Once a measurement, a figure you were told and a figure you decided are typed into the same
+column of a spreadsheet, nothing on screen tells them apart. The spreadsheet does not record which
+kind each number is, so you cannot tell a measurement from a decision, and neither can whoever
+opens the file after you.
 
 ## The material
 
